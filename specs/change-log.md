@@ -9,6 +9,14 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-14
 
+### Sprint 5 — TRAN/MCPL/MCPK (awaiting usability confirm)
+
+- Shared MCP core (`src/core/tools`, `src/mcp/create-server.ts`); stdio + sibling Streamable HTTP on `:3041/mcp`.
+- ADR-049: HTTP bearer `MCP_AUTH_TOKEN` for all tools including `sdd_get_key`.
+- `sdd_list_versions` from Settings GitHub (tags + inventory + `paths_version`); `sdd_get_key` decrypts KEYS-01.
+- Install/update stubbed until Sprint 6.
+- Public `/instructions` guide; CI sets `MCP_AUTH_TOKEN` + `GITHUB_FIXTURE`.
+
 ### MVP-4 closed (Sprint 4)
 
 - Operator confirmed Settings + Framework **usable** (DoD).

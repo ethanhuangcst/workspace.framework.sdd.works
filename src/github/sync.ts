@@ -6,9 +6,12 @@ export type TreeNode = {
   children?: TreeNode[];
 };
 
+export type RepoVersion = { id: string; published_at?: string };
+
 export type GitHubPort = {
   checkRepoAccessible: (owner: string, repo: string) => Promise<boolean>;
   fetchRepoTree: (owner: string, repo: string) => Promise<TreeNode[]>;
+  listRepoTags: (owner: string, repo: string) => Promise<RepoVersion[]>;
 };
 
 export class GitHubConfigError extends Error {
@@ -69,6 +72,16 @@ export function createFixtureGitHubPort(options?: {
         throw new GitHubSyncError("fixture repo unreachable");
       }
       return structuredClone(FIXTURE_TREE);
+    },
+    async listRepoTags(owner, repo) {
+      const ok = await this.checkRepoAccessible(owner, repo);
+      if (!ok) {
+        throw new GitHubSyncError("fixture repo unreachable");
+      }
+      return [
+        { id: "v1.0.0", published_at: "2026-01-01T00:00:00.000Z" },
+        { id: "v0.9.0", published_at: "2025-12-01T00:00:00.000Z" },
+      ];
     },
   };
 }
@@ -180,6 +193,25 @@ function createOctokitPort(): GitHubPort {
         }
         throw new GitHubSyncError(
           error instanceof Error ? error.message : "GitHub sync failed",
+        );
+      }
+    },
+    async listRepoTags(owner, repo) {
+      try {
+        const tags: RepoVersion[] = [];
+        for await (const response of octokit.paginate.iterator(
+          octokit.repos.listTags,
+          { owner, repo, per_page: 100 },
+        )) {
+          for (const tag of response.data) {
+            tags.push({ id: tag.name });
+          }
+          if (tags.length >= 50) break;
+        }
+        return tags.slice(0, 50);
+      } catch (error) {
+        throw new GitHubSyncError(
+          error instanceof Error ? error.message : "GitHub tags failed",
         );
       }
     },

@@ -1,4 +1,4 @@
-.PHONY: help dev up down test lint typecheck seed
+.PHONY: help dev up down test lint typecheck seed mcp-http mcp-stdio
 
 .DEFAULT_GOAL := help
 
@@ -10,6 +10,12 @@ help: ## Show available targets
 
 dev: ## Start Next.js development server (foreground, port 3040)
 	npm run dev
+
+mcp-http: ## Start MCP Streamable HTTP (port 3041; requires MCP_AUTH_TOKEN)
+	npm run mcp:http
+
+mcp-stdio: ## Start MCP stdio transport (foreground)
+	npm run mcp:stdio
 
 up: ## Start local Postgres + migrate + seed
 	docker-compose up -d

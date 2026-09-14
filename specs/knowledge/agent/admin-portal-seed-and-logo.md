@@ -63,3 +63,12 @@ When either capture env is set, the server writes the URL to that file and does 
 - Freshness: in-memory tree cache ~30s; Framework UI polls `GET /api/admin/framework` every 30s. Webhooks not wired yet.
 - Saving Settings clears the tree cache so the next Framework load refetches.
 - For live demos, save a real `https://github.com/{owner}/{repo}` the token can read — not the fixture URL.
+
+## MCP server (Sprint 5)
+
+- Stdio: `npm run mcp:stdio` / `make mcp-stdio` (local trust for `sdd_get_key`).
+- HTTP: `npm run mcp:http` / `make mcp-http` on `http://127.0.0.1:3041/mcp`.
+- Auth: `MCP_AUTH_TOKEN` required for HTTP (ADR-049). Fail closed if unset.
+- CI: `MCP_AUTH_TOKEN=ci-mcp-auth-token`, `GITHUB_FIXTURE=1`.
+- Tools: list_versions + get_key real; install/update stub until Sprint 6.
+- Guide: `/instructions`.
