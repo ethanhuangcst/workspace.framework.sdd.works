@@ -39,7 +39,7 @@
         <div class="page-head">
           <p class="eyebrow" data-i18n="admin.keys.eyebrow">KEY STORE</p>
           <h1 data-i18n="admin.keys.issue">Add key</h1>
-          <p data-i18n="admin.keys.lead">Named values for sdd_get_key. Callers look up by key_name; the store returns key_value in plaintext.</p>
+          <p data-i18n="admin.keys.lead">For use with sdd_get_key. Callers pass a key name; MCP returns the key value.</p>
         </div>
         <form class="form" action="06-keys.html?saved=1" style="max-width: 32rem">
           <label>
@@ -69,7 +69,6 @@
               placeholder="Paste the API key or secret here"
               spellcheck="false"
             ></textarea>
-            <span class="field-note" data-i18n="admin.keys.value_hint">Usually a long AI API key. Stored in the database; shown on the list for signed-in admins.</span>
           </label>
           <div class="form-actions">
             <button class="btn" type="submit" data-i18n="admin.keys.create_submit">Save key</button>

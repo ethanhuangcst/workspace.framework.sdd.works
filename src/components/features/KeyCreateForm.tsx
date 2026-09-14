@@ -7,7 +7,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
 import { t, type Locale } from "@/i18n/t";
-import { createKeySchema } from "@/lib/keys";
+import { createKeySchema, keyFieldErrorKey } from "@/lib/keys";
 
 type FormValues = {
   name: string;
@@ -26,7 +26,12 @@ export function KeyCreateForm({
   const [locale, setLocale] = useState(initialLocale);
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [, startTransition] = useTransition();
-  const { register, handleSubmit } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
     defaultValues: { name: "", description: "", value: "" },
   });
 
@@ -50,26 +55,50 @@ export function KeyCreateForm({
     setErrorKey(null);
     const parsed = createKeySchema.safeParse(values);
     if (!parsed.success) {
-      setErrorKey(
-        parsed.error.issues[0]?.message === "errors.key_name_invalid"
-          ? "errors.key_name_invalid"
-          : "errors.invalid_input",
-      );
+      const key = keyFieldErrorKey(parsed.error.issues[0]);
+      setErrorKey(key);
+      if (key === "errors.key_name_invalid") {
+        setError("name", { type: "validate", message: key });
+      }
+      if (key === "errors.key_value_no_chinese") {
+        setError("value", { type: "validate", message: key });
+      }
       return;
     }
-    const res = await fetch("/api/admin/keys", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(parsed.data),
-    });
-    const data = (await res.json()) as { error?: { key: string } };
-    if (!res.ok) {
-      setErrorKey(data.error?.key ?? "errors.invalid_input");
-      return;
+    try {
+      const res = await fetch("/api/admin/keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed.data),
+      });
+      const data = (await res.json()) as { error?: { key: string } };
+      if (!res.ok) {
+        const key = data.error?.key ?? "errors.invalid_input";
+        setErrorKey(key);
+        if (key === "errors.key_name_taken" || key === "errors.key_name_invalid") {
+          setError("name", { type: "server", message: key });
+        }
+        if (key === "errors.key_value_no_chinese") {
+          setError("value", { type: "server", message: key });
+        }
+        return;
+      }
+      router.push("/admin/keys?saved=1");
+      router.refresh();
+    } catch {
+      setErrorKey("errors.invalid_input");
     }
-    router.push("/admin/keys?saved=1");
-    router.refresh();
   }
+
+  const nameError =
+    errors.name?.message === "errors.key_name_invalid" ||
+    errors.name?.message === "errors.key_name_taken"
+      ? t(locale, errors.name.message)
+      : null;
+  const valueError =
+    errors.value?.message === "errors.key_value_no_chinese"
+      ? t(locale, errors.value.message)
+      : null;
 
   return (
     <AppShell
@@ -85,7 +114,7 @@ export function KeyCreateForm({
         <p className="lead">{t(locale, "admin.keys.lead")}</p>
       </div>
       {errorKey ? (
-        <p className="error" data-testid="key-form-error">
+        <p className="error" role="alert" data-testid="key-form-error">
           {t(locale, errorKey)}
         </p>
       ) : null}
@@ -93,6 +122,7 @@ export function KeyCreateForm({
         className="form"
         style={{ maxWidth: "32rem" }}
         onSubmit={handleSubmit(onSubmit)}
+        noValidate
       >
         <Field
           label={t(locale, "admin.keys.name")}
@@ -102,11 +132,19 @@ export function KeyCreateForm({
             type="text"
             autoComplete="off"
             required
+            pattern="[A-Za-z][A-Za-z0-9_-]*"
+            title={t(locale, "errors.key_name_invalid")}
             data-testid="key-name"
             placeholder="cursor-prod"
+            aria-invalid={Boolean(nameError)}
             {...register("name")}
           />
         </Field>
+        {nameError ? (
+          <p className="error" data-testid="key-name-error">
+            {nameError}
+          </p>
+        ) : null}
         <Field label={t(locale, "admin.keys.description")}>
           <input
             type="text"
@@ -114,20 +152,28 @@ export function KeyCreateForm({
             {...register("description")}
           />
         </Field>
-        <Field
-          label={t(locale, "admin.keys.value")}
-          fieldNote={t(locale, "admin.keys.value_hint")}
-        >
+        <Field label={t(locale, "admin.keys.value")}>
           <textarea
             required
             rows={4}
             data-testid="key-value"
             spellCheck={false}
+            lang="en"
+            aria-invalid={Boolean(valueError)}
             {...register("value")}
           />
         </Field>
+        {valueError ? (
+          <p className="error" data-testid="key-value-error">
+            {valueError}
+          </p>
+        ) : null}
         <div className="form-actions">
-          <Button type="submit" data-testid="key-create-submit">
+          <Button
+            type="submit"
+            data-testid="key-create-submit"
+            disabled={isSubmitting}
+          >
             {t(locale, "admin.keys.create_submit")}
           </Button>
           <Button variant="text" href="/admin/keys">

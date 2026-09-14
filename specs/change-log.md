@@ -9,7 +9,14 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-14
 
-### Sprint 3 — KEYS-01 (awaiting usability confirm)
+### MVP-3 closed (Sprint 3)
+
+- Operator confirmed Keys management **usable** (DoD).
+- Feature **Done**: KEYS-01.
+- Polish: create-form validation UX; lead copy for `sdd_get_key`; reject CJK in `key_value`.
+- ADR: [`ADR-048-keys-encryption-at-rest.md`](./adr/ADR-048-keys-encryption-at-rest.md). Knowledge: Keys validation notes in [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md).
+
+### Sprint 3 — KEYS-01
 
 - AES-256-GCM at-rest encryption (`KEYS_ENCRYPTION_KEY`); payload `v1:iv:tag:ciphertext`.
 - BFF: `GET/POST /api/admin/keys`, `GET/PATCH/DELETE /api/admin/keys/[id]`, bulk `POST /api/admin/keys/delete`.

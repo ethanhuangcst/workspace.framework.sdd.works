@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { Field } from "@/components/ui/Field";
 import { t, type Locale } from "@/i18n/t";
-import { updateKeySchema } from "@/lib/keys";
+import { keyFieldErrorKey, updateKeySchema } from "@/lib/keys";
 
 type FormValues = {
   name: string;
@@ -34,7 +34,12 @@ export function KeyEditForm({
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(openDelete);
   const [, startTransition] = useTransition();
-  const { register, handleSubmit } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues: initial,
   });
 
@@ -58,11 +63,14 @@ export function KeyEditForm({
     setErrorKey(null);
     const parsed = updateKeySchema.safeParse(values);
     if (!parsed.success) {
-      setErrorKey(
-        parsed.error.issues[0]?.message === "errors.key_name_invalid"
-          ? "errors.key_name_invalid"
-          : "errors.invalid_input",
-      );
+      const key = keyFieldErrorKey(parsed.error.issues[0]);
+      setErrorKey(key);
+      if (key === "errors.key_name_invalid") {
+        setError("name", { type: "validate", message: key });
+      }
+      if (key === "errors.key_value_no_chinese") {
+        setError("value", { type: "validate", message: key });
+      }
       return;
     }
     const res = await fetch(`/api/admin/keys/${keyId}`, {
@@ -72,12 +80,21 @@ export function KeyEditForm({
     });
     const data = (await res.json()) as { error?: { key: string } };
     if (!res.ok) {
-      setErrorKey(data.error?.key ?? "errors.invalid_input");
+      const key = data.error?.key ?? "errors.invalid_input";
+      setErrorKey(key);
+      if (key === "errors.key_value_no_chinese") {
+        setError("value", { type: "server", message: key });
+      }
       return;
     }
     router.push("/admin/keys?saved=1");
     router.refresh();
   }
+
+  const valueError =
+    errors.value?.message === "errors.key_value_no_chinese"
+      ? t(locale, errors.value.message)
+      : null;
 
   async function onDelete() {
     const res = await fetch(`/api/admin/keys/${keyId}`, { method: "DELETE" });
@@ -141,9 +158,16 @@ export function KeyEditForm({
             rows={4}
             data-testid="key-value"
             spellCheck={false}
+            lang="en"
+            aria-invalid={Boolean(valueError)}
             {...register("value")}
           />
         </Field>
+        {valueError ? (
+          <p className="error" data-testid="key-value-error">
+            {valueError}
+          </p>
+        ) : null}
         <div className="form-actions">
           <Button type="submit" data-testid="key-edit-submit">
             {t(locale, "admin.common.save")}

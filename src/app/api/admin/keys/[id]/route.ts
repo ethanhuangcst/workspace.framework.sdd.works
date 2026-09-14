@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import { assertCsrf } from "@/auth/csrf";
 import { requireAdminApi } from "@/auth/require-admin-api";
 import { db } from "@/lib/db";
-import { keyNameErrorKey, updateKeySchema } from "@/lib/keys";
+import { keyFieldErrorKey, updateKeySchema } from "@/lib/keys";
 import { decryptKeyValue, encryptKeyValue } from "@/lib/keys-crypto";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -59,7 +59,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   const parsed = updateKeySchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: { key: keyNameErrorKey(parsed.error.issues[0]) } },
+      { error: { key: keyFieldErrorKey(parsed.error.issues[0]) } },
       { status: 400 },
     );
   }

@@ -5,7 +5,7 @@ import {
   encryptKeyValue,
   resolveEncryptionKey,
 } from "./keys-crypto";
-import { createKeySchema, keyNameErrorKey } from "./keys";
+import { createKeySchema, keyFieldErrorKey } from "./keys";
 
 const FIXTURE_HEX =
   "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
@@ -52,8 +52,22 @@ describe("createKeySchema", () => {
     });
     expect(parsed.success).toBe(false);
     if (!parsed.success) {
-      expect(keyNameErrorKey(parsed.error.issues[0])).toBe(
+      expect(keyFieldErrorKey(parsed.error.issues[0])).toBe(
         "errors.key_name_invalid",
+      );
+    }
+  });
+
+  it("should_reject_chinese_in_key_value", () => {
+    const parsed = createKeySchema.safeParse({
+      name: "cursor-prod",
+      description: "",
+      value: "sk-密钥",
+    });
+    expect(parsed.success).toBe(false);
+    if (!parsed.success) {
+      expect(keyFieldErrorKey(parsed.error.issues[0])).toBe(
+        "errors.key_value_no_chinese",
       );
     }
   });

@@ -36,7 +36,7 @@ Change log: [`change-log.md`](./change-log.md).
 | 06 | Admin Portal | ACCT | ACCT-02 | Password reset | Request reset by email; Resend transactional mail; hashed, expiring reset token; rate-limited | [ACCT-02](./admin-portal/app-stories.md#sdd-admin-password-reset) | MVP-1 | Done |
 | 06a | Admin Portal | SEED | SEED-01 | Default admin from env | Seed `me@ethanhuang.com` / `admin` with password from `ADMIN_SEED_PASSWORD`; fail if unset | [SEED-01](./admin-portal/app-stories.md#sdd-admin-seed) | MVP-2 | Done |
 | 07 | Admin Portal | ACCT | ACCT-03 | Admin account management | Invite by email, list ACTIVE admins + pending invites, delete with confirm (not self / not last admin); soft-deactivate deferred | [ACCT-03](./admin-portal/app-stories.md#sdd-admin-accounts) | MVP-2 | Done |
-| 08 | Admin Portal | KEYS | KEYS-01 | Keys CRUD | Create / view / edit / delete keys (`key_id`, English unique `key_name`, `key_description`, `key_value`); list shows name, description, value; Copy / Edit / Delete — no regenerate | [KEYS-01](./admin-portal/app-stories.md#sdd-admin-keys) | MVP-3 | ToDo |
+| 08 | Admin Portal | KEYS | KEYS-01 | Keys CRUD | Create / view / edit / delete keys (`key_id`, English unique `key_name`, `key_description`, `key_value`); list shows name, description, value; Copy / Edit / Delete — no regenerate | [KEYS-01](./admin-portal/app-stories.md#sdd-admin-keys) | MVP-3 | Done |
 | 09 | Admin Portal | SETT | SETT-01 | GitHub repository URL | View / save one GitHub repository URL; Save enabled only when dirty; verify reachability before persist | [SETT-01](./admin-portal/app-stories.md#sdd-admin-settings) | MVP-4 | ToDo |
 | 10 | Admin Portal | FRMW | FRMW-01 | Framework live view | Read-only, near-real-time GitHub tree/file view from the Settings URL; poll or webhook + short cache; sync error shown | [FRMW-01](./admin-portal/app-stories.md#sdd-admin-framework) | MVP-4 | ToDo |
 | 11 | MCP | TRAN | TRAN-01 | MCP server bootstrap (stdio) | Node stdio entry that registers tools with pinned `@modelcontextprotocol/sdk`; transport-agnostic core | [TRAN-01](./mcp/mcp-stories.md#sdd-mcp-transport-stdio) | MVP-5 | ToDo |
@@ -137,7 +137,7 @@ Notes:
 
 ### KEYS-01 — Keys CRUD
 
-- **Detail.** Authenticated admin creates, views, edits, and deletes keys. Fields: `key_id` (UUID, system), `key_name` (admin, unique, English letters/digits/`_`/`-`), `key_description` (admin), `key_value` (admin paste, often a long AI API key; protected at rest with `KEYS_ENCRYPTION_KEY`). List shows name, description, and value. Actions: Copy, Edit, Delete — **no regenerate**. Values shown only to authenticated admins; never in unauthenticated responses or logs. Forms use RHF + Zod; CSRF-safe.
+- **Detail.** Authenticated admin creates, views, edits, and deletes keys. Fields: `key_id` (UUID, system), `key_name` (admin, unique, English letters/digits/`_`/`-`, must start with a letter), `key_description` (admin), `key_value` (admin paste; no CJK; protected at rest with `KEYS_ENCRYPTION_KEY`, ADR-048). List shows name, description, and value. Actions: Copy, Edit, Delete — **no regenerate**. Values shown only to authenticated admins; never in unauthenticated responses or logs. Forms use RHF + Zod; CSRF-safe.
 - **Dependencies.** ACCT-01, INF-02, I18N-01.
 - **User stories & AC.** [KEYS-01](./admin-portal/app-stories.md#sdd-admin-keys)
 - **UI design & mockup.** [app-design.md](./admin-portal/app-design.md) · [06-keys.html](./admin-portal/ui-mockup/06-keys.html)

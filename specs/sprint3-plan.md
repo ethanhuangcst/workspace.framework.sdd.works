@@ -1,6 +1,6 @@
 # Sprint 3 Plan — MVP-3: Keys management
 
-**Batch:** MVP-3 · **Status:** Ready for confirm  
+**Batch:** MVP-3 · **Status:** Done  
 **Updated:** 2026-09-14  
 **Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
 
@@ -12,11 +12,11 @@ An admin can create, view, edit, and delete keys (name, description, value); lis
 
 | Feature | Name | Stories | Status |
 | --- | --- | --- | --- |
-| KEYS-01 | Keys CRUD | [keys](./admin-portal/app-stories.md#sdd-admin-keys) | **Ready for confirm** |
+| KEYS-01 | Keys CRUD | [keys](./admin-portal/app-stories.md#sdd-admin-keys) | **Done** |
 
 ## Delivery order
 
-1. KEYS-01 — create / list / edit / delete; Copy action; encrypt at rest with `KEYS_ENCRYPTION_KEY`; no regenerate — **implemented; awaiting operator usability confirm**
+1. KEYS-01 — create / list / edit / delete; Copy action; encrypt at rest with `KEYS_ENCRYPTION_KEY`; no regenerate — **Done** (operator confirmed usable)
 
 ## Dependencies
 
@@ -34,8 +34,13 @@ An admin can create, view, edit, and delete keys (name, description, value); lis
 - [x] Values only on authenticated Keys pages; never in logs or unauthenticated responses
 - [x] RHF + Zod validation; CSRF-safe mutations
 - [x] Unit/integration on key store + E2E Keys journey
-- [ ] User confirms Keys page is usable
+- [x] User confirms Keys page is usable
 
 ## Design / mockups
 
 - [app-design.md](./admin-portal/app-design.md) · [06-keys](./admin-portal/ui-mockup/06-keys.html) · [07-key-new](./admin-portal/ui-mockup/07-key-new.html) · [09-key-edit](./admin-portal/ui-mockup/09-key-edit.html)
+
+## Retrospective
+
+- ADR: [`ADR-048-keys-encryption-at-rest.md`](./adr/ADR-048-keys-encryption-at-rest.md)
+- Knowledge: [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md) (Keys validation / UX)

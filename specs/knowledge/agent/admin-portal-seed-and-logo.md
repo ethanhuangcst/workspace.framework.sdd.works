@@ -43,6 +43,13 @@ When either capture env is set, the server writes the URL to that file and does 
 ## Keys at rest (KEYS-01)
 
 - Env: `KEYS_ENCRYPTION_KEY` — 64 hex chars or 32-byte base64.
-- Format stored in DB: `v1:<iv_b64url>:<tag_b64url>:<ciphertext_b64url>` (AES-256-GCM).
+- Format stored in DB: `v1:<iv_b64url>:<tag_b64url>:<ciphertext_b64url>` (AES-256-GCM). Decision: [ADR-048](../../adr/ADR-048-keys-encryption-at-rest.md).
 - CI / Playwright inject a fixture key; local `.env.local` must set the same (or another) secret or create/list of encrypted rows will fail closed.
 - Plaintext leaves the server only for authenticated Keys UI (and later `sdd_get_key`).
+
+### Validation / UX
+
+- `key_name`: `^[A-Za-z][A-Za-z0-9_-]*$` — must start with a letter (digit-only names like `1` fail client + server).
+- `key_value`: reject CJK ideographs (`errors.key_value_no_chinese`); ASCII/API tokens expected.
+- Surface field errors next to the control (`key-name-error` / `key-value-error`) plus a form-level alert — silent Zod failures are easy to miss on submit.
+- Lead copy frames MCP usage (`sdd_get_key` + key name → key value); do not re-explain storage or “long AI API key” under the value field.

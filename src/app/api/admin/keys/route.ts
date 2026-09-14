@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import { assertCsrf } from "@/auth/csrf";
 import { requireAdminApi } from "@/auth/require-admin-api";
 import { db } from "@/lib/db";
-import { createKeySchema, keyNameErrorKey } from "@/lib/keys";
+import { createKeySchema, keyFieldErrorKey } from "@/lib/keys";
 import { encryptKeyValue, decryptKeyValue } from "@/lib/keys-crypto";
 
 function toRow(row: {
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
   const parsed = createKeySchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: { key: keyNameErrorKey(parsed.error.issues[0]) } },
+      { error: { key: keyFieldErrorKey(parsed.error.issues[0]) } },
       { status: 400 },
     );
   }

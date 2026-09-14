@@ -336,7 +336,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | Job | Create key_id + English unique name + description + pasted value |
 | Layout | Form: name (`pattern` English), description, textarea value; Save → `/admin/keys?saved=1` |
 | Validation | `errors.key_name_taken`, `errors.key_name_invalid` |
-| Keys | `admin.keys.name_hint`, `admin.keys.value_hint`, … |
+| Keys | `admin.keys.name_hint`, … |
 
 #### `/admin/keys/[id]` — Edit key · `09-key-edit.html`
 

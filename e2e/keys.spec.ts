@@ -16,6 +16,29 @@ async function loginAsSeedAdmin(page: import("@playwright/test").Page) {
 }
 
 test.describe("admin keys CRUD", () => {
+  test("should_reject_key_name_starting_with_digit", async ({ page }) => {
+    await loginAsSeedAdmin(page);
+    await page.getByTestId("issue-key").click();
+    await page.waitForURL("**/admin/keys/new");
+    await page.getByTestId("key-name").fill("1");
+    await page.getByTestId("key-description").fill("2");
+    await page.getByTestId("key-value").fill("3");
+    await page.getByTestId("key-create-submit").click();
+    await expect(page.getByTestId("key-form-error")).toBeVisible();
+    await expect(page).toHaveURL(/\/admin\/keys\/new/);
+  });
+
+  test("should_reject_chinese_in_key_value", async ({ page }) => {
+    await loginAsSeedAdmin(page);
+    await page.getByTestId("issue-key").click();
+    await page.waitForURL("**/admin/keys/new");
+    await page.getByTestId("key-name").fill("valid_name");
+    await page.getByTestId("key-value").fill("sk-中文");
+    await page.getByTestId("key-create-submit").click();
+    await expect(page.getByTestId("key-value-error")).toBeVisible();
+    await expect(page).toHaveURL(/\/admin\/keys\/new/);
+  });
+
   test("should_create_list_edit_and_delete_key", async ({ page }) => {
     test.setTimeout(60_000);
     const db = new PrismaClient();
