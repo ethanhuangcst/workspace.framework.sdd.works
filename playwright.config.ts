@@ -34,6 +34,9 @@ export default defineConfig({
       E2E_RESET_FILE: process.env.E2E_RESET_FILE ?? "/tmp/sdd-reset-url.txt",
       E2E_INVITE_FILE:
         process.env.E2E_INVITE_FILE ?? "/tmp/sdd-invite-url.txt",
+      KEYS_ENCRYPTION_KEY:
+        process.env.KEYS_ENCRYPTION_KEY ??
+        "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
     },
   },
 });

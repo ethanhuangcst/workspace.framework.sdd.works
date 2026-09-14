@@ -39,3 +39,10 @@ CI sets `ADMIN_SEED_PASSWORD` and `E2E_ADMIN_PASSWORD` to the same fixture value
 When either capture env is set, the server writes the URL to that file and does **not** call Resend (logs a warning if a Resend key is also present). Default CI sets both capture paths and does not set Resend.
 
 **Operator pitfall:** do not export `E2E_INVITE_FILE` / `E2E_RESET_FILE` in a long-lived `npm run dev` shell if you expect real inbox delivery — restart `make dev` / `npm run dev` without those vars so Resend runs.
+
+## Keys at rest (KEYS-01)
+
+- Env: `KEYS_ENCRYPTION_KEY` — 64 hex chars or 32-byte base64.
+- Format stored in DB: `v1:<iv_b64url>:<tag_b64url>:<ciphertext_b64url>` (AES-256-GCM).
+- CI / Playwright inject a fixture key; local `.env.local` must set the same (or another) secret or create/list of encrypted rows will fail closed.
+- Plaintext leaves the server only for authenticated Keys UI (and later `sdd_get_key`).

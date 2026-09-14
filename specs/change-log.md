@@ -9,6 +9,14 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-14
 
+### Sprint 3 — KEYS-01 (awaiting usability confirm)
+
+- AES-256-GCM at-rest encryption (`KEYS_ENCRYPTION_KEY`); payload `v1:iv:tag:ciphertext`.
+- BFF: `GET/POST /api/admin/keys`, `GET/PATCH/DELETE /api/admin/keys/[id]`, bulk `POST /api/admin/keys/delete`.
+- UI: list wired to DB; `/admin/keys/new` and `/admin/keys/[id]` with RHF + Zod; Copy / Edit / Delete / bulk delete; `?saved=1` tip.
+- CI + Playwright set fixture `KEYS_ENCRYPTION_KEY`; unit/integration/E2E green.
+- MCP `sdd_get_key` remains Sprint 5.
+
 ### MVP-2 closed (Sprint 2)
 
 - Operator confirmed accounts management (invite / accept / list / delete) **usable** (DoD).

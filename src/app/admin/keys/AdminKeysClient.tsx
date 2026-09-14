@@ -3,18 +3,23 @@
 import { useCallback, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
-import { KeysList } from "@/components/features/KeysList";
+import { KeysList, type KeyRow } from "@/components/features/KeysList";
 import type { Locale } from "@/i18n/t";
 
 export function AdminKeysClient({
   initialLocale,
   name,
+  initialKeys,
+  showSaved = false,
 }: {
   initialLocale: Locale;
   name: string;
+  initialKeys: KeyRow[];
+  showSaved?: boolean;
 }) {
   const router = useRouter();
   const [locale, setLocale] = useState(initialLocale);
+  const [keys, setKeys] = useState(initialKeys);
   const [, startTransition] = useTransition();
 
   const onLocaleChange = useCallback((next: Locale) => {
@@ -34,6 +39,20 @@ export function AdminKeysClient({
     router.refresh();
   }, [router]);
 
+  const onDeleteSelected = useCallback(
+    async (ids: string[]) => {
+      const res = await fetch("/api/admin/keys/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
+      if (!res.ok) return;
+      setKeys((prev) => prev.filter((k) => !ids.includes(k.id)));
+      router.refresh();
+    },
+    [router],
+  );
+
   return (
     <AppShell
       locale={locale}
@@ -45,10 +64,9 @@ export function AdminKeysClient({
     >
       <KeysList
         locale={locale}
-        keys={[]}
-        onDeleteSelected={async () => {
-          /* Sprint 3 */
-        }}
+        keys={keys}
+        showSaved={showSaved}
+        onDeleteSelected={onDeleteSelected}
       />
     </AppShell>
   );

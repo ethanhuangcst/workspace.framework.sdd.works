@@ -1,6 +1,7 @@
 # Sprint 3 Plan — MVP-3: Keys management
 
-**Batch:** MVP-3 · **Status:** ToDo  
+**Batch:** MVP-3 · **Status:** Ready for confirm  
+**Updated:** 2026-09-14  
 **Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
 
 ## Goal
@@ -9,13 +10,13 @@ An admin can create, view, edit, and delete keys (name, description, value); lis
 
 ## In scope
 
-| Feature | Name | Stories |
-| --- | --- | --- |
-| KEYS-01 | Keys CRUD | [keys](./admin-portal/app-stories.md#sdd-admin-keys) |
+| Feature | Name | Stories | Status |
+| --- | --- | --- | --- |
+| KEYS-01 | Keys CRUD | [keys](./admin-portal/app-stories.md#sdd-admin-keys) | **Ready for confirm** |
 
 ## Delivery order
 
-1. KEYS-01 — create / list / edit / delete; Copy action; encrypt at rest with `KEYS_ENCRYPTION_KEY`; no regenerate
+1. KEYS-01 — create / list / edit / delete; Copy action; encrypt at rest with `KEYS_ENCRYPTION_KEY`; no regenerate — **implemented; awaiting operator usability confirm**
 
 ## Dependencies
 
@@ -29,10 +30,10 @@ An admin can create, view, edit, and delete keys (name, description, value); lis
 
 ## Exit criteria (DoD)
 
-- [ ] CRUD works; unique English `key_name`; list shows name, description, value
-- [ ] Values only on authenticated Keys pages; never in logs or unauthenticated responses
-- [ ] RHF + Zod validation; CSRF-safe mutations
-- [ ] Unit/integration on key store + E2E Keys journey
+- [x] CRUD works; unique English `key_name`; list shows name, description, value
+- [x] Values only on authenticated Keys pages; never in logs or unauthenticated responses
+- [x] RHF + Zod validation; CSRF-safe mutations
+- [x] Unit/integration on key store + E2E Keys journey
 - [ ] User confirms Keys page is usable
 
 ## Design / mockups

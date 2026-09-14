@@ -91,7 +91,7 @@ export function KeysList({
         <Callout variant="success">{t(locale, "admin.keys.saved")}</Callout>
       ) : null}
       <div className="table-wrap" data-keys-table>
-        <table>
+        <table data-testid="keys-table">
           <thead>
             <tr>
               <th className="table-check">
@@ -111,7 +111,7 @@ export function KeysList({
           </thead>
           <tbody>
             {keys.map((row) => (
-              <tr key={row.id}>
+              <tr key={row.id} data-testid={`key-row-${row.name}`}>
                 <td className="table-check">
                   <input
                     type="checkbox"
@@ -138,10 +138,13 @@ export function KeysList({
                       label={t(locale, "admin.keys.copy_list")}
                       copiedLabel={t(locale, "admin.common.copied")}
                     />
-                    <a href={`/admin/keys/${row.id}`}>
+                    <a href={`/admin/keys/${row.id}`} data-testid={`key-edit-${row.id}`}>
                       {t(locale, "admin.keys.edit")}
                     </a>
-                    <a href={`/admin/keys/${row.id}?confirm=delete`}>
+                    <a
+                      href={`/admin/keys/${row.id}?confirm=delete`}
+                      data-testid={`key-delete-link-${row.id}`}
+                    >
                       {t(locale, "admin.keys.delete")}
                     </a>
                   </div>
