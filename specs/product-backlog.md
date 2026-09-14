@@ -35,7 +35,7 @@ Change log: [`change-log.md`](./change-log.md).
 | 05 | Admin Portal | ACCT | ACCT-01 | Admin login | Email + password login; httpOnly secure session cookie; rate-limited; CSRF-safe | [ACCT-01](./admin-portal/app-stories.md#sdd-admin-login) | MVP-1 | Done |
 | 06 | Admin Portal | ACCT | ACCT-02 | Password reset | Request reset by email; Resend transactional mail; hashed, expiring reset token; rate-limited | [ACCT-02](./admin-portal/app-stories.md#sdd-admin-password-reset) | MVP-1 | Done |
 | 06a | Admin Portal | SEED | SEED-01 | Default admin from env | Seed `me@ethanhuang.com` / `admin` with password from `ADMIN_SEED_PASSWORD`; fail if unset | [SEED-01](./admin-portal/app-stories.md#sdd-admin-seed) | MVP-2 | Done |
-| 07 | Admin Portal | ACCT | ACCT-03 | Admin account management | Create / view / update / deactivate admin accounts (first admin seeded) | [ACCT-03](./admin-portal/app-stories.md#sdd-admin-accounts) | MVP-2 | ToDo |
+| 07 | Admin Portal | ACCT | ACCT-03 | Admin account management | Invite by email, list ACTIVE admins + pending invites, delete with confirm (not self / not last admin); soft-deactivate deferred | [ACCT-03](./admin-portal/app-stories.md#sdd-admin-accounts) | MVP-2 | Done |
 | 08 | Admin Portal | KEYS | KEYS-01 | Keys CRUD | Create / view / edit / delete keys (`key_id`, English unique `key_name`, `key_description`, `key_value`); list shows name, description, value; Copy / Edit / Delete — no regenerate | [KEYS-01](./admin-portal/app-stories.md#sdd-admin-keys) | MVP-3 | ToDo |
 | 09 | Admin Portal | SETT | SETT-01 | GitHub repository URL | View / save one GitHub repository URL; Save enabled only when dirty; verify reachability before persist | [SETT-01](./admin-portal/app-stories.md#sdd-admin-settings) | MVP-4 | ToDo |
 | 10 | Admin Portal | FRMW | FRMW-01 | Framework live view | Read-only, near-real-time GitHub tree/file view from the Settings URL; poll or webhook + short cache; sync error shown | [FRMW-01](./admin-portal/app-stories.md#sdd-admin-framework) | MVP-4 | ToDo |
@@ -58,7 +58,7 @@ Change log: [`change-log.md`](./change-log.md).
 | Batch | Theme | Business closure (what an end user can do and verify) | Features | Sprint plan |
 | --- | --- | --- | --- | --- |
 | MVP-1 | Portal foundation + admin auth + path-map foundation | An operator can run the portal locally, log in as a seeded admin, reset a forgotten password by email; the versioned client path map and resolver exist as the architecture foundation for install/update | INF-01, INF-02, INF-03, PATH-01, I18N-01, ACCT-01, ACCT-02 | [sprint1-plan.md](./sprint1-plan.md) |
-| MVP-2 | Account management | Default admin is seeded from env; an admin can manage other admin accounts (create, view, update, deactivate) end-to-end in the portal | SEED-01, ACCT-03 | [sprint2-plan.md](./sprint2-plan.md) |
+| MVP-2 | Account management | Default admin is seeded from env; an admin can invite, list, and delete other admins (and pending invites) end-to-end in the portal | SEED-01, ACCT-03 | [sprint2-plan.md](./sprint2-plan.md) |
 | MVP-3 | Keys management | An admin can create, view, edit, and delete keys (name, description, value); list shows all three; values are protected at rest and never appear unauthenticated | KEYS-01 | [sprint3-plan.md](./sprint3-plan.md) |
 | MVP-4 | Settings + framework live view | An admin can configure one GitHub repo URL and see a read-only, near-real-time view of the framework repository in the portal | SETT-01, FRMW-01 | [sprint4-plan.md](./sprint4-plan.md) |
 | MVP-5 | MCP server + discovery + key lookup | A supported MCP client can connect (stdio and HTTP), list framework versions, and resolve a key value via `sdd_get_key` with auth | TRAN-01, TRAN-02, MCPL-01, MCPK-01 | [sprint5-plan.md](./sprint5-plan.md) |
@@ -130,10 +130,10 @@ Notes:
 
 ### ACCT-03 — Admin account management
 
-- **Detail.** First admin seeded via **SEED-01**. Authenticated admin can create, view, update, and deactivate other admin accounts. Deactivation is reversible; delete is hard-delete only with confirmation. Authorization enforced server-side; UI hiding is not the control.
+- **Detail.** First admin seeded via **SEED-01**. Authenticated admin invites by email (Resend + `/accept-invite`), lists ACTIVE admins and pending unused invites, and deletes another admin or pending invite after confirm. Cannot delete self or the last ACTIVE admin (BFF enforced). Soft-deactivate UI is deferred (`DEACTIVATED` unused in v1). Authorization enforced server-side; UI hiding is not the control.
 - **Dependencies.** ACCT-01, INF-02, I18N-01, SEED-01.
-- **User stories & AC.** [ACCT-03](./admin-portal/app-stories.md#sdd-admin-accounts)
-- **UI design & mockup.** [design.md — accounts page](./design.md#acct-03)
+- **User stories & AC.** [invite](./admin-portal/app-stories.md#sdd-admin-invite) · [accounts](./admin-portal/app-stories.md#sdd-admin-accounts)
+- **UI design & mockup.** [app-design.md](./admin-portal/app-design.md) · [10-admins](./admin-portal/ui-mockup/10-admins.html) · [05-accept-invite](./admin-portal/ui-mockup/05-accept-invite.html)
 
 ### KEYS-01 — Keys CRUD
 

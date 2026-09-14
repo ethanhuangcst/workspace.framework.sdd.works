@@ -293,7 +293,7 @@ Scenario: Expired or used invite token
 
 ## `sdd-admin-accounts` — Admin accounts
 
-List / deactivate / delete. Cannot delete self or last admin. (ACCT-03)
+List ACTIVE admins + pending invites; delete with confirm. Cannot delete self or last ACTIVE admin. Soft-deactivate UI deferred. (ACCT-03)
 
 ### User story 1 — List admins
 
@@ -312,10 +312,10 @@ Scenario: Signed-in admin sees the accounts list
   And each row includes email and status
 ```
 
-### User story 2 — Deactivate or delete another admin
+### User story 2 — Delete another admin or pending invite
 
 **As an** admin
-**I want** to deactivate or delete another admin after confirm
+**I want** to delete another admin or a pending invite after confirm
 **So that** access can be revoked
 
 #### AC1

@@ -87,7 +87,14 @@ export async function POST(request: NextRequest) {
     request.cookies.get("sdd_locale")?.value,
   );
 
+  // Playwright / CI fixture capture wins over live mail (do not export
+  // E2E_INVITE_FILE in a long-lived operator `npm run dev` shell).
   if (process.env.E2E_INVITE_FILE) {
+    if (process.env.RESEND_API_KEY) {
+      console.warn(
+        "[mail] E2E_INVITE_FILE is set; skipping Resend and writing invite URL to the capture file",
+      );
+    }
     await writeFile(process.env.E2E_INVITE_FILE, inviteUrl, "utf8");
   } else if (process.env.RESEND_API_KEY && process.env.MAIL_FROM) {
     const sent = await sendInviteMail({ to: email, locale, inviteUrl });

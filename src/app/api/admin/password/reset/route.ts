@@ -67,6 +67,11 @@ export async function POST(request: NextRequest) {
     );
 
     if (process.env.E2E_RESET_FILE) {
+      if (process.env.RESEND_API_KEY) {
+        console.warn(
+          "[mail] E2E_RESET_FILE is set; skipping Resend and writing reset URL to the capture file",
+        );
+      }
       await writeFile(process.env.E2E_RESET_FILE, setUrl, "utf8");
     } else if (process.env.RESEND_API_KEY && process.env.MAIL_FROM) {
       const sent = await sendResetMail({ to: email, locale, setUrl });

@@ -33,7 +33,9 @@ CI sets `ADMIN_SEED_PASSWORD` and `E2E_ADMIN_PASSWORD` to the same fixture value
 
 | Capture env | Purpose |
 | --- | --- |
-| `E2E_RESET_FILE` | Password-reset link (instead of live Resend) |
-| `E2E_INVITE_FILE` | Admin-invite accept URL (instead of live Resend) |
+| `E2E_RESET_FILE` | Password-reset link (Playwright fixture; **skips** Resend) |
+| `E2E_INVITE_FILE` | Admin-invite accept URL (Playwright fixture; **skips** Resend) |
 
-Both paths write the absolute URL into the file when the env is set. Local Playwright `webServer.env` and `.github/workflows/ci.yml` should set both. Prefer fixture capture in default CI; live Resend only in opt-in jobs.
+When either capture env is set, the server writes the URL to that file and does **not** call Resend (logs a warning if a Resend key is also present). Default CI sets both capture paths and does not set Resend.
+
+**Operator pitfall:** do not export `E2E_INVITE_FILE` / `E2E_RESET_FILE` in a long-lived `npm run dev` shell if you expect real inbox delivery — restart `make dev` / `npm run dev` without those vars so Resend runs.

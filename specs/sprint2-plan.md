@@ -1,7 +1,8 @@
 # Sprint 2 Plan — MVP-2: Account management
 
-**Batch:** MVP-2 · **Status:** Ready for confirm  
+**Batch:** MVP-2 · **Status:** Done  
 **Updated:** 2026-09-14  
+**Accepted:** 2026-09-14 (operator confirmed usable)  
 **Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
 
 ## Goal
@@ -12,20 +13,20 @@ Default admin is seeded from env with a real password; an authenticated admin ca
 
 | Feature | Name | Stories | Status |
 | --- | --- | --- | --- |
-| SEED-01 | Default admin from env | [seed](./admin-portal/app-stories.md#sdd-admin-seed) | **Done** — seed hashes `ADMIN_SEED_PASSWORD`; fails if unset |
-| ACCT-03 | Admin account management | [invite](./admin-portal/app-stories.md#sdd-admin-invite) · [accounts](./admin-portal/app-stories.md#sdd-admin-accounts) | **Ready for confirm** — invite + list + delete (not self / not last admin); no deactivate UI in v1 |
+| SEED-01 | Default admin from env | [seed](./admin-portal/app-stories.md#sdd-admin-seed) | **Done** |
+| ACCT-03 | Admin account management | [invite](./admin-portal/app-stories.md#sdd-admin-invite) · [accounts](./admin-portal/app-stories.md#sdd-admin-accounts) | **Done** — invite + list + delete (not self / not last admin); no deactivate UI in v1 |
 
 ## Delivery order (one story at a time)
 
 1. **SEED-01** — seed `me@ethanhuang.com` / `admin` with password from `ADMIN_SEED_PASSWORD` — **done**
-2. **ACCT-03** — invite by email → `/accept-invite` → list ACTIVE admins + pending invites → delete with confirm — **implemented; awaiting operator usability confirm**
+2. **ACCT-03** — invite by email → `/accept-invite` → list ACTIVE admins + pending invites → delete with confirm — **done**
 
 ## Dependencies
 
 - **Requires Sprint 1** (INF-02, ACCT-01, I18N-01) — Done.
 - Operator sets `ADMIN_SEED_PASSWORD` in `.env.local` / Portainer (`protect-eng`).
 - Seed fails closed if `ADMIN_SEED_PASSWORD` is missing or blank.
-- Invite mail: Resend in prod; fixture capture via `E2E_INVITE_FILE` in CI/local E2E.
+- Invite mail: Resend when configured; Playwright/CI uses `E2E_INVITE_FILE` capture (skips Resend).
 
 ## Out of scope this sprint
 
@@ -42,7 +43,7 @@ Default admin is seeded from env with a real password; an authenticated admin ca
 - [x] Cannot delete self or the last ACTIVE admin (BFF enforced)
 - [x] Authorization enforced on BFF; UI hiding is not the control
 - [x] i18n keys for all new UI; E2E covers seed login + invite (mail capture) + accept + list + delete + cannot delete self
-- [ ] User confirms accounts management (and seed login) is usable
+- [x] User confirms accounts management (and seed login) is usable
 
 ## Design / mockups
 
