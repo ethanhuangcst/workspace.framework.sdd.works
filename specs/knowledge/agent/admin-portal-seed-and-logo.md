@@ -59,5 +59,7 @@ When either capture env is set, the server writes the URL to that file and does 
 - Env: `GITHUB_TOKEN` (contents:read) + optional `GITHUB_API_BASE_URL`; **never** expose to the browser.
 - CI / Playwright: set `GITHUB_FIXTURE=1` so `src/github/sync.ts` uses an in-process fixture port (reachable: `fixture/sdd-framework`; unreachable: `fixture/missing`).
 - Tests may also call `setGitHubPortForTests(...)`.
+- Owner `fixture` always uses the fixture port (even with a real token) so E2E leftover Settings URLs do not 404 against api.github.com.
 - Freshness: in-memory tree cache ~30s; Framework UI polls `GET /api/admin/framework` every 30s. Webhooks not wired yet.
 - Saving Settings clears the tree cache so the next Framework load refetches.
+- For live demos, save a real `https://github.com/{owner}/{repo}` the token can read — not the fixture URL.

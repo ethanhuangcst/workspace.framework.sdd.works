@@ -166,6 +166,18 @@ function createOctokitPort(): GitHubPort {
         );
       } catch (error) {
         if (error instanceof GitHubSyncError) throw error;
+        const status =
+          error &&
+          typeof error === "object" &&
+          "status" in error &&
+          typeof (error as { status: unknown }).status === "number"
+            ? (error as { status: number }).status
+            : undefined;
+        if (status === 404) {
+          throw new GitHubSyncError(
+            `Repository ${owner}/${repo} was not found with the configured token`,
+          );
+        }
         throw new GitHubSyncError(
           error instanceof Error ? error.message : "GitHub sync failed",
         );
@@ -188,18 +200,30 @@ export function getGitHubPort(): GitHubPort {
   return createOctokitPort();
 }
 
+/**
+ * Prefer the in-process fixture for `fixture/*` repos so E2E leftover URLs
+ * do not hit api.github.com when a real token is configured.
+ */
+export function getGitHubPortForRepo(owner: string): GitHubPort {
+  if (overridePort) return overridePort;
+  if (process.env.GITHUB_FIXTURE === "1" || owner === "fixture") {
+    return createFixtureGitHubPort();
+  }
+  return createOctokitPort();
+}
+
 export async function checkRepoAccessible(
   owner: string,
   repo: string,
 ): Promise<boolean> {
-  return getGitHubPort().checkRepoAccessible(owner, repo);
+  return getGitHubPortForRepo(owner).checkRepoAccessible(owner, repo);
 }
 
 export async function fetchRepoTree(
   owner: string,
   repo: string,
 ): Promise<TreeNode[]> {
-  return getGitHubPort().fetchRepoTree(owner, repo);
+  return getGitHubPortForRepo(owner).fetchRepoTree(owner, repo);
 }
 
 type CacheEntry = {

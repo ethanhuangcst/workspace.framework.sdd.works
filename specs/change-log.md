@@ -9,7 +9,14 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-14
 
-### Sprint 4 — SETT-01 + FRMW-01 (awaiting usability confirm)
+### MVP-4 closed (Sprint 4)
+
+- Operator confirmed Settings + Framework **usable** (DoD).
+- Features **Done**: SETT-01, FRMW-01.
+- Follow-up: `fixture/*` owner uses in-process GitHub fixture even when `GITHUB_TOKEN` is set (avoids E2E leftover URL 404s).
+- Knowledge: GitHub fixture notes in [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md). No new ADR.
+
+### Sprint 4 — SETT-01 + FRMW-01
 
 - Settings: dirty Save; validate `https://github.com/{owner}/{repo}`; reachability via injectable GitHub port; persist singleton `Setting.githubUrl` only on success.
 - Framework: read-only tree; 30s server TTL cache + 30s client poll; empty → Settings CTA; sync error keeps shell.

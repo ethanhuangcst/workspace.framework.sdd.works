@@ -40,6 +40,15 @@ describe("fixture GitHub port", () => {
     expect(tree.some((n) => n.name === "skills/")).toBe(true);
   });
 
+  it("should_route_fixture_owner_to_fixture_port_without_env", async () => {
+    delete process.env.GITHUB_FIXTURE;
+    const { getGitHubPortForRepo } = await import("./sync");
+    const port = getGitHubPortForRepo("fixture");
+    expect(await port.checkRepoAccessible("fixture", "sdd-framework")).toBe(
+      true,
+    );
+  });
+
   it("should_cache_tree_for_ttl", async () => {
     setGitHubPortForTests(createFixtureGitHubPort());
     const first = await fetchRepoTreeCached("fixture", "sdd-framework", 1_000);
