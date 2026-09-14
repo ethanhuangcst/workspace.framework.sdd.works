@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://framework.sdd.works/schemas/paths.json",
+  "title": "SDD client path map",
+  "type": "object",
+  "required": ["version", "updated_at", "clients"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "updated_at": { "type": "string", "minLength": 1 },
+    "clients": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["default"],
+        "properties": {
+          "default": { "$ref": "#/$defs/roots" },
+          "darwin": { "$ref": "#/$defs/roots" },
+          "linux": { "$ref": "#/$defs/roots" },
+          "win32": { "$ref": "#/$defs/roots" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "roots": {
+      "type": "object",
+      "required": ["skills", "rules", "other"],
+      "additionalProperties": false,
+      "properties": {
+        "skills": { "type": "string", "minLength": 1 },
+        "rules": { "type": "string", "minLength": 1 },
+        "other": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

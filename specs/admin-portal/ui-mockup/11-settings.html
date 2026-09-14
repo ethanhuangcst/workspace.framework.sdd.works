@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>framework.sdd.works</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+    <link rel="stylesheet" href="assets/mockup.css" />
+  </head>
+  <body class="app-shell" data-title-key="admin.settings.title">
+    <a class="sr-only" href="#content" data-i18n="admin.a11y.skip">Skip to content</a>
+    <header class="app-header">
+      <a class="logo" href="06-keys.html" aria-label="framework.sdd.works">
+        <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="234" height="130" />
+      </a>
+      <button type="button" class="menu-toggle" data-i18n="admin.nav.menu">Menu</button>
+      <div class="header-end">
+        <a class="header-guide" href="13-instructions.html" data-i18n="admin.landing.instructions_link" target="_blank" rel="noopener noreferrer">MCP instructions</a>
+        <p class="hello" data-i18n="admin.landing.hello" data-i18n-vars='{"name":"admin"}'>Hello, admin</p>
+        <div class="locale-switch" role="group" data-i18n="admin.a11y.locale" data-i18n-attr="aria-label">
+          <button type="button" data-locale="EN">EN</button>
+          <button type="button" data-locale="CN">简</button>
+          <button type="button" data-locale="HANT">繁</button>
+        </div>
+      </div>
+    </header>
+    <div class="app-body">
+      <aside class="sidebar">
+        <nav class="nav">
+          <a href="06-keys.html" data-i18n="admin.nav.keys">Keys</a>
+          <a href="12-framework.html" data-i18n="admin.nav.framework">Framework</a>
+          <a class="active" href="11-settings.html" data-i18n="admin.nav.settings">Settings</a>
+          <a href="10-admins.html" data-i18n="admin.nav.admins">Admins</a>
+          <a class="nav-signout" href="01-home.html" data-i18n="admin.nav.sign_out">Sign out</a>
+        </nav>
+      </aside>
+      <main id="content" class="content">
+        <div class="page-head">
+          <p class="eyebrow" data-i18n="admin.settings.eyebrow">GitHub</p>
+          <h1 data-i18n="admin.settings.title">Settings</h1>
+          <p data-i18n="admin.settings.lead">One repository URL for the read-only framework sync.</p>
+        </div>
+        <div class="callout callout-success" data-settings-saved hidden>
+          <p class="callout-body" data-i18n="admin.settings.saved">Repository URL verified and saved. The framework view will use this link.</p>
+        </div>
+        <div class="callout callout-error" data-settings-error hidden>
+          <p class="callout-body" data-i18n="errors.settings_url_unreachable">GitHub repository could not be reached. The URL was not changed.</p>
+        </div>
+        <form class="form" data-settings-form style="max-width: 32rem">
+          <label>
+            <span data-i18n="admin.settings.url">Repository URL</span>
+            <input
+              type="url"
+              name="url"
+              data-settings-url
+              data-testid="settings-url"
+              required
+              placeholder="https://github.com/org/sdd-framework"
+              value="https://github.com/org/sdd-framework"
+            />
+          </label>
+          <p class="field-note" data-i18n="admin.settings.url_hint">Save stays disabled until the URL changes. On save, the server checks that the repository is reachable.</p>
+          <div class="form-actions">
+            <button
+              class="btn"
+              type="submit"
+              data-settings-save
+              data-testid="settings-save"
+              data-i18n="admin.settings.save"
+              disabled
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+    <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>
+    <script src="assets/i18n.js"></script>
+    <script src="assets/mockup.js"></script>
+  </body>
+</html>

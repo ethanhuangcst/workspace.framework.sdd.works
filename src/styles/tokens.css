@@ -1,0 +1,28 @@
+/* Design tokens — source of truth for portal UI.
+ * Keep in sync with specs/admin-portal/ui-mockup/assets/mockup.css :root.
+ * Imported by portal.css / globals.
+ */
+:root {
+  --bg: #fafafa;
+  --bg-elevated: #fff;
+  --ink: #0a0a0a;
+  --ink-2: #1f1f1f;
+  --mute: #525252;
+  --mute-soft: #6b6b6b;
+  --line: #e0e0e0;
+  --line-strong: #bdbdbd;
+  --fill: #f0f0f0;
+  --danger: #8b1a1a;
+  --radius: 0;
+  --control-h: 2.75rem;
+  --control-px: 1.25rem;
+  --control-border: 1.5px;
+  --btn-font-size: 0.8125rem;
+  --btn-tracking: 0.08em;
+  --btn-page-min: 10.5rem;
+  --font-ui: "Outfit", "Noto Sans SC", "Noto Sans TC", system-ui, sans-serif;
+  --font-cn: "Noto Sans SC", "Noto Sans TC", "Outfit", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --max: 760px;
+  --guide-max: 56rem;
+}

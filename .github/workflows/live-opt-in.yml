@@ -1,0 +1,11 @@
+name: Live opt-in
+
+on:
+  workflow_dispatch:
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Configure RESEND_API_KEY / GITHUB_TOKEN / QWEN_API_KEY secrets for live jobs."

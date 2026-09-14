@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "updated_at": "2026-09-14",
+  "clients": {
+    "cursor": {
+      "default": {
+        "skills": "~/.cursor/skills/",
+        "rules": "~/.cursor/rules/",
+        "other": "~/.cursor/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.cursor/skills/",
+        "rules": "~/.cursor/rules/",
+        "other": "~/.cursor/sdd/"
+      },
+      "linux": {
+        "skills": "~/.cursor/skills/",
+        "rules": "~/.cursor/rules/",
+        "other": "~/.cursor/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.cursor\\skills\\",
+        "rules": "%USERPROFILE%\\.cursor\\rules\\",
+        "other": "%USERPROFILE%\\.cursor\\sdd\\"
+      }
+    }
+  }
+}

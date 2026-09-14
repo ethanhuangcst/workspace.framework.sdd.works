@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>framework.sdd.works</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+    <link rel="stylesheet" href="assets/mockup.css" />
+  </head>
+  <body class="guide-shell" data-title-key="admin.guide.title">
+    <a class="sr-only" href="#content" data-i18n="admin.a11y.skip">Skip to content</a>
+    <header class="guide-header">
+      <a class="logo" href="01-home.html" aria-label="framework.sdd.works">
+        <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="234" height="130" />
+      </a>
+      <div class="header-end">
+        <a class="header-guide" href="01-home.html" data-i18n="admin.common.back_home">Back to home</a>
+        <div class="locale-switch" role="group" data-i18n="admin.a11y.locale" data-i18n-attr="aria-label">
+          <button type="button" data-locale="EN">EN</button>
+          <button type="button" data-locale="CN">简</button>
+          <button type="button" data-locale="HANT">繁</button>
+        </div>
+      </div>
+    </header>
+    <main id="content" class="guide-body">
+      <p class="eyebrow" data-i18n="admin.guide.eyebrow">Connect</p>
+      <h1 data-i18n="admin.guide.title">MCP instructions</h1>
+      <p class="lead" data-i18n="admin.guide.lead">How to call framework.sdd.works. The server id is framework.sdd.works. Callers send a bearer token. Key values come from sdd_get_key.</p>
+      <nav class="guide-toc">
+        <a href="#tools" data-i18n="admin.guide.toc_tools">1. Tools</a>
+        <a href="#stdio" data-i18n="admin.guide.toc_stdio">2. stdio</a>
+        <a href="#http" data-i18n="admin.guide.toc_http">3. Streamable HTTP</a>
+      </nav>
+      <section class="guide-section" id="tools">
+        <h2 data-i18n="admin.guide.h_tools">1. Tools</h2>
+        <p data-i18n="admin.guide.tools_intro">HTTP and stdio share the same core. Descriptions include failure modes.</p>
+        <div class="table-wrap">
+          <table class="guide-caps-table">
+            <thead>
+              <tr>
+                <th data-i18n="admin.guide.cap_col_tool">Tool</th>
+                <th data-i18n="admin.guide.cap_col_channel">Channel</th>
+                <th data-i18n="admin.guide.cap_col_body">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>sdd_list_versions</code></td>
+                <td data-i18n="admin.guide.cap_channel_both">stdio and HTTP</td>
+                <td>List package versions and inventory. Read-only.</td>
+              </tr>
+              <tr>
+                <td><code>sdd_get_key</code></td>
+                <td data-i18n="admin.guide.cap_channel_both">stdio and HTTP</td>
+                <td>Return plaintext key_value for key_name. Auth required.</td>
+              </tr>
+              <tr>
+                <td><code>sdd_install_framework</code></td>
+                <td data-i18n="admin.guide.cap_channel_stdio">stdio (local writes)</td>
+                <td>Install skills, rules, and other folders on the developer machine.</td>
+              </tr>
+              <tr>
+                <td><code>sdd_update_framework</code></td>
+                <td data-i18n="admin.guide.cap_channel_stdio">stdio (local writes)</td>
+                <td>Update an existing install. Same version is idempotent.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="guide-section" id="stdio">
+        <h2 data-i18n="admin.guide.h_stdio">2. stdio</h2>
+        <p data-i18n="admin.guide.stdio_body">Local desktop clients (Cursor, Claude Code, VS Code) run the stdio binary. Install and update write the caller’s skill and rule paths.</p>
+      </section>
+      <section class="guide-section" id="http">
+        <h2 data-i18n="admin.guide.h_http">3. Streamable HTTP</h2>
+        <p data-i18n="admin.guide.http_body">Remote clients use https://framework.sdd.works/mcp with Authorization: Bearer. HTTP install does not write the server disk.</p>
+      </section>
+    </main>
+    <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>
+    <script src="assets/i18n.js"></script>
+    <script src="assets/mockup.js"></script>
+  </body>
+</html>

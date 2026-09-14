@@ -1,0 +1,4 @@
+/* App entry stylesheet. Font @import must come first (CSS rule). */
+@import "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap";
+@import "tailwindcss";
+@import "./portal.css";

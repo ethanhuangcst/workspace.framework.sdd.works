@@ -1,0 +1,11 @@
+{
+  "name": "@sdd/paths",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./resolver.ts",
+  "exports": {
+    ".": "./resolver.ts",
+    "./paths.json": "./paths.json"
+  }
+}

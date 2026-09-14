@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>framework.sdd.works</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+    <link rel="stylesheet" href="assets/mockup.css" />
+  </head>
+  <body class="home-shell">
+    <a class="sr-only" href="#content" data-i18n="admin.a11y.skip">Skip to content</a>
+    <div class="shell-locale">
+      <div class="locale-switch" role="group" data-i18n="admin.a11y.locale" data-i18n-attr="aria-label">
+        <button type="button" data-locale="EN">EN</button>
+        <button type="button" data-locale="CN">简</button>
+        <button type="button" data-locale="HANT">繁</button>
+      </div>
+    </div>
+    <main id="content" class="home-main">
+      <div class="home-card">
+        <div class="logo logo-home" aria-label="framework.sdd.works">
+          <img class="logo-full" src="assets/sdd-logo.png" alt="" width="360" height="200" />
+        </div>
+        <p class="tagline" data-i18n="admin.home.tagline">SDD framework for IDEs and agents. Install, update, and resolve keys over MCP.</p>
+        <div class="home-actions">
+          <a class="home-link" href="13-instructions.html" data-i18n="admin.home.instructions_link" data-testid="admin-home-instructions" target="_blank" rel="noopener noreferrer">MCP instructions</a>
+          <a class="btn btn-page" href="02-login.html" data-i18n="admin.home.login" data-testid="admin-login">Sign in</a>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>
+    <script src="assets/i18n.js"></script>
+    <script src="assets/mockup.js"></script>
+  </body>
+</html>

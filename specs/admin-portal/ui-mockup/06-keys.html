@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>framework.sdd.works</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+    <link rel="stylesheet" href="assets/mockup.css" />
+  </head>
+  <body class="app-shell" data-title-key="admin.keys.title">
+    <a class="sr-only" href="#content" data-i18n="admin.a11y.skip">Skip to content</a>
+    <header class="app-header">
+      <a class="logo" href="06-keys.html" aria-label="framework.sdd.works">
+        <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="234" height="130" />
+      </a>
+      <button type="button" class="menu-toggle" data-i18n="admin.nav.menu">Menu</button>
+      <div class="header-end">
+        <a class="header-guide" href="13-instructions.html" data-i18n="admin.landing.instructions_link" data-testid="landing-instructions" target="_blank" rel="noopener noreferrer">MCP instructions</a>
+        <p class="hello" data-i18n="admin.landing.hello" data-i18n-vars='{"name":"admin"}'>Hello, admin</p>
+        <div class="locale-switch" role="group" data-i18n="admin.a11y.locale" data-i18n-attr="aria-label">
+          <button type="button" data-locale="EN">EN</button>
+          <button type="button" data-locale="CN">简</button>
+          <button type="button" data-locale="HANT">繁</button>
+        </div>
+      </div>
+    </header>
+    <div class="app-body">
+      <aside class="sidebar">
+        <nav class="nav">
+          <a class="active" href="06-keys.html" data-i18n="admin.nav.keys">Keys</a>
+          <a href="12-framework.html" data-i18n="admin.nav.framework">Framework</a>
+          <a href="11-settings.html" data-i18n="admin.nav.settings">Settings</a>
+          <a href="10-admins.html" data-i18n="admin.nav.admins">Admins</a>
+          <a class="nav-signout" href="01-home.html" data-i18n="admin.nav.sign_out">Sign out</a>
+        </nav>
+      </aside>
+      <main id="content" class="content content--keys">
+        <div class="page-head">
+          <p class="eyebrow" data-i18n="admin.keys.eyebrow">KEY STORE</p>
+          <div class="page-head-row">
+            <p class="page-head-lead" data-i18n="admin.keys.lead">Named values for sdd_get_key. Callers look up by key_name; the store returns key_value in plaintext.</p>
+            <div class="page-head-actions">
+              <a class="btn btn-page" href="07-key-new.html" data-i18n="admin.keys.issue" data-testid="issue-key">Add key</a>
+              <button type="button" class="btn btn-page" data-i18n="admin.keys.bulk_delete" data-testid="keys-delete-selected" disabled>Bulk delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="callout callout-success" data-keys-saved hidden>
+          <p class="callout-body" data-i18n="admin.keys.saved">Key saved.</p>
+        </div>
+        <div class="table-wrap" data-keys-table>
+          <table>
+            <thead>
+              <tr>
+                <th class="table-check">
+                  <input type="checkbox" data-testid="keys-select-all" data-i18n="admin.keys.select_all" data-i18n-attr="aria-label" aria-label="Select all keys" />
+                </th>
+                <th data-i18n="admin.keys.col_name">Name</th>
+                <th data-i18n="admin.keys.col_description">Description</th>
+                <th data-i18n="admin.keys.col_value">Key</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="table-check"><input type="checkbox" data-testid="keys-select-cursor-prod" /></td>
+                <td class="mono">cursor-prod</td>
+                <td>Cursor MCP — Anthropic API</td>
+                <td>
+                  <span class="key-value-cell" title="sk-ant-api03-7f3e9c0d4b18e2a6examplelongtokenvalue">sk-ant-api03-7f3e9c0d4b18e2a6examplelongtokenvalue</span>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" data-copy="sk-ant-api03-7f3e9c0d4b18e2a6examplelongtokenvalue" data-i18n="admin.keys.copy_list" data-testid="keys-copy-cursor-prod">Copy</button>
+                    <a href="09-key-edit.html" data-i18n="admin.keys.edit">Edit</a>
+                    <a href="09-key-edit.html?confirm=delete" data-i18n="admin.keys.delete">Delete</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="table-check"><input type="checkbox" /></td>
+                <td class="mono">openai-lab</td>
+                <td>Lab OpenAI key for demos</td>
+                <td>
+                  <span class="key-value-cell" title="sk-proj-52d4e6f8a0b1c2d3examplelongtokenvalue">sk-proj-52d4e6f8a0b1c2d3examplelongtokenvalue</span>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" data-copy="sk-proj-52d4e6f8a0b1c2d3examplelongtokenvalue" data-i18n="admin.keys.copy_list">Copy</button>
+                    <a href="09-key-edit.html" data-i18n="admin.keys.edit">Edit</a>
+                    <a href="09-key-edit.html?confirm=delete" data-i18n="admin.keys.delete">Delete</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="empty" data-keys-empty hidden>
+          <p data-i18n="admin.keys.empty">No keys yet. Add one for MCP callers.</p>
+        </div>
+      </main>
+    </div>
+    <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>
+    <div class="dialog-backdrop" id="dialog-delete-selected" role="dialog" aria-modal="true">
+      <div class="dialog">
+        <h2 class="dialog-title" data-i18n="admin.keys.delete_selected_title">Delete selected keys?</h2>
+        <p class="dialog-body" data-i18n="admin.keys.delete_selected_body" data-i18n-vars='{"count":"0"}'>0 keys will stop working.</p>
+        <div class="dialog-actions">
+          <button type="button" class="btn" data-testid="keys-delete-selected-confirm" data-i18n="admin.keys.delete_selected_submit">Delete selected</button>
+          <button type="button" class="btn-text" data-close-dialog data-i18n="admin.common.cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <script src="assets/i18n.js"></script>
+    <script src="assets/mockup.js"></script>
+  </body>
+</html>

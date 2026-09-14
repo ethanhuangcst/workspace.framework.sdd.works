@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>framework.sdd.works</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+    <link rel="stylesheet" href="assets/mockup.css" />
+  </head>
+  <body class="app-shell" data-title-key="admin.keys.edit_title">
+    <a class="sr-only" href="#content" data-i18n="admin.a11y.skip">Skip to content</a>
+    <header class="app-header">
+      <a class="logo" href="06-keys.html" aria-label="framework.sdd.works">
+        <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="234" height="130" />
+      </a>
+      <button type="button" class="menu-toggle" data-i18n="admin.nav.menu">Menu</button>
+      <div class="header-end">
+        <a class="header-guide" href="13-instructions.html" data-i18n="admin.landing.instructions_link" target="_blank" rel="noopener noreferrer">MCP instructions</a>
+        <p class="hello" data-i18n="admin.landing.hello" data-i18n-vars='{"name":"admin"}'>Hello, admin</p>
+        <div class="locale-switch" role="group" data-i18n="admin.a11y.locale" data-i18n-attr="aria-label">
+          <button type="button" data-locale="EN">EN</button>
+          <button type="button" data-locale="CN">简</button>
+          <button type="button" data-locale="HANT">繁</button>
+        </div>
+      </div>
+    </header>
+    <div class="app-body">
+      <aside class="sidebar">
+        <nav class="nav">
+          <a class="active" href="06-keys.html" data-i18n="admin.nav.keys">Keys</a>
+          <a href="12-framework.html" data-i18n="admin.nav.framework">Framework</a>
+          <a href="11-settings.html" data-i18n="admin.nav.settings">Settings</a>
+          <a href="10-admins.html" data-i18n="admin.nav.admins">Admins</a>
+          <a class="nav-signout" href="01-home.html" data-i18n="admin.nav.sign_out">Sign out</a>
+        </nav>
+      </aside>
+      <main id="content" class="content">
+        <div class="page-head">
+          <p class="eyebrow" data-i18n="admin.keys.eyebrow">KEY STORE</p>
+          <h1 data-i18n="admin.keys.edit_title">Edit key</h1>
+          <p class="field-note" data-i18n="admin.keys.id_label" data-i18n-vars='{"id":"7f3e9c0d-4b18-4e2a-9c0d-4b18e2a6f001"}'>ID 7f3e9c0d-4b18-4e2a-9c0d-4b18e2a6f001</p>
+        </div>
+        <form class="form" action="06-keys.html?saved=1" style="max-width: 32rem">
+          <label>
+            <span data-i18n="admin.keys.name">Name</span>
+            <input
+              type="text"
+              name="name"
+              value="cursor-prod"
+              required
+              pattern="[A-Za-z][A-Za-z0-9_-]*"
+              data-testid="key-name"
+              autocomplete="off"
+            />
+            <span class="field-note" data-i18n="admin.keys.name_hint">English only: letters, digits, underscore, hyphen. Must be unique. Used by sdd_get_key.</span>
+          </label>
+          <label>
+            <span data-i18n="admin.keys.description">Description</span>
+            <input type="text" name="description" value="Cursor MCP — Anthropic API" data-testid="key-description" />
+          </label>
+          <label>
+            <span data-i18n="admin.keys.value">Key value</span>
+            <textarea name="value" required rows="4" data-testid="key-value" spellcheck="false">sk-ant-api03-7f3e9c0d4b18e2a6examplelongtokenvalue</textarea>
+          </label>
+          <div class="form-actions">
+            <button class="btn" type="submit" data-i18n="admin.common.save">Save</button>
+            <a class="btn-text" href="06-keys.html" data-i18n="admin.keys.back_list">Back to keys</a>
+          </div>
+        </form>
+        <div class="form-actions" style="max-width: 32rem; margin-top: 1.5rem">
+          <button type="button" class="btn-text" data-open-dialog="dialog-delete" data-i18n="admin.keys.delete">Delete</button>
+        </div>
+      </main>
+    </div>
+    <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>
+    <div class="dialog-backdrop" id="dialog-delete" role="dialog" aria-modal="true">
+      <div class="dialog">
+        <h2 class="dialog-title" data-i18n="admin.keys.delete_title">Delete this key?</h2>
+        <p class="dialog-body" data-i18n="admin.keys.delete_body">sdd_get_key for this name will return not_found.</p>
+        <div class="dialog-actions">
+          <a class="btn" href="06-keys.html" data-i18n="admin.keys.delete_submit">Delete</a>
+          <button type="button" class="btn-text" data-close-dialog data-i18n="admin.common.cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <script src="assets/i18n.js"></script>
+    <script src="assets/mockup.js"></script>
+  </body>
+</html>

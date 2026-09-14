@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: framework_sdd_pg
+    environment:
+      POSTGRES_USER: framework_sdd
+      POSTGRES_PASSWORD: framework_sdd
+      POSTGRES_DB: framework_sdd
+    ports:
+      - "5435:5432"
+    volumes:
+      - framework_sdd_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U framework_sdd -d framework_sdd"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  framework_sdd_pg_data:
