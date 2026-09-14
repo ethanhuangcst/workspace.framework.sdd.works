@@ -32,6 +32,8 @@ export default defineConfig({
         process.env.SESSION_SECRET ?? "ci-session-secret-at-least-16",
       PUBLIC_BASE_URL: process.env.PUBLIC_BASE_URL ?? "http://localhost:3040",
       E2E_RESET_FILE: process.env.E2E_RESET_FILE ?? "/tmp/sdd-reset-url.txt",
+      E2E_INVITE_FILE:
+        process.env.E2E_INVITE_FILE ?? "/tmp/sdd-invite-url.txt",
     },
   },
 });

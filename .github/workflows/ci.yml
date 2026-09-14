@@ -32,6 +32,7 @@ jobs:
       ADMIN_SEED_USERNAME: admin
       ADMIN_SEED_PASSWORD: Sprint1Pass!
       E2E_RESET_FILE: /tmp/sdd-reset-url.txt
+      E2E_INVITE_FILE: /tmp/sdd-invite-url.txt
       E2E_ADMIN_PASSWORD: Sprint1Pass!
 
     steps:

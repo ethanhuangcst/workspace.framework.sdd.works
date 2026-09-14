@@ -23,6 +23,7 @@ model Admin {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   resetTokens    ResetToken[]
+  invitesSent    InviteToken[] @relation("InvitedBy")
 }
 
 model ResetToken {
@@ -35,6 +36,20 @@ model ResetToken {
   createdAt DateTime  @default(now())
 
   @@index([adminId])
+}
+
+model InviteToken {
+  id         String    @id @default(cuid())
+  email      String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  invitedBy  String
+  inviter    Admin     @relation("InvitedBy", fields: [invitedBy], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+
+  @@index([email])
+  @@index([invitedBy])
 }
 
 model Key {

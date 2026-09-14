@@ -9,6 +9,14 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-14
 
+### Sprint 2 — ACCT-03 (awaiting usability confirm)
+
+- InviteToken model + migration; APIs: `GET/POST/DELETE` admin users, `GET/POST` invite accept.
+- UI: `/admin/accounts`, `/accept-invite` (mockup-aligned); i18n error keys for delete guards and invite conflicts.
+- E2E: `E2E_INVITE_FILE` capture (CI + Playwright webServer); invite → accept → list → delete other; expired token callout.
+- Soft-deactivate UI deferred (schema `DEACTIVATED` unused in v1).
+- Knowledge: invite/reset mail capture table in [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md). No new ADR (invite-only matches mockups/stories).
+
 ### Sprint 2 — SEED-01 (new requirement)
 
 - Default admin: email `me@ethanhuang.com`, username `admin`, password from **`ADMIN_SEED_PASSWORD`** in `.env.local` / Portainer (SEED-01).

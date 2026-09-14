@@ -29,4 +29,11 @@ Blank-password first-login bootstrap for the **default** admin is retired. Empty
 
 ## CI / E2E
 
-CI sets `ADMIN_SEED_PASSWORD` and `E2E_ADMIN_PASSWORD` to the same fixture value. Password reset uses `E2E_RESET_FILE` capture instead of live Resend.
+CI sets `ADMIN_SEED_PASSWORD` and `E2E_ADMIN_PASSWORD` to the same fixture value.
+
+| Capture env | Purpose |
+| --- | --- |
+| `E2E_RESET_FILE` | Password-reset link (instead of live Resend) |
+| `E2E_INVITE_FILE` | Admin-invite accept URL (instead of live Resend) |
+
+Both paths write the absolute URL into the file when the env is set. Local Playwright `webServer.env` and `.github/workflows/ci.yml` should set both. Prefer fixture capture in default CI; live Resend only in opt-in jobs.
