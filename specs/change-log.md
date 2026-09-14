@@ -9,6 +9,13 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-14
 
+### Sprint 4 — SETT-01 + FRMW-01 (awaiting usability confirm)
+
+- Settings: dirty Save; validate `https://github.com/{owner}/{repo}`; reachability via injectable GitHub port; persist singleton `Setting.githubUrl` only on success.
+- Framework: read-only tree; 30s server TTL cache + 30s client poll; empty → Settings CTA; sync error keeps shell.
+- CI / Playwright: `GITHUB_FIXTURE=1` (no live `GITHUB_TOKEN` in default CI).
+- Webhook invalidation deferred.
+
 ### MVP-3 closed (Sprint 3)
 
 - Operator confirmed Keys management **usable** (DoD).

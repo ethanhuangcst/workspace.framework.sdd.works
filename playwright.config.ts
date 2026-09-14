@@ -37,6 +37,7 @@ export default defineConfig({
       KEYS_ENCRYPTION_KEY:
         process.env.KEYS_ENCRYPTION_KEY ??
         "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      GITHUB_FIXTURE: process.env.GITHUB_FIXTURE ?? "1",
     },
   },
 });

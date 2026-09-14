@@ -173,6 +173,7 @@
   "admin.framework.empty": "尚未配置 GitHub 仓库。请到设置中填写 URL。",
   "admin.framework.to_settings": "打开设置",
   "admin.framework.sync_error": "GitHub 同步失败。页面框架仍可用。",
+  "admin.framework.slow_sync": "仓库刷新比平时更慢。你仍可继续使用门户。",
   "admin.guide.title": "MCP 说明",
   "admin.guide.eyebrow": "连接",
   "admin.guide.lead": "如何调用 framework.sdd.works。服务 id 为 framework.sdd.works。调用方发送 Bearer。密钥值来自 sdd_get_key。",

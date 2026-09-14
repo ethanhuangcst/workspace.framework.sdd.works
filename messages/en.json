@@ -173,6 +173,7 @@
   "admin.framework.empty": "No GitHub repository is configured. Set the URL in Settings.",
   "admin.framework.to_settings": "Open Settings",
   "admin.framework.sync_error": "GitHub sync failed. The shell stays available.",
+  "admin.framework.slow_sync": "Repository refresh is taking longer than usual. You can keep using the portal.",
   "admin.guide.title": "MCP instructions",
   "admin.guide.eyebrow": "Connect",
   "admin.guide.lead": "How to call framework.sdd.works. The server id is framework.sdd.works. Callers send a bearer token. Key values come from sdd_get_key.",

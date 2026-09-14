@@ -53,3 +53,11 @@ When either capture env is set, the server writes the URL to that file and does 
 - `key_value`: reject CJK ideographs (`errors.key_value_no_chinese`); ASCII/API tokens expected.
 - Surface field errors next to the control (`key-name-error` / `key-value-error`) plus a form-level alert — silent Zod failures are easy to miss on submit.
 - Lead copy frames MCP usage (`sdd_get_key` + key name → key value); do not re-explain storage or “long AI API key” under the value field.
+
+## GitHub settings + framework sync (SETT-01 / FRMW-01)
+
+- Env: `GITHUB_TOKEN` (contents:read) + optional `GITHUB_API_BASE_URL`; **never** expose to the browser.
+- CI / Playwright: set `GITHUB_FIXTURE=1` so `src/github/sync.ts` uses an in-process fixture port (reachable: `fixture/sdd-framework`; unreachable: `fixture/missing`).
+- Tests may also call `setGitHubPortForTests(...)`.
+- Freshness: in-memory tree cache ~30s; Framework UI polls `GET /api/admin/framework` every 30s. Webhooks not wired yet.
+- Saving Settings clears the tree cache so the next Framework load refetches.

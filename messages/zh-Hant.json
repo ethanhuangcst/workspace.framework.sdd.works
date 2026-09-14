@@ -173,6 +173,7 @@
   "admin.framework.empty": "尚未設定 GitHub 倉庫。請到設定中填寫 URL。",
   "admin.framework.to_settings": "開啟設定",
   "admin.framework.sync_error": "GitHub 同步失敗。頁面框架仍可用。",
+  "admin.framework.slow_sync": "儲存庫重新整理比平時更慢。你仍可繼續使用入口。",
   "admin.guide.title": "MCP 說明",
   "admin.guide.eyebrow": "連線",
   "admin.guide.lead": "如何呼叫 framework.sdd.works。服務 id 為 framework.sdd.works。呼叫端發送 Bearer。金鑰值來自 sdd_get_key。",

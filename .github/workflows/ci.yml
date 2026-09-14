@@ -35,6 +35,7 @@ jobs:
       E2E_INVITE_FILE: /tmp/sdd-invite-url.txt
       E2E_ADMIN_PASSWORD: Sprint1Pass!
       KEYS_ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      GITHUB_FIXTURE: "1"
 
     steps:
       - uses: actions/checkout@v4
