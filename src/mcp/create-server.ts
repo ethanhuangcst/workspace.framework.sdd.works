@@ -6,6 +6,7 @@ import {
   updateFrameworkStub,
 } from "@/core/tools/install";
 import { listVersions } from "@/core/tools/list-versions";
+import { getMcpBrandIcons, getMcpWebsiteUrl } from "./brand";
 
 export const SDD_TOOL_NAMES = [
   "sdd_install_framework",
@@ -32,6 +33,8 @@ export function createSddMcpServer(
   const server = new McpServer({
     name: "framework.sdd.works",
     version: "0.1.0",
+    websiteUrl: getMcpWebsiteUrl(),
+    icons: getMcpBrandIcons(),
   });
 
   server.registerTool(

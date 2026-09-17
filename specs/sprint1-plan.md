@@ -18,7 +18,7 @@ An operator can run the admin portal locally, log in as a seeded admin, and rese
 | INF-03 | CI pipeline | [app-stories](./admin-portal/app-stories.md) | **Done** — `.github/workflows/ci.yml` (lint, typecheck, unit, E2E; fixture Resend via `E2E_RESET_FILE`) |
 | PATH-01 | Client path map (seed data + resolver) | [path-map](./mcp/mcp-stories.md#sdd-mcp-path-map) | **Done** — `packages/sdd-paths` (Cursor × 3 OS); unit tests green; `paths_version` exposure deferred to Sprint 5 (`sdd_list_versions`) |
 | I18N-01 | i18n foundation (`en` / `zh-Hans` / `zh-Hant`) | [I18N](./admin-portal/app-stories.md#sdd-admin-i18n) | **Done** — `messages/*` + `t()` + locale switcher |
-| ACCT-01 | Admin login | [login](./admin-portal/app-stories.md#sdd-admin-login) | **Done** — email/password session, CSRF, rate-limit; empty-password seed → `/set-password` (password field not required on first login) |
+| ACCT-01 | Admin login | [login](./admin-portal/app-stories.md#sdd-admin-login) | **Done** — email/password session, CSRF; login not rate-limited; empty-password seed → `/set-password` (password field not required on first login) |
 | ACCT-02 | Password reset (Resend) | [reset](./admin-portal/app-stories.md#sdd-admin-password-reset) | **Done** — reset request + set-password; E2E captures link via `E2E_RESET_FILE` |
 
 ## Delivery order (one story at a time)
@@ -46,7 +46,7 @@ An operator can run the admin portal locally, log in as a seeded admin, and rese
 ## Exit criteria (DoD)
 
 - [x] `make dev` / `make up` / `make down` work with local Postgres
-- [x] Seeded admin can log in; session is httpOnly / CSRF-safe / rate-limited
+- [x] Seeded admin can log in; session is httpOnly / CSRF-safe (login not rate-limited)
 - [x] Password reset email path works (sandbox or live Resend with operator key; CI uses file capture)
 - [x] UI strings via i18n; locale switch does not crash on missing keys
 - [x] `packages/sdd-paths/paths.json` exists with Cursor seed (macOS/Windows/Linux); resolver returns allow-listed roots; table-validation test passes; `paths_version` is exposed once `sdd_list_versions` lands (Sprint 5)

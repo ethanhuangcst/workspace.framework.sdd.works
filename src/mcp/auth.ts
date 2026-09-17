@@ -1,6 +1,9 @@
 import type { IncomingMessage } from "node:http";
 
-/** ADR-049: HTTP MCP bearer gate. */
+/**
+ * ADR-049 + ADR-050: HTTP MCP bearer gate.
+ * Token set → require matching Bearer. Token unset → allow (local open mode).
+ */
 export function getConfiguredMcpAuthToken(): string | null {
   const token = process.env.MCP_AUTH_TOKEN?.trim();
   return token || null;
@@ -19,7 +22,7 @@ export function isAuthorizedMcpBearer(
   authorization: string | string[] | undefined,
 ): boolean {
   const expected = getConfiguredMcpAuthToken();
-  if (!expected) return false;
+  if (!expected) return true;
   const got = extractBearerToken(authorization);
   if (!got) return false;
   return got === expected;

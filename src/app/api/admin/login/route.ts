@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { assertCsrf } from "@/auth/csrf";
 import { verifyPassword } from "@/auth/password";
-import { checkRateLimit } from "@/auth/rate-limit";
 import {
   createSessionValue,
   SESSION_COOKIE,
@@ -42,13 +41,6 @@ export async function POST(request: NextRequest) {
   }
 
   const email = parsed.data.email.trim().toLowerCase();
-  const rate = checkRateLimit(`login:${email}`);
-  if (!rate.ok) {
-    return NextResponse.json(
-      { error: { key: "errors.rate_limited" } },
-      { status: 429 },
-    );
-  }
 
   const admin = await db.admin.findUnique({ where: { email } });
   if (!admin || admin.status !== "ACTIVE") {

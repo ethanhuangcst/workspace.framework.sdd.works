@@ -7,9 +7,24 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ---
 
+## 2026-09-17
+
+### MVP-5 closed (Sprint 5)
+
+- Operator confirmed MCP discovery + key lookup **usable** in Cursor (DoD).
+- Features **Done**: TRAN-01, TRAN-02, MCPL-01, MCPK-01.
+- Verified: `sdd_list_versions` (versions/inventory/`paths_version`); `sdd_get_key` returns plaintext for stored `key_name`.
+- Install/update remain stubbed until Sprint 6.
+
+### ACCT-01 — Login rate limit removed
+
+- Operator request: remove admin login attempt rate limit (was 5 / 15 min in-memory).
+- Password-reset and invite throttles unchanged; `errors.rate_limited` retained for those routes.
+- Specs: ACCT-01 AC3 (too many failed sign-ins) dropped; backlog / tech-spec / app-design / sprint1-plan updated.
+
 ## 2026-09-14
 
-### Sprint 5 — TRAN/MCPL/MCPK (awaiting usability confirm)
+### Sprint 5 — TRAN/MCPL/MCPK (implementation)
 
 - Shared MCP core (`src/core/tools`, `src/mcp/create-server.ts`); stdio + sibling Streamable HTTP on `:3041/mcp`.
 - ADR-049: HTTP bearer `MCP_AUTH_TOKEN` for all tools including `sdd_get_key`.

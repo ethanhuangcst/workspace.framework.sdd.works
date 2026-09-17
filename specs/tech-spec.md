@@ -319,7 +319,7 @@ No image generation, no multi-vendor fan-out. Do not add a 10s “timeout” cop
 
 | Area | Contract |
 | --- | --- |
-| **Portal** | Session cookie (httpOnly, secure in prod, SameSite); CSRF-safe mutations; rate-limit login and reset |
+| **Portal** | Session cookie (httpOnly, secure in prod, SameSite); CSRF-safe mutations; rate-limit reset (and invite); login not rate-limited |
 | **MCP HTTP** | Authenticate every request; authorize `sdd_get_key` separately if keys are scoped |
 | **MCP stdio** | Local process; still validate paths (allow-list under user config roots); no `..` escape |
 | **Keys** | Values only on Keys page + `sdd_get_key`; never in `sdd_list_versions` or resources |

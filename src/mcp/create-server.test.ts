@@ -34,6 +34,12 @@ describe("createSddMcpServer tool contracts", () => {
     const listed = await client.listTools();
     const names = listed.tools.map((t) => t.name).sort();
     expect(names).toEqual([...SDD_TOOL_NAMES].sort());
+    const init = client.getServerVersion();
+    expect(init?.name).toBe("framework.sdd.works");
+    expect(init?.icons?.length).toBeGreaterThan(0);
+    expect(init?.icons?.[0]?.src.startsWith("data:image/png;base64,")).toBe(
+      true,
+    );
     await client.close();
     await server.close();
   });

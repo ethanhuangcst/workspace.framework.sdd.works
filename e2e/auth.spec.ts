@@ -60,33 +60,6 @@ test.describe("admin login", () => {
     await expect(page.getByTestId("issue-key")).toBeVisible();
   });
 
-  test("should_rate_limit_after_repeated_failures", async ({ page }) => {
-    const unique = `limit-${Date.now()}@ethanhuang.com`;
-    const db = new PrismaClient();
-    await db.admin.create({
-      data: {
-        email: unique,
-        username: `u${Date.now()}`,
-        name: "Rate Limit",
-        passwordHash: "scrypt$not-a-real-hash$00",
-        status: "ACTIVE",
-      },
-    });
-    await db.$disconnect();
-
-    await page.goto("/login");
-    for (let i = 0; i < 5; i++) {
-      await page.locator('input[name="email"]').fill(unique);
-      await page.locator('input[name="password"]').fill("wrong-password");
-      await page.getByTestId("login-submit").click();
-      await expect(page.getByTestId("login-error")).toBeVisible();
-    }
-    await page.locator('input[name="password"]').fill("wrong-again");
-    await page.getByTestId("login-submit").click();
-    await expect(page.getByTestId("login-error")).toContainText(
-      /too many|过多|過多/i,
-    );
-  });
 });
 
 test.describe("password reset", () => {

@@ -32,17 +32,17 @@ Change log: [`change-log.md`](./change-log.md).
 | 03 | Admin Portal | INF | INF-03 | CI pipeline | GitHub Actions: lint, typecheck, unit, integration, E2E (fixture-only by default; live GitHub / Resend opt-in) | [INF-03](./admin-portal/app-stories.md) | MVP-1 | Done |
 | 03a | MCP | PATH | PATH-01 | Client path map (seed data + resolver) | Versioned `packages/sdd-paths/paths.json` + JSON Schema + resolver (`resolve(client, os, overrides?)`); Cursor seed × macOS/Windows/Linux; table-validation unit test; `paths_version` exposed via `sdd_list_versions` once that tool exists | [PATH-01](./mcp/mcp-stories.md#sdd-mcp-path-map) | MVP-1 | Done |
 | 04 | Admin Portal | I18N | I18N-01 | i18n foundation | Catalog setup for `en`, `zh-Hans`, `zh-Hant`; `t()` helper; missing-key fallback (default locale or key name) | [I18N-01](./admin-portal/app-stories.md#sdd-admin-i18n) | MVP-1 | Done |
-| 05 | Admin Portal | ACCT | ACCT-01 | Admin login | Email + password login; httpOnly secure session cookie; rate-limited; CSRF-safe | [ACCT-01](./admin-portal/app-stories.md#sdd-admin-login) | MVP-1 | Done |
+| 05 | Admin Portal | ACCT | ACCT-01 | Admin login | Email + password login; httpOnly secure session cookie; CSRF-safe (login not rate-limited) | [ACCT-01](./admin-portal/app-stories.md#sdd-admin-login) | MVP-1 | Done |
 | 06 | Admin Portal | ACCT | ACCT-02 | Password reset | Request reset by email; Resend transactional mail; hashed, expiring reset token; rate-limited | [ACCT-02](./admin-portal/app-stories.md#sdd-admin-password-reset) | MVP-1 | Done |
 | 06a | Admin Portal | SEED | SEED-01 | Default admin from env | Seed `me@ethanhuang.com` / `admin` with password from `ADMIN_SEED_PASSWORD`; fail if unset | [SEED-01](./admin-portal/app-stories.md#sdd-admin-seed) | MVP-2 | Done |
 | 07 | Admin Portal | ACCT | ACCT-03 | Admin account management | Invite by email, list ACTIVE admins + pending invites, delete with confirm (not self / not last admin); soft-deactivate deferred | [ACCT-03](./admin-portal/app-stories.md#sdd-admin-accounts) | MVP-2 | Done |
 | 08 | Admin Portal | KEYS | KEYS-01 | Keys CRUD | Create / view / edit / delete keys (`key_id`, English unique `key_name`, `key_description`, `key_value`); list shows name, description, value; Copy / Edit / Delete — no regenerate | [KEYS-01](./admin-portal/app-stories.md#sdd-admin-keys) | MVP-3 | Done |
 | 09 | Admin Portal | SETT | SETT-01 | GitHub repository URL | View / save one GitHub repository URL; Save enabled only when dirty; verify reachability before persist | [SETT-01](./admin-portal/app-stories.md#sdd-admin-settings) | MVP-4 | Done |
 | 10 | Admin Portal | FRMW | FRMW-01 | Framework live view | Read-only, near-real-time GitHub tree/file view from the Settings URL; poll or webhook + short cache; sync error shown | [FRMW-01](./admin-portal/app-stories.md#sdd-admin-framework) | MVP-4 | Done |
-| 11 | MCP | TRAN | TRAN-01 | MCP server bootstrap (stdio) | Node stdio entry that registers tools with pinned `@modelcontextprotocol/sdk`; transport-agnostic core | [TRAN-01](./mcp/mcp-stories.md#sdd-mcp-transport-stdio) | MVP-5 | ToDo |
-| 12 | MCP | TRAN | TRAN-02 | MCP server bootstrap (Streamable HTTP) | HTTP entry on `/mcp` with bearer/session auth; same core as stdio | [TRAN-02](./mcp/mcp-stories.md#sdd-mcp-transport-http) | MVP-5 | ToDo |
-| 13 | MCP | MCPL | MCPL-01 | `sdd_list_versions` | List available framework package versions and high-level inventory from configured repo(s) / release artifacts; read-only, no key values | [MCPL-01](./mcp/mcp-stories.md#sdd-mcp-list-versions) | MVP-5 | ToDo |
-| 14 | MCP | MCPK | MCPK-01 | `sdd_get_key` | Caller passes `key_name`; return plaintext `key_value` from DB; structured `not_found` / `unauthorized`; no other-key leakage | [MCPK-01](./mcp/mcp-stories.md#sdd-mcp-get-key) | MVP-5 | ToDo |
+| 11 | MCP | TRAN | TRAN-01 | MCP server bootstrap (stdio) | Node stdio entry that registers tools with pinned `@modelcontextprotocol/sdk`; transport-agnostic core | [TRAN-01](./mcp/mcp-stories.md#sdd-mcp-transport-stdio) | MVP-5 | Done |
+| 12 | MCP | TRAN | TRAN-02 | MCP server bootstrap (Streamable HTTP) | HTTP entry on `/mcp` with bearer/session auth; same core as stdio | [TRAN-02](./mcp/mcp-stories.md#sdd-mcp-transport-http) | MVP-5 | Done |
+| 13 | MCP | MCPL | MCPL-01 | `sdd_list_versions` | List available framework package versions and high-level inventory from configured repo(s) / release artifacts; read-only, no key values | [MCPL-01](./mcp/mcp-stories.md#sdd-mcp-list-versions) | MVP-5 | Done |
+| 14 | MCP | MCPK | MCPK-01 | `sdd_get_key` | Caller passes `key_name`; return plaintext `key_value` from DB; structured `not_found` / `unauthorized`; no other-key leakage | [MCPK-01](./mcp/mcp-stories.md#sdd-mcp-get-key) | MVP-5 | Done |
 | 15 | MCP | MCPI | MCPI-01 | `sdd_install_framework` (stdio, Cursor) | Install skills (with `SKILL.md`), rules, and other package folders into Cursor paths on the developer machine; path allow-list; structured summary | [MCPI-01](./mcp/mcp-stories.md#sdd-mcp-install) | MVP-6 | ToDo |
 | 16 | MCP | MCPU | MCPU-01 | `sdd_update_framework` (stdio, Cursor) | Refresh an existing Cursor install to a specified or latest version; idempotent on same version; merge/overwrite policy per design | [MCPU-01](./mcp/mcp-stories.md#sdd-mcp-update) | MVP-6 | ToDo |
 | 17 | MCP | MCPI | MCPI-04 | Qwen path discovery | Qwen searches local client config to propose install roots; seed-map fallback; allow-list validation (ADR-047) | [MCPI-04](./mcp/mcp-stories.md#sdd-mcp-path-llm) | MVP-6 | ToDo |
@@ -109,7 +109,7 @@ Notes:
 
 ### ACCT-01 — Admin login
 
-- **Detail.** Email + password login. Argon2/bcrypt hash verification. httpOnly, secure (prod), SameSite session cookie. Rate-limit login attempts. CSRF-safe form. Structured errors (`invalid_credentials`, `rate_limited`) with no stack traces.
+- **Detail.** Email + password login. Argon2/bcrypt hash verification. httpOnly, secure (prod), SameSite session cookie. CSRF-safe form. Login is not rate-limited (operator request). Structured errors (`invalid_credentials`) with no stack traces.
 - **Dependencies.** INF-02, I18N-01.
 - **User stories & AC.** [ACCT-01](./admin-portal/app-stories.md#sdd-admin-login)
 - **UI design & mockup.** [design.md — login page](./design.md#acct-01)

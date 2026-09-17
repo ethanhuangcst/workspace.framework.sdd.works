@@ -4,7 +4,7 @@ import {
   isAuthorizedMcpBearer,
 } from "./auth";
 
-describe("MCP bearer auth (ADR-049)", () => {
+describe("MCP bearer auth (ADR-049 / ADR-050)", () => {
   afterEach(() => {
     delete process.env.MCP_AUTH_TOKEN;
   });
@@ -14,15 +14,16 @@ describe("MCP bearer auth (ADR-049)", () => {
     expect(isAuthorizedMcpBearer("Bearer secret-token")).toBe(true);
   });
 
-  it("should_reject_missing_or_wrong_bearer", () => {
+  it("should_reject_missing_or_wrong_bearer_when_token_configured", () => {
     process.env.MCP_AUTH_TOKEN = "secret-token";
     expect(isAuthorizedMcpBearer(undefined)).toBe(false);
     expect(isAuthorizedMcpBearer("Bearer wrong")).toBe(false);
     expect(extractBearerToken("Token x")).toBeNull();
   });
 
-  it("should_fail_closed_when_token_unset", () => {
+  it("should_allow_all_when_token_unset", () => {
     delete process.env.MCP_AUTH_TOKEN;
-    expect(isAuthorizedMcpBearer("Bearer anything")).toBe(false);
+    expect(isAuthorizedMcpBearer(undefined)).toBe(true);
+    expect(isAuthorizedMcpBearer("Bearer anything")).toBe(true);
   });
 });

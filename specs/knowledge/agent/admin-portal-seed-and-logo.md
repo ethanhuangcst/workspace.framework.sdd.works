@@ -45,6 +45,7 @@ When either capture env is set, the server writes the URL to that file and does 
 - Env: `KEYS_ENCRYPTION_KEY` — 64 hex chars or 32-byte base64.
 - Format stored in DB: `v1:<iv_b64url>:<tag_b64url>:<ciphertext_b64url>` (AES-256-GCM). Decision: [ADR-048](../../adr/ADR-048-keys-encryption-at-rest.md).
 - CI / Playwright inject a fixture key; local `.env.local` must set the same (or another) secret or create/list of encrypted rows will fail closed.
+- **Pitfall:** Playwright’s default `KEYS_ENCRYPTION_KEY` differs from a typical `.env.local` value. If E2E writes keys into the same Postgres as `npm run dev`, the Keys page decrypts with the env key and throws `Unsupported state or unable to authenticate data`. Fix: re-encrypt under the current env key, or delete those rows and recreate them in the portal. Prefer a separate E2E database when possible.
 - Plaintext leaves the server only for authenticated Keys UI (and later `sdd_get_key`).
 
 ### Validation / UX

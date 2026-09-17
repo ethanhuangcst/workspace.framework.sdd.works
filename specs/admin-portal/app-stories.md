@@ -96,7 +96,7 @@ Scenario: Sign in with seeded env password
 
 ## `sdd-admin-login` — Admin login
 
-Email + password. Session cookie is httpOnly, SameSite, Secure in production. CSRF-safe. Rate-limited. (ACCT-01)
+Email + password. Session cookie is httpOnly, SameSite, Secure in production. CSRF-safe. Not rate-limited. (ACCT-01)
 
 ### User story 1 — Sign in with email and password
 
@@ -126,17 +126,6 @@ Scenario: Sign in with wrong password
 ```
 
 #### AC3
-
-```gherkin
-Scenario: Too many failed sign-in attempts
-  Given an admin exists
-  And the sign-in rate limit has been exceeded for that identity
-  When the admin signs in with any password
-  Then the result key is errors.rate_limited
-  And no session is established
-```
-
-#### AC4
 
 ```gherkin
 Scenario: Seeded default admin does not use blank-password bootstrap

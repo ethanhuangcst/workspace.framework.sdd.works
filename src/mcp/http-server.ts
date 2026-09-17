@@ -12,11 +12,11 @@ const HOST = process.env.MCP_HTTP_HOST?.trim() || "127.0.0.1";
 type TransportMap = Record<string, StreamableHTTPServerTransport>;
 
 async function main() {
-  if (!getConfiguredMcpAuthToken()) {
-    console.error(
-      "MCP_AUTH_TOKEN is not configured. Refusing to start HTTP MCP (ADR-049).",
+  const token = getConfiguredMcpAuthToken();
+  if (!token) {
+    console.warn(
+      "MCP_AUTH_TOKEN unset — HTTP MCP is open (ADR-050 local mode). Do not expose this port publicly.",
     );
-    process.exit(1);
   }
 
   const app = createMcpExpressApp({ host: HOST });

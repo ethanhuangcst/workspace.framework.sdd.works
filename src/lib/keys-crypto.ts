@@ -71,9 +71,15 @@ export function decryptKeyValue(
   const iv = Buffer.from(ivB64, "base64url");
   const tag = Buffer.from(tagB64, "base64url");
   const data = Buffer.from(dataB64, "base64url");
-  const decipher = createDecipheriv(ALGO, key, iv);
-  decipher.setAuthTag(tag);
-  return Buffer.concat([decipher.update(data), decipher.final()]).toString(
-    "utf8",
-  );
+  try {
+    const decipher = createDecipheriv(ALGO, key, iv);
+    decipher.setAuthTag(tag);
+    return Buffer.concat([decipher.update(data), decipher.final()]).toString(
+      "utf8",
+    );
+  } catch {
+    throw new KeysEncryptionError(
+      "Unable to decrypt key value — KEYS_ENCRYPTION_KEY may not match the key used at write time",
+    );
+  }
 }

@@ -30,7 +30,9 @@ describe("keys-crypto", () => {
     const cipher = encryptKeyValue("hello", FIXTURE_HEX);
     const parts = cipher.split(":");
     parts[3] = Buffer.from("tampered").toString("base64url");
-    expect(() => decryptKeyValue(parts.join(":"), FIXTURE_HEX)).toThrow();
+    expect(() => decryptKeyValue(parts.join(":"), FIXTURE_HEX)).toThrow(
+      /KEYS_ENCRYPTION_KEY may not match/,
+    );
   });
 });
 
