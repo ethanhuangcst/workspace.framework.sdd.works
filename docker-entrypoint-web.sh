@@ -5,7 +5,7 @@ echo "[entrypoint] prisma migrate deploy"
 npx prisma migrate deploy
 
 echo "[entrypoint] prisma db seed"
-npx prisma db seed
+npx tsx prisma/seed.ts
 
 echo "[entrypoint] starting Next.js web"
 if [ -f "./server.js" ]; then
