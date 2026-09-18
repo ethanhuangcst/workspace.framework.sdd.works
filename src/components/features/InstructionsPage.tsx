@@ -2,6 +2,30 @@
 
 import { t, type Locale } from "@/i18n/t";
 import { AuthShell } from "@/components/layout/AuthShell";
+import { CopyButton } from "@/components/ui/CopyButton";
+import { Logo } from "@/components/ui/Logo";
+
+const SETUP_PROMPT =
+  "Fetch and execute the setup instructions from https://framework.sdd.works/agent-setup";
+
+const MCP_CONFIG = `{
+  "mcpServers": {
+    "framework.sdd.works": {
+      "url": "https://framework.sdd.works/mcp"
+    }
+  }
+}`;
+
+const CURL_FALLBACK = "curl -fsSL https://framework.sdd.works/install | sh";
+
+const INSTALL_CMD = "sdd_install_framework";
+
+const AGENT_LOGOS = [
+  { src: "/guide/claude.png", alt: "Claude" },
+  { src: "/guide/cursor.png", alt: "Cursor" },
+  { src: "/guide/codex.png", alt: "Codex" },
+  { src: "/guide/codebuddy.png", alt: "CodeBuddy" },
+] as const;
 
 const TOOLS = [
   {
@@ -26,6 +50,47 @@ const TOOLS = [
   },
 ] as const;
 
+function AgentToolIcons() {
+  return (
+    <span className="setup-pill-icons" aria-hidden="true">
+      {AGENT_LOGOS.map((logo) => (
+        // eslint-disable-next-line @next/next/no-img-element -- small static brand marks
+        <img
+          key={logo.src}
+          className="setup-pill-icon"
+          src={logo.src}
+          alt=""
+          width={18}
+          height={18}
+        />
+      ))}
+    </span>
+  );
+}
+
+function CmdBlock({
+  value,
+  locale,
+  testid,
+}: {
+  value: string;
+  locale: Locale;
+  testid?: string;
+}) {
+  return (
+    <div className="codeblock">
+      <pre className="codeblock-text mono">{value}</pre>
+      <CopyButton
+        className="codeblock-copy"
+        value={value}
+        label={t(locale, "admin.keys.copy")}
+        copiedLabel={t(locale, "admin.common.copied")}
+        data-testid={testid}
+      />
+    </div>
+  );
+}
+
 export function InstructionsPage({
   locale,
   onLocaleChange,
@@ -38,20 +103,103 @@ export function InstructionsPage({
       locale={locale}
       onLocaleChange={onLocaleChange}
       variant="home"
+      className="guide-shell"
     >
       <article className="guide" data-testid="instructions-guide">
-        <header className="page-head">
-          <p className="eyebrow">{t(locale, "admin.guide.eyebrow")}</p>
-          <h1>{t(locale, "admin.guide.title")}</h1>
-          <p>{t(locale, "admin.guide.lead")}</p>
-          <nav className="guide-toc" aria-label="Contents">
-            <a href="#tools">{t(locale, "admin.guide.toc_tools")}</a>
-            <a href="#setup">{t(locale, "admin.guide.toc_setup")}</a>
-            <a href="#http">{t(locale, "admin.guide.toc_http")}</a>
-          </nav>
+        <header className="guide-hero">
+          <div className="guide-hero-title">
+            <Logo size="header" href="/" />
+            <h1>{t(locale, "admin.guide.title")}</h1>
+          </div>
+          <p className="guide-hero-tag">{t(locale, "admin.guide.lead")}</p>
         </header>
+
+        <section className="guide-section" id="setup">
+          <h2 className="section-subtitle">{t(locale, "admin.guide.h_setup")}</h2>
+          <p>{t(locale, "admin.guide.setup_body")}</p>
+
+          <div className="setup-card">
+            <span className="setup-card-label">
+              {t(locale, "admin.guide.setup_prompt_label")}
+            </span>
+            <CmdBlock
+              value={SETUP_PROMPT}
+              locale={locale}
+              testid="copy-setup-prompt-block"
+            />
+            <CopyButton
+              className="setup-pill"
+              value={SETUP_PROMPT}
+              label={
+                <>
+                  <span className="setup-pill-text">
+                    {t(locale, "admin.guide.copy_prompt")}
+                  </span>
+                  <span className="setup-pill-divider" aria-hidden="true" />
+                  <AgentToolIcons />
+                </>
+              }
+              copiedLabel={
+                <>
+                  <span className="setup-pill-text">
+                    {t(locale, "admin.common.copied")}
+                  </span>
+                  <span className="setup-pill-divider" aria-hidden="true" />
+                  <AgentToolIcons />
+                </>
+              }
+              data-testid="copy-setup-prompt"
+            />
+
+            <div className="setup-after">
+              <p>{t(locale, "admin.guide.setup_after_prompt")}</p>
+              <CmdBlock
+                value={t(locale, "admin.guide.setup_install_phrase")}
+                locale={locale}
+                testid="copy-install-phrase"
+              />
+              <p>{t(locale, "admin.guide.setup_after_tool")}</p>
+              <CmdBlock
+                value={INSTALL_CMD}
+                locale={locale}
+                testid="copy-install-cmd"
+              />
+            </div>
+          </div>
+
+          <div className="setup-manual">
+            <h3 className="section-subtitle">
+              {t(locale, "admin.guide.manual_title")}
+            </h3>
+            <p className="field-note">{t(locale, "admin.guide.manual_body")}</p>
+            <div className="codeblock codeblock--file">
+              <div className="codeblock-head">
+                <span className="codeblock-tag">mcp.json</span>
+                <CopyButton
+                  className="codeblock-copy"
+                  value={MCP_CONFIG}
+                  label={t(locale, "admin.keys.copy")}
+                  copiedLabel={t(locale, "admin.common.copied")}
+                  data-testid="copy-mcp-config"
+                />
+              </div>
+              <pre className="codeblock-text mono">{MCP_CONFIG}</pre>
+            </div>
+            <div className="setup-fallback">
+              <p className="setup-fallback-label">
+                {t(locale, "admin.guide.setup_fallback_label")}
+              </p>
+              <CmdBlock
+                value={CURL_FALLBACK}
+                locale={locale}
+                testid="copy-curl-fallback"
+              />
+            </div>
+          </div>
+        </section>
+
         <section className="guide-section" id="tools">
-          <h2>{t(locale, "admin.guide.h_tools")}</h2>
+          <h2 className="section-subtitle">{t(locale, "admin.guide.h_tools")}</h2>
           <p>{t(locale, "admin.guide.tools_intro")}</p>
           <div className="table-wrap">
             <table className="guide-caps-table">
@@ -75,25 +223,6 @@ export function InstructionsPage({
               </tbody>
             </table>
           </div>
-        </section>
-        <section className="guide-section" id="setup">
-          <h2>{t(locale, "admin.guide.h_setup")}</h2>
-          <p>{t(locale, "admin.guide.setup_body")}</p>
-          <p className="field-note mono">{t(locale, "admin.guide.setup_prompt")}</p>
-          <p className="field-note">{t(locale, "admin.guide.setup_note")}</p>
-          <p className="field-note mono">
-            # Fallback — binary installer:
-            <br />
-            curl -fsSL https://framework.sdd.works/install | sh
-          </p>
-        </section>
-        <section className="guide-section" id="http">
-          <h2>{t(locale, "admin.guide.h_http")}</h2>
-          <p>{t(locale, "admin.guide.http_body")}</p>
-          <p className="field-note mono">
-            {`{ "framework.sdd.works": { "url": "https://framework.sdd.works/mcp" } }`}
-          </p>
-          <p className="field-note">{t(locale, "admin.guide.http_note")}</p>
         </section>
       </article>
     </AuthShell>

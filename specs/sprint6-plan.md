@@ -1,6 +1,8 @@
 # Sprint 6 Plan — MVP-6: MCP install + update (Cursor, local)
 
-**Batch:** MVP-6 · **Status:** Implemented (automated tests + ADR-053 server sync)  
+**Batch:** MVP-6 · **Status:** Done  
+**Updated:** 2026-09-18  
+**Accepted:** 2026-09-18 (Cursor HTTP install + LE1–LE5 live GitHub E2E)  
 **Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md) · **MCP design:** [`mcp/mcp-design.md`](./mcp/mcp-design.md)
 
 ## Goal
@@ -66,3 +68,13 @@ A Cursor user can install the SDD framework locally and update it to a chosen ve
 ## Design
 
 - [mcp-design.md](./mcp/mcp-design.md) · [mcp-stories.md](./mcp/mcp-stories.md) · [mcp-test.md](./mcp/mcp-test.md)
+
+## Deferred to Sprint 7
+
+Verification and scope items not required to close MVP-6 — see [`sprint7-plan.md`](./sprint7-plan.md) § Carried from Sprint 6:
+
+- Mac live stdio path E2E ([`mcp-test.md`](./mcp/mcp-test.md) §5 Tests 1–5; field `clientInfo.name` observation)
+- Manual operator scenarios M1–M2 ([`mcp-test.md`](./mcp/mcp-test.md) §7.4)
+- Sync E2E S2–S5 (rename/delete/GitHub-down scenarios beyond LE1–LE5)
+- MCPI-05 env matrix: Copilot (`COPILOT_*`), OpenCode (`XDG_DATA_HOME`), `CLINE_DATA_DIR`
+- Cross-client install beyond Cursor-first ([`MCPI-02`](./mcp/mcp-stories.md#sdd-mcp-cross-client))

@@ -13,6 +13,7 @@
 | **Unit** | Path map table validation, resolver, path-policy, path-detect (MCPI-05), LLM schema validation, idempotent update logic, sync job, package cache, package-fetch | Always | — |
 | **Integration** | Tool contracts on in-process stdio fixture + HTTP transport; package REST API; fixture Qwen | Always | — |
 | **E2E** | Real client (Cursor / Claude Code) over stdio or HTTP sibling process; sync job against real GitHub test repo | Manual / opt-in | `SDD_E2E_GITHUB_REPO` + `GITHUB_TOKEN`, live Qwen, real client |
+| **Freshness regression** | ADR-055 install/sync defects (F1–F10 fixture; LE1–LE4 live) | Always (fixture); opt-in (live) | `npm run test:regression:freshness` |
 
 **Principles**
 
@@ -148,10 +149,10 @@ Prerequisites: `npm run mcp:stdio` or `mcp:http` with Settings GitHub configured
 
 **Pass criteria for this Mac gate**
 
-- [ ] Tests 2–3 prove env override wins over seed
-- [ ] Test 4 proves seed when deterministic signals absent
-- [ ] Test 5 proves fail-closed with zero writes
-- [ ] Test 1 documents actual Cursor `clientInfo.name` string observed in the field (update `path-detect` mapping if needed)
+- [ ] Tests 2–3 prove env override wins over seed — *unit covered; live Mac stdio → Sprint 7 ([`sprint7-plan.md`](../sprint7-plan.md) VERIF-01)*
+- [ ] Test 4 proves seed when deterministic signals absent — *unit covered; live Mac stdio → Sprint 7 VERIF-01*
+- [ ] Test 5 proves fail-closed with zero writes — *unit covered; live Mac stdio → Sprint 7 VERIF-01*
+- [ ] Test 1 documents actual Cursor `clientInfo.name` string observed in the field — *Sprint 7 VERIF-01*
 
 ---
 
@@ -180,11 +181,100 @@ GITHUB_TOKEN=... \
 npx vitest run src/core/sync/sync-e2e.test.ts
 ```
 
-Fixture layout in [test.sdd](https://github.com/ethanhuangcst/test.sdd): `skills/{tdd,atdd,dod}/SKILL.md`, `rules/dod.mdc`, `agents/code-reviewer.md`, `workflows/new-feature.md`.
+Fixture layout in [test.sdd](https://github.com/ethanhuangcst/test.sdd): `skills/{tdd,a-tdd}/SKILL.md`, `rules/dod.mdc`, `agents/code-reviewer.md`, `workflows/new-feature.md`.
 
 ---
 
-## 7. Out of scope for MCP tests
+## 7. Freshness regression suite (ADR-055)
+
+**Purpose.** Regression coverage for the defects where HTTP install returned `already_up_to_date` with deleted local files, or served stale cache after a repo update.
+
+**Test repo:** [ethanhuangcst/test.sdd](https://github.com/ethanhuangcst/test.sdd) (`main` branch; skills `tdd`, `a-tdd`).
+
+### 7.1 Fixture regression (default CI — no secrets)
+
+Implementation: `src/core/sync/freshness-regression.test.ts` (+ route/unit companions).
+
+| ID | Scenario | Given | When | Then |
+| --- | --- | --- | --- | --- |
+| **F1** | Local files deleted, same repo commit | Cache SHA-A; local manifest says SHA-A; skill dirs deleted | HTTP `sdd_install_framework` with `installed_commit` | **Not** `already_up_to_date`; `packageUrl` + `extract_recommended: true`; `local_commit_matches: true` |
+| **F2** | Repo updated → auto sync on install | Cache SHA-OLD; live tip SHA-NEW | HTTP install | `ensurePackageCacheFresh` syncs; response `commitSha` = SHA-NEW; inventory reflects rename (e.g. `a-tdd`) |
+| **F3a** | Auto sync failed, cache exists | Live ahead; sync returns `sync_error`; stale cache on disk | HTTP install | Still returns cached `packageUrl` (better stale than nothing) |
+| **F3b** | Auto sync failed, no cache | Empty cache; GitHub unreachable | HTTP install | `sync_pending` |
+| **F4a** | Scheduled sync interval | `GITHUB_TOKEN` set; server started | Advance clock 30 min × 2 | `runScheduledSync` called twice |
+| **F4b** | Scheduled sync disabled | `GITHUB_TOKEN` unset | `startScheduledSyncInterval()` | No timer; no sync calls |
+| **F5** | Repo/local commit mismatch | Local manifest SHA-OLD; cache refreshed to SHA-NEW | HTTP install with `installed_commit: SHA-OLD` | New `commitSha`; `local_commit_matches: false`; `cache_refresh: refreshed` |
+| **F6** | Webhook push trigger | Valid HMAC; `push` event | `POST /api/github/webhook` | `syncFrameworkRepo` + `clearListVersionsCache` |
+| **F7** | Cron backup trigger | Valid `CRON_SECRET` bearer | `POST /api/sync/cron` | `runScheduledSync` |
+| **F8** | Live tip lookup fails | Cache exists; `resolveLatestLiveCommit` errors | `ensurePackageCacheFresh` | Falls back to full `syncFrameworkRepo` |
+| **F9** | Stale cache advisory | `syncedAt` > 30 min ago | HTTP install | `cache_stale: true`; instructions mention stale cache |
+| **F10** | Stdio self-heal (contrast) | stdio install; delete skill files; manifest intact | stdio `sdd_install_framework` | Reinstalls files; **not** `already_up_to_date` |
+| **F11a** | Tarball bytes match unpacked | Real `pkg.tar.gz` built from cache | `GET /api/sdd/package` → extract | `skills/a-tdd/SKILL.md` in tarball = unpacked file |
+| **F11b** | Content-only update (rename done) | Cache SHA-OLD `a-tdd`=`# atdd`; live SHA-NEW `# a-tdd` | HTTP install + package download | Extracted SKILL.md is `# a-tdd\n`, not `# atdd\n` |
+| **F11c** | Stale bytes when SHA unchanged | Same SHA; old `# atdd` content | Package download | Still `# atdd` (documents expected stale behavior until push+sync) |
+
+**Run (CI-safe):**
+
+```bash
+npm run test:regression:freshness
+```
+
+This runs fixture regression + webhook/cron/ensure-cache-fresh unit tests. Live GitHub cases skip when `SDD_E2E_GITHUB_REPO` / `GITHUB_TOKEN` unset.
+
+### 7.2 Live GitHub regression (opt-in — test.sdd)
+
+Implementation: `src/core/sync/sync-e2e.test.ts`.
+
+| ID | Scenario | Assert |
+| --- | --- | --- |
+| **LE1** | Initial sync + idempotent re-sync | `status: synced` then `unchanged`; skills include `tdd`, `a-tdd` |
+| **LE2** | Live tip matches cache after sync | `resolveLatestLiveCommit` SHA = manifest `latestCommit`; `ensurePackageCacheFresh` → `fresh` |
+| **LE3** | Stale manifest SHA forced on disk | After `ensurePackageCacheFresh`, manifest restored to live SHA (`refreshed`) |
+| **LE4** | HTTP install against live cache | Never `already_up_to_date`; always `packageUrl` + `extract_recommended` |
+| **LE5** | **Content parity** with GitHub main | After sync, `unpacked/.../a-tdd/SKILL.md` bytes = raw GitHub `main` file |
+
+**Run (operator machine with token):**
+
+```bash
+SDD_E2E_GITHUB_REPO=https://github.com/ethanhuangcst/test.sdd \
+GITHUB_TOKEN=ghp_... \
+npm run test:regression:freshness
+```
+
+### 7.3 Known gap (fixed in F11 / LE5)
+
+Prior tests (F2, F5, LE1) asserted **skill folder names** (`a-tdd` vs `atdd`) and **commit SHA**, but not **file content bytes** inside the tarball. That missed the defect: folder renamed to `a-tdd` but `SKILL.md` still `# atdd` when cache lagged a content-only commit.
+
+**Operator check:** if install renames folders but content looks old, compare:
+
+```bash
+curl -sL "https://raw.githubusercontent.com/ethanhuangcst/test.sdd/main/skills/a-tdd/SKILL.md"
+cat .data/sdd-packages/$(jq -r .latestCommit .data/sdd-packages/manifest.json)/unpacked/skills/a-tdd/SKILL.md
+```
+
+If GitHub shows `# a-tdd` but cache shows `# atdd`, run `POST /api/admin/sync` (or wait for webhook/cron). If GitHub still shows `# atdd`, the content change was not pushed.
+
+### 7.4 Manual operator scenarios (not automated)
+
+Run after pushing to **test.sdd** when validating a release:
+
+| Step | Action | Expected |
+| --- | --- | --- |
+| M1 | Push skill rename (`atdd` → `a-tdd`) to test.sdd | Webhook or 30-min cron refreshes cache; HTTP install returns new skill list |
+| M2 | Delete `~/.cursor/skills/*` locally; run install in Cursor | AI receives `packageUrl`; runs `curl \| tar`; files restored |
+| M3 | Change only `SKILL.md` text (same paths) | New commit SHA; install returns updated tarball |
+| M4 | Stop `GITHUB_TOKEN` / block GitHub | Sync errors logged; existing cache still installable (F3a) |
+
+### 7.5 Pass criteria
+
+- [x] `npm run test:regression:freshness` green in CI (fixture layer) — verified 2026-09-18
+- [x] LE1–LE5 green locally with `SDD_E2E_GITHUB_REPO` + `GITHUB_TOKEN` — verified 2026-09-18
+- [x] F11a–F11b green in CI (tarball content assertions) — verified via `package-content.test.ts` in regression run
+- [ ] Manual M1–M2 verified once per release candidate — *Sprint 7 VERIF-01*
+
+---
+
+## 8. Out of scope for MCP tests
 
 - Admin portal UI (see [`../admin-portal/app-test.md`](../admin-portal/app-test.md))
 - Live Bailian Qwen spend in default CI

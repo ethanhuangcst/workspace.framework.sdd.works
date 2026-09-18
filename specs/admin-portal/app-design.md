@@ -380,8 +380,8 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | | |
 | --- | --- |
-| Job | How to connect MCP clients |
-| Layout | Public guide (may use app chrome without requiring session when opened in new tab); tool table; stdio / HTTP sections |
+| Job | Install framework.sdd.works to AI tools |
+| Layout | Public guide; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.WORKFLOWS`; **Setup** / **Tools** as `section-subtitle` (no numbered headings); all commands/prompts as `.codeblock` rows (mono text + right-rail Copy) or `.codeblock--file` (header tag + Copy) for `mcp.json`; pill CTA (“Copy prompt…” + Claude/Cursor/Codex/CodeBuddy icons); Manual setup (`mcp.json` + curl fallback); tools intro + table |
 | Entry | Home + header open **new tab** |
 | Keys | `admin.guide.*` |
 

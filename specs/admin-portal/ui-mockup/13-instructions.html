@@ -24,17 +24,80 @@
       </div>
     </header>
     <main id="content" class="guide-body">
-      <p class="eyebrow" data-i18n="admin.guide.eyebrow">Connect</p>
-      <h1 data-i18n="admin.guide.title">MCP instructions</h1>
-      <p class="lead" data-i18n="admin.guide.lead">How to call framework.sdd.works. The server id is framework.sdd.works. Callers send a bearer token. Key values come from sdd_get_key.</p>
-      <nav class="guide-toc">
-        <a href="#tools" data-i18n="admin.guide.toc_tools">1. Tools</a>
-        <a href="#stdio" data-i18n="admin.guide.toc_stdio">2. stdio</a>
-        <a href="#http" data-i18n="admin.guide.toc_http">3. Streamable HTTP</a>
-      </nav>
+      <header class="guide-hero">
+        <div class="guide-hero-title">
+          <a class="logo" href="01-home.html" aria-label="framework.sdd.works">
+            <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="234" height="130" />
+          </a>
+          <h1 data-i18n="admin.guide.title">Install framework.sdd.works to your AI tools</h1>
+        </div>
+        <p class="guide-hero-tag" data-i18n="admin.guide.lead">SKILLS.RULES.AGENTS.WORKFLOWS</p>
+      </header>
+
+      <section class="guide-section" id="setup">
+        <h2 class="section-subtitle" data-i18n="admin.guide.h_setup">Setup</h2>
+        <p data-i18n="admin.guide.setup_body">Paste this prompt into Cursor or your agent. It fetches the setup instructions and adds MCP service to your tool. One prompt for all users.</p>
+
+        <div class="setup-card">
+          <span class="setup-card-label" data-i18n="admin.guide.setup_prompt_label">Paste this prompt</span>
+          <div class="codeblock">
+            <pre class="codeblock-text mono" data-i18n="admin.guide.setup_prompt">Fetch and execute the setup instructions from https://framework.sdd.works/agent-setup</pre>
+            <button class="codeblock-copy" type="button" data-i18n="admin.keys.copy">Copy</button>
+          </div>
+          <button class="setup-pill" type="button">
+            <span class="setup-pill-text" data-i18n="admin.guide.copy_prompt">Copy prompt and paste to your AI tool</span>
+            <span class="setup-pill-divider" aria-hidden="true"></span>
+            <span class="setup-pill-icons" aria-hidden="true">
+              <img class="setup-pill-icon" src="assets/guide/claude.png" alt="" width="18" height="18" />
+              <img class="setup-pill-icon" src="assets/guide/cursor.png" alt="" width="18" height="18" />
+              <img class="setup-pill-icon" src="assets/guide/codex.png" alt="" width="18" height="18" />
+              <img class="setup-pill-icon" src="assets/guide/codebuddy.png" alt="" width="18" height="18" />
+            </span>
+          </button>
+
+          <div class="setup-after">
+            <p data-i18n="admin.guide.setup_after_prompt">Once MCP is connected, type to AI:</p>
+            <div class="codeblock">
+              <pre class="codeblock-text mono" data-i18n="admin.guide.setup_install_phrase">Install SDD.works Framework</pre>
+              <button class="codeblock-copy" type="button" data-i18n="admin.keys.copy">Copy</button>
+            </div>
+            <p data-i18n="admin.guide.setup_after_tool">or, directly call MCP tool by giving the command:</p>
+            <div class="codeblock">
+              <pre class="codeblock-text mono">sdd_install_framework</pre>
+              <button class="codeblock-copy" type="button" data-i18n="admin.keys.copy">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-manual">
+          <h3 class="section-subtitle" data-i18n="admin.guide.manual_title">Manual setup</h3>
+          <p class="field-note" data-i18n="admin.guide.manual_body">Prefer not to use the setup prompt? Add the remote MCP URL yourself.</p>
+          <div class="codeblock codeblock--file">
+            <div class="codeblock-head">
+              <span class="codeblock-tag">mcp.json</span>
+              <button class="codeblock-copy" type="button" data-i18n="admin.keys.copy">Copy</button>
+            </div>
+            <pre class="codeblock-text mono">{
+  "mcpServers": {
+    "framework.sdd.works": {
+      "url": "https://framework.sdd.works/mcp"
+    }
+  }
+}</pre>
+          </div>
+          <div class="setup-fallback">
+            <p class="setup-fallback-label" data-i18n="admin.guide.setup_fallback_label">Fallback — terminal installer</p>
+            <div class="codeblock">
+              <pre class="codeblock-text mono">curl -fsSL https://framework.sdd.works/install | sh</pre>
+              <button class="codeblock-copy" type="button" data-i18n="admin.keys.copy">Copy</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="guide-section" id="tools">
-        <h2 data-i18n="admin.guide.h_tools">1. Tools</h2>
-        <p data-i18n="admin.guide.tools_intro">HTTP and stdio share the same core. Descriptions include failure modes.</p>
+        <h2 class="section-subtitle" data-i18n="admin.guide.h_tools">Tools</h2>
+        <p data-i18n="admin.guide.tools_intro">Use this MCP server to install the skills, rules, agents, and workflows recommended by framework.sdd.works. You can also request API keys for third-party capabilities such as Qwen and Amap from WoodenSward Dojo. Tools we provide:</p>
         <div class="table-wrap">
           <table class="guide-caps-table">
             <thead>
@@ -48,38 +111,30 @@
               <tr>
                 <td><code>sdd_list_versions</code></td>
                 <td data-i18n="admin.guide.cap_channel_both">stdio and HTTP</td>
-                <td>List package versions and inventory. Read-only.</td>
+                <td data-i18n="admin.guide.tool_list_versions">List package versions and inventory. Read-only.</td>
               </tr>
               <tr>
                 <td><code>sdd_get_key</code></td>
-                <td data-i18n="admin.guide.cap_channel_both">stdio and HTTP</td>
-                <td>Return plaintext key_value for key_name. Auth required.</td>
+                <td data-i18n="admin.guide.cap_channel_http">HTTP only</td>
+                <td data-i18n="admin.guide.tool_get_key">Pass a key_name to receive the plaintext key_value. Auth required.</td>
               </tr>
               <tr>
                 <td><code>sdd_install_framework</code></td>
-                <td data-i18n="admin.guide.cap_channel_stdio">stdio (local writes)</td>
-                <td>Install skills, rules, and other folders on the developer machine.</td>
+                <td data-i18n="admin.guide.cap_channel_both">stdio and HTTP</td>
+                <td data-i18n="admin.guide.tool_install">Install skills, rules, and other folders. Stdio writes locally; HTTP returns a tarball URL for the AI to extract.</td>
               </tr>
               <tr>
                 <td><code>sdd_update_framework</code></td>
-                <td data-i18n="admin.guide.cap_channel_stdio">stdio (local writes)</td>
-                <td>Update an existing install. Same version is idempotent.</td>
+                <td data-i18n="admin.guide.cap_channel_both">stdio and HTTP</td>
+                <td data-i18n="admin.guide.tool_update">Update an existing install. Same version is idempotent. HTTP returns a tarball URL plus instructions.</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
-      <section class="guide-section" id="stdio">
-        <h2 data-i18n="admin.guide.h_stdio">2. stdio</h2>
-        <p data-i18n="admin.guide.stdio_body">Local desktop clients (Cursor, Claude Code, VS Code) run the stdio binary. Install and update write the caller’s skill and rule paths.</p>
-      </section>
-      <section class="guide-section" id="http">
-        <h2 data-i18n="admin.guide.h_http">3. Streamable HTTP</h2>
-        <p data-i18n="admin.guide.http_body">Remote clients use https://framework.sdd.works/mcp with Authorization: Bearer. HTTP install does not write the server disk.</p>
-      </section>
     </main>
-    <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>
-    <script src="assets/i18n.js"></script>
-    <script src="assets/mockup.js"></script>
+    <footer class="site-footer">
+      <p>framework.sdd.works</p>
+    </footer>
   </body>
 </html>

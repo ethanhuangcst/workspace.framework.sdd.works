@@ -180,7 +180,7 @@ describe("MCP install/update contracts", () => {
 
     seedHttpCache("sha-http-mcp", "v1.0.0");
     mockCacheFreshAsMatchingCache();
-    const http = createSddMcpServer({
+    const httpWithHome = createSddMcpServer({
       channel: "http",
       authorized: true,
       installHome: home,
@@ -188,7 +188,7 @@ describe("MCP install/update contracts", () => {
     });
     const [c2, s2] = InMemoryTransport.createLinkedPair();
     const httpClient = new Client({ name: "cursor", version: "0.0.0" });
-    await http.connect(s2);
+    await httpWithHome.connect(s2);
     await httpClient.connect(c2);
     const httpInstall = await httpClient.callTool({
       name: "sdd_update_framework",
@@ -200,7 +200,27 @@ describe("MCP install/update contracts", () => {
     expect(httpBody.packageUrl).toContain("/api/sdd/package");
     expect(httpBody.version).toBe("v1.0.0");
     await httpClient.close();
-    await http.close();
+    await httpWithHome.close();
+
+    seedHttpCache("sha-http-portable", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const httpProd = createSddMcpServer({ channel: "http", authorized: true });
+    const [c3, s3] = InMemoryTransport.createLinkedPair();
+    const prodClient = new Client({ name: "cursor", version: "0.0.0" });
+    await httpProd.connect(s3);
+    await prodClient.connect(c3);
+    const prodInstall = await prodClient.callTool({
+      name: "sdd_install_framework",
+      arguments: { client: "cursor", os: "darwin" },
+    });
+    const prodBody = parseToolJson<{
+      extractTarget: string;
+      previousManifest: unknown;
+    }>(prodInstall as never);
+    expect(prodBody.extractTarget).toBe("~/.cursor");
+    expect(prodBody.previousManifest).toBeNull();
+    await prodClient.close();
+    await httpProd.close();
   });
 });
 

@@ -53,7 +53,7 @@ export function createSddMcpServer(
       env: options.installHome
         ? { HOME: options.installHome, USERPROFILE: options.installHome }
         : undefined,
-      skipLlm: options.skipLlm,
+      skipLlm: channel === "http" ? true : options.skipLlm,
     };
   };
   const server = new McpServer({
@@ -96,7 +96,7 @@ export function createSddMcpServer(
     "sdd_install_framework",
     {
       description:
-        "framework.sdd.works: install framework package. Stdio writes local paths directly. HTTP returns packageUrl + paths + manifest + instructions for AI shell extraction. Optional force=true reinstalls even when version matches. Failures: path_rejected, client_unknown, already_up_to_date, package_unavailable, sync_pending.",
+        "framework.sdd.works: install framework package. Stdio writes local paths directly. HTTP always returns packageUrl + paths + manifest + instructions for AI shell extraction (never already_up_to_date — verify local files before skipping curl|tar). Optional force=true. Failures: path_rejected, client_unknown, package_unavailable, sync_pending.",
       inputSchema: {
         version: z.string().optional(),
         client: z.string().optional(),
@@ -113,7 +113,7 @@ export function createSddMcpServer(
     "sdd_update_framework",
     {
       description:
-        "framework.sdd.works: update an existing install. Alias of sdd_install_framework. Stdio writes locally; HTTP returns packageUrl + instructions for AI extraction. Optional force=true reinstalls even when version matches. Failures: already_up_to_date, path_rejected, package_unavailable, sync_pending.",
+        "framework.sdd.works: update an existing install. Alias of sdd_install_framework. Stdio writes locally; HTTP returns packageUrl + instructions for AI extraction (never already_up_to_date). Optional force=true. Failures: path_rejected, package_unavailable, sync_pending.",
       inputSchema: {
         version: z.string().optional(),
         client: z.string().optional(),

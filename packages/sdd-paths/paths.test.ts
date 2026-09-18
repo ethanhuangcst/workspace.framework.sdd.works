@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import pathMap from "./paths.json";
-import { getPathsVersion, resolve, validatePathTemplate, type PathRoots } from "./resolver";
+import {
+  getPathsVersion,
+  resolve,
+  resolveTemplates,
+  validatePathTemplate,
+  type PathRoots,
+} from "./resolver";
 
 const OS_KEYS = new Set(["default", "darwin", "linux", "win32"]);
 const CLIENTS = ["cursor", "codebuddy", "trae", "trae-cn", "claude"] as const;
@@ -127,5 +133,25 @@ describe("resolve", () => {
 
   it("should_expose_paths_version", () => {
     expect(getPathsVersion()).toBe(pathMap.version);
+  });
+});
+
+describe("resolveTemplates", () => {
+  it("should_return_unexpanded_cursor_templates", () => {
+    const result = resolveTemplates("cursor", "darwin");
+    expect(result).toMatchObject({
+      skills: "~/.cursor/skills/",
+      rules: "~/.cursor/rules/",
+      agents: "~/.cursor/agents/",
+      workflows: "~/.cursor/workflows/",
+      other: "~/.cursor/sdd/",
+    });
+  });
+
+  it("should_return_client_unknown_when_missing", () => {
+    expect(resolveTemplates("unknown-cli", "darwin")).toEqual({
+      code: "client_unknown",
+      client: "unknown-cli",
+    });
   });
 });

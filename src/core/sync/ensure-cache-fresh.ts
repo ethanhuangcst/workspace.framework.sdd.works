@@ -46,8 +46,23 @@ export async function ensurePackageCacheFresh(): Promise<EnsureFreshResult> {
   const live = await deps.resolveLive();
 
   if ("code" in live) {
-    if (manifest) return { status: "fresh" };
-    return live;
+    if (!manifest) return live;
+    // Live tip unknown — run full sync anyway (short-circuits if SHA unchanged).
+    const sync = await deps.sync();
+    deps.clearVersionsCache();
+    if ("code" in sync) return sync;
+    if (sync.status === "synced") {
+      return {
+        status: "refreshed",
+        commitSha: sync.commitSha,
+        version: sync.version,
+      };
+    }
+    return {
+      status: "unchanged",
+      commitSha: sync.commitSha,
+      version: sync.version,
+    };
   }
 
   if (!manifest || manifest.latestCommit !== live.commitSha) {

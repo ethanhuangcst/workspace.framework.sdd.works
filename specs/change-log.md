@@ -9,6 +9,13 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-18
 
+### MVP-6 closed (Sprint 6)
+
+- **Status:** Done — Cursor install/update (stdio + HTTP hybrid ADR-054), path detect (MCPI-05), Qwen fallback (MCPI-04), server sync (SYNK-01), package API (PKAPI-01), prompt setup (SETUP-01).
+- **HTTP portable paths:** production HTTP returns unexpanded `~/.cursor…` templates via `resolveTemplates`; no server-side env/LLM probe.
+- **Verification:** fixture CI + freshness regression green; LE1–LE5 live GitHub E2E green (`test.sdd`).
+- **Deferred to Sprint 7:** Mac live stdio path E2E (§5), manual M1–M2, sync S2–S5, Copilot/XDG env matrix, cross-client MCPI-02 — see [`sprint7-plan.md`](./sprint7-plan.md).
+
 ### Layered sync freshness (ADR-055)
 
 - **Layer 1:** `POST /api/github/webhook` — HMAC `GITHUB_WEBHOOK_SECRET`; `push` and `release` call `syncFrameworkRepo`.
@@ -63,7 +70,7 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 - **MCPI-04 / MCPI-05 / MCPI-01 / MCPU-01**: stdio install/update share one `installFramework` core (update is an alias). Manifest-tracked merge (`.sdd-installed.json`). Path detect: env → config → seed → Qwen.
 - PATH-01 map v2: cursor, codebuddy, trae, trae-cn, claude + agents/workflows/compat.
-- Tests: 86 vitest cases (path-policy, path-detect, path-resolve-llm, install filesystem, MCP InMemoryTransport). HTTP still `local_install_required`.
+- Tests: path-policy, path-detect, path-resolve-llm, install filesystem, MCP InMemoryTransport, freshness regression. **HTTP install (ADR-054):** returns `packageUrl` + portable `~` paths + AI extraction instructions — `local_install_required` deprecated on HTTP.
 
 ### MCPI-05 — Client path detection (Sprint 6 scope)
 

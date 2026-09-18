@@ -1,8 +1,14 @@
 import { runScheduledSync } from "./run-scheduled-sync";
 
-const INTERVAL_MS = 30 * 60 * 1000;
+export const SCHEDULED_SYNC_INTERVAL_MS = 30 * 60 * 1000;
 
 let interval: NodeJS.Timeout | null = null;
+
+/** Test-only: clear the module interval so tests can restart the timer. */
+export function resetScheduledSyncIntervalForTests(): void {
+  if (interval) clearInterval(interval);
+  interval = null;
+}
 
 export function startScheduledSyncInterval(): void {
   if (interval) return;
@@ -13,7 +19,7 @@ export function startScheduledSyncInterval(): void {
 
   const timer = setInterval(() => {
     void runScheduledSync();
-  }, INTERVAL_MS);
+  }, SCHEDULED_SYNC_INTERVAL_MS);
   timer.unref();
   interval = timer;
   console.info("[sdd-sync] scheduled sync interval started (30 min)");

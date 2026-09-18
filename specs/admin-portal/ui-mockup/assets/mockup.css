@@ -1414,6 +1414,17 @@ td.table-check {
   display: flex;
 }
 
+.guide-shell .home-main {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.guide-shell .guide {
+  width: 100%;
+  max-width: var(--guide-max);
+  margin: 0 auto;
+}
+
 .guide-header {
   border-bottom: 1px solid var(--line);
   background: var(--bg-elevated);
@@ -1446,41 +1457,276 @@ td.table-check {
   margin: 0 0 1.5rem;
 }
 
-.guide-toc {
-  font-family: var(--font-mono);
-  letter-spacing: 0.04em;
-  flex-wrap: wrap;
-  gap: 0.75rem 1.25rem;
-  margin: 0 0 0.5rem;
-  padding-bottom: 1.25rem;
-  font-size: 0.75rem;
+.guide-hero {
+  margin-bottom: 2.25rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-hero-title {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.25rem;
+  margin-bottom: 0.85rem;
 }
 
-.guide-toc a {
-  border-bottom-color: var(--line);
+.guide-hero-title .logo {
+  flex-shrink: 0;
+  margin: 0 0 0 -20px;
+}
+
+.guide-hero-title .logo-header-mark {
+  height: 104px;
+  max-width: 22rem;
+}
+
+.guide-hero-title h1 {
+  flex: 1 1 14rem;
+  margin: 0;
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.guide-hero-tag {
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--mute);
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 500;
 }
 
-.guide-toc a:hover {
+.guide-section {
+  margin-bottom: 2.75rem;
+}
+
+.guide-section:last-child {
+  margin-bottom: 0;
+}
+
+.guide-section > .section-subtitle {
+  margin-top: 0;
+}
+
+.guide-section > p {
+  color: var(--mute);
+  margin: 1rem 0 1.35rem;
+  max-width: 48rem;
+}
+
+.setup-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin: 0 0 0.5rem;
+}
+
+.setup-card-label {
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.codeblock {
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.codeblock-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0.8rem 1rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
   color: var(--ink);
-  border-bottom-color: var(--ink);
 }
 
-.guide-body h2 {
-  border-top: 1px solid var(--line);
-  margin: 2rem 0 0.75rem;
-  padding-top: 1.25rem;
-  font-size: 1.15rem;
+.codeblock-copy {
+  position: static;
+  height: auto;
+  flex-shrink: 0;
+  border: 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+  padding: 0 1.05rem;
+  background: var(--fill);
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
-.guide-section:first-of-type h2 {
-  border-top: none;
-  padding-top: 0.5rem;
+.codeblock-copy:hover {
+  color: var(--ink);
+}
+
+.codeblock-copy:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.codeblock--file {
+  display: block;
+}
+
+.codeblock-head {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  background: var(--fill);
+  border-bottom: 1px solid var(--line);
+}
+
+.codeblock-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--mute);
+  padding: 0.55rem 1rem;
+  align-self: center;
+}
+
+.codeblock-head .codeblock-copy {
+  background: transparent;
+}
+
+.codeblock--file .codeblock-text {
+  display: block;
+  white-space: pre;
+  padding: 0.95rem 1.1rem;
+  overflow-x: auto;
+}
+
+.setup-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.15rem 0 0;
+  padding: 0.55rem 0.55rem 0.55rem 1.15rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.2;
+  position: static;
+  height: auto;
+}
+
+.setup-pill:hover {
+  border-color: var(--ink);
+}
+
+.setup-pill:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.setup-pill-text {
+  padding-right: 0.95rem;
+  white-space: nowrap;
+}
+
+.setup-pill-divider {
+  width: 1px;
+  align-self: stretch;
+  min-height: 1.35rem;
+  background: var(--line-strong);
+  margin: 0.1rem 0;
+}
+
+.setup-pill-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0 0.75rem 0 0.85rem;
+  color: var(--ink);
+}
+
+.setup-pill-icon {
+  display: block;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.setup-after {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.setup-after p {
+  margin: 0;
+  color: var(--mute);
+  font-size: 0.95rem;
+}
+
+.setup-after .codeblock {
+  margin: 0;
+}
+
+.setup-manual {
+  margin-top: 2.25rem;
+}
+
+.setup-manual > .section-subtitle {
+  margin-top: 0;
+}
+
+.setup-manual .field-note {
+  margin: 1rem 0 1.15rem;
+}
+
+.setup-manual .codeblock {
+  margin-bottom: 1.5rem;
+}
+
+.setup-fallback {
+  margin-top: 1.5rem;
+}
+
+.setup-fallback-label {
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.setup-fallback .codeblock-text {
+  font-size: 0.9rem;
+  word-break: break-all;
 }
 
 .guide-caps-table {
-  margin-top: 1.25rem;
+  margin-top: 0.35rem;
 }
 
 .guide-caps-table tbody tr:last-child td {
@@ -1501,31 +1747,17 @@ td.table-check {
   color: var(--mute);
 }
 
-.guide-cap-channel {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.2rem;
-}
+@media (max-width: 640px) {
+  .setup-pill {
+    width: 100%;
+    justify-content: space-between;
+    padding-left: 1rem;
+  }
 
-.guide-cap-channel code {
-  font-size: 0.8rem;
-}
-
-.guide-sub {
-  font-family: var(--font-ui);
-  margin: 1.75rem 0 0.85rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.guide-body ul {
-  margin: 0 0 1.25rem;
-  padding-left: 1.15rem;
-}
-
-.guide-body li {
-  margin: 0.35rem 0;
+  .setup-pill-text {
+    white-space: normal;
+    text-align: left;
+  }
 }
 
 .guide-flow {

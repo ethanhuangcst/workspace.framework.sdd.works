@@ -63,7 +63,8 @@ describe("ensurePackageCacheFresh", () => {
     });
   });
 
-  it("should_treat_live_lookup_failure_as_fresh_when_cache_exists", async () => {
+  it("should_sync_when_live_lookup_fails_but_cache_exists", async () => {
+    let syncCalled = false;
     setEnsureCacheFreshDepsForTests({
       readManifest: () => ({
         latestCommit: "sha-a",
@@ -74,13 +75,19 @@ describe("ensurePackageCacheFresh", () => {
       }),
       resolveLive: async () => ({ code: "sync_error", message: "GitHub down" }),
       sync: async () => {
-        throw new Error("sync should not run");
+        syncCalled = true;
+        return { status: "synced", commitSha: "sha-b", version: "main" };
       },
       clearVersionsCache: () => {},
     });
 
     const result = await ensurePackageCacheFresh();
-    expect(result).toEqual({ status: "fresh" });
+    expect(syncCalled).toBe(true);
+    expect(result).toEqual({
+      status: "refreshed",
+      commitSha: "sha-b",
+      version: "main",
+    });
   });
 
   it("should_propagate_error_when_no_cache_and_live_lookup_fails", async () => {

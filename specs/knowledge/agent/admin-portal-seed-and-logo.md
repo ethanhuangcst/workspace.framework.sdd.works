@@ -72,5 +72,5 @@ When either capture env is set, the server writes the URL to that file and does 
 - HTTP: `npm run mcp:http` / `make mcp-http` on `http://127.0.0.1:3041/mcp`.
 - Auth: `MCP_AUTH_TOKEN` when set for HTTP (ADR-049/050). Open local mode when unset.
 - CI: `MCP_AUTH_TOKEN=ci-mcp-auth-token`, `GITHUB_FIXTURE=1`.
-- Tools: list_versions + get_key + stdio install/update (HTTP install returns `local_install_required`).
+- Tools: list_versions + get_key + install/update. **HTTP:** returns `packageUrl` + portable paths + instructions (ADR-054); AI extracts locally. **stdio:** writes directly.
 - Guide: `/instructions`.

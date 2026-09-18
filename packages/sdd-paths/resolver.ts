@@ -98,6 +98,40 @@ function expandRoots(
   return expanded;
 }
 
+/** Seed-map path templates without expanding home (for HTTP MCP portable responses). */
+export function resolveTemplates(
+  client: string,
+  os: string,
+  overrides?: Partial<PathRoots>,
+): PathRoots | PathError {
+  const entry = pathMap.clients[client];
+  if (!entry) {
+    return { code: "client_unknown", client };
+  }
+
+  const osKey = os as PathOs;
+  const roots: PathRoots | undefined = entry[osKey] ?? entry.default ?? undefined;
+
+  if (!roots) {
+    return { code: "os_unsupported", client, os };
+  }
+
+  const merged: PathRoots = {
+    skills: overrides?.skills ?? roots.skills,
+    rules: overrides?.rules ?? roots.rules,
+    agents: overrides?.agents ?? roots.agents,
+    workflows: overrides?.workflows ?? roots.workflows,
+    other: overrides?.other ?? roots.other,
+  };
+
+  for (const raw of Object.values(merged)) {
+    const err = validatePathTemplate(raw);
+    if (err) return err;
+  }
+
+  return merged;
+}
+
 export function resolve(
   client: string,
   os: string,

@@ -162,7 +162,7 @@ Three layers keep the sync cache aligned with GitHub:
 
 HTTP install response includes `cache_synced_at`, `cache_age_minutes`, `cache_stale` (advisory when age > 30 min). Install does **not** block on staleness.
 
-**HTTP idempotency contract:** Before passing `installed_commit` / `installed_version`, the AI must confirm every file in the local manifest still exists. If files were deleted locally but the server cache is stale, omit `installed_commit` so the tool returns the package for re-extraction.
+**HTTP extraction contract:** The server always returns `packageUrl` and `extract_recommended: true`. The AI must confirm every file in the local manifest still exists before skipping extraction. `installed_commit` / `installed_version` are hints only (`local_commit_matches` in the response); they do not suppress the package response.
 
 ## 3. Tools
 
@@ -223,7 +223,7 @@ Shared steps (both transports):
 
 4. Resolve package from **sync cache** (`resolveCachedVersion`); build `packageUrl = ${SDD_SERVER_URL}/api/sdd/package?version=<v>`.
 5. Build proposed manifest from cached unpacked inventory (file list only — no server-side write).
-6. If `installed_commit` + `installed_version` match resolved package and `force` is false → `already_up_to_date`.
+6. **Never** return `already_up_to_date` on HTTP — the server cannot verify the caller's disk. Always return `packageUrl` + `extract_recommended: true`. AI must verify local files before skipping `curl|tar`.
 7. Return:
 
 ```json
@@ -414,7 +414,7 @@ Path resolution modules live in shared core (see §6).
 
 ### 4.4 Client path detection (MCPI-05)
 
-Deterministic path resolution layer that runs **before** Qwen (§4.2). **stdio:** reads caller env/config. **HTTP:** returns canonical roots from seed map + `client`/`os` for the AI executor (does not read user disk). Knowledge: [`client.paths.md`](./client.paths.md).
+Deterministic path resolution layer that runs **before** Qwen (§4.2). **stdio:** reads caller env/config. **HTTP:** returns **unexpanded** seed-map templates (`~/.cursor/skills/`, etc.) via `resolveTemplates` + `client`/`os` — no env/config/LLM on server; `previousManifest` is null (AI reads local manifest). Knowledge: [`client.paths.md`](./client.paths.md).
 
 #### Detection flow
 

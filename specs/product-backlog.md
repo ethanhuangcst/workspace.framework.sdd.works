@@ -48,11 +48,11 @@ Change log: [`change-log.md`](./change-log.md).
 | 15 | MCP | MCPI | MCPI-01 | `sdd_install_framework` (stdio + HTTP) | Stdio writes locally; HTTP returns tarball URL for AI extraction (ADR-054); path allow-list; structured summary | [MCPI-01](./mcp/mcp-stories.md#sdd-mcp-install) | MVP-6 | Done |
 | 16 | MCP | MCPU | MCPU-01 | `sdd_update_framework` (stdio + HTTP) | Same as install; idempotent on same version | [MCPU-01](./mcp/mcp-stories.md#sdd-mcp-update) | MVP-6 | Done |
 | 16a | MCP | SETUP | SETUP-01 | Prompt-based MCP setup | `GET /agent-setup`; Instructions page paste-prompt; HTTP URL only in mcp.json (ADR-054) | [SETUP-01](./mcp/mcp-stories.md#sdd-mcp-prompt-setup) | MVP-6 | Done |
-| 17 | MCP | MCPI | MCPI-04 | Qwen path discovery | Qwen searches local client config to propose install roots; seed-map fallback; allow-list validation (ADR-047) | [MCPI-04](./mcp/mcp-stories.md#sdd-mcp-path-llm) | MVP-6 | ToDo |
-| 17a | MCP | MCPI | MCPI-05 | Client path detection | Deterministically read client config (env vars + config files) to resolve install paths; fall back to Qwen + seed map if unresolved; auto-detect client from MCP clientInfo | [MCPI-05](./mcp/mcp-stories.md#sdd-mcp-path-detect) | MVP-6 | ToDo |
+| 17 | MCP | MCPI | MCPI-04 | Qwen path discovery | Qwen searches local client config to propose install roots; seed-map fallback; allow-list validation (ADR-047). **stdio only** — HTTP uses seed templates (ADR-054). | [MCPI-04](./mcp/mcp-stories.md#sdd-mcp-path-llm) | MVP-6 | Done |
+| 17a | MCP | MCPI | MCPI-05 | Client path detection | Deterministically read client config (env vars + config files) to resolve install paths; fall back to Qwen + seed map if unresolved; auto-detect client from MCP clientInfo. **HTTP:** seed templates only (`~/.cursor…`). | [MCPI-05](./mcp/mcp-stories.md#sdd-mcp-path-detect) | MVP-6 | Done |
 | 18 | MCP | MCPI | MCPI-02 | Cross-client path resolution | Seed maps + Qwen discovery for first-class clients (Cursor Agents, WorkBuddy / CN, Claude Code, Cline, VS Code, Codex, Copilot); OS variants | [MCPI-02](./mcp/mcp-stories.md#sdd-mcp-cross-client) | MVP-7 | ToDo |
 | 19 | MCP | MCPI | MCPI-03 | HTTP install policy | HTTP MCP SHALL NOT write Server 2 disk; returns tarball URL + instructions for AI extraction (ADR-054) | [MCPI-03](./mcp/mcp-stories.md#sdd-mcp-http-install-policy) | MVP-6 | Done |
-| 20 | MCP | MCPU | MCPU-02 | Update on HTTP | Same update semantics over HTTP transport under the HTTP install policy | [MCPU-02](./mcp/mcp-stories.md#sdd-mcp-http-install-policy) | MVP-7 | ToDo |
+| 20 | MCP | MCPU | MCPU-02 | Update on HTTP | Alias of install on HTTP; returns `packageUrl` + instructions (ADR-054) | [MCPU-02](./mcp/mcp-stories.md#sdd-mcp-http-install-policy) | MVP-6 | Done |
 | 21 | Admin Portal | I18N | I18N-02 | MCP description i18n | MCP tool descriptions shown in client UI use the same catalogs (English source + locale overlay) | [I18N-02](./admin-portal/app-stories.md#sdd-admin-i18n) | MVP-7 | ToDo |
 | 22 | MCP | SYNK | SYNK-01 | Server-side framework sync | Sync job fetches GitHub repo → local cache (`.data/sdd-packages/`); manifest with versions/inventory/commit SHA; manual + polling trigger | [SYNK-01](./mcp/mcp-stories.md#sdd-mcp-sync-job) | MVP-6 | Done |
 | 23 | MCP | PKAPI | PKAPI-01 | Package REST API | `GET /api/sdd/versions`, `GET /api/sdd/package`; admin `POST /api/admin/sync`; stdio fetches from here (ADR-053) | [PKAPI-01](./mcp/mcp-stories.md#sdd-mcp-package-api) | MVP-6 | Done |
@@ -70,13 +70,13 @@ Change log: [`change-log.md`](./change-log.md).
 | MVP-3 | Keys management | An admin can create, view, edit, and delete keys (name, description, value); list shows all three; values are protected at rest and never appear unauthenticated | KEYS-01 | [sprint3-plan.md](./sprint3-plan.md) |
 | MVP-4 | Settings + framework live view | An admin can configure one GitHub repo URL and see a read-only, near-real-time view of the framework repository in the portal | SETT-01, FRMW-01 | [sprint4-plan.md](./sprint4-plan.md) |
 | MVP-5 | MCP server + discovery + key lookup | A supported MCP client can connect (stdio and HTTP), list framework versions, and resolve a key value via `sdd_get_key` with auth | TRAN-01, TRAN-02, MCPL-01, MCPK-01 | [sprint5-plan.md](./sprint5-plan.md) |
-| MVP-6 | MCP install + update (Cursor, local) | A Cursor user can install the SDD framework locally and update it to a chosen version; re-running the same version is idempotent; path roots use deterministic client config detection first, then seed map + Qwen when needed; stdio fetches packages from operator server (ADR-053) | MCPI-01, MCPU-01, MCPI-04, MCPI-05, SYNK-01, PKAPI-01 | [sprint6-plan.md](./sprint6-plan.md) |
-| MVP-7 | Cross-client + HTTP hardening | First-class clients across macOS / Windows / Linux resolve install paths (seed + Qwen); HTTP install follows the safe local-bridge policy; MCP descriptions are i18n-aware | MCPI-02, MCPI-03, MCPU-02, I18N-02 | [sprint7-plan.md](./sprint7-plan.md) |
+| MVP-6 | MCP install + update (Cursor, local) **Done** | A Cursor user can install the SDD framework locally and update it to a chosen version; re-running the same version is idempotent; path roots use deterministic client config detection first, then seed map + Qwen when needed; stdio fetches packages from operator server (ADR-053); HTTP hybrid ADR-054 | MCPI-01, MCPU-01, MCPU-02, MCPI-03, MCPI-04, MCPI-05, SETUP-01, SYNK-01, PKAPI-01 | [sprint6-plan.md](./sprint6-plan.md) |
+| MVP-7 | Cross-client + verification hardening | First-class clients across macOS / Windows / Linux; Sprint 6 verification deferrals (Mac stdio E2E, sync S2–S5, operator manual); extended env matrix; MCP description i18n | MCPI-02, MCPI-05+, VERIF-01, VERIF-02, I18N-02 | [sprint7-plan.md](./sprint7-plan.md) |
 
 Notes:
 - MVP-5 depends on MVP-3 (keys store) and MVP-4 (GitHub links for version listing).
 - MVP-6 depends on MVP-5 (transport + list versions), MVP-4 (package source), and MVP-1 PATH-01 (path map + resolver); includes MCPI-05 (deterministic client path detection) and MCPI-04 (Qwen path discovery layered on PATH-01).
-- MVP-7 depends on MVP-6 and expands the path map (PATH-01) to first-class clients; resolves open questions on client path resolution and HTTP install policy.
+- MVP-7 depends on MVP-6 and expands the path map (PATH-01) to first-class clients; closes Sprint 6 verification deferrals (see [`sprint7-plan.md`](./sprint7-plan.md) § Carried from Sprint 6).
 
 ## Part 2 — Feature Detail
 
@@ -215,7 +215,7 @@ Notes:
 
 ### MCPI-05 — Client path detection
 
-- **Detail.** Before Qwen discovery, deterministically resolve client install roots by: (1) reading client-specific env vars (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`, `CLINE_DIR`, `KIRO_HOME`, `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`, `XDG_DATA_HOME`), (2) probing client config files for customized paths. Auto-detect the calling client from MCP `clientInfo.name` when the explicit `client` arg is omitted. Fall back to MCPI-04 (Qwen) + PATH-01 seed map if deterministic resolution fails. stdio writes locally; HTTP returns tarball URL (ADR-054). Knowledge base: [`specs/mcp/client.paths.md`](./mcp/client.paths.md).
+- **Detail.** Before Qwen discovery, deterministically resolve client install roots by: (1) reading client-specific env vars (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`, `CLINE_DIR`, `KIRO_HOME`), (2) probing client config files for customized paths. Auto-detect the calling client from MCP `clientInfo.name` when the explicit `client` arg is omitted. Fall back to MCPI-04 (Qwen) + PATH-01 seed map if deterministic resolution fails. **stdio** writes locally; **HTTP** returns portable seed templates + tarball URL (ADR-054) — no env/config/LLM on server. Copilot/XDG env rows deferred to Sprint 7. Knowledge base: [`specs/mcp/client.paths.md`](./mcp/client.paths.md).
 - **Dependencies.** TRAN-01, PATH-01, MCPI-04.
 - **User stories & AC.** [MCPI-05](./mcp/mcp-stories.md#sdd-mcp-path-detect)
 - **UI design & mockup.** n/a

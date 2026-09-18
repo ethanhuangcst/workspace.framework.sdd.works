@@ -19,6 +19,9 @@ export function InstructionsClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ locale: next }),
+      }).then(() => {
+        document.documentElement.lang =
+          next === "zh-Hans" ? "zh-CN" : next === "zh-Hant" ? "zh-Hant" : "en";
       });
     });
   }, []);

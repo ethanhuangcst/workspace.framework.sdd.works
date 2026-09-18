@@ -416,7 +416,7 @@ Our SDK (`@modelcontextprotocol/sdk`): `McpServer.server.getClientVersion()` ret
 
 **Note:** MCP 2026-07-28 spec deprecates `roots/list` (server-initiated request for working dirs). New pattern is MRTR (Multi Round-Trip Requests) — server returns `InputRequiredResult`, client retries with input. For path discovery, explicit `client` arg + env vars are simpler than MRTR.
 
-### Proposed resolution chain (stdio only — HTTP returns `local_install_required` per MCPI-03)
+### Proposed resolution chain (stdio — full chain; HTTP — seed templates only, ADR-054)
 
 ```
 1. Explicit `client` arg (caller tells us)           → highest priority
@@ -477,7 +477,7 @@ Build a case-insensitive mapping table with aliases. Fall back to explicit `clie
 
 ### Cons / Risks
 
-1. **stdio only** — env vars and config files are only accessible when the server runs as a child process. HTTP install returns `local_install_required` (MCPI-03 unchanged).
+1. **stdio only** — env vars and config files are only accessible when the server runs as a child process. **HTTP install (ADR-054):** returns portable seed-map templates (`~/.cursor…`) + `packageUrl`; the AI agent extracts on the caller machine — no server-side env/config/LLM probe.
 2. **4 clients have no env var** — Cursor, WorkBuddy, TRAE, Windsurf. For those, the flow falls through to seed map → Qwen. No regression vs. current design.
 3. **`clientInfo.name` not standardized** — different clients may send different names. Need a case-insensitive mapping table with aliases. Verify with real clients during Sprint 6.
 4. **Config file formats differ** — JSON (`~/.claude.json`), TOML (`~/.codex/config.toml`), YAML (`~/.continue/config.yaml`). Per-client parser needed. Only read the fields relevant to path discovery; don't parse the entire config.
@@ -505,7 +505,7 @@ Build a case-insensitive mapping table with aliases. Fall back to explicit `clie
 4. Keep Qwen as the last-resort fallback for clients without env vars (Cursor, WorkBuddy, TRAE, Windsurf).
 5. Update ADR-047 to document the new resolution chain.
 
-This does not change MCPI-03 (HTTP install policy) — HTTP still returns `local_install_required`. The detect-resolve-write flow is stdio-only, which is where install happens.
+**HTTP vs stdio:** stdio runs the full detect-resolve-write chain locally. HTTP returns seed templates + tarball URL; the AI executor runs `curl | tar` and writes the manifest on the user machine (ADR-054). `local_install_required` is deprecated on HTTP.
 
 
 

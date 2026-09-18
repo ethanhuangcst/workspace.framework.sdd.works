@@ -9,7 +9,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname, join } from "node:path";
-import type { PathRoots } from "@sdd/paths";
+import { resolveTemplates, type PathRoots } from "@sdd/paths";
 import {
   detectClient,
   resolveClientPaths,
@@ -31,7 +31,7 @@ export type InstallArgs = {
   client?: string;
   os?: string;
   force?: boolean;
-  /** When AI read local manifest first (HTTP channel idempotency). */
+  /** HTTP hint only — AI read from local manifest; never used for already_up_to_date. */
   installed_commit?: string;
   installed_version?: string;
 };
@@ -111,6 +111,16 @@ function clientRootFromSkills(skills: string): string {
   return dirname(skills.replace(/[/\\]+$/, ""));
 }
 
+function defaultOs(): string {
+  return process.platform === "win32" || process.platform === "linux"
+    ? process.platform
+    : "darwin";
+}
+
+function hasInstallHome(ctx: InstallContext): boolean {
+  return Boolean(ctx.home);
+}
+
 function inventoryFromUnpacked(unpackedPath: string): Manifest["files"] {
   return {
     skills: listNames(join(unpackedPath, "skills")),
@@ -128,7 +138,7 @@ function buildHttpInstallInstructions(
 ): string {
   const lines = [
     "HTTP MCP cannot write the local filesystem. Execute these steps on the developer machine:",
-    "Before calling install with installed_commit / installed_version, confirm every file listed in the local manifest still exists under the returned paths. If any are missing, omit installed_commit so the tool returns the package for re-extraction.",
+    "Always verify local files from the manifest exist before skipping extraction. If any skill, rule, agent, or workflow file is missing, you MUST run step 2.",
     `1. Read ${manifestPath} if it exists (previousManifest). Remove files listed under files.* before extracting.`,
     `2. Download and extract: curl -fsSL "${packageUrl}" | tar xz -C "${extractTarget}" --strip-components 1`,
     `3. Write the manifest JSON returned in this response to ${manifestPath}.`,
@@ -183,9 +193,40 @@ async function resolveInstallContext(
     };
   }
 
+  const os = args.os ?? ctx.os ?? defaultOs();
+
+  if (ctx.channel === "http" && !hasInstallHome(ctx)) {
+    const templates = resolveTemplates(detected, os);
+    if ("code" in templates) {
+      if (templates.code === "client_unknown") {
+        return {
+          ok: false,
+          result: toolError("client_unknown", `Unknown client: ${detected}`),
+        };
+      }
+      return {
+        ok: false,
+        result: toolError(
+          "os_unsupported",
+          `Unsupported OS for ${detected}`,
+        ),
+      };
+    }
+    const clientRoot = clientRootFromSkills(templates.skills);
+    const resolved: ResolvedClientPaths = {
+      primary: templates,
+      compat: [],
+      source: "seed",
+    };
+    return {
+      ok: true,
+      ctx: { detected, resolved, roots: templates, clientRoot },
+    };
+  }
+
   const resolved = await resolveClientPaths(detected, {
     ...ctx,
-    os: args.os ?? ctx.os,
+    os,
     skipLlm: ctx.skipLlm,
   });
   if ("code" in resolved) {
@@ -247,23 +288,10 @@ export async function installFramework(
       return toolError("version_not_found", "Requested version not in cache.");
     }
 
-    if (
-      !args.force &&
-      args.installed_commit &&
-      args.installed_version &&
-      args.installed_commit === cached.commitSha &&
-      args.installed_version === cached.version
-    ) {
-      return toolError(
-        "already_up_to_date",
-        `Framework ${cached.version} is already installed.`,
-      );
-    }
-
     const versionParam = args.version?.trim() || "latest";
     const packageUrl = `${getSddServerUrl()}/api/sdd/package?version=${encodeURIComponent(versionParam)}`;
     const manifestPath = join(clientRoot, MANIFEST_NAME);
-    const previousManifest = readManifest(clientRoot);
+    const previousManifest = hasInstallHome(ctx) ? readManifest(clientRoot) : null;
     const files = inventoryFromUnpacked(cached.unpackedPath);
     const manifest: Manifest = {
       version: 1,
@@ -276,11 +304,17 @@ export async function installFramework(
     const cacheAgeMinutes =
       (Date.now() - Date.parse(cached.syncedAt)) / (60 * 1000);
     const cacheStale = cacheAgeMinutes > CACHE_STALE_MINUTES;
+    const localCommitMatches =
+      Boolean(args.installed_commit) &&
+      args.installed_commit === cached.commitSha &&
+      args.installed_version === cached.version;
 
     return toolOk({
       packageUrl,
       version: cached.version,
       commitSha: cached.commitSha,
+      extract_recommended: true,
+      local_commit_matches: localCommitMatches,
       client: detected,
       paths: roots,
       manifestPath,

@@ -296,7 +296,31 @@ describe("installFramework", () => {
     expect(existsSync(join(home, ".cursor"))).toBe(false);
   });
 
-  it("should_return_package_url_on_http", async () => {
+  it("should_return_portable_paths_on_http_without_install_home", async () => {
+    seedHttpCache("sha-http-portable", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const result = await installFramework(
+      { client: "cursor", os: "darwin" },
+      { channel: "http" },
+    );
+    const body = parseToolJson<{
+      extractTarget: string;
+      manifestPath: string;
+      paths: { skills: string; rules: string };
+      previousManifest: unknown;
+      resolution_source: string;
+      instructions: string;
+    }>(result);
+    expect(body.extractTarget).toBe("~/.cursor");
+    expect(body.manifestPath).toBe("~/.cursor/.sdd-installed.json");
+    expect(body.paths.skills).toBe("~/.cursor/skills/");
+    expect(body.paths.rules).toBe("~/.cursor/rules/");
+    expect(body.previousManifest).toBeNull();
+    expect(body.resolution_source).toBe("seed");
+    expect(body.instructions).toContain('tar xz -C "~/.cursor"');
+  });
+
+  it("should_return_expanded_paths_on_http_with_install_home", async () => {
     seedHttpCache("sha-http-v1", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
@@ -405,10 +429,53 @@ describe("installFramework", () => {
     expect(body.cache_age_minutes).toBeGreaterThan(30);
     expect(body.cache_stale).toBe(true);
     expect(body.instructions).toContain("package cache may be stale");
-    expect(body.instructions).toContain("installed_commit");
+    expect(body.instructions).toContain("verify local files");
   });
 
-  it("should_not_return_already_up_to_date_when_cache_refreshed_to_new_commit", async () => {
+  it("should_never_return_already_up_to_date_on_http_even_when_commit_matches", async () => {
+    seedHttpCache("sha-old", "main");
+    mockCacheFreshAsMatchingCache();
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    mkdirSync(join(home, ".cursor"), { recursive: true });
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "sha-old",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        files: { skills: ["tdd"], rules: [], agents: [], workflows: [] },
+      }),
+    );
+
+    const result = await installFramework(
+      {
+        client: "cursor",
+        os: "darwin",
+        installed_commit: "sha-old",
+        installed_version: "main",
+      },
+      {
+        channel: "http",
+        home,
+        userProfile: home,
+        env: { HOME: home },
+        skipLlm: true,
+      },
+    );
+    const body = parseToolJson<{
+      packageUrl: string;
+      extract_recommended: boolean;
+      local_commit_matches: boolean;
+      error?: { code: string };
+    }>(result);
+    expect(body.error).toBeUndefined();
+    expect(body.packageUrl).toContain("/api/sdd/package");
+    expect(body.extract_recommended).toBe(true);
+    expect(body.local_commit_matches).toBe(true);
+  });
+
+  it("should_return_new_package_when_cache_refreshed_to_new_commit", async () => {
     seedHttpCache("sha-old", "main");
     mockCacheFreshAsMatchingCache();
 
@@ -467,10 +534,14 @@ describe("installFramework", () => {
     const body = parseToolJson<{
       commitSha: string;
       cache_refresh?: string;
+      extract_recommended: boolean;
+      local_commit_matches: boolean;
       manifest: { files: { skills: string[] } };
     }>(result);
     expect(body.cache_refresh).toBe("refreshed");
     expect(body.commitSha).toBe("sha-new");
+    expect(body.extract_recommended).toBe(true);
+    expect(body.local_commit_matches).toBe(false);
     expect(body.manifest.files.skills).toContain("atdd");
   });
 

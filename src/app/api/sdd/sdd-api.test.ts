@@ -81,13 +81,21 @@ describe("SDD package API", () => {
   });
 
   it("should_return_agent_setup_markdown", async () => {
-    const res = await getAgentSetup();
-    expect(res.status).toBe(200);
-    expect(res.headers.get("Content-Type")).toContain("text/markdown");
-    const body = await res.text();
-    expect(body).toContain("framework.sdd.works");
-    expect(body).toContain("https://framework.sdd.works/mcp");
-    expect(body).toContain("sdd_install_framework");
+    const prevBase = process.env.PUBLIC_BASE_URL;
+    delete process.env.PUBLIC_BASE_URL;
+    delete process.env.MCP_PUBLIC_URL;
+    try {
+      const res = await getAgentSetup();
+      expect(res.status).toBe(200);
+      expect(res.headers.get("Content-Type")).toContain("text/markdown");
+      const body = await res.text();
+      expect(body).toContain("framework.sdd.works");
+      expect(body).toContain("https://framework.sdd.works/mcp");
+      expect(body).toContain("sdd_install_framework");
+    } finally {
+      if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
+      else process.env.PUBLIC_BASE_URL = prevBase;
+    }
   });
 
   it("should_return_404_for_unknown_version", async () => {
