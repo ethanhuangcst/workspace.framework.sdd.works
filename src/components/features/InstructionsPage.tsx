@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { t, type Locale } from "@/i18n/t";
 import { AuthShell } from "@/components/layout/AuthShell";
 import { CopyButton } from "@/components/ui/CopyButton";
@@ -25,6 +26,16 @@ const AGENT_LOGOS = [
   { src: "/guide/cursor.png", alt: "Cursor" },
   { src: "/guide/codex.png", alt: "Codex" },
   { src: "/guide/codebuddy.png", alt: "CodeBuddy" },
+] as const;
+
+const AGENT_ROSTER = [
+  { icon: "/guide/claude.png", name: "Claude Code" },
+  { icon: "/guide/codex.png", name: "Codex" },
+  { icon: "/guide/cursor.png", name: "Cursor" },
+  { icon: "/guide/codebuddy.png", name: "CodeBuddy CN / CodeBuddy / WorkBuddy CN" },
+  { icon: "/guide/trae.png", name: "TraeCode CN / TRAE" },
+  { icon: "/guide/copilot.png", name: "GitHub Copilot" },
+  { icon: "/guide/kiro.png", name: "AWS Kiro" },
 ] as const;
 
 const TOOLS = [
@@ -106,6 +117,9 @@ export function InstructionsPage({
       className="guide-shell"
     >
       <article className="guide" data-testid="instructions-guide">
+        <Link className="back-link" href="/" data-testid="guide-back-home">
+          {t(locale, "admin.common.back_home")}
+        </Link>
         <header className="guide-hero">
           <div className="guide-hero-title">
             <Logo size="header" href="/" />
@@ -196,6 +210,28 @@ export function InstructionsPage({
               />
             </div>
           </div>
+        </section>
+
+        <section className="guide-section" id="agents">
+          <h2 className="section-subtitle">{t(locale, "admin.guide.h_agents")}</h2>
+          <p>{t(locale, "admin.guide.agents_intro")}</p>
+          <ol className="agent-roster" data-testid="guide-agents">
+            {AGENT_ROSTER.map((agent) => (
+              <li key={agent.name} className="agent-roster-row">
+                <span className="agent-roster-mark" aria-hidden="true">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- small static brand marks */}
+                  <img
+                    className="agent-roster-icon"
+                    src={agent.icon}
+                    alt=""
+                    width={18}
+                    height={18}
+                  />
+                </span>
+                <span className="agent-roster-name">{agent.name}</span>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section className="guide-section" id="tools">

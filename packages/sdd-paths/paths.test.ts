@@ -9,11 +9,25 @@ import {
 } from "./resolver";
 
 const OS_KEYS = new Set(["default", "darwin", "linux", "win32"]);
-const CLIENTS = ["cursor", "codebuddy", "trae", "trae-cn", "claude"] as const;
+const CLIENTS = [
+  "cursor",
+  "codebuddy",
+  "trae",
+  "trae-cn",
+  "claude",
+  "cline",
+  "codex",
+  "copilot",
+  "gemini",
+  "kiro",
+  "continue",
+  "windsurf",
+  "opencode",
+] as const;
 
 describe("paths.json table validation", () => {
   it("should_have_version_and_clients", () => {
-    expect(pathMap.version).toBeGreaterThanOrEqual(2);
+    expect(pathMap.version).toBeGreaterThanOrEqual(3);
     expect(Object.keys(pathMap.clients).sort()).toEqual([...CLIENTS].sort());
   });
 
@@ -72,6 +86,56 @@ describe("resolve", () => {
     });
     if (!("code" in result)) {
       expect(result.compat[0]?.skills).toBe("/Users/dev/.claude/skills/");
+    }
+  });
+
+  it("should_resolve_first_class_clients_on_darwin", () => {
+    const home = { home: "/Users/dev", userProfile: "/Users/dev" };
+    expect(resolve("cline", "darwin", undefined, home)).toMatchObject({
+      skills: "/Users/dev/.cline/skills/",
+    });
+    expect(resolve("codex", "darwin", undefined, home)).toMatchObject({
+      skills: "/Users/dev/.agents/skills/",
+    });
+    expect(resolve("copilot", "darwin", undefined, home)).toMatchObject({
+      other: "/Users/dev/.copilot/",
+    });
+    expect(resolve("gemini", "darwin", undefined, home)).toMatchObject({
+      skills: "/Users/dev/.gemini/skills/",
+    });
+    expect(resolve("kiro", "darwin", undefined, home)).toMatchObject({
+      rules: "/Users/dev/.kiro/steering/",
+    });
+    expect(resolve("continue", "darwin", undefined, home)).toMatchObject({
+      skills: "/Users/dev/.continue/skills/",
+    });
+    expect(resolve("windsurf", "darwin", undefined, home)).toMatchObject({
+      rules: "/Users/dev/.windsurf/rules/",
+    });
+    expect(resolve("opencode", "darwin", undefined, home)).toMatchObject({
+      skills: "/Users/dev/.config/opencode/skills/",
+    });
+  });
+
+  it("should_resolve_first_class_clients_on_win32", () => {
+    const home = { home: "C:\\Users\\dev", userProfile: "C:\\Users\\dev" };
+    for (const client of ["cline", "codex", "copilot", "gemini", "kiro", "continue", "windsurf", "opencode"] as const) {
+      const result = resolve(client, "win32", undefined, home);
+      expect("code" in result, client).toBe(false);
+      if (!("code" in result)) {
+        expect(result.skills.toLowerCase()).toContain("users\\dev");
+      }
+    }
+  });
+
+  it("should_resolve_first_class_clients_on_linux", () => {
+    const home = { home: "/home/dev", userProfile: "/home/dev" };
+    for (const client of ["cline", "codex", "copilot", "gemini", "kiro", "continue", "windsurf", "opencode"] as const) {
+      const result = resolve(client, "linux", undefined, home);
+      expect("code" in result, client).toBe(false);
+      if (!("code" in result)) {
+        expect(result.skills.startsWith("/home/dev")).toBe(true);
+      }
     }
   });
 

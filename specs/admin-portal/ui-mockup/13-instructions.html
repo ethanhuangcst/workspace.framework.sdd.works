@@ -8,22 +8,18 @@
     <link rel="apple-touch-icon" href="assets/apple-icon.png" />
     <link rel="stylesheet" href="assets/mockup.css" />
   </head>
-  <body class="guide-shell" data-title-key="admin.guide.title">
+  <body class="home-shell guide-shell" data-title-key="admin.guide.title">
     <a class="sr-only" href="#content" data-i18n="admin.a11y.skip">Skip to content</a>
-    <header class="guide-header">
-      <a class="logo" href="01-home.html" aria-label="framework.sdd.works">
-        <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="234" height="130" />
-      </a>
-      <div class="header-end">
-        <a class="header-guide" href="01-home.html" data-i18n="admin.common.back_home">Back to home</a>
-        <div class="locale-switch" role="group" data-i18n="admin.a11y.locale" data-i18n-attr="aria-label">
-          <button type="button" data-locale="EN">EN</button>
-          <button type="button" data-locale="CN">简</button>
-          <button type="button" data-locale="HANT">繁</button>
-        </div>
+    <div class="shell-locale">
+      <div class="locale-switch" role="group" data-i18n="admin.a11y.locale" data-i18n-attr="aria-label">
+        <button type="button" data-locale="EN">EN</button>
+        <button type="button" data-locale="CN">简</button>
+        <button type="button" data-locale="HANT">繁</button>
       </div>
-    </header>
-    <main id="content" class="guide-body">
+    </div>
+    <main id="content" class="home-main">
+      <article class="guide" data-testid="instructions-guide">
+      <a class="back-link" href="01-home.html" data-i18n="admin.common.back_home" data-testid="guide-back-home">Back to home</a>
       <header class="guide-hero">
         <div class="guide-hero-title">
           <a class="logo" href="01-home.html" aria-label="framework.sdd.works">
@@ -95,6 +91,55 @@
         </div>
       </section>
 
+      <section class="guide-section" id="agents">
+        <h2 class="section-subtitle" data-i18n="admin.guide.h_agents">Supported AI agents</h2>
+        <p data-i18n="admin.guide.agents_intro">Paste the setup prompt into any of these agents. One MCP server; install writes to that agent’s local paths.</p>
+        <ol class="agent-roster" data-testid="guide-agents">
+          <li class="agent-roster-row">
+            <span class="agent-roster-mark" aria-hidden="true">
+              <img class="agent-roster-icon" src="assets/guide/claude.png" alt="" width="18" height="18" />
+            </span>
+            <span class="agent-roster-name">Claude Code</span>
+          </li>
+          <li class="agent-roster-row">
+            <span class="agent-roster-mark" aria-hidden="true">
+              <img class="agent-roster-icon" src="assets/guide/codex.png" alt="" width="18" height="18" />
+            </span>
+            <span class="agent-roster-name">Codex</span>
+          </li>
+          <li class="agent-roster-row">
+            <span class="agent-roster-mark" aria-hidden="true">
+              <img class="agent-roster-icon" src="assets/guide/cursor.png" alt="" width="18" height="18" />
+            </span>
+            <span class="agent-roster-name">Cursor</span>
+          </li>
+          <li class="agent-roster-row">
+            <span class="agent-roster-mark" aria-hidden="true">
+              <img class="agent-roster-icon" src="assets/guide/codebuddy.png" alt="" width="18" height="18" />
+            </span>
+            <span class="agent-roster-name">CodeBuddy CN / CodeBuddy / WorkBuddy CN</span>
+          </li>
+          <li class="agent-roster-row">
+            <span class="agent-roster-mark" aria-hidden="true">
+              <img class="agent-roster-icon" src="assets/guide/trae.png" alt="" width="18" height="18" />
+            </span>
+            <span class="agent-roster-name">TraeCode CN / TRAE</span>
+          </li>
+          <li class="agent-roster-row">
+            <span class="agent-roster-mark" aria-hidden="true">
+              <img class="agent-roster-icon" src="assets/guide/copilot.png" alt="" width="18" height="18" />
+            </span>
+            <span class="agent-roster-name">GitHub Copilot</span>
+          </li>
+          <li class="agent-roster-row">
+            <span class="agent-roster-mark" aria-hidden="true">
+              <img class="agent-roster-icon" src="assets/guide/kiro.png" alt="" width="18" height="18" />
+            </span>
+            <span class="agent-roster-name">AWS Kiro</span>
+          </li>
+        </ol>
+      </section>
+
       <section class="guide-section" id="tools">
         <h2 class="section-subtitle" data-i18n="admin.guide.h_tools">Tools</h2>
         <p data-i18n="admin.guide.tools_intro">Use this MCP server to install the skills, rules, agents, and workflows recommended by framework.sdd.works. You can also request API keys for third-party capabilities such as Qwen and Amap from WoodenSward Dojo. Tools we provide:</p>
@@ -132,9 +177,12 @@
           </table>
         </div>
       </section>
+      </article>
     </main>
     <footer class="site-footer">
-      <p>framework.sdd.works</p>
+      <p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p>
     </footer>
+    <script src="assets/i18n.js"></script>
+    <script src="assets/mockup.js"></script>
   </body>
 </html>

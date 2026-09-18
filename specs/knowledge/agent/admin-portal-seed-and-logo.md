@@ -55,14 +55,14 @@ When either capture env is set, the server writes the URL to that file and does 
 - Surface field errors next to the control (`key-name-error` / `key-value-error`) plus a form-level alert — silent Zod failures are easy to miss on submit.
 - Lead copy frames MCP usage (`sdd_get_key` + key name → key value); do not re-explain storage or “long AI API key” under the value field.
 
-## GitHub settings + framework sync (SETT-01 / FRMW-01)
+## GitHub settings + framework sync (SETT-01 / FRMW-01 / FRMW-02)
 
 - Env: `GITHUB_TOKEN` (contents:read) + optional `GITHUB_API_BASE_URL`; **never** expose to the browser.
 - CI / Playwright: set `GITHUB_FIXTURE=1` so `src/github/sync.ts` uses an in-process fixture port (reachable: `fixture/sdd-framework`; unreachable: `fixture/missing`).
 - Tests may also call `setGitHubPortForTests(...)`.
 - Owner `fixture` always uses the fixture port (even with a real token) so E2E leftover Settings URLs do not 404 against api.github.com.
-- Freshness: in-memory tree cache ~30s; Framework UI polls `GET /api/admin/framework` every 30s. Webhooks not wired yet.
-- Saving Settings clears the tree cache so the next Framework load refetches.
+- Framework tree: `GET /api/admin/framework` reads SYNK-01 unpacked cache (`.data/sdd-packages/<sha>/unpacked/`); no live Octokit on page load. UI polls every 30s; **Sync with git repository** calls `POST /api/admin/sync { force: true }`.
+- Tree UX: top-level dirs (Agents, Rules, Skills, …) expand one level by default; children indented under each folder; deeper dirs use `+`/`−`.
 - For live demos, save a real `https://github.com/{owner}/{repo}` the token can read — not the fixture URL.
 
 ## MCP server (Sprint 5)

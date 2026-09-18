@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "updated_at": "2026-09-17",
+  "version": 3,
+  "updated_at": "2026-09-18",
   "clients": {
     "cursor": {
       "default": {
@@ -178,6 +178,280 @@
         "workflows": "%USERPROFILE%\\.claude\\workflows\\",
         "other": "%USERPROFILE%\\.claude\\sdd\\"
       }
+    },
+    "cline": {
+      "default": {
+        "skills": "~/.cline/skills/",
+        "rules": "~/.cline/rules/",
+        "agents": "~/.cline/agents/",
+        "workflows": "~/.cline/workflows/",
+        "other": "~/.cline/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.cline/skills/",
+        "rules": "~/.cline/rules/",
+        "agents": "~/.cline/agents/",
+        "workflows": "~/.cline/workflows/",
+        "other": "~/.cline/sdd/"
+      },
+      "linux": {
+        "skills": "~/.cline/skills/",
+        "rules": "~/.cline/rules/",
+        "agents": "~/.cline/agents/",
+        "workflows": "~/.cline/workflows/",
+        "other": "~/.cline/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.cline\\skills\\",
+        "rules": "%USERPROFILE%\\.cline\\rules\\",
+        "agents": "%USERPROFILE%\\.cline\\agents\\",
+        "workflows": "%USERPROFILE%\\.cline\\workflows\\",
+        "other": "%USERPROFILE%\\.cline\\sdd\\"
+      }
+    },
+    "codex": {
+      "default": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.codex/rules/",
+        "agents": "~/.codex/agents/",
+        "workflows": "~/.codex/workflows/",
+        "other": "~/.codex/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.codex/rules/",
+        "agents": "~/.codex/agents/",
+        "workflows": "~/.codex/workflows/",
+        "other": "~/.codex/sdd/"
+      },
+      "linux": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.codex/rules/",
+        "agents": "~/.codex/agents/",
+        "workflows": "~/.codex/workflows/",
+        "other": "~/.codex/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.agents\\skills\\",
+        "rules": "%USERPROFILE%\\.codex\\rules\\",
+        "agents": "%USERPROFILE%\\.codex\\agents\\",
+        "workflows": "%USERPROFILE%\\.codex\\workflows\\",
+        "other": "%USERPROFILE%\\.codex\\sdd\\"
+      }
+    },
+    "copilot": {
+      "default": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.copilot/instructions/",
+        "agents": "~/.github/agents/",
+        "workflows": "~/.copilot/workflows/",
+        "other": "~/.copilot/"
+      },
+      "darwin": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.copilot/instructions/",
+        "agents": "~/.github/agents/",
+        "workflows": "~/.copilot/workflows/",
+        "other": "~/.copilot/"
+      },
+      "linux": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.copilot/instructions/",
+        "agents": "~/.github/agents/",
+        "workflows": "~/.copilot/workflows/",
+        "other": "~/.copilot/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.agents\\skills\\",
+        "rules": "%USERPROFILE%\\.copilot\\instructions\\",
+        "agents": "%USERPROFILE%\\.github\\agents\\",
+        "workflows": "%USERPROFILE%\\.copilot\\workflows\\",
+        "other": "%USERPROFILE%\\.copilot\\"
+      }
+    },
+    "gemini": {
+      "default": {
+        "skills": "~/.gemini/skills/",
+        "rules": "~/.gemini/rules/",
+        "agents": "~/.gemini/agents/",
+        "workflows": "~/.gemini/workflows/",
+        "other": "~/.gemini/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.gemini/skills/",
+        "rules": "~/.gemini/rules/",
+        "agents": "~/.gemini/agents/",
+        "workflows": "~/.gemini/workflows/",
+        "other": "~/.gemini/sdd/"
+      },
+      "linux": {
+        "skills": "~/.gemini/skills/",
+        "rules": "~/.gemini/rules/",
+        "agents": "~/.gemini/agents/",
+        "workflows": "~/.gemini/workflows/",
+        "other": "~/.gemini/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.gemini\\skills\\",
+        "rules": "%USERPROFILE%\\.gemini\\rules\\",
+        "agents": "%USERPROFILE%\\.gemini\\agents\\",
+        "workflows": "%USERPROFILE%\\.gemini\\workflows\\",
+        "other": "%USERPROFILE%\\.gemini\\sdd\\"
+      },
+      "compat": [
+        {
+          "skills": "~/.agents/skills/",
+          "rules": "~/.gemini/rules/",
+          "agents": "~/.gemini/agents/",
+          "workflows": "~/.gemini/workflows/",
+          "other": "~/.gemini/sdd/"
+        }
+      ]
+    },
+    "kiro": {
+      "default": {
+        "skills": "~/.kiro/skills/",
+        "rules": "~/.kiro/steering/",
+        "agents": "~/.kiro/agents/",
+        "workflows": "~/.kiro/workflows/",
+        "other": "~/.kiro/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.kiro/skills/",
+        "rules": "~/.kiro/steering/",
+        "agents": "~/.kiro/agents/",
+        "workflows": "~/.kiro/workflows/",
+        "other": "~/.kiro/sdd/"
+      },
+      "linux": {
+        "skills": "~/.kiro/skills/",
+        "rules": "~/.kiro/steering/",
+        "agents": "~/.kiro/agents/",
+        "workflows": "~/.kiro/workflows/",
+        "other": "~/.kiro/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.kiro\\skills\\",
+        "rules": "%USERPROFILE%\\.kiro\\steering\\",
+        "agents": "%USERPROFILE%\\.kiro\\agents\\",
+        "workflows": "%USERPROFILE%\\.kiro\\workflows\\",
+        "other": "%USERPROFILE%\\.kiro\\sdd\\"
+      }
+    },
+    "continue": {
+      "default": {
+        "skills": "~/.continue/skills/",
+        "rules": "~/.continue/rules/",
+        "agents": "~/.continue/agents/",
+        "workflows": "~/.continue/workflows/",
+        "other": "~/.continue/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.continue/skills/",
+        "rules": "~/.continue/rules/",
+        "agents": "~/.continue/agents/",
+        "workflows": "~/.continue/workflows/",
+        "other": "~/.continue/sdd/"
+      },
+      "linux": {
+        "skills": "~/.continue/skills/",
+        "rules": "~/.continue/rules/",
+        "agents": "~/.continue/agents/",
+        "workflows": "~/.continue/workflows/",
+        "other": "~/.continue/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.continue\\skills\\",
+        "rules": "%USERPROFILE%\\.continue\\rules\\",
+        "agents": "%USERPROFILE%\\.continue\\agents\\",
+        "workflows": "%USERPROFILE%\\.continue\\workflows\\",
+        "other": "%USERPROFILE%\\.continue\\sdd\\"
+      },
+      "compat": [
+        {
+          "skills": "~/.claude/skills/",
+          "rules": "~/.continue/rules/",
+          "agents": "~/.continue/agents/",
+          "workflows": "~/.continue/workflows/",
+          "other": "~/.continue/sdd/"
+        }
+      ]
+    },
+    "windsurf": {
+      "default": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.windsurf/rules/",
+        "agents": "~/.windsurf/agents/",
+        "workflows": "~/.windsurf/workflows/",
+        "other": "~/.windsurf/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.windsurf/rules/",
+        "agents": "~/.windsurf/agents/",
+        "workflows": "~/.windsurf/workflows/",
+        "other": "~/.windsurf/sdd/"
+      },
+      "linux": {
+        "skills": "~/.agents/skills/",
+        "rules": "~/.windsurf/rules/",
+        "agents": "~/.windsurf/agents/",
+        "workflows": "~/.windsurf/workflows/",
+        "other": "~/.windsurf/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.agents\\skills\\",
+        "rules": "%USERPROFILE%\\.windsurf\\rules\\",
+        "agents": "%USERPROFILE%\\.windsurf\\agents\\",
+        "workflows": "%USERPROFILE%\\.windsurf\\workflows\\",
+        "other": "%USERPROFILE%\\.windsurf\\sdd\\"
+      }
+    },
+    "opencode": {
+      "default": {
+        "skills": "~/.config/opencode/skills/",
+        "rules": "~/.config/opencode/rules/",
+        "agents": "~/.config/opencode/agents/",
+        "workflows": "~/.config/opencode/workflows/",
+        "other": "~/.config/opencode/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.config/opencode/skills/",
+        "rules": "~/.config/opencode/rules/",
+        "agents": "~/.config/opencode/agents/",
+        "workflows": "~/.config/opencode/workflows/",
+        "other": "~/.config/opencode/sdd/"
+      },
+      "linux": {
+        "skills": "~/.config/opencode/skills/",
+        "rules": "~/.config/opencode/rules/",
+        "agents": "~/.config/opencode/agents/",
+        "workflows": "~/.config/opencode/workflows/",
+        "other": "~/.config/opencode/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.config\\opencode\\skills\\",
+        "rules": "%USERPROFILE%\\.config\\opencode\\rules\\",
+        "agents": "%USERPROFILE%\\.config\\opencode\\agents\\",
+        "workflows": "%USERPROFILE%\\.config\\opencode\\workflows\\",
+        "other": "%USERPROFILE%\\.config\\opencode\\sdd\\"
+      },
+      "compat": [
+        {
+          "skills": "~/.claude/skills/",
+          "rules": "~/.config/opencode/rules/",
+          "agents": "~/.config/opencode/agents/",
+          "workflows": "~/.config/opencode/workflows/",
+          "other": "~/.config/opencode/sdd/"
+        },
+        {
+          "skills": "~/.agents/skills/",
+          "rules": "~/.config/opencode/rules/",
+          "agents": "~/.config/opencode/agents/",
+          "workflows": "~/.config/opencode/workflows/",
+          "other": "~/.config/opencode/sdd/"
+        }
+      ]
     }
   }
 }

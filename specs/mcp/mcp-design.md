@@ -96,6 +96,7 @@ The prompt instructs the AI to add the HTTP MCP URL only. **Install is a separat
 | Step | Who | Where |
 | --- | --- | --- |
 | Sync GitHub → cache | Operator server | `.data/sdd-packages/<commit-sha>/` |
+| Framework portal tree | Admin `GET /api/admin/framework` | Reads same unpacked cache; one-level default expand |
 | List versions, resolve package | HTTP MCP tool | Reads sync cache |
 | Resolve target paths | HTTP MCP tool | PATH-01 seed map + `client` / `os` args (canonical roots, not server disk) |
 | Return `packageUrl` + manifest + instructions | HTTP MCP tool | Response JSON |

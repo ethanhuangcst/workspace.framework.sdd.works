@@ -51,7 +51,7 @@ Commands: `npx vitest run src/auth src/lib`
 | Keys CRUD | Create / list / update / delete; decrypt with current `KEYS_ENCRYPTION_KEY` |
 | Users invite | Rate-limit invite; cannot delete self / last admin |
 | Settings | Dirty-only Save; unreachable URL does not persist |
-| Framework | Tree from fixture GitHub; sync error keeps shell |
+| Framework | Tree from SYNK cache; top-level one-level expand + indented child rows; force sync; sync error keeps shell |
 
 ---
 
@@ -60,12 +60,13 @@ Commands: `npx vitest run src/auth src/lib`
 | Spec area | Scenarios |
 | --- | --- |
 | Public home | Instructions + login link visible |
+| Instructions | Guide title visible; back-home → `/`; agents roster lists seven names in order |
 | Login | Seeded admin reaches keys landing; empty-password admin → set-password |
 | Password reset | Mail capture / fixture path when configured |
 | Keys | Create, list shows value, copy, edit, delete, bulk delete |
 | Admins | Invite list; delete confirm; self/last-admin blocked |
 | Settings | Save valid URL; unreachable rejected |
-| Framework | Tree from configured repo; empty → Settings CTA |
+| Framework | Cache-backed tree; one-level default expand; indented child entries; dirs before files then name sort at each level; sync button; change-repo navigates; collapse/expand top-level folder; empty → Settings CTA |
 | i18n | Locale switch updates chrome copy |
 
 Config: `playwright.config.ts` injects fixture `KEYS_ENCRYPTION_KEY` and `GITHUB_FIXTURE=1`.

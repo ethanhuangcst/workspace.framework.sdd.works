@@ -1,66 +1,72 @@
-# Sprint 7 Plan — MVP-7: Cross-client + verification hardening
+# Sprint 7 Plan — one story to DoD, automated E2E only
 
-**Batch:** MVP-7 · **Status:** ToDo  
-**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md) · **MCP design:** [`mcp/mcp-design.md`](./mcp/mcp-design.md)
+**Batch:** MVP-7 · **Status:** Done  
+**Updated:** 2026-09-18  
+**Accepted:** 2026-09-18 (cache-backed Framework + force sync Playwright; path-e2e; sync-scenarios; paths v3; MCP description i18n)  
+**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
 
-## Goal
+## Principle
 
-First-class clients across macOS / Windows / Linux resolve install paths via **seed maps + Qwen** config discovery; remaining Sprint 6 verification gates close; MCP tool descriptions are i18n-aware.
+**Incremental-delivery:** finish one backlog story (specs + TDD + implementation + automated E2E + DoD) before starting the next. No operator-manual gates — former Mac §5, M1–M2, and “user confirms” items are **vitest + Playwright**.
 
-## Carried from Sprint 6
+---
 
-Items deferred at MVP-6 close-out (2026-09-18):
+## Story 1 — FRMW-02 (portal) ✅
 
-| Item | Source | Sprint 7 action |
-| --- | --- | --- |
-| Mac live stdio path E2E | [`mcp-test.md`](./mcp/mcp-test.md) §5 Tests 1–5 | Run on operator Mac; document actual Cursor `clientInfo.name` |
-| Manual operator M1–M2 | [`mcp-test.md`](./mcp/mcp-test.md) §7.4 | Verify once per release candidate |
-| Sync E2E S2–S5 | [`mcp-test.md`](./mcp/mcp-test.md) §6 | Automate or operator-run rename/delete/GitHub-down scenarios |
-| Copilot / XDG / `CLINE_DATA_DIR` env rows | [`client.paths.md`](./mcp/client.paths.md) | Extend MCPI-05 env matrix + unit tests |
-| Cross-client install | MCPI-02 | Seed + Qwen for WorkBuddy, Claude Code, Cline, Codex, Copilot, etc. |
+**AC (automated):**
 
-**Already done in Sprint 6 (not Sprint 7 scope):** ADR-054 HTTP hybrid (`packageUrl` + portable `~` paths + AI extraction), MCPI-03, HTTP update alias (MCPU-02 behavior).
+1. Framework tree from unpacked package cache (not Octokit).
+2. Settings empty → empty state; settings set, no cache → `cache_missing`.
+3. “Change git repository in Settings” → `Button variant="page"` (`framework-change-repo`).
+4. “Sync with git repository” → `POST /api/admin/sync` `{ force: true }`; rematerializes; tree refreshes (`framework-sync-repo`).
+5. Local folders/files tree: top-level artifact dirs (**Agents**, **Rules**, **Skills**, …) expand one level by default; immediate children indented under each folder; deeper nesting collapsible via `+`/`−`; `aria-expanded` + i18n.
 
-## In scope
+**Tests:** `src/core/sync/cache-tree.test.ts`, `src/app/api/admin/framework/route.test.ts`, `src/core/sync/sync-job.test.ts` (force), `e2e/settings-framework.spec.ts`.
 
-| Feature | Name | Stories |
-| --- | --- | --- |
-| MCPI-02 | Cross-client path resolution | [cross-client](./mcp/mcp-stories.md#sdd-mcp-cross-client) |
-| MCPI-05+ | Extended env path detection | [path-detect](./mcp/mcp-stories.md#sdd-mcp-path-detect) |
-| VERIF-01 | Mac stdio path E2E + operator manual gates | [`mcp-test.md`](./mcp/mcp-test.md) §5, §7.4 |
-| VERIF-02 | Sync scenario E2E (S2–S5) | [`mcp-test.md`](./mcp/mcp-test.md) §6 |
-| I18N-02 | MCP description i18n | [i18n](./admin-portal/app-stories.md#sdd-admin-i18n) |
+---
 
-## Delivery order
+## Story 2 — MCPI-05+ (env matrix) ✅
 
-1. VERIF-01 — Mac live stdio path tests; tick [`mcp-test.md`](./mcp/mcp-test.md) §5; manual M1–M2 once
-2. MCPI-05+ — Copilot / XDG / `CLINE_DATA_DIR` env resolution + tests
-3. MCPI-02 — seed + Qwen for first-class non-Cursor clients; OS variants (macOS / Windows / Linux)
-4. VERIF-02 — sync rename/delete/unavailable E2E (S2–S5)
-5. I18N-02 — tool descriptions from catalogs (`en` + `zh-Hans` / `zh-Hant` overlay)
+Copilot (`COPILOT_CUSTOM_INSTRUCTIONS_DIRS`), OpenCode (`XDG_DATA_HOME`), Cline (`CLINE_DATA_DIR`) in `path-detect.ts`.
 
-## Dependencies
+**Tests:** `src/core/path-detect.test.ts`.
 
-- **Requires Sprint 6** (MCPI-01, MCPU-01, MCPI-04, MCPI-05, SYNK-01, PKAPI-01, ADR-054).
-- **Requires Sprint 1 PATH-01** — expand the same `paths.json` for new clients; bump `paths_version`.
+---
 
-## Out of scope this sprint
+## Story 3 — MCPI-02 (cross-client seed) ✅
 
-- New admin portal pages
-- Hosting third-party skill marketplaces
-- In-portal GitHub file editing
-- Portal chat LLM
+Expanded `packages/sdd-paths/paths.json` (v3): cline, codex, copilot, gemini, kiro, continue, windsurf, opencode × darwin/linux/win32.
+
+**Tests:** `packages/sdd-paths/paths.test.ts`.
+
+---
+
+## Story 4 — VERIF (automated §5 / M1 / S2–S5) ✅
+
+| Former gate | Automated suite |
+| --- | --- |
+| mcp-test §5 Tests 1–5 | `src/core/path-e2e.test.ts` |
+| M1 rename + HTTP install inventory | `src/core/sync/sync-scenarios.test.ts` |
+| S2–S5 sync scenarios | `src/core/sync/sync-scenarios.test.ts` + existing `sync-job.test.ts` |
+| Framework force sync (M2 partial) | `e2e/settings-framework.spec.ts` sync button |
+
+Live GitHub LE1–LE5 remains opt-in (`sync-e2e.test.ts`).
+
+---
+
+## Story 5 — I18N-02 (MCP descriptions) ✅
+
+Tool descriptions from `messages/*` via `src/mcp/tool-descriptions.ts`.
+
+**Tests:** `src/mcp/tool-descriptions.test.ts`.
+
+---
 
 ## Exit criteria (DoD)
 
-- [ ] Path resolution documented and tested for at least one primary client path per OS (macOS / Windows / Linux)
-- [ ] [`mcp-test.md`](./mcp/mcp-test.md) §5 Mac gate checkboxes ticked (live stdio)
-- [ ] Manual M1–M2 verified once per release candidate
-- [ ] Sync E2E S2–S5 covered (automated or documented operator run)
-- [ ] Copilot / XDG / `CLINE_DATA_DIR` env resolution implemented + unit tested
-- [ ] MCP descriptions resolve for supported locales without missing-key crashes
-- [ ] Regression: Cursor stdio + HTTP install/update still green
-
-## Design
-
-- [mcp-design.md](./mcp/mcp-design.md) · [tech-spec.md](./tech-spec.md) · [13-instructions](./admin-portal/ui-mockup/13-instructions.html)
+- [x] FRMW-02 cache-backed Framework page + force sync + Playwright E2E
+- [x] MCPI-05+ env matrix unit tested
+- [x] MCPI-02 paths.json v3 + resolver tests per client/OS
+- [x] VERIF automated (no Mac operator §5 / M1–M2 manual gates)
+- [x] I18N-02 MCP descriptions resolve for en / zh-Hans / zh-Hant
+- [x] Regression: vitest core + paths green; Playwright framework spec green

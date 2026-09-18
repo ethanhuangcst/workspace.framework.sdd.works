@@ -187,6 +187,8 @@
   "admin.guide.manual_title": "手動設定",
   "admin.guide.manual_body": "不想使用設定提示？可自行新增遠端 MCP URL。",
   "admin.guide.setup_fallback_label": "備用 — 終端機安裝腳本",
+  "admin.guide.h_agents": "支援的 AI 智能體",
+  "admin.guide.agents_intro": "把設定提示詞貼到下列任一智能體。一個 MCP 服務；安裝寫入該智能體的本機路徑。",
   "admin.guide.h_tools": "工具",
   "admin.guide.tools_intro": "用此 MCP 服務安裝 framework.sdd.works 推薦的 skills、rules、agents 與 workflows。你也可以從 WoodenSward Dojo 申請 Qwen、Amap 等第三方能力的 API 金鑰。我們提供的工具：",
   "admin.guide.cap_col_tool": "工具",
@@ -210,6 +212,15 @@
   "admin.keys.lead_1": "金鑰供學員使用第三方能力",
   "admin.keys.lead_2": "例如 Qwen、OpenAI、Google Maps、Amap。",
   "admin.keys.lead_3": "學員呼叫 sdd_get_key(key-name) 從 MCP 取得金鑰值。",
-  "admin.framework.change_repo": "在設定中更改 Git 倉庫。",
-  "admin.framework.artifacts": "framework.sdd.works 產物："
+  "admin.framework.change_repo": "在設定中更改 Git 倉庫",
+  "admin.framework.sync_repo": "與 Git 倉庫同步",
+  "admin.framework.syncing": "同步中…",
+  "admin.framework.cache_missing": "尚無已同步的套件快取。請與 Git 倉庫同步以載入框架樹。",
+  "admin.framework.tree_expand": "展開 {name}",
+  "admin.framework.tree_collapse": "折疊 {name}",
+  "admin.framework.artifacts": "framework.sdd.works 產物：",
+  "mcp.tools.sdd_list_versions": "framework.sdd.works：列出設定中 GitHub 來源的可用框架套件版本及概要清單（skills/rules/other）。唯讀。不返回密鑰值。失敗：package_unavailable。",
+  "mcp.tools.sdd_get_key": "framework.sdd.works：根據 key_name 從管理密鑰庫返回明文 key_value。HTTP 需認證（與傳輸層相同的 bearer）。失敗：not_found、unauthorized。不洩露其他密鑰名稱。",
+  "mcp.tools.sdd_install_framework": "framework.sdd.works：安裝框架套件。stdio 直接寫入本地路徑；HTTP 始終返回 packageUrl、paths、manifest 及 AI 解壓說明（不會 already_up_to_date — 跳過 curl|tar 前請驗證本地檔案）。可選 force=true。失敗：path_rejected、client_unknown、package_unavailable、sync_pending。",
+  "mcp.tools.sdd_update_framework": "framework.sdd.works：更新現有安裝。sdd_install_framework 的別名。stdio 本地寫入；HTTP 返回 packageUrl 及 AI 解壓說明（不會 already_up_to_date）。可選 force=true。失敗：path_rejected、package_unavailable、sync_pending。"
 }

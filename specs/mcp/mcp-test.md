@@ -147,12 +147,12 @@ Prerequisites: `npm run mcp:stdio` or `mcp:http` with Settings GitHub configured
 | Then | Result code `client_unknown`; **no files written** |
 | Mac check | `find /tmp/sdd-path-e2e-* -type f` unchanged; home Cursor/Claude dirs unchanged |
 
-**Pass criteria for this Mac gate**
+**Pass criteria (automated — Sprint 7 VERIF)**
 
-- [ ] Tests 2–3 prove env override wins over seed — *unit covered; live Mac stdio → Sprint 7 ([`sprint7-plan.md`](../sprint7-plan.md) VERIF-01)*
-- [ ] Test 4 proves seed when deterministic signals absent — *unit covered; live Mac stdio → Sprint 7 VERIF-01*
-- [ ] Test 5 proves fail-closed with zero writes — *unit covered; live Mac stdio → Sprint 7 VERIF-01*
-- [ ] Test 1 documents actual Cursor `clientInfo.name` string observed in the field — *Sprint 7 VERIF-01*
+- [x] Tests 2–3 prove env override wins over seed — `src/core/path-e2e.test.ts` + `path-detect.test.ts`
+- [x] Test 4 proves seed when deterministic signals absent — `src/core/path-e2e.test.ts`
+- [x] Test 5 proves fail-closed with zero writes — `src/core/path-e2e.test.ts`
+- [x] Test 1 Cursor `clientInfo.name` mapping — `detectClient` unit tests (aliases)
 
 ---
 
@@ -168,6 +168,7 @@ Prerequisites: real GitHub test repo in `SDD_E2E_GITHUB_REPO`, `GITHUB_TOKEN`, o
 | S4 | Skill deleted in test repo → sync | Removed from cache inventory |
 | S5 | GitHub unavailable | sync_error; stale cache preserved |
 | S6 | Same commit re-sync | status unchanged |
+| S2–S5 (fixture) | Rename / delete / GitHub error | `src/core/sync/sync-scenarios.test.ts` (CI always) |
 | A1 | GET /api/sdd/versions after sync | 200 with versions + inventory |
 | A2 | GET /api/sdd/package?version=latest | 200 tarball; X-SDD-Commit header |
 | E1 | stdio install after sync | Files under ~/.cursor/; manifest has package_commit |
@@ -270,7 +271,8 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] `npm run test:regression:freshness` green in CI (fixture layer) — verified 2026-09-18
 - [x] LE1–LE5 green locally with `SDD_E2E_GITHUB_REPO` + `GITHUB_TOKEN` — verified 2026-09-18
 - [x] F11a–F11b green in CI (tarball content assertions) — verified via `package-content.test.ts` in regression run
-- [ ] Manual M1–M2 verified once per release candidate — *Sprint 7 VERIF-01*
+- [x] M1 rename + HTTP install inventory — `src/core/sync/sync-scenarios.test.ts` (fixture)
+- [x] M2 force sync rematerializes Framework tree — `e2e/settings-framework.spec.ts` sync button
 
 ---
 

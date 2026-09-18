@@ -136,7 +136,9 @@ export async function resolveLatestLiveCommit(): Promise<LiveCommitRef> {
   }
 }
 
-export async function syncFrameworkRepo(): Promise<SyncResult> {
+export async function syncFrameworkRepo(options?: {
+  force?: boolean;
+}): Promise<SyncResult> {
   const deps = getDeps();
   const url = await deps.getRepoUrl();
   if (!url) {
@@ -160,7 +162,7 @@ export async function syncFrameworkRepo(): Promise<SyncResult> {
     );
 
     const existing = readPackageManifest();
-    if (existing?.latestCommit === commitSha) {
+    if (!options?.force && existing?.latestCommit === commitSha) {
       rmSync(tempRoot, { recursive: true, force: true });
       return { status: "unchanged", commitSha, version: latestVersion };
     }

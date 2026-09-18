@@ -41,9 +41,10 @@
           <h1 data-i18n="admin.framework.title">framework.sdd.works GitHub repository</h1>
           <div class="framework-repo-block" data-framework-repo>
             <p class="lead mono">github.com/org/sdd-framework</p>
-            <p class="field-note">
-              <a href="11-settings.html" data-i18n="admin.framework.change_repo">Change git repository in Settings.</a>
-            </p>
+            <div class="framework-repo-actions">
+              <a class="btn btn-page" href="11-settings.html" data-i18n="admin.framework.change_repo">Change git repository in Settings</a>
+              <button type="button" class="btn btn-page" data-i18n="admin.framework.sync_repo">Sync with git repository</button>
+            </div>
           </div>
         </div>
         <div class="callout callout-error" data-framework-error hidden>
@@ -55,26 +56,28 @@
         </div>
         <h2 class="section-subtitle tree-subtitle" data-i18n="admin.framework.artifacts" data-framework-tree-label>framework.sdd.works artifacts:</h2>
         <ul class="tree" data-framework-tree>
-          <li>
-            <span class="tree-dir">skills/</span>
-            <ul>
-              <li>tdd/SKILL.md</li>
-              <li>atdd/SKILL.md</li>
-              <li>retrospective/SKILL.md</li>
+          <li class="tree-branch">
+            <button type="button" class="tree-toggle" aria-expanded="true" aria-label="Collapse Skills">−</button>
+            <span class="tree-dir">Skills</span>
+            <ul class="tree-children">
+              <li class="tree-child"><span>tdd</span></li>
+              <li class="tree-child"><span>atdd</span></li>
+              <li class="tree-child"><span>retrospective</span></li>
             </ul>
           </li>
-          <li>
-            <span class="tree-dir">rules/</span>
-            <ul>
-              <li>dod.mdc</li>
-              <li>incremental-delivery.mdc</li>
-              <li>common-test-strategy.mdc</li>
+          <li class="tree-branch">
+            <button type="button" class="tree-toggle" aria-expanded="true" aria-label="Collapse Rules">−</button>
+            <span class="tree-dir">Rules</span>
+            <ul class="tree-children">
+              <li class="tree-child"><span>dod.mdc</span></li>
+              <li class="tree-child"><span>incremental-delivery.mdc</span></li>
             </ul>
           </li>
-          <li>
-            <span class="tree-dir">specs/</span>
-            <ul>
-              <li>req-spec.md</li>
+          <li class="tree-branch">
+            <button type="button" class="tree-toggle" aria-expanded="true" aria-label="Collapse Agents">−</button>
+            <span class="tree-dir">Agents</span>
+            <ul class="tree-children">
+              <li class="tree-child"><span>code-reviewer.md</span></li>
             </ul>
           </li>
         </ul>

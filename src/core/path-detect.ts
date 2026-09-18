@@ -43,6 +43,28 @@ const ENV_VARS: Record<string, { varName: string; skillsSubpath: string }> = {
   gemini: { varName: "GEMINI_CLI_HOME", skillsSubpath: "skills" },
 };
 
+function clineRootFromDataDir(dataDir: string, win: boolean): string {
+  const normalized = dataDir.replace(/[/\\]+$/, "");
+  const sep = win ? "\\" : "/";
+  const parts = normalized.split(/[/\\]/);
+  if (parts[parts.length - 1] === "data") {
+    return parts.slice(0, -1).join(sep);
+  }
+  return normalized;
+}
+
+function copilotBaseFromInstructionsDirs(raw: string, win: boolean): string {
+  const first = raw.split(",")[0]?.trim();
+  if (!first) return "";
+  const normalized = first.replace(/[/\\]+$/, "");
+  const sep = win ? "\\" : "/";
+  const parts = normalized.split(/[/\\]/);
+  if (parts[parts.length - 1] === "instructions") {
+    return parts.slice(0, -1).join(sep);
+  }
+  return normalized;
+}
+
 const CONFIG_FILES: Record<string, string> = {
   claude: "~/.claude.json",
   cursor: "~/.cursor/mcp.json",
@@ -140,7 +162,7 @@ export async function resolveClientPaths(
     (process.platform === "win32" || process.platform === "linux"
       ? process.platform
       : "darwin");
-  const fingerprint = `${client}:${os}:${env.CLAUDE_CONFIG_DIR ?? ""}:${env.CODEX_HOME ?? ""}:${env.CLINE_DIR ?? ""}:${env.KIRO_HOME ?? ""}`;
+  const fingerprint = `${client}:${os}:${env.CLAUDE_CONFIG_DIR ?? ""}:${env.CODEX_HOME ?? ""}:${env.CLINE_DIR ?? ""}:${env.CLINE_DATA_DIR ?? ""}:${env.KIRO_HOME ?? ""}:${env.COPILOT_CUSTOM_INSTRUCTIONS_DIRS ?? ""}:${env.XDG_DATA_HOME ?? ""}`;
   const cached = sessionCache.get(fingerprint);
   if (cached) return cached;
 
@@ -179,6 +201,49 @@ export async function resolveClientPaths(
 
   if (client === "kiro" && env.KIRO_HOME) {
     const primary = rootsFromHomeDir(env.KIRO_HOME, win);
+    const err = validateRoots(primary, home, userProfile);
+    if (err) return err;
+    const result: ResolvedClientPaths = { primary, compat: [], source: "env" };
+    sessionCache.set(fingerprint, result);
+    return result;
+  }
+
+  if (client === "cline" && !env.CLINE_DIR && env.CLINE_DATA_DIR) {
+    const base = clineRootFromDataDir(env.CLINE_DATA_DIR, win);
+    const primary = rootsFromHomeDir(base, win);
+    const err = validateRoots(primary, home, userProfile);
+    if (err) return err;
+    const result: ResolvedClientPaths = { primary, compat: [], source: "env" };
+    sessionCache.set(fingerprint, result);
+    return result;
+  }
+
+  if (client === "copilot" && env.COPILOT_CUSTOM_INSTRUCTIONS_DIRS) {
+    const base = copilotBaseFromInstructionsDirs(
+      env.COPILOT_CUSTOM_INSTRUCTIONS_DIRS,
+      win,
+    );
+    if (base) {
+      const primary = rootsFromHomeDir(base, win);
+      const firstDir = env.COPILOT_CUSTOM_INSTRUCTIONS_DIRS.split(",")[0]?.trim();
+      if (firstDir) {
+        primary.other = firstDir.endsWith("/") || firstDir.endsWith("\\")
+          ? firstDir
+          : `${firstDir}${win ? "\\" : "/"}`;
+      }
+      const err = validateRoots(primary, home, userProfile);
+      if (err) return err;
+      const result: ResolvedClientPaths = { primary, compat: [], source: "env" };
+      sessionCache.set(fingerprint, result);
+      return result;
+    }
+  }
+
+  if (client === "opencode" && env.XDG_DATA_HOME) {
+    const base = win
+      ? `${env.XDG_DATA_HOME}\\opencode`
+      : `${env.XDG_DATA_HOME}/opencode`;
+    const primary = rootsFromHomeDir(base, win);
     const err = validateRoots(primary, home, userProfile);
     if (err) return err;
     const result: ResolvedClientPaths = { primary, compat: [], source: "env" };

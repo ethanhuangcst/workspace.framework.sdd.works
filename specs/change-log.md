@@ -9,6 +9,23 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-18
 
+### Framework tree — dirs-before-files sort
+
+- SYNK cache tree (`buildTreeFromUnpacked`) sorts directories before files, then by name at each level (matches GitHub tree builder).
+- Specs: `app-design.md`, `app-stories.md` AC4b; test: `cache-tree.test.ts`.
+
+### Framework tree — one-level default expand (FRMW-02 UX)
+
+- Top-level artifact dirs (Agents, Rules, Skills, …) expand one level on load; children indented under each folder; deeper dirs stay collapsible.
+- Tests: `framework-tree-utils.test.ts`, `e2e/settings-framework.spec.ts`.
+
+### MVP-7 closed (Sprint 7)
+
+- **Status:** Done — cache-backed Framework page (FRMW-02), force sync (`POST /api/admin/sync { force: true }`), collapsible tree, MCPI-05+ env matrix, MCPI-02 paths v3, automated VERIF (path-e2e + sync-scenarios), I18N-02 MCP tool descriptions.
+- **Portal:** `GET /api/admin/framework` reads SYNK-01 unpacked cache (no live Octokit); `cache_missing` when settings set but no manifest.
+- **Paths:** `paths.json` v3 adds cline, codex, copilot, gemini, kiro, continue, windsurf, opencode × darwin/linux/win32.
+- **Verification:** `path-e2e.test.ts`, `sync-scenarios.test.ts`, `e2e/settings-framework.spec.ts` (5/5 green).
+
 ### MVP-6 closed (Sprint 6)
 
 - **Status:** Done — Cursor install/update (stdio + HTTP hybrid ADR-054), path detect (MCPI-05), Qwen fallback (MCPI-04), server sync (SYNK-01), package API (PKAPI-01), prompt setup (SETUP-01).

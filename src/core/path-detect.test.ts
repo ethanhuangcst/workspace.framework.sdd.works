@@ -77,6 +77,57 @@ describe("resolveClientPaths", () => {
     }
   });
 
+  it("should_honor_CLINE_DATA_DIR_when_CLINE_DIR_unset", async () => {
+    const result = await resolveClientPaths("cline", {
+      home,
+      userProfile: home,
+      os: "darwin",
+      env: { HOME: home, CLINE_DATA_DIR: "/Users/dev/custom-cline/data" },
+      skipLlm: true,
+    });
+    expect(result).toMatchObject({
+      source: "env",
+      primary: { skills: "/Users/dev/custom-cline/skills/" },
+    });
+  });
+
+  it("should_honor_COPILOT_CUSTOM_INSTRUCTIONS_DIRS", async () => {
+    const result = await resolveClientPaths("copilot", {
+      home,
+      userProfile: home,
+      os: "darwin",
+      env: {
+        HOME: home,
+        COPILOT_CUSTOM_INSTRUCTIONS_DIRS: "/Users/dev/custom-copilot/instructions",
+      },
+      skipLlm: true,
+    });
+    expect(result).toMatchObject({ source: "env" });
+    if (!("code" in result)) {
+      expect(result.primary.skills).toBe("/Users/dev/custom-copilot/skills/");
+      expect(result.primary.other).toBe("/Users/dev/custom-copilot/instructions/");
+    }
+  });
+
+  it("should_honor_XDG_DATA_HOME_for_opencode", async () => {
+    const linuxHome = "/home/dev";
+    const result = await resolveClientPaths("opencode", {
+      home: linuxHome,
+      userProfile: linuxHome,
+      os: "linux",
+      env: {
+        HOME: linuxHome,
+        USERPROFILE: linuxHome,
+        XDG_DATA_HOME: `${linuxHome}/.local/share`,
+      },
+      skipLlm: true,
+    });
+    expect(result).toMatchObject({
+      source: "env",
+      primary: { skills: "/home/dev/.local/share/opencode/skills/" },
+    });
+  });
+
   it("should_honor_CLINE_DIR_and_KIRO_HOME", async () => {
     const cline = await resolveClientPaths("cline", {
       home,

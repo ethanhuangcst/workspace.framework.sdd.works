@@ -1,14 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/auth/require-admin-api";
-import {
-  fetchRepoTreeCached,
-  GitHubConfigError,
-  GitHubSyncError,
-} from "@/github/sync";
+import { buildTreeFromUnpacked } from "@/core/sync/cache-tree";
+import { readPackageManifest } from "@/core/sync/manifest";
+import { unpackedDir } from "@/core/sync/paths";
 import { db } from "@/lib/db";
 import { parseGithubRepoUrl } from "@/lib/settings";
-
-const SLOW_MS = 3_000;
 
 export async function GET() {
   const auth = await requireAdminApi();
@@ -29,28 +25,24 @@ export async function GET() {
     });
   }
 
-  try {
-    const { tree, durationMs, fromCache } = await fetchRepoTreeCached(
-      parsed.owner,
-      parsed.repo,
-    );
+  const manifest = readPackageManifest();
+  if (!manifest?.latestCommit) {
     return NextResponse.json({
       empty: false,
       source: parsed.display,
-      tree,
-      slow: !fromCache && durationMs >= SLOW_MS,
+      tree: [],
+      cache_missing: true,
     });
-  } catch (error) {
-    if (
-      error instanceof GitHubSyncError ||
-      error instanceof GitHubConfigError
-    ) {
-      return NextResponse.json({
-        empty: false,
-        source: parsed.display,
-        error: { key: "admin.framework.sync_error" },
-      });
-    }
-    throw error;
   }
+
+  const unpackedPath = unpackedDir(manifest.latestCommit);
+  const tree = buildTreeFromUnpacked(unpackedPath);
+
+  return NextResponse.json({
+    empty: false,
+    source: parsed.display,
+    tree,
+    commitSha: manifest.latestCommit,
+    syncedAt: manifest.syncedAt,
+  });
 }

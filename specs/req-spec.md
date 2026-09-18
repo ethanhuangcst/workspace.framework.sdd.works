@@ -195,7 +195,7 @@ Streamable HTTP SHALL enforce authentication. Do not rely on obscure tool names 
 ### Admin portal
 
 9. Admin can register/manage accounts, log in with email+password, and reset password via email.
-10. Framework page shows a read-only, real-time (or near real-time) sync from the GitHub repo configured in Settings.
+10. Framework page shows a read-only tree from the local SYNK-01 package cache (same source as MCP install); top-level artifact folders expand one level by default with indented child entries; admin can force-sync from Settings URL via Sync with git repository.
 11. Keys page supports create / view / edit / delete of `key_id` / `key_name` / `key_description` / `key_value`; list shows name, description, and key; actions are copy / edit / delete (no regenerate); `sdd_get_key` resolves by `key_name` and returns plaintext `key_value`.
 12. Settings page stores one GitHub repository URL; Save is disabled until the URL changes; on save the system verifies reachability then persists (or shows a failure tip and does not change the stored URL); changing the URL updates what the framework page syncs.
 13. No key values appear in unauthenticated responses or public logs.

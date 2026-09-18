@@ -85,6 +85,54 @@ describe("syncFrameworkRepo", () => {
     });
   });
 
+  it("should_rematerialize_when_force_true_and_commit_unchanged", async () => {
+    await withTempCache(async () => {
+      const sha = "sha-main";
+      const unpacked = unpackedDir(sha);
+      mkdirSync(unpacked, { recursive: true });
+      writeFileSync(join(unpacked, "stale.txt"), "old");
+      writeFileSync(packageTarPath(sha), "tar");
+      writeFileSync(join(getPackageCacheDir(), MANIFEST_FILENAME), JSON.stringify({
+        latestCommit: sha,
+        latestVersion: "main",
+        versions: [{ id: "main", commitSha: sha }],
+        inventory: { skills: ["tdd"], rules: [], agents: [], workflows: [], other: [] },
+        syncedAt: "2026-01-01T00:00:00.000Z",
+      }));
+
+      const pkgRoot = mkdtempSync(join(tmpdir(), "sdd-force-pkg-"));
+      mkdirSync(join(pkgRoot, "skills/tdd"), { recursive: true });
+      writeFileSync(join(pkgRoot, "skills/tdd/SKILL.md"), "# refreshed\n");
+
+      setSyncJobDepsForTests({
+        async getRepoUrl() {
+          return "https://github.com/fixture/sdd-framework";
+        },
+        async materialize(_o, _r, _ref, destDir) {
+          mkdirSync(join(destDir, "unpacked"), { recursive: true });
+          cpSync(pkgRoot, join(destDir, "unpacked"), { recursive: true });
+          writeFileSync(join(destDir, "pkg.tgz"), "new-tar");
+          return { commitSha: sha };
+        },
+        async resolveCommit() {
+          return sha;
+        },
+        async listTags() {
+          return [{ id: "main" }];
+        },
+        async fetchTree() {
+          return { skills: ["tdd"], rules: [], agents: [], workflows: [], other: [] };
+        },
+      });
+
+      const result = await syncFrameworkRepo({ force: true });
+      expect(result).toEqual({ status: "synced", commitSha: sha, version: "main" });
+      expect(readFileSync(join(unpacked, "skills/tdd/SKILL.md"), "utf8")).toBe(
+        "# refreshed\n",
+      );
+    });
+  });
+
   it("should_noop_when_commit_unchanged", async () => {
     await withTempCache(async () => {
       const sha = "sha-main";

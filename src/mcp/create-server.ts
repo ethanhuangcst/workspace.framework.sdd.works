@@ -5,6 +5,7 @@ import { installFramework, updateFramework } from "@/core/tools/install";
 import type { InstallContext } from "@/core/tools/install";
 import { listVersions } from "@/core/tools/list-versions";
 import { getMcpBrandIcons, getMcpWebsiteUrl } from "./brand";
+import { mcpToolDescription } from "./tool-descriptions";
 
 export const SDD_TOOL_NAMES = [
   "sdd_install_framework",
@@ -66,8 +67,7 @@ export function createSddMcpServer(
   server.registerTool(
     "sdd_list_versions",
     {
-      description:
-        "framework.sdd.works: list available framework package versions and high-level inventory (skills/rules/other) from the Settings GitHub source. Read-only. Never returns key values. Failures: package_unavailable.",
+      description: mcpToolDescription("sdd_list_versions"),
       inputSchema: {
         client: z
           .string()
@@ -82,8 +82,7 @@ export function createSddMcpServer(
     server.registerTool(
       "sdd_get_key",
       {
-        description:
-          "framework.sdd.works: return plaintext key_value for key_name from the admin key store. Auth required on HTTP (same bearer as transport). Failures: not_found, unauthorized. Does not leak other key names.",
+        description: mcpToolDescription("sdd_get_key"),
         inputSchema: {
           key_name: z.string().min(1).describe("Unique English key name"),
         },
@@ -95,8 +94,7 @@ export function createSddMcpServer(
   server.registerTool(
     "sdd_install_framework",
     {
-      description:
-        "framework.sdd.works: install framework package. Stdio writes local paths directly. HTTP always returns packageUrl + paths + manifest + instructions for AI shell extraction (never already_up_to_date — verify local files before skipping curl|tar). Optional force=true. Failures: path_rejected, client_unknown, package_unavailable, sync_pending.",
+      description: mcpToolDescription("sdd_install_framework"),
       inputSchema: {
         version: z.string().optional(),
         client: z.string().optional(),
@@ -112,8 +110,7 @@ export function createSddMcpServer(
   server.registerTool(
     "sdd_update_framework",
     {
-      description:
-        "framework.sdd.works: update an existing install. Alias of sdd_install_framework. Stdio writes locally; HTTP returns packageUrl + instructions for AI extraction (never already_up_to_date). Optional force=true. Failures: path_rejected, package_unavailable, sync_pending.",
+      description: mcpToolDescription("sdd_update_framework"),
       inputSchema: {
         version: z.string().optional(),
         client: z.string().optional(),

@@ -607,6 +607,47 @@ Scenario: No GitHub link configured
   And the empty state points the admin to Settings
 ```
 
+### User story 2 — Inspect local synced artifact tree (FRMW-02)
+
+**As an** admin
+**I want** the framework page to list folders and files from the local sync cache
+**So that** I see the same package the MCP install API serves without live GitHub calls
+
+#### AC4
+
+```gherkin
+Scenario: Tree expands one level by default
+  Given a signed-in admin
+  And Settings contains a reachable GitHub repository URL
+  And the SYNK-01 package cache is populated
+  When the admin opens the framework page
+  Then top-level artifact folders (Agents, Rules, Skills, Workflows) are shown as title-case labels
+  And each top-level folder is expanded to show immediate children indented beneath it
+  And deeper nested folders remain collapsed until toggled
+  And within each folder, child directories are listed before files, each group sorted by name
+```
+
+#### AC4b
+
+```gherkin
+Scenario: Skill folders list before README at skills root
+  Given a signed-in admin
+  And the SYNK-01 package cache includes skills with multiple skill folders and a README.md file
+  When the admin opens the framework page
+  Then every skill folder name appears above README.md under Skills
+```
+
+#### AC5
+
+```gherkin
+Scenario: Force sync refreshes tree from cache
+  Given a signed-in admin
+  And Settings contains a reachable GitHub repository URL
+  When the admin clicks Sync with git repository
+  Then POST /api/admin/sync is called with force true
+  And the artifact tree reloads from the unpacked cache
+```
+
 ---
 
 ## `sdd-admin-instructions` — MCP instructions
@@ -627,6 +668,8 @@ Scenario: Public instructions are reachable from home
   When the visitor opens instructions from home in a new browsing context
   Then the guide with key admin.guide.title is shown
   And the protocol id framework.sdd.works is shown as a literal
+  And the back-home control with test id guide-back-home links to /
+  And the agents roster with test id guide-agents lists Claude Code, Codex, Cursor, CodeBuddy CN / CodeBuddy / WorkBuddy CN, TraeCode CN / TRAE, GitHub Copilot, and AWS Kiro in that order
 ```
 
 #### AC2

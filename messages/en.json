@@ -187,6 +187,8 @@
   "admin.guide.manual_title": "Manual setup",
   "admin.guide.manual_body": "Prefer not to use the setup prompt? Add the remote MCP URL yourself.",
   "admin.guide.setup_fallback_label": "Fallback — terminal installer",
+  "admin.guide.h_agents": "Supported AI agents",
+  "admin.guide.agents_intro": "Paste the setup prompt into any of these agents. One MCP server; install writes to that agent's local paths.",
   "admin.guide.h_tools": "Tools",
   "admin.guide.tools_intro": "Use this MCP server to install the skills, rules, agents, and workflows recommended by framework.sdd.works. You can also request API keys for third-party capabilities such as Qwen and Amap from WoodenSward Dojo. Tools we provide:",
   "admin.guide.cap_col_tool": "Tool",
@@ -210,6 +212,15 @@
   "admin.keys.lead_1": "Keys give learners access to third-party capabilities",
   "admin.keys.lead_2": "such as Qwen, OpenAI, Google Maps, and Amap.",
   "admin.keys.lead_3": "Learners call sdd_get_key(key-name) to receive the key value from MCP.",
-  "admin.framework.change_repo": "Change git repository in Settings.",
-  "admin.framework.artifacts": "framework.sdd.works artifacts:"
+  "admin.framework.change_repo": "Change git repository in Settings",
+  "admin.framework.sync_repo": "Sync with git repository",
+  "admin.framework.syncing": "Syncing…",
+  "admin.framework.cache_missing": "No synced package cache yet. Sync with the git repository to load the framework tree.",
+  "admin.framework.tree_expand": "Expand {name}",
+  "admin.framework.tree_collapse": "Collapse {name}",
+  "admin.framework.artifacts": "framework.sdd.works artifacts:",
+  "mcp.tools.sdd_list_versions": "framework.sdd.works: list available framework package versions and high-level inventory (skills/rules/other) from the Settings GitHub source. Read-only. Never returns key values. Failures: package_unavailable.",
+  "mcp.tools.sdd_get_key": "framework.sdd.works: return plaintext key_value for key_name from the admin key store. Auth required on HTTP (same bearer as transport). Failures: not_found, unauthorized. Does not leak other key names.",
+  "mcp.tools.sdd_install_framework": "framework.sdd.works: install framework package. Stdio writes local paths directly. HTTP always returns packageUrl + paths + manifest + instructions for AI shell extraction (never already_up_to_date — verify local files before skipping curl|tar). Optional force=true. Failures: path_rejected, client_unknown, package_unavailable, sync_pending.",
+  "mcp.tools.sdd_update_framework": "framework.sdd.works: update an existing install. Alias of sdd_install_framework. Stdio writes locally; HTTP returns packageUrl + instructions for AI extraction (never already_up_to_date). Optional force=true. Failures: path_rejected, package_unavailable, sync_pending."
 }

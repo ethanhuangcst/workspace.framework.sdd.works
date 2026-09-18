@@ -370,18 +370,20 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | | |
 | --- | --- |
-| Job | Live sync view of Settings GitHub URL (read-only tree) |
-| Layout | Eyebrow “Live sync with” + title “framework.sdd.works GitHub repository”; **repo path** (mono, from Settings) + CTA “Change git repository in Settings.”; `h2.section-subtitle` “framework.sdd.works artifacts:” above tree; empty → CTA Settings (hide repo block + artifacts); sync error callout keeps shell |
-| Keys | `admin.framework.*` (`change_repo`, `artifacts`; display URL is data, not `lead` prose) |
+| Job | Cache-backed read-only view of synced package artifacts (SYNK-01 unpacked tree) |
+| Layout | Eyebrow “Live sync with” + title “framework.sdd.works GitHub repository”; **repo path** (mono) + `btn-page` **Change git repository in Settings** + **Sync with git repository**; `h2.section-subtitle` “framework.sdd.works artifacts:” above tree; empty → CTA Settings; `cache_missing` → sync CTA; sync error callout keeps shell |
+| Tree | Top-level dirs (`agents/`, `rules/`, `skills/`, …) render as title-case labels (**Agents**, **Rules**, **Skills**) and **expand one level by default**. Immediate children are indented under each folder (files and subfolders). Deeper nesting uses `+`/`−` toggles, collapsed by default. Files never get toggles. At every level, **directories sort before files**, then entries sort **by name** (locale-aware `localeCompare`). |
+| Keys | `admin.framework.*` (`change_repo`, `sync_repo`, `tree_expand`, `tree_collapse`, `artifacts`; display URL is data, not `lead` prose) |
 | Forbidden | Edit / push |
-| Test ids | `framework-source`, `framework-artifacts`, `framework-tree`, `framework-empty`, `framework-to-settings` |
+| Test ids | `framework-source`, `framework-change-repo`, `framework-sync-repo`, `framework-cache-missing`, `framework-artifacts`, `framework-tree`, `framework-tree-toggle-*`, `framework-empty`, `framework-to-settings` |
 
 #### `/instructions` — MCP guide · `13-instructions.html`
 
 | | |
 | --- | --- |
 | Job | Install framework.sdd.works to AI tools |
-| Layout | Public guide; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.WORKFLOWS`; **Setup** / **Tools** as `section-subtitle` (no numbered headings); all commands/prompts as `.codeblock` rows (mono text + right-rail Copy) or `.codeblock--file` (header tag + Copy) for `mcp.json`; pill CTA (“Copy prompt…” + Claude/Cursor/Codex/CodeBuddy icons); Manual setup (`mcp.json` + curl fallback); tools intro + table |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only — **no** duplicate `guide-header` bar; text **Back to home** link (`back-link`, `guide-back-home`) above hero; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.WORKFLOWS`; **Setup** / **Supported AI agents** / **Tools** as `section-subtitle`; agents roster (7 brand names in fixed order with 18×18 icons); all commands/prompts as `.codeblock` rows (mono text + right-rail Copy) or `.codeblock--file` (header tag + Copy) for `mcp.json`; pill CTA (“Copy prompt…” + Claude/Cursor/Codex/CodeBuddy icons); Manual setup (`mcp.json` + curl fallback); tools intro + table |
+| Test ids | `instructions-guide`, `guide-back-home`, `guide-agents` |
 | Entry | Home + header open **new tab** |
 | Keys | `admin.guide.*` |
 

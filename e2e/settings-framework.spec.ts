@@ -62,8 +62,8 @@ test.describe("settings and framework", () => {
     expect(row?.githubUrl).toBeNull();
   });
 
-  test("should_save_fixture_url_and_show_framework_tree", async ({ page }) => {
-    test.setTimeout(60_000);
+  test("should_show_cache_missing_then_sync_fixture_tree", async ({ page }) => {
+    test.setTimeout(90_000);
     await loginAsSeedAdmin(page);
     await page.goto("/admin/settings");
     await page
@@ -73,10 +73,62 @@ test.describe("settings and framework", () => {
     await expect(page.getByText(/verified and saved|已验证|已驗證/i)).toBeVisible();
 
     await page.goto("/admin/framework");
-    await expect(page.getByTestId("framework-tree")).toBeVisible();
     await expect(page.getByTestId("framework-source")).toContainText(
       "github.com/fixture/sdd-framework",
     );
-    await expect(page.getByTestId("framework-tree")).toContainText("skills/");
+
+    const cacheMissing = page.getByTestId("framework-cache-missing");
+    const tree = page.getByTestId("framework-tree");
+    const hasCache = await tree.isVisible().catch(() => false);
+    if (!hasCache) {
+      await expect(cacheMissing).toBeVisible();
+    }
+
+    await page.getByTestId("framework-sync-repo").first().click();
+    await expect(tree).toBeVisible({ timeout: 60_000 });
+    await expect(tree).toContainText("skills/");
+  });
+
+  test("should_navigate_change_repo_button_to_settings", async ({ page }) => {
+    test.setTimeout(90_000);
+    await loginAsSeedAdmin(page);
+    await page.goto("/admin/settings");
+    await page
+      .getByTestId("settings-url")
+      .fill("https://github.com/fixture/sdd-framework");
+    await page.getByTestId("settings-save").click();
+    await expect(page.getByText(/verified and saved|已验证|已驗證/i)).toBeVisible();
+
+    await page.goto("/admin/framework");
+    await page.getByTestId("framework-sync-repo").click();
+    await expect(page.getByTestId("framework-tree")).toBeVisible({ timeout: 60_000 });
+
+    await page.getByTestId("framework-change-repo").click();
+    await page.waitForURL("**/admin/settings");
+    await expect(page.getByTestId("settings-url")).toBeVisible();
+  });
+
+  test("should_expand_and_collapse_folder_in_tree", async ({ page }) => {
+    test.setTimeout(90_000);
+    await loginAsSeedAdmin(page);
+    await page.goto("/admin/settings");
+    await page
+      .getByTestId("settings-url")
+      .fill("https://github.com/fixture/sdd-framework");
+    await page.getByTestId("settings-save").click();
+    await expect(page.getByText(/verified and saved|已验证|已驗證/i)).toBeVisible();
+
+    await page.goto("/admin/framework");
+    await page.getByTestId("framework-sync-repo").click();
+    await expect(page.getByTestId("framework-tree")).toBeVisible({ timeout: 60_000 });
+
+    const toggle = page.getByTestId("framework-tree-toggle-skills-");
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(page.getByTestId("framework-tree")).toContainText("Skills");
+    await expect(page.getByTestId("framework-tree")).toContainText("tdd");
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
   });
 });
