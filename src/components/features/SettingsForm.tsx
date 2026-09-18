@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { t, type Locale } from "../../i18n/t";
 import { Button } from "../ui/Button";
 import { Callout } from "../ui/Callout";
@@ -21,16 +21,19 @@ export function SettingsForm({
 }: SettingsFormProps) {
   const [url, setUrl] = useState(savedUrl);
   const [baseline, setBaseline] = useState(savedUrl);
+  const [prevSavedUrl, setPrevSavedUrl] = useState(savedUrl);
   const [status, setStatus] = useState<"saved" | "unreachable" | "invalid" | null>(
     initialStatus,
   );
   const [pending, setPending] = useState(false);
-  const dirty = url.trim() !== baseline;
 
-  useEffect(() => {
+  if (savedUrl !== prevSavedUrl) {
+    setPrevSavedUrl(savedUrl);
     setUrl(savedUrl);
     setBaseline(savedUrl);
-  }, [savedUrl]);
+  }
+
+  const dirty = url.trim() !== baseline;
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
