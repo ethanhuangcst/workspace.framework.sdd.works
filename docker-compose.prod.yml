@@ -1,0 +1,73 @@
+name: framework-sdd-works
+
+services:
+  web:
+    image: ghcr.io/ethanhuangcst/workspace.framework.sdd.works/web:${IMAGE_TAG:-latest}
+    container_name: framework-sdd-web
+    restart: unless-stopped
+    ports:
+      - "3008:3000"
+    volumes:
+      - framework_sdd_packages:/data/sdd-packages
+    environment:
+      NODE_ENV: production
+      APP_NAME: framework.sdd.works
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-https://framework.sdd.works}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET}
+      ADMIN_SEED_EMAIL: ${ADMIN_SEED_EMAIL:-me@ethanhuang.com}
+      ADMIN_SEED_USERNAME: ${ADMIN_SEED_USERNAME:-admin}
+      ADMIN_SEED_PASSWORD: ${ADMIN_SEED_PASSWORD:?set ADMIN_SEED_PASSWORD}
+      KEYS_ENCRYPTION_KEY: ${KEYS_ENCRYPTION_KEY:?set KEYS_ENCRYPTION_KEY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:?set GITHUB_TOKEN}
+      GITHUB_API_HOST: ${GITHUB_API_HOST:-api.github.com}
+      GITHUB_API_BASE_URL: ${GITHUB_API_BASE_URL:-https://api.github.com}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET:-}
+      CRON_SECRET: ${CRON_SECRET:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      RESEND_HOST: ${RESEND_HOST:-api.resend.com}
+      RESEND_BASE_URL: ${RESEND_BASE_URL:-https://api.resend.com}
+      RESEND_KEY_MGMT_SITE: ${RESEND_KEY_MGMT_SITE:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      SMTP_URL: ${SMTP_URL:-}
+      SDD_PACKAGE_CACHE_DIR: /data/sdd-packages
+    command: ["./docker-entrypoint-web.sh"]
+    networks:
+      - default
+
+  mcp:
+    image: ghcr.io/ethanhuangcst/workspace.framework.sdd.works/web:${IMAGE_TAG:-latest}
+    container_name: framework-sdd-mcp
+    restart: unless-stopped
+    ports:
+      - "3204:3041"
+    volumes:
+      - framework_sdd_packages:/data/sdd-packages
+    environment:
+      NODE_ENV: production
+      APP_NAME: framework.sdd.works
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-https://framework.sdd.works}
+      SDD_SERVER_URL: ${SDD_SERVER_URL:-https://framework.sdd.works}
+      KEYS_ENCRYPTION_KEY: ${KEYS_ENCRYPTION_KEY:?set KEYS_ENCRYPTION_KEY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:?set GITHUB_TOKEN}
+      GITHUB_API_HOST: ${GITHUB_API_HOST:-api.github.com}
+      GITHUB_API_BASE_URL: ${GITHUB_API_BASE_URL:-https://api.github.com}
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:?set MCP_AUTH_TOKEN}
+      MCP_HTTP_HOST: "0.0.0.0"
+      MCP_HTTP_PORT: "3041"
+      MCP_HTTP_PATH: /mcp
+      SDD_PACKAGE_CACHE_DIR: /data/sdd-packages
+    command: ["npx", "tsx", "src/mcp/http-server.ts"]
+    networks:
+      - default
+
+volumes:
+  framework_sdd_packages:
+
+networks:
+  default:
+    external: true
+    name: portainer_network
