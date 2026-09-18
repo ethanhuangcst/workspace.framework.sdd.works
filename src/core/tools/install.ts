@@ -16,7 +16,11 @@ import {
   type PathDetectOptions,
   type ResolvedClientPaths,
 } from "@/core/path-detect";
-import { resolveCachedVersion } from "@/core/sync/cache";
+import {
+  CACHE_STALE_MINUTES,
+  resolveCachedVersion,
+} from "@/core/sync/cache";
+import { ensurePackageCacheFresh } from "@/core/sync/ensure-cache-fresh";
 import { fetchPackage, getSddServerUrl } from "./package-fetch";
 import { toolError, toolOk } from "./errors";
 
@@ -120,14 +124,23 @@ function buildHttpInstallInstructions(
   extractTarget: string,
   manifestPath: string,
   packageUrl: string,
+  options?: { cacheStale?: boolean; cacheAgeMinutes?: number },
 ): string {
-  return [
+  const lines = [
     "HTTP MCP cannot write the local filesystem. Execute these steps on the developer machine:",
+    "Before calling install with installed_commit / installed_version, confirm every file listed in the local manifest still exists under the returned paths. If any are missing, omit installed_commit so the tool returns the package for re-extraction.",
     `1. Read ${manifestPath} if it exists (previousManifest). Remove files listed under files.* before extracting.`,
     `2. Download and extract: curl -fsSL "${packageUrl}" | tar xz -C "${extractTarget}" --strip-components 1`,
     `3. Write the manifest JSON returned in this response to ${manifestPath}.`,
     "4. Verify skills, rules, agents, and workflows exist under the paths returned.",
-  ].join("\n");
+  ];
+  if (options?.cacheStale) {
+    const age = Math.round(options.cacheAgeMinutes ?? CACHE_STALE_MINUTES);
+    lines.push(
+      `Note: package cache may be stale (last synced ${age} min ago). Ask the operator to run sync, or retry shortly.`,
+    );
+  }
+  return lines.join("\n");
 }
 
 function applyPackage(pkgDir: string, roots: PathRoots): Manifest["files"] {
@@ -221,6 +234,8 @@ export async function installFramework(
   const { detected, resolved, roots, clientRoot } = installCtx.ctx;
 
   if (ctx.channel === "http") {
+    const fresh = await ensurePackageCacheFresh();
+
     const cached = resolveCachedVersion(args.version);
     if ("code" in cached) {
       if (cached.code === "sync_pending") {
@@ -258,6 +273,10 @@ export async function installFramework(
       files,
     };
 
+    const cacheAgeMinutes =
+      (Date.now() - Date.parse(cached.syncedAt)) / (60 * 1000);
+    const cacheStale = cacheAgeMinutes > CACHE_STALE_MINUTES;
+
     return toolOk({
       packageUrl,
       version: cached.version,
@@ -268,10 +287,15 @@ export async function installFramework(
       manifest,
       previousManifest,
       extractTarget: clientRoot,
+      cache_synced_at: cached.syncedAt,
+      cache_age_minutes: Math.round(cacheAgeMinutes * 10) / 10,
+      cache_stale: cacheStale,
+      cache_refresh: "code" in fresh ? undefined : fresh.status,
       instructions: buildHttpInstallInstructions(
         clientRoot,
         manifestPath,
         packageUrl,
+        { cacheStale, cacheAgeMinutes },
       ),
       resolution_source: resolved.source,
     });

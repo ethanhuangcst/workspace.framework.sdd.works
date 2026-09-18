@@ -243,7 +243,7 @@ Notes:
 
 ### SYNK-01 — Server-side framework sync job
 
-- **Detail.** Operator server sync job reads Settings GitHub URL, fetches latest ref via `GitHubPort.materializePackage`, stores unpacked files + tarball under `.data/sdd-packages/<commit-sha>/`, writes manifest (versions, inventory, latestCommit). Idempotent on unchanged SHA. Triggers: `POST /api/admin/sync`, polling (15 min). Retains last 5 commit dirs. ADR-053.
+- **Detail.** Operator server sync job reads Settings GitHub URL, fetches latest ref via `GitHubPort.materializePackage`, stores unpacked files + tarball under `.data/sdd-packages/<commit-sha>/`, writes manifest (versions, inventory, latestCommit). Idempotent on unchanged SHA. Triggers: `POST /api/admin/sync`, GitHub webhook, 30-min scheduled sync (+ cron route backup). HTTP install syncs when cache differs from live tip. ADR-053, ADR-055.
 - **Dependencies.** SETT-01, FRMW-01.
 - **User stories & AC.** [SYNK-01](./mcp/mcp-stories.md#sdd-mcp-sync-job)
 - **UI design & mockup.** n/a

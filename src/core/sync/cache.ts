@@ -16,7 +16,10 @@ export type CachedPackageRef = {
   commitSha: string;
   tarPath: string;
   unpackedPath: string;
+  syncedAt: string;
 };
+
+export const CACHE_STALE_MINUTES = 30;
 
 export function getCachedManifest(): PackageManifest | null {
   return readPackageManifest();
@@ -59,6 +62,7 @@ export function resolveCachedVersion(
     commitSha,
     tarPath,
     unpackedPath: unpackedDir(commitSha),
+    syncedAt: manifest.syncedAt,
   };
 }
 

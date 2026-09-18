@@ -692,6 +692,59 @@ Scenario: Same commit is a no-op
   And no duplicate storage is created
 ```
 
+#### AC7 — GitHub webhook triggers sync (ADR-055)
+
+```gherkin
+Scenario: Valid push webhook refreshes cache
+  Given GITHUB_WEBHOOK_SECRET is configured
+  And a push event with valid HMAC signature
+  When POST /api/github/webhook is called
+  Then syncFrameworkRepo runs
+  And list-versions cache is cleared
+```
+
+#### AC8 — Scheduled sync catch-up (ADR-055)
+
+```gherkin
+Scenario: Cron route runs scheduled sync
+  Given CRON_SECRET is configured
+  And Authorization Bearer matches CRON_SECRET
+  When POST /api/sync/cron is called
+  Then syncFrameworkRepo runs
+```
+
+#### AC9 — HTTP install refreshes stale cache (ADR-055)
+
+```gherkin
+Scenario: Repo moved ahead of cache on HTTP install
+  Given cache latestCommit is SHA-OLD
+  And live GitHub tip resolves to SHA-NEW
+  When sdd_install_framework runs on HTTP channel
+  Then the server syncs before returning packageUrl
+  And commitSha in the response is SHA-NEW
+  And already_up_to_date is not returned when installed_commit is SHA-OLD
+```
+
+#### AC10 — Cache staleness observability (ADR-055)
+
+```gherkin
+Scenario: HTTP install exposes cache age
+  Given cache syncedAt is older than 30 minutes
+  When sdd_install_framework runs on HTTP channel
+  Then the response includes cache_synced_at, cache_age_minutes, and cache_stale true
+  And instructions mention stale cache advisory
+```
+
+### E2E test plan (freshness regression)
+
+| Test | Layer | Assertion |
+| --- | --- | --- |
+| `install.test.ts` — stale cache + live tip ahead | 3 | Returns new commitSha after refresh; not `already_up_to_date` |
+| `webhook/route.test.ts` | 1 | Valid HMAC → sync; bad HMAC → 401 |
+| `sync/cron/route.test.ts` | 2 | Valid CRON_SECRET → sync |
+| `ensure-cache-fresh.test.ts` | 3 | Sync when cache ≠ live; fresh when equal |
+| Opt-in `sync-e2e.test.ts` | all | Real GitHub repo sync unchanged + idempotent |
+
 ---
 
 ## `sdd-mcp-package-api` — Package REST API (PKAPI-01)

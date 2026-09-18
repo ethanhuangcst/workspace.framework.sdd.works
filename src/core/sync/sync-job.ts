@@ -45,9 +45,14 @@ type SyncDeps = {
     ref: string,
     destDir: string,
   ) => Promise<{ commitSha: string }>;
+  resolveCommit: (owner: string, repo: string, ref: string) => Promise<string>;
   listTags: (owner: string, repo: string) => Promise<VersionEntry[]>;
   fetchTree: (owner: string, repo: string) => Promise<ReturnType<typeof inventoryFromTree>>;
 };
+
+export type LiveCommitRef =
+  | { commitSha: string; version: string }
+  | { code: "sync_error"; message: string };
 
 function defaultDeps(): SyncDeps {
   return {
@@ -58,6 +63,10 @@ function defaultDeps(): SyncDeps {
     async materialize(owner, repo, ref, destDir) {
       const port = getGitHubPortForRepo(owner);
       return port.materializePackage(owner, repo, ref, destDir);
+    },
+    async resolveCommit(owner, repo, ref) {
+      const port = getGitHubPortForRepo(owner);
+      return port.resolveCommitSha(owner, repo, ref);
     },
     async listTags(owner, repo) {
       const port = getGitHubPortForRepo(owner);
@@ -92,6 +101,38 @@ function cleanupOldCommits(keepSha: string): void {
 
   for (const sha of entries.slice(RETAIN_COMMITS - 1)) {
     rmSync(commitDir(sha), { recursive: true, force: true });
+  }
+}
+
+export async function resolveLatestLiveCommit(): Promise<LiveCommitRef> {
+  const deps = getDeps();
+  const url = await deps.getRepoUrl();
+  if (!url) {
+    return { code: "sync_error", message: "No GitHub repository is configured in Settings." };
+  }
+
+  const parsed = parseGithubRepoUrl(url);
+  if (!parsed) {
+    return { code: "sync_error", message: "Settings GitHub URL is invalid." };
+  }
+
+  try {
+    const tags = await deps.listTags(parsed.owner, parsed.repo);
+    const latestVersion = tags[0]?.id ?? "main";
+    const commitSha = await deps.resolveCommit(
+      parsed.owner,
+      parsed.repo,
+      latestVersion,
+    );
+    return { commitSha, version: latestVersion };
+  } catch (error) {
+    if (error instanceof GitHubSyncError || error instanceof GitHubConfigError) {
+      return { code: "sync_error", message: error.message };
+    }
+    if (error instanceof Error) {
+      return { code: "sync_error", message: error.message };
+    }
+    throw error;
   }
 }
 

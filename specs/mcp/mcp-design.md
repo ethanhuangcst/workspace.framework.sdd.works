@@ -2,30 +2,123 @@
 
 MCP server for install, update, list, and get-key. Stories: [`mcp-stories.md`](./mcp-stories.md). Portal: [`app-design.md`](../admin-portal/app-design.md). Stack: [`tech-spec.md`](../tech-spec.md).
 
-**Status:** draft. Pin `@modelcontextprotocol/sdk` and verify `tool` / `registerTool` against that release before coding.
+**Status:** implemented (Sprint 6 + ADR-054 Hybrid + ADR-055 sync freshness). ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md), [055](../adr/ADR-055-layered-sync-freshness.md).
 
 ## 1. Goals and non-goals
 
 | Goals | Non-goals |
 | --- | --- |
-| Four tools, same core on stdio and Streamable HTTP | Portal chat LLM / image generation |
-| Install/update skills, rules, other folders on the **caller** machine | Writing Server 2 disk as `~/.cursor` |
-| `sdd_list_versions` from Settings-linked GitHub / releases | Third-party skill marketplace |
-| `sdd_get_key` from the admin key store | MCP transport session as business state |
-| Path allow-list; structured errors | Editing skills/rules inside an MCP session |
-| Qwen-assisted client-config path discovery (stdio, ADR-047) | Trusting LLM paths without allow-list validation |
+| Four tools on Streamable HTTP for **end users** (ADR-054) | Portal chat LLM / image generation |
+| Hybrid install: HTTP returns tarball URL; **AI agent** extracts on caller machine | Writing Server 2 disk as `~/.cursor` |
+| Prompt-based MCP setup — one paste, no binary path in `mcp.json` (SETUP-01) | Third-party skill marketplace |
+| Stdio direct writes for **dev contributors** only (ADR-051, ADR-053) | MCP transport session as business state |
+| `sdd_list_versions` from operator sync cache / REST API | Editing skills/rules inside an MCP session |
+| `sdd_get_key` from the admin key store (HTTP only) | |
+| Path allow-list; structured errors | Trusting LLM paths without allow-list validation |
+| Qwen-assisted path discovery on stdio (ADR-047) | |
 
 `serverInfo.name` = `framework.sdd.works` (literal). Tool names unprefixed. Descriptions SHOULD contain the literal `framework.sdd.works`.
 
-## 2. Transport
+## 2. Transport and roles
 
-```text
-Local desktop?  → stdio entry (developer machine)
-Remote client?  → Streamable HTTP POST/GET /mcp
-Legacy SSE?     → only if a listed client requires it
-```
+Two audiences, two transports:
+
+| Audience | Transport | MCP config | Install executor |
+| --- | --- | --- | --- |
+| **End user** (primary, ADR-054) | Streamable HTTP `POST/GET /mcp` | `"url": "https://framework.sdd.works/mcp"` only | **AI agent** in the IDE (shell + manifest write) |
+| **Dev contributor** | stdio (`npm run mcp:stdio` or compiled binary) | `"command": "${userHome}/.sdd/sdd-mcp"` or local `tsx` | stdio process writes directly |
+| **Terminal fallback** | stdio via curl installer | written by `scripts/install.sh` | stdio binary |
+
+Legacy SSE: only if a listed client requires it.
 
 Core (resolve package, path policy, key lookup) is transport-agnostic. Wire stdio or HTTP only in bootstrap.
+
+**HTTP auth:** verify bearer **before** initialize. Do not rely on obscure tool names. Portal cookies never authorize MCP.
+
+Prefer a **sibling Node process** for `/mcp` if the pinned SDK Streamable HTTP transport does not fit the Next.js request lifecycle.
+
+### 2.1 Hybrid architecture (ADR-054)
+
+**Problem:** A remote HTTP MCP server cannot see or write the caller’s home directory. A stdio binary solves that but forces every user to configure a local `command` path in `mcp.json`.
+
+**Hybrid decision:** HTTP MCP owns catalog + policy + tarball URL. The **AI agent** in the user’s IDE is the local executor — it runs shell commands and writes the small manifest file. Content arrives via deterministic `tar` extraction, not AI-generated file bodies.
+
+```mermaid
+flowchart LR
+  subgraph setup [Setup — paste one prompt]
+    User[User pastes prompt in Cursor] --> AI1[AI fetches GET /agent-setup]
+    AI1 --> AI2[AI writes URL to mcp.json]
+  end
+
+  subgraph install [Install — AI-driven]
+    UserChat[User: install framework] --> AICall[AI calls sdd_install_framework via HTTP MCP]
+    AICall --> Server[Server returns packageUrl + paths + manifest]
+    Server --> AIShell[AI runs curl URL pipe tar xz -C clientRoot]
+    AIShell --> AIManifest[AI writes .sdd-installed.json]
+  end
+
+  subgraph server [Operator server — ADR-053 + ADR-055]
+    WH[GitHub webhook] --> Sync[Sync job]
+    CRON[30-min scheduled sync] --> Sync
+    Sync --> Cache[.data/sdd-packages/]
+    Cache --> API[/api/sdd/package/]
+    Cache --> API2[/api/sdd/versions/]
+  end
+
+  AICall --> API
+```
+
+#### End-user MCP config
+
+Same for everyone — no binary, no per-user path:
+
+```json
+"framework.sdd.works": { "url": "https://framework.sdd.works/mcp" }
+```
+
+#### Prompt-based setup (SETUP-01)
+
+User pastes in Cursor (or other agent):
+
+```text
+Fetch and execute the setup instructions from https://framework.sdd.works/agent-setup
+```
+
+| Endpoint | Serves |
+| --- | --- |
+| `GET /agent-setup` | Markdown setup instructions (Next.js rewrite → `/api/agent-setup`) |
+| Source file | `public/agent-setup/prompt.md` |
+
+The prompt instructs the AI to add the HTTP MCP URL only. **Install is a separate step** after MCP is connected — the setup prompt explicitly does not authorize installing skills/rules.
+
+#### Install/update responsibility split
+
+| Step | Who | Where |
+| --- | --- | --- |
+| Sync GitHub → cache | Operator server | `.data/sdd-packages/<commit-sha>/` |
+| List versions, resolve package | HTTP MCP tool | Reads sync cache |
+| Resolve target paths | HTTP MCP tool | PATH-01 seed map + `client` / `os` args (canonical roots, not server disk) |
+| Return `packageUrl` + manifest + instructions | HTTP MCP tool | Response JSON |
+| Read local `.sdd-installed.json` | AI agent | User machine |
+| Delete previous package-owned files | AI agent | Per `previousManifest.files` |
+| `curl \| tar xz --strip-components 1` | AI agent | User machine (`extractTarget`) |
+| Write new `.sdd-installed.json` | AI agent | User machine (`manifestPath`) |
+
+**Why `tar` not Write tool for content:** GitHub tarball bytes are deterministic; AI Write tool would risk drift or truncation on large skill trees. Manifest JSON is small and safe for Write.
+
+**Why not stdio for end users:** Requires binary download, OS/arch matrix, and a `command` path in config — poor UX compared to a universal URL.
+
+#### Fallback paths (de-emphasized, not removed)
+
+| Path | When |
+| --- | --- |
+| `curl -fsSL https://framework.sdd.works/install \| sh` | User prefers terminal; writes stdio binary + mcp.json |
+| `npm run mcp:stdio` | Repo contributors testing locally |
+| Bun-compiled binary (ADR-051) | Same as curl installer target |
+
+Dev stdio uses `SDD_SERVER_URL=http://localhost:3040` when testing against local portal.
+
+#### Stdio architecture (dev contributors)
 
 ```mermaid
 flowchart LR
@@ -45,36 +138,44 @@ flowchart LR
     FS[Caller filesystem]
     Qwen[Qwen Chat Completions]
   end
-  StdioHost --> Stdio --> Core
   HttpHost --> Http --> Core
   Http --> PG
   Http --> Cache
+  StdioHost --> Stdio --> Core
   GH -->|sync job| Cache
   Stdio -->|GET /api/sdd/*| Cache
   Stdio --> FS
   Stdio -.->|path discovery only| Qwen
 ```
 
-**HTTP auth:** verify bearer **before** initialize. Do not rely on obscure tool names. Portal cookies never authorize MCP.
+HTTP install never reaches `FS` on the operator server. Stdio reaches `FS` on the developer machine only.
 
-**HTTP install (ADR-054):** the hosted process cannot write the caller’s home directory. `sdd_install_framework` / `sdd_update_framework` return `{ packageUrl, paths, manifest, instructions }` for AI shell extraction (`curl | tar`). They must not write server disk as user config roots. Stdio (dev contributors) still writes locally.
+### 2.2 Cache freshness (ADR-055)
 
-Prefer a **sibling Node process** for `/mcp` if the pinned SDK Streamable HTTP transport does not fit the Next.js request lifecycle.
+Three layers keep the sync cache aligned with GitHub:
 
-**Distribution (ADR-054, primary):** end users paste one setup prompt; the AI fetches `GET /agent-setup` (rewrites to `/api/agent-setup`) and adds `"url": "https://framework.sdd.works/mcp"` to MCP config — no binary, no path. Install/update: AI calls HTTP MCP tools, downloads tarball from `/api/sdd/package`, extracts locally, writes `.sdd-installed.json`.
+| Layer | Trigger | Behavior |
+| --- | --- | --- |
+| 1 Webhook | `push`, `release` → `POST /api/github/webhook` | HMAC verify → `syncFrameworkRepo` |
+| 2 Scheduled | `instrumentation.ts` every 30 min; backup `POST /api/sync/cron` | Same sync job; skips when `GITHUB_TOKEN` unset |
+| 3 Install check | HTTP `sdd_install_framework` | Compare cache `latestCommit` to live GitHub tip; sync if different |
 
-**Distribution (stdio, dev contributors, ADR-051 + ADR-053):** stdio entry packaged via `bun build --compile` for contributors. Fallback **curl installer** (`curl -fsSL https://framework.sdd.works/install | sh`) remains for terminal users. Dev: `npm run mcp:stdio` with `SDD_SERVER_URL=http://localhost:3040`.
+HTTP install response includes `cache_synced_at`, `cache_age_minutes`, `cache_stale` (advisory when age > 30 min). Install does **not** block on staleness.
+
+**HTTP idempotency contract:** Before passing `installed_commit` / `installed_version`, the AI must confirm every file in the local manifest still exists. If files were deleted locally but the server cache is stale, omit `installed_commit` so the tool returns the package for re-extraction.
 
 ## 3. Tools
 
-Register with Zod input schemas. Descriptions state parameters, success shape, and failure modes (`not_found`, `unauthorized`, `path_rejected`, `already_up_to_date`, `local_install_required`, `package_unavailable`, `client_config_unresolved`, `llm_unavailable`).
+Register with Zod input schemas. Descriptions state parameters, success shape, and failure modes.
+
+**Failure codes:** `not_found`, `unauthorized`, `path_rejected`, `already_up_to_date`, `package_unavailable`, `client_config_unresolved`, `llm_unavailable`, `client_unknown`, `os_unsupported`, `sync_pending`, `version_not_found`. `local_install_required` is **deprecated** on HTTP (ADR-054); retained in error enum for legacy references only.
 
 | Tool | Side effects | Transport |
 | --- | --- | --- |
 | `sdd_list_versions` | None | stdio (REST API) + HTTP (sync cache) |
 | `sdd_get_key` | None (returns plaintext `key_value`) | **HTTP only**; auth required |
-| `sdd_install_framework` | Writes client skill/rule paths (stdio) or returns tarball URL + instructions (HTTP, ADR-054) | stdio + HTTP |
-| `sdd_update_framework` | Same as install; idempotent on same version | same as install |
+| `sdd_install_framework` | **stdio:** writes client paths. **HTTP:** returns tarball URL + metadata; AI extracts locally | stdio + HTTP |
+| `sdd_update_framework` | Alias of install; idempotent on same version + commit | stdio + HTTP |
 
 Optional resources (no side effects, no key values): `sdd://framework/versions`.
 
@@ -94,14 +195,62 @@ Missing → `not_found`. Unauthorized → `unauthorized`. Do not list other key 
 
 ### `sdd_install_framework`
 
-Input: `{ version?: string, client?: string, os?: string, force?: boolean }`. Missing version → latest from list. Client: explicit argument in v1 if auto-detect is unresolved. `force: true` skips the version match check and always reinstalls.
+Input:
 
-Behavior:
-1. Resolve package artifact for version.
-2. Resolve target roots: **MCPI-05** deterministic detection (env vars + config files) → seed path map + Qwen search of redacted local client config (stdio only; ADR-047 / MCPI-04). Prefer explicit `client`; else `clientInfo.name`.
-3. Reject if any target is outside allow-list or contains `..` → `path_rejected`. Unresolved → `client_config_unresolved` / `llm_unavailable` / `client_unknown`.
-4. Write skills (each with `SKILL.md`), rules, agents, workflows.
-5. Return `{ version, paths, asset_counts, resolution_source: "env" | "config" | "seed" | "llm" }`.
+```ts
+{
+  version?: string;           // default: latest from sync cache
+  client?: string;            // prefer explicit; else clientInfo.name
+  os?: string;                // darwin | win32 | linux
+  force?: boolean;            // skip idempotency check
+  installed_commit?: string;  // HTTP only: AI read from local manifest
+  installed_version?: string; // HTTP only: AI read from local manifest
+}
+```
+
+Shared steps (both transports):
+1. Detect client (`client` arg or `clientInfo.name`).
+2. Resolve target roots via **MCPI-05** → seed map → Qwen (stdio only, ADR-047).
+3. Reject escaped paths → `path_rejected`. Unresolved → `client_config_unresolved` / `llm_unavailable` / `client_unknown`.
+
+#### stdio behavior (dev contributors)
+
+4. Fetch package: `GET ${SDD_SERVER_URL}/api/sdd/package?version=<v>` → unpack to temp.
+5. Manifest-tracked merge (§ Write policy): delete old package files, write new, update `.sdd-installed.json`.
+6. Return `{ version, paths, asset_counts, resolution_source }`.
+
+#### HTTP behavior (end users, ADR-054)
+
+4. Resolve package from **sync cache** (`resolveCachedVersion`); build `packageUrl = ${SDD_SERVER_URL}/api/sdd/package?version=<v>`.
+5. Build proposed manifest from cached unpacked inventory (file list only — no server-side write).
+6. If `installed_commit` + `installed_version` match resolved package and `force` is false → `already_up_to_date`.
+7. Return:
+
+```json
+{
+  "packageUrl": "https://framework.sdd.works/api/sdd/package?version=latest",
+  "version": "v1.0.0",
+  "commitSha": "abc123…",
+  "client": "cursor",
+  "paths": { "skills": "…", "rules": "…", "agents": "…", "workflows": "…" },
+  "manifestPath": "~/.cursor/.sdd-installed.json",
+  "manifest": { "version": 1, "package_version": "…", "package_commit": "…", "files": { … } },
+  "previousManifest": null,
+  "extractTarget": "~/.cursor",
+  "instructions": "…",
+  "resolution_source": "seed"
+}
+```
+
+`previousManifest` is populated when the HTTP handler can read an existing manifest (e.g. tests with `installHome`; production relies on the AI reading `manifestPath` locally).
+
+**AI executor steps** (from `instructions`):
+1. Read `manifestPath`; if present, delete files listed in `previousManifest.files.*`.
+2. `curl -fsSL "<packageUrl>" | tar xz -C "<extractTarget>" --strip-components 1`
+3. Write `manifest` JSON to `manifestPath`.
+4. Verify artifacts exist under `paths`.
+
+HTTP never writes operator server disk as user config. The operator server does not verify the caller’s local filesystem after the tool returns.
 
 #### Write policy — manifest-tracked merge (ADR-048)
 
@@ -138,7 +287,7 @@ Manifest shape (`~/.<client>/.sdd-installed.json`):
 
 ### `sdd_update_framework`
 
-Same path policy as install. If `package_version`, `package_commit`, and on-disk integrity all match → `already_up_to_date` without needless rewrite. Supports `force?: boolean` like install.
+Alias of `sdd_install_framework` (same channel-specific behavior). **stdio:** idempotent when manifest + on-disk integrity match. **HTTP:** idempotent when AI passes matching `installed_commit` + `installed_version`, or when AI reads local manifest and skips. Supports `force?: boolean` on both channels.
 
 ## 4. Path resolution (PATH-01 seed map + Qwen)
 
@@ -256,7 +405,7 @@ client arg or detect
 - Prefer explicit `client` when provided.
 - Cache resolution by `(client, os, config fingerprint)` with short TTL.
 - Never send key-store values or env secrets to Qwen.
-- HTTP MCP: do not run this against Server 2 disk (see §3 / MCPI-03).
+- HTTP MCP: do not run Qwen against operator server disk. HTTP install returns paths from seed map + args; the AI executes locally (§2.1).
 - Fallback target is the PATH-01 seed map (§4.0), not a separate static table.
 
 ### 4.3 Module sketch
@@ -265,7 +414,7 @@ Path resolution modules live in shared core (see §6).
 
 ### 4.4 Client path detection (MCPI-05)
 
-Deterministic path resolution layer that runs **before** Qwen (§4.2). stdio only. Knowledge: [`client.paths.md`](./client.paths.md).
+Deterministic path resolution layer that runs **before** Qwen (§4.2). **stdio:** reads caller env/config. **HTTP:** returns canonical roots from seed map + `client`/`os` for the AI executor (does not read user disk). Knowledge: [`client.paths.md`](./client.paths.md).
 
 #### Detection flow
 
@@ -291,7 +440,9 @@ flowchart TD
   ResolveConfig --> Validate
   ResolveSeed --> Validate
   ResolveQwen --> Validate
-  Validate -->|pass| Write[write_to_resolved_roots]
+  Validate -->|pass| Channel{transport}
+  Channel -->|stdio| Write[write_to_resolved_roots]
+  Channel -->|http| ReturnUrl[return packageUrl + instructions]
   Validate -->|fail| EndRejected[path_rejected]
 ```
 
@@ -391,18 +542,18 @@ or `PathError`.
 - **Shared-root install** → write to a `compat` root (covers multiple clients in one write).
 - **Never write to both `primary` and `compat` for the same client** — the client reads both, so it would see duplicate skills.
 
-**`mcp.json` is out of scope** for `sdd_install_framework` / `sdd_update_framework`. The MCP server is already registered in the client's `mcp.json` (that's how the tool is called). These tools write **framework artifacts** (skills/rules/agents/workflows) only — never MCP server config.
+**`mcp.json` setup is out of scope for install/update tools.** Initial MCP registration uses prompt-based setup (`GET /agent-setup`, SETUP-01). `sdd_install_framework` / `sdd_update_framework` write **framework artifacts** (skills/rules/agents/workflows) only — never MCP server config.
 
 Cache resolved paths per stdio session (the server process lives for the duration of the client session). Cache key: `(client, os, configFingerprint)`.
 
 #### Security
 
-- Env vars are read from `process.env` only (stdio). HTTP server never runs this.
+- Env vars are read from `process.env` only on **stdio** (inherits IDE env). HTTP uses seed map + explicit `client`/`os` unless test harness sets `installHome`.
 - Config file reads are limited to path-relevant fields; never parse credentials or key values.
 - All resolved paths pass `path-policy` (allow-list) before any write.
 - `clientInfo.name` is logged at debug level only; never log env var values.
 
-## 5. Package resolve (server sync + client fetch, ADR-053)
+## 5. Package resolve (server sync + client fetch, ADR-053 + ADR-054)
 
 **Operator server (sync job):**
 
@@ -414,7 +565,7 @@ Settings GitHub URL
   → write manifest.json (versions, inventory, latestCommit)
 ```
 
-**stdio client (install/update):**
+**stdio client (dev contributors — direct write):**
 
 ```text
 GET ${SDD_SERVER_URL}/api/sdd/package?version=<v>
@@ -423,7 +574,17 @@ GET ${SDD_SERVER_URL}/api/sdd/package?version=<v>
   → copy into allowed client roots (manifest-tracked merge)
 ```
 
-HTTP MCP without a local bridge stops before unpack-to-home. `GITHUB_TOKEN` stays on the operator server only.
+**HTTP MCP + AI agent (end users — hybrid, ADR-054):**
+
+```text
+sdd_install_framework (HTTP)
+  → resolveCachedVersion from sync cache
+  → return packageUrl pointing at GET /api/sdd/package?version=<v>
+  → AI agent: curl | tar xz -C extractTarget --strip-components 1
+  → AI agent: write manifest to manifestPath
+```
+
+`GITHUB_TOKEN` stays on the operator server only. End users never call GitHub directly.
 
 ## 6. Shared core
 
@@ -436,6 +597,9 @@ src/core/
   path-resolve-llm.ts      # Qwen client + schema + redact (layers on packages/sdd-paths)
   package-resolve.ts       # server-side only (sync job); stdio uses package-fetch.ts
 src/app/api/sdd/{versions,package}/route.ts  # public package REST API
+src/app/api/agent-setup/route.ts             # prompt-based MCP setup (SETUP-01)
+src/app/api/install/route.ts                 # curl installer fallback
+public/agent-setup/prompt.md                 # setup instructions source
 src/app/api/admin/sync/route.ts              # manual sync trigger
 packages/sdd-paths/
   paths.json               # PATH-01 versioned seed data
@@ -469,7 +633,10 @@ Test plan: [`mcp-test.md`](./mcp-test.md). Follow **common-test-strategy** + `te
 
 ## 10. Anti-patterns
 
-- HTTP MCP writing Server 2 `~/.cursor`
+- HTTP MCP writing Server 2 `~/.cursor` (use Hybrid: return URL, AI extracts locally)
+- Requiring end users to configure a stdio `command` path when HTTP URL suffices (ADR-054)
+- Using AI Write tool to recreate skill trees instead of `tar` extraction
+- Expecting HTTP install to verify local filesystem state without AI passing `installed_commit` / `installed_version`
 - Security through tool-name obscurity
 - Returning key values from `sdd_list_versions` or resources
 - Silent empty success when GitHub is down

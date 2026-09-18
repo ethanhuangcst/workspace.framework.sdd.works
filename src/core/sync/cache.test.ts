@@ -45,6 +45,7 @@ describe("package cache", () => {
     if (!("code" in resolved)) {
       expect(resolved.commitSha).toBe(sha);
       expect(resolved.version).toBe("v1.0.0");
+      expect(resolved.syncedAt).toBe("2026-01-01T00:00:00.000Z");
       expect(existsSync(resolved.tarPath)).toBe(true);
     }
   });

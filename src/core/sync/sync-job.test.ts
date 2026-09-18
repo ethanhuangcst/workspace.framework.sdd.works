@@ -54,6 +54,9 @@ describe("syncFrameworkRepo", () => {
           writeFileSync(join(destDir, "pkg.tgz"), "fake-tar");
           return { commitSha: `sha-${ref}` };
         },
+        async resolveCommit(_o, _r, ref) {
+          return `sha-${ref}`;
+        },
         async listTags() {
           return [{ id: "v1.0.0", published_at: "2026-01-01T00:00:00.000Z" }];
         },
@@ -102,6 +105,9 @@ describe("syncFrameworkRepo", () => {
         async materialize() {
           return { commitSha: sha };
         },
+        async resolveCommit() {
+          return sha;
+        },
         async listTags() {
           return [{ id: "main" }];
         },
@@ -133,6 +139,9 @@ describe("syncFrameworkRepo", () => {
           return "https://github.com/fixture/sdd-framework";
         },
         async materialize() {
+          throw new Error("GitHub down");
+        },
+        async resolveCommit() {
           throw new Error("GitHub down");
         },
         async listTags() {
@@ -180,6 +189,9 @@ describe("syncFrameworkRepo", () => {
           cpSync(newPkg, join(destDir, "unpacked"), { recursive: true });
           writeFileSync(join(destDir, "pkg.tgz"), "new-tar");
           return { commitSha: "sha-new" };
+        },
+        async resolveCommit() {
+          return "sha-new";
         },
         async listTags() {
           return [{ id: "main" }];

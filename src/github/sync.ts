@@ -15,6 +15,7 @@ export type GitHubPort = {
   checkRepoAccessible: (owner: string, repo: string) => Promise<boolean>;
   fetchRepoTree: (owner: string, repo: string) => Promise<TreeNode[]>;
   listRepoTags: (owner: string, repo: string) => Promise<RepoVersion[]>;
+  resolveCommitSha: (owner: string, repo: string, ref: string) => Promise<string>;
   materializePackage: (
     owner: string,
     repo: string,
@@ -91,6 +92,9 @@ export function createFixtureGitHubPort(options?: {
         { id: "v1.0.0", published_at: "2026-01-01T00:00:00.000Z" },
         { id: "v0.9.0", published_at: "2025-12-01T00:00:00.000Z" },
       ];
+    },
+    async resolveCommitSha(_owner, _repo, ref) {
+      return `sha-${ref}`;
     },
     async materializePackage(_owner, _repo, ref, destDir) {
       const files: Record<string, string> = {
@@ -239,14 +243,19 @@ function createOctokitPort(): GitHubPort {
         );
       }
     },
+    async resolveCommitSha(owner, repo, ref) {
+      try {
+        const { data } = await octokit.repos.getCommit({ owner, repo, ref });
+        return data.sha;
+      } catch (error) {
+        throw new GitHubSyncError(
+          error instanceof Error ? error.message : "GitHub commit resolve failed",
+        );
+      }
+    },
     async materializePackage(owner, repo, ref, destDir) {
       try {
-        const { data: commitData } = await octokit.repos.getCommit({
-          owner,
-          repo,
-          ref,
-        });
-        const commitSha = commitData.sha;
+        const commitSha = await this.resolveCommitSha(owner, repo, ref);
         const response = await octokit.repos.downloadTarballArchive({
           owner,
           repo,

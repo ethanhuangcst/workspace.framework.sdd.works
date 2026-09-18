@@ -191,11 +191,12 @@ Read-only live view and version listing. Settings store one repo URL; the BFF fe
   - Host=`GITHUB_API_HOST` = `api.github.com`
   - Base_URL=`GITHUB_API_BASE_URL` = `https://api.github.com`
   - Token=`GITHUB_TOKEN` (fine-grained or classic, **contents:read** only)
-  - Optional webhook=`GITHUB_WEBHOOK_SECRET` (refresh sync cache on push)
+  - Webhook=`GITHUB_WEBHOOK_SECRET` → `POST /api/github/webhook` (push/release → sync cache; ADR-055)
+  - Scheduled sync=`CRON_SECRET` → `POST /api/sync/cron` (backup); primary: Next.js `instrumentation.ts` 30-min interval
 - Technical highlights
   - Server-side only. Never expose `GITHUB_TOKEN` to the browser.
   - Portal shows files; **no** in-portal edit or git push (req-spec out of scope).
-  - Poll or webhook + short cache for “real-time / near-real-time.”
+  - Webhook + 30-min scheduled sync + install-time cache-vs-live check (ADR-055).
   - `sdd_list_versions` reads tags/releases or a version manifest from the configured repo(s) and/or a release artifact URL — see open question in req-spec.
   - On failure: show sync error in portal; MCP list/install returns structured error — never silent empty success.
 
@@ -283,6 +284,7 @@ GITHUB_TOKEN=
 GITHUB_API_HOST=api.github.com
 GITHUB_API_BASE_URL=https://api.github.com
 GITHUB_WEBHOOK_SECRET=
+CRON_SECRET=
 
 # Mail
 RESEND_API_KEY=

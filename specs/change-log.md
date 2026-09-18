@@ -9,6 +9,14 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ## 2026-09-18
 
+### Layered sync freshness (ADR-055)
+
+- **Layer 1:** `POST /api/github/webhook` — HMAC `GITHUB_WEBHOOK_SECRET`; `push` and `release` call `syncFrameworkRepo`.
+- **Layer 2:** `instrumentation.ts` 30-min interval + `POST /api/sync/cron` (`CRON_SECRET` bearer) as backup.
+- **Layer 3:** HTTP install compares cache to live GitHub tip; syncs when different; returns `cache_synced_at`, `cache_age_minutes`, `cache_stale`.
+- Install instructions: AI verifies local files before passing `installed_commit`.
+- Tests: webhook route, cron route, ensure-cache-fresh, install freshness regression.
+
 ### Hybrid HTTP MCP + AI tarball extraction (ADR-054)
 
 - **Primary end-user path:** HTTP MCP URL only (`"url": "https://framework.sdd.works/mcp"`). No binary in mcp.json.
@@ -26,7 +34,7 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ### Server-side sync + thin stdio client (ADR-053)
 
-- **SYNK-01:** Sync job fetches GitHub repo → `.data/sdd-packages/<commit-sha>/` + manifest. Triggers: `POST /api/admin/sync`, polling (future).
+- **SYNK-01:** Sync job fetches GitHub repo → `.data/sdd-packages/<commit-sha>/` + manifest. Triggers: admin sync, webhook, scheduled sync (ADR-055).
 - **PKAPI-01:** Public `GET /api/sdd/versions`, `GET /api/sdd/package`. stdio binary fetches from operator REST API (`SDD_SERVER_URL`).
 - stdio no longer imports Prisma/GitHub; `sdd_get_key` HTTP-only. `package-fetch.ts` replaces client-side `package-resolve`.
 - Tests: sync-job, cache, package API, list-versions, package-fetch; opt-in E2E via `SDD_E2E_GITHUB_REPO`.

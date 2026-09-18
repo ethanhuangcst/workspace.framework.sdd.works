@@ -8,6 +8,10 @@ import { PrismaClient } from "@prisma/client";
 import { setPackageFetchForTests } from "@/core/tools/package-fetch";
 import { clearPathDetectCache } from "@/core/path-detect";
 import {
+  setEnsureCacheFreshDepsForTests,
+} from "@/core/sync/ensure-cache-fresh";
+import { readPackageManifest } from "@/core/sync/manifest";
+import {
   MANIFEST_FILENAME,
   packageTarPath,
   unpackedDir,
@@ -106,9 +110,32 @@ function seedHttpCache(sha: string, version: string): void {
   );
 }
 
+function mockCacheFreshAsMatchingCache(): void {
+  setEnsureCacheFreshDepsForTests({
+    readManifest: readPackageManifest,
+    resolveLive: async () => {
+      const manifest = readPackageManifest();
+      if (!manifest) {
+        return { code: "sync_error", message: "sync_pending" };
+      }
+      return { commitSha: manifest.latestCommit, version: manifest.latestVersion };
+    },
+    sync: async () => {
+      const manifest = readPackageManifest();
+      return {
+        status: "unchanged" as const,
+        commitSha: manifest?.latestCommit ?? "sha-unknown",
+        version: manifest?.latestVersion ?? "main",
+      };
+    },
+    clearVersionsCache: () => {},
+  });
+}
+
 describe("MCP install/update contracts", () => {
   afterEach(() => {
     setPackageFetchForTests(null);
+    setEnsureCacheFreshDepsForTests(null);
     clearPathDetectCache();
     if (originalCacheDir === undefined) {
       delete process.env.SDD_PACKAGE_CACHE_DIR;
@@ -152,6 +179,7 @@ describe("MCP install/update contracts", () => {
     await stdio.close();
 
     seedHttpCache("sha-http-mcp", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
     const http = createSddMcpServer({
       channel: "http",
       authorized: true,

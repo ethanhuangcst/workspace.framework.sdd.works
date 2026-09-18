@@ -54,6 +54,10 @@ describe.skipIf(!e2eRepo || !hasToken)("sync E2E (real GitHub repo)", () => {
           destDir,
         );
       },
+      async resolveCommit(owner, repo, ref) {
+        const { getGitHubPortForRepo } = await import("@/github/sync");
+        return getGitHubPortForRepo(owner).resolveCommitSha(owner, repo, ref);
+      },
       async listTags(owner, repo) {
         const { getGitHubPortForRepo } = await import("@/github/sync");
         const tags = await getGitHubPortForRepo(owner).listRepoTags(owner, repo);
