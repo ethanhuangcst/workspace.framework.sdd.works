@@ -16,6 +16,9 @@ export default defineConfig({
       DATABASE_URL:
         process.env.DATABASE_URL ??
         "postgresql://framework_sdd:framework_sdd@localhost:5435/framework_sdd",
+      KEYS_ENCRYPTION_KEY:
+        process.env.KEYS_ENCRYPTION_KEY ??
+        "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
     },
     include: [
       "src/**/*.test.ts",

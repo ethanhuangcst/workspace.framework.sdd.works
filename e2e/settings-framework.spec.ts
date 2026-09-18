@@ -86,7 +86,8 @@ test.describe("settings and framework", () => {
 
     await page.getByTestId("framework-sync-repo").first().click();
     await expect(tree).toBeVisible({ timeout: 60_000 });
-    await expect(tree).toContainText("skills/");
+    await expect(tree).toContainText("Skills");
+    await expect(tree).toContainText("tdd");
   });
 
   test("should_navigate_change_repo_button_to_settings", async ({ page }) => {

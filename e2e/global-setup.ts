@@ -21,5 +21,16 @@ export default async function globalSetup() {
       status: "ACTIVE",
     },
   });
+
+  // Unit tests and local dev may leave rows encrypted with another KEYS_ENCRYPTION_KEY.
+  await db.key.deleteMany({});
+  await db.inviteToken.deleteMany({});
+  await db.resetToken.deleteMany({});
+  await db.setting.upsert({
+    where: { id: "singleton" },
+    create: { id: "singleton", githubUrl: null },
+    update: { githubUrl: null },
+  });
+
   await db.$disconnect();
 }

@@ -42,9 +42,7 @@ test.describe("admin keys CRUD", () => {
   test("should_create_list_edit_and_delete_key", async ({ page }) => {
     test.setTimeout(60_000);
     const db = new PrismaClient();
-    await db.key.deleteMany({
-      where: { keyName: { startsWith: "e2e_key_" } },
-    });
+    await db.key.deleteMany({});
     await db.$disconnect();
 
     const name = `e2e_key_${Date.now()}`;
@@ -81,7 +79,7 @@ test.describe("admin keys CRUD", () => {
     await expect(page.getByTestId("key-delete-confirm")).toBeVisible();
     await page.getByTestId("key-delete-confirm").click();
     await page.waitForURL(/\/admin\/keys$/);
-    await expect(page.getByTestId("keys-table")).toHaveCount(0);
+    await expect(page.getByTestId(`key-row-${name}`)).toHaveCount(0);
     await expect(page.getByText(/No keys yet|还没有|還沒有/i)).toBeVisible();
   });
 });
