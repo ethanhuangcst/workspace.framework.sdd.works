@@ -11,17 +11,17 @@ const TOOLS = [
   },
   {
     name: "sdd_get_key",
-    channelKey: "admin.guide.cap_channel_both",
+    channelKey: "admin.guide.cap_channel_http",
     bodyKey: "admin.guide.tool_get_key",
   },
   {
     name: "sdd_install_framework",
-    channelKey: "admin.guide.cap_channel_stdio",
+    channelKey: "admin.guide.cap_channel_both",
     bodyKey: "admin.guide.tool_install",
   },
   {
     name: "sdd_update_framework",
-    channelKey: "admin.guide.cap_channel_stdio",
+    channelKey: "admin.guide.cap_channel_both",
     bodyKey: "admin.guide.tool_update",
   },
 ] as const;
@@ -46,7 +46,7 @@ export function InstructionsPage({
           <p>{t(locale, "admin.guide.lead")}</p>
           <nav className="guide-toc" aria-label="Contents">
             <a href="#tools">{t(locale, "admin.guide.toc_tools")}</a>
-            <a href="#stdio">{t(locale, "admin.guide.toc_stdio")}</a>
+            <a href="#setup">{t(locale, "admin.guide.toc_setup")}</a>
             <a href="#http">{t(locale, "admin.guide.toc_http")}</a>
           </nav>
         </header>
@@ -76,19 +76,24 @@ export function InstructionsPage({
             </table>
           </div>
         </section>
-        <section className="guide-section" id="stdio">
-          <h2>{t(locale, "admin.guide.h_stdio")}</h2>
-          <p>{t(locale, "admin.guide.stdio_body")}</p>
+        <section className="guide-section" id="setup">
+          <h2>{t(locale, "admin.guide.h_setup")}</h2>
+          <p>{t(locale, "admin.guide.setup_body")}</p>
+          <p className="field-note mono">{t(locale, "admin.guide.setup_prompt")}</p>
+          <p className="field-note">{t(locale, "admin.guide.setup_note")}</p>
           <p className="field-note mono">
-            npx tsx src/mcp/stdio.ts
+            # Fallback — binary installer:
+            <br />
+            curl -fsSL https://framework.sdd.works/install | sh
           </p>
         </section>
         <section className="guide-section" id="http">
           <h2>{t(locale, "admin.guide.h_http")}</h2>
           <p>{t(locale, "admin.guide.http_body")}</p>
           <p className="field-note mono">
-            http://localhost:3041/mcp
+            {`{ "framework.sdd.works": { "url": "https://framework.sdd.works/mcp" } }`}
           </p>
+          <p className="field-note">{t(locale, "admin.guide.http_note")}</p>
         </section>
       </article>
     </AuthShell>

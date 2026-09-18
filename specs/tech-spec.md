@@ -27,6 +27,8 @@ Copy secrets into the deployable’s env (Portainer / `.env.local`) — never co
 | Admin portal + BFF | Next.js (App Router) · React · TypeScript | **16.3.0** · **19.2.8** · **7.0.2** |
 | Styles / client data | Tailwind CSS · React Query · Zustand · RHF + Zod | **4.3.1** · **5.101.4** · **5.0.15** · **7.85.0** + **4.4.3** |
 | MCP server | TypeScript / Node · `@modelcontextprotocol/sdk` · Zod | Pin SDK; verify `tool` / `registerTool` against the pinned release |
+| MCP stdio packaging | **Bun `--compile`** (devDependency only) | Build-time only; ships single executable per OS/arch; see ADR-051 |
+| Install idempotency | Commit SHA in manifest (`package_commit`, ADR-052) | Resolved via `repos.getCommit` on materialize; ref label alone is not identity |
 | Shared domain | TypeScript — package resolve, path policy, key lookup | Transport-agnostic; used by stdio and HTTP |
 | Mail | Resend | Admin password reset (and optional invite) |
 | GitHub | GitHub REST (Octokit or `fetch`) | Read-only tree/content for Settings-linked repos |
@@ -38,8 +40,8 @@ Copy secrets into the deployable’s env (Portainer / `.env.local`) — never co
 | Deployable | LLM | Persistence | External APIs |
 | --- | --- | --- | --- |
 | Admin portal (Next.js) | None (no portal chat) | Prisma → Postgres | Resend, GitHub (server-side) |
-| MCP HTTP | None for path discovery (no caller home FS) | Same Postgres for `sdd_get_key`; package metadata from GitHub/releases | GitHub / release artifacts |
-| MCP stdio | **Qwen** — client-config path discovery (ADR-047) | Local FS writes; keys via same store or issued credential | Package fetch + Qwen Chat Completions |
+| MCP HTTP | None for path discovery (no caller home FS) | Same Postgres for `sdd_get_key`; package metadata from sync cache | GitHub (sync job only) |
+| MCP stdio | **Qwen** — client-config path discovery (ADR-047) | Local FS writes only | Package fetch from operator REST API (`SDD_SERVER_URL`); Qwen Chat Completions |
 
 Rules: minimal dependencies; prefer platform and stdlib. Secrets never ship to the browser.
 
@@ -77,14 +79,15 @@ Other regions may use the default npm registry.
          ┌──────────────────┼──────────────────┐
          │                  │                  │
     / (portal)        /mcp  (HTTP)        stdio (local only)
-    Next.js           Streamable HTTP     node mcp-stdio
+    Next.js           Streamable HTTP     Bun-compiled binary
     App Router        same process or     developer machine
          │            sibling process            │
          └──────────────────┬──────────────────┘
                             │
                    shared TypeScript core
                    Prisma → PostgreSQL
-                   GitHub read + Resend
+                   GitHub read (sync job) + Resend
+                   Package cache (.data/sdd-packages/)
                    Qwen client (stdio path discovery only)
 ```
 
@@ -94,20 +97,20 @@ Other regions may use the default npm registry.
 | --- | --- |
 | **portal** | Next.js: pages (framework view, Keys, Settings, accounts) + BFF routes |
 | **mcp-http** | Streamable HTTP MCP on the same host (may be a Next.js route handler **or** a sibling Node process behind `/mcp`) |
-| **mcp-stdio** | Separate Node entry for local clients; **not** served on Server 2 |
+| **mcp-stdio** | Separate stdio entry for local clients; distributed as a **Bun-compiled single executable** per OS/arch (ADR-051); **not** served on Server 2. Fetches packages from operator REST API (`SDD_SERVER_URL`); no DB/GitHub on client (ADR-053). Dev: `npm run mcp:stdio` (`tsx`). Prod/client: download binary from GitHub Releases — **no Node/npm on the client**. |
 
 **Decision:** one **git repo**, two production processes on Server 2 if MCP HTTP is not inlined into Next.js; one **shared `packages/core`** (or `src/core`) for install/update/list/key logic. Prefer **sibling Node MCP** if the pinned SDK’s Streamable HTTP transport does not fit Next.js request lifecycle; otherwise a single Next.js process is allowed.
 
-**Filesystem writes** (`sdd_install_framework` / `sdd_update_framework`) run only where the process can see the **caller’s** home/config roots — typically **stdio on the developer machine**. HTTP MCP on Server 2 SHALL NOT write arbitrary paths on the server; it returns package metadata / signed instructions or fails with a structured “local install required” error unless a documented local bridge exists.
+**Filesystem writes** (`sdd_install_framework` / `sdd_update_framework`) on stdio run where the process can see the **caller’s** home/config roots (dev contributors). **End users** use HTTP MCP: tools return `packageUrl` + manifest + instructions; the AI agent extracts via shell (ADR-054). HTTP MCP on Server 2 SHALL NOT write arbitrary paths on the server.
 
 ### MCP tools (canonical names)
 
 | Tool | Side effects | Transport notes |
 | --- | --- | --- |
-| `sdd_list_versions` | None (read) | stdio + HTTP |
-| `sdd_install_framework` | Writes client skill/rule paths | stdio (local); HTTP only with explicit local-bridge story |
+| `sdd_list_versions` | None (read) | stdio (from REST API) + HTTP (from sync cache) |
+| `sdd_install_framework` | Writes client paths (stdio) or returns tarball URL (HTTP) | stdio + HTTP (ADR-054) |
 | `sdd_update_framework` | Same as install; idempotent on same version | same as install |
-| `sdd_get_key` | None (returns plaintext `key_value`) | stdio + HTTP; **auth required** |
+| `sdd_get_key` | None (returns plaintext `key_value`) | **HTTP only**; auth required |
 
 Input schemas: Zod on every tool. Descriptions state parameters, success shape, and failure modes (`not_found`, `unauthorized`, `path_rejected`, `already_up_to_date`, `client_config_unresolved`, `llm_unavailable`).
 
@@ -271,6 +274,10 @@ MCP_HTTP_PATH=/mcp
 MCP_HTTP_PORT=3041
 MCP_AUTH_TOKEN=
 
+# stdio client → operator server (ADR-053)
+SDD_SERVER_URL=http://localhost:3040
+SDD_PACKAGE_CACHE_DIR=
+
 # GitHub (server-side, read-only)
 GITHUB_TOKEN=
 GITHUB_API_HOST=api.github.com
@@ -358,8 +365,9 @@ Extends **common-test-strategy** (do not weaken it):
 - Unit tests for path allow-list, merge/overwrite policy, key lookup, version listing, **LLM output schema + allow-list validation** — **100%** of those critical paths
 - Integration: Prisma CRUD (admins, keys, settings); MCP tool contracts (stdio fixture + HTTP if enabled)
 - E2E (Playwright): login, password-reset request, Keys CRUD, Settings URL + framework view
-- Isolated test DB / temp data dir — never production
+- Isolated test DB / temp data dir — never production. Suites that temporarily switch a shared env (e.g. `GITHUB_FIXTURE`) or shared Setting rows MUST restore the previous live values after each test.
 - Default CI: fixture GitHub payloads, **fixture Qwen responses**, and no live Resend. Live GitHub / Resend / Qwen are **opt-in**
+- **DoD:** fixture/stub/mock-only green is not enough to mark a feature Done; confirm a live operator path (portal or MCP client) as well.
 - Tests assert i18n **keys** / roles / test ids — not a single language’s copy (except catalog tests)
 
 ---
@@ -374,7 +382,7 @@ Extends **common-test-strategy** (do not weaken it):
 | MCP | TypeScript + official SDK; stdio + Streamable HTTP |
 | LLM | Qwen (install path discovery, stdio) — ADR-047 |
 | Hosting | Server 2 + Cloudflare `framework.sdd.works`; apex WordPress stays on Server 1 |
-| Process split | Shared core; portal Next.js; stdio binary local; HTTP MCP on Server 2 (route or sibling) |
+| Process split | Shared core; portal Next.js; stdio binary local (Bun compile, ADR-051); HTTP MCP on Server 2 (route or sibling) |
 
 ## Open questions (carry from req-spec)
 
@@ -385,4 +393,4 @@ Extends **common-test-strategy** (do not weaken it):
 5. Package source: GitHub sync, release artifact, or both.
 6. TRAE Agents verification.
 
-ADR-worthy when implemented: HTTP MCP in Next.js vs sibling process; key-at-rest encryption; install-on-HTTP policy. **Accepted:** [ADR-047](./adr/ADR-047-qwen-install-path-discovery.md).
+ADR-worthy when implemented: HTTP MCP in Next.js vs sibling process; key-at-rest encryption. **Accepted:** [ADR-047](./adr/ADR-047-qwen-install-path-discovery.md), [ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md), [ADR-052](./adr/ADR-052-commit-sha-identity.md), [ADR-053](./adr/ADR-053-server-side-sync-thin-stdio.md), [ADR-054](./adr/ADR-054-hybrid-http-ai-tarball.md).

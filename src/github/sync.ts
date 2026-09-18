@@ -1,4 +1,7 @@
 import { Octokit } from "@octokit/rest";
+import { spawnSync } from "node:child_process";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 export type TreeNode = {
   name: string;
@@ -12,6 +15,12 @@ export type GitHubPort = {
   checkRepoAccessible: (owner: string, repo: string) => Promise<boolean>;
   fetchRepoTree: (owner: string, repo: string) => Promise<TreeNode[]>;
   listRepoTags: (owner: string, repo: string) => Promise<RepoVersion[]>;
+  materializePackage: (
+    owner: string,
+    repo: string,
+    ref: string,
+    destDir: string,
+  ) => Promise<{ commitSha: string }>;
 };
 
 export class GitHubConfigError extends Error {
@@ -82,6 +91,21 @@ export function createFixtureGitHubPort(options?: {
         { id: "v1.0.0", published_at: "2026-01-01T00:00:00.000Z" },
         { id: "v0.9.0", published_at: "2025-12-01T00:00:00.000Z" },
       ];
+    },
+    async materializePackage(_owner, _repo, ref, destDir) {
+      const files: Record<string, string> = {
+        "skills/tdd/SKILL.md": `# tdd ${ref}\n`,
+        "skills/atdd/SKILL.md": `# atdd ${ref}\n`,
+        "rules/dod.mdc": "# dod\n",
+        "agents/code-reviewer.md": "# reviewer\n",
+        "workflows/new-feature.md": "# workflow\n",
+      };
+      for (const [rel, content] of Object.entries(files)) {
+        const abs = join(destDir, rel);
+        mkdirSync(join(abs, ".."), { recursive: true });
+        writeFileSync(abs, content, "utf8");
+      }
+      return { commitSha: `sha-${ref}` };
     },
   };
 }
@@ -212,6 +236,44 @@ function createOctokitPort(): GitHubPort {
       } catch (error) {
         throw new GitHubSyncError(
           error instanceof Error ? error.message : "GitHub tags failed",
+        );
+      }
+    },
+    async materializePackage(owner, repo, ref, destDir) {
+      try {
+        const { data: commitData } = await octokit.repos.getCommit({
+          owner,
+          repo,
+          ref,
+        });
+        const commitSha = commitData.sha;
+        const response = await octokit.repos.downloadTarballArchive({
+          owner,
+          repo,
+          ref,
+        });
+        const data = response.data as unknown;
+        const buffer = Buffer.isBuffer(data)
+          ? data
+          : Buffer.from(data as ArrayBuffer);
+        mkdirSync(destDir, { recursive: true });
+        const tarPath = join(destDir, "pkg.tgz");
+        writeFileSync(tarPath, buffer);
+        const unpacked = join(destDir, "unpacked");
+        mkdirSync(unpacked, { recursive: true });
+        const result = spawnSync(
+          "tar",
+          ["-xzf", tarPath, "-C", unpacked, "--strip-components", "1"],
+          { encoding: "utf8" },
+        );
+        if (result.status !== 0) {
+          throw new GitHubSyncError(result.stderr || "tarball unpack failed");
+        }
+        return { commitSha };
+      } catch (error) {
+        if (error instanceof GitHubSyncError) throw error;
+        throw new GitHubSyncError(
+          error instanceof Error ? error.message : "tarball download failed",
         );
       }
     },

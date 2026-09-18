@@ -7,10 +7,14 @@ export type McpIcon = {
   sizes?: string[];
 };
 
-function pngDataUri(relativePublicPath: string): string {
-  const abs = join(process.cwd(), "public", relativePublicPath);
-  const buf = readFileSync(abs);
-  return `data:image/png;base64,${buf.toString("base64")}`;
+function pngDataUri(relativePublicPath: string): string | null {
+  try {
+    const abs = join(process.cwd(), "public", relativePublicPath);
+    const buf = readFileSync(abs);
+    return `data:image/png;base64,${buf.toString("base64")}`;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -18,18 +22,16 @@ function pngDataUri(relativePublicPath: string): string {
  * Data URIs so Cursor can render icons without fetching the portal host.
  */
 export function getMcpBrandIcons(): McpIcon[] {
-  return [
-    {
-      src: pngDataUri("sdd-mark.png"),
-      mimeType: "image/png",
-      sizes: ["128x128"],
-    },
-    {
-      src: pngDataUri("sdd-logo.png"),
-      mimeType: "image/png",
-      sizes: ["663x369"],
-    },
-  ];
+  const icons: McpIcon[] = [];
+  const mark = pngDataUri("sdd-mark.png");
+  const logo = pngDataUri("sdd-logo.png");
+  if (mark) {
+    icons.push({ src: mark, mimeType: "image/png", sizes: ["128x128"] });
+  }
+  if (logo) {
+    icons.push({ src: logo, mimeType: "image/png", sizes: ["663x369"] });
+  }
+  return icons;
 }
 
 export function getMcpWebsiteUrl(): string {

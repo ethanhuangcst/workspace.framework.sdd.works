@@ -1,10 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { t, type Locale } from "../../i18n/t";
 import { Button } from "../ui/Button";
 import { Callout } from "../ui/Callout";
-import { Field } from "../ui/Field";
 
 export type SettingsFormProps = {
   locale: Locale;
@@ -27,6 +26,11 @@ export function SettingsForm({
   );
   const [pending, setPending] = useState(false);
   const dirty = url.trim() !== baseline;
+
+  useEffect(() => {
+    setUrl(savedUrl);
+    setBaseline(savedUrl);
+  }, [savedUrl]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -70,20 +74,21 @@ export function SettingsForm({
         style={{ maxWidth: "32rem" }}
         onSubmit={handleSubmit}
       >
-        <Field
-          label={t(locale, "admin.settings.url")}
-          fieldNote={t(locale, "admin.settings.url_hint")}
-        >
+        <label className="settings-url-field">
+          <span className="section-subtitle">
+            {t(locale, "admin.settings.url")}
+          </span>
           <input
             type="url"
             name="url"
             data-testid="settings-url"
             required
-            placeholder="https://github.com/org/sdd-framework"
+            placeholder="https://github.com/your-org/your-repo"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
-        </Field>
+        </label>
+        <p className="field-note">{t(locale, "admin.settings.url_hint")}</p>
         <div className="form-actions">
           <Button
             type="submit"

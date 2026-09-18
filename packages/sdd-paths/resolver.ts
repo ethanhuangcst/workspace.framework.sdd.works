@@ -2,10 +2,16 @@ import pathsData from "./paths.json";
 
 export type PathOs = "darwin" | "linux" | "win32";
 
-export type ResolvedPaths = {
+export type PathRoots = {
   skills: string;
   rules: string;
+  agents: string;
+  workflows: string;
   other: string;
+};
+
+export type ResolvedPaths = PathRoots & {
+  compat: PathRoots[];
 };
 
 export type PathError =
@@ -13,17 +19,12 @@ export type PathError =
   | { code: "os_unsupported"; client: string; os: string }
   | { code: "path_rejected"; reason: string; raw: string };
 
-export type PathRoots = {
-  skills: string;
-  rules: string;
-  other: string;
-};
-
 type ClientEntry = {
   default: PathRoots;
   darwin?: PathRoots;
   linux?: PathRoots;
   win32?: PathRoots;
+  compat?: PathRoots[];
 };
 
 export type PathMap = {
@@ -38,7 +39,7 @@ export function getPathsVersion(): number {
   return pathMap.version;
 }
 
-function expandHome(raw: string, home: string, userProfile: string): string {
+export function expandHome(raw: string, home: string, userProfile: string): string {
   let out = raw;
   if (out.startsWith("~")) {
     out = home + out.slice(1);
@@ -47,7 +48,11 @@ function expandHome(raw: string, home: string, userProfile: string): string {
   return out;
 }
 
-function isUnderHome(expanded: string, home: string, userProfile: string): boolean {
+export function isUnderHome(
+  expanded: string,
+  home: string,
+  userProfile: string,
+): boolean {
   const normalized = expanded.replace(/\\/g, "/");
   const homeNorm = home.replace(/\\/g, "/").replace(/\/+$/, "");
   const profileNorm = userProfile.replace(/\\/g, "/").replace(/\/+$/, "");
@@ -69,6 +74,30 @@ export function validatePathTemplate(raw: string): PathError | null {
   return null;
 }
 
+function expandRoots(
+  roots: PathRoots,
+  home: string,
+  userProfile: string,
+): PathRoots | PathError {
+  const expanded: PathRoots = {
+    skills: expandHome(roots.skills, home, userProfile),
+    rules: expandHome(roots.rules, home, userProfile),
+    agents: expandHome(roots.agents, home, userProfile),
+    workflows: expandHome(roots.workflows, home, userProfile),
+    other: expandHome(roots.other, home, userProfile),
+  };
+  for (const [kind, value] of Object.entries(expanded)) {
+    if (value.includes("..") || !isUnderHome(value, home, userProfile)) {
+      return {
+        code: "path_rejected",
+        reason: `escape_after_expand:${kind}`,
+        raw: value,
+      };
+    }
+  }
+  return expanded;
+}
+
 export function resolve(
   client: string,
   os: string,
@@ -81,8 +110,7 @@ export function resolve(
   }
 
   const osKey = os as PathOs;
-  const roots: PathRoots | undefined =
-    entry[osKey] ?? entry.default ?? undefined;
+  const roots: PathRoots | undefined = entry[osKey] ?? entry.default ?? undefined;
 
   if (!roots) {
     return { code: "os_unsupported", client, os };
@@ -91,6 +119,8 @@ export function resolve(
   const merged: PathRoots = {
     skills: overrides?.skills ?? roots.skills,
     rules: overrides?.rules ?? roots.rules,
+    agents: overrides?.agents ?? roots.agents,
+    workflows: overrides?.workflows ?? roots.workflows,
     other: overrides?.other ?? roots.other,
   };
 
@@ -103,21 +133,19 @@ export function resolve(
   const userProfile =
     env.userProfile ?? process.env.USERPROFILE ?? process.env.HOME ?? "";
 
-  const expanded: ResolvedPaths = {
-    skills: expandHome(merged.skills, home, userProfile),
-    rules: expandHome(merged.rules, home, userProfile),
-    other: expandHome(merged.other, home, userProfile),
-  };
+  const expanded = expandRoots(merged, home, userProfile);
+  if ("code" in expanded) return expanded;
 
-  for (const [kind, value] of Object.entries(expanded)) {
-    if (value.includes("..") || !isUnderHome(value, home, userProfile)) {
-      return {
-        code: "path_rejected",
-        reason: `escape_after_expand:${kind}`,
-        raw: value,
-      };
+  const compat: PathRoots[] = [];
+  for (const row of entry.compat ?? []) {
+    for (const raw of Object.values(row)) {
+      const err = validatePathTemplate(raw);
+      if (err) return err;
     }
+    const expandedCompat = expandRoots(row, home, userProfile);
+    if ("code" in expandedCompat) return expandedCompat;
+    compat.push(expandedCompat);
   }
 
-  return expanded;
+  return { ...expanded, compat };
 }

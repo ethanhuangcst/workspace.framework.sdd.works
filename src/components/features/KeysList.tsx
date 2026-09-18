@@ -6,6 +6,7 @@ import { Button } from "../ui/Button";
 import { Callout } from "../ui/Callout";
 import { CopyButton } from "../ui/CopyButton";
 import { Dialog } from "../ui/Dialog";
+import { KeysLeadList } from "./KeysLeadList";
 
 export type KeyRow = {
   id: string;
@@ -50,7 +51,7 @@ export function KeysList({
         <div className="page-head">
           <p className="eyebrow">{t(locale, "admin.keys.eyebrow")}</p>
           <div className="page-head-row">
-            <p className="page-head-lead">{t(locale, "admin.keys.lead")}</p>
+            <KeysLeadList locale={locale} />
             <div className="page-head-actions">
               <Button variant="page" href="/admin/keys/new" data-testid="issue-key">
                 {t(locale, "admin.keys.issue")}
@@ -70,7 +71,7 @@ export function KeysList({
       <div className="page-head">
         <p className="eyebrow">{t(locale, "admin.keys.eyebrow")}</p>
         <div className="page-head-row">
-          <p className="page-head-lead">{t(locale, "admin.keys.lead")}</p>
+          <KeysLeadList locale={locale} />
           <div className="page-head-actions">
             <Button variant="page" href="/admin/keys/new" data-testid="issue-key">
               {t(locale, "admin.keys.issue")}

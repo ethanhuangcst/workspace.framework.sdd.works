@@ -7,7 +7,68 @@ Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
 
 ---
 
+## 2026-09-18
+
+### Hybrid HTTP MCP + AI tarball extraction (ADR-054)
+
+- **Primary end-user path:** HTTP MCP URL only (`"url": "https://framework.sdd.works/mcp"`). No binary in mcp.json.
+- **Prompt-based setup (SETUP-01):** `GET /agent-setup` serves markdown; users paste one prompt in Cursor.
+- **HTTP install/update:** `sdd_install_framework` returns `packageUrl`, paths, manifest, instructions; AI runs `curl | tar` locally.
+- Stdio + curl installer remain for dev contributors and fallback.
+- Supersedes end-user distribution from ADR-051/053; stdio dev path unchanged.
+
+### One-line installer + binary verification
+
+- `scripts/install.sh` — `curl -fsSL https://framework.sdd.works/install | sh` detects OS/arch, downloads binary to `~/.sdd/sdd-mcp`, writes `~/.cursor/mcp.json` entry automatically. No manual path entry.
+- `GET /api/install` serves the install script.
+- Verified Bun-compiled binary responds to MCP `initialize` (serverInfo, icons, tool list) — 61 MB, zero runtime deps.
+- Instructions page shows one command instead of manual binary path config.
+
+### Server-side sync + thin stdio client (ADR-053)
+
+- **SYNK-01:** Sync job fetches GitHub repo → `.data/sdd-packages/<commit-sha>/` + manifest. Triggers: `POST /api/admin/sync`, polling (future).
+- **PKAPI-01:** Public `GET /api/sdd/versions`, `GET /api/sdd/package`. stdio binary fetches from operator REST API (`SDD_SERVER_URL`).
+- stdio no longer imports Prisma/GitHub; `sdd_get_key` HTTP-only. `package-fetch.ts` replaces client-side `package-resolve`.
+- Tests: sync-job, cache, package API, list-versions, package-fetch; opt-in E2E via `SDD_E2E_GITHUB_REPO`.
+
+### Commit SHA identity for install/update (ADR-052)
+
+- Manifest stores `package_commit` (resolved GitHub commit SHA). `already_up_to_date` requires matching SHA + ref label + intact files.
+- Same ref (`main`) with moved commit → manifest-tracked reinstall; renames/deletes in repo sync correctly.
+- `materializePackage` returns `{ commitSha }`; Octokit uses `repos.getCommit`. `sdd_list_versions` unchanged.
+
 ## 2026-09-17
+
+### Zero-dep stdio MCP + manifest integrity (ADR-051)
+
+- **NFR-9:** client OS installs no runtime dependencies for stdio install/update; stdio MCP ships as Bun-compiled single executable per OS/arch (GitHub Releases on tags).
+- Dev path unchanged: `npm run mcp:stdio`. Build: `npm run mcp:build`. Instructions page shows binary download.
+- **Manifest integrity:** `already_up_to_date` only when manifest-listed files still exist; missing files trigger self-heal reinstall. Optional `force: true` on install/update.
+
+### Settings GitHub URL — tests no longer clobber operator DB
+
+- Root cause: vitest integration tests upserted `Setting.githubUrl` to `fixture/sdd-framework` on the shared Postgres used by `npm run dev`.
+- Tests restore previous `githubUrl` and `GITHUB_FIXTURE` after each run. SettingsForm syncs `savedUrl` and uses a generic URL placeholder.
+- DoD: fixture-only green is not enough to mark a feature Done.
+
+### MVP-6 implemented (Sprint 6) — automated DoD
+
+- **MCPI-04 / MCPI-05 / MCPI-01 / MCPU-01**: stdio install/update share one `installFramework` core (update is an alias). Manifest-tracked merge (`.sdd-installed.json`). Path detect: env → config → seed → Qwen.
+- PATH-01 map v2: cursor, codebuddy, trae, trae-cn, claude + agents/workflows/compat.
+- Tests: 86 vitest cases (path-policy, path-detect, path-resolve-llm, install filesystem, MCP InMemoryTransport). HTTP still `local_install_required`.
+
+### MCPI-05 — Client path detection (Sprint 6 scope)
+
+- Added feature **MCPI-05**: deterministic client path resolution (env vars + config probes + `clientInfo.name`) before Qwen + seed map.
+- Specs: product-backlog, sprint6-plan, mcp-stories (`sdd-mcp-path-detect`), mcp-design §4.4, [`mcp/mcp-test.md`](./mcp/mcp-test.md), [`admin-portal/app-test.md`](./admin-portal/app-test.md).
+- Knowledge: [`mcp/client.paths.md`](./mcp/client.paths.md).
+
+### Admin portal copy — Keys + Framework (implemented)
+
+- Keys lead: three bullets (`admin.keys.lead_1`–`lead_3`) in mockups + app (`KeysLeadList`, `portal.css`).
+- Framework: “Live sync with” / “framework.sdd.works GitHub repository”; Settings URL + “Change git repository in Settings.”; artifacts `section-subtitle` above tree.
+- Settings: “Repository URL” as section subtitle (no rule under label); underline mono `input[type=url]`.
+- Specs: [`admin-portal/app-design.md`](./admin-portal/app-design.md) aligned; catalogs en / zh-Hans / zh-Hant updated.
 
 ### MVP-5 closed (Sprint 5)
 

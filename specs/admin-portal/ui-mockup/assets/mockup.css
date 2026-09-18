@@ -357,7 +357,8 @@ label,
 input:not([type]),
 input[type="email"],
 input[type="password"],
-input[type="text"] {
+input[type="text"],
+input[type="url"] {
   font-family: var(--font-cn);
   border: none;
   border-bottom: 1.5px solid var(--line-strong);
@@ -383,7 +384,10 @@ input[type="password"]:-webkit-autofill:hover,
 input[type="password"]:-webkit-autofill:focus,
 input[type="text"]:-webkit-autofill,
 input[type="text"]:-webkit-autofill:hover,
-input[type="text"]:-webkit-autofill:focus {
+input[type="text"]:-webkit-autofill:focus,
+input[type="url"]:-webkit-autofill,
+input[type="url"]:-webkit-autofill:hover,
+input[type="url"]:-webkit-autofill:focus {
   -webkit-text-fill-color: var(--ink);
   caret-color: var(--ink);
   box-shadow: 0 0 0 1000px var(--bg) inset;
@@ -951,14 +955,96 @@ textarea:focus {
 
 .page-head-lead {
   min-width: 0;
-  max-width: none;
+  max-width: 40rem;
   font-family: var(--font-cn);
   font-weight: 400;
   letter-spacing: 0;
+  line-height: 1.85;
+}
+
+.keys-lead-list {
+  margin: 0;
+  padding: 0 0 0 1.15rem;
+  list-style: disc;
+  line-height: 1.9;
+}
+
+.keys-lead-list li {
+  margin: 0.15rem 0;
+  padding: 0;
+}
+
+.keys-lead-list li + li {
+  margin-top: 0.45rem;
 }
 
 .page-head-row > .page-head-lead {
   flex: 1 1 10rem;
+}
+
+.framework-repo-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  margin-top: 0.35rem;
+}
+
+.framework-repo-block .lead {
+  margin: 0;
+}
+
+.framework-repo-block .field-note {
+  margin: 0;
+}
+
+.section-subtitle,
+.tree-subtitle {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  margin: 2rem 0 0;
+  padding: 0 0 0.85rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.settings-url-field .section-subtitle {
+  font-family: var(--font-ui);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--ink);
+  margin-top: 0;
+  margin-bottom: 0.85rem;
+  padding: 0;
+  border-bottom: none;
+}
+
+.settings-url-field input[type="url"] {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  padding: 0.9rem 0;
+  border-bottom: 1.5px solid var(--line-strong);
+}
+
+.settings-url-field input[type="url"]:focus {
+  border-bottom-color: var(--ink);
+}
+
+.settings-url-field input[type="url"]::placeholder {
+  color: #9a9a9a;
+}
+
+.form label.settings-url-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .page-head-actions {
@@ -1721,7 +1807,7 @@ td.table-check {
 .tree {
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  border-top: 1px solid var(--line);
+  border-top: none;
   margin: 0;
   padding: 0;
   list-style: none;

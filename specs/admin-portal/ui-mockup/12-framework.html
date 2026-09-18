@@ -37,10 +37,14 @@
       </aside>
       <main id="content" class="content">
         <div class="page-head">
-          <p class="eyebrow" data-i18n="admin.framework.eyebrow">Live sync</p>
-          <h1 data-i18n="admin.framework.title">Framework</h1>
-          <p data-i18n="admin.framework.lead">Read-only view of the repository configured in Settings.</p>
-          <p class="field-note"><span data-i18n="admin.framework.source">Source</span>: <span class="mono">github.com/org/sdd-framework</span></p>
+          <p class="eyebrow" data-i18n="admin.framework.eyebrow">Live sync with</p>
+          <h1 data-i18n="admin.framework.title">framework.sdd.works GitHub repository</h1>
+          <div class="framework-repo-block" data-framework-repo>
+            <p class="lead mono">github.com/org/sdd-framework</p>
+            <p class="field-note">
+              <a href="11-settings.html" data-i18n="admin.framework.change_repo">Change git repository in Settings.</a>
+            </p>
+          </div>
         </div>
         <div class="callout callout-error" data-framework-error hidden>
           <p class="callout-body" data-i18n="admin.framework.sync_error">GitHub sync failed. The shell stays available.</p>
@@ -49,6 +53,7 @@
           <p data-i18n="admin.framework.empty">No GitHub repository is configured. Set the URL in Settings.</p>
           <a class="btn" href="11-settings.html" data-i18n="admin.framework.to_settings">Open Settings</a>
         </div>
+        <h2 class="section-subtitle tree-subtitle" data-i18n="admin.framework.artifacts" data-framework-tree-label>framework.sdd.works artifacts:</h2>
         <ul class="tree" data-framework-tree>
           <li>
             <span class="tree-dir">skills/</span>

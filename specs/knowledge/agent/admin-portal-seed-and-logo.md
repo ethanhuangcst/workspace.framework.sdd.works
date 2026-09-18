@@ -67,9 +67,10 @@ When either capture env is set, the server writes the URL to that file and does 
 
 ## MCP server (Sprint 5)
 
-- Stdio: `npm run mcp:stdio` / `make mcp-stdio` (local trust for `sdd_get_key`).
+- Stdio (dev): `npm run mcp:stdio` / `make mcp-stdio`. **Client distribution:** Bun-compiled binary per OS/arch from GitHub Releases (ADR-051) — no Node/npm on client.
+- Build binaries: `npm run mcp:build`. Release workflow uploads on `v*` tags.
 - HTTP: `npm run mcp:http` / `make mcp-http` on `http://127.0.0.1:3041/mcp`.
-- Auth: `MCP_AUTH_TOKEN` required for HTTP (ADR-049). Fail closed if unset.
+- Auth: `MCP_AUTH_TOKEN` when set for HTTP (ADR-049/050). Open local mode when unset.
 - CI: `MCP_AUTH_TOKEN=ci-mcp-auth-token`, `GITHUB_FIXTURE=1`.
-- Tools: list_versions + get_key real; install/update stub until Sprint 6.
+- Tools: list_versions + get_key + stdio install/update (HTTP install returns `local_install_required`).
 - Guide: `/instructions`.

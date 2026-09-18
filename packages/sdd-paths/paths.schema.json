@@ -18,7 +18,11 @@
           "default": { "$ref": "#/$defs/roots" },
           "darwin": { "$ref": "#/$defs/roots" },
           "linux": { "$ref": "#/$defs/roots" },
-          "win32": { "$ref": "#/$defs/roots" }
+          "win32": { "$ref": "#/$defs/roots" },
+          "compat": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/roots" }
+          }
         },
         "additionalProperties": false
       }
@@ -27,11 +31,13 @@
   "$defs": {
     "roots": {
       "type": "object",
-      "required": ["skills", "rules", "other"],
+      "required": ["skills", "rules", "agents", "workflows", "other"],
       "additionalProperties": false,
       "properties": {
         "skills": { "type": "string", "minLength": 1 },
         "rules": { "type": "string", "minLength": 1 },
+        "agents": { "type": "string", "minLength": 1 },
+        "workflows": { "type": "string", "minLength": 1 },
         "other": { "type": "string", "minLength": 1 }
       }
     }

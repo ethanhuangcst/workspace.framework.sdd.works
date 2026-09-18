@@ -114,7 +114,14 @@ Exact inventory and target paths are defined per client and by the published fra
 - FR-M11: On **stdio** install/update, the system SHALL use **Qwen** (OpenAI-compatible) to search and interpret **local client configuration** (settings / MCP config / known skill-rule hints) together with a **seed path map**, then propose install roots. Every proposed path SHALL pass the path allow-list before any write (ADR-047).
 - FR-M12: If Qwen is unavailable or confidence is below threshold, the system SHALL fall back to the seed path map and/or an explicit `client` argument. If roots remain unresolved, the tool SHALL return `client_config_unresolved` or `llm_unavailable` and SHALL NOT write files.
 - FR-M13: Prompts and LLM responses for path discovery SHALL NOT include `key_value`, env secrets, or full credential-bearing config blobs — redacted path-related snippets only.
-- FR-M14: Streamable HTTP install/update SHALL NOT run Qwen path discovery against Server 2 disk; HTTP remains under the local-bridge / `local_install_required` policy.
+- FR-M14: Streamable HTTP install/update SHALL NOT run Qwen path discovery against Server 2 disk or write user config roots on the server. HTTP returns `packageUrl`, paths, manifest, and extraction instructions for AI shell execution (ADR-054).
+- FR-M15: On **stdio** install/update, the system SHALL first attempt **deterministic** path resolution (explicit `client` arg, MCP `clientInfo.name`, client env vars such as `CLAUDE_CONFIG_DIR` / `CODEX_HOME` / `CLINE_DIR` / `KIRO_HOME`, and config-file probes) before Qwen (FR-M11) or the seed map (FR-M12). The install/update summary SHALL report `resolution_source` as one of `env` | `config` | `seed` | `llm`. Unrecognized `clientInfo` with no explicit `client` SHALL fail closed (`client_unknown`) with no writes.
+- FR-M16: Install/update idempotency SHALL compare the **resolved commit SHA** of the materialized package, not just the ref label. Same ref with a new commit SHALL reinstall (manifest-tracked merge). `already_up_to_date` requires matching `package_commit`, matching `package_version`, and intact manifest-listed files (ADR-052).
+- FR-M17: The operator server SHALL run a **sync job** that fetches framework files from the configured GitHub repo and stores unpacked files + tarball + version metadata in a local cache (`.data/sdd-packages/`). Sync is idempotent on unchanged commit SHA (ADR-053).
+- FR-M18: The operator server SHALL expose a public REST API: `GET /api/sdd/versions` (version list + inventory) and `GET /api/sdd/package?version=<v>` (tarball stream with `X-SDD-Commit` / `X-SDD-Version` headers). Returns `409 sync_pending` when cache is empty (ADR-053).
+- FR-M19: The **stdio** MCP server SHALL fetch package data from the operator REST API (`SDD_SERVER_URL`), not from PostgreSQL or GitHub directly (ADR-053).
+- FR-M20: All four MCP tools (`sdd_install_framework`, `sdd_update_framework`, `sdd_list_versions`, `sdd_get_key`) SHALL be registered on **HTTP MCP**. The stdio binary registers install, update, and list only (ADR-053). HTTP install returns tarball URL instead of writing locally (ADR-054).
+- FR-M21: The operator server SHALL expose `GET /agent-setup` (markdown) with agent-specific MCP configuration instructions for prompt-based setup (SETUP-01, ADR-054).
 
 ### 6.3 Transport
 
@@ -161,6 +168,7 @@ Streamable HTTP SHALL enforce authentication. Do not rely on obscure tool names 
 - NFR-6 **Compatibility**: Pin `@modelcontextprotocol/sdk` (or equivalent) and verify registration APIs against the pinned version.
 - NFR-7 **Cross-platform**: `sdd_install_framework` / `sdd_update_framework` behavior MUST be verified on macOS, Windows, and Linux for at least one primary client path per OS in the test plan.
 - NFR-8 **LLM safety**: Model-proposed install paths are advisory until allow-list validation; never write outside allowed roots based on LLM output alone.
+- NFR-9 **Zero client dependencies (end users)**: End users SHALL NOT require any runtime dependency (Node, npm, Bun, PostgreSQL, binary download, etc.) to connect MCP or install the framework. Primary path: HTTP MCP URL in config + AI tarball extraction (ADR-054). Fallback: curl installer / stdio binary for terminal users (ADR-051, ADR-053). No `DATABASE_URL`, `GITHUB_TOKEN`, or `KEYS_ENCRYPTION_KEY` on the client.
 
 ## 9. Out of Scope (initial)
 

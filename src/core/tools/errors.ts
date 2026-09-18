@@ -6,7 +6,15 @@ export type McpErrorCode =
   | "invalid_input"
   | "package_unavailable"
   | "local_install_required"
-  | "not_implemented";
+  | "not_implemented"
+  | "client_unknown"
+  | "os_unsupported"
+  | "path_rejected"
+  | "client_config_unresolved"
+  | "llm_unavailable"
+  | "already_up_to_date"
+  | "sync_pending"
+  | "version_not_found";
 
 export function toolOk(data: unknown): CallToolResult {
   return {

@@ -12,18 +12,19 @@ const hasDb = Boolean(process.env.DATABASE_URL);
 
 describe.skipIf(!hasDb)("settings githubUrl persistence", () => {
   const db = new PrismaClient();
+  let savedUrlBefore: string | null = null;
 
-  afterEach(() => {
+  afterEach(async () => {
     setGitHubPortForTests(null);
     clearFrameworkTreeCache();
+    await db.setting.upsert({
+      where: { id: "singleton" },
+      create: { id: "singleton", githubUrl: savedUrlBefore },
+      update: { githubUrl: savedUrlBefore },
+    });
   });
 
   afterAll(async () => {
-    await db.setting.upsert({
-      where: { id: "singleton" },
-      create: { id: "singleton", githubUrl: null },
-      update: { githubUrl: null },
-    });
     await db.$disconnect();
   });
 
@@ -31,7 +32,8 @@ describe.skipIf(!hasDb)("settings githubUrl persistence", () => {
     setGitHubPortForTests(createFixtureGitHubPort());
 
     const before = await db.setting.findUnique({ where: { id: "singleton" } });
-    const previous = before?.githubUrl ?? null;
+    savedUrlBefore = before?.githubUrl ?? null;
+    const previous = savedUrlBefore;
 
     const bad = parseGithubRepoUrl("https://github.com/fixture/missing");
     expect(bad).not.toBeNull();

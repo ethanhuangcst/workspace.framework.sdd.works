@@ -324,19 +324,20 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | List name, description, key_value; copy / edit / delete |
-| Layout | Eyebrow + lead + Add key + Bulk delete; optional saved callout; table checkbox · name · description · value · row actions; empty state |
+| Layout | Eyebrow + **bullet lead** (`lead_1`–`lead_3`) + Add key + Bulk delete; optional saved callout; table checkbox · name · description · value · row actions; empty state |
 | Forbidden | Regenerate |
-| Keys | `admin.keys.*` |
+| Keys | `admin.keys.*` (`lead_1`–`lead_3`; legacy `lead` kept for catalogs) |
 | Test ids | `issue-key`, `keys-delete-selected`, `keys-select-all` |
+| Lead copy | Three bullets: third-party capabilities → examples (Qwen, OpenAI, Google Maps, Amap) → `sdd_get_key(key-name)` |
 
 #### `/admin/keys/new` — Add key · `07-key-new.html`
 
 | | |
 | --- | --- |
 | Job | Create key_id + English unique name + description + pasted value |
-| Layout | Form: name (`pattern` English), description, textarea value; Save → `/admin/keys?saved=1` |
+| Layout | Same bullet lead as Keys list; form: name (`pattern` English), description, textarea value; Save → `/admin/keys?saved=1` |
 | Validation | `errors.key_name_taken`, `errors.key_name_invalid` |
-| Keys | `admin.keys.name_hint`, … |
+| Keys | `admin.keys.name_hint`, `lead_1`–`lead_3`, … |
 
 #### `/admin/keys/[id]` — Edit key · `09-key-edit.html`
 
@@ -360,7 +361,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | One GitHub URL; dirty Save; validate then persist |
-| Layout | Title + lead; success/error callouts; URL field + hint; Save disabled until dirty |
+| Layout | Title + lead; success/error callouts; **Repository URL** as `.section-subtitle` (no rule under label); underline `input[type=url]` (mono); hint; Save disabled until dirty |
 | Flow | Unchanged → Save disabled; success → tip + DB; fail → tip, no DB write |
 | Keys | `admin.settings.*`, `errors.settings_url_*` |
 | Test ids | `settings-url`, `settings-save` |
@@ -369,10 +370,11 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | | |
 | --- | --- |
-| Job | Read-only tree from Settings URL |
-| Layout | Source line (mono URL); tree dirs/files; empty → CTA Settings; sync error callout keeps shell |
-| Keys | `admin.framework.*` |
+| Job | Live sync view of Settings GitHub URL (read-only tree) |
+| Layout | Eyebrow “Live sync with” + title “framework.sdd.works GitHub repository”; **repo path** (mono, from Settings) + CTA “Change git repository in Settings.”; `h2.section-subtitle` “framework.sdd.works artifacts:” above tree; empty → CTA Settings (hide repo block + artifacts); sync error callout keeps shell |
+| Keys | `admin.framework.*` (`change_repo`, `artifacts`; display URL is data, not `lead` prose) |
 | Forbidden | Edit / push |
+| Test ids | `framework-source`, `framework-artifacts`, `framework-tree`, `framework-empty`, `framework-to-settings` |
 
 #### `/instructions` — MCP guide · `13-instructions.html`
 

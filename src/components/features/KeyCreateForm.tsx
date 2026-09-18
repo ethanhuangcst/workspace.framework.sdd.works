@@ -4,6 +4,7 @@ import { useCallback, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { AppShell } from "@/components/layout/AppShell";
+import { KeysLeadList } from "@/components/features/KeysLeadList";
 import { Button } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
 import { t, type Locale } from "@/i18n/t";
@@ -111,7 +112,7 @@ export function KeyCreateForm({
       <div className="page-head">
         <p className="eyebrow">{t(locale, "admin.keys.eyebrow")}</p>
         <h1>{t(locale, "admin.keys.issue")}</h1>
-        <p className="lead">{t(locale, "admin.keys.lead")}</p>
+        <KeysLeadList locale={locale} />
       </div>
       {errorKey ? (
         <p className="error" role="alert" data-testid="key-form-error">

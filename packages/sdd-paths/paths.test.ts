@@ -1,18 +1,23 @@
 import { describe, expect, it } from "vitest";
 import pathMap from "./paths.json";
-import { getPathsVersion, resolve, validatePathTemplate } from "./resolver";
+import { getPathsVersion, resolve, validatePathTemplate, type PathRoots } from "./resolver";
+
+const OS_KEYS = new Set(["default", "darwin", "linux", "win32"]);
+const CLIENTS = ["cursor", "codebuddy", "trae", "trae-cn", "claude"] as const;
 
 describe("paths.json table validation", () => {
   it("should_have_version_and_clients", () => {
-    expect(pathMap.version).toBeGreaterThanOrEqual(1);
-    expect(Object.keys(pathMap.clients).length).toBeGreaterThan(0);
+    expect(pathMap.version).toBeGreaterThanOrEqual(2);
+    expect(Object.keys(pathMap.clients).sort()).toEqual([...CLIENTS].sort());
   });
 
-  it("should_have_default_for_every_client", () => {
+  it("should_have_default_and_artifact_fields_for_every_client", () => {
     for (const [client, entry] of Object.entries(pathMap.clients)) {
       expect(entry.default, `${client} missing default`).toBeDefined();
       expect(entry.default.skills).toBeTruthy();
       expect(entry.default.rules).toBeTruthy();
+      expect(entry.default.agents).toBeTruthy();
+      expect(entry.default.workflows).toBeTruthy();
       expect(entry.default.other).toBeTruthy();
     }
   });
@@ -20,20 +25,29 @@ describe("paths.json table validation", () => {
   it("should_keep_templates_under_home_without_escape", () => {
     for (const [client, entry] of Object.entries(pathMap.clients)) {
       for (const [osKey, roots] of Object.entries(entry)) {
+        if (!OS_KEYS.has(osKey)) continue;
         for (const [kind, p] of Object.entries(roots as Record<string, string>)) {
-          expect(
-            validatePathTemplate(p),
-            `${client}/${osKey}/${kind}`,
-          ).toBeNull();
+          expect(validatePathTemplate(p), `${client}/${osKey}/${kind}`).toBeNull();
           expect(p.includes(".."), `${client}/${osKey}/${kind}`).toBe(false);
-          const okSlash =
-            p.endsWith("/") || p.endsWith("\\");
-          expect(okSlash, `${client}/${osKey}/${kind} trailing slash`).toBe(
-            true,
-          );
+          expect(
+            p.endsWith("/") || p.endsWith("\\"),
+            `${client}/${osKey}/${kind} trailing slash`,
+          ).toBe(true);
+        }
+      }
+      for (const [i, roots] of ((entry as { compat?: PathRoots[] }).compat ?? []).entries()) {
+        for (const [kind, p] of Object.entries(roots)) {
+          expect(
+            validatePathTemplate(p as string),
+            `${client}/compat/${i}/${kind}`,
+          ).toBeNull();
         }
       }
     }
+  });
+
+  it("should_use_Rules_casing_for_codebuddy", () => {
+    expect(pathMap.clients.codebuddy.default.rules).toContain("Rules");
   });
 });
 
@@ -43,11 +57,34 @@ describe("resolve", () => {
       home: "/Users/dev",
       userProfile: "/Users/dev",
     });
-    expect(result).toEqual({
+    expect(result).toMatchObject({
       skills: "/Users/dev/.cursor/skills/",
       rules: "/Users/dev/.cursor/rules/",
+      agents: "/Users/dev/.cursor/agents/",
+      workflows: "/Users/dev/.cursor/workflows/",
       other: "/Users/dev/.cursor/sdd/",
     });
+    if (!("code" in result)) {
+      expect(result.compat[0]?.skills).toBe("/Users/dev/.claude/skills/");
+    }
+  });
+
+  it("should_resolve_codebuddy_trae_and_claude", () => {
+    const home = { home: "/Users/dev", userProfile: "/Users/dev" };
+    const codebuddy = resolve("codebuddy", "darwin", undefined, home);
+    const trae = resolve("trae", "darwin", undefined, home);
+    const traeCn = resolve("trae-cn", "darwin", undefined, home);
+    const claude = resolve("claude", "darwin", undefined, home);
+    expect(codebuddy).toMatchObject({
+      skills: "/Users/dev/.codebuddy/skills/",
+      rules: "/Users/dev/.codebuddy/Rules/",
+    });
+    expect(trae).toMatchObject({ skills: "/Users/dev/.trae/skills/" });
+    expect(traeCn).toMatchObject({ skills: "/Users/dev/.trae-cn/skills/" });
+    if (!("code" in traeCn)) {
+      expect(traeCn.compat[0]?.skills).toBe("/Users/dev/.trae/skills/");
+    }
+    expect(claude).toMatchObject({ skills: "/Users/dev/.claude/skills/" });
   });
 
   it("should_resolve_cursor_win32_under_userprofile", () => {

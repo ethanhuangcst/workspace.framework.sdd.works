@@ -1,27 +1,182 @@
 {
-  "version": 1,
-  "updated_at": "2026-09-14",
+  "version": 2,
+  "updated_at": "2026-09-17",
   "clients": {
     "cursor": {
       "default": {
         "skills": "~/.cursor/skills/",
         "rules": "~/.cursor/rules/",
+        "agents": "~/.cursor/agents/",
+        "workflows": "~/.cursor/workflows/",
         "other": "~/.cursor/sdd/"
       },
       "darwin": {
         "skills": "~/.cursor/skills/",
         "rules": "~/.cursor/rules/",
+        "agents": "~/.cursor/agents/",
+        "workflows": "~/.cursor/workflows/",
         "other": "~/.cursor/sdd/"
       },
       "linux": {
         "skills": "~/.cursor/skills/",
         "rules": "~/.cursor/rules/",
+        "agents": "~/.cursor/agents/",
+        "workflows": "~/.cursor/workflows/",
         "other": "~/.cursor/sdd/"
       },
       "win32": {
         "skills": "%USERPROFILE%\\.cursor\\skills\\",
         "rules": "%USERPROFILE%\\.cursor\\rules\\",
+        "agents": "%USERPROFILE%\\.cursor\\agents\\",
+        "workflows": "%USERPROFILE%\\.cursor\\workflows\\",
         "other": "%USERPROFILE%\\.cursor\\sdd\\"
+      },
+      "compat": [
+        {
+          "skills": "~/.claude/skills/",
+          "rules": "~/.claude/rules/",
+          "agents": "~/.claude/agents/",
+          "workflows": "~/.claude/workflows/",
+          "other": "~/.claude/sdd/"
+        }
+      ]
+    },
+    "codebuddy": {
+      "default": {
+        "skills": "~/.codebuddy/skills/",
+        "rules": "~/.codebuddy/Rules/",
+        "agents": "~/.codebuddy/agents/",
+        "workflows": "~/.codebuddy/workflows/",
+        "other": "~/.codebuddy/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.codebuddy/skills/",
+        "rules": "~/.codebuddy/Rules/",
+        "agents": "~/.codebuddy/agents/",
+        "workflows": "~/.codebuddy/workflows/",
+        "other": "~/.codebuddy/sdd/"
+      },
+      "linux": {
+        "skills": "~/.codebuddy/skills/",
+        "rules": "~/.codebuddy/Rules/",
+        "agents": "~/.codebuddy/agents/",
+        "workflows": "~/.codebuddy/workflows/",
+        "other": "~/.codebuddy/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.codebuddy\\skills\\",
+        "rules": "%USERPROFILE%\\.codebuddy\\Rules\\",
+        "agents": "%USERPROFILE%\\.codebuddy\\agents\\",
+        "workflows": "%USERPROFILE%\\.codebuddy\\workflows\\",
+        "other": "%USERPROFILE%\\.codebuddy\\sdd\\"
+      },
+      "compat": [
+        {
+          "skills": "~/.claude/skills/",
+          "rules": "~/.claude/rules/",
+          "agents": "~/.claude/agents/",
+          "workflows": "~/.claude/workflows/",
+          "other": "~/.claude/sdd/"
+        }
+      ]
+    },
+    "trae": {
+      "default": {
+        "skills": "~/.trae/skills/",
+        "rules": "~/.trae/rules/",
+        "agents": "~/.trae/agents/",
+        "workflows": "~/.trae/workflows/",
+        "other": "~/.trae/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.trae/skills/",
+        "rules": "~/.trae/rules/",
+        "agents": "~/.trae/agents/",
+        "workflows": "~/.trae/workflows/",
+        "other": "~/.trae/sdd/"
+      },
+      "linux": {
+        "skills": "~/.trae/skills/",
+        "rules": "~/.trae/rules/",
+        "agents": "~/.trae/agents/",
+        "workflows": "~/.trae/workflows/",
+        "other": "~/.trae/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.trae\\skills\\",
+        "rules": "%USERPROFILE%\\.trae\\rules\\",
+        "agents": "%USERPROFILE%\\.trae\\agents\\",
+        "workflows": "%USERPROFILE%\\.trae\\workflows\\",
+        "other": "%USERPROFILE%\\.trae\\sdd\\"
+      }
+    },
+    "trae-cn": {
+      "default": {
+        "skills": "~/.trae-cn/skills/",
+        "rules": "~/.trae-cn/rules/",
+        "agents": "~/.trae-cn/agents/",
+        "workflows": "~/.trae-cn/workflows/",
+        "other": "~/.trae-cn/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.trae-cn/skills/",
+        "rules": "~/.trae-cn/rules/",
+        "agents": "~/.trae-cn/agents/",
+        "workflows": "~/.trae-cn/workflows/",
+        "other": "~/.trae-cn/sdd/"
+      },
+      "linux": {
+        "skills": "~/.trae-cn/skills/",
+        "rules": "~/.trae-cn/rules/",
+        "agents": "~/.trae-cn/agents/",
+        "workflows": "~/.trae-cn/workflows/",
+        "other": "~/.trae-cn/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.trae-cn\\skills\\",
+        "rules": "%USERPROFILE%\\.trae-cn\\rules\\",
+        "agents": "%USERPROFILE%\\.trae-cn\\agents\\",
+        "workflows": "%USERPROFILE%\\.trae-cn\\workflows\\",
+        "other": "%USERPROFILE%\\.trae-cn\\sdd\\"
+      },
+      "compat": [
+        {
+          "skills": "~/.trae/skills/",
+          "rules": "~/.trae/rules/",
+          "agents": "~/.trae/agents/",
+          "workflows": "~/.trae/workflows/",
+          "other": "~/.trae/sdd/"
+        }
+      ]
+    },
+    "claude": {
+      "default": {
+        "skills": "~/.claude/skills/",
+        "rules": "~/.claude/rules/",
+        "agents": "~/.claude/agents/",
+        "workflows": "~/.claude/workflows/",
+        "other": "~/.claude/sdd/"
+      },
+      "darwin": {
+        "skills": "~/.claude/skills/",
+        "rules": "~/.claude/rules/",
+        "agents": "~/.claude/agents/",
+        "workflows": "~/.claude/workflows/",
+        "other": "~/.claude/sdd/"
+      },
+      "linux": {
+        "skills": "~/.claude/skills/",
+        "rules": "~/.claude/rules/",
+        "agents": "~/.claude/agents/",
+        "workflows": "~/.claude/workflows/",
+        "other": "~/.claude/sdd/"
+      },
+      "win32": {
+        "skills": "%USERPROFILE%\\.claude\\skills\\",
+        "rules": "%USERPROFILE%\\.claude\\rules\\",
+        "agents": "%USERPROFILE%\\.claude\\agents\\",
+        "workflows": "%USERPROFILE%\\.claude\\workflows\\",
+        "other": "%USERPROFILE%\\.claude\\sdd\\"
       }
     }
   }

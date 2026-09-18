@@ -8,7 +8,7 @@ MCP server that installs and updates the SDD framework and resolves named keys. 
 
 **Default Given:** unless stated, the MCP client is connected and authorized where the tool requires auth.
 
-Open questions (do not block ACs that can use explicit `client`): merge vs overwrite; auto-detect vs required `client`; `sdd_get_key` credential type; TRAE Agents first-class vs candidate.
+Open questions (do not block ACs that can use explicit `client`): ~~merge vs overwrite~~ (DECIDED: manifest-tracked merge, ADR-048); auto-detect vs required `client` (Cursor-first; prefer explicit `client` when ambiguous); `sdd_get_key` credential type; ~~TRAE Agents first-class vs candidate~~ (CONFIRMED first-class via empirical spike 2026-09-17).
 
 ---
 
@@ -116,10 +116,11 @@ Node stdio entry registers tools with pinned `@modelcontextprotocol/sdk`. Core i
 #### AC1
 
 ```gherkin
-Scenario: stdio server advertises SDD tools
+Scenario: stdio server advertises SDD tools (no get_key)
   Given the MCP stdio process is started
   When the client completes initialize and lists tools
-  Then the tool list includes sdd_install_framework, sdd_update_framework, sdd_list_versions, and sdd_get_key
+  Then the tool list includes sdd_install_framework, sdd_update_framework, and sdd_list_versions
+  And the tool list does not include sdd_get_key
   And each tool description states parameters, success shape, and failure modes
 ```
 
@@ -182,13 +183,24 @@ List available package versions and a high-level inventory. Read-only. No key va
 #### AC1
 
 ```gherkin
-Scenario: List versions and inventory
-  Given Settings contains a configured GitHub repository with at least one package version
-  When the client calls sdd_list_versions
-  Then the result includes one or more version identifiers
-  And the result includes a high-level inventory of skills, rules, and other folders
+Scenario: List versions and inventory from sync cache
+  Given the operator server has run a successful package sync
+  When the client calls sdd_list_versions over HTTP
+  Then the result includes one or more version identifiers from the sync manifest
+  And the result includes a high-level inventory of skills, rules, agents, and workflows
   And no key values are present
   And no files are written
+```
+
+#### AC3
+
+```gherkin
+Scenario: stdio list_versions fetches from operator REST API
+  Given the stdio binary is configured with SDD_SERVER_URL pointing at the operator server
+  And the operator server has run a successful package sync
+  When the client calls sdd_list_versions over stdio
+  Then the result includes versions and inventory from GET /api/sdd/versions
+  And no database or GitHub calls are made from the stdio process
 ```
 
 #### AC2
@@ -247,9 +259,9 @@ Scenario: Unauthorized get_key
 
 ---
 
-## `sdd-mcp-install` — `sdd_install_framework` (stdio, Cursor)
+## `sdd-mcp-install` — `sdd_install_framework` (stdio + HTTP, Cursor)
 
-Install skills (with `SKILL.md`), rules, and other folders into Cursor paths. Path allow-list. Structured summary. (MCPI-01)
+Install skills (with `SKILL.md`), rules, and other folders into Cursor paths. Stdio writes locally; HTTP returns tarball URL for AI extraction (ADR-054). Path allow-list. Structured summary. (MCPI-01)
 
 ### User story 1 — Install SDD framework for Cursor
 
@@ -262,9 +274,11 @@ Install skills (with `SKILL.md`), rules, and other folders into Cursor paths. Pa
 ```gherkin
 Scenario: Install writes skills, rules, and other folders
   Given the client is Cursor on the developer machine over stdio
-  And a package version is available
+  And the operator server has synced the requested package version
+  And SDD_SERVER_URL points at the operator server
   When the client calls sdd_install_framework for that version
-  Then skills each containing SKILL.md are written under the Cursor skills root
+  Then the stdio process fetches the package from GET /api/sdd/package
+  And skills each containing SKILL.md are written under the Cursor skills root
   And rules are written under the Cursor rules root
   And other package folders are written to documented paths
   And the result includes paths, version, and asset counts
@@ -278,6 +292,40 @@ Scenario: Invalid or escaped path is rejected
   When the resolved target is outside allowed user config roots or contains path escape
   Then the result code is path_rejected
   And no files are written
+```
+
+#### AC3
+
+```gherkin
+Scenario: Manifest exists but files were deleted
+  Given the client has .sdd-installed.json matching the requested version
+  And the listed skill or rule folders have been manually deleted
+  When the client calls sdd_install_framework for that version
+  Then the tool reinstalls all package files
+  And the result includes paths, version, and asset_counts
+  And the result code is not already_up_to_date
+```
+
+#### AC4
+
+```gherkin
+Scenario: Force reinstall when version matches
+  Given the client has a complete install at version A
+  When the client calls sdd_install_framework with force true for version A
+  Then the tool reinstalls all package files
+  And the result includes version A and asset_counts
+```
+
+#### AC5
+
+```gherkin
+Scenario: Same ref label but repo content changed
+  Given the client has .sdd-installed.json for ref main at commit SHA-A
+  And the GitHub repo at ref main now resolves to commit SHA-B with different skills
+  When the client calls sdd_install_framework for main
+  Then the tool reinstalls all package files from SHA-B
+  And stale package-owned skills from SHA-A are removed
+  And the result is not already_up_to_date
 ```
 
 ---
@@ -407,24 +455,322 @@ Scenario: LLM-proposed escape is rejected
 
 ---
 
-## `sdd-mcp-http-install-policy` — HTTP install policy
+## `sdd-mcp-path-detect` — Client path detection
 
-HTTP MCP must not write Server 2 disk as if it were the user’s home. (MCPI-03, MCPU-02)
+Deterministically read client configuration (env vars + config files) to resolve install paths. Fall back to Qwen + seed map. (MCPI-05)
 
-### User story 1 — Remote install does not write the server disk
+### User story 1 — Auto-detect calling client
 
-**As a** developer calling MCP over HTTP
-**I want** install and update to fail safely or return local-bridge instructions
-**So that** the hosted server never writes another user’s `~/.cursor`
+**As a** developer calling sdd_install_framework without an explicit client argument
+**I want** the MCP server to detect which client I am from the MCP handshake
+**So that** I do not have to specify the client every time
 
 #### AC1
 
 ```gherkin
-Scenario: HTTP install without a local bridge
+Scenario: clientInfo.name auto-detects Cursor
+  Given the MCP client sends clientInfo.name "cursor" or "Cursor" in the initialize handshake
+  When the client calls sdd_install_framework without a client argument over stdio
+  Then the server resolves paths for the cursor client
+  And the resolution source is env, config, seed, or llm
+  And the result is not client_unknown
+```
+
+#### AC2
+
+```gherkin
+Scenario: clientInfo.name auto-detects Claude Code
+  Given the MCP client sends clientInfo.name "claude-code" or "Claude Code"
+  When the client calls sdd_install_framework without a client argument over stdio
+  Then the server resolves paths for the claude client
+  And the resolution source is env, config, seed, or llm
+```
+
+#### AC3
+
+```gherkin
+Scenario: Unrecognized clientInfo.name falls back to explicit arg or error
+  Given the MCP client sends an unrecognized clientInfo.name
+  And no explicit client argument is provided
+  When the client calls sdd_install_framework
+  Then the result code is client_unknown
+  And no files are written
+```
+
+### User story 2 — Env var resolution
+
+**As a** developer who relocated my client config directory via an env var
+**I want** sdd_install_framework to honor that relocation
+**So that** files are written to my actual config location, not the default
+
+#### AC1
+
+```gherkin
+Scenario: CLAUDE_CONFIG_DIR relocates skills root
+  Given CLAUDE_CONFIG_DIR is set to a non-default absolute path
+  When the client calls sdd_install_framework for the claude client over stdio
+  Then skills are written under $CLAUDE_CONFIG_DIR/skills/
+  And the resolution source is env
+```
+
+#### AC2
+
+```gherkin
+Scenario: CODEX_HOME relocates skills root
+  Given CODEX_HOME is set to a non-default absolute path
+  When the client calls sdd_install_framework for the codex client over stdio
+  Then skills are written under the resolved Codex skills root under $CODEX_HOME
+  And the resolution source is env
+```
+
+#### AC3
+
+```gherkin
+Scenario: CLINE_DIR relocates skills root
+  Given CLINE_DIR is set to a non-default absolute path
+  When the client calls sdd_install_framework for the cline client over stdio
+  Then skills are written under $CLINE_DIR/skills/
+  And the resolution source is env
+```
+
+#### AC4
+
+```gherkin
+Scenario: KIRO_HOME relocates skills root
+  Given KIRO_HOME is set to a non-default absolute path
+  When the client calls sdd_install_framework for the kiro client over stdio
+  Then skills are written under $KIRO_HOME/skills/
+  And the resolution source is env
+```
+
+### User story 3 — Config file probe
+
+**As a** developer whose client config file documents custom skill paths
+**I want** sdd_install_framework to read the config file
+**So that** install targets match the client's actual configuration
+
+#### AC1
+
+```gherkin
+Scenario: Config file probe finds customized skills root
+  Given the client config file exists at the documented path
+  And the config file contains a custom skills root entry
+  When the client calls sdd_install_framework over stdio
+  Then the server reads the config file and resolves the custom skills root
+  And the resolution source is config
+  And the resolved path passes the allow-list before any write
+```
+
+#### AC2
+
+```gherkin
+Scenario: Config file absent falls through to seed map
+  Given the client config file does not exist at the documented path
+  And no relocating env var is set
+  And the seed map has defaults for the client
+  When the client calls sdd_install_framework over stdio
+  Then roots come from the seed map
+  And the resolution source is seed
+```
+
+### User story 4 — Fallback to Qwen + seed map
+
+**As a** developer on a client without env vars or config files (Cursor, WorkBuddy, TRAE, Windsurf)
+**I want** sdd_install_framework to fall back to Qwen then seed map
+**So that** install still works even without deterministic signals
+
+#### AC1
+
+```gherkin
+Scenario: No env var, no config file → Qwen → seed
+  Given the client has no documented env var for config relocation
+  And no config file is found at the documented path
+  And Qwen credentials are configured
+  When the client calls sdd_install_framework over stdio
+  Then the server falls through to Qwen discovery
+  And if Qwen resolves, the resolution source is llm
+  And if Qwen fails, the seed map is used and the resolution source is seed
+```
+
+#### AC2
+
+```gherkin
+Scenario: All resolution fails → structured error, no writes
+  Given no env var, no config file, Qwen unavailable, and no seed map entry
+  When the client calls sdd_install_framework over stdio
+  Then the result code is client_config_unresolved or llm_unavailable
+  And no files are written
+```
+
+### User story 5 — Resolution source in summary
+
+**As a** developer
+**I want** the install summary to report how paths were resolved
+**So that** I can debug path issues and trust the install target
+
+#### AC1
+
+```gherkin
+Scenario: Summary includes resolution_source
+  Given the client calls sdd_install_framework over stdio
+  When the install completes
+  Then the result includes resolution_source with one of: env, config, seed, llm
+  And the result includes the resolved paths for skills, rules, and other
+```
+
+---
+
+## `sdd-mcp-sync-job` — Server-side framework sync (SYNK-01)
+
+Operator server sync job fetches framework files from GitHub into local cache. (ADR-053)
+
+### User story 1 — Sync framework from GitHub
+
+**As the** operator server
+**I want** to sync the configured GitHub repo into a local package cache
+**So that** stdio clients can install without direct GitHub or database access
+
+#### AC1
+
+```gherkin
+Scenario: Initial sync stores files and manifest
+  Given Settings contains a reachable GitHub repository
+  When the sync job runs
+  Then unpacked files are stored under .data/sdd-packages/<commit-sha>/
+  And manifest.json records latestCommit, latestVersion, versions, and inventory
+  And a pkg.tar.gz exists for the commit
+```
+
+#### AC2
+
+```gherkin
+Scenario: New commit triggers cache update
+  Given a prior sync stored commit SHA-A
+  And the GitHub repo default ref now resolves to commit SHA-B
+  When the sync job runs
+  Then files for SHA-B are stored
+  And manifest.json latestCommit is SHA-B
+```
+
+#### AC3
+
+```gherkin
+Scenario: Skill renamed in repo
+  Given the repo renamed skill tdd to test-driven-dev
+  When the sync job runs after the push
+  Then the cache inventory lists test-driven-dev
+  And tdd is no longer in the cache inventory
+```
+
+#### AC4
+
+```gherkin
+Scenario: Skill deleted in repo
+  Given the repo deleted skill dod
+  When the sync job runs after the push
+  Then dod is no longer in the cache inventory
+```
+
+#### AC5
+
+```gherkin
+Scenario: GitHub unavailable preserves stale cache
+  Given a prior successful sync exists
+  And GitHub is unreachable
+  When the sync job runs
+  Then the result is sync_error
+  And the existing cache and manifest are unchanged
+```
+
+#### AC6
+
+```gherkin
+Scenario: Same commit is a no-op
+  Given the sync job already stored commit SHA-A
+  When the sync job runs again without a new commit
+  Then the result status is unchanged
+  And no duplicate storage is created
+```
+
+---
+
+## `sdd-mcp-package-api` — Package REST API (PKAPI-01)
+
+Public REST API serves sync cache to stdio clients. (ADR-053)
+
+### User story 1 — stdio client downloads packages
+
+**As a** stdio MCP binary on an end-user machine
+**I want** to fetch package versions and tarballs from the operator server
+**So that** I can install without DB, GitHub token, or Prisma
+
+#### AC1
+
+```gherkin
+Scenario: Versions endpoint after sync
+  Given the operator server has a populated sync cache
+  When GET /api/sdd/versions is called
+  Then the response is 200 with versions, inventory, paths_version, latestCommit
+```
+
+#### AC2
+
+```gherkin
+Scenario: Package download
+  Given the operator server has a populated sync cache
+  When GET /api/sdd/package?version=latest is called
+  Then the response is 200 with application/gzip body
+  And headers X-SDD-Commit and X-SDD-Version are present
+```
+
+#### AC3
+
+```gherkin
+Scenario: Sync pending before first sync
+  Given no sync has run
+  When GET /api/sdd/versions is called
+  Then the response is 409 with error code sync_pending
+```
+
+#### AC4
+
+```gherkin
+Scenario: Unknown version returns not found
+  Given the sync cache does not contain version v9.9.9
+  When GET /api/sdd/package?version=v9.9.9 is called
+  Then the response is 404 with error code version_not_found
+```
+
+#### AC5
+
+```gherkin
+Scenario: Admin manual sync trigger
+  Given an authenticated admin session
+  When POST /api/admin/sync is called
+  Then the sync job runs and returns synced or unchanged status
+```
+
+---
+
+## `sdd-mcp-http-install-policy` — HTTP install policy (ADR-054)
+
+HTTP MCP must not write Server 2 disk as if it were the user’s home. Install/update return tarball URL + metadata for AI extraction. (MCPI-03, MCPU-02)
+
+### User story 1 — Remote install returns tarball URL for AI extraction
+
+**As a** developer calling MCP over HTTP
+**I want** install and update to return a package URL and extraction instructions
+**So that** the AI agent extracts files locally and the hosted server never writes another user’s `~/.cursor`
+
+#### AC1
+
+```gherkin
+Scenario: HTTP install returns package URL and instructions
   Given the client calls sdd_install_framework over Streamable HTTP
-  And no documented local bridge is configured
+  And the operator sync cache contains the requested version
   When the tool runs
-  Then the result code is local_install_required or the result contains signed local-install instructions
+  Then the result includes packageUrl pointing at GET /api/sdd/package
+  And the result includes paths, manifest, manifestPath, and instructions
   And the server disk is not written as a user config root
 ```
 
@@ -433,8 +779,29 @@ Scenario: HTTP install without a local bridge
 ```gherkin
 Scenario: HTTP update follows the same policy
   Given the client calls sdd_update_framework over Streamable HTTP
-  And no documented local bridge is configured
   When the tool runs
-  Then the result follows the same local_install_required or instructions policy
+  Then the result includes packageUrl and instructions
   And the server disk is not written as a user config root
+```
+
+---
+
+## `sdd-mcp-prompt-setup` — Prompt-based MCP setup (SETUP-01)
+
+End users paste one prompt; the AI configures HTTP MCP. (ADR-054)
+
+### User story 1 — One-prompt setup
+
+**As an** end user in Cursor
+**I want** to paste one prompt to connect framework.sdd.works MCP
+**So that** I do not need to edit mcp.json manually or install a binary
+
+#### AC1
+
+```gherkin
+Scenario: Agent setup endpoint serves markdown instructions
+  When GET /agent-setup is requested
+  Then the response Content-Type is text/markdown
+  And the body includes https://framework.sdd.works/mcp
+  And the body includes agent-specific configuration steps
 ```

@@ -39,7 +39,11 @@
         <div class="page-head">
           <p class="eyebrow" data-i18n="admin.keys.eyebrow">KEY STORE</p>
           <h1 data-i18n="admin.keys.issue">Add key</h1>
-          <p data-i18n="admin.keys.lead">For use with sdd_get_key. Callers pass a key name; MCP returns the key value.</p>
+          <ul class="page-head-lead keys-lead-list">
+            <li data-i18n="admin.keys.lead_1">Keys give learners access to third-party capabilities</li>
+            <li data-i18n="admin.keys.lead_2">such as Qwen, OpenAI, Google Maps, and Amap.</li>
+            <li data-i18n="admin.keys.lead_3">Learners call sdd_get_key(key-name) to receive the key value from MCP.</li>
+          </ul>
         </div>
         <form class="form" action="06-keys.html?saved=1" style="max-width: 32rem">
           <label>

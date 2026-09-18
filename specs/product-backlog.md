@@ -22,6 +22,8 @@ Change log: [`change-log.md`](./change-log.md).
 | MCPI | MCP `sdd_install_framework` |
 | MCPU | MCP `sdd_update_framework` |
 | MCPK | MCP `sdd_get_key` |
+| SYNK | Server-side framework sync job |
+| PKAPI | Package REST API for stdio clients |
 
 ### Feature list
 
@@ -43,17 +45,23 @@ Change log: [`change-log.md`](./change-log.md).
 | 12 | MCP | TRAN | TRAN-02 | MCP server bootstrap (Streamable HTTP) | HTTP entry on `/mcp` with bearer/session auth; same core as stdio | [TRAN-02](./mcp/mcp-stories.md#sdd-mcp-transport-http) | MVP-5 | Done |
 | 13 | MCP | MCPL | MCPL-01 | `sdd_list_versions` | List available framework package versions and high-level inventory from configured repo(s) / release artifacts; read-only, no key values | [MCPL-01](./mcp/mcp-stories.md#sdd-mcp-list-versions) | MVP-5 | Done |
 | 14 | MCP | MCPK | MCPK-01 | `sdd_get_key` | Caller passes `key_name`; return plaintext `key_value` from DB; structured `not_found` / `unauthorized`; no other-key leakage | [MCPK-01](./mcp/mcp-stories.md#sdd-mcp-get-key) | MVP-5 | Done |
-| 15 | MCP | MCPI | MCPI-01 | `sdd_install_framework` (stdio, Cursor) | Install skills (with `SKILL.md`), rules, and other package folders into Cursor paths on the developer machine; path allow-list; structured summary | [MCPI-01](./mcp/mcp-stories.md#sdd-mcp-install) | MVP-6 | ToDo |
-| 16 | MCP | MCPU | MCPU-01 | `sdd_update_framework` (stdio, Cursor) | Refresh an existing Cursor install to a specified or latest version; idempotent on same version; merge/overwrite policy per design | [MCPU-01](./mcp/mcp-stories.md#sdd-mcp-update) | MVP-6 | ToDo |
+| 15 | MCP | MCPI | MCPI-01 | `sdd_install_framework` (stdio + HTTP) | Stdio writes locally; HTTP returns tarball URL for AI extraction (ADR-054); path allow-list; structured summary | [MCPI-01](./mcp/mcp-stories.md#sdd-mcp-install) | MVP-6 | Done |
+| 16 | MCP | MCPU | MCPU-01 | `sdd_update_framework` (stdio + HTTP) | Same as install; idempotent on same version | [MCPU-01](./mcp/mcp-stories.md#sdd-mcp-update) | MVP-6 | Done |
+| 16a | MCP | SETUP | SETUP-01 | Prompt-based MCP setup | `GET /agent-setup`; Instructions page paste-prompt; HTTP URL only in mcp.json (ADR-054) | [SETUP-01](./mcp/mcp-stories.md#sdd-mcp-prompt-setup) | MVP-6 | Done |
 | 17 | MCP | MCPI | MCPI-04 | Qwen path discovery | Qwen searches local client config to propose install roots; seed-map fallback; allow-list validation (ADR-047) | [MCPI-04](./mcp/mcp-stories.md#sdd-mcp-path-llm) | MVP-6 | ToDo |
+| 17a | MCP | MCPI | MCPI-05 | Client path detection | Deterministically read client config (env vars + config files) to resolve install paths; fall back to Qwen + seed map if unresolved; auto-detect client from MCP clientInfo | [MCPI-05](./mcp/mcp-stories.md#sdd-mcp-path-detect) | MVP-6 | ToDo |
 | 18 | MCP | MCPI | MCPI-02 | Cross-client path resolution | Seed maps + Qwen discovery for first-class clients (Cursor Agents, WorkBuddy / CN, Claude Code, Cline, VS Code, Codex, Copilot); OS variants | [MCPI-02](./mcp/mcp-stories.md#sdd-mcp-cross-client) | MVP-7 | ToDo |
-| 19 | MCP | MCPI | MCPI-03 | HTTP install policy | HTTP MCP SHALL NOT write Server 2 disk; return signed instructions or fail with `local_install_required` unless a documented local bridge exists | [MCPI-03](./mcp/mcp-stories.md#sdd-mcp-http-install-policy) | MVP-7 | ToDo |
+| 19 | MCP | MCPI | MCPI-03 | HTTP install policy | HTTP MCP SHALL NOT write Server 2 disk; returns tarball URL + instructions for AI extraction (ADR-054) | [MCPI-03](./mcp/mcp-stories.md#sdd-mcp-http-install-policy) | MVP-6 | Done |
 | 20 | MCP | MCPU | MCPU-02 | Update on HTTP | Same update semantics over HTTP transport under the HTTP install policy | [MCPU-02](./mcp/mcp-stories.md#sdd-mcp-http-install-policy) | MVP-7 | ToDo |
 | 21 | Admin Portal | I18N | I18N-02 | MCP description i18n | MCP tool descriptions shown in client UI use the same catalogs (English source + locale overlay) | [I18N-02](./admin-portal/app-stories.md#sdd-admin-i18n) | MVP-7 | ToDo |
+| 22 | MCP | SYNK | SYNK-01 | Server-side framework sync | Sync job fetches GitHub repo → local cache (`.data/sdd-packages/`); manifest with versions/inventory/commit SHA; manual + polling trigger | [SYNK-01](./mcp/mcp-stories.md#sdd-mcp-sync-job) | MVP-6 | Done |
+| 23 | MCP | PKAPI | PKAPI-01 | Package REST API | `GET /api/sdd/versions`, `GET /api/sdd/package`; admin `POST /api/admin/sync`; stdio fetches from here (ADR-053) | [PKAPI-01](./mcp/mcp-stories.md#sdd-mcp-package-api) | MVP-6 | Done |
 
 ### MVP batch plan
 
 **Principle.** Each MVP is small enough for incremental delivery, contains a complete business loop (no stub/mock/fixture for upstream/downstream), and is independently verifiable end-to-end through the UI or an MCP client.
+
+**Definition of Done.** A feature MAY NOT be marked Done on fixture-, stub-, or mock-only test passes. Default CI fixtures are required, but Done still needs a live path: operator-verified portal or MCP client against real GitHub / keys / install targets (live GitHub, Resend, Qwen remain opt-in in CI).
 
 | Batch | Theme | Business closure (what an end user can do and verify) | Features | Sprint plan |
 | --- | --- | --- | --- | --- |
@@ -62,12 +70,12 @@ Change log: [`change-log.md`](./change-log.md).
 | MVP-3 | Keys management | An admin can create, view, edit, and delete keys (name, description, value); list shows all three; values are protected at rest and never appear unauthenticated | KEYS-01 | [sprint3-plan.md](./sprint3-plan.md) |
 | MVP-4 | Settings + framework live view | An admin can configure one GitHub repo URL and see a read-only, near-real-time view of the framework repository in the portal | SETT-01, FRMW-01 | [sprint4-plan.md](./sprint4-plan.md) |
 | MVP-5 | MCP server + discovery + key lookup | A supported MCP client can connect (stdio and HTTP), list framework versions, and resolve a key value via `sdd_get_key` with auth | TRAN-01, TRAN-02, MCPL-01, MCPK-01 | [sprint5-plan.md](./sprint5-plan.md) |
-| MVP-6 | MCP install + update (Cursor, local) | A Cursor user can install the SDD framework locally and update it to a chosen version; re-running the same version is idempotent; path roots use seed map + Qwen when needed | MCPI-01, MCPU-01, MCPI-04 | [sprint6-plan.md](./sprint6-plan.md) |
+| MVP-6 | MCP install + update (Cursor, local) | A Cursor user can install the SDD framework locally and update it to a chosen version; re-running the same version is idempotent; path roots use deterministic client config detection first, then seed map + Qwen when needed; stdio fetches packages from operator server (ADR-053) | MCPI-01, MCPU-01, MCPI-04, MCPI-05, SYNK-01, PKAPI-01 | [sprint6-plan.md](./sprint6-plan.md) |
 | MVP-7 | Cross-client + HTTP hardening | First-class clients across macOS / Windows / Linux resolve install paths (seed + Qwen); HTTP install follows the safe local-bridge policy; MCP descriptions are i18n-aware | MCPI-02, MCPI-03, MCPU-02, I18N-02 | [sprint7-plan.md](./sprint7-plan.md) |
 
 Notes:
 - MVP-5 depends on MVP-3 (keys store) and MVP-4 (GitHub links for version listing).
-- MVP-6 depends on MVP-5 (transport + list versions), MVP-4 (package source), and MVP-1 PATH-01 (path map + resolver); includes MCPI-04 (Qwen path discovery layered on PATH-01).
+- MVP-6 depends on MVP-5 (transport + list versions), MVP-4 (package source), and MVP-1 PATH-01 (path map + resolver); includes MCPI-05 (deterministic client path detection) and MCPI-04 (Qwen path discovery layered on PATH-01).
 - MVP-7 depends on MVP-6 and expands the path map (PATH-01) to first-class clients; resolves open questions on client path resolution and HTTP install policy.
 
 ## Part 2 — Feature Detail
@@ -172,7 +180,7 @@ Notes:
 
 ### MCPL-01 — `sdd_list_versions`
 
-- **Detail.** Read-only tool. Lists available framework package versions and a high-level inventory (skills, rules, other folders) from configured repo(s) and/or release artifacts. No side effects, no key values. Optional MCP resources (e.g. `sdd://framework/versions`) MAY mirror the same data. Cache release/tag list for fast response.
+- **Detail.** Read-only tool. Lists available framework package versions and a high-level inventory from the operator sync cache (HTTP) or REST API (stdio, ADR-053). No side effects, no key values. Optional MCP resources (e.g. `sdd://framework/versions`) MAY mirror the same data.
 - **Dependencies.** TRAN-01, TRAN-02, SETT-01.
 - **User stories & AC.** [MCPL-01](./mcp/mcp-stories.md#sdd-mcp-list-versions)
 - **UI design & mockup.** n/a
@@ -186,23 +194,30 @@ Notes:
 
 ### MCPI-01 — `sdd_install_framework` (stdio, Cursor)
 
-- **Detail.** Installs the SDD framework package into Cursor paths on the developer machine: skills (each with `SKILL.md`), rules (`.mdc`), and other package folders. Detects or accepts an explicit `client` argument; resolves OS-specific paths via **PATH-01 seed map + Qwen config discovery** (MCPI-04 / ADR-047). Path allow-list rejects invalid or out-of-root targets. Returns a structured summary: paths written, version, asset counts, resolution source. Merge/overwrite policy per design decision (open question).
-- **Dependencies.** TRAN-01, MCPL-01, FRMW-01, PATH-01, MCPI-04.
+- **Detail.** Installs the SDD framework package into Cursor paths on the developer machine: skills (each with `SKILL.md`), rules (`.mdc`), and other package folders. Fetches package from operator REST API (`SDD_SERVER_URL`, ADR-053) — no DB or GitHub on client. Detects or accepts an explicit `client` argument; resolves OS-specific paths via **MCPI-05 deterministic detection → PATH-01 seed map + Qwen config discovery** (MCPI-04 / ADR-047). Path allow-list rejects invalid or out-of-root targets. Returns a structured summary: paths written, version, asset counts, resolution source (`env` | `config` | `seed` | `llm`). Manifest-tracked merge (ADR-048).
+- **Dependencies.** TRAN-01, MCPL-01, FRMW-01, PATH-01, MCPI-04, MCPI-05.
 - **User stories & AC.** [MCPI-01](./mcp/mcp-stories.md#sdd-mcp-install)
 - **UI design & mockup.** n/a
 
 ### MCPU-01 — `sdd_update_framework` (stdio, Cursor)
 
-- **Detail.** Refreshes an existing Cursor install to a specified or latest version. Idempotent on same version (reports `already_up_to_date`). Applies the same path resolution (MCPI-04), allow-list, and merge/overwrite policy as install. Returns a structured summary of changes. Fails safely on invalid paths or would-overwrite without policy.
-- **Dependencies.** MCPI-01.
+- **Detail.** Refreshes an existing Cursor install to a specified or latest version. Idempotent on same version (reports `already_up_to_date`). Applies the same path resolution (MCPI-05 + MCPI-04), allow-list, and merge/overwrite policy as install. Returns a structured summary of changes. Fails safely on invalid paths or would-overwrite without policy.
+- **Dependencies.** MCPI-01, MCPI-05.
 - **User stories & AC.** [MCPU-01](./mcp/mcp-stories.md#sdd-mcp-update)
 - **UI design & mockup.** n/a
 
 ### MCPI-04 — Qwen client-config path discovery
 
-- **Detail.** On stdio install/update, call Aliyun Bailian **Qwen** (OpenAI-compatible) with redacted local client config snippets to propose skills/rules roots. Validate with path-policy. Fall back to **PATH-01** seed map when LLM unavailable or low confidence; otherwise `client_config_unresolved` / `llm_unavailable` with no writes. No portal chat. Env: `QWEN_*` (tech-spec). ADR-047.
-- **Dependencies.** TRAN-01, PATH-01.
+- **Detail.** On stdio install/update, call Aliyun Bailian **Qwen** (OpenAI-compatible) with redacted local client config snippets to propose skills/rules roots. Validate with path-policy. Fall back to **PATH-01** seed map when LLM unavailable or low confidence; otherwise `client_config_unresolved` / `llm_unavailable` with no writes. No portal chat. Env: `QWEN_*` (tech-spec). ADR-047. Runs **after** MCPI-05 deterministic detection fails.
+- **Dependencies.** TRAN-01, PATH-01, MCPI-05.
 - **User stories & AC.** [MCPI-04](./mcp/mcp-stories.md#sdd-mcp-path-llm)
+- **UI design & mockup.** n/a
+
+### MCPI-05 — Client path detection
+
+- **Detail.** Before Qwen discovery, deterministically resolve client install roots by: (1) reading client-specific env vars (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`, `CLINE_DIR`, `KIRO_HOME`, `COPILOT_CUSTOM_INSTRUCTIONS_DIRS`, `XDG_DATA_HOME`), (2) probing client config files for customized paths. Auto-detect the calling client from MCP `clientInfo.name` when the explicit `client` arg is omitted. Fall back to MCPI-04 (Qwen) + PATH-01 seed map if deterministic resolution fails. stdio writes locally; HTTP returns tarball URL (ADR-054). Knowledge base: [`specs/mcp/client.paths.md`](./mcp/client.paths.md).
+- **Dependencies.** TRAN-01, PATH-01, MCPI-04.
+- **User stories & AC.** [MCPI-05](./mcp/mcp-stories.md#sdd-mcp-path-detect)
 - **UI design & mockup.** n/a
 
 ### MCPI-02 — Cross-client path resolution
@@ -214,7 +229,7 @@ Notes:
 
 ### MCPI-03 — HTTP install policy
 
-- **Detail.** HTTP MCP SHALL NOT write Server 2 disk as if it were the user’s `~/.cursor`. Returns signed instructions or fails with a structured `local_install_required` error unless a documented local bridge exists. Same path allow-list and structured summary contract as stdio install.
+- **Detail.** HTTP MCP SHALL NOT write Server 2 disk as if it were the user’s `~/.cursor`. Returns `packageUrl`, paths, manifest, and extraction instructions for AI shell execution (ADR-054). Same path allow-list contract as stdio install.
 - **Dependencies.** TRAN-02, MCPI-01.
 - **User stories & AC.** [MCPI-03](./mcp/mcp-stories.md#sdd-mcp-http-install-policy)
 - **UI design & mockup.** n/a
@@ -224,6 +239,20 @@ Notes:
 - **Detail.** Same update semantics as MCPU-01 over the Streamable HTTP transport, under the HTTP install policy (MCPI-03). Idempotent on same version; structured errors only.
 - **Dependencies.** MCPU-01, MCPI-03.
 - **User stories & AC.** [MCPU-02](./mcp/mcp-stories.md#sdd-mcp-http-install-policy)
+- **UI design & mockup.** n/a
+
+### SYNK-01 — Server-side framework sync job
+
+- **Detail.** Operator server sync job reads Settings GitHub URL, fetches latest ref via `GitHubPort.materializePackage`, stores unpacked files + tarball under `.data/sdd-packages/<commit-sha>/`, writes manifest (versions, inventory, latestCommit). Idempotent on unchanged SHA. Triggers: `POST /api/admin/sync`, polling (15 min). Retains last 5 commit dirs. ADR-053.
+- **Dependencies.** SETT-01, FRMW-01.
+- **User stories & AC.** [SYNK-01](./mcp/mcp-stories.md#sdd-mcp-sync-job)
+- **UI design & mockup.** n/a
+
+### PKAPI-01 — Package REST API for stdio clients
+
+- **Detail.** Public `GET /api/sdd/versions` and `GET /api/sdd/package?version=<v>` serve sync cache to stdio binary. Returns `409 sync_pending` when empty, `404 version_not_found` for unknown versions. Package response includes `X-SDD-Commit` and `X-SDD-Version` headers. ADR-053.
+- **Dependencies.** SYNK-01.
+- **User stories & AC.** [PKAPI-01](./mcp/mcp-stories.md#sdd-mcp-package-api)
 - **UI design & mockup.** n/a
 
 ### I18N-02 — MCP description i18n

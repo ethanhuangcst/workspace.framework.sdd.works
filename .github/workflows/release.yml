@@ -1,0 +1,35 @@
+name: Release MCP binaries
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  mcp-binaries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run mcp:build
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/sdd-mcp-darwin-arm64
+            dist/sdd-mcp-darwin-x64
+            dist/sdd-mcp-linux-arm64
+            dist/sdd-mcp-linux-x64
+            dist/sdd-mcp-windows-x64.exe
+          generate_release_notes: true

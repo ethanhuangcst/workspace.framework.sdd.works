@@ -41,6 +41,33 @@ function TreeItems({ nodes }: { nodes: TreeNode[] }) {
   );
 }
 
+function FrameworkPageHead({
+  locale,
+  source,
+  showRepo,
+}: {
+  locale: Locale;
+  source?: string;
+  showRepo: boolean;
+}) {
+  return (
+    <div className="page-head">
+      <p className="eyebrow">{t(locale, "admin.framework.eyebrow")}</p>
+      <h1>{t(locale, "admin.framework.title")}</h1>
+      {showRepo && source ? (
+        <div className="framework-repo-block">
+          <p className="lead mono" data-testid="framework-source">
+            {source}
+          </p>
+          <p className="field-note">
+            <a href="/admin/settings">{t(locale, "admin.framework.change_repo")}</a>
+          </p>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export function FrameworkView({ locale }: { locale: Locale }) {
   const [data, setData] = useState<FrameworkPayload | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,22 +111,14 @@ export function FrameworkView({ locale }: { locale: Locale }) {
 
   if (loading && !data) {
     return (
-      <div className="page-head">
-        <p className="eyebrow">{t(locale, "admin.framework.eyebrow")}</p>
-        <h1>{t(locale, "admin.framework.title")}</h1>
-        <p>{t(locale, "admin.framework.lead")}</p>
-      </div>
+      <FrameworkPageHead locale={locale} showRepo={false} />
     );
   }
 
   if (!data || data.empty) {
     return (
       <>
-        <div className="page-head">
-          <p className="eyebrow">{t(locale, "admin.framework.eyebrow")}</p>
-          <h1>{t(locale, "admin.framework.title")}</h1>
-          <p>{t(locale, "admin.framework.lead")}</p>
-        </div>
+        <FrameworkPageHead locale={locale} showRepo={false} />
         <div className="empty" data-testid="framework-empty">
           <p>{t(locale, "admin.framework.empty")}</p>
           <Button href="/admin/settings" data-testid="framework-to-settings">
@@ -110,21 +129,15 @@ export function FrameworkView({ locale }: { locale: Locale }) {
     );
   }
 
+  const showTree = Boolean(data.tree && data.tree.length > 0 && !data.error);
+
   return (
     <>
-      <div className="page-head">
-        <p className="eyebrow">{t(locale, "admin.framework.eyebrow")}</p>
-        <h1>{t(locale, "admin.framework.title")}</h1>
-        <p>{t(locale, "admin.framework.lead")}</p>
-        {data.source ? (
-          <p className="field-note">
-            {t(locale, "admin.framework.source")}:{" "}
-            <span className="mono" data-testid="framework-source">
-              {data.source}
-            </span>
-          </p>
-        ) : null}
-      </div>
+      <FrameworkPageHead
+        locale={locale}
+        source={data.source}
+        showRepo={Boolean(data.source)}
+      />
       {data.error ? (
         <div data-testid="framework-error">
           <Callout variant="error">{t(locale, data.error.key)}</Callout>
@@ -135,10 +148,18 @@ export function FrameworkView({ locale }: { locale: Locale }) {
           {t(locale, "admin.framework.slow_sync")}
         </p>
       ) : null}
-      {data.tree && data.tree.length > 0 && !data.error ? (
-        <ul className="tree" data-testid="framework-tree">
-          <TreeItems nodes={data.tree} />
-        </ul>
+      {showTree ? (
+        <>
+          <h2
+            className="section-subtitle tree-subtitle"
+            data-testid="framework-artifacts"
+          >
+            {t(locale, "admin.framework.artifacts")}
+          </h2>
+          <ul className="tree" data-testid="framework-tree">
+            <TreeItems nodes={data.tree!} />
+          </ul>
+        </>
       ) : null}
     </>
   );

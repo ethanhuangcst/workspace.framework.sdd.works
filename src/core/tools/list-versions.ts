@@ -1,45 +1,34 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { getPathsVersion } from "@sdd/paths";
-import {
-  fetchRepoTree,
-  GitHubConfigError,
-  GitHubSyncError,
-  getGitHubPortForRepo,
-  type TreeNode,
-} from "@/github/sync";
-import { db } from "@/lib/db";
-import { parseGithubRepoUrl } from "@/lib/settings";
+import { getCachedManifest } from "@/core/sync/cache";
 import { toolError, toolOk } from "./errors";
-
+import { getSddServerUrl } from "./package-fetch";
 export type VersionEntry = { id: string; published_at?: string };
 
 export type ListVersionsResult = {
   versions: VersionEntry[];
-  inventory: { skills: string[]; rules: string[]; other: string[] };
+  inventory: {
+    skills: string[];
+    rules: string[];
+    agents: string[];
+    workflows: string[];
+    other: string[];
+  };
   paths_version: number;
 };
 
-function inventoryFromTree(tree: TreeNode[]): ListVersionsResult["inventory"] {
-  const skills: string[] = [];
-  const rules: string[] = [];
-  const other: string[] = [];
+type ListVersionsOptions = {
+  channel?: "stdio" | "http";
+};
 
-  for (const node of tree) {
-    const base = node.name.replace(/\/$/, "");
-    if (base === "skills" && node.type === "dir") {
-      for (const child of node.children ?? []) {
-        skills.push(child.name.replace(/\/$/, ""));
-      }
-    } else if (base === "rules" && node.type === "dir") {
-      for (const child of node.children ?? []) {
-        rules.push(child.name.replace(/\/$/, ""));
-      }
-    } else {
-      other.push(node.name.replace(/\/$/, ""));
-    }
-  }
+type VersionsOverride =
+  | (() => Promise<CallToolResult>)
+  | null;
 
-  return { skills, rules, other };
+let override: VersionsOverride = null;
+
+export function setListVersionsForTests(fn: VersionsOverride): void {
+  override = fn;
 }
 
 let cache: { key: string; payload: ListVersionsResult; expiresAt: number } | null =
@@ -50,52 +39,85 @@ export function clearListVersionsCache(): void {
   cache = null;
 }
 
-export async function listVersions(): Promise<CallToolResult> {
-  const row = await db.setting.findUnique({ where: { id: "singleton" } });
-  const url = row?.githubUrl?.trim() ?? "";
-  if (!url) {
-    return toolError(
-      "package_unavailable",
-      "No GitHub repository is configured in Settings.",
-    );
-  }
+function fromManifest(): ListVersionsResult | null {
+  const manifest = getCachedManifest();
+  if (!manifest) return null;
+  return {
+    versions: manifest.versions.map(({ id, published_at }) => ({
+      id,
+      published_at,
+    })),
+    inventory: manifest.inventory,
+    paths_version: getPathsVersion(),
+  };
+}
 
-  const parsed = parseGithubRepoUrl(url);
-  if (!parsed) {
-    return toolError(
-      "package_unavailable",
-      "Settings GitHub URL is invalid.",
-    );
+async function fetchVersionsFromServer(
+  serverUrl = getSddServerUrl(),
+): Promise<ListVersionsResult | { code: "package_unavailable"; message: string }> {
+  const url = `${serverUrl.replace(/\/+$/, "")}/api/sdd/versions`;
+  let res: Response;
+  try {
+    res = await fetch(url);
+  } catch (error) {
+    return {
+      code: "package_unavailable",
+      message:
+        error instanceof Error ? error.message : "Failed to reach package server",
+    };
   }
+  if (res.status === 409) {
+    return {
+      code: "package_unavailable",
+      message: "Package sync has not run on the server yet.",
+    };
+  }
+  if (!res.ok) {
+    return {
+      code: "package_unavailable",
+      message: `Package server returned ${res.status}`,
+    };
+  }
+  const body = (await res.json()) as {
+    versions: VersionEntry[];
+    inventory: ListVersionsResult["inventory"];
+    paths_version?: number;
+  };
+  return {
+    versions: body.versions,
+    inventory: body.inventory,
+    paths_version: body.paths_version ?? getPathsVersion(),
+  };
+}
 
-  const cacheKey = `${parsed.owner}/${parsed.repo}`;
+export async function listVersions(
+  options: ListVersionsOptions = {},
+): Promise<CallToolResult> {
+  if (override) return override();
+
+  const channel = options.channel ?? "http";
+  const cacheKey = channel === "http" ? "cache-local" : getSddServerUrl();
   const now = Date.now();
   if (cache && cache.key === cacheKey && cache.expiresAt > now) {
     return toolOk(cache.payload);
   }
 
-  try {
-    const port = getGitHubPortForRepo(parsed.owner);
-    const [tags, tree] = await Promise.all([
-      port.listRepoTags(parsed.owner, parsed.repo),
-      fetchRepoTree(parsed.owner, parsed.repo),
-    ]);
-    const versions =
-      tags.length > 0 ? tags : [{ id: "main" } satisfies VersionEntry];
-    const payload: ListVersionsResult = {
-      versions,
-      inventory: inventoryFromTree(tree),
-      paths_version: getPathsVersion(),
-    };
+  if (channel === "http") {
+    const payload = fromManifest();
+    if (!payload) {
+      return toolError(
+        "package_unavailable",
+        "Package sync has not run yet. Trigger sync from Settings or POST /api/admin/sync.",
+      );
+    }
     cache = { key: cacheKey, payload, expiresAt: now + CACHE_TTL_MS };
     return toolOk(payload);
-  } catch (error) {
-    if (
-      error instanceof GitHubSyncError ||
-      error instanceof GitHubConfigError
-    ) {
-      return toolError("package_unavailable", error.message);
-    }
-    throw error;
   }
+
+  const fetched = await fetchVersionsFromServer();
+  if ("code" in fetched) {
+    return toolError(fetched.code, fetched.message);
+  }
+  cache = { key: cacheKey, payload: fetched, expiresAt: now + CACHE_TTL_MS };
+  return toolOk(fetched);
 }

@@ -48,15 +48,15 @@
           <p class="callout-body" data-i18n="errors.settings_url_unreachable">GitHub repository could not be reached. The URL was not changed.</p>
         </div>
         <form class="form" data-settings-form style="max-width: 32rem">
-          <label>
-            <span data-i18n="admin.settings.url">Repository URL</span>
+          <label class="settings-url-field">
+            <span class="section-subtitle" data-i18n="admin.settings.url">Repository URL</span>
             <input
               type="url"
               name="url"
               data-settings-url
               data-testid="settings-url"
               required
-              placeholder="https://github.com/org/sdd-framework"
+              placeholder="https://github.com/your-org/your-repo"
               value="https://github.com/org/sdd-framework"
             />
           </label>

@@ -186,8 +186,12 @@
     }
     if (params.get("empty") === "1") {
       var tree = document.querySelector("[data-framework-tree]");
+      var treeLabel = document.querySelector("[data-framework-tree-label]");
       var fwEmpty = document.querySelector("[data-framework-empty]");
+      var fwRepo = document.querySelector("[data-framework-repo]");
       if (tree) tree.hidden = true;
+      if (treeLabel) treeLabel.hidden = true;
+      if (fwRepo) fwRepo.hidden = true;
       if (fwEmpty) fwEmpty.hidden = false;
     }
     var mode = params.get("mode");
