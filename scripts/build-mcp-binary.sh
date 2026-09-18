@@ -4,6 +4,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+bash "$ROOT/scripts/gen-mcp-mark-embed.sh"
+
 ENTRY="src/mcp/stdio.ts"
 OUT_DIR="${OUT_DIR:-dist}"
 mkdir -p "$OUT_DIR"

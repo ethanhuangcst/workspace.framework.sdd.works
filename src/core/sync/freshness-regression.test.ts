@@ -216,7 +216,7 @@ describe("freshness regression — HTTP install (F1, F5, F9)", () => {
   it("F1: local manifest matches repo but files deleted — never already_up_to_date", async () => {
     seedCache("sha-same", "main", ["tdd", "atdd"]);
     const home = mkdtempSync(join(tmpdir(), "sdd-home-f1-"));
-    writeLocalManifest("sha-same", "main", ["tdd", "atdd", "dod"]);
+    writeLocalManifest(home, "sha-same", "main", ["tdd", "atdd", "dod"]);
     // Skills deleted on disk — only manifest remains.
 
     const body = await httpInstall(home, {
@@ -265,7 +265,7 @@ describe("freshness regression — HTTP install (F1, F5, F9)", () => {
     });
 
     const home = mkdtempSync(join(tmpdir(), "sdd-home-f5-"));
-    writeLocalManifest("sha-old", "main", ["tdd"]);
+    writeLocalManifest(home, "sha-old", "main", ["tdd"]);
 
     const body = await httpInstall(home, {
       installed_commit: "sha-old",

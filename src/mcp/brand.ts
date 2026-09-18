@@ -1,5 +1,7 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { MCP_MARK_BASE64 } from "./generated/mcp-mark-base64";
 
 export type McpIcon = {
   src: string;
@@ -7,29 +9,62 @@ export type McpIcon = {
   sizes?: string[];
 };
 
-function pngDataUri(relativePublicPath: string): string | null {
+const MCP_DIR = dirname(fileURLToPath(import.meta.url));
+const MCP_MARK_RELATIVE = join("assets", "sdd-mark.png");
+
+/** Absolute path to the square MCP list icon shipped beside MCP source. */
+export function resolveMcpMarkPath(): string {
+  return join(MCP_DIR, MCP_MARK_RELATIVE);
+}
+
+function readMarkBytes(): Buffer | null {
+  const candidates = [
+    resolveMcpMarkPath(),
+    join(MCP_DIR, "..", "..", "public", "sdd-mark.png"),
+    join(process.cwd(), "public", "sdd-mark.png"),
+  ];
+  for (const path of candidates) {
+    try {
+      return readFileSync(path);
+    } catch {
+      /* try next */
+    }
+  }
   try {
-    const abs = join(process.cwd(), "public", relativePublicPath);
-    const buf = readFileSync(abs);
-    return `data:image/png;base64,${buf.toString("base64")}`;
+    return Buffer.from(MCP_MARK_BASE64, "base64");
   } catch {
     return null;
   }
 }
 
+/** Small PNG data URI fallback when clients cannot fetch HTTPS assets. */
+export function getMcpMarkDataUri(): string | null {
+  const buf = readMarkBytes();
+  if (!buf) return null;
+  return `data:image/png;base64,${buf.toString("base64")}`;
+}
+
 /**
- * Same brand assets as the admin portal (`public/sdd-logo.png`, `sdd-mark.png`).
- * Data URIs so Cursor can render icons without fetching the portal host.
+ * Square SDD mark for MCP Connected-list tiles.
+ * HTTPS URL first (clients fetch); compact data URI fallback (stdio / offline).
+ * Do not use the wide portal wordmark here — it does not read at 16–24px.
  */
 export function getMcpBrandIcons(): McpIcon[] {
-  const icons: McpIcon[] = [];
-  const mark = pngDataUri("sdd-mark.png");
-  const logo = pngDataUri("sdd-logo.png");
-  if (mark) {
-    icons.push({ src: mark, mimeType: "image/png", sizes: ["128x128"] });
-  }
-  if (logo) {
-    icons.push({ src: logo, mimeType: "image/png", sizes: ["663x369"] });
+  const base = getMcpWebsiteUrl().replace(/\/$/, "");
+  const icons: McpIcon[] = [
+    {
+      src: `${base}/sdd-mark.png`,
+      mimeType: "image/png",
+      sizes: ["128x128", "48x48"],
+    },
+  ];
+  const dataUri = getMcpMarkDataUri();
+  if (dataUri) {
+    icons.push({
+      src: dataUri,
+      mimeType: "image/png",
+      sizes: ["128x128"],
+    });
   }
   return icons;
 }

@@ -52,6 +52,28 @@ describe("createSddMcpServer tool contracts", () => {
     expect(names).not.toContain("sdd_get_key");
     const init = client.getServerVersion();
     expect(init?.name).toBe("framework.sdd.works");
+    expect(init?.icons?.length).toBeGreaterThanOrEqual(2);
+    expect(init?.icons?.[0]?.src).toMatch(/^https?:\/\/.+\/sdd-mark\.png$/);
+    expect(init?.icons?.[1]?.src.startsWith("data:image/png;base64,")).toBe(
+      true,
+    );
+    await client.close();
+    await server.close();
+  });
+
+  it("should_advertise_brand_icons_on_http_initialize", async () => {
+    const server = createSddMcpServer({ channel: "http", authorized: true });
+    const [clientTransport, serverTransport] =
+      InMemoryTransport.createLinkedPair();
+    const client = new Client({ name: "test", version: "0.0.0" });
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+    const init = client.getServerVersion();
+    expect(init?.icons?.length).toBeGreaterThanOrEqual(2);
+    expect(init?.icons?.[0]?.src).toMatch(/^https?:\/\/.+\/sdd-mark\.png$/);
+    expect(init?.icons?.[1]?.src.startsWith("data:image/png;base64,")).toBe(
+      true,
+    );
     await client.close();
     await server.close();
   });

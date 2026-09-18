@@ -250,6 +250,12 @@ describe("sync scenarios (fixture S2–S5, M1)", () => {
           commitSha: sha,
           version: "main",
         }),
+        sync: async () => ({
+          status: "synced",
+          commitSha: sha,
+          version: "main",
+        }),
+        clearVersionsCache: () => {},
       });
 
       const home = mkdtempSync(join(tmpdir(), "sdd-m1-home-"));
