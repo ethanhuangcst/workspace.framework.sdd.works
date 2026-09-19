@@ -624,7 +624,7 @@ services:
       GITHUB_TOKEN: ${GITHUB_TOKEN:?set GITHUB_TOKEN}
       GITHUB_API_HOST: ${GITHUB_API_HOST:-api.github.com}
       GITHUB_API_BASE_URL: ${GITHUB_API_BASE_URL:-https://api.github.com}
-      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:?set MCP_AUTH_TOKEN}
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:-}
       MCP_HTTP_HOST: "0.0.0.0"
       MCP_HTTP_PORT: "3041"
       MCP_HTTP_PATH: /mcp

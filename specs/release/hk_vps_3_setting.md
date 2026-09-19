@@ -2,7 +2,7 @@
 
 > **节点**：野草云3 · `38.55.192.140`  
 > **角色**：应用/边缘节点（标准平台层 + 多应用共存）  
-> **采集**：SSH 实机只读快照 · **as_of: 2026-08-20**（places-agent 上线后；kb 段仍以 2026-08-12 为准）  
+> **采集**：SSH 实机只读快照 · **as_of: 2026-09-18**（framework-sdd-works 隔离检查；media-mkt web 已在跑；kb 段 2026-08-12；places-agent 2026-08-20）  
 > **原则**：本文件不写密码 / Token；凭证仅存本机密钥库。  
 > **姊妹节点蓝图**：[`../svr_hk_vps_4/hk_vps_4_settings.md`](../svr_hk_vps_4/hk_vps_4_settings.md)（目标与本文平台层同构）。
 
@@ -46,7 +46,7 @@
 | `places-agent` | 运行中 | `places.agent-mate.ai` | 外部 Postgres `…/places_agent` |
 | `what2eat` | 未部署（端口/域名已规划） | `what2eat.food` | 外部 Postgres `…/what2eat` |
 | `where2play` | 未部署（端口/域名已规划） | `where2play.place` | 库 TBD（勿复用 `places_agent` / `what2eat`） |
-| `media-mkt-agent` | 未部署（端口/域名已规划） | `media.mkt-agent.ai` | 外部 Postgres `…/media_marketing`（schema `mia`） |
+| `media-mkt-agent` | 运行中（至少 web） | `media.mkt-agent.ai` | 外部 Postgres `…/media_marketing`（schema `mia`） |
 | `framework-sdd-works` | 未部署（端口/域名已规划） | `framework.sdd.works` | 外部 Postgres `…/framework_sdd` |
 
 ---
@@ -98,7 +98,7 @@ Redirection / Dead / Stream hosts：空。
 | --- | --- | --- | --- | --- | --- |
 | `hcp-engagement-agent` | 运行中 | `hcp.agent-mate.ai` | 3001 / 3200 / `127.0.0.1:6333` | `/data/compose/12/data` | MySQL `38.55.199.241:3306/hca` |
 | `mypoke-trade` | 运行中 | `mypoke.trade` (+ www) | 3002 / 6335 / 3201 | volumes + `/opt/mypoke-trade` | Postgres `101.132.156.250:5432/mypoke_trade_prod` |
-| `media-mkt-agent` | **未部署**（已规划） | `media.mkt-agent.ai`（DNS 已指本机） | **预留 `3003`** | 计划 `/opt/social-media-mkt/data` | Postgres `101.132.156.250:5432/media_marketing`（schema `mia`） |
+| `media-mkt-agent` | **运行中**（2026-09-18 见 web 容器） | `media.mkt-agent.ai` | **`3003→3000`** | 计划 `/opt/social-media-mkt/data` | Postgres `101.132.156.250:5432/media_marketing`（schema `mia`） |
 | `kb-agent` | **运行中**（2026-08-12） | `kb.agent-mate.ai` | **`3006` / `3202` / `3203` / `127.0.0.1:6336`** | volumes `kb_qdrant_data` / `kb_blob_data` | Postgres `101.132.156.250:5432/kb_agent` |
 | `what2eat` | **未部署**（已规划） | `what2eat.food` | **预留 `3004→3000`** | — | Postgres `101.132.156.250:5432/**what2eat**`（专用库） |
 | `where2play` | **未部署**（已规划） | `where2play.place` | **预留 `3005→3000`** | TBD | TBD |
@@ -150,16 +150,19 @@ Redirection / Dead / Stream hosts：空。
 
 ---
 
-### 4.3 `media-mkt-agent`（规划中，节点上尚无容器）
+### 4.3 `media-mkt-agent`（web 已在跑；2026-09-18 `docker ps`）
 
-| 项 | 规划值 |
+| 服务 | 容器 | 镜像 | 映射 | 角色 |
+| --- | --- | --- | --- | --- |
+| web | `media-mkt-agent-web` | `ghcr.io/ethanhuangcst/media-marketing-agent/web:latest` | **`3003→3000`** | Next/BFF（本快照仅见此容器） |
+
+| 项 | 值 |
 | --- | --- |
-| Stack / slug | `media-mkt-agent` |
-| 域名 | `media.mkt-agent.ai`（A → `38.55.192.140` 已确认） |
-| 主机端口 | **`3003→3000`**（尚未监听） |
-| 数据卷 | `/opt/social-media-mkt/data`（`MCP_DATA_DIR`） |
-| 主库（外部） | Postgres `101.132.156.250:5432` / **`media_marketing`** + schema **`mia`**（已建；勿碰 `media_crawler_mcp`） |
+| 域名 | `media.mkt-agent.ai`（A → `38.55.192.140`） |
+| 数据卷 | `/opt/social-media-mkt/data`（`MCP_DATA_DIR`，未在本次 `docker ps` 核验） |
+| 主库（外部） | Postgres `101.132.156.250:5432` / **`media_marketing`** + schema **`mia`**（勿碰 `media_crawler_mcp`） |
 | 形态 | 单进程 Next + 内嵌 MCP；需 Chromium + xvfb |
+| 隔离 | **`3003` 已占用** — framework-sdd-works 不得使用 |
 
 ---
 
@@ -282,7 +285,7 @@ Admin portal（Keys / Settings / Framework 缓存树 / 账户）+ **Streamable H
 | 8000 / 9443 | `*` | Portainer | Edge / UI |
 | 3001 | `*` | hcp web | |
 | 3002 | `*` | mypoke web | |
-| **3003** | — | **预留 media-mkt-agent** | 当前空闲 |
+| **3003** | `*` | **media-mkt-agent web** | **占用** `3003→3000`（2026-09-18） |
 | **3004** | — | **预留 places what2eat** | 规划 `3004→3000`；NPM → `what2eat-web:3000` |
 | **3005** | — | **预留 places where2play** | 规划 `3005→3000` |
 | **3006** | `*` | **kb-agent web** | `3006→3000` |
@@ -336,7 +339,7 @@ places-agent **无** named volume（库在阿里云 `places_agent`）。framewor
 | --- | --- | --- | --- | --- |
 | MySQL | `38.55.199.241:3306` | `hca` | hcp-engagement-agent | 独立 DB 机 |
 | Postgres | `101.132.156.250:5432` | `mypoke_trade_prod` | mypoke-trade | 阿里云 |
-| Postgres | `101.132.156.250:5432` | `media_marketing` / `mia` | media-mkt-agent | 已建库；应用未上线 |
+| Postgres | `101.132.156.250:5432` | `media_marketing` / `mia` | media-mkt-agent | 已建库；web 容器已在野草云3 |
 | Postgres | `101.132.156.250:5432` | `media_crawler_mcp` | （其它） | **勿给生产 media 复用** |
 | Postgres | `101.132.156.250:5432` | **`kb_agent`** | kb-agent | Alembic 已用 |
 | Postgres | `101.132.156.250:5432` | **`what2eat`** | what2eat（未部署） | 专用库；勿复用 kb/mypoke/media/`places_agent` |
@@ -365,7 +368,7 @@ places-agent **无** named volume（库在阿里云 `places_agent`）。framewor
 | --- | --- |
 | `root_nginx-proxy-manager_1` | 172.18.0.2 |
 | `portainer` | 172.18.0.3 |
-| HCP / mypoke / kb / **places-agent** / **framework-sdd-works**（规划）各容器 | 以 `docker network inspect portainer_network` 为准 |
+| HCP / mypoke / kb / places-agent / **media-mkt-agent-web** / **framework-sdd-works**（规划）各容器 | 以 `docker network inspect portainer_network` 为准 |
 
 IP 仅作排障参考；NPM 上游应使用**容器名**，不要写死旧 IP。
 
@@ -375,7 +378,7 @@ IP 仅作排障参考；NPM 上游应使用**容器名**，不要写死旧 IP。
 
 1. **只改目标 Stack / 对应 NPM Host / 对应 DNS**；禁止删建 `portainer_network`。  
 2. NPM 上 `hcp.agent-mate.ai` 有两条 Host（IP vs 容器名）——清理时勿碰其他域名。  
-3. `media.mkt-agent.ai` DNS 已指本机，Stack/端口 **3003** 尚未部署。  
+3. `media.mkt-agent.ai`：容器 `media-mkt-agent-web` 占用主机 **3003**；勿再预留为空闲。  
 4. `kb.agent-mate.ai`：Stack recreate 后 NPM 再 Save；验 `/healthz`。  
 5. `places.agent-mate.ai`：单容器 `places-agent:3000`；recreate 后 NPM 再 Save；验 `GET /v1/health`。主机 `3007` 仅 debug。勿给 MCP 加 Custom Locations。  
 6. 规划中的 `what2eat`（`3004`）与 `where2play`（`3005`）勿占用 `3007`；agent 同网 URL 用容器名 `places-agent:3000`。  
@@ -388,7 +391,7 @@ IP 仅作排障参考；NPM 上游应使用**容器名**，不要写死旧 IP。
 
 ## 11. 来源
 
-- 实机：`38.55.192.140`（2026-08-10 SSH；kb 段 2026-08-12；places-agent 2026-08-20；framework-sdd-works 规划 2026-09-18）  
+- 实机：`38.55.192.140`（2026-08-10 SSH；kb 段 2026-08-12；places-agent 2026-08-20；隔离刷新 2026-09-18：media-mkt web 在跑；framework-sdd-works 仍未部署，`3008`/`3204` 空闲）  
 - 任务：`Release-jobs/mypoke.trade/`、`Release-jobs/media-marketing-agent/`、`Release-jobs/kb.agent-mate.ai/`、`Release-jobs/places.family/`、`specs/release/framework-sdd-works-deployment-instruction.md`  
 - 手册：`knowledge/03-semi-auto-release.md`、`knowledge/09-isolation-safety.md`  
 - ADR：`specs/adr/ADR-002-…`、`specs/adr/ADR-003-…`
