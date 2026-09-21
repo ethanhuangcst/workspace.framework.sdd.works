@@ -3,7 +3,7 @@
 **Batch:** MVP-6 · **Status:** Done  
 **Updated:** 2026-09-18  
 **Accepted:** 2026-09-18 (Cursor HTTP install + LE1–LE5 live GitHub E2E)  
-**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md) · **MCP design:** [`mcp/mcp-design.md`](./mcp/mcp-design.md)
+**Backlog:** [`r1-product-backlog.md`](./r1-product-backlog.md) · **Req:** [`r1-req-spec.md`](./r1-req-spec.md) · **Tech:** [`r1-tech-spec.md`](./r1-tech-spec.md) · **MCP design:** [`mcp/mcp-design.md`](../mcp/mcp-design.md)
 
 ## Goal
 
@@ -13,12 +13,12 @@ A Cursor user can install the SDD framework locally and update it to a chosen ve
 
 | Feature | Name | Stories |
 | --- | --- | --- |
-| MCPI-04 | Qwen path discovery | [path-llm](./mcp/mcp-stories.md#sdd-mcp-path-llm) |
-| MCPI-05 | Client path detection | [path-detect](./mcp/mcp-stories.md#sdd-mcp-path-detect) |
-| MCPI-01 | `sdd_install_framework` (stdio, Cursor) | [install](./mcp/mcp-stories.md#sdd-mcp-install) |
-| MCPU-01 | `sdd_update_framework` (stdio, Cursor) | [update](./mcp/mcp-stories.md#sdd-mcp-update) |
-| SYNK-01 | Server-side framework sync | [sync-job](./mcp/mcp-stories.md#sdd-mcp-sync-job) |
-| PKAPI-01 | Package REST API | [package-api](./mcp/mcp-stories.md#sdd-mcp-package-api) |
+| MCPI-04 | Qwen path discovery | [path-llm](../mcp/mcp-stories.md#sdd-mcp-path-llm) |
+| MCPI-05 | Client path detection | [path-detect](../mcp/mcp-stories.md#sdd-mcp-path-detect) |
+| MCPI-01 | `sdd_install_framework` (stdio, Cursor) | [install](../mcp/mcp-stories.md#sdd-mcp-install) |
+| MCPU-01 | `sdd_update_framework` (stdio, Cursor) | [update](../mcp/mcp-stories.md#sdd-mcp-update) |
+| SYNK-01 | Server-side framework sync | [sync-job](../mcp/mcp-stories.md#sdd-mcp-sync-job) |
+| PKAPI-01 | Package REST API | [package-api](../mcp/mcp-stories.md#sdd-mcp-package-api) |
 
 ## Delivery order
 
@@ -37,7 +37,7 @@ A Cursor user can install the SDD framework locally and update it to a chosen ve
 - Decide merge vs overwrite (req-spec open question) before coding write policy. **DECIDED: manifest-tracked merge (ADR-048)** — see `mcp-design.md` § Write policy.
 - Client detection vs explicit `client` argument — Cursor-first; prefer explicit `client` when ambiguous (MCPI-05 + ADR-047).
 - Operator fills `QWEN_*` in `.env.local` / Portainer (`protect-eng` — do not rewrite env without confirmation).
-- Knowledge: [`mcp/client.paths.md`](./mcp/client.paths.md).
+- Knowledge: [`mcp/client.paths.md`](../mcp/client.paths.md).
 
 ## Out of scope this sprint
 
@@ -67,14 +67,14 @@ A Cursor user can install the SDD framework locally and update it to a chosen ve
 
 ## Design
 
-- [mcp-design.md](./mcp/mcp-design.md) · [mcp-stories.md](./mcp/mcp-stories.md) · [mcp-test.md](./mcp/mcp-test.md)
+- [mcp-design.md](../mcp/mcp-design.md) · [mcp-stories.md](../mcp/mcp-stories.md) · [mcp-test.md](../mcp/mcp-test.md)
 
 ## Deferred to Sprint 7
 
 Verification and scope items not required to close MVP-6 — see [`sprint7-plan.md`](./sprint7-plan.md) § Carried from Sprint 6:
 
-- Mac live stdio path E2E ([`mcp-test.md`](./mcp/mcp-test.md) §5 Tests 1–5; field `clientInfo.name` observation)
-- Manual operator scenarios M1–M2 ([`mcp-test.md`](./mcp/mcp-test.md) §7.4)
+- Mac live stdio path E2E ([`mcp-test.md`](../mcp/mcp-test.md) §5 Tests 1–5; field `clientInfo.name` observation)
+- Manual operator scenarios M1–M2 ([`mcp-test.md`](../mcp/mcp-test.md) §7.4)
 - Sync E2E S2–S5 (rename/delete/GitHub-down scenarios beyond LE1–LE5)
 - MCPI-05 env matrix: Copilot (`COPILOT_*`), OpenCode (`XDG_DATA_HOME`), `CLINE_DATA_DIR`
-- Cross-client install beyond Cursor-first ([`MCPI-02`](./mcp/mcp-stories.md#sdd-mcp-cross-client))
+- Cross-client install beyond Cursor-first ([`MCPI-02`](../mcp/mcp-stories.md#sdd-mcp-cross-client))

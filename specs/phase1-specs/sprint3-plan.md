@@ -2,7 +2,7 @@
 
 **Batch:** MVP-3 · **Status:** Done  
 **Updated:** 2026-09-14  
-**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
+**Backlog:** [`r1-product-backlog.md`](./r1-product-backlog.md) · **Req:** [`r1-req-spec.md`](./r1-req-spec.md) · **Tech:** [`r1-tech-spec.md`](./r1-tech-spec.md)
 
 ## Goal
 
@@ -12,7 +12,7 @@ An admin can create, view, edit, and delete keys (name, description, value); lis
 
 | Feature | Name | Stories | Status |
 | --- | --- | --- | --- |
-| KEYS-01 | Keys CRUD | [keys](./admin-portal/app-stories.md#sdd-admin-keys) | **Done** |
+| KEYS-01 | Keys CRUD | [keys](../admin-portal/app-stories.md#sdd-admin-keys) | **Done** |
 
 ## Delivery order
 
@@ -38,9 +38,9 @@ An admin can create, view, edit, and delete keys (name, description, value); lis
 
 ## Design / mockups
 
-- [app-design.md](./admin-portal/app-design.md) · [06-keys](./admin-portal/ui-mockup/06-keys.html) · [07-key-new](./admin-portal/ui-mockup/07-key-new.html) · [09-key-edit](./admin-portal/ui-mockup/09-key-edit.html)
+- [app-design.md](../admin-portal/app-design.md) · [06-keys](../admin-portal/ui-mockup/06-keys.html) · [07-key-new](../admin-portal/ui-mockup/07-key-new.html) · [09-key-edit](../admin-portal/ui-mockup/09-key-edit.html)
 
 ## Retrospective
 
-- ADR: [`ADR-048-keys-encryption-at-rest.md`](./adr/ADR-048-keys-encryption-at-rest.md)
-- Knowledge: [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md) (Keys validation / UX)
+- ADR: [`ADR-048-keys-encryption-at-rest.md`](../adr/ADR-048-keys-encryption-at-rest.md)
+- Knowledge: [`knowledge/agent/admin-portal-seed-and-logo.md`](../knowledge/agent/admin-portal-seed-and-logo.md) (Keys validation / UX)

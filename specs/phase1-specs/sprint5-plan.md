@@ -3,7 +3,7 @@
 **Batch:** MVP-5 · **Status:** Done  
 **Updated:** 2026-09-17  
 **Accepted:** 2026-09-17 (operator confirmed usable in Cursor)  
-**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md) · **MCP design:** [`mcp/mcp-design.md`](./mcp/mcp-design.md)
+**Backlog:** [`r1-product-backlog.md`](./r1-product-backlog.md) · **Req:** [`r1-req-spec.md`](./r1-req-spec.md) · **Tech:** [`r1-tech-spec.md`](./r1-tech-spec.md) · **MCP design:** [`mcp/mcp-design.md`](../mcp/mcp-design.md)
 
 ## Goal
 
@@ -13,10 +13,10 @@ A supported MCP client can connect (stdio and Streamable HTTP), list framework v
 
 | Feature | Name | Stories | Status |
 | --- | --- | --- | --- |
-| TRAN-01 | MCP bootstrap (stdio) | [stdio](./mcp/mcp-stories.md#sdd-mcp-transport-stdio) | **Done** |
-| TRAN-02 | MCP bootstrap (Streamable HTTP `/mcp`) | [http](./mcp/mcp-stories.md#sdd-mcp-transport-http) | **Done** |
-| MCPL-01 | `sdd_list_versions` | [list](./mcp/mcp-stories.md#sdd-mcp-list-versions) | **Done** |
-| MCPK-01 | `sdd_get_key` | [get_key](./mcp/mcp-stories.md#sdd-mcp-get-key) | **Done** |
+| TRAN-01 | MCP bootstrap (stdio) | [stdio](../mcp/mcp-stories.md#sdd-mcp-transport-stdio) | **Done** |
+| TRAN-02 | MCP bootstrap (Streamable HTTP `/mcp`) | [http](../mcp/mcp-stories.md#sdd-mcp-transport-http) | **Done** |
+| MCPL-01 | `sdd_list_versions` | [list](../mcp/mcp-stories.md#sdd-mcp-list-versions) | **Done** |
+| MCPK-01 | `sdd_get_key` | [get_key](../mcp/mcp-stories.md#sdd-mcp-get-key) | **Done** |
 
 ## Delivery order
 
@@ -28,7 +28,7 @@ A supported MCP client can connect (stdio and Streamable HTTP), list framework v
 ## Dependencies
 
 - **Requires Sprint 3** (KEYS-01) and **Sprint 4** (SETT-01 / FRMW package source).
-- Auth: [ADR-049](./adr/ADR-049-mcp-http-bearer-auth.md).
+- Auth: [ADR-049](../adr/ADR-049-mcp-http-bearer-auth.md).
 
 ## Out of scope this sprint
 
@@ -53,5 +53,5 @@ Tool names (locked): `sdd_install_framework`, `sdd_update_framework`, `sdd_list_
 ## Retrospective
 
 - Confirmed in Cursor over Streamable HTTP: `sdd_list_versions` + `sdd_get_key`.
-- ADRs: [ADR-049](./adr/ADR-049-mcp-http-bearer-auth.md), [ADR-050](./adr/ADR-050-mcp-http-optional-bearer.md).
+- ADRs: [ADR-049](../adr/ADR-049-mcp-http-bearer-auth.md), [ADR-050](../adr/ADR-050-mcp-http-optional-bearer.md).
 - Next: Sprint 6 (`MCPI-01`, `MCPU-01`, `MCPI-04`).

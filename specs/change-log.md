@@ -1,244 +1,30 @@
-# Change log — framework.sdd.works
+# Change log (framework.sdd.works)
 
-Track notable product, spec, and repo changes. Newest first.  
-Source of truth for scope: [`product-backlog.md`](./product-backlog.md). Sprint plans: [`sprint1-plan.md`](./sprint1-plan.md)–[`sprint7-plan.md`](./sprint7-plan.md).
-
-Format: `YYYY-MM-DD` · area · summary. Do not put secrets here.
+> This file records conclusion-level changes for Phase 2: what changed, why, and how it was verified.
+> Step-by-step detail stays in `git log` and in each spec. This file does not replace any spec.
+> **Scope**: [`product-backlog.md`](./product-backlog.md) · [`sprint-plan.md`](./sprint-plan.md) · [`artifacts-map.md`](./artifacts-map.md) · [`sdd-scrum-practices.md`](./sdd-scrum-practices.md)
+> Phase 1 history stays in git and [`phase1-specs/`](./phase1-specs/). Do not put secrets here.
 
 ---
 
-## 2026-09-18
+## 2026-09-21
 
-### Framework tree — dirs-before-files sort
+### Phase 2 backlog split into install, practices, templates, skills, coach-ethan, and Instructions
 
-- SYNK cache tree (`buildTreeFromUnpacked`) sorts directories before files, then by name at each level (matches GitHub tree builder).
-- Specs: `app-design.md`, `app-stories.md` AC4b; test: `cache-tree.test.ts`.
+**Why**: One coach item and a wide template list hid the practices file, the six process skills, and the Instructions page. coach-ethan presence was being treated as already chosen.
 
-### Framework tree — one-level default expand (FRMW-02 UX)
+**What changed**: [`product-backlog.md`](./product-backlog.md) now has PRACTICES-01, SKILLS-01, and INSTRUCT-01. TEMPLATES-01 is the four process files only. COACH-01 is coach-ethan (prompt, spike, presence TBD). Sprint 2 lists those stories as ToDo. [D1](./sprint-plan.md#rid-d1) records the MCP-vs-local dependency as Pending.
 
-- Top-level artifact dirs (Agents, Rules, Skills, …) expand one level on load; children indented under each folder; deeper dirs stay collapsible.
-- Tests: `framework-tree-utils.test.ts`, `e2e/settings-framework.spec.ts`.
+**Verification**: Each new requirement in the backlog overview has a backlog row (pb-2 through pb-7). Sprint 2 has a matching ToDo row. No application code, skill files, or Instructions UI were changed.
 
-### MVP-7 closed (Sprint 7)
+**Boundary**: This does not implement install, write `sdd-scrum-practices.md` as the Scrum framework, or pick MCP vs local.
 
-- **Status:** Done — cache-backed Framework page (FRMW-02), force sync (`POST /api/admin/sync { force: true }`), collapsible tree, MCPI-05+ env matrix, MCPI-02 paths v3, automated VERIF (path-e2e + sync-scenarios), I18N-02 MCP tool descriptions.
-- **Portal:** `GET /api/admin/framework` reads SYNK-01 unpacked cache (no live Octokit); `cache_missing` when settings set but no manifest.
-- **Paths:** `paths.json` v3 adds cline, codex, copilot, gemini, kiro, continue, windsurf, opencode × darwin/linux/win32.
-- **Verification:** `path-e2e.test.ts`, `sync-scenarios.test.ts`, `e2e/settings-framework.spec.ts` (5/5 green).
+### Phase 2 specs use the new process shape
 
-### MVP-6 closed (Sprint 6)
+**Why**: Phase 1 Scrum files and the copied sample product cannot both be the live backlog. Phase 2 needs process files that can take new stories.
 
-- **Status:** Done — Cursor install/update (stdio + HTTP hybrid ADR-054), path detect (MCPI-05), Qwen fallback (MCPI-04), server sync (SYNK-01), package API (PKAPI-01), prompt setup (SETUP-01).
-- **HTTP portable paths:** production HTTP returns unexpanded `~/.cursor…` templates via `resolveTemplates`; no server-side env/LLM probe.
-- **Verification:** fixture CI + freshness regression green; LE1–LE5 live GitHub E2E green (`test.sdd`).
-- **Deferred to Sprint 7:** Mac live stdio path E2E (§5), manual M1–M2, sync S2–S5, Copilot/XDG env matrix, cross-client MCPI-02 — see [`sprint7-plan.md`](./sprint7-plan.md).
+**What changed**: Phase 1 Scrum files stay archived under [`phase1-specs/`](./phase1-specs/). Live [`product-backlog.md`](./product-backlog.md), [`sprint-plan.md`](./sprint-plan.md), and [`artifacts-map.md`](./artifacts-map.md) now describe framework.sdd.works Phase 2 only (SPEC-01 done; ARTIFACTS-01, COACH-01, TEMPLATES-01 not started). Earlier portal and MCP entries were removed from this log.
 
-### Layered sync freshness (ADR-055)
+**Verification**: Live process files contain no sample-product rows. `*-old.md` copies are deleted. Links among backlog, sprint plan, and artifacts map resolve.
 
-- **Layer 1:** `POST /api/github/webhook` — HMAC `GITHUB_WEBHOOK_SECRET`; `push` and `release` call `syncFrameworkRepo`.
-- **Layer 2:** `instrumentation.ts` 30-min interval + `POST /api/sync/cron` (`CRON_SECRET` bearer) as backup.
-- **Layer 3:** HTTP install compares cache to live GitHub tip; syncs when different; returns `cache_synced_at`, `cache_age_minutes`, `cache_stale`.
-- Install instructions: AI verifies local files before passing `installed_commit`.
-- Tests: webhook route, cron route, ensure-cache-fresh, install freshness regression.
-
-### Hybrid HTTP MCP + AI tarball extraction (ADR-054)
-
-- **Primary end-user path:** HTTP MCP URL only (`"url": "https://framework.sdd.works/mcp"`). No binary in mcp.json.
-- **Prompt-based setup (SETUP-01):** `GET /agent-setup` serves markdown; users paste one prompt in Cursor.
-- **HTTP install/update:** `sdd_install_framework` returns `packageUrl`, paths, manifest, instructions; AI runs `curl | tar` locally.
-- Stdio + curl installer remain for dev contributors and fallback.
-- Supersedes end-user distribution from ADR-051/053; stdio dev path unchanged.
-
-### One-line installer + binary verification
-
-- `scripts/install.sh` — `curl -fsSL https://framework.sdd.works/install | sh` detects OS/arch, downloads binary to `~/.sdd/sdd-mcp`, writes `~/.cursor/mcp.json` entry automatically. No manual path entry.
-- `GET /api/install` serves the install script.
-- Verified Bun-compiled binary responds to MCP `initialize` (serverInfo, icons, tool list) — 61 MB, zero runtime deps.
-- Instructions page shows one command instead of manual binary path config.
-
-### Server-side sync + thin stdio client (ADR-053)
-
-- **SYNK-01:** Sync job fetches GitHub repo → `.data/sdd-packages/<commit-sha>/` + manifest. Triggers: admin sync, webhook, scheduled sync (ADR-055).
-- **PKAPI-01:** Public `GET /api/sdd/versions`, `GET /api/sdd/package`. stdio binary fetches from operator REST API (`SDD_SERVER_URL`).
-- stdio no longer imports Prisma/GitHub; `sdd_get_key` HTTP-only. `package-fetch.ts` replaces client-side `package-resolve`.
-- Tests: sync-job, cache, package API, list-versions, package-fetch; opt-in E2E via `SDD_E2E_GITHUB_REPO`.
-
-### Commit SHA identity for install/update (ADR-052)
-
-- Manifest stores `package_commit` (resolved GitHub commit SHA). `already_up_to_date` requires matching SHA + ref label + intact files.
-- Same ref (`main`) with moved commit → manifest-tracked reinstall; renames/deletes in repo sync correctly.
-- `materializePackage` returns `{ commitSha }`; Octokit uses `repos.getCommit`. `sdd_list_versions` unchanged.
-
-## 2026-09-17
-
-### Zero-dep stdio MCP + manifest integrity (ADR-051)
-
-- **NFR-9:** client OS installs no runtime dependencies for stdio install/update; stdio MCP ships as Bun-compiled single executable per OS/arch (GitHub Releases on tags).
-- Dev path unchanged: `npm run mcp:stdio`. Build: `npm run mcp:build`. Instructions page shows binary download.
-- **Manifest integrity:** `already_up_to_date` only when manifest-listed files still exist; missing files trigger self-heal reinstall. Optional `force: true` on install/update.
-
-### Settings GitHub URL — tests no longer clobber operator DB
-
-- Root cause: vitest integration tests upserted `Setting.githubUrl` to `fixture/sdd-framework` on the shared Postgres used by `npm run dev`.
-- Tests restore previous `githubUrl` and `GITHUB_FIXTURE` after each run. SettingsForm syncs `savedUrl` and uses a generic URL placeholder.
-- DoD: fixture-only green is not enough to mark a feature Done.
-
-### MVP-6 implemented (Sprint 6) — automated DoD
-
-- **MCPI-04 / MCPI-05 / MCPI-01 / MCPU-01**: stdio install/update share one `installFramework` core (update is an alias). Manifest-tracked merge (`.sdd-installed.json`). Path detect: env → config → seed → Qwen.
-- PATH-01 map v2: cursor, codebuddy, trae, trae-cn, claude + agents/workflows/compat.
-- Tests: path-policy, path-detect, path-resolve-llm, install filesystem, MCP InMemoryTransport, freshness regression. **HTTP install (ADR-054):** returns `packageUrl` + portable `~` paths + AI extraction instructions — `local_install_required` deprecated on HTTP.
-
-### MCPI-05 — Client path detection (Sprint 6 scope)
-
-- Added feature **MCPI-05**: deterministic client path resolution (env vars + config probes + `clientInfo.name`) before Qwen + seed map.
-- Specs: product-backlog, sprint6-plan, mcp-stories (`sdd-mcp-path-detect`), mcp-design §4.4, [`mcp/mcp-test.md`](./mcp/mcp-test.md), [`admin-portal/app-test.md`](./admin-portal/app-test.md).
-- Knowledge: [`mcp/client.paths.md`](./mcp/client.paths.md).
-
-### Admin portal copy — Keys + Framework (implemented)
-
-- Keys lead: three bullets (`admin.keys.lead_1`–`lead_3`) in mockups + app (`KeysLeadList`, `portal.css`).
-- Framework: “Live sync with” / “framework.sdd.works GitHub repository”; Settings URL + “Change git repository in Settings.”; artifacts `section-subtitle` above tree.
-- Settings: “Repository URL” as section subtitle (no rule under label); underline mono `input[type=url]`.
-- Specs: [`admin-portal/app-design.md`](./admin-portal/app-design.md) aligned; catalogs en / zh-Hans / zh-Hant updated.
-
-### MVP-5 closed (Sprint 5)
-
-- Operator confirmed MCP discovery + key lookup **usable** in Cursor (DoD).
-- Features **Done**: TRAN-01, TRAN-02, MCPL-01, MCPK-01.
-- Verified: `sdd_list_versions` (versions/inventory/`paths_version`); `sdd_get_key` returns plaintext for stored `key_name`.
-- Install/update remain stubbed until Sprint 6.
-
-### ACCT-01 — Login rate limit removed
-
-- Operator request: remove admin login attempt rate limit (was 5 / 15 min in-memory).
-- Password-reset and invite throttles unchanged; `errors.rate_limited` retained for those routes.
-- Specs: ACCT-01 AC3 (too many failed sign-ins) dropped; backlog / tech-spec / app-design / sprint1-plan updated.
-
-## 2026-09-14
-
-### Sprint 5 — TRAN/MCPL/MCPK (implementation)
-
-- Shared MCP core (`src/core/tools`, `src/mcp/create-server.ts`); stdio + sibling Streamable HTTP on `:3041/mcp`.
-- ADR-049: HTTP bearer `MCP_AUTH_TOKEN` for all tools including `sdd_get_key`.
-- `sdd_list_versions` from Settings GitHub (tags + inventory + `paths_version`); `sdd_get_key` decrypts KEYS-01.
-- Install/update stubbed until Sprint 6.
-- Public `/instructions` guide; CI sets `MCP_AUTH_TOKEN` + `GITHUB_FIXTURE`.
-
-### MVP-4 closed (Sprint 4)
-
-- Operator confirmed Settings + Framework **usable** (DoD).
-- Features **Done**: SETT-01, FRMW-01.
-- Follow-up: `fixture/*` owner uses in-process GitHub fixture even when `GITHUB_TOKEN` is set (avoids E2E leftover URL 404s).
-- Knowledge: GitHub fixture notes in [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md). No new ADR.
-
-### Sprint 4 — SETT-01 + FRMW-01
-
-- Settings: dirty Save; validate `https://github.com/{owner}/{repo}`; reachability via injectable GitHub port; persist singleton `Setting.githubUrl` only on success.
-- Framework: read-only tree; 30s server TTL cache + 30s client poll; empty → Settings CTA; sync error keeps shell.
-- CI / Playwright: `GITHUB_FIXTURE=1` (no live `GITHUB_TOKEN` in default CI).
-- Webhook invalidation deferred.
-
-### MVP-3 closed (Sprint 3)
-
-- Operator confirmed Keys management **usable** (DoD).
-- Feature **Done**: KEYS-01.
-- Polish: create-form validation UX; lead copy for `sdd_get_key`; reject CJK in `key_value`.
-- ADR: [`ADR-048-keys-encryption-at-rest.md`](./adr/ADR-048-keys-encryption-at-rest.md). Knowledge: Keys validation notes in [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md).
-
-### Sprint 3 — KEYS-01
-
-- AES-256-GCM at-rest encryption (`KEYS_ENCRYPTION_KEY`); payload `v1:iv:tag:ciphertext`.
-- BFF: `GET/POST /api/admin/keys`, `GET/PATCH/DELETE /api/admin/keys/[id]`, bulk `POST /api/admin/keys/delete`.
-- UI: list wired to DB; `/admin/keys/new` and `/admin/keys/[id]` with RHF + Zod; Copy / Edit / Delete / bulk delete; `?saved=1` tip.
-- CI + Playwright set fixture `KEYS_ENCRYPTION_KEY`; unit/integration/E2E green.
-- MCP `sdd_get_key` remains Sprint 5.
-
-### MVP-2 closed (Sprint 2)
-
-- Operator confirmed accounts management (invite / accept / list / delete) **usable** (DoD).
-- Features **Done**: SEED-01, ACCT-03.
-- Soft-deactivate UI deferred; schema `DEACTIVATED` unused until a later story.
-- Follow-up polish: invite input single-border focus; `E2E_INVITE_FILE` / `E2E_RESET_FILE` skip Resend with a console warning (operator must not leave those vars set on `npm run dev`).
-- Knowledge: [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md). No new ADR.
-
-### Sprint 2 — ACCT-03
-
-- InviteToken model + migration; APIs: `GET/POST/DELETE` admin users, `GET/POST` invite accept.
-- UI: `/admin/accounts`, `/accept-invite` (mockup-aligned); i18n error keys for delete guards and invite conflicts.
-- E2E: `E2E_INVITE_FILE` capture (CI + Playwright webServer); invite → accept → list → delete other; expired token callout.
-
-### Sprint 2 — SEED-01 (new requirement)
-
-- Default admin: email `me@ethanhuang.com`, username `admin`, password from **`ADMIN_SEED_PASSWORD`** in `.env.local` / Portainer (SEED-01).
-- ATDD ACs in `admin-portal/app-stories.md` (`sdd-admin-seed`); sprint2 plan + backlog updated (SEED-01 before ACCT-03).
-- Replaces blank-password first-login bootstrap for the default admin.
-- Env codes also listed in `tech-spec.md` and `.env.example` (empty). Operator-owned values stay in `.env.local` only.
-
-### MVP-1 closed (Sprint 1)
-
-- Operator confirmed login + password reset **usable** (DoD).
-- Features **Done**: INF-01, INF-02, INF-03, PATH-01, I18N-01, ACCT-01, ACCT-02.
-- Seeded admin: `me@ethanhuang.com` / username `admin` / empty password until first `/set-password`.
-- Login password field is optional (not HTML-`required`) so blank first login works; i18n hint `admin.login.password_first_hint`.
-- Brand logo polish: transparent PNG (remove `.logo img { background: #000 }`); display size **200%** of prior tokens; home `margin-left: -30px`; header `margin-left: -22px`. Mockups + `app-design.md` synced.
-- Knowledge: [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md). No new ADR for logo/login polish (ADR-047 already covers Qwen).
-
-### LLM — Qwen install path discovery
-
-- Accepted [ADR-047](./adr/ADR-047-qwen-install-path-discovery.md): Qwen (Aliyun Bailian, OpenAI-compatible) for MCP **stdio** client-config path discovery only.
-- Supersedes tech-spec “no product LLM” for this narrow use case; no portal chat LLM.
-- New backlog feature **MCPI-04** (MVP-6); MCPI-02 revised to seed + Qwen cross-client resolution.
-- Specs updated: `tech-spec.md`, `req-spec.md` (FR-M11–M14, NFR-8), `mcp/mcp-design.md`, `mcp/mcp-stories.md`, `product-backlog.md`, `sprint6-plan.md`, `sprint7-plan.md`.
-- Env codes: `QWEN_*` listed in tech-spec (operator-owned values; do not commit secrets).
-
-### Specs & planning
-
-- Added `specs/sprint1-plan.md` … `specs/sprint7-plan.md` (one sprint per MVP-1…MVP-7).
-- Added this `specs/change-log.md`.
-- Product backlog, req-spec, tech-spec, admin-portal / mcp stories and designs in place for framework.sdd.works (MCP + admin portal).
-
-### Architecture — client path map (PATH-01)
-
-- New feature **PATH-01 — Client path map (seed data + resolver)** added as an architecture-level foundation in **MVP-1 / Sprint 1**.
-- One versioned data file `packages/sdd-paths/paths.json` (JSON Schema-validated in CI) + transport-agnostic resolver `resolve(client, os, overrides?)`.
-- v1 ships Cursor seed for macOS / Windows / Linux only.
-- `paths_version` exposed via `sdd_list_versions` (Sprint 5) for stale-install warnings.
-- Maintenance is reactive (human PR, bump `version`); no daily job, no auto-discovery in v1.
-- MCPI-04 (Qwen discovery, Sprint 6) layers on PATH-01 as refinement/fallback; MCPI-02 (cross-client, Sprint 7) expands the same file.
-- Updated `product-backlog.md` (new PATH module code + PATH-01 row + MVP-1 scope + dependency notes), `mcp/mcp-stories.md` (new `sdd-mcp-path-map` story with 6 ACs), `mcp/mcp-design.md` (§4.0 path map foundation, resolver contract, maintenance, module sketch, tests), `sprint1-plan.md`, `sprint6-plan.md`, `sprint7-plan.md`.
-
-### Branding & cleanup
-
-- Canonical logos: `public/sdd-logo.png` (wordmark), `public/sdd-mark.png` (square for mail).
-- Removed places-agent leftovers: `agent-stories.md`, `agent-design.md`, `agent-logo.png` (public + mockup), `600x600.logos.png`.
-- Removed empty stubs `app-test.md`, `mcp-test.md`; designs point at common-test-strategy until test docs are written.
-- Email mockups `14` / `15` and `app-design.md` updated to `sdd-mark.png`.
-
-### Environment & data
-
-- Created `.env.local` (gitignored) with env codes; operator fills secrets.
-- Locked DB: **dev** = local PostgreSQL; **prod** = AliCloud PostgreSQL (`DATABASE_URL` on Server 2 / Portainer only).
-- Root `.gitignore` includes `.env` / `.env.local`.
-
-### MCP tools (locked names)
-
-- `sdd_install_framework`
-- `sdd_update_framework`
-- `sdd_list_versions`
-- `sdd_get_key`
-
-### Hosting (decision)
-
-- Apex `sdd.works` WordPress remains Server 1; MCP + portal on Server 2 at `framework.sdd.works` (Cloudflare DNS).
-
----
-
-## Template for future entries
-
-```md
-## YYYY-MM-DD
-
-### Area
-- What changed and why (1–3 bullets). Link sprint / feature codes when relevant.
-```
+**Boundary**: This does not change application code, install scope, or the Phase 1 archive contents.

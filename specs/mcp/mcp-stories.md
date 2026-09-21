@@ -1,6 +1,8 @@
 # framework.sdd.works — MCP service user stories
 
-MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Backlog: [`product-backlog.md`](../product-backlog.md).
+MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
+
+**Phase 2 upcoming (no Gherkin yet):** [Install whole git artifacts](../product-backlog.md#pb-2) will extend install/update beyond skills, rules, agents, and workflows. Acceptance scenarios are written when that story starts.
 
 **Tools:** `sdd_install_framework`, `sdd_update_framework`, `sdd_list_versions`, `sdd_get_key`. Protocol ids are not localized.
 

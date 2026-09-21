@@ -3,7 +3,7 @@
 **Batch:** MVP-2 · **Status:** Done  
 **Updated:** 2026-09-14  
 **Accepted:** 2026-09-14 (operator confirmed usable)  
-**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
+**Backlog:** [`r1-product-backlog.md`](./r1-product-backlog.md) · **Req:** [`r1-req-spec.md`](./r1-req-spec.md) · **Tech:** [`r1-tech-spec.md`](./r1-tech-spec.md)
 
 ## Goal
 
@@ -13,8 +13,8 @@ Default admin is seeded from env with a real password; an authenticated admin ca
 
 | Feature | Name | Stories | Status |
 | --- | --- | --- | --- |
-| SEED-01 | Default admin from env | [seed](./admin-portal/app-stories.md#sdd-admin-seed) | **Done** |
-| ACCT-03 | Admin account management | [invite](./admin-portal/app-stories.md#sdd-admin-invite) · [accounts](./admin-portal/app-stories.md#sdd-admin-accounts) | **Done** — invite + list + delete (not self / not last admin); no deactivate UI in v1 |
+| SEED-01 | Default admin from env | [seed](../admin-portal/app-stories.md#sdd-admin-seed) | **Done** |
+| ACCT-03 | Admin account management | [invite](../admin-portal/app-stories.md#sdd-admin-invite) · [accounts](../admin-portal/app-stories.md#sdd-admin-accounts) | **Done** — invite + list + delete (not self / not last admin); no deactivate UI in v1 |
 
 ## Delivery order (one story at a time)
 
@@ -47,4 +47,4 @@ Default admin is seeded from env with a real password; an authenticated admin ca
 
 ## Design / mockups
 
-- [app-design.md](./admin-portal/app-design.md) · [10-admins](./admin-portal/ui-mockup/10-admins.html) · [05-accept-invite](./admin-portal/ui-mockup/05-accept-invite.html)
+- [app-design.md](../admin-portal/app-design.md) · [10-admins](../admin-portal/ui-mockup/10-admins.html) · [05-accept-invite](../admin-portal/ui-mockup/05-accept-invite.html)

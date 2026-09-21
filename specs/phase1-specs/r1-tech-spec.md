@@ -1,6 +1,6 @@
 # Tech stack & dependencies — framework.sdd.works
 
-Locked for **framework.sdd.works**: an MCP service (install / update / list / get key for the SDD framework) plus an **admin portal**. Requirements: [`req-spec.md`](./req-spec.md).
+Locked for **framework.sdd.works**: an MCP service (install / update / list / get key for the SDD framework) plus an **admin portal**. Requirements: [`r1-req-spec.md`](./r1-req-spec.md).
 
 This file is **not** the places-agent / what2eat / where2play stack. Portal UI/BFF versions match that family so operators reuse the same Next.js patterns. Product behavior belongs in the requirements spec, not here.
 
@@ -395,4 +395,4 @@ Extends **common-test-strategy** (do not weaken it):
 5. Package source: GitHub sync, release artifact, or both.
 6. TRAE Agents verification.
 
-ADR-worthy when implemented: HTTP MCP in Next.js vs sibling process; key-at-rest encryption. **Accepted:** [ADR-047](./adr/ADR-047-qwen-install-path-discovery.md), [ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md), [ADR-052](./adr/ADR-052-commit-sha-identity.md), [ADR-053](./adr/ADR-053-server-side-sync-thin-stdio.md), [ADR-054](./adr/ADR-054-hybrid-http-ai-tarball.md).
+ADR-worthy when implemented: HTTP MCP in Next.js vs sibling process; key-at-rest encryption. **Accepted:** [ADR-047](../adr/ADR-047-qwen-install-path-discovery.md), [ADR-051](../adr/ADR-051-zero-dep-stdio-binary.md), [ADR-052](../adr/ADR-052-commit-sha-identity.md), [ADR-053](../adr/ADR-053-server-side-sync-thin-stdio.md), [ADR-054](../adr/ADR-054-hybrid-http-ai-tarball.md).

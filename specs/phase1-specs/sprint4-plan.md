@@ -2,7 +2,7 @@
 
 **Batch:** MVP-4 · **Status:** Done  
 **Updated:** 2026-09-14  
-**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
+**Backlog:** [`r1-product-backlog.md`](./r1-product-backlog.md) · **Req:** [`r1-req-spec.md`](./r1-req-spec.md) · **Tech:** [`r1-tech-spec.md`](./r1-tech-spec.md)
 
 ## Goal
 
@@ -12,8 +12,8 @@ An admin can configure one GitHub repo URL and see a read-only, near-real-time v
 
 | Feature | Name | Stories | Status |
 | --- | --- | --- | --- |
-| SETT-01 | GitHub repository URL | [settings](./admin-portal/app-stories.md#sdd-admin-settings) | **Done** |
-| FRMW-01 | Framework live view | [framework](./admin-portal/app-stories.md#sdd-admin-framework) | **Done** |
+| SETT-01 | GitHub repository URL | [settings](../admin-portal/app-stories.md#sdd-admin-settings) | **Done** |
+| FRMW-01 | Framework live view | [framework](../admin-portal/app-stories.md#sdd-admin-framework) | **Done** |
 
 ## Delivery order
 
@@ -43,9 +43,9 @@ An admin can configure one GitHub repo URL and see a read-only, near-real-time v
 
 ## Design / mockups
 
-- [app-design.md](./admin-portal/app-design.md) · [11-settings](./admin-portal/ui-mockup/11-settings.html) · [12-framework](./admin-portal/ui-mockup/12-framework.html)
+- [app-design.md](../admin-portal/app-design.md) · [11-settings](../admin-portal/ui-mockup/11-settings.html) · [12-framework](../admin-portal/ui-mockup/12-framework.html)
 
 ## Retrospective
 
 - No new ADR (poll + TTL + injectable port documented in knowledge).
-- Knowledge: [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md) (GitHub fixture / `fixture/*` routing).
+- Knowledge: [`knowledge/agent/admin-portal-seed-and-logo.md`](../knowledge/agent/admin-portal-seed-and-logo.md) (GitHub fixture / `fixture/*` routing).

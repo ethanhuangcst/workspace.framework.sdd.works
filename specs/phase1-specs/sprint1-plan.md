@@ -3,7 +3,7 @@
 **Batch:** MVP-1 · **Status:** Done  
 **Updated:** 2026-09-14  
 **Accepted:** 2026-09-14 — operator confirmed login + password reset usable  
-**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
+**Backlog:** [`r1-product-backlog.md`](./r1-product-backlog.md) · **Req:** [`r1-req-spec.md`](./r1-req-spec.md) · **Tech:** [`r1-tech-spec.md`](./r1-tech-spec.md)
 
 ## Goal
 
@@ -13,13 +13,13 @@ An operator can run the admin portal locally, log in as a seeded admin, and rese
 
 | Feature | Name | Stories | Status |
 | --- | --- | --- | --- |
-| INF-01 | Project scaffold | [app-stories](./admin-portal/app-stories.md) | **Done** — Next.js App Router, Makefile `dev`/`up`/`down`, Tailwind, Vitest/Playwright |
-| INF-02 | Database schema & migrations | [app-stories](./admin-portal/app-stories.md) | **Done** — Prisma schema + migrate + seed (`me@ethanhuang.com`; password via SEED-01 `ADMIN_SEED_PASSWORD`) |
-| INF-03 | CI pipeline | [app-stories](./admin-portal/app-stories.md) | **Done** — `.github/workflows/ci.yml` (lint, typecheck, unit, E2E; fixture Resend via `E2E_RESET_FILE`) |
-| PATH-01 | Client path map (seed data + resolver) | [path-map](./mcp/mcp-stories.md#sdd-mcp-path-map) | **Done** — `packages/sdd-paths` (Cursor × 3 OS); unit tests green; `paths_version` exposure deferred to Sprint 5 (`sdd_list_versions`) |
-| I18N-01 | i18n foundation (`en` / `zh-Hans` / `zh-Hant`) | [I18N](./admin-portal/app-stories.md#sdd-admin-i18n) | **Done** — `messages/*` + `t()` + locale switcher |
-| ACCT-01 | Admin login | [login](./admin-portal/app-stories.md#sdd-admin-login) | **Done** — email/password session, CSRF; login not rate-limited; empty-password seed → `/set-password` (password field not required on first login) |
-| ACCT-02 | Password reset (Resend) | [reset](./admin-portal/app-stories.md#sdd-admin-password-reset) | **Done** — reset request + set-password; E2E captures link via `E2E_RESET_FILE` |
+| INF-01 | Project scaffold | [app-stories](../admin-portal/app-stories.md) | **Done** — Next.js App Router, Makefile `dev`/`up`/`down`, Tailwind, Vitest/Playwright |
+| INF-02 | Database schema & migrations | [app-stories](../admin-portal/app-stories.md) | **Done** — Prisma schema + migrate + seed (`me@ethanhuang.com`; password via SEED-01 `ADMIN_SEED_PASSWORD`) |
+| INF-03 | CI pipeline | [app-stories](../admin-portal/app-stories.md) | **Done** — `.github/workflows/ci.yml` (lint, typecheck, unit, E2E; fixture Resend via `E2E_RESET_FILE`) |
+| PATH-01 | Client path map (seed data + resolver) | [path-map](../mcp/mcp-stories.md#sdd-mcp-path-map) | **Done** — `packages/sdd-paths` (Cursor × 3 OS); unit tests green; `paths_version` exposure deferred to Sprint 5 (`sdd_list_versions`) |
+| I18N-01 | i18n foundation (`en` / `zh-Hans` / `zh-Hant`) | [I18N](../admin-portal/app-stories.md#sdd-admin-i18n) | **Done** — `messages/*` + `t()` + locale switcher |
+| ACCT-01 | Admin login | [login](../admin-portal/app-stories.md#sdd-admin-login) | **Done** — email/password session, CSRF; login not rate-limited; empty-password seed → `/set-password` (password field not required on first login) |
+| ACCT-02 | Password reset (Resend) | [reset](../admin-portal/app-stories.md#sdd-admin-password-reset) | **Done** — reset request + set-password; E2E captures link via `E2E_RESET_FILE` |
 
 ## Delivery order (one story at a time)
 
@@ -62,4 +62,4 @@ An operator can run the admin portal locally, log in as a seeded admin, and rese
 
 ## Design / mockups
 
-- [app-design.md](./admin-portal/app-design.md) · [01-home](./admin-portal/ui-mockup/01-home.html) · [02-login](./admin-portal/ui-mockup/02-login.html) · [03-reset](./admin-portal/ui-mockup/03-reset.html) · [04-set-password](./admin-portal/ui-mockup/04-set-password.html)
+- [app-design.md](../admin-portal/app-design.md) · [01-home](../admin-portal/ui-mockup/01-home.html) · [02-login](../admin-portal/ui-mockup/02-login.html) · [03-reset](../admin-portal/ui-mockup/03-reset.html) · [04-set-password](../admin-portal/ui-mockup/04-set-password.html)

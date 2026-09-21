@@ -3,7 +3,7 @@
 **Batch:** MVP-7 · **Status:** Done  
 **Updated:** 2026-09-18  
 **Accepted:** 2026-09-18 (cache-backed Framework + force sync Playwright; path-e2e; sync-scenarios; paths v3; MCP description i18n)  
-**Backlog:** [`product-backlog.md`](./product-backlog.md) · **Req:** [`req-spec.md`](./req-spec.md) · **Tech:** [`tech-spec.md`](./tech-spec.md)
+**Backlog:** [`r1-product-backlog.md`](./r1-product-backlog.md) · **Req:** [`r1-req-spec.md`](./r1-req-spec.md) · **Tech:** [`r1-tech-spec.md`](./r1-tech-spec.md)
 
 ## Principle
 
