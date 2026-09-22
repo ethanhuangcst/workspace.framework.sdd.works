@@ -7,7 +7,7 @@ tags:
   - sdd
   - scrum
   - docs
-related_spec: sprint_plan.md
+related_spec: sprint-backlog.md
 related:
   - product-backlog.md
   - change-log.md
@@ -63,9 +63,9 @@ The status column contains only the enum value. Put dates, scope completed, rema
 - A single source of truth is not a one-way link with no way back. Docs do not copy each other’s status or body text, but they may navigate both ways through stable anchors. RID handling status stays in the RID Registry. Sprint execution status stays in the Sprint Backlog.
 - The RID section must keep a coverage table: `RID → Backlog item → acceptance criteria and design/test location → Sprint location`. Every cell must have a value and a resolvable link, so solution, verification, and schedule are fully covered.
 
-## 2. Sprint plan
+## 2. Sprint backlog
 
-The ToDo table of each sprint in [`sprint_plan.md`](./sprint_plan.md) is the single source of truth for that sprint’s execution list and status.
+The ToDo table of each sprint in [`sprint-backlog.md`](./sprint-backlog.md) is the single source of truth for that sprint’s execution list and status.
 
 ### 2.1 Column definitions
 
@@ -102,7 +102,7 @@ The status column contains only the enum value. Before you move a long status se
 Columns are fixed: `#`, `Category`, `Parent`, `Title`, `Description`, `Acceptance criteria`, `Related`, `Sprint`, `Status`.
 
 - Description, acceptance criteria, related links, and status are owned by the Product Backlog.
-- `Sprint` is a projection of the schedule in `sprint_plan.md`. It must not become a second schedule.
+- `Sprint` is a projection of the schedule in `sprint-backlog.md`. It must not become a second schedule.
 - Acceptance criteria must be executable and observable, and they carry the verification method for a RID solution.
 - A Product Backlog item cited by a RID must have a stable item anchor. The `Related` column must link the Sprint Backlog item and the design or test source, so the path from product solution to implementation and verification is navigable.
 - Back-references prefer the item name and use the number only as a locator. A renumber must not change the meaning.
@@ -122,9 +122,9 @@ The status column contains only the enum value. Put the completion date, remaini
 
 | Information | Single source | How other docs cite it |
 |---|---|---|
-| RID status, impact, and current handling summary | RID Registry in `sprint_plan.md` | Cite only the RID id and title |
+| RID status, impact, and current handling summary | RID Registry in `sprint-backlog.md` | Cite only the RID id and title |
 | Product solution and acceptance criteria | `product-backlog.md` | RID links the item anchor; the item’s `Related` column links the sprint item and design or test source |
-| Sprint schedule and execution status | Sprint Backlog in `sprint_plan.md` | Product Backlog `Sprint` is only a projection; `Related` may link the execution item |
+| Sprint schedule and execution status | Sprint Backlog in `sprint-backlog.md` | Product Backlog `Sprint` is only a projection; `Related` may link the execution item |
 | Detailed design and verification matrix | The design or test spec | Process tables keep a summary and a section link |
 | Process evidence and reason for change | `change-log.md` | The note column keeps the date, conclusion, and link |
 | Table shape and status meanings | This file | Process docs link this file from the header |
@@ -136,7 +136,7 @@ State each fact in full only in the document that owns it. When the wording chan
 
 ## 5. Links
 
-- [`sprint_plan.md`](./sprint_plan.md): RID Registry and Sprint Backlog
+- [`sprint-backlog.md`](./sprint-backlog.md): RID Registry and Sprint Backlog
 - [`product-backlog.md`](./product-backlog.md): product items and acceptance criteria
 - [`change-log.md`](./change-log.md): process evidence and change record
 - [`artifacts-map.md`](./artifacts-map.md): artifact index

@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | Conventions | [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) | How to write RID, sprint, backlog, and change log |
 | Product backlog | [`product-backlog.md`](./product-backlog.md) | Requirements and acceptance |
-| Sprint plan | [`sprint_plan.md`](./sprint_plan.md) | Current schedule and execution status |
+| Sprint backlog | [`sprint-backlog.md`](./sprint-backlog.md) | Current schedule and execution status |
 | Change log | [`change-log.md`](./change-log.md) | Conclusion-level changes |
 | Architecture | [`architecture.md`](./architecture.md) | Stack and decisions |
 | Deployment | [`deployment.md`](./deployment.md) | Local startup and go-live steps |

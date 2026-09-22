@@ -12,7 +12,7 @@ This folder holds the **Phase 1 / Release 1** Scrum artifacts for framework.sdd.
 **Live Scrum files** (Phase 2+) live one level up:
 
 - [`../product-backlog.md`](../product-backlog.md)
-- [`../sprint-plan.md`](../sprint-plan.md)
+- [`../sprint-backlog.md`](../sprint-backlog.md)
 - [`../artifacts-map.md`](../artifacts-map.md)
 - [`../change-log.md`](../change-log.md)
 

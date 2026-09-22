@@ -11,4 +11,4 @@ Phase 1 portal and MCP design stay in [`admin-portal/`](./admin-portal/) and [`m
 
 ## 2. Phase 2 decisions
 
-**coach-ethan presence is TBD** (MCP vs local). Do not add an ADR until the spike in [coach-ethan](./product-backlog.md#pb-3) closes. Tracking: [D1](./sprint-plan.md#rid-d1) in the sprint plan.
+**coach-ethan product presence: local Cursor agent** (installable prompt in the client `agents/` tree). Remote MCP stays the installer. Design: [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md). Decision: [D1](./sprint-backlog.md#rid-d1). Tracking: [coach-ethan](./product-backlog.md#pb-3).

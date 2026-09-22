@@ -1,4 +1,4 @@
-# sprint_plan — [product name]
+# sprint-backlog — [product name]
 
 > **Purpose**: Short-cycle execution list — what to do, what is blocked, and how to accept it.
 > **Example**: Pokymon Card Collection. After you copy this file, replace the product name and the items.
