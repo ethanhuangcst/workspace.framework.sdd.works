@@ -3,8 +3,9 @@
 > **用途**：记录 [产品名] 的产品需求 —— 要什么、边界在哪、验收是什么。
 > **示例**：本文件用 **Pokymon Card Collection** 填好。复制后把产品名、条目和验收换成真实产品。
 > **状态**：v1.0 · as_of 2026-09-21
-> **关联**：[`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint_plan.md`](./sprint_plan.md) · [`artifacts-map.md`](./artifacts-map.md)
-> **体例**：列定义、状态语义见 [`sdd-scrum-practices.md`](./sdd-scrum-practices.md)。
+> **关联**：[`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint_plan.md`](./sprint_plan.md) · [`artifacts-map.md`](./artifacts-map.md) · [`status.md`](./status.md)
+> **实践**：[`sdd-scrum-practices.md`](./sdd-scrum-practices.md)（做什么、怎么做、何时做：工作、模板、表格约定）。
+> **框架**：[`sdd-scrum-guide.md`](./sdd-scrum-guide.md)（名称与含义）。
 > **排期**：文末 Backlog 表的 `Sprint` 列是 [`sprint_plan.md`](./sprint_plan.md) 排期的投影。排期变更以该文件为准。
 
 Pokymon Card Collection 是收藏者用来登记卡牌、放入活页夹、按系列与稀有度搜索、并记下交换的应用。卡牌为虚构「Pokymon」，不声称任何已授权品牌。

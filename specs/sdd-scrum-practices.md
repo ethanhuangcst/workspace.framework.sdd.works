@@ -1,28 +1,85 @@
 ---
-title: SDD and Scrum process document conventions
+title: SDD Scrum practices
 type: process-spec
 status: active
-as_of: 2026-09-21
+as_of: 2026-09-22
 tags:
   - sdd
   - scrum
   - docs
 related_spec: sprint-backlog.md
 related:
+  - sdd-scrum-guide.md
   - product-backlog.md
   - change-log.md
   - artifacts-map.md
+  - status.md
   - architecture.md
   - deployment.md
 ---
 
-# SDD and Scrum process document conventions
+# SDD Scrum practices
 
-This file is the single source of truth for how this repo writes the RID Registry, Sprint Backlog, and Product Backlog. Product facts, design, and test criteria stay in their own specs. This file only defines how to register items, schedule them, write status back, and cite evidence.
+This file is the **single source of truth** for what, how, and when AI agents apply sdd-scrum (Cursor, Claude Code, Codex, CodeBuddy, and similar). Names and meaning stay in [`sdd-scrum-guide.md`](./sdd-scrum-guide.md).
 
-The refined Scrum framework in SDD (terminologies, events, artifacts) lives in [`sdd-scrum-guide.md`](./sdd-scrum-guide.md). Do not expand this file into that framework.
+Table conventions for RID, Sprint Backlog, and Product Backlog are in the sections after **Jobs**. Product facts, design, and test criteria stay in their own specs.
 
-Live process docs for this product are `product-backlog.md`, `sprint-backlog.md`, `artifacts-map.md`, `change-log.md`, `architecture.md`, `deployment.md`, and `sdd-scrum-guide.md`. Maintain table shape using this guide.
+## Jobs (what, how, when)
+
+### 1. On-board agent
+
+- On-board agent ethan.
+- Load artifact templates from the framework.sdd.works folder, or via `sdd_install_framework` / `sdd_update_framework`, when artifacts are missing.
+- Run an on-board check and tell the user that agent ethan is ready.
+- Record current status in `status.md` and suggest what to do next.
+
+### 2. Start a new project
+
+- Decide language of project artifacts (EN, HanS, HanT).
+- Decide workspace folder structure from sub-systems, architecture, and components.
+- Specify the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
+- Record that structure in `artifacts-map.md` (required process artifact; this project’s index).
+- Copy artifact templates to the locations named in `artifacts-map.md`, for the chosen language.
+- Ensure agent ethan can operate those files.
+- Record current status in `status.md` and tell the user the project is initialized, with suggestions for what to do next.
+
+### 3. Update project settings
+
+- Update language of project artifacts (EN, HanS, HanT).
+- Update workspace folder structure from sub-systems, architecture, and components.
+- Update the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
+- Update `artifacts-map.md` so it remains this project’s index.
+- Relocate artifact files to match language and `artifacts-map.md`.
+- Ensure agent ethan can operate those files.
+- Record current status in `status.md` and tell the user the project is updated, with suggestions for what to do next.
+
+### 4. Refine product backlog
+
+*(to fill)*
+
+### 5. Sprint planning
+
+*(to fill)*
+
+### 6. Report status
+
+*(to fill)*
+
+### 7. Retrospective
+
+*(to fill)*
+
+### 8. Start a new sprint
+
+*(to fill)*
+
+## Templates
+
+**When**: copy or refresh seeds during on-board (job 1) if working copies are missing; on new project (job 2); on update settings (job 3) only when relocating or filling a gap — never overwrite filled working copies without the user confirming.
+
+**From where**: `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy listed files into the artifacts root named in `artifacts-map.md`.
+
+**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (seeds vs working copies).
 
 ## 1. RID Registry
 
@@ -128,11 +185,14 @@ The status column contains only the enum value. Put the completion date, remaini
 | Product solution and acceptance criteria | `product-backlog.md` | RID links the item anchor; the item’s `Related` column links the sprint item and design or test source |
 | Sprint schedule and execution status | Sprint Backlog in `sprint-backlog.md` | Product Backlog `Sprint` is only a projection; `Related` may link the execution item |
 | Detailed design and verification matrix | The design or test spec | Process tables keep a summary and a section link |
-| Process evidence and reason for change | `change-log.md` | The note column keeps the date, conclusion, and link |
-| Table shape and status meanings | This file | Process docs link this file from the header |
+| Process evidence and reason for change | `change-log.md` | Tracking artifact; the note column keeps the date, conclusion, and link |
+| Current sprint, SBI, next, and OGT rows | `status.md` | Tracking projection; not a second sprint backlog |
+| Table shape and status meanings | This file (after Jobs) | Process docs link this file from the header |
 | Artifact index | `artifacts-map.md` | Other docs link paths; they do not keep a second catalog |
-| Architecture decisions | `architecture.md` | Process tables link the section; they do not restate the full decision |
-| Deploy and upgrade steps | `deployment.md` | Process tables link the section; they do not restate the full steps |
+| Durable decisions | `adr/` | Knowledge category; create when ADR-worthy (retrospective) |
+| Reusable research / ops notes | `knowledge/` | Knowledge category; create when knowledge-worthy (retrospective) |
+| Architecture decisions (optional / JIT) | `architecture.md` | Process tables link the section; they do not restate the full decision |
+| Deploy and upgrade steps (optional / JIT) | `deployment.md` | Process tables link the section; they do not restate the full steps |
 
 State each fact in full only in the document that owns it. When the wording changes, check authority document, then citing documents, then the place operators follow, so a second copy does not go stale in silence.
 
@@ -140,8 +200,11 @@ State each fact in full only in the document that owns it. When the wording chan
 
 - [`sprint-backlog.md`](./sprint-backlog.md): RID Registry and Sprint Backlog
 - [`product-backlog.md`](./product-backlog.md): product items and acceptance criteria
-- [`change-log.md`](./change-log.md): process evidence and change record
-- [`artifacts-map.md`](./artifacts-map.md): artifact index
-- [`sdd-scrum-guide.md`](./sdd-scrum-guide.md): refined Scrum-in-SDD framework
-- [`architecture.md`](./architecture.md): architecture and decisions
-- [`deployment.md`](./deployment.md): deploy and upgrade
+- [`status.md`](./status.md): current sprint, SBI, next, OGT
+- [`change-log.md`](./change-log.md): tracking — process evidence and change record
+- [`artifacts-map.md`](./artifacts-map.md): process artifact index
+- [`sdd-scrum-guide.md`](./sdd-scrum-guide.md): names and meaning
+- [`architecture.md`](./architecture.md): optional / JIT — architecture and decisions
+- [`deployment.md`](./deployment.md): optional / JIT — deploy and upgrade
+- [`adr/`](./adr/): knowledge — durable decisions
+- [`knowledge/`](./knowledge/): knowledge — reusable notes

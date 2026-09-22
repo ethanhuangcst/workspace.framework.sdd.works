@@ -2,7 +2,10 @@
 
 > 本文件记录结论级变更：一次改动做了什么、为什么、怎么验证的。
 > 过程细节在 `git log` 与各 spec 中。本文件不替代任何 spec。
+> 跟踪制品（不是第二份 Sprint Backlog）。见 [`sdd-scrum-guide.md`](./sdd-scrum-guide.md)。
 > **示例**：Pokymon Card Collection。复制后只保留真实变更。
+> **实践**：[`sdd-scrum-practices.md`](./sdd-scrum-practices.md)（做什么、怎么做、何时做）。
+> **框架**：[`sdd-scrum-guide.md`](./sdd-scrum-guide.md)（名称与含义）。
 
 ---
 

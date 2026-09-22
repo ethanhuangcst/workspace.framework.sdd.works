@@ -3,10 +3,11 @@
 > **Purpose**: Short-cycle execution list — what to do, what is blocked, and how to accept it.
 > **Example**: Pokymon Card Collection. After you copy this file, replace the product name and the items.
 > **Single source of truth for schedule and status**: this file. The `Sprint` column in `product-backlog.md` is a projection of this file.
-> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md)
+> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md) · [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) · [`status.md`](./status.md)
 > **Numbering**: `#N` is the item number inside that sprint. When citing another document, prefer the item name.
-> **Conventions**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md).
-> **as_of**: 2026-09-21
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
+> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
+> **as_of**: 2026-09-22
 
 ---
 

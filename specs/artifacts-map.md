@@ -1,32 +1,54 @@
 # Artifact index — framework.sdd.works
 
-> **Purpose**: List process docs, domain docs, and the closed Phase 1 archive so there is not a second catalog.
-> **Conventions**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (how to write RID, sprint, backlog tables).
-> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (refined Scrum in SDD).
+> **Purpose**: Required **process artifact** — this project’s index of live files and trees. Not framework definition (that is the guide and practices). Tracking is `status.md` and `change-log.md`. Knowledge is `adr/` and `knowledge/` (retrospective). Other docs link here; they do not keep a second catalog.
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
+> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
 
-## Process docs
+## Framework definition
 
 | Artifact | Path | Role |
 | --- | --- | --- |
-| Scrum-in-SDD guide | [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) | Single source of truth for terminologies, events, artifacts, and TBD framework content |
-| Writing conventions | [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) | Columns, statuses, RID shape. Not the framework definition |
-| Product backlog | [`product-backlog.md`](./product-backlog.md) | Phase 2 requirements and acceptance |
-| Sprint backlog | [`sprint-backlog.md`](./sprint-backlog.md) | Current schedule and execution status |
-| Change log | [`change-log.md`](./change-log.md) | Conclusion-level changes |
-| Architecture | [`architecture.md`](./architecture.md) | Stack pointer and Phase 2 decisions |
-| Deployment | [`deployment.md`](./deployment.md) | Pointer to operator release docs |
-| coach-ethan design | [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md) | Presence, jobs, start load, missing-file recovery, MVP capabilities |
-| coach-ethan tests | [`agent-ethan/agent-test.md`](./agent-ethan/agent-test.md) | Start-load and recovery test plan (`CE-LOAD-01`…`16`) |
+| Scrum-in-SDD guide | [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) | Names and meaning: terminologies, artifacts (process / tracking / knowledge / optional), events |
+| Practices | [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) | What, how, when: eight jobs, templates, RID and backlog table conventions |
 
-## Domain docs
+## Process
+
+| Artifact | Path | Role |
+| --- | --- | --- |
+| Product backlog | [`product-backlog.md`](./product-backlog.md) | Phase 2 requirements and acceptance |
+| Sprint backlog | [`sprint-backlog.md`](./sprint-backlog.md) | Current schedule and execution status (SBI ToDo/WIP/Done) |
+| Artifact index | [`artifacts-map.md`](./artifacts-map.md) | This file — project index |
+
+## Tracking
+
+| Artifact | Path | Role |
+| --- | --- | --- |
+| Status | [`status.md`](./status.md) | Current sprint, current SBI, next, OGT table (not a second sprint backlog) |
+| Change log | [`change-log.md`](./change-log.md) | Conclusion-level changes |
+
+## Knowledge
 
 | Tree | Path | Role |
 | --- | --- | --- |
-| ADRs | [`adr/`](./adr/) | Architecture decision records |
+| ADRs | [`adr/`](./adr/) | Durable architecture / process decisions (retrospective) |
+| Knowledge | [`knowledge/`](./knowledge/) | Reusable research and ops notes that are not themselves a decision |
+
+## Optional / JIT
+
+| Artifact | Path | Role |
+| --- | --- | --- |
+| Architecture | [`architecture.md`](./architecture.md) | Stack pointer and Phase 2 decisions |
+| Deployment | [`deployment.md`](./deployment.md) | Pointer to operator release docs |
+
+## This product
+
+| Tree | Path | Role |
+| --- | --- | --- |
+| coach-ethan design | [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md) | Presence, jobs, start load, missing-file recovery, MVP capabilities |
+| coach-ethan tests | [`agent-ethan/agent-test.md`](./agent-ethan/agent-test.md) | Start-load and recovery test plan (`CE-LOAD-01`…`16`) |
+| coach-ethan | [`agent-ethan/`](./agent-ethan/) | Coach agent design and tests |
 | MCP | [`mcp/`](./mcp/) | MCP stories, design, tests, client paths |
 | Admin portal | [`admin-portal/`](./admin-portal/) | Portal stories, design, mockups, tests |
-| coach-ethan | [`agent-ethan/`](./agent-ethan/) | Coach agent design and tests |
-| Knowledge | [`knowledge/`](./knowledge/) | Reusable research and ops notes |
 | Release / deploy | [`release/`](./release/) | Operator deployment instructions |
 
 ## Planned framework artifacts

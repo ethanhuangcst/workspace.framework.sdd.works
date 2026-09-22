@@ -1,7 +1,8 @@
 # Architecture — framework.sdd.works
 
-> **Purpose**: Point at the locked stack and hold Phase 2 decisions. Product behavior belongs in [`product-backlog.md`](./product-backlog.md).
-> **Conventions**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md).
+> **Purpose**: Point at the locked stack and hold Phase 2 decisions. Product behavior belongs in [`product-backlog.md`](./product-backlog.md). Optional / JIT (not a required process artifact).
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
 
 ## 1. Stack
 

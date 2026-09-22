@@ -3,8 +3,9 @@
 > **Purpose**: Record what [product name] must do, where the boundary is, and how to accept it.
 > **Example**: This file is filled in for **Pokymon Card Collection**. After you copy it, replace the product name, items, and acceptance criteria with the real product.
 > **Status**: v1.0 · as_of 2026-09-21
-> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md)
-> **Conventions**: Column definitions and status meanings are in [`sdd-scrum-practices.md`](./sdd-scrum-practices.md).
+> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md) · [`status.md`](./status.md)
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
+> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
 > **Schedule**: The `Sprint` column in the backlog table at the end is a projection of [`sprint-backlog.md`](./sprint-backlog.md). Schedule changes belong in that file.
 
 Pokymon Card Collection is an app a collector uses to catalog cards, place them in binders, search by set or rarity, and record trades. The cards are fictional “Pokymon”. The sample does not claim any licensed brand.

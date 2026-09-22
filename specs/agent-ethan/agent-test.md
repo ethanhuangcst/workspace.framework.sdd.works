@@ -134,6 +134,6 @@ Matches [`agent-design.md`](./agent-design.md) §6 case table.
 | Doc | Role |
 | --- | --- |
 | [`agent-design.md`](./agent-design.md) | Presence, stores, toggles, case table |
-| [`../artifacts-map.md`](../artifacts-map.md) | Process index the coach loads |
+| [`../artifacts-map.md`](../artifacts-map.md) | Project index the coach loads (process rows at start) |
 | [`../mcp/mcp-test.md`](../mcp/mcp-test.md) | Installer tool contracts |
 | [`../product-backlog.md`](../product-backlog.md) | MVP acceptance |

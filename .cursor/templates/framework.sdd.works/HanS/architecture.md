@@ -1,8 +1,9 @@
 # 架构 — [产品名]
 
-> **用途**：记录技术栈与少量决议。产品行为以 [`product-backlog.md`](./product-backlog.md) 为准。
+> **用途**：记录技术栈与少量决议。产品行为以 [`product-backlog.md`](./product-backlog.md) 为准。可选 / JIT（非必需过程制品）。
 > **示例**：Pokymon Card Collection。
-> **体例**：见 [`sdd-scrum-practices.md`](./sdd-scrum-practices.md)。
+> **实践**：[`sdd-scrum-practices.md`](./sdd-scrum-practices.md)（做什么、怎么做、何时做）。
+> **框架**：[`sdd-scrum-guide.md`](./sdd-scrum-guide.md)（名称与含义）。
 
 ## 1. 产品形状
 

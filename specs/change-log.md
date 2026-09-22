@@ -9,6 +9,16 @@
 
 ## 2026-09-22
 
+### Artifact taxonomy: guide vs practices; process / tracking / knowledge / optional
+
+**Why**: Live pointers still said practices were “columns only.” The guide and map mixed process, tracking, and knowledge. Seeds under `.cursor/templates/` would reinstall that story.
+
+**What changed**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) names process, tracking, knowledge, and optional/JIT artifacts, plus seeds vs working copies. [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) owns eight jobs and Templates (what/how/when). [`artifacts-map.md`](./artifacts-map.md) regroups by those categories. Sprint/product AC (`s2-guide`, pb-8), architecture/deployment headers, and agent-design/test pointers aligned. EN and HanS templates updated to match.
+
+**Verification**: Map has Framework / Process / Tracking / Knowledge / Optional / This product sections. No remaining “writing conventions only” claim in live headers. Historical entries below keep their original wording.
+
+**Boundary**: Does not fill remaining MVP 1 terms or implement Coach MVP 1.
+
 ### Rename agent-ethan folder and sprint-backlog file
 
 **Why**: Shorter agent design path; the execution file is the Sprint Backlog, not a separate “plan” filename.

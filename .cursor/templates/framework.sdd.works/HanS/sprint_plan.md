@@ -3,10 +3,11 @@
 > **用途**：短周期执行清单 —— 做什么、卡在哪、验收是什么。
 > **示例**：Pokymon Card Collection。复制后替换产品名与条目。
 > **排期与状态的唯一真相源**：本文件。`product-backlog.md` 的 `Sprint` 列是本文件排期的投影。
-> **关联**：[`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md)
+> **关联**：[`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md) · [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) · [`status.md`](./status.md)
 > **编号口径**：`#N` 指所在 Sprint 的条目编号。引用其它文档时优先写条目名。
-> **体例**：见 [`sdd-scrum-practices.md`](./sdd-scrum-practices.md)。
-> **as_of**：2026-09-21
+> **实践**：[`sdd-scrum-practices.md`](./sdd-scrum-practices.md)（做什么、怎么做、何时做：工作、模板、表格约定）。
+> **框架**：[`sdd-scrum-guide.md`](./sdd-scrum-guide.md)（名称与含义）。
+> **as_of**：2026-09-22
 
 ---
 

@@ -3,7 +3,7 @@
 > **Purpose**: Define how coach-ethan is present, what it does, what it reads, how start-up resolves files, and how capabilities grow across MVPs.
 > **Status**: design · as_of 2026-09-22 · not implemented
 > **Backlog**: [coach-ethan](../product-backlog.md#pb-3) · [MVP 1](../product-backlog.md#pb-8) · [MVP 2](../product-backlog.md#pb-9) · [MVP 3](../product-backlog.md#pb-10)
-> **Framework**: [`sdd-scrum-guide.md`](../sdd-scrum-guide.md) · **Writing conventions**: [`sdd-scrum-practices.md`](../sdd-scrum-practices.md)
+> **Framework**: [`sdd-scrum-guide.md`](../sdd-scrum-guide.md) · **Practices**: [`sdd-scrum-practices.md`](../sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
 > **Tests**: [`agent-test.md`](./agent-test.md)
 
@@ -17,7 +17,7 @@ This file is the design for the coach. It does not fill the Scrum guide, add a p
 | At start, load every **process** file named in `artifacts-map.md` | Load domain trees (`adr/`, `mcp/`, …) at start |
 | Answer what to do now and what is next from live specs | Memory store, embeddings, or MCP resource for knowledge |
 | Run Scrum events by calling installed skills / workflows | Invent a second event catalog beside the guide |
-| Edit process artifacts using practices columns | Overwrite existing live `specs/` files when seeding |
+| Edit process artifacts using practices (jobs, templates, columns) | Overwrite existing live `specs/` files when seeding |
 | Recover missing templates via MCP; seed missing specs after confirm | Tar the install package into `specs/` |
 | Collect missing input via AskQuestion when the host provides it | Require AskQuestion to close an MVP |
 
@@ -51,7 +51,7 @@ What coach-ethan does over time:
 1. **Start load** — find `artifacts-map.md`, then load each process file it lists (see §4–§5).
 2. **Guide** — answer questions; say what to do now and what is next from the guide and live sprint/backlog state.
 3. **Run events** — call the matching skill or workflow for SDD-Scrum events. Event definitions and skill names live in [`sdd-scrum-guide.md`](../sdd-scrum-guide.md).
-4. **Maintain artifacts** — edit the right local files using [`sdd-scrum-practices.md`](../sdd-scrum-practices.md) columns and statuses.
+4. **Maintain artifacts** — edit the right local files using [`sdd-scrum-practices.md`](../sdd-scrum-practices.md) (jobs, templates, columns, and statuses).
 5. **Ask** — use AskQuestion when the Cursor host provides it; otherwise ask in chat. Required for Toggle B seed (confirm before copy). Not required to close every MVP acceptance path.
 
 ## 4. Two stores (do not mix)
@@ -198,8 +198,8 @@ MVP 2 needs only a minimal `plan` skill. The rest ship with the full pack.
 | [`../product-backlog.md`](../product-backlog.md) | Parent and MVP acceptance |
 | [`../sprint-backlog.md`](../sprint-backlog.md) | Schedule and D1 |
 | [`../architecture.md`](../architecture.md) | Stack pointer; presence decision |
-| [`../artifacts-map.md`](../artifacts-map.md) | Process file index the coach loads |
-| [`../sdd-scrum-guide.md`](../sdd-scrum-guide.md) | Framework SSOT |
-| [`../sdd-scrum-practices.md`](../sdd-scrum-practices.md) | Artifact writing rules |
+| [`../artifacts-map.md`](../artifacts-map.md) | Project index (framework / process / tracking / knowledge / optional / this product) |
+| [`../sdd-scrum-guide.md`](../sdd-scrum-guide.md) | Names and meaning |
+| [`../sdd-scrum-practices.md`](../sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
 | [`../mcp/mcp-design.md`](../mcp/mcp-design.md) | Installer MCP (`sdd_install_framework` / `sdd_update_framework`) |
 | [`../knowledge/agent/cursor-agent-callup.md`](../knowledge/agent/cursor-agent-callup.md) | Slash-invoke vs templates vs project `agents/` |

@@ -2,9 +2,10 @@
 
 > **Purpose**: Short-cycle execution list — what to do, what is blocked, and how to accept it.
 > **Single source of truth for schedule and status**: this file. The `Sprint` column in `product-backlog.md` is a projection of this file.
-> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md) · [`sdd-scrum-guide.md`](./sdd-scrum-guide.md)
+> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md) · [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) · [`status.md`](./status.md)
 > **Numbering**: `#N` is the item number inside that sprint. When citing another document, prefer the item name.
-> **Conventions**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md).
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
+> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
 > **as_of**: 2026-09-22
 
 ---
@@ -170,7 +171,7 @@ Sprint Goal: The guide has vocabulary and named artifacts; a local coach answers
 <td>Guide MVP 1 slice</td>
 <td>Task</td>
 <td>Specs</td>
-<td><code>sdd-scrum-guide.md</code> has terminologies, named artifacts (product backlog, sprint backlog, change log, artifacts map), events listed by name only, and a TBD section.</td>
+<td><code>sdd-scrum-guide.md</code> has terminologies; named artifacts by category — process (product backlog, sprint backlog, artifacts map), tracking (<code>status.md</code>, change log), knowledge (<code>adr/</code>, <code>knowledge/</code>), optional/JIT (architecture, deployment, <code>{component}-*</code>); events listed by name only; and a TBD section.</td>
 <td><a href="./product-backlog.md#pb-5">sdd-scrum-guide</a> · <a href="./product-backlog.md#pb-8">MVP 1</a></td>
 <td>Do this before the coach slice.</td>
 <td>ToDo</td>

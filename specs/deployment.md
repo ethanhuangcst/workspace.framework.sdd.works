@@ -1,7 +1,8 @@
 # Deployment — framework.sdd.works
 
-> **Purpose**: Point operators at the release docs. Do not copy host names, secrets, or step lists into this file.
-> **Conventions**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md).
+> **Purpose**: Point operators at the release docs. Do not copy host names, secrets, or step lists into this file. Optional / JIT (not a required process artifact).
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
 
 ## 1. Operator docs
 

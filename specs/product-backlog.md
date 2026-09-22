@@ -3,8 +3,8 @@
 > **Purpose**: Record what framework.sdd.works must do in Phase 2, where the boundary is, and how to accept it.
 > **Status**: v1.2 · as_of 2026-09-22
 > **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md)
-> **Conventions**: Column definitions and status meanings are in [`sdd-scrum-practices.md`](./sdd-scrum-practices.md).
-> **Framework (Scrum in SDD)**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) is the single source of truth for the refined Scrum framework.
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) is what, how, and when (jobs, templates, table conventions).
+> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) is names and meaning.
 > **Schedule**: The `Sprint` column in the backlog table is a projection of [`sprint-backlog.md`](./sprint-backlog.md). Schedule changes belong in that file.
 > **Phase 1 archive**: [`phase1-specs/`](./phase1-specs/) (closed). Do not reopen those items here.
 
@@ -138,8 +138,8 @@ Acceptance → [Backlog “sdd-scrum-guide”](#pb-5) · [Backlog “coach-ethan
 <td>[Specs]</td>
 <td>—</td>
 <td>sdd-scrum-guide (GUIDE-01)</td>
-<td><a href="./sdd-scrum-guide.md"><code>sdd-scrum-guide.md</code></a> is the single source of truth for the refined Scrum framework in SDD: terminologies, events, artifacts, and other to-be-decided contents. <a href="./sdd-scrum-practices.md"><code>sdd-scrum-practices.md</code></a> stays the writing convention only (columns, statuses, RID).</td>
-<td>The file has sections for terminologies, events, artifacts, and TBD. Other docs link here for framework meaning instead of restating it. Practices.md does not claim to own the framework.</td>
+<td><a href="./sdd-scrum-guide.md"><code>sdd-scrum-guide.md</code></a> is names and meaning (terminologies, artifacts, events). <a href="./sdd-scrum-practices.md"><code>sdd-scrum-practices.md</code></a> is what, how, and when (jobs, templates, table conventions). Practices does not redefine terms.</td>
+<td>The guide has sections for terminologies, events, artifacts, and TBD. Other docs link there for meaning. Practices owns jobs and how agents apply the framework.</td>
 <td><a href="./sprint-backlog.md#s2-guide">Sprint 2 “Guide MVP 1 slice”</a> · <a href="./sprint-backlog.md#s3-guide">Sprint 3</a> · <a href="./sprint-backlog.md#s4-guide">Sprint 4</a> · <a href="./artifacts-map.md"><code>artifacts-map.md</code></a></td>
 <td>Sprint 2</td>
 <td>ToDo</td>
@@ -171,8 +171,8 @@ Acceptance → [Backlog “sdd-scrum-guide”](#pb-5) · [Backlog “coach-ethan
 <td>[Framework]</td>
 <td>coach-ethan</td>
 <td>MVP 1 — vocabulary and what now (COACH-MVP1)</td>
-<td>Guide slice: terminologies; name the artifacts (product backlog, sprint backlog, change log, artifacts map); list events by name only; TBD section. Coach slice: local agent reads the guide plus live backlog and sprint backlog; answers what to do now and what is next. Does not edit files and does not call skills. Presence: <a href="./agent-ethan/agent-design.md">agent-design.md</a>.</td>
-<td>Guide sections for terms, named artifacts, named events, and TBD exist. A local coach prompt answers “what now / what next” from those files without writing the repo.</td>
+<td>Guide slice: terminologies; name artifacts by category — process (product backlog, sprint backlog, artifacts map), tracking (<code>status.md</code>, change log), knowledge (<code>adr/</code>, <code>knowledge/</code>), optional/JIT (architecture, deployment, <code>{component}-*</code>); list events by name only; TBD section. Coach slice: local agent reads the guide plus live backlog and sprint backlog; answers what to do now and what is next. Does not edit files and does not call skills. Presence: <a href="./agent-ethan/agent-design.md">agent-design.md</a>.</td>
+<td>Guide sections for terms, categorized artifacts, named events, and TBD exist. A local coach prompt answers “what now / what next” from those files without writing the repo.</td>
 <td><a href="./sprint-backlog.md#s2-guide">Sprint 2 “Guide MVP 1”</a> · <a href="./sprint-backlog.md#s2-coach">Sprint 2 “Coach MVP 1”</a> · <a href="#pb-5">sdd-scrum-guide</a> · <a href="./agent-ethan/agent-design.md">agent-design.md</a></td>
 <td>Sprint 2</td>
 <td>ToDo</td>

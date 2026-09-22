@@ -1,8 +1,9 @@
 # 部署 — [产品名]
 
-> **用途**：本地如何启动，以及上线时按什么顺序做。不要在此写入真实主机名、密钥或客户环境名。
+> **用途**：本地如何启动，以及上线时按什么顺序做。不要在此写入真实主机名、密钥或客户环境名。可选 / JIT（非必需过程制品）。
 > **示例**：Pokymon Card Collection。
-> **体例**：见 [`sdd-scrum-practices.md`](./sdd-scrum-practices.md)。
+> **实践**：[`sdd-scrum-practices.md`](./sdd-scrum-practices.md)（做什么、怎么做、何时做）。
+> **框架**：[`sdd-scrum-guide.md`](./sdd-scrum-guide.md)（名称与含义）。
 
 ## 1. 本地
 

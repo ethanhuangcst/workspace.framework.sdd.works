@@ -1,26 +1,87 @@
 ---
-title: SDD 与 Scrum 过程文档体例约定
+title: SDD Scrum 实践
 type: process-spec
 status: active
-as_of: 2026-09-21
+as_of: 2026-09-22
 tags:
   - sdd
   - scrum
   - docs
 related_spec: sprint_plan.md
 related:
+  - sdd-scrum-guide.md
   - product-backlog.md
   - change-log.md
   - artifacts-map.md
+  - status.md
   - architecture.md
   - deployment.md
 ---
 
-# SDD 与 Scrum 过程文档体例约定
+# SDD Scrum 实践
 
-本文件是本仓 RID Registry、Sprint Backlog 与 Product Backlog 的编写体例唯一真源。产品事实、设计与测试判据仍归各自 spec；本文件只定义如何登记、排期、回写状态和引用证据。
+本文件是 AI agent 应用 sdd-scrum 时**做什么、怎么做、何时做**的唯一真源（Cursor、Claude Code、Codex、CodeBuddy 等）。名称与含义见 [`sdd-scrum-guide.md`](./sdd-scrum-guide.md)。
 
-示例产品见同目录其它模板（Pokymon Card Collection）。把 `[产品名]` 换成真实产品名后，按本文件维护各过程文档。
+RID、Sprint Backlog 与 Product Backlog 的表格约定在 **Jobs** 之后的章节。产品事实、设计与测试判据仍归各自 spec。
+
+示例产品见同目录其它模板（Pokymon Card Collection）。把 `[产品名]` 换成真实产品名后，按本文件维护各过程文档。本 locale 的 Sprint 文件名为 `sprint_plan.md`。
+
+## Jobs（做什么、怎么做、何时做）
+
+### 1. 上线 agent
+
+- 上线 agent ethan。
+- 从 framework.sdd.works 文件夹加载制品模板，或缺件时通过 `sdd_install_framework` / `sdd_update_framework`。
+- 跑上线检查，告知用户 agent ethan 已就绪。
+- 在 `status.md` 记录当前状态，并建议下一步。
+
+### 2. 开始新项目
+
+- 决定项目制品语言（EN、HanS、HanT）。
+- 按子系统、架构、组件决定工作区目录结构。
+- 指定 sdd-scrum 制品根目录（默认 `{workspace_folder}/specs`）及所需子目录。
+- 把该结构写入 `artifacts-map.md`（必需的过程制品；本项目索引）。
+- 按所选语言，把制品模板复制到 `artifacts-map.md` 命名的位置。
+- 确保 agent ethan 可操作这些文件。
+- 在 `status.md` 记录当前状态，告知用户项目已初始化，并建议下一步。
+
+### 3. 更新项目设置
+
+- 更新项目制品语言（EN、HanS、HanT）。
+- 按子系统、架构、组件更新工作区目录结构。
+- 更新 sdd-scrum 制品根目录（默认 `{workspace_folder}/specs`）及子目录。
+- 更新 `artifacts-map.md`，使其仍为本项目索引。
+- 按语言与 `artifacts-map.md` 重定位制品文件。
+- 确保 agent ethan 可操作这些文件。
+- 在 `status.md` 记录当前状态，告知用户项目已更新，并建议下一步。
+
+### 4. 细化产品待办
+
+*（待填）*
+
+### 5. Sprint 计划
+
+*（待填）*
+
+### 6. 报告状态
+
+*（待填）*
+
+### 7. 回顾
+
+*（待填）*
+
+### 8. 开始新 Sprint
+
+*（待填）*
+
+## Templates
+
+**何时**：上线（工作 1）时若工作副本缺失则复制或刷新种子；新项目（工作 2）；更新设置（工作 3）仅在重定位或补缺时 — 未经用户确认不得覆盖已填写的工作副本。
+
+**从何处**：`.cursor/templates/framework.sdd.works/<locale>/`（locale EN、HanS 或 HanT），或 MCP `sdd_install_framework` / `sdd_update_framework` 到同一解压目标。再把所列文件复制到 `artifacts-map.md` 命名的制品根目录。
+
+**它们不是什么**：种子不是活制品。编辑制品根目录下的工作副本。该拆分的名称与含义见 [`sdd-scrum-guide.md`](./sdd-scrum-guide.md)（种子 vs 工作副本）。
 
 ## 1. RID Registry
 
@@ -126,11 +187,14 @@ Product Backlog 使用与 Sprint Backlog 相同的四态：
 | 产品解决方案与验收条件 | `product-backlog.md` | RID 链接具体条目锚点；条目 `关联` 回链 Sprint 执行项与设计/测试依据 |
 | Sprint 排期与执行状态 | `sprint_plan.md` 的 Sprint Backlog | Product Backlog 的 `Sprint` 列只作投影，`关联`列可链接具体执行项 |
 | 详细设计与验证矩阵 | 对应设计、测试 spec | 过程表只写摘要与章节链接 |
-| 过程证据与变更原因 | `change-log.md` | 说明列写日期、结论和链接 |
-| 表格体例与状态语义 | 本文件 | 各过程文档头部链接本文件 |
+| 过程证据与变更原因 | `change-log.md` | 跟踪制品；说明列写日期、结论和链接 |
+| 当前 Sprint、SBI、下一步与 OGT 行 | `status.md` | 跟踪投影；不是第二份 Sprint Backlog |
+| 表格体例与状态语义 | 本文件（Jobs 之后） | 各过程文档头部链接本文件 |
 | 制品索引 | `artifacts-map.md` | 其它文档只链接路径，不另列第二份目录 |
-| 架构决议 | `architecture.md` | 过程表只链接章节，不复述决议全文 |
-| 部署与升级步骤 | `deployment.md` | 过程表只链接章节，不复述步骤全文 |
+| 持久决策 | `adr/` | 知识类；有 ADR 价值时再建（回顾） |
+| 可复用研究 / 运维笔记 | `knowledge/` | 知识类；有知识价值时再建（回顾） |
+| 架构决议（可选 / JIT） | `architecture.md` | 过程表只链接章节，不复述决议全文 |
+| 部署与升级步骤（可选 / JIT） | `deployment.md` | 过程表只链接章节，不复述步骤全文 |
 
 同一事实只在其归属文档完整叙述。改口径时按「权威文档 → 引用方 → 操作现场」核对，避免第二处口径静默过时。
 
@@ -138,7 +202,11 @@ Product Backlog 使用与 Sprint Backlog 相同的四态：
 
 - [`sprint_plan.md`](./sprint_plan.md)：RID Registry 与 Sprint Backlog
 - [`product-backlog.md`](./product-backlog.md)：产品条目与验收条件
-- [`change-log.md`](./change-log.md)：过程证据与变更记录
-- [`artifacts-map.md`](./artifacts-map.md)：制品索引
-- [`architecture.md`](./architecture.md)：架构与决议
-- [`deployment.md`](./deployment.md)：部署与升级
+- [`status.md`](./status.md)：当前 Sprint、SBI、下一步、OGT
+- [`change-log.md`](./change-log.md)：跟踪 — 过程证据与变更记录
+- [`artifacts-map.md`](./artifacts-map.md)：过程制品索引
+- [`sdd-scrum-guide.md`](./sdd-scrum-guide.md)：名称与含义
+- [`architecture.md`](./architecture.md)：可选 / JIT — 架构与决议
+- [`deployment.md`](./deployment.md)：可选 / JIT — 部署与升级
+- [`adr/`](./adr/)：知识 — 持久决策
+- [`knowledge/`](./knowledge/)：知识 — 可复用笔记
