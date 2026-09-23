@@ -26,25 +26,17 @@ Table conventions for RID, Sprint Backlog, and Product Backlog are in the sectio
 
 ## Jobs (what, how, when)
 
-### 1. On-board agent
-
-- On-board agent ethan.
-- Load artifact templates from the framework.sdd.works folder, or via `sdd_install_framework` / `sdd_update_framework`, when artifacts are missing.
-- Run an on-board check and tell the user that agent ethan is ready.
-- Record current status in `status.md` and suggest what to do next.
-
-### 2. Start a new project
-
-- Decide language of project artifacts (EN, HanS, HanT).
-- Decide workspace folder structure from sub-systems, architecture, and components.
-- Specify the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
+### 1. Start a new project
+- Check if framework.sdd.works assets (agents/rules/skills/workflows/templates) are properly installed, re-install or update otherwise.
+- Ask input from the user to decide language of project artifacts (EN, HanS, HanT).
+- Ask input from the user to decide workspace folder structure, based on sub-systems, architecture, etc.
+- Ask input from the user to specify the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
 - Record that structure in `artifacts-map.md` (required process artifact; this project’s index).
 - Copy artifact templates to the locations named in `artifacts-map.md`, for the chosen language.
 - Ensure agent ethan can operate those files.
 - Record current status in `status.md` and tell the user the project is initialized, with suggestions for what to do next.
 
 ### 3. Update project settings
-
 - Update language of project artifacts (EN, HanS, HanT).
 - Update workspace folder structure from sub-systems, architecture, and components.
 - Update the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.

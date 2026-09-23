@@ -1,206 +1,132 @@
 # Product overview — framework.sdd.works
 
 > **Purpose**: Record what framework.sdd.works must do in Phase 2, where the boundary is, and how to accept it.
-> **Status**: v1.2 · as_of 2026-09-22
+> **Status**: v1.3 · as_of 2026-09-23
 > **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md)
 > **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) is what, how, and when (jobs, templates, table conventions).
 > **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) is names and meaning.
-> **Schedule**: The `Sprint` column in the backlog table is a projection of [`sprint-backlog.md`](./sprint-backlog.md). Schedule changes belong in that file.
+> **Schedule**: The `Sprint` field on each backlog item is a projection of [`sprint-backlog.md`](./sprint-backlog.md). Schedule changes belong in that file.
 > **Phase 1 archive**: [`phase1-specs/`](./phase1-specs/) (closed). Do not reopen those items here.
 
-framework.sdd.works is an MCP service plus an admin portal that installs and updates an SDD framework in the calling AI client. Phase 1 is closed. Phase 2’s top priority is to define the refined Scrum-in-SDD guide and prove coach-ethan in three small MVPs. Other Phase 2 themes stay on the backlog until those MVPs finish.
+framework.sdd.works is an MCP service plus an admin portal that installs and updates an SDD framework in the calling AI client. Phase 1 is closed. Phase 2 defines the sdd-scrum specs, the ethan agent, and the SDD harness (rules and skills).
 
 ---------
 ## Scope boundary
 
-### What Phase 2 does (priority first)
+### What Phase 2 does
 
-- Define [`sdd-scrum-guide.md`](./sdd-scrum-guide.md): terminologies, events, artifacts, and sections still to be decided.
-- Build `coach-ethan` in three MVPs: “what now”, run one event (`plan`), then chat that maintains backlog and change log.
-- Presence is a **local Cursor agent** ([D1](./sprint-backlog.md#rid-d1) Closed). Design: [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md).
+- Define [`sdd-scrum-guide.md`](./sdd-scrum-guide.md): the methodological definition of sdd-scrum, including terminologies, events, artifacts and so on.
+- Define [`sdd-scrum-practices.md`](./sdd-scrum-practices.md): the operational hand-book on how to implement sdd-scrum with detailed guideline in each events.
+- Define artifacts template, path mapping file (artifacts-map.md) and it's governance guide to ensure the content is aligned with sdd-scrum.
+- Build sdd harness assets including rules, skills, workflows(when needed), and knowledge management mechanism.
+- Build agent `ethan` to facilitate sdd-scrum events for human and agents. It's presence is a **local Cursor agent** ([D1](./sprint-backlog.md#rid-d1) Closed). Design: [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md).
+- Expand framework.sdd.works service functionalities, such as expand assets from rules/skills/agents/workflows to all folders under repo, more documentation etc
 
-Acceptance → [Backlog “sdd-scrum-guide”](#pb-5) · [Backlog “coach-ethan”](#pb-3) · [Backlog “MVP 1”](#pb-8) · [Backlog “MVP 2”](#pb-9) · [Backlog “MVP 3”](#pb-10)
-
-### Later Phase 2 themes (not on the current MVP sprints)
-
-- Install every top-level folder in the synced git package. → [Backlog “Install whole git artifacts”](#pb-2)
-- Ship four process templates. → [Backlog “Artifact templates”](#pb-4)
-- Ship the full six process skills. → [Backlog “Process skills”](#pb-6)
-- Update the portal Instructions page. → [Backlog “Instructions page”](#pb-7)
+Acceptance → [pb-1](#pb-1) · [pb-2](#pb-2) · [pb-3](#pb-3) · [pb-4](#pb-4) · [pb-5](#pb-5) · [pb-6](#pb-6)–[pb-11](#pb-11) · [pb-12](#pb-12) · [pb-13](#pb-13)
 
 ### Explicitly out of scope
 
 - **Rewriting Phase 1 portal or MCP behavior.**
 - **Hosting coach-ethan on remote MCP** (installer MCP stays separate; see agent design).
-- **Implementing install, the full skill pack, templates, or Instructions UI** while MVP 1–3 are the active sequence.
 
 ---------
 # Requirements
 
-> Executable detail is in the Product Backlog table. Back-references prefer the item name.
+> Executable detail is in the Product Backlog items below. Back-references prefer the item name.
 
 ---------
 ## [Specs] Process files and guide
 
-- Archive Phase 1 Scrum files. → [Backlog “Phase 2 specs restructure”](#pb-1)
-- Write the refined Scrum-in-SDD framework in [`sdd-scrum-guide.md`](./sdd-scrum-guide.md). → [Backlog “sdd-scrum-guide”](#pb-5)
+### 1. Archive Phase 1 Scrum files. → [pb-1](#pb-1)
+
+### 2. Develop specs
+
+#### sdd-scrum framework definition → [pb-2](#pb-2)
+
+- sdd-scrum-guide.md
+- sdd-scrum-practices.md
+
+#### process-artifacts → [pb-3](#pb-3)
+
+- artifacts-map.md
+- product-backlog.md
+- sprint-backlog.md
+
+#### engineering-specs → [pb-4](#pb-4)
+
+- architecture.md
+- deployment.md
+- {component name}-stories.md
+- {component name}-design.md
+- {component name}-test.md
+
+#### real-time tracking artifacts → [pb-5](#pb-5)
+
+- change-log.md
+- status.md
 
 ---------
-## [Framework] coach-ethan (MVP sequence)
+## [agent] agent: ethan
 
-- Parent: coach that guides practices, runs events via skills, maintains artifacts, and chats. Presence: local Cursor agent — [`agent-design.md`](./agent-ethan/agent-design.md). → [Backlog “coach-ethan”](#pb-3)
-- MVP 1: vocabulary in the guide; coach answers what to do now / next (read-only). → [Backlog “MVP 1 vocabulary and what now”](#pb-8)
-- MVP 2: events defined in the guide; coach runs `plan` and updates `sprint-backlog.md`. → [Backlog “MVP 2 plan event”](#pb-9)
-- MVP 3: maintenance rules in the guide; coach refines the backlog and appends to the change log. → [Backlog “MVP 3 chat maintains artifacts”](#pb-10)
+- agent: ethan - POC → [pb-6](#pb-6)
+- agent: ethan - initial capabilities → [pb-7](#pb-7)
+- agent: ethan - facilitate events → [pb-8](#pb-8)
+- agent: ethan - governance artifacts → [pb-9](#pb-9)
+- agent: ethan - knowledgable coach → [pb-10](#pb-10)
+- agent: ethan - chat → [pb-11](#pb-11)
 
 ---------
-## [Framework] Later themes
+## [Framework] SDD harness
 
-- Install, templates, full skills pack, Instructions page. → [pb-2](#pb-2) · [pb-4](#pb-4) · [pb-6](#pb-6) · [pb-7](#pb-7)
+### Rules → [pb-12](#pb-12)
+
+- **dod.mdc**: Definition of Done
+- **incremental-delivery.mdc**: Incremental Delivery
+- **realtime-status.mdc**: track status in real time and update **status.md** when each task is done
+
+### Skills → [pb-13](#pb-13)
+
+- **atdd**
+- **tdd**
+- **start-new-project**
+- **update-project**
+- **refine-pb**
+- **plan-sprint**
+- **update-status**
+- **retrospective**
+- **close-sprint**
+- **audit-artifacts**
+- **update-artifacts**
+
+---------
+## [User_Journey] framework.sdd.works R2 functionalities
+
+
+### Initialize framework.sdd.works v2 POC → pb-14
+
+- User creates an empty folder and open from IDE (user Cursor as example moving forward).
+- Install framework.sdd.works MCP (done in R1), run sdd_install_framework or sdd_update_framework, get framework installed at user_root/.cursor/..
+- User type '/ethan' can call up agent
 
 ---------
 # Product Backlog
 
-<!-- Pipe Markdown cannot set table width. HTML width works in Cursor/VS Code preview; GitHub often ignores style. -->
-
-<table width="100%">
-<colgroup>
-  <col style="width:3%" />
-  <col style="width:8%" />
-  <col style="width:10%" />
-  <col style="width:14%" />
-  <col style="width:20%" />
-  <col style="width:22%" />
-  <col style="width:13%" />
-  <col style="width:5%" />
-  <col style="width:5%" />
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Category</th>
-<th>Parent</th>
-<th>Title</th>
-<th>Description</th>
-<th>Acceptance criteria</th>
-<th>Related</th>
-<th>Sprint</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a id="pb-1"></a>1</td>
-<td>[Specs]</td>
-<td>—</td>
-<td>Phase 2 specs restructure (SPEC-01)</td>
-<td>Archive Phase 1 under <code>phase1-specs/</code>. Live process files use this shape.</td>
-<td>Phase 1 Scrum files are only under <code>phase1-specs/</code>. Live process files exist at <code>specs/</code> for this product. No application code change for this item.</td>
-<td><a href="./sprint-backlog.md#s1-spec">Sprint 1 “Phase 2 specs restructure”</a> · <a href="./artifacts-map.md"><code>artifacts-map.md</code></a></td>
-<td>Sprint 1</td>
-<td>Done</td>
-</tr>
-<tr>
-<td><a id="pb-2"></a>2</td>
-<td>[Framework]</td>
-<td>—</td>
-<td>Install whole git artifacts (ARTIFACTS-01)</td>
-<td>Install and update copy every top-level folder in the synced git package, not only skills, rules, agents, and workflows.</td>
-<td>The copied set matches the package’s top-level folders. Stdio and HTTP follow ADR-054. MCP design and stories are updated when this story is implemented.</td>
-<td>—</td>
-<td>—</td>
-<td>ToDo</td>
-</tr>
-<tr>
-<td><a id="pb-3"></a>3</td>
-<td>[Framework]</td>
-<td>—</td>
-<td>coach-ethan (COACH-01)</td>
-<td>Agent that coaches SDD-refined Scrum: guides what to do now and next, runs events by calling skills, maintains process artifacts, and replies from chat input. Delivered as three MVPs. Presence is a local Cursor agent (installable prompt in <code>agents/</code>). Design: <a href="./agent-ethan/agent-design.md"><code>agent-design.md</code></a>.</td>
-<td>MVP 1–3 each meet their own acceptance criteria. Presence matches <a href="./sprint-backlog.md#rid-d1">D1</a> (Closed). The agent is not shipped as a remote MCP coach.</td>
-<td><a href="#pb-8">MVP 1</a> · <a href="#pb-9">MVP 2</a> · <a href="#pb-10">MVP 3</a> · <a href="./agent-ethan/agent-design.md">agent-design.md</a> · <a href="./architecture.md">architecture.md</a> §2 · <a href="./sprint-backlog.md#rid-d1">D1</a></td>
-<td>—</td>
-<td>ToDo</td>
-</tr>
-<tr>
-<td><a id="pb-4"></a>4</td>
-<td>[Framework]</td>
-<td>sdd-scrum-guide</td>
-<td>Artifact templates (TEMPLATES-01)</td>
-<td>Template pack of four files: <code>product-backlog.md</code>, <code>change-log.md</code>, <code>sprint-backlog.md</code>, <code>artifacts-map.md</code>.</td>
-<td>The pack contains those four files and no extra required architecture or deployment template. They install with the framework package. The artifacts map lists them.</td>
-<td>—</td>
-<td>—</td>
-<td>ToDo</td>
-</tr>
-<tr>
-<td><a id="pb-5"></a>5</td>
-<td>[Specs]</td>
-<td>—</td>
-<td>sdd-scrum-guide (GUIDE-01)</td>
-<td><a href="./sdd-scrum-guide.md"><code>sdd-scrum-guide.md</code></a> is names and meaning (terminologies, artifacts, events). <a href="./sdd-scrum-practices.md"><code>sdd-scrum-practices.md</code></a> is what, how, and when (jobs, templates, table conventions). Practices does not redefine terms.</td>
-<td>The guide has sections for terminologies, events, artifacts, and TBD. Other docs link there for meaning. Practices owns jobs and how agents apply the framework.</td>
-<td><a href="./sprint-backlog.md#s2-guide">Sprint 2 “Guide MVP 1 slice”</a> · <a href="./sprint-backlog.md#s3-guide">Sprint 3</a> · <a href="./sprint-backlog.md#s4-guide">Sprint 4</a> · <a href="./artifacts-map.md"><code>artifacts-map.md</code></a></td>
-<td>Sprint 2</td>
-<td>ToDo</td>
-</tr>
-<tr>
-<td><a id="pb-6"></a>6</td>
-<td>[Framework]</td>
-<td>sdd-scrum-guide</td>
-<td>Process skills (SKILLS-01)</td>
-<td>Skills, plus rules or workflows where needed: <code>Initiate_project</code>, <code>organize_artifacts</code>, <code>backlog_refinement</code>, <code>plan</code>, <code>track</code>, <code>retrospective</code>. MVP 2 only needs a minimal <code>plan</code> skill; the full pack stays here.</td>
-<td>Each name exists as an installable skill. Each is mapped to one Scrum event in the guide.</td>
-<td><a href="#pb-5">sdd-scrum-guide</a></td>
-<td>—</td>
-<td>ToDo</td>
-</tr>
-<tr>
-<td><a id="pb-7"></a>7</td>
-<td>[Portal]</td>
-<td>coach-ethan</td>
-<td>Instructions page (INSTRUCT-01)</td>
-<td>Update the portal Instructions page for full-repo install, the four templates, the process skills, and coach-ethan.</td>
-<td>The page states the install set, names the four templates and six skills, and names coach-ethan. Copy is i18n keys.</td>
-<td><a href="./admin-portal/app-stories.md"><code>admin-portal/app-stories.md</code></a></td>
-<td>—</td>
-<td>ToDo</td>
-</tr>
-<tr>
-<td><a id="pb-8"></a>8</td>
-<td>[Framework]</td>
-<td>coach-ethan</td>
-<td>MVP 1 — vocabulary and what now (COACH-MVP1)</td>
-<td>Guide slice: terminologies; name artifacts by category — process (product backlog, sprint backlog, artifacts map), tracking (<code>status.md</code>, change log), knowledge (<code>adr/</code>, <code>knowledge/</code>), optional/JIT (architecture, deployment, <code>{component}-*</code>); list events by name only; TBD section. Coach slice: local agent reads the guide plus live backlog and sprint backlog; answers what to do now and what is next. Does not edit files and does not call skills. Presence: <a href="./agent-ethan/agent-design.md">agent-design.md</a>.</td>
-<td>Guide sections for terms, categorized artifacts, named events, and TBD exist. A local coach prompt answers “what now / what next” from those files without writing the repo.</td>
-<td><a href="./sprint-backlog.md#s2-guide">Sprint 2 “Guide MVP 1”</a> · <a href="./sprint-backlog.md#s2-coach">Sprint 2 “Coach MVP 1”</a> · <a href="#pb-5">sdd-scrum-guide</a> · <a href="./agent-ethan/agent-design.md">agent-design.md</a></td>
-<td>Sprint 2</td>
-<td>ToDo</td>
-</tr>
-<tr>
-<td><a id="pb-9"></a>9</td>
-<td>[Framework]</td>
-<td>coach-ethan</td>
-<td>MVP 2 — plan event writes sprint backlog (COACH-MVP2)</td>
-<td>Guide slice: define events <code>plan</code>, <code>track</code>, <code>retrospective</code> and which skill each calls. Coach slice: run <code>plan</code> only via a minimal <code>plan</code> skill and update <code>sprint-backlog.md</code> using practices columns. Track and retrospective are named, not executed.</td>
-<td>The guide defines the three events and skill names. The coach can run plan once and leave a valid ToDo row or status change in <code>sprint-backlog.md</code>.</td>
-<td><a href="./sprint-backlog.md#s3-guide">Sprint 3 “Guide MVP 2”</a> · <a href="./sprint-backlog.md#s3-coach">Sprint 3 “Coach MVP 2”</a> · <a href="#pb-5">sdd-scrum-guide</a></td>
-<td>Sprint 3</td>
-<td>ToDo</td>
-</tr>
-<tr>
-<td><a id="pb-10"></a>10</td>
-<td>[Framework]</td>
-<td>coach-ethan</td>
-<td>MVP 3 — chat maintains backlog and change log (COACH-MVP3)</td>
-<td>Guide slice: maintenance rules for product-backlog, sprint-backlog, change-log, artifacts-map. Coach slice: reply from chat plus those files; apply a small backlog refinement and append a change-log entry. Local Cursor agent per <a href="./agent-ethan/agent-design.md">agent-design.md</a>.</td>
-<td>The guide states what the coach may change. One refinement appears in the backlog and one entry in the change log after a coach turn.</td>
-<td><a href="./sprint-backlog.md#s4-guide">Sprint 4 “Guide MVP 3”</a> · <a href="./sprint-backlog.md#s4-coach">Sprint 4 “Coach MVP 3”</a> · <a href="#pb-5">sdd-scrum-guide</a> · <a href="./agent-ethan/agent-design.md">agent-design.md</a></td>
-<td>Sprint 4</td>
-<td>ToDo</td>
-</tr>
-</tbody>
-</table>
+| # | Category | Parent | PBI | Description | Acceptance criteria | Related | Sprint | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | [Specs] | — | Phase 2 specs restructure (SPEC-01) | Archive Phase 1 under `phase1-specs/`. Live process files use this shape. | Phase 1 Scrum files are only under `phase1-specs/`. Live process files exist at `specs/` for this product. No application code change for this item. | [`artifacts-map.md`](./artifacts-map.md) | Sprint 1 | Done |
+| 2 | [Specs] | Develop specs | sdd-scrum framework definition | [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) is names and meaning. [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) is what, how, and when. Practices does not redefine terms. | Both files exist under `specs/` and state the guide vs practices split for terminologies, events, and artifacts. | [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) · [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) · [Sprint 1 “sdd-scrum-guide.md draft”](./sprint-backlog.md) | Sprint 1 | ToDo |
+| 3 | [Specs] | Develop specs | Process artifacts | Live process files: `artifacts-map.md`, `product-backlog.md`, `sprint-backlog.md`. | Those three files exist under `specs/` and are listed in [`artifacts-map.md`](./artifacts-map.md). | [`artifacts-map.md`](./artifacts-map.md) | — | ToDo |
+| 4 | [Specs] | Develop specs | Engineering specs | Optional / JIT engineering docs: `architecture.md`, `deployment.md`, and `{component}-stories.md` / `{component}-design.md` / `{component}-test.md` when a component exists. | `architecture.md` and `deployment.md` exist. Component story/design/test files appear when a component is in scope and are indexed in [`artifacts-map.md`](./artifacts-map.md). | [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md) | — | ToDo |
+| 5 | [Specs] | Develop specs | Real-time tracking artifacts | Tracking projection files: `change-log.md` and `status.md` (current sprint, SBI, next, OGT). | Both files exist under `specs/` and are listed under Tracking in [`artifacts-map.md`](./artifacts-map.md). | [`change-log.md`](./change-log.md) · [`status.md`](./status.md) | — | ToDo |
+| 6 | [agent] | agent ethan | agent ethan — POC | Proof of concept for ethan as a local Cursor agent ([D1](./sprint-backlog.md#rid-d1) Closed). | A local Cursor agent prompt for ethan exists and can be invoked. Presence matches [D1](./sprint-backlog.md#rid-d1). Design: [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md). | [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md) · [D1](./sprint-backlog.md#rid-d1) | — | ToDo |
+| 7 | [agent] | agent ethan | agent ethan — initial capabilities | Ethan answers what to do now and next from live process files without editing the repo. | From a chat turn, ethan answers “what now / what next” using the guide plus live backlog and sprint backlog, without writing files or calling skills. | [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md) · [pb-6](#pb-6) | — | ToDo |
+| 8 | [agent] | agent ethan | agent ethan — facilitate events | Ethan runs sdd-scrum events by calling the matching skills. | Ethan can run at least one named event (for example `plan-sprint`) via its skill and leave a verifiable change in the process artifacts that event owns. | [pb-13](#pb-13) · [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md) | — | ToDo |
+| 9 | [agent] | agent ethan | agent ethan — governance artifacts | Ethan maintains process and tracking artifacts within the rules the guide names. | From a chat turn, ethan applies one small backlog refinement and one change-log entry without violating guide maintenance rules. | [`change-log.md`](./change-log.md) · [pb-2](#pb-2) · [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md) | — | ToDo |
+| 10 | [agent] | agent ethan | agent ethan — knowledgeable coach | Ethan coaches from the guide, practices, and knowledge trees (`adr/`, `knowledge/`). | Ethan answers a coaching question by citing the guide or practices (and knowledge when present) without inventing process rules. | [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) · [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) · [`artifacts-map.md`](./artifacts-map.md) | — | ToDo |
+| 11 | [agent] | agent ethan | agent ethan — chat | Ethan replies from free-form chat input while staying inside harness and process boundaries. | A chat turn that is not an event verb still gets a useful reply grounded in live artifacts, without unauthorized file edits. | [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md) · [pb-7](#pb-7) | — | ToDo |
+| 12 | [Framework] | SDD harness | Harness rules | Always-on rules: `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc` (update `status.md` when each task is done). | Those three rule files are present in the framework install set and named in the harness Requirements list. | [`artifacts-map.md`](./artifacts-map.md) | — | ToDo |
+| 13 | [Framework] | SDD harness | Harness skills | Skills: `atdd`, `tdd`, `start-new-project`, `update-project`, `refine-pb`, `plan-sprint`, `update-status`, `retrospective`, `close-sprint`, `audit-artifacts`, `update-artifacts`. | Each named skill exists as an installable skill in the framework package. | [`artifacts-map.md`](./artifacts-map.md) · [pb-8](#pb-8) | — | ToDo |
+| 14 | [User_Journey] | framework.sdd.works R2 functionalities | Initialize framework.sdd.works v2 POC | Empty folder opened in Cursor. Release 1 MCP is already installed. `sdd_install_framework` or `sdd_update_framework` installs the framework under `user_root/.cursor/`. `/ethan` calls up the agent. | User can open an empty folder in Cursor, run install or update, and invoke `/ethan`. | [Sprint 1 “Initialize framework.sdd.works v2 POC”](./sprint-backlog.md) | Sprint 1 | ToDo |
 
 ---------
 
@@ -212,3 +138,6 @@ Acceptance → [Backlog “sdd-scrum-guide”](#pb-5) · [Backlog “coach-ethan
 | 2026-09-21 | Split Phase 2: practices SSOT, four templates, six process skills, coach-ethan (presence TBD), Instructions page. |
 | 2026-09-22 | Priority: `sdd-scrum-guide.md` as framework SSOT; coach-ethan as three MVPs (Sprint 2–4); other themes cleared from Sprint. |
 | 2026-09-22 | coach-ethan presence: local Cursor agent ([D1](./sprint-backlog.md#rid-d1) Closed). Design at [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md). |
+| 2026-09-23 | Dropped HTML table width hacks for pipe Markdown. Sprint backlog aligned to Phase 2 scope map. |
+| 2026-09-23 | Product Backlog rows match Requirements (specs, ethan, harness) in the pipe table (`#`, Category, Parent, PBI, Description, Acceptance criteria, Related, Sprint, Status). |
+| 2026-09-23 | Removed HTML id anchors. Added pb-14 Initialize framework.sdd.works v2 POC (Sprint 1). |

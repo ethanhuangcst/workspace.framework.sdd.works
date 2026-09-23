@@ -36,7 +36,7 @@ SBI number
 ## Current on-going tasks
 <!-- 
 To keep tracking the temporary on-going tasks. (OGT, On-Going-Tasks)
-OGT is different from the Sprint Backlog Items (SBIs) in sprint-backlog.md. They are the samller tasks created when AI agents are executing the SBI.
+OGT is different from the Sprint Backlog Items (SBIs) in sprint-backlog.md. They are the samller tasks created when AI agents are executing the SBI. Many of them are created by agents in PLAN mode and rely on agents to manage them, or created by human as the temporary tasks.
 -->
 OGT for Sprint #2, SBI #1, Guide MVP 1 slice — taxonomy (1–8 Done) and guide outline (9–14):
 | # | On-going Task | Status |

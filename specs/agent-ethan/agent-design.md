@@ -1,8 +1,8 @@
 # coach-ethan — agent design
 
 > **Purpose**: Define how coach-ethan is present, what it does, what it reads, how start-up resolves files, and how capabilities grow across MVPs.
-> **Status**: design · as_of 2026-09-22 · not implemented
-> **Backlog**: [coach-ethan](../product-backlog.md#pb-3) · [MVP 1](../product-backlog.md#pb-8) · [MVP 2](../product-backlog.md#pb-9) · [MVP 3](../product-backlog.md#pb-10)
+> **Status**: design · as_of 2026-09-23 · Sprint 1 SBI 2 not implemented
+> **Backlog**: [pb-14 Initialize framework.sdd.works v2 POC](../product-backlog.md) · [pb-6 agent ethan — POC](../product-backlog.md) · Sprint 1 SBI 2 in [`sprint-backlog.md`](../sprint-backlog.md)
 > **Framework**: [`sdd-scrum-guide.md`](../sdd-scrum-guide.md) · **Practices**: [`sdd-scrum-practices.md`](../sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
 > **Tests**: [`agent-test.md`](./agent-test.md)
@@ -44,6 +44,36 @@ After start, **knowledge load** still follows §5 (live `specs/` first, then WS-
 
 Decision recorded as [D1](../sprint-backlog.md#rid-d1). See also [`architecture.md`](../architecture.md) §2 and [`../knowledge/agent/cursor-agent-callup.md`](../knowledge/agent/cursor-agent-callup.md).
 
+### 2.1 One pack, on the user root
+
+The framework pack lives only in the user client root. [ADR-056](../adr/ADR-056-single-user-root-framework-pack.md). Evidence: [`../knowledge/agent/ide-asset-precedence.md`](../knowledge/agent/ide-asset-precedence.md).
+
+| What | Where |
+| --- | --- |
+| Installed agents, skills, rules, workflows, templates | `~/.cursor/` (Cursor). Written by `sdd_install_framework` / `sdd_update_framework`. |
+| `/ethan` | `~/.cursor/agents/ethan.md` in every project |
+| `project-constants.md` | `~/.cursor/templates/framework.sdd.works/project-constants.md` when the package includes templates |
+
+Ethan does not copy those trees into `<workspace>/.cursor/`. He does not download the pack again.
+
+A workspace file is allowed when its name is not already in the user root: one new rule, or one new skill folder. Ethan does not create that file on start.
+
+If `~/.cursor/agents/ethan.md` is missing, the framework is not installed or not updated. Say that, send the user to `https://framework.sdd.works/instructions`, and stop.
+
+If `<workspace>/.cursor/agents/ethan.md` already exists, Cursor loads that file instead of the user-root agent. The product does not create it. Remove it when this project should use the installed agent.
+
+This repository has no `.cursor/` directory. It was removed on 2026-09-23. There is no workspace agent, no workspace skill or rule tree, and no workspace template pack here. `/ethan` in this repo is `~/.cursor/agents/ethan.md` only. Live product specs stay in `specs/`.
+
+### 2.2 Start cases
+
+| Case | What ethan does |
+| --- | --- |
+| User-root `agents/ethan.md` exists | Use the user-root pack. Read constants from the user-root templates path when that file exists. |
+| User-root `agents/ethan.md` is missing | Instructions URL above, then stop. |
+| A job needs a skill | Open that folder under `~/.cursor/skills/` using the Skills table in the user-root constants file. If the folder is missing, read `instructions_url` from that file when it exists. Otherwise use the instructions URL above and stop. |
+| `templates/` is missing on the user root | The current package has no templates entry ([`mcp-design.md`](../mcp/mcp-design.md)). Say that. Do not create a workspace templates tree. |
+| Workspace already has a same-name agent, rule, or skill | Do not overwrite it and do not treat it as the installed pack. Call-up still follows Cursor: a project `ethan.md` wins. |
+
 ## 3. Jobs
 
 What coach-ethan does over time:
@@ -58,8 +88,8 @@ What coach-ethan does over time:
 
 | Store | Where | What |
 | --- | --- | --- |
-| **Client root (CR)** | Cursor: `~/.cursor` from MCP `paths` / `.sdd-installed.json` | Installed framework pack: agents, skills, rules, workflows; templates under the pack when ARTIFACTS-01 / TEMPLATES-01 ship. This repo’s `.cursor/` is an **edit copy** for framework.sdd.works authors, not the end-user layout. |
-| **Workspace templates (WS-t)** | `<workspace>/.cursor/templates/framework.sdd.works/<locale>/` | Same process files if the user pasted the folder into the project. |
+| **Client root (CR)** | Cursor: `~/.cursor` from MCP `paths` / `.sdd-installed.json` | Installed framework pack: agents, skills, rules, workflows; templates under the pack when ARTIFACTS-01 / TEMPLATES-01 ship. This is the only framework tree for this repository. |
+| **Workspace templates (WS-t)** | `<workspace>/.cursor/templates/framework.sdd.works/<locale>/` | Process files if a project pasted that folder. This repository has no WS-t. |
 | **Workspace specs (WS-s)** | `<workspace>/specs/` | Live project process files. Destination when the user confirms seed-from-template (Toggle B). |
 | **Project agents** | `<workspace>/.cursor/agents/` | Cursor registry for slash-invoke in this workspace. **Not** WS-t. |
 
@@ -91,6 +121,12 @@ When repairing the **client-root** pack, call `sdd_install_framework` or `sdd_up
 - **HTTP** (ADR-054): server returns `packageUrl`, `extractTarget`, `paths`, `manifestPath`, `manifest`, `instructions`. The agent extracts **only** to `extractTarget` / `paths`. Never extract the tarball into `workspace/specs/`.
 - After extract, verify every name in `manifest.files.*` exists under `paths`. If any listed file is missing, do not skip extraction.
 
+### 5.3 Project constants
+
+`project-constants.md` is read from `~/.cursor/templates/framework.sdd.works/project-constants.md` ([ADR-056](../adr/ADR-056-single-user-root-framework-pack.md)). It is not copied into the workspace or into `specs/`.
+
+Until the install package includes `templates/`, that file is absent. §2.2 covers that case. `instructions_url` inside the file is used only after the user-root file exists. The bootstrap URL in §2.2 is the literal for a missing `agents/ethan.md`.
+
 ## 6. Missing-file recovery
 
 Two toggles. Do not collapse them.
@@ -103,7 +139,7 @@ Covers incomplete CR pack and/or missing WS-t.
 | --- | --- |
 | Incomplete **client-root** pack (agents, skills, templates when in the tarball) | Call install/update; extract to `extractTarget` / `paths` only |
 | WS-t missing, CR has templates | Use CR for this session. Do not require a workspace `.cursor` copy |
-| CR missing, WS-t present (author edit copy or paste) | Use WS-t. Optional later: install to CR for other projects; do not block this chat |
+| CR missing, WS-t present (pasted templates) | Use WS-t. Optional later: install to CR for other projects; do not block this chat |
 | Both missing | MCP install, then retry search. If MCP unavailable or extract fails, stop and tell the user |
 
 ### Toggle B — live `specs/` missing
@@ -190,7 +226,68 @@ MVP 2 needs only a minimal `plan` skill. The rest ship with the full pack.
 - Portal chat UI for the coach.
 - Using install/update to invent missing **project** specs without Toggle B confirm.
 
-## 12. Related docs
+## 12. Sprint 1 SBI 2 — initialize v2 POC
+
+Parent: pb-14. This section is the technical solution for that SBI. Later coaching (what now / next, events, artifact edits) stays in §7–§9 and is not part of this POC.
+
+### 12.1 Constraints
+
+| Constraint | Choice for this POC |
+| --- | --- |
+| Client | Cursor only. Other IDEs are out of this SBI. |
+| MCP | Already installed and connected (Release 1). This SBI does not install the MCP server. |
+| Workspace | A new empty folder the user opens in Cursor. No `specs/`, no project `.cursor/agents/`. |
+| Install target | User client root: `user_root/.cursor/` (`~/.cursor` on macOS). Not the empty project folder. |
+| Call-up | `/ethan` from Cursor’s user agent registry: `~/.cursor/agents/ethan.md`. |
+| Who runs install | The default Cursor agent (or the MCP tool UI). Ethan cannot install itself before the file exists. |
+| Success bar | The agent starts when the user types `/ethan`. Seeding `specs/` and coaching answers are later PBIs. |
+
+No new model server, registry, or feature store. Cursor’s model is the agent. framework.sdd.works MCP stays the installer (ADR-054 for HTTP).
+
+### 12.2 Sequence
+
+1. User creates an empty folder and opens it as the Cursor workspace.
+2. User confirms the Release 1 MCP server is connected in this Cursor profile (tools include `sdd_install_framework` and `sdd_update_framework`). If it is not connected, stop. Do not bundle MCP setup into this SBI.
+3. User asks the default agent to install or update the framework. That agent calls `sdd_install_framework` or `sdd_update_framework` (`sdd_update_framework` is an alias of install).
+4. **HTTP** (end-user path, ADR-054): the tool returns `packageUrl`, `extractTarget`, `paths`, `manifest`, and `instructions`. The default agent downloads the tarball and extracts **only** to `extractTarget` / `paths`. `paths.agents` is `~/.cursor/agents/`.
+5. **stdio** (local binary): the tool writes those paths itself and updates `.sdd-installed.json`.
+6. Verify `~/.cursor/agents/ethan.md` exists and every name in `manifest.files` exists under `paths`. If the agent file is missing, the install failed for this SBI even if skills or rules copied.
+7. User reloads the window if Cursor does not list the new agent yet.
+8. User types `/ethan`. Cursor loads `~/.cursor/agents/ethan.md` because the empty workspace has no project agent with the same name.
+
+Do not extract the tarball into the empty workspace, and do not copy it into `workspace/specs/` or into `workspace/.cursor/`. [ADR-056](../adr/ADR-056-single-user-root-framework-pack.md).
+
+### 12.3 Agent file contract
+
+| Field | Value |
+| --- | --- |
+| Path in the package | `agents/ethan.md` |
+| Installed path | `~/.cursor/agents/ethan.md` |
+| Frontmatter `name` | `ethan` (slash command is `/ethan`) |
+| Body for this POC | Identify as ethan, state that the framework pack is installed under `~/.cursor`, and say the workspace has no live `specs/` yet. Do not edit files. Do not call skills. |
+
+Every `/ethan` in this project loads `~/.cursor/agents/ethan.md` (§2.1). Ethan does not create a workspace agent file. Templates under `.cursor/templates/` do not register `/ethan`.
+
+### 12.4 What this POC does not do
+
+- Seed `specs/` (Toggle B in §6). Ask only if a later story requires it.
+- Answer “what now / what next” from a product backlog (pb-7).
+- Run events or edit artifacts (pb-8, pb-9).
+- Add a second agent runtime beside Cursor.
+
+### 12.5 Failures
+
+| Failure | What the user sees | Fix |
+| --- | --- | --- |
+| MCP not connected | Tool call is unavailable | Connect the Release 1 server, then retry. Do not invent a local copy. |
+| Extract into the empty project | Files appear under the workspace, `/ethan` still missing | Re-extract to `paths` under `~/.cursor`. Remove the mistaken workspace copy only if the user confirms. |
+| Agent markdown under templates or skills, not `agents/` | Pack looks installed, slash does nothing | Ship `agents/ethan.md` in the package and reinstall. |
+| Frontmatter `name` is not `ethan` | `/ethan` does not match | Set `name: ethan`. |
+| A project `ethan.md` already exists | `/ethan` loads that file instead of the user-root agent | Remove `<workspace>/.cursor/agents/ethan.md` when this project should use the installed agent ([ADR-056](../adr/ADR-056-single-user-root-framework-pack.md)). |
+
+Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/agents/ethan.md`. He does not copy the pack into the workspace. [ADR-056](../adr/ADR-056-single-user-root-framework-pack.md). That matches D1 and [`cursor-agent-callup.md`](../knowledge/agent/cursor-agent-callup.md).
+
+## 13. Related docs
 
 | Doc | Role |
 | --- | --- |
@@ -202,4 +299,6 @@ MVP 2 needs only a minimal `plan` skill. The rest ship with the full pack.
 | [`../sdd-scrum-guide.md`](../sdd-scrum-guide.md) | Names and meaning |
 | [`../sdd-scrum-practices.md`](../sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
 | [`../mcp/mcp-design.md`](../mcp/mcp-design.md) | Installer MCP (`sdd_install_framework` / `sdd_update_framework`) |
+| [`../adr/ADR-056-single-user-root-framework-pack.md`](../adr/ADR-056-single-user-root-framework-pack.md) | One pack on the user root |
+| [`../knowledge/agent/ide-asset-precedence.md`](../knowledge/agent/ide-asset-precedence.md) | Same-name project vs user-root assets |
 | [`../knowledge/agent/cursor-agent-callup.md`](../knowledge/agent/cursor-agent-callup.md) | Slash-invoke vs templates vs project `agents/` |

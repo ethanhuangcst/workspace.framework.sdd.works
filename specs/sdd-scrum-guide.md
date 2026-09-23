@@ -34,7 +34,7 @@ related:
 
 The Scrum Guide defines Scrum, and every element serves a purpose. Partial implementation can make Scrum ineffective.
 
-Scrum applies to complex work beyond software. “Developers” refers to anyone doing that work, so anyone gaining value from Scrum is included.
+Scrum applies to complex work beyond software. “Developers” refers to anyone doing that work, so anyone who gains value from Scrum is included.
 
 People may apply patterns, processes, and insights within Scrum, but this Guide does not cover them because they are not defined in Scrum.
 
@@ -150,7 +150,7 @@ Only the Product Owner can cancel a Sprint.
 
 Sprint Planning starts the Sprint and creates the Sprint Backlog.
 
-It defines the Sprint Goal (why), selects Product Backlog items (what), and plans (how) to deliver them.
+It defines the Sprint Goal (why), selects Product Backlog items (what), and plans how to deliver them.
 
 Timeboxed to up to eight hours for a one-month Sprint.
 
@@ -237,25 +237,29 @@ Many people contributed to Scrum. Among the earliest were Jeff Sutherland, Jeff 
 
 Ken Schwaber and Jeff Sutherland first presented Scrum publicly in 1995. The Scrum Guide documents Scrum as developed and refined by them over more than 30 years.
 
-# **Part II** Agenic Programming, Harness Engineering and Spec-Driven Development (SDD)
-With **Agentic Programming** with **Spec-Driven Development**, under the **Harness Engineering principles**, the software industry has been completely redefined.
-**Relationship to Agentic Programming, SDD and Harness Entineering:** **Agentic Programming** is the broader paradigm of using AI agents in software work. **Harness Engineering** is the infrastructure that makes it operational. **SDD** is a methodological approach within that paradigm, where agents work from specifications as the **source of truth**.
+# **Part II** Agentic Programming, Harness Engineering and Spec-Driven Development (SDD)
 
+With **Agentic Programming** and **Spec-Driven Development**, under **Harness Engineering principles**, software delivery is fundamentally reshaped.
+
+**Relationship to Agentic Programming, SDD and Harness Engineering:** **Agentic Programming** is the broader paradigm of using AI agents in software work. **Harness Engineering** is the infrastructure that makes it operational. **SDD** is the methodological approach within that paradigm, in which agents work from specifications as the **source of truth**.
 
 ## Agentic Programming
-**Agentic programming** is a software development approach in which **AI agents** act not merely as passive code assistants, but as **active collaborators** that participate in the engineering workflow: **planning, coding, testing, debugging, reviewing**, and sometimes operating software—with a degree of autonomy under **human-defined goals, constraints, and oversight**.
+
+**Agentic Programming** is a software development approach in which **AI agents** act not merely as passive code assistants, but as **active collaborators** in the engineering workflow: **planning, coding, testing, debugging, reviewing**, and sometimes operating software, with autonomy bounded by **human-defined goals, constraints, and oversight**.
 
 ## Harness Engineering
+
 **Harness Engineering** is the discipline of designing the **runtime framework** that enables AI agents to operate **reliably, safely, and effectively** in real-world environments. It includes **tool integration, execution orchestration, context and memory management, permissions and guardrails, observability, and human oversight**.
 
 - **Tool integration**: connects agents to files, APIs, and systems
 - **Execution orchestration**: manages planning, action, checking, and retries
 - **Context and memory**: controls what the agent knows and retains
-- **Permissions and guardrails**: constrains actions and reduces risk
-- **Observability and oversight**: supports monitoring, evaluation, and human intervention
+- **Permissions and guardrails**: constrain actions and reduce risk
+- **Observability and oversight**: support monitoring, evaluation, and human intervention
 
 ## Spec-Driven Development (SDD)
-**Spec-Driven Development (SDD)** is an approach within agentic programming where the **specification** is the **primary artifact**: requirements, behaviors, interfaces, constraints, and acceptance criteria are defined first, and implementation follows from the spec.
+
+**Spec-Driven Development (SDD)** is an approach within agentic programming in which the **specification** is the **primary artifact**: requirements, behaviors, interfaces, constraints, and acceptance criteria are defined first, and implementation follows from the spec.
 
 - **Start with the spec**: define goals, workflows, tools, inputs/outputs, guardrails, and success criteria.
 - **Turn intent into structure**: define roles, rules, permissions, memory, and failure handling.
@@ -265,7 +269,6 @@ With **Agentic Programming** with **Spec-Driven Development**, under the **Harne
 - **Clarify multi-agent work**: align planner, coder, reviewer, and tester on one source of truth.
 - **Reduce drift and ambiguity**: make constraints explicit.
 - **Improve automation**: generate code, tests, docs, and validation more easily.
-
 
 ## SDD under Harness Engineering Principles
 
@@ -277,14 +280,13 @@ In **Spec-Driven Development (SDD)**, the **specification** defines behavior, co
 - **Skills**: provide reusable capabilities.  
 - **Agents**: execute tasks against the spec.  
 - **Workflows**: coordinate actions and handoffs.  
-- **Knowledge**: grounds execution in relevant context.  
+- **Knowledge**: ground execution in relevant context.  
 
 Together, these layers turn **specifications** into **reliable execution**.
 
-
 ### Integrating eXtreme Programming practices with SDD
 
-In **SDD**, **eXtreme Programming (XP)** practices can be embedded in the **harness** so AI agents follow **consistent engineering standards**, including:
+In **SDD**, **eXtreme Programming (XP)** practices can be embedded in the **harness** so humans and AI agents follow consistent engineering standards, including:
 
 - **ATDD**: define acceptance tests from the spec before implementation.
 - **TDD**: write tests first, then implement to pass them.
@@ -299,13 +301,13 @@ In **SDD**, **eXtreme Programming (XP)** practices can be embedded in the **harn
 
 - **Humans define the harness**: rules, skills, workflows, agent roles, and knowledge boundaries.
 - **Humans define the spec**: goals, constraints, business rules, and acceptance criteria.
-- **AI helps formalize and execute**: refining specs, implementing, testing, and iterating within the harness.
-- **Humans validate and supervise**: reviewing outputs, resolving ambiguity, approving sensitive actions, and updating the source of truth.
-- **AI provides feedback**: comparing outcomes against the spec and surfacing gaps or failures.
+- **AI helps formalize and execute**: refine specs, implement, test, and iterate within the harness.
+- **Humans validate and supervise**: review outputs, resolve ambiguity, approve sensitive actions, and update the source of truth.
+- **AI provides feedback**: compare outcomes against the spec and surface gaps or failures.
 
 # **Part III** The Gap in Classic Scrum When Implementing Agentic Programming with SDD
 
-When implementing **SDD** under **Harness Engineering principles**, we found gaps that change the **Scrum definition**.
+When implementing **SDD** under **Harness Engineering principles**, gaps emerge that change the **Scrum definition**.
 
 ## SDD concepts that need to be added into scrum implementation
 
@@ -351,7 +353,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 - **Teams** can be much smaller: often one **Product Owner** and a few **full-stack engineers**, with one also serving as **Scrum Master**.
 - **Scrum roles** can include both **humans and AI agents**.
 - Traditional **Scrum Master** responsibilities can be largely delegated to **AI agents**.
-- **Additinoal Scrum Master responsibilities**: upholds **Harness Engineering principles** across **Rules, Skills, Workflows, Agents, and Knowledge**.
+- **Additional Scrum Master responsibilities**: uphold **Harness Engineering principles** across **Rules, Skills, Workflows, Agents, and Knowledge**.
 
 #### Developers
 - **Humans and AI agents** who create a **usable Increment** each Sprint.
@@ -365,7 +367,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 - **One person**, assisted by AI agents, **not a committee**.
 
 #### Scrum Master
-- **Traditinoal Scrum Master responsibilities** can be distributed across **Scrum accountabilities**.
+- **Traditional Scrum Master responsibilities** can be distributed across **Scrum accountabilities**.
 - **AI agents** can support **coaching, impediment removal, Scrum events, Product Goal definition, Product Backlog management, and Scrum adoption**.
 - Additional responsibilities include **upholding Harness Engineering principles, managing knowledge, and continuously improving sdd-scrum**.
 
@@ -410,4 +412,197 @@ As there is no current need for **workflows** at this stage, this folder remains
 
 #### Commitment: Definition of Done
 - The **Definition of Done** is a **rule**: **dod.mdc**.
-- It applies not only to **Increments**, but to **all tasks**.
+- It applies not only to **Increments**, but also to **all tasks**.
+
+
+
+**PART IV** sdd-scrum guide
+# **Part IV** sdd-scrum Guide
+
+## Purpose
+
+This guide defines sdd-scrum by stating what stays, what is added, and what changes.
+
+## Audience
+
+This guide is for both humans and AI agents.
+
+- **Humans** govern, approve, and remain accountable.
+- **AI agents** execute within defined constraints.
+- Both use the same rules, artifacts, and terminology.
+
+## How to read this guide
+
+- **Keep**: classic Scrum concepts that remain valid.
+- **Add**: new concepts required by SDD under Harness Engineering principles.
+- **Modify**: classic Scrum concepts that change in sdd-scrum.
+
+## Terminology
+
+- **sdd-scrum**: Scrum adapted for SDD under Harness Engineering principles.
+- **Spec**: the source of truth for behavior, constraints, and acceptance criteria.
+- **Harness**: the runtime system that governs agent execution.
+- **Rule**: a constraint on execution.
+- **Skill**: a reusable capability.
+- **Agent**: a human or AI actor that performs work.
+- **Workflow**: a defined sequence of actions and handoffs.
+- **Knowledge**: retained project context used in execution.
+- **Artifact**: a persistent project document used to plan, execute, or inspect work.
+- **PBI**: Product Backlog Item.
+- **SBI**: Sprint Backlog Item.
+- **Increment**: usable output that meets the Definition of Done.
+- **OGT**: on-going tasks:different from the Sprint Backlog Items (SBIs) in sprint-backlog.md. They are the samller tasks created when AI agents are executing the SBI. Many of them are created by agents in PLAN mode and rely on agents to manage them, or created by human as the temporary tasks.
+
+## What remains unchanged
+
+### Scrum theory
+- Empiricism remains the foundation.
+- Transparency, inspection, and adaptation still apply.
+- Lean thinking still applies.
+
+### Scrum values
+- Commitment
+- Focus
+- Openness
+- Respect
+- Courage
+
+### Core accountabilities
+- The **Product Owner** remains accountable for product value.
+- **Developers** remain accountable for creating usable output.
+- The **Scrum Master** remains accountable for Scrum effectiveness.
+
+### Core artifacts
+- The **Product Backlog** remains the source of candidate work.
+- The **Sprint Backlog** remains the source of current Sprint work.
+- The **Increment** remains the unit of delivered value.
+
+## What is added
+
+### Harness layers
+- **Rules**: constrain execution.
+- **Skills**: provide reusable capabilities.
+- **Agents**: execute work.
+- **Workflows**: coordinate actions and handoffs.
+- **Knowledge**: ground execution in context.
+
+### Rules
+- **dod.mdc**: Definition of Done.
+- **incremental-delivery.mdc**: incremental delivery policy.
+- **realtime-status.mdc**: real-time status update policy.
+
+### Skills
+- **atdd**
+- **tdd**
+- **start-new-project**
+- **update-project**
+- **refine-pb**
+- **plan-sprint**
+- **update-status**
+- **retrospective**
+- **close-sprint**
+- **audit-artifacts**
+- **update-artifacts**
+
+### Framework Artifacts
+- **status.md**: real-time status.
+- **change-log.md**: change history.
+- **artifacts-map.md**: artifact mapping.
+
+### Engineering Artifacts
+- **architecture.md**: architecture spec.
+- **{model_name}-stories**: user stories and acceptance criterias
+- **{model_name}-design.md**: design spec.
+- **{model_name}-test.md**: test spec.
+- **deployment.md**: deployment spec.
+- **.secrets**: file to store secrets.
+
+### Knowledge
+- **ADR**: Architecture Decision Record.
+- **knowledge/**: project knowledge learned during execution.
+
+## What changes
+
+### Scrum Team
+- Teams may be smaller.
+- Scrum roles may include humans and AI agents.
+- The Scrum Master also upholds Harness Engineering principles.
+- Human members train, supervise, and govern AI agents.
+
+#### Developers
+- Developers may be human, AI, or both.
+- They may adapt plans in real time toward the Sprint Goal.
+- Human members remain professionally accountable.
+
+#### Product Owner
+- The Product Owner remains one person, not a committee.
+- Work may be delegated to AI agents, but accountability may not.
+
+#### Scrum Master
+- Some classic Scrum Master duties may be executed by AI agents.
+- The role expands to include rule design, skill design, harness quality, and knowledge management.
+
+### Scrum Events
+
+#### The Sprint
+- Sprints may be much shorter.
+- Fixed cadence may matter less in very short execution cycles.
+- The Sprint still bounds planning, inspection, and delivery.
+
+#### Sprint Planning
+- Sprint Planning may take minutes, not hours.
+- AI agents may prepare backlog updates for human review.
+
+#### Daily Scrum
+- Real-time inspection may supplement the daily event.
+- Rules may trigger status updates and small retrospectives.
+
+#### Sprint Review
+- Sprint Review remains the event for inspecting outcomes and deciding next steps.
+- AI-generated outputs may be reviewed before or during the event.
+
+#### Sprint Retrospective
+- Retrospectives may occur at Sprint-end, on demand, by rule, or before Sprint close.
+- Retrospective is both an event and a skill.
+
+### Scrum Artifacts
+
+#### Product Backlog
+- The Product Backlog may be maintained as a Markdown artifact.
+- Sizing may become optional when work is sliced very small.
+
+#### Sprint Backlog
+- The Sprint Backlog may be maintained as a Markdown artifact.
+- It may be updated continuously by humans and AI agents.
+
+#### Increment
+- An Increment remains usable output that meets the Definition of Done.
+- Multiple small Increments may be produced within short cycles.
+
+#### Commitment: Definition of Done
+- The Definition of Done is implemented as a rule.
+- It may apply to tasks as well as Increments.
+
+## Minimum sdd-scrum setup
+
+- One **Product Owner**
+- One **Scrum Master**
+- One or more **Developers**
+- One shared **spec**
+- One **Product Backlog**
+- One **Sprint Backlog**
+- One **Definition of Done** rule
+- One **status** artifact
+- Defined human approval boundaries
+- Defined agent execution boundaries
+
+## Operating principles
+
+- Spec before implementation.
+- Rules before autonomy.
+- Humans keep accountability.
+- AI agents execute within constraints.
+- Artifacts remain the shared source of truth.
+- Inspection happens continuously.
+- Retrospective drives improvement.
+- Write rules so both humans and AI agents can follow them.
