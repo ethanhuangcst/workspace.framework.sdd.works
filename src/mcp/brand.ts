@@ -93,7 +93,7 @@ export function getMcpHttpUrl(): string {
 }
 
 export function getAgentSetupUrl(): string {
-  return `${getMcpWebsiteUrl().replace(/\/$/, "")}/agent-setup`;
+  return `${getMcpWebsiteUrl().replace(/\/$/, "")}/setup`;
 }
 
 export function isLocalMcpDev(): boolean {

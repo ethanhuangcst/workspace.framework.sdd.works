@@ -15,7 +15,7 @@ Ethan still needs a bit he can set false when a later job cannot read a skill, r
 ## Decision
 1. `{client_root}/.sdd-installed.json` is the only install record. Do not write `framework.sdd.works.json`.
 2. Add `pack_complete` to that ledger. The installer sets it `true` in the same write as `package_version`, `package_commit`, `installed_at`, and `files`, and only after the copy succeeds. A failed copy does not set it `true`.
-3. Keep the existing `files` groups. Do not replace them with a flat list.
+3. Keep the existing `files` groups. Do not replace them with a flat list. **Amended by [ADR-059](./ADR-059-ledger-lists-pack-files.md):** each entry is a file path relative to `{client_root}`, not a folder name.
 4. Idempotency ignores `pack_complete`. It still requires matching `package_version`, matching `package_commit`, the listed files on disk, and `force` unset (ADR-052).
 5. On start, Ethan reads only `{client_root}/.sdd-installed.json`. Missing file, or `pack_complete` not `true`, is a fatal stop: instructions URL, then stop. He does not scan the pack to decide completeness.
 6. When a later job cannot read a required skill, rule, or seed, Ethan sets `pack_complete` to `false` and stops. He does not change `package_version` or `package_commit`. He does not set the flag back to `true`. The next install or update sets it `true` only when that copy succeeds.

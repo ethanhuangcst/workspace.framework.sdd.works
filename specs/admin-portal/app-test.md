@@ -37,8 +37,9 @@
 | Keys crypto | Round-trip encrypt/decrypt; missing key; wrong key / tampered ciphertext → clear error |
 | Locale | Cookie → locale; missing-key fallback |
 | Keys / settings Zod | Valid names; reject CJK in `key_value`; invalid GitHub URL |
+| InstructionsPage | Tab switch Setup / Features; copy value is the `/setup` sentence; one stdio `mcp.json`; Features lists ethan and fixed skill/rule/template names; Get secret submit does not network and shows no stored value |
 
-Commands: `npx vitest run src/auth src/lib`
+Commands: `npx vitest run src/auth src/lib src/components/features/InstructionsPage.test.ts`
 
 ---
 
@@ -60,7 +61,7 @@ Commands: `npx vitest run src/auth src/lib`
 | Spec area | Scenarios |
 | --- | --- |
 | Public home | Instructions + login link visible |
-| Instructions | Guide title visible; back-home → `/`; agents roster lists seven names in order |
+| Instructions | Guide title visible; Setup and Features tabs; Features shows ethan; secret control does not reveal a value; agents roster lists seven names in order |
 | Login | Seeded admin reaches keys landing; empty-password admin → set-password |
 | Password reset | Mail capture / fixture path when configured |
 | Keys | Create, list shows value, copy, edit, delete, bulk delete |

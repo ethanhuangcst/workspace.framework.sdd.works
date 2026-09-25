@@ -101,14 +101,14 @@ Other regions may use the default npm registry.
 
 **Decision:** one **git repo**, two production processes on Server 2 if MCP HTTP is not inlined into Next.js; one **shared `packages/core`** (or `src/core`) for install/update/list/key logic. Prefer **sibling Node MCP** if the pinned SDK’s Streamable HTTP transport does not fit Next.js request lifecycle; otherwise a single Next.js process is allowed.
 
-**Filesystem writes** (`sdd_install_framework` / `sdd_update_framework`) on stdio run where the process can see the **caller’s** home/config roots (dev contributors). **End users** use HTTP MCP: tools return `packageUrl` + manifest + instructions; the AI agent extracts via shell (ADR-054). HTTP MCP on Server 2 SHALL NOT write arbitrary paths on the server.
+**Filesystem writes** (`sdd_install_framework` / `sdd_update_framework`) on stdio run where the process can see the **caller’s** home/config roots (end users primary path and dev contributors, ADR-058). **HTTP fallback:** tools return `packageUrl` + manifest + instructions; the AI agent extracts via shell (ADR-054). HTTP MCP on Server 2 SHALL NOT write arbitrary paths on the server.
 
 ### MCP tools (canonical names)
 
 | Tool | Side effects | Transport notes |
 | --- | --- | --- |
 | `sdd_list_versions` | None (read) | stdio (from REST API) + HTTP (from sync cache) |
-| `sdd_install_framework` | Writes client paths (stdio) or returns tarball URL (HTTP) | stdio + HTTP (ADR-054) |
+| `sdd_install_framework` | Writes client paths (stdio primary) or returns tarball URL (HTTP fallback) | stdio + HTTP (ADR-058 / ADR-054) |
 | `sdd_update_framework` | Same as install; idempotent on same version | same as install |
 | `sdd_get_key` | None (returns plaintext `key_value`) | **HTTP only**; auth required |
 
@@ -395,4 +395,4 @@ Extends **common-test-strategy** (do not weaken it):
 5. Package source: GitHub sync, release artifact, or both.
 6. TRAE Agents verification.
 
-ADR-worthy when implemented: HTTP MCP in Next.js vs sibling process; key-at-rest encryption. **Accepted:** [ADR-047](../adr/ADR-047-qwen-install-path-discovery.md), [ADR-051](../adr/ADR-051-zero-dep-stdio-binary.md), [ADR-052](../adr/ADR-052-commit-sha-identity.md), [ADR-053](../adr/ADR-053-server-side-sync-thin-stdio.md), [ADR-054](../adr/ADR-054-hybrid-http-ai-tarball.md).
+ADR-worthy when implemented: HTTP MCP in Next.js vs sibling process; key-at-rest encryption. **Accepted:** [ADR-047](../adr/ADR-047-qwen-install-path-discovery.md), [ADR-051](../adr/ADR-051-zero-dep-stdio-binary.md), [ADR-052](../adr/ADR-052-commit-sha-identity.md), [ADR-053](../adr/ADR-053-server-side-sync-thin-stdio.md), [ADR-054](../adr/ADR-054-hybrid-http-ai-tarball.md) (HTTP fallback), [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md), [ADR-058](../adr/ADR-058-stdio-end-user-http-fallback.md), [ADR-059](../adr/ADR-059-ledger-lists-pack-files.md), [ADR-061](../adr/ADR-061-setup-prompt-public-path.md).

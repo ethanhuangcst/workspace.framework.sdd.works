@@ -77,13 +77,48 @@ The other templates in this folder use Pokymon Card Collection as the worked exa
 
 ## Templates
 
-**When**: copy or refresh seeds during on-board (job 1) if working copies are missing; on new project (job 2); on update settings (job 3) only when relocating or filling a gap — never overwrite filled working copies without the user confirming.
+**When**: copy or refresh locale seeds during on-board (job 1) if working copies are missing; on new project (job 2); on update settings (job 3) only when relocating or filling a gap — never overwrite filled working copies without the user confirming. Do not copy `constants.md` into the artifacts root.
 
-**From where**: `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy listed files into the artifacts root named in `artifacts-map.md`.
+**From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy listed locale files into the artifacts root named in `artifacts-map.md`. Read `constants.md` from `{client_root}/templates/framework.sdd.works/constants.md` after install; do not copy it into the artifacts root.
 
-**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (seeds vs working copies).
+**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (seeds vs working copies). `constants.md` is pack lookup on the client root, not a working copy under the artifacts root.
 
-Each heading below is one seed file. The RID Registry is a section inside `sprint-backlog.md`. It is not a separate seed.
+Each heading below is one seed file. The RID Registry is a section inside `sprint-backlog.md`. It is not a separate seed. `constants.md` is listed first because it is not a locale seed.
+
+### constants.md
+
+[`constants.md`](../constants.md) is the pack lookup for path names, the instructions URL, skill keys, and rule keys. Ethan reads it after `{client_root}/.sdd-installed.json` has `pack_complete: true`. On a failed start he reads `instructions_url` from it when the file can be read. Home after install: `{client_root}/templates/framework.sdd.works/constants.md` ([ADR-060](../../../adr/ADR-060-constants-on-client-root.md)).
+
+#### Home and copy boundary
+
+- Read the live file from `{client_root}/templates/framework.sdd.works/constants.md`.
+- Jobs 1–3 do not copy it into the artifacts root. Locale seeds still copy into that root.
+- It is pack lookup, not a project file under `specs/`. Do not put product facts, acceptance criteria, or secret values in it.
+- Do not add a section for a one-off path.
+
+#### Sections
+
+Sections stay in this order: Paths, `instructions_url`, Skills, Rules.
+
+#### Paths table
+
+Columns are `Name` and `Value`. Names are `agents_dir`, `skills_dir`, `rules_dir`, `workflows_dir`, `templates_dir`. Values are folder names relative to `client_root`, not absolute paths and not `~`.
+
+#### instructions_url
+
+One URL: the public instructions page. Prompts read it from this file. They do not hard-code the host.
+
+#### Skills table
+
+Columns are `Skill key` and `Folder`. A job row uses the `skill_*` key ethan matches. A non-job skill uses the folder name as the key. Folder names start with `sdd-`. One skill, one row. Do not repeat a folder under a second key.
+
+#### Rules table
+
+Columns are `Rule key` and `File`. The key is the rule id without `.mdc`. The file is the filename under `rules_dir`.
+
+#### When a pack file is added
+
+Add the skill or rule row here in the same change as the skill or rule. Do not leave a prompt that types the folder name itself.
 
 ### product-backlog.md
 

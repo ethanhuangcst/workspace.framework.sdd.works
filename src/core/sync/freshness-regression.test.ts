@@ -275,7 +275,7 @@ describe("freshness regression — HTTP install (F1, F5, F9)", () => {
     expect(body.local_commit_matches).toBe(false);
     expect(body.extract_recommended).toBe(true);
     expect(body.cache_refresh).toBe("refreshed");
-    expect(body.manifest?.files.skills).toContain("a-tdd");
+    expect(body.manifest?.files.skills).toContain("skills/a-tdd/SKILL.md");
   });
 
   it("F9: stale syncedAt surfaces cache_stale advisory", async () => {
@@ -328,7 +328,7 @@ describe("freshness regression — auto sync on install (F2, F8)", () => {
     const body = await httpInstall(home);
     expect(syncCalls).toBe(1);
     expect(body.commitSha).toBe("sha-new");
-    expect(body.manifest?.files.skills).toEqual(["a-tdd"]);
+    expect(body.manifest?.files.skills).toEqual(["skills/a-tdd/SKILL.md"]);
   });
 
   it("F8: live tip lookup fails — falls back to full sync", async () => {

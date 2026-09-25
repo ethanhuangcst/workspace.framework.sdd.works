@@ -8,7 +8,7 @@
     <link rel="apple-touch-icon" href="assets/apple-icon.png" />
     <link rel="stylesheet" href="assets/mockup.css" />
   </head>
-  <body class="home-shell">
+  <body class="home-shell guide-shell" data-title-key="admin.guide.title">
     <a class="sr-only" href="#content" data-i18n="admin.a11y.skip">Skip to content</a>
     <div class="shell-locale">
       <div class="locale-switch" role="group" data-i18n="admin.a11y.locale" data-i18n-attr="aria-label">
@@ -18,18 +18,382 @@
       </div>
     </div>
     <main id="content" class="home-main">
-      <div class="home-card">
-        <div class="logo logo-home" aria-label="framework.sdd.works">
-          <img class="logo-full" src="assets/sdd-logo.png" alt="" width="360" height="200" />
+      <article class="guide" data-testid="instructions-guide">
+        <header class="guide-hero">
+          <div class="guide-hero-title">
+            <a class="logo" href="01-home.html" aria-label="framework.sdd.works">
+              <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="234" height="130" />
+            </a>
+            <h1 data-i18n="admin.guide.title">Install framework.sdd.works to your AI tools</h1>
+          </div>
+          <p class="guide-hero-tag" data-i18n="admin.guide.lead">SKILLS.RULES.AGENTS.TEMPLATES</p>
+        </header>
+
+        <div class="guide-tabs" role="tablist" aria-label="Guide sections">
+          <button
+            type="button"
+            class="guide-tab is-active"
+            role="tab"
+            id="tab-setup"
+            aria-selected="true"
+            aria-controls="panel-setup"
+            data-tab="setup"
+            data-i18n="admin.guide.tab_setup"
+          >
+            Setup
+          </button>
+          <button
+            type="button"
+            class="guide-tab"
+            role="tab"
+            id="tab-features"
+            aria-selected="false"
+            aria-controls="panel-features"
+            data-tab="features"
+            data-i18n="admin.guide.tab_features"
+          >
+            Features
+          </button>
         </div>
-        <p class="tagline" data-i18n="admin.home.tagline">SDD framework for IDEs and agents. Install, update, and resolve keys over MCP.</p>
-        <div class="home-actions">
-          <a class="home-link" href="13-instructions.html" data-i18n="admin.home.instructions_link" data-testid="admin-home-instructions" target="_blank" rel="noopener noreferrer">MCP instructions</a>
-          <a class="btn btn-page" href="02-login.html" data-i18n="admin.home.login" data-testid="admin-login">Sign in</a>
+
+        <div
+          class="guide-tab-panel"
+          role="tabpanel"
+          id="panel-setup"
+          aria-labelledby="tab-setup"
+          data-panel="setup"
+        >
+          <section class="guide-section" id="setup">
+            <div class="setup-card">
+              <button
+                class="setup-pill"
+                type="button"
+                data-copy="Fetch and execute the setup instructions from https://framework.sdd.works/setup"
+                data-testid="copy-setup-prompt"
+              >
+                <span class="setup-pill-text" data-i18n="admin.guide.copy_prompt" data-i18n-idle="admin.guide.copy_prompt">Copy prompt and paste to your AI tool</span>
+                <span class="setup-pill-divider" aria-hidden="true"></span>
+                <span class="setup-pill-icons" aria-hidden="true">
+                  <img class="setup-pill-icon" src="assets/guide/claude.png" alt="" width="18" height="18" />
+                  <img class="setup-pill-icon" src="assets/guide/cursor.png" alt="" width="18" height="18" />
+                  <img class="setup-pill-icon" src="assets/guide/codex.png" alt="" width="18" height="18" />
+                  <img class="setup-pill-icon" src="assets/guide/codebuddy.png" alt="" width="18" height="18" />
+                </span>
+              </button>
+
+              <div class="setup-after">
+                <p data-i18n="admin.guide.setup_after_prompt">Once MCP is connected, type to AI:</p>
+                <div class="codeblock">
+                  <pre class="codeblock-text mono" data-i18n="admin.guide.setup_install_phrase">Install SDD.works Framework</pre>
+                  <button
+                    class="codeblock-copy"
+                    type="button"
+                    data-copy="Install SDD.works Framework"
+                    data-i18n="admin.keys.copy"
+                    data-testid="copy-install-phrase"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <p data-i18n="admin.guide.setup_after_tool">or, directly call MCP tool by giving the command:</p>
+                <div class="codeblock">
+                  <pre class="codeblock-text mono">sdd_install_framework</pre>
+                  <button
+                    class="codeblock-copy"
+                    type="button"
+                    data-copy="sdd_install_framework"
+                    data-i18n="admin.keys.copy"
+                    data-testid="copy-install-cmd"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="setup-manual">
+              <h3 class="section-subtitle" data-i18n="admin.guide.manual_title">Manual setup</h3>
+              <p class="field-note" data-i18n="admin.guide.manual_body">Prefer not to use the setup prompt? Add this MCP entry. Leave every other server unchanged.</p>
+              <div class="codeblock codeblock--file">
+                <div class="codeblock-head">
+                  <span class="codeblock-tag">mcp.json</span>
+                  <button
+                    class="codeblock-copy"
+                    type="button"
+                    data-copy='{
+  "mcpServers": {
+    "framework.sdd.works": {
+      "command": "${userHome}/.sdd/sdd-mcp",
+      "env": {
+        "SDD_SERVER_URL": "https://framework.sdd.works"
+      }
+    }
+  }
+}'
+                    data-i18n="admin.keys.copy"
+                    data-testid="copy-mcp-config"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <pre class="codeblock-text mono">{
+  "mcpServers": {
+    "framework.sdd.works": {
+      "command": "${userHome}/.sdd/sdd-mcp",
+      "env": {
+        "SDD_SERVER_URL": "https://framework.sdd.works"
+      }
+    }
+  }
+}</pre>
+              </div>
+            </div>
+          </section>
+
+          <section class="guide-section" id="agents">
+            <h2 class="section-subtitle" data-i18n="admin.guide.h_agents">Supported AI agents</h2>
+            <p data-i18n="admin.guide.agents_intro">Paste the setup prompt into any of these agents. One MCP server; install writes to that agent’s local paths.</p>
+            <ol class="agent-roster" data-testid="guide-agents">
+              <li class="agent-roster-row">
+                <span class="agent-roster-mark" aria-hidden="true">
+                  <img class="agent-roster-icon" src="assets/guide/claude.png" alt="" width="18" height="18" />
+                </span>
+                <span class="agent-roster-name">Claude Code</span>
+              </li>
+              <li class="agent-roster-row">
+                <span class="agent-roster-mark" aria-hidden="true">
+                  <img class="agent-roster-icon" src="assets/guide/codex.png" alt="" width="18" height="18" />
+                </span>
+                <span class="agent-roster-name">Codex</span>
+              </li>
+              <li class="agent-roster-row">
+                <span class="agent-roster-mark" aria-hidden="true">
+                  <img class="agent-roster-icon" src="assets/guide/cursor.png" alt="" width="18" height="18" />
+                </span>
+                <span class="agent-roster-name">Cursor</span>
+              </li>
+              <li class="agent-roster-row">
+                <span class="agent-roster-mark" aria-hidden="true">
+                  <img class="agent-roster-icon" src="assets/guide/codebuddy.png" alt="" width="18" height="18" />
+                </span>
+                <span class="agent-roster-name">CodeBuddy CN / CodeBuddy / WorkBuddy CN</span>
+              </li>
+              <li class="agent-roster-row">
+                <span class="agent-roster-mark" aria-hidden="true">
+                  <img class="agent-roster-icon" src="assets/guide/trae.png" alt="" width="18" height="18" />
+                </span>
+                <span class="agent-roster-name">TraeCode CN / TRAE</span>
+              </li>
+              <li class="agent-roster-row">
+                <span class="agent-roster-mark" aria-hidden="true">
+                  <img class="agent-roster-icon" src="assets/guide/copilot.png" alt="" width="18" height="18" />
+                </span>
+                <span class="agent-roster-name">GitHub Copilot</span>
+              </li>
+              <li class="agent-roster-row">
+                <span class="agent-roster-mark" aria-hidden="true">
+                  <img class="agent-roster-icon" src="assets/guide/kiro.png" alt="" width="18" height="18" />
+                </span>
+                <span class="agent-roster-name">AWS Kiro</span>
+              </li>
+            </ol>
+          </section>
+
+          <section class="guide-section" id="tools">
+            <h2 class="section-subtitle" data-i18n="admin.guide.h_tools">Tools</h2>
+            <div class="table-wrap">
+              <table class="guide-caps-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="admin.guide.cap_col_tool">Tool</th>
+                    <th data-i18n="admin.guide.cap_col_body">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>sdd_list_versions</code></td>
+                    <td data-i18n="admin.guide.tool_list_versions">List package versions and inventory. Read-only.</td>
+                  </tr>
+                  <tr>
+                    <td><code>sdd_install_framework</code></td>
+                    <td data-i18n="admin.guide.tool_install">Install agents, skills, rules, and other capabilities from framework.sdd.works</td>
+                  </tr>
+                  <tr>
+                    <td><code>sdd_update_framework</code></td>
+                    <td data-i18n="admin.guide.tool_update">Update the framework.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
         </div>
-      </div>
+
+        <div
+          class="guide-tab-panel"
+          role="tabpanel"
+          id="panel-features"
+          aria-labelledby="tab-features"
+          data-panel="features"
+          hidden
+        >
+          <section class="guide-section feature-section" id="features-agents">
+            <h2 class="section-subtitle" data-i18n="admin.guide.features_h_agents">Agents</h2>
+            <ul class="feature-list">
+              <li>
+                <span class="feature-name">ethan</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_ethan">The scrum-master agent for this service.</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="guide-section feature-section" id="features-skills">
+            <h2 class="section-subtitle" data-i18n="admin.guide.features_h_skills">Skills</h2>
+            <ul class="feature-list">
+              <li>
+                <span class="feature-name">sdd-atdd</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_atdd">Acceptance Test Driven Development.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-tdd</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_tdd">Test Driven Development.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-new-project</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_new_project">Start a new project.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-update-project</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_update_project">Update project settings.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-refine-pb</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_refine_pb">Refine the product backlog.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-plan-sprint</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_plan_sprint">Plan a sprint.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-update-status</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_update_status">Report status.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-retrospective</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_retrospective">Run a retrospective.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-close-sprint</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_close_sprint">Close or start a sprint.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-audit-artifacts</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_audit_artifacts">Audit project artifacts.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-update-specs</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_update_specs">Keep specs aligned with the implementation.</span>
+              </li>
+              <li>
+                <span class="feature-name">sdd-implement-feature</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_implement_feature">Update specs, then implement with TDD.</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="guide-section feature-section" id="features-rules">
+            <h2 class="section-subtitle" data-i18n="admin.guide.features_h_rules">Rules</h2>
+            <ul class="feature-list">
+              <li>
+                <span class="feature-name">dod.mdc</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_dod">Definition of Done.</span>
+              </li>
+              <li>
+                <span class="feature-name">incremental-delivery.mdc</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_incremental">Incremental Delivery.</span>
+              </li>
+              <li>
+                <span class="feature-name">realtime-status.mdc</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_realtime">Track status in real time and update status.md when each task is done.</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="guide-section feature-section" id="features-templates">
+            <h2 class="section-subtitle" data-i18n="admin.guide.features_h_templates">Templates</h2>
+            <ul class="feature-list">
+              <li>
+                <span class="feature-name">product-backlog.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_product_backlog">Product Backlog.</span>
+              </li>
+              <li>
+                <span class="feature-name">sprint-backlog.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_sprint_backlog">Sprint Backlog.</span>
+              </li>
+              <li>
+                <span class="feature-name">status.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_status">Real-time status.</span>
+              </li>
+              <li>
+                <span class="feature-name">change-log.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_change_log">Change management.</span>
+              </li>
+              <li>
+                <span class="feature-name">artifacts-map.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_artifacts_map">Artifact path definition and project mapping.</span>
+              </li>
+              <li>
+                <span class="feature-name">architecture.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_architecture">Engineering artifact template.</span>
+              </li>
+              <li>
+                <span class="feature-name">design.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_design">Engineering artifact template.</span>
+              </li>
+              <li>
+                <span class="feature-name">test.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_test">Engineering artifact template.</span>
+              </li>
+              <li>
+                <span class="feature-name">deployment.md</span>
+                <span class="feature-summary" data-i18n="admin.guide.feat_deployment">Engineering artifact template.</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="guide-section" id="features-secret">
+            <form class="secret-lookup" data-testid="secret-lookup">
+              <input
+                class="input-box"
+                type="text"
+                name="secret_name"
+                autocomplete="off"
+                spellcheck="false"
+                data-i18n="admin.guide.secret_hint"
+                data-i18n-attr="placeholder"
+                placeholder="Enter the name of the secret, example: sdd-trial-googlemaps"
+                data-testid="secret-name"
+              />
+              <button class="btn" type="submit" data-i18n="admin.guide.secret_button" data-testid="secret-get">
+                Get secret
+              </button>
+            </form>
+            <p class="secret-result mono" hidden data-testid="secret-result" aria-live="polite"></p>
+            <p class="field-note secret-error" hidden data-testid="secret-error" aria-live="polite"></p>
+          </section>
+        </div>
+      </article>
     </main>
-    <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>
+    <footer class="site-footer site-footer--guide">
+      <div class="site-footer-inner">
+        <a
+          class="site-footer-admin"
+          href="02-login.html"
+          data-i18n="admin.footer.admin_portal"
+          data-testid="footer-admin-portal"
+        >Admin portal</a>
+        <p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p>
+      </div>
+    </footer>
     <script src="assets/i18n.js"></script>
     <script src="assets/mockup.js"></script>
   </body>

@@ -274,7 +274,7 @@ describe("sync scenarios (fixture S2–S5, M1)", () => {
         packageUrl?: string;
       }>(result);
       expect(body.packageUrl).toContain("/api/sdd/package");
-      expect(body.manifest?.files?.skills).toContain("a-tdd");
+      expect(body.manifest?.files?.skills).toContain("skills/a-tdd/SKILL.md");
     });
   });
 });

@@ -3,18 +3,28 @@ import { join } from "node:path";
 import {
   getAgentSetupUrl,
   getMcpHttpUrl,
+  getMcpWebsiteUrl,
   isLocalMcpDev,
 } from "@/mcp/brand";
 
 const PROD_MCP = "https://framework.sdd.works/mcp";
-const PROD_SETUP = "https://framework.sdd.works/agent-setup";
+const PROD_ORIGIN = "https://framework.sdd.works";
 
 function renderPrompt(template: string): string {
   const mcpUrl = getMcpHttpUrl();
   const setupUrl = getAgentSetupUrl();
-  let body = template
-    .replaceAll(PROD_MCP, mcpUrl)
-    .replaceAll(PROD_SETUP, setupUrl);
+  const website = getMcpWebsiteUrl().replace(/\/$/, "");
+  let body = template.replaceAll(PROD_MCP, mcpUrl);
+
+  if (isLocalMcpDev()) {
+    // Pack base and leftover production origin only — do not touch GitHub release hosts.
+    body = body.replaceAll(PROD_ORIGIN, website);
+  } else {
+    body = body.replaceAll(
+      "https://framework.sdd.works/agent-setup",
+      setupUrl,
+    );
+  }
 
   if (isLocalMcpDev() && process.env.MCP_AUTH_TOKEN?.trim()) {
     body += `

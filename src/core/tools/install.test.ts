@@ -206,7 +206,7 @@ describe("installFramework", () => {
     expect(existsSync(join(home, ".cursor/skills/test-driven-dev/SKILL.md"))).toBe(
       true,
     );
-    expect(existsSync(join(home, ".cursor/skills/tdd"))).toBe(false);
+    expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(false);
   });
 
   it("should_reinstall_when_manifest_lacks_package_commit", async () => {
@@ -347,7 +347,8 @@ describe("installFramework", () => {
     expect(body.commitSha).toBe("sha-http-v1");
     expect(body.paths.skills).toContain(".cursor/skills");
     expect(body.manifest.package_version).toBe("v1.0.0");
-    expect(body.manifest.files.skills).toContain("tdd");
+    expect(body.manifest.files.skills).toContain("skills/tdd/SKILL.md");
+    expect(body.manifest).toMatchObject({ pack_complete: true });
     expect(body.instructions).toContain("curl -fsSL");
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(false);
   });
@@ -542,7 +543,7 @@ describe("installFramework", () => {
     expect(body.commitSha).toBe("sha-new");
     expect(body.extract_recommended).toBe(true);
     expect(body.local_commit_matches).toBe(false);
-    expect(body.manifest.files.skills).toContain("atdd");
+    expect(body.manifest.files.skills).toContain("skills/atdd/SKILL.md");
   });
 
   it("should_alias_updateFramework_to_install", async () => {
@@ -559,7 +560,7 @@ describe("installFramework", () => {
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
   });
 
-  it("P1_should_write_receipt_after_stdio_copy_with_templates", async () => {
+  it("P1_should_write_file_level_ledger_after_stdio_copy_with_templates", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const pkg = makePkg("v1.0.0");
     mkdirSync(join(pkg, "templates/framework.sdd.works"), { recursive: true });
@@ -572,28 +573,34 @@ describe("installFramework", () => {
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
-    const body = parseToolJson<{ receiptPath: string }>(result);
-    expect(body.receiptPath).toContain("framework.sdd.works.json");
-    expect(existsSync(join(home, ".cursor/.sdd-installed.json"))).toBe(true);
-    const receiptPath = join(home, ".cursor/framework.sdd.works.json");
-    expect(existsSync(receiptPath)).toBe(true);
-    const receipt = JSON.parse(readFileSync(receiptPath, "utf8")) as {
+    const body = parseToolJson<{
+      receiptPath?: string;
+      receipt?: unknown;
+    }>(result);
+    expect(body.receiptPath).toBeUndefined();
+    expect(body.receipt).toBeUndefined();
+    expect(existsSync(join(home, ".cursor/framework.sdd.works.json"))).toBe(
+      false,
+    );
+    const ledgerPath = join(home, ".cursor/.sdd-installed.json");
+    expect(existsSync(ledgerPath)).toBe(true);
+    const ledger = JSON.parse(readFileSync(ledgerPath, "utf8")) as {
       pack_complete: boolean;
       package_commit: string;
-      files: string[];
+      files: { skills: string[]; templates: string[] };
     };
-    expect(receipt.pack_complete).toBe(true);
-    expect(receipt.package_commit).toBe("sha-p1");
-    expect(receipt.files.some((f) => f.includes("skills/tdd"))).toBe(true);
-    expect(
-      receipt.files.some((f) => f.includes("templates/framework.sdd.works")),
-    ).toBe(true);
+    expect(ledger.pack_complete).toBe(true);
+    expect(ledger.package_commit).toBe("sha-p1");
+    expect(ledger.files.skills).toContain("skills/tdd/SKILL.md");
+    expect(ledger.files.templates).toContain(
+      "templates/framework.sdd.works/x.md",
+    );
     expect(
       existsSync(join(home, ".cursor/templates/framework.sdd.works/x.md")),
     ).toBe(true);
   });
 
-  it("P2_should_not_write_true_receipt_on_reject", async () => {
+  it("P2_should_not_write_complete_ledger_on_reject", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     setPackageFetchForTests(async () => ({
       code: "package_unavailable" as const,
@@ -605,13 +612,16 @@ describe("installFramework", () => {
     );
     const body = parseToolJson<{ error: { code: string } }>(result);
     expect(body.error.code).toBe("package_unavailable");
-    const receiptPath = join(home, ".cursor/framework.sdd.works.json");
-    if (existsSync(receiptPath)) {
-      const receipt = JSON.parse(readFileSync(receiptPath, "utf8")) as {
+    const ledgerPath = join(home, ".cursor/.sdd-installed.json");
+    if (existsSync(ledgerPath)) {
+      const ledger = JSON.parse(readFileSync(ledgerPath, "utf8")) as {
         pack_complete?: boolean;
       };
-      expect(receipt.pack_complete).not.toBe(true);
+      expect(ledger.pack_complete).not.toBe(true);
     }
+    expect(existsSync(join(home, ".cursor/framework.sdd.works.json"))).toBe(
+      false,
+    );
   });
 
   it("P3_should_ignore_non_pack_folders_like_src", async () => {
@@ -633,7 +643,7 @@ describe("installFramework", () => {
     const pkg = makePkg("v1.0.0");
     mkdirSync(join(pkg, "templates/framework.sdd.works"), { recursive: true });
     writeFileSync(
-      join(pkg, "templates/framework.sdd.works/project-constants.md"),
+      join(pkg, "templates/framework.sdd.works/constants.md"),
       "# pc\n",
     );
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
@@ -643,13 +653,13 @@ describe("installFramework", () => {
     );
     expect(
       existsSync(
-        join(home, ".cursor/templates/framework.sdd.works/project-constants.md"),
+        join(home, ".cursor/templates/framework.sdd.works/constants.md"),
       ),
     ).toBe(true);
     expect(existsSync(join(home, ".cursor/sdd"))).toBe(false);
   });
 
-  it("P5_should_include_receipt_payload_on_http", async () => {
+  it("P5_should_include_ledger_payload_on_http", async () => {
     seedHttpCache("sha-http-receipt", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
@@ -664,19 +674,28 @@ describe("installFramework", () => {
       },
     );
     const body = parseToolJson<{
-      receiptPath: string;
-      receipt: { pack_complete: boolean; files: string[] };
+      receiptPath?: string;
+      receipt?: unknown;
+      manifestPath: string;
+      manifest: {
+        pack_complete: boolean;
+        files: { skills: string[] };
+      };
       paths: { templates?: string };
       instructions: string;
     }>(result);
-    expect(body.receiptPath).toMatch(/framework\.sdd\.works\.json$/);
-    expect(body.receipt.pack_complete).toBe(true);
+    expect(body.receiptPath).toBeUndefined();
+    expect(body.receipt).toBeUndefined();
+    expect(body.manifestPath).toMatch(/\.sdd-installed\.json$/);
+    expect(body.manifest.pack_complete).toBe(true);
+    expect(body.manifest.files.skills).toContain("skills/tdd/SKILL.md");
     expect(body.paths.templates).toContain("templates");
-    expect(body.instructions.toLowerCase()).toContain("receipt");
-    expect(body.instructions).toContain("last");
+    expect(body.instructions.toLowerCase()).toContain(".sdd-installed.json");
+    expect(body.instructions.toLowerCase()).not.toContain("receipt");
+    expect(existsSync(join(home, ".cursor/.sdd-installed.json"))).toBe(false);
   });
 
-  it("P6_should_still_return_packageUrl_and_receipt_when_commit_matches", async () => {
+  it("P6_should_still_return_packageUrl_and_manifest_when_commit_matches", async () => {
     seedHttpCache("sha-old", "main");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
@@ -697,12 +716,59 @@ describe("installFramework", () => {
     );
     const body = parseToolJson<{
       packageUrl: string;
-      receipt: { pack_complete: boolean };
+      manifest: { pack_complete: boolean };
       error?: { code: string };
     }>(result);
     expect(body.error).toBeUndefined();
     expect(body.packageUrl).toContain("/api/sdd/package");
-    expect(body.receipt.pack_complete).toBe(true);
+    expect(body.manifest.pack_complete).toBe(true);
+  });
+
+  it("C1_should_keep_other_skills_and_replace_same_path_on_first_install", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    mkdirSync(join(home, ".cursor/skills/samectx"), { recursive: true });
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/samectx/SKILL.md"), "my skill");
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "my tdd notes");
+    const pkg = makePkg("v1.0.0");
+    setPackageFetchForTests(async () => resolved("v1.0.0", pkg, "sha-c1"));
+    await installFramework(
+      { client: "cursor", os: "darwin" },
+      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    expect(readFileSync(join(home, ".cursor/skills/samectx/SKILL.md"), "utf8")).toBe(
+      "my skill",
+    );
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "# tdd v1.0.0\n",
+    );
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    ) as {
+      pack_complete: boolean;
+      files: { skills: string[] };
+    };
+    expect(ledger.pack_complete).toBe(true);
+    expect(ledger.files.skills).toContain("skills/tdd/SKILL.md");
+    expect(ledger.files.skills.some((f) => f.includes("samectx"))).toBe(false);
+    expect(existsSync(join(home, ".cursor/framework.sdd.works.json"))).toBe(
+      false,
+    );
+  });
+
+  it("C4_should_leave_notes_folder_outside_the_pack", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    mkdirSync(join(home, ".cursor/notes"), { recursive: true });
+    writeFileSync(join(home, ".cursor/notes/ideas.md"), "my ideas");
+    const pkg = makePkg("v1.0.0");
+    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    await installFramework(
+      { client: "cursor", os: "darwin" },
+      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    expect(readFileSync(join(home, ".cursor/notes/ideas.md"), "utf8")).toBe(
+      "my ideas",
+    );
   });
 
   it("should_map_skill_and_Rules_aliases_on_stdio", async () => {
@@ -721,5 +787,450 @@ describe("installFramework", () => {
     );
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
     expect(existsSync(join(home, ".cursor/rules/dod.mdc"))).toBe(true);
+  });
+
+  it("C5_should_delete_recorded_pack_file_and_keep_unlisted_note", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "old pack tdd");
+    writeFileSync(join(home, ".cursor/skills/tdd/old-step.md"), "old pack step");
+    writeFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "my notes");
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "sha-old",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        pack_complete: true,
+        files: {
+          skills: ["skills/tdd/SKILL.md", "skills/tdd/old-step.md"],
+          rules: [],
+          agents: [],
+          workflows: [],
+          templates: [],
+        },
+      }),
+    );
+
+    const pkg = makePkg("main");
+    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
+    setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
+    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "new pack tdd",
+    );
+    expect(existsSync(join(home, ".cursor/skills/tdd/old-step.md"))).toBe(false);
+    expect(readFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "utf8")).toBe(
+      "my notes",
+    );
+    expect(existsSync(join(home, ".cursor/skills/tdd"))).toBe(true);
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    ) as {
+      pack_complete: boolean;
+      files: { skills: string[] };
+    };
+    expect(ledger.pack_complete).toBe(true);
+    expect(ledger.files.skills).toEqual(["skills/tdd/SKILL.md"]);
+  });
+
+  it("C2b_should_not_delete_directory_when_old_ledger_names_folder", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "old pack tdd");
+    writeFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "my notes");
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "sha-old",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        files: {
+          skills: ["tdd"],
+          rules: [],
+          agents: [],
+          workflows: [],
+          templates: [],
+        },
+      }),
+    );
+
+    const pkg = makePkg("main");
+    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
+    setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
+    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+
+    expect(existsSync(join(home, ".cursor/skills/tdd"))).toBe(true);
+    expect(readFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "utf8")).toBe(
+      "my notes",
+    );
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "new pack tdd",
+    );
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    ) as {
+      pack_complete: boolean;
+      files: { skills: string[] };
+    };
+    expect(ledger.pack_complete).toBe(true);
+    expect(ledger.files.skills).toContain("skills/tdd/SKILL.md");
+    expect(ledger.files.skills).not.toContain("tdd");
+  });
+
+  it("C3_should_leave_edit_when_same_commit_and_pack_complete_true", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "my edited tdd");
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "abc",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        pack_complete: true,
+        files: {
+          skills: ["skills/tdd/SKILL.md"],
+          rules: [],
+          agents: [],
+          workflows: [],
+          templates: [],
+        },
+      }),
+    );
+    const pkg = makePkg("main");
+    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
+    setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
+    const result = await installFramework(
+      { client: "cursor", os: "darwin", version: "main" },
+      ctx,
+    );
+    const body = parseToolJson<{ error: { code: string } }>(result);
+    expect(body.error.code).toBe("already_up_to_date");
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "my edited tdd",
+    );
+  });
+
+  it("C6a_should_rewrite_missing_pack_complete_without_replacing_bytes", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "my edited tdd");
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "abc",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        files: {
+          skills: ["skills/tdd/SKILL.md"],
+          rules: [],
+          agents: [],
+          workflows: [],
+          templates: [],
+        },
+      }),
+    );
+    const pkg = makePkg("main");
+    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
+    setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
+    const result = await installFramework(
+      { client: "cursor", os: "darwin", version: "main" },
+      ctx,
+    );
+    const body = parseToolJson<{ error?: { code: string }; ledger_rewritten?: boolean }>(
+      result,
+    );
+    expect(body.error).toBeUndefined();
+    expect(body.ledger_rewritten).toBe(true);
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "my edited tdd",
+    );
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    ) as {
+      pack_complete: boolean;
+      package_version: string;
+      package_commit: string;
+      files: { skills: string[] };
+    };
+    expect(ledger.pack_complete).toBe(true);
+    expect(ledger.package_version).toBe("main");
+    expect(ledger.package_commit).toBe("abc");
+    expect(ledger.files.skills).toEqual(["skills/tdd/SKILL.md"]);
+  });
+
+  it("C7a_should_keep_pack_complete_false_on_same_commit", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "my edited tdd");
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "abc",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        pack_complete: false,
+        files: {
+          skills: ["skills/tdd/SKILL.md"],
+          rules: [],
+          agents: [],
+          workflows: [],
+          templates: [],
+        },
+      }),
+    );
+    const pkg = makePkg("main");
+    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
+    setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
+    const result = await installFramework(
+      { client: "cursor", os: "darwin", version: "main" },
+      ctx,
+    );
+    const body = parseToolJson<{ error: { code: string } }>(result);
+    expect(body.error.code).toBe("already_up_to_date");
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "my edited tdd",
+    );
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    ) as { pack_complete: boolean };
+    expect(ledger.pack_complete).toBe(false);
+  });
+
+  it("C2_should_replace_recorded_file_and_keep_unlisted_skill_and_note", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    mkdirSync(join(home, ".cursor/skills/samectx"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "old pack tdd");
+    writeFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "my notes");
+    writeFileSync(join(home, ".cursor/skills/samectx/SKILL.md"), "my skill");
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "sha-old",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        pack_complete: true,
+        files: {
+          skills: ["skills/tdd/SKILL.md"],
+          rules: [],
+          agents: [],
+          workflows: [],
+          templates: [],
+        },
+      }),
+    );
+    const pkg = makePkg("main");
+    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
+    setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
+    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "new pack tdd",
+    );
+    expect(existsSync(join(home, ".cursor/skills/tdd"))).toBe(true);
+    expect(readFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "utf8")).toBe(
+      "my notes",
+    );
+    expect(readFileSync(join(home, ".cursor/skills/samectx/SKILL.md"), "utf8")).toBe(
+      "my skill",
+    );
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    ) as {
+      pack_complete: boolean;
+      package_commit: string;
+      files: { skills: string[] };
+    };
+    expect(ledger.pack_complete).toBe(true);
+    expect(ledger.package_commit).toBe("sha-new");
+    expect(ledger.files.skills).toContain("skills/tdd/SKILL.md");
+    expect(ledger.files.skills.some((f) => f.includes("samectx"))).toBe(false);
+  });
+
+  it("C6b_should_replace_on_new_commit_when_pack_complete_missing", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "my edited tdd");
+    writeFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "my notes");
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "abc",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        files: {
+          skills: ["skills/tdd/SKILL.md"],
+          rules: [],
+          agents: [],
+          workflows: [],
+          templates: [],
+        },
+      }),
+    );
+    const pkg = makePkg("main");
+    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
+    setPackageFetchForTests(async () => resolved("main", pkg, "def"));
+    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "new pack tdd",
+    );
+    expect(readFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "utf8")).toBe(
+      "my notes",
+    );
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    ) as { pack_complete: boolean; package_commit: string };
+    expect(ledger.pack_complete).toBe(true);
+    expect(ledger.package_commit).toBe("def");
+  });
+
+  it("C7b_should_set_pack_complete_true_on_new_commit_when_flag_was_false", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "old pack tdd");
+    writeFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "my notes");
+    writeFileSync(
+      join(home, ".cursor/.sdd-installed.json"),
+      JSON.stringify({
+        version: 1,
+        package_version: "main",
+        package_commit: "abc",
+        installed_at: "2026-01-01T00:00:00.000Z",
+        pack_complete: false,
+        files: {
+          skills: ["skills/tdd/SKILL.md"],
+          rules: [],
+          agents: [],
+          workflows: [],
+          templates: [],
+        },
+      }),
+    );
+    const pkg = makePkg("main");
+    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
+    setPackageFetchForTests(async () => resolved("main", pkg, "def"));
+    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "new pack tdd",
+    );
+    expect(readFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "utf8")).toBe(
+      "my notes",
+    );
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    ) as { pack_complete: boolean; package_commit: string };
+    expect(ledger.pack_complete).toBe(true);
+    expect(ledger.package_commit).toBe("def");
+  });
+
+  it("C8_should_leave_folder_unchanged_when_download_fails", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const ctx = {
+      channel: "stdio" as const,
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    mkdirSync(join(home, ".cursor/skills/tdd"), { recursive: true });
+    writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "pack tdd");
+    const ledgerBefore = {
+      version: 1,
+      package_version: "main",
+      package_commit: "abc",
+      installed_at: "2026-01-01T00:00:00.000Z",
+      pack_complete: true,
+      files: {
+        skills: ["skills/tdd/SKILL.md"],
+        rules: [] as string[],
+        agents: [] as string[],
+        workflows: [] as string[],
+        templates: [] as string[],
+      },
+    };
+    const ledgerPath = join(home, ".cursor/.sdd-installed.json");
+    writeFileSync(ledgerPath, JSON.stringify(ledgerBefore, null, 2));
+    const ledgerJsonBefore = readFileSync(ledgerPath, "utf8");
+    setPackageFetchForTests(async () => ({
+      code: "package_unavailable" as const,
+      message: "download failed",
+    }));
+    const result = await installFramework(
+      { client: "cursor", os: "darwin", version: "main" },
+      ctx,
+    );
+    const body = parseToolJson<{ error: { code: string } }>(result);
+    expect(body.error.code).toBe("package_unavailable");
+    expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
+      "pack tdd",
+    );
+    expect(readFileSync(ledgerPath, "utf8")).toBe(ledgerJsonBefore);
+    const ledger = JSON.parse(ledgerJsonBefore) as { pack_complete: boolean };
+    expect(ledger.pack_complete).toBe(true);
   });
 });

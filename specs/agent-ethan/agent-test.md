@@ -1,11 +1,11 @@
 # coach-ethan — test strategy and plan
 
-**Area:** coach-ethan local Cursor agent (start load, missing-file recovery, MVP coaching)
-**Design:** [`agent-design.md`](./agent-design.md) · **Backlog:** [Agent-01](../product-backlog.md#pb-6) · [Agent-03](../product-backlog.md#pb-8)
+**Area:** coach-ethan local Cursor agent (start load, ledger gate, missing-file recovery, MVP coaching)
+**Design:** [`agent-design.md`](./agent-design.md) · **Stories:** [`agent-stories.md`](./agent-stories.md) · **Backlog:** [Agent-07](../product-backlog.md#pb-17) · [Agent-01](../product-backlog.md#pb-6) · [Agent-03](../product-backlog.md#pb-8)
 **Installer reference:** [`../mcp/mcp-design.md`](../mcp/mcp-design.md) (`sdd_install_framework`, `sdd_update_framework`)
 **Quality bar:** common-test-strategy — critical path 100% for load/recovery once the prompt exists; overall ≥80% where measurable.
 
-> **Status:** plan · as_of 2026-09-22 · automation waits until the agent prompt exists. Cases below are expected outcomes for fixture and manual verification.
+> **Status:** plan · as_of 2026-09-25 · seed prompt exists at [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md). CE-GATE cases match Sprint 2 feature-03. Automation waits on fixture harness. Cases below are expected outcomes for fixture and manual verification.
 
 ---
 
@@ -22,7 +22,7 @@
 - Prefer fixture trees under a temp workspace over live `~/.cursor` in default CI.
 - Never assert that tarball extraction wrote into `specs/`.
 - Never overwrite an existing `specs/` file in Toggle B cases.
-- Critical path: find `artifacts-map.md` → load listed process files → Toggle A/B recovery → visible error when both fail.
+- Critical path: ledger gate → find `artifacts-map.md` → load listed process files → Toggle A/B recovery → visible error when both fail.
 - MVP 1: coaching edits remain forbidden; Toggle B seed-copy after confirm is allowed as start recovery.
 
 **Abbreviations**
@@ -36,7 +36,22 @@
 
 ---
 
-## 2. Search-order cases
+## 2. Install ledger gate (`CE-GATE-01` … `CE-GATE-04`)
+
+Matches [`agent-design.md`](./agent-design.md) §2.4 and [`agent-stories.md`](./agent-stories.md) `sdd-ethan-pack-complete-gate`. Ethan reads only `{client_root}/.sdd-installed.json` before any greeting or job list.
+
+| Id | Setup | Act | Assert |
+| --- | --- | --- | --- |
+| CE-GATE-01 | Ledger file missing at CR | Start ethan | Instructions URL; stop; no job list; no project-file reads; no install/update |
+| CE-GATE-02 | Ledger exists; no `pack_complete` field | Start ethan | Same stop as CE-GATE-01 |
+| CE-GATE-03 | Ledger has `pack_complete: false` | Start ethan | Same stop as CE-GATE-01 |
+| CE-GATE-04 | Ledger has `pack_complete: true` | Start ethan | Continues start load; missing project files are a stage, not a stop |
+
+Instructions URL: `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read; otherwise `https://framework.sdd.works/instructions`.
+
+---
+
+## 3. Search-order cases
 
 | Id | Setup | Act | Assert |
 | --- | --- | --- | --- |
@@ -50,7 +65,7 @@
 
 ---
 
-## 3. Load / recovery matrix (`CE-LOAD-01` … `CE-LOAD-16`)
+## 4. Load / recovery matrix (`CE-LOAD-01` … `CE-LOAD-16`)
 
 Matches [`agent-design.md`](./agent-design.md) §6 case table.
 
@@ -75,7 +90,7 @@ Matches [`agent-design.md`](./agent-design.md) §6 case table.
 
 ---
 
-## 4. Toggle B safety
+## 5. Toggle B safety
 
 | Id | Setup | Act | Assert |
 | --- | --- | --- | --- |
@@ -87,7 +102,7 @@ Matches [`agent-design.md`](./agent-design.md) §6 case table.
 
 ---
 
-## 5. MCP install / extract discipline
+## 6. MCP install / extract discipline
 
 | Id | Setup | Act | Assert |
 | --- | --- | --- | --- |
@@ -98,7 +113,7 @@ Matches [`agent-design.md`](./agent-design.md) §6 case table.
 
 ---
 
-## 6. MVP 1 coaching (after successful load)
+## 7. MVP 1 coaching (after successful load)
 
 | Id | Setup | Act | Assert |
 | --- | --- | --- | --- |
@@ -108,7 +123,7 @@ Matches [`agent-design.md`](./agent-design.md) §6 case table.
 
 ---
 
-## 7. Negative / honesty
+## 8. Negative / honesty
 
 | Id | Assert |
 | --- | --- |
@@ -119,7 +134,7 @@ Matches [`agent-design.md`](./agent-design.md) §6 case table.
 
 ---
 
-## 8. Verification commands (when implemented)
+## 9. Verification commands (when implemented)
 
 | When | How |
 | --- | --- |
@@ -129,11 +144,13 @@ Matches [`agent-design.md`](./agent-design.md) §6 case table.
 
 ---
 
-## 9. Related docs
+## 10. Related docs
 
 | Doc | Role |
 | --- | --- |
-| [`agent-design.md`](./agent-design.md) | Presence, stores, toggles, case table |
+| [`agent-design.md`](./agent-design.md) | Presence, stores, toggles, case table, §14 prompt |
+| [`agent-stories.md`](./agent-stories.md) | Agent-07 start-gate stories and ACs |
+| [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md) | Seed prompt |
 | [`../artifacts-map.md`](../artifacts-map.md) | Project index the coach loads (process rows at start) |
 | [`../mcp/mcp-test.md`](../mcp/mcp-test.md) | Installer tool contracts |
 | [`../product-backlog.md`](../product-backlog.md) | MVP acceptance |

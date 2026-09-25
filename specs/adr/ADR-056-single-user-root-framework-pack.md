@@ -19,7 +19,7 @@ Rules and skills are what change how the coach behaves. Those edits have to land
 3. `/ethan` is the user-root agent, `~/.cursor/agents/ethan.md`, in every project. The product does not create `<workspace>/.cursor/agents/ethan.md`.
 4. `sdd_install_framework` and `sdd_update_framework` remain the install and update path. They write the user root only.
 5. A workspace file is in scope only when it is new for that project: a rule or a skill whose name is not already in the user root. That file is an addition. It is not a second copy of an installed name.
-6. `project-constants.md` is read from the user-root templates tree when that file is in the pack. It is not copied into the workspace or into `specs/`.
+6. The pack lookup file is read from the user-root templates tree when that file is in the pack. It is not copied into the workspace or into `specs/`. The filename is `constants.md` ([ADR-060](./ADR-060-constants-on-client-root.md)). The earlier name `project-constants.md` is superseded.
 
 ## Rationale
 A workspace fork cannot override user-root skills, and it cannot fully override user-root rules or commands. Keeping two copies would still force framework edits into `~/.cursor`, and it would leave a stale workspace agent that Cursor prefers over later installs.

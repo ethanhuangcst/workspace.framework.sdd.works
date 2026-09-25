@@ -13,15 +13,34 @@ Do not mix these workspaces. They are separate git remotes.
 | This workspace (`framework.sdd.works`) | [workspace.framework.sdd.works](https://github.com/ethanhuangcst/workspace.framework.sdd.works.git) | Build the product: framework pack authoring, MCP, and the web portal |
 | Framework pack | [framework.sdd.works](https://github.com/ethanhuangcst/framework.sdd.works.git) | Published pack only (`agents/`, `skill/`, `rules/`, `templates/`) |
 
-Author pack files here. Copy them into the pack repo by hand, then commit there. Do not point this checkout’s git remote at the pack repo. Do not put portal, MCP, or `src/` into the pack repo.
+Author pack files here. Copying the finalized seed folder into the pack repo is [Go-live](#go-live). Do not point this checkout’s git remote at the pack repo. Do not put portal, MCP, or `src/` into the pack repo.
+
+## Go-live
+
+When every framework artifact under the seed folder is finalized, copy that folder into the framework pack repo. That repo is a different workspace and a different remote from this one. Then push it to GitHub.
+
+In the framework.sdd.works admin portal, sync that pack to the server by hand, or leave it to the 30-minute auto sync from MCP.
+
+Do not add the pack copy, the GitHub push, or the server sync to a Spec-seeds task or to Spec-seeds acceptance criteria.
 
 ## Install ledger
 
-One file, `{client_root}/.sdd-installed.json`, is the merge ledger and the start gate. [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). Do not add `framework.sdd.works.json`.
+One file, `{client_root}/.sdd-installed.json`, is the merge ledger and the start gate. [ADR-057](../../../adr/ADR-057-install-ledger-pack-complete.md). Do not add `framework.sdd.works.json`.
 
-The installer sets `pack_complete` to `true` in the same write as `package_version`, `package_commit`, and `files`, and only after the copy succeeds. `files` stays grouped by skills, rules, agents, workflows, and templates. Idempotency uses the version, the commit, and the files on disk. It does not use the flag.
+The installer sets `pack_complete` to `true` in the same write as `package_version`, `package_commit`, and `files`, and only after the copy succeeds. `files` stays grouped by skills, rules, agents, workflows, and templates. Each entry is a pack file path, not a folder name ([ADR-059](../../../adr/ADR-059-ledger-lists-pack-files.md)). Idempotency uses the version, the commit, and those files on disk. It does not use the flag.
 
 Ethan reads this file on start. A missing file, or `pack_complete` not `true`, is a fatal stop. He may set the flag `false`. He does not change `package_version` or `package_commit`. Only install or update sets the flag `true`.
+
+## Constants
+
+Lookup file for pack path names, the instructions URL, skill keys, and rule keys. Filename: `constants.md`. [ADR-060](../../../adr/ADR-060-constants-on-client-root.md).
+
+| Role | Path |
+| --- | --- |
+| Authoring seed in this workspace | `specs/framework.seeds/templates/constants.md` (beside `EN/` and `HanS/`, not inside a locale folder) |
+| After install | `{client_root}/templates/framework.sdd.works/constants.md` |
+
+Do not copy `constants.md` into the workspace, into `{workspace}/specs`, or into the artifacts root. Writing rules live in [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) under Templates.
 
 ## Sprint item table
 

@@ -9,6 +9,83 @@
 
 ## 2026-09-25
 
+### Instructions page re-design (feature-10)
+
+**Why**: Sprint 2 [Web-portal-05](./product-backlog.md#pb-71). The public instructions page must match the Setup / Features mock after the stdio transport change. The old PBI title (“shows the ethan prompt”) was wrong.
+
+**What changed**: PBI and SBI renamed to Instructions page re-design. `/instructions` gains Setup and Features tabs, the one-line `/setup` copy, one stdio `mcp.json`, a fixed Features catalog, and an inert secret form. Pack `features.md` sync and live secret lookup stay later items.
+
+**Verification**: [`app-stories.md`](./admin-portal/app-stories.md) AC1, AC5, AC6; [`InstructionsPage.test.tsx`](../src/components/features/InstructionsPage.test.tsx); mock [`01-home.html`](./admin-portal/ui-mockup/01-home.html). User confirmed usable 2026-09-25.
+
+**Boundary**: Does not implement [Web-portal-07](./product-backlog.md#pb-73) or [Web-portal-08](./product-backlog.md#pb-74) live lookup. Does not change `GET /setup` (backend-01).
+
+### Instructions page looks up one secret (Web-portal-08)
+
+**Why**: `sdd_get_key` is HTTP-only, so the stdio setup path cannot return a secret without a token in `mcp.json`. The lookup moves to the instructions page. The one-line setup prompt stays without a key.
+
+**What changed**: [Web-portal-08](./product-backlog.md#pb-74) is Sprint 3 feature-04, feature-05, and feature-06. The Features tab mock has a name field and a Get secret button after the template list. A click in the mock shows a stand-in value. The live lookup is Sprint 3.
+
+**Verification**: Product backlog row, Sprint 3 rows, and [`01-home.html`](./admin-portal/ui-mockup/01-home.html).
+
+**Boundary**: No new admin token system. Stdio does not gain `sdd_get_key`. The setup prompt does not embed `MCP_AUTH_TOKEN`.
+
+### Setup prompt URL is /setup (ADR-061)
+
+**Why**: The instructions page keeps one paste sentence. The stdio contract stays in the markdown that sentence fetches. The public path should be `https://framework.sdd.works/setup`. Manual setup is one `mcp.json`.
+
+**What changed**: [ADR-061](./adr/ADR-061-setup-prompt-public-path.md). Paste text is `Fetch and execute the setup instructions from https://framework.sdd.works/setup`. `GET /agent-setup` redirects to `GET /setup`. Source file stays `public/agent-setup/prompt.md`. Manual setup shows the `command` entry only. No second HTTP `mcp.json` and no `curl | sh` on that section. Feature-11 owns the page copy sentence. `backend-01` owns the public `/setup` route and redirect. Feature-12 owns the single sample. Feature-13 tests both.
+
+**Verification**: ADR-061, [`mcp-design.md`](./mcp/mcp-design.md) §2.1, [`app-design.md`](./admin-portal/app-design.md) `/instructions`, [`app-stories.md`](./admin-portal/app-stories.md) AC3 and AC4, sprint feature-11–13 and `backend-01`, and the instructions mockup. The app route is not changed in this pass.
+
+**Boundary**: HTTP fallback stays inside the fetched markdown. Terminal install stays in go-live. Closed Phase 1 snapshots that still say `/agent-setup` stay as history.
+
+### Sprint 2 backend-01; Features tab to Sprint 3
+
+**Why**: The one-line pastes needs a Backend SBI for the route that connects agent tools to MCP. The Features tab is not required to close Sprint 2.
+
+**What changed**: Sprint 2 `backend-01` (Module MCP, Type Backend): one-line prompt automatically connects agent tools to MCP. [Web-portal-07](./product-backlog.md#pb-73) moved to Sprint 3 as feature-07.
+
+**Verification**: [`sprint-backlog.md`](./sprint-backlog.md) Sprint 2 and Sprint 3. Product backlog Sprint column for pb-73 is Sprint 3.
+
+### Features tab reads pack features.md (Web-portal-07)
+
+**Why**: The Features list should change with the pack, using the sync cache that already updates on manual sync and every 30 minutes. An admin editor would be a second store.
+
+**What changed**: [Web-portal-07](./product-backlog.md#pb-73) is Sprint 3 feature-07 (moved from Sprint 2). `features.md` at the pack root is the catalog. The public Features tab reads it from `.data/sdd-packages/<commit>/`. Four headings only: Agents, Skills, Rules, Templates. Each row is `name: sentence`. No admin editor and no parsed sidecar. Install does not copy the file onto `{client_root}`.
+
+**Verification**: Product backlog row and Sprint 3 feature-07. Not implemented.
+
+**Boundary**: Page chrome stays i18n keys. Sentences stay in the language of `features.md`.
+
+### Instructions page becomes the public landing page (feature-10)
+
+**Why**: Sprint 2 [Web-portal-05](./product-backlog.md#pb-71). The public site should open on install instructions. The old paste prompt and WoodenSward Dojo tools intro no longer match stdio-primary setup (ADR-058) or the ethan ledger gate.
+
+**What changed** (requirement; live site not implemented in this pass). The paste sentence and the manual `mcp.json` in the bullets below are superseded by [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) in the entry above:
+
+- `/` is the instructions page. The logo-card home goes away. There is no Back to home link.
+- Two tabs: **Setup** and **Features**.
+- Remove the “Paste this prompt…” body, the “Paste this prompt” label, and the fetch-`/agent-setup` code block.
+- Copy button and manual setup use a connect prompt with local `sdd-mcp` (`command` + `SDD_SERVER_URL`) first and HTTP `"url": "https://framework.sdd.works/mcp"` as fallback. Manual setup shows the command block first and the URL block as fallback. The terminal `curl | sh` block stays.
+- Remove the Tools intro that mentions WoodenSward Dojo. Tools table drops the Channel column. Install description: “Install agents, skills, rules, and other capabilities from framework.sdd.works.” Update description: “Update the framework.”
+- Body text and code blocks share one content width.
+- Footer, right edge aligned to that column: Admin portal link, then `copyright © Ethan Huang`.
+- Features tab lists only Agents, Skills, Rules, and Templates from [`sdd-scrum-guide.md`](./framework.seeds/templates/EN/sdd-scrum-guide.md) lines 314–349 (Artifacts map to Templates). Workflows and Knowledge are omitted. Each row is a name and one sentence.
+
+**Verification**: UI mock at [`admin-portal/ui-mockup/01-home.html`](./admin-portal/ui-mockup/01-home.html) and [`13-instructions.html`](./admin-portal/ui-mockup/13-instructions.html). User confirms the mock before app implementation.
+
+**Boundary**: Does not change `src/` or the live site. Per-client call-up research stays Sprint 13.
+
+### Pack lookup renamed to constants.md
+
+**Why**: The lookup file was named `project-constants.md`, which suggested a workspace copy under `specs/`. Ethan must read one pack file on the client root.
+
+**What changed**: Filename is `constants.md`. Authoring seed is `specs/framework.seeds/templates/constants.md`. Live path is `{client_root}/templates/framework.sdd.works/constants.md`. Not copied into the workspace or into `specs/`. [ADR-060](./adr/ADR-060-constants-on-client-root.md). Writing guidance is under Templates in the EN practices. Spec-seeds-01, ethan, agent specs, MCP ledger examples, and the install fixture name the new file.
+
+**Verification**: Grep for `project-constants` under live specs only hits ADR-056 and ADR-060 historical notes. Seed file exists at `templates/constants.md`.
+
+**Boundary**: User review of the seed and seed-tree cross-review stay open on Sprint 2 feature-04. Does not implement portal UI.
+
 ### Sprint 1 closed
 
 **Why**: The EN guide and practices seeds were confirmed. The archive path still said `phase1-specs/`.
@@ -17,7 +94,7 @@
 
 **Verification**: Every Sprint 1 SBI is Done. Seed files are under `templates/EN/`. No remaining `phase1-specs/` path under live `specs/`.
 
-**Boundary**: Does not add `project-constants.md`, `.secrets`, or HanS/HanT translations. Does not implement the installer.
+**Boundary**: Does not add `constants.md`, `.secrets`, or HanS/HanT translations. Does not implement the installer.
 
 ## 2026-09-24
 

@@ -90,15 +90,21 @@
     document.querySelectorAll("[data-copy]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var text = btn.getAttribute("data-copy");
-        var idleKey = btn.getAttribute("data-i18n-idle") || btn.getAttribute("data-i18n") || "admin.keys.copy";
-        if (!btn.getAttribute("data-i18n-idle")) {
-          btn.setAttribute("data-i18n-idle", idleKey);
+        var label = btn.querySelector(".setup-pill-text") || btn;
+        var idleKey =
+          label.getAttribute("data-i18n-idle") ||
+          label.getAttribute("data-i18n") ||
+          btn.getAttribute("data-i18n-idle") ||
+          btn.getAttribute("data-i18n") ||
+          "admin.keys.copy";
+        if (!label.getAttribute("data-i18n-idle")) {
+          label.setAttribute("data-i18n-idle", idleKey);
         }
         var done = function () {
-          btn.setAttribute("data-i18n", "admin.common.copied");
+          label.setAttribute("data-i18n", "admin.common.copied");
           applyI18n();
           setTimeout(function () {
-            btn.setAttribute("data-i18n", btn.getAttribute("data-i18n-idle") || "admin.keys.copy");
+            label.setAttribute("data-i18n", label.getAttribute("data-i18n-idle") || "admin.keys.copy");
             applyI18n();
           }, 1600);
         };
@@ -345,6 +351,54 @@
     syncSave();
   }
 
+  function bindSecretLookup() {
+    var form = document.querySelector("[data-testid='secret-lookup']");
+    if (!form) return;
+    var input = form.querySelector("[data-testid='secret-name']");
+    var result = document.querySelector("[data-testid='secret-result']");
+    var error = document.querySelector("[data-testid='secret-error']");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var name = (input && input.value ? input.value : "").trim();
+      if (result) {
+        result.hidden = true;
+        result.textContent = "";
+      }
+      if (!name) {
+        if (error) {
+          error.hidden = false;
+          error.setAttribute("data-i18n", "admin.guide.secret_empty");
+          applyI18n();
+        }
+        return;
+      }
+      if (error) error.hidden = true;
+      if (result) {
+        result.hidden = false;
+        result.removeAttribute("data-i18n");
+        result.textContent = "sample-secret-value";
+      }
+    });
+  }
+
+  function bindGuideTabs() {
+    var tabs = document.querySelectorAll(".guide-tab[data-tab]");
+    if (!tabs.length) return;
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var name = tab.getAttribute("data-tab");
+        tabs.forEach(function (btn) {
+          var on = btn.getAttribute("data-tab") === name;
+          btn.classList.toggle("is-active", on);
+          btn.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        document.querySelectorAll(".guide-tab-panel[data-panel]").forEach(function (panel) {
+          panel.hidden = panel.getAttribute("data-panel") !== name;
+        });
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     bindLocale();
     bindPassword();
@@ -353,6 +407,8 @@
     bindDialogs();
     bindKeysSelection();
     bindSettingsForm();
+    bindGuideTabs();
+    bindSecretLookup();
     applyQueryState();
     applyI18n();
   });

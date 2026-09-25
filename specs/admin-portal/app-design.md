@@ -382,8 +382,8 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | Install framework.sdd.works to AI tools |
-| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only — **no** duplicate `guide-header` bar; text **Back to home** link (`back-link`, `guide-back-home`) above hero; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.WORKFLOWS`; **Setup** / **Supported AI agents** / **Tools** as `section-subtitle`; agents roster (7 brand names in fixed order with 18×18 icons); all commands/prompts as `.codeblock` rows (mono text + right-rail Copy) or `.codeblock--file` (header tag + Copy) for `mcp.json`; pill CTA (“Copy prompt…” + Claude/Cursor/Codex/CodeBuddy icons); Manual setup (`mcp.json` + curl fallback); tools intro + table |
-| Test ids | `instructions-guide`, `guide-back-home`, `guide-agents` |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES`; **Setup** / **Features** tabs (`guide-tabs`, labels flush to content left edge); Setup: pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)), install phrase + `sdd_install_framework`, Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: fixed Agents / Skills / Rules / Templates lists; secret name field (~32rem) + Get secret button (height 2.125rem) after templates — submit does not call a keys API in feature-10; footer Admin portal link then copyright |
+| Test ids | `instructions-guide`, `guide-agents`, `copy-setup-prompt`, `copy-mcp-config`, `secret-lookup`, `secret-name`, `secret-get` |
 | Entry | Home + header open **new tab** |
 | Keys | `admin.guide.*` |
 

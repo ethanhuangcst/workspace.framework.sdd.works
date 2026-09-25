@@ -1418,7 +1418,7 @@ td.table-check {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  padding-top: 2.75rem;
+  padding: 2.75rem 1.5rem 2rem;
 }
 
 .guide-shell .guide {
@@ -1517,7 +1517,117 @@ td.table-check {
 .guide-section > p {
   color: var(--mute);
   margin: 1rem 0 1.35rem;
-  max-width: 48rem;
+  max-width: none;
+  width: 100%;
+}
+
+.guide-tabs {
+  display: flex;
+  gap: 1.35rem;
+  margin: 0 0 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--mute);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: -1px;
+  /* No horizontal padding — tab label shares the content column left edge */
+  padding: 0.65rem 0;
+}
+
+.guide-tab.is-active {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.guide-tab-panel[hidden] {
+  display: none;
+}
+
+.feature-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-inline-start: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.feature-list li {
+  display: grid;
+  grid-template-columns: minmax(10rem, 14rem) 1fr;
+  gap: 0.75rem 1.25rem;
+  align-items: baseline;
+  margin: 0;
+  padding: 0;
+}
+
+.feature-name {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.feature-summary {
+  color: var(--mute);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .feature-list li {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .secret-lookup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .secret-lookup .btn {
+    width: 100%;
+  }
+}
+
+.secret-lookup {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0;
+}
+
+.secret-lookup .input-box {
+  flex: 0 1 32rem;
+  width: 32rem;
+  max-width: 100%;
+  height: 2.125rem;
+  min-height: 2.125rem;
+}
+
+.secret-lookup .btn {
+  height: 2.125rem;
+  min-height: 0;
+  padding: 0 0.8rem;
+}
+
+.secret-result {
+  margin: 0.85rem 0 0;
+  font-size: 0.95rem;
+}
+
+.secret-error {
+  margin: 0.85rem 0 0;
 }
 
 .setup-card {
@@ -1942,6 +2052,33 @@ td.table-check {
 
 .site-footer p {
   margin: 0;
+}
+
+.site-footer--guide {
+  padding: 1rem 0 1.25rem;
+}
+
+.site-footer-inner {
+  width: 100%;
+  max-width: var(--guide-max);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.25rem;
+  box-sizing: border-box;
+}
+
+.site-footer-admin {
+  color: var(--mute);
+  text-decoration: none;
+}
+
+.site-footer-admin:hover,
+.site-footer-admin:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
 }
 
 .app-shell > .site-footer,

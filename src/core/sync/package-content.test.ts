@@ -181,7 +181,7 @@ describe("package tarball content", () => {
     );
 
     expect(body.commitSha).toBe("sha-new-content");
-    expect(body.manifest?.files.skills).toContain("a-tdd");
+    expect(body.manifest?.files.skills).toContain("skills/a-tdd/SKILL.md");
 
     const extracted = await extractPackageTarball();
     const skillContent = readFileSync(

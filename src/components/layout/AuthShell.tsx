@@ -14,6 +14,7 @@ export type AuthShellProps = {
   variant?: AuthShellVariant;
   children: ReactNode;
   className?: string;
+  footerVariant?: "default" | "guide";
 };
 
 /** Public / auth chrome — mockups `01-home` / `02-login` / reset / invite. */
@@ -23,6 +24,7 @@ export function AuthShell({
   variant = "auth",
   children,
   className,
+  footerVariant = "default",
 }: AuthShellProps) {
   const shellClass = variant === "home" ? "home-shell" : "auth-shell";
   const mainClass = variant === "home" ? "home-main" : "auth-main";
@@ -37,7 +39,7 @@ export function AuthShell({
       <main id="content" className={mainClass}>
         {children}
       </main>
-      <SiteFooter locale={locale} />
+      <SiteFooter locale={locale} variant={footerVariant} />
     </div>
   );
 }

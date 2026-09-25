@@ -2,7 +2,7 @@
 
 MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Sprint 2 Feature-01 (MCP-01):** full pack copy + pack receipt. Stories: [`sdd-mcp-install`](#sdd-mcp-install) (extended) and [`sdd-mcp-pack-receipt`](#sdd-mcp-pack-receipt). Design: [`mcp-design.md`](./mcp-design.md) §3 install / pack allow-list / receipt. Tests: [`mcp-test.md`](./mcp-test.md) §2–3 and §7.6.
+**Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-test.md`](./mcp-test.md) §7.6.
 
 **Tools:** `sdd_install_framework`, `sdd_update_framework`, `sdd_list_versions`, `sdd_get_key`. Protocol ids are not localized.
 
@@ -345,27 +345,27 @@ Scenario: Same ref label but repo content changed
 
 ---
 
-## `sdd-mcp-pack-receipt` — Pack receipt (`framework.sdd.works.json`)
+## `sdd-mcp-install-ledger` — Install ledger (`.sdd-installed.json`, ADR-057)
 
-After a successful install or update, write `{client_root}/framework.sdd.works.json` with `pack_complete: true`. Ethan’s start gate ([Agent-07](../product-backlog.md#pb-17)) reads only this file. `.sdd-installed.json` remains the merge ledger. ([MCP-01](../product-backlog.md#pb-16), Sprint 2 Feature-01)
+After a successful install or update, write `{client_root}/.sdd-installed.json` once with `pack_complete: true`, version, commit, and `files`. Ethan’s start gate ([Agent-07](../product-backlog.md#pb-17)) reads only this file. Do not write `framework.sdd.works.json`. ([MCP-01](../product-backlog.md#pb-16), Sprint 2 Feature-01)
 
-### User story 1 — Receipt after a successful copy
+### User story 1 — Ledger after a successful copy
 
 **As a** developer who installed the framework
-**I want** a pack receipt at `{client_root}/framework.sdd.works.json`
-**So that** Ethan can tell the pack copy finished without scanning skills and rules
+**I want** one install record at `{client_root}/.sdd-installed.json`
+**So that** Ethan can tell the pack copy finished without a second receipt file
 
 #### AC1
 
 ```gherkin
-Scenario: Stdio install writes the receipt last
+Scenario: Stdio install writes the ledger last
   Given a successful stdio sdd_install_framework that copied the present pack folders
   When the tool returns success
-  Then {client_root}/framework.sdd.works.json exists
+  Then {client_root}/.sdd-installed.json exists
   And pack_complete is true
   And installed_at, package_version, and package_commit are set
-  And files lists the pack-relative paths that were written
-  And .sdd-installed.json still exists as the merge ledger
+  And files lists the pack-owned paths that were written
+  And framework.sdd.works.json does not exist
 ```
 
 #### AC2
@@ -374,37 +374,38 @@ Scenario: Stdio install writes the receipt last
 Scenario: Failed install does not mark the pack complete
   Given sdd_install_framework over stdio is rejected with path_rejected or package_unavailable
   When the tool returns
-  Then no new framework.sdd.works.json is written with pack_complete true
+  Then no new .sdd-installed.json is written with pack_complete true
   And no pack folders are written
 ```
 
 #### AC3
 
 ```gherkin
-Scenario: Update rewrites the receipt after a successful merge
-  Given an existing install with a receipt
+Scenario: Update rewrites the ledger after a successful merge
+  Given an existing install with .sdd-installed.json
   When sdd_update_framework completes a new package_commit over stdio
-  Then framework.sdd.works.json is rewritten with pack_complete true
+  Then .sdd-installed.json is rewritten with pack_complete true
   And files matches the new pack contents
 ```
 
-### User story 2 — HTTP install returns a receipt for the AI to write last
+### User story 2 — HTTP fallback returns the ledger for the AI to write last
 
-**As a** developer using HTTP MCP
-**I want** the tool response to include the receipt payload and path
-**So that** the AI writes the receipt only after a successful extract
+**As a** developer using HTTP MCP as fallback
+**I want** the tool response to include the ledger payload and path
+**So that** the AI writes `.sdd-installed.json` only after a successful extract
 
 #### AC4
 
 ```gherkin
-Scenario: HTTP install includes receipt in the tool result
+Scenario: HTTP install includes ledger in the tool result
   Given the client calls sdd_install_framework over Streamable HTTP
   And the operator sync cache contains the requested version
   When the tool runs
-  Then the result includes receiptPath {client_root}/framework.sdd.works.json
-  And the result includes a receipt object with pack_complete true, installed_at, package_version, package_commit, and files
-  And instructions tell the AI to write that receipt only after extract succeeds
+  Then the result includes manifestPath {client_root}/.sdd-installed.json
+  And the result includes a manifest object with pack_complete true, installed_at, package_version, package_commit, and files
+  And instructions tell the AI to write that ledger only after extract succeeds
   And the operator server is not written as a user config root
+  And the result does not require framework.sdd.works.json
 ```
 
 #### AC5
@@ -414,7 +415,167 @@ Scenario: HTTP already_up_to_date is still not returned
   Given the AI passes installed_commit matching the cache
   When sdd_install_framework runs over HTTP
   Then the result still includes packageUrl and extract_recommended true
-  And the result still includes the receipt object for a successful extract
+  And the result still includes the manifest object for a successful extract
+```
+
+---
+
+## `sdd-mcp-client-root-scenarios` — Eight client-root outcomes (stdio)
+
+The local program (ADR-058) must produce the Expected outcomes in [`mcp-design.md`](./mcp-design.md) client-root scenarios. ([MCP-01](../product-backlog.md#pb-16))
+
+### User story 1 — Preserve user files and record pack files
+
+**As a** developer with skills and notes under my client folder
+**I want** install and update to keep my files and record each pack file
+**So that** a later update does not delete my notes inside a pack skill folder
+
+#### AC1
+
+```gherkin
+Scenario: First install replaces same path and keeps other skills
+  Given ~/.cursor/skills/samectx/SKILL.md exists with content "my skill"
+  And ~/.cursor/skills/tdd/SKILL.md exists with content "my tdd notes"
+  And ~/.cursor/.sdd-installed.json does not exist
+  And the pack has tdd and does not have samectx
+  When sdd_install_framework runs over stdio
+  Then samectx content stays "my skill"
+  And skills/tdd/SKILL.md becomes the pack text
+  And .sdd-installed.json lists skills/tdd/SKILL.md not samectx
+  And pack_complete is true
+  And framework.sdd.works.json does not exist
+```
+
+#### AC2 — feature-08
+
+```gherkin
+Scenario: Update replaces recorded pack files and keeps an unlisted user skill
+  Given .sdd-installed.json lists skills/tdd/SKILL.md only
+  And samectx exists with content "my skill"
+  And skills/tdd/my-notes.md exists and is not listed
+  When sdd_update_framework installs a new pack that still has skills/tdd/SKILL.md
+  Then skills/tdd/SKILL.md becomes the new pack text
+  And the skills/tdd directory is not deleted
+  And my-notes.md stays
+  And samectx stays "my skill"
+  And the new ledger lists skills/tdd/SKILL.md not the folder name tdd
+  And pack_complete is true
+```
+
+#### AC2b — feature-06
+
+```gherkin
+Scenario: An old ledger that names a skill folder does not delete that folder
+  Given .sdd-installed.json lists the folder name tdd under files.skills
+  And skills/tdd/my-notes.md exists
+  When sdd_update_framework installs a new pack that has skills/tdd/SKILL.md
+  Then skills/tdd is not removed as a directory
+  And my-notes.md stays
+  And the new ledger lists skills/tdd/SKILL.md
+  And the new ledger does not list the folder name tdd
+  And pack_complete is true
+```
+
+#### AC3 — feature-07
+
+```gherkin
+Scenario: Same version and commit leave a user edit in place
+  Given .sdd-installed.json has main at commit abc and lists skills/tdd/SKILL.md
+  And pack_complete is true
+  And skills/tdd/SKILL.md content is "my edited tdd"
+  And the server pack is still main at abc
+  When sdd_install_framework runs over stdio without force
+  Then the result is already_up_to_date
+  And the content stays "my edited tdd"
+```
+
+#### AC4
+
+```gherkin
+Scenario: Notes folder outside the pack is left alone
+  Given ~/.cursor/notes/ideas.md exists with content "my ideas"
+  And notes is not in .sdd-installed.json
+  When sdd_install_framework runs over stdio
+  Then notes/ideas.md stays "my ideas"
+```
+
+#### AC5 — feature-06
+
+```gherkin
+Scenario: File-level record keeps user note inside a pack skill folder
+  Given .sdd-installed.json lists skills/tdd/SKILL.md and skills/tdd/old-step.md
+  And skills/tdd/my-notes.md exists with content "my notes" and is not listed
+  And the new pack has skills/tdd/SKILL.md "new pack tdd" and no old-step.md
+  When sdd_update_framework runs over stdio
+  Then SKILL.md becomes "new pack tdd"
+  And old-step.md is deleted
+  And my-notes.md stays "my notes"
+  And the skills/tdd directory remains
+  And the new ledger lists skills/tdd/SKILL.md only
+  And pack_complete is true
+```
+
+#### AC6a — feature-07
+
+```gherkin
+Scenario: Old ledger missing pack_complete with same commit rewrites the flag only
+  Given .sdd-installed.json has main at abc, lists skills/tdd/SKILL.md, and has no pack_complete field
+  And skills/tdd/SKILL.md content is "my edited tdd"
+  And the server pack is main at abc
+  When sdd_install_framework runs over stdio
+  Then the result is not already_up_to_date
+  And the content stays "my edited tdd"
+  And .sdd-installed.json is rewritten with pack_complete true and the same version and commit
+```
+
+#### AC6b — feature-08
+
+```gherkin
+Scenario: Old ledger missing pack_complete with new commit replaces recorded files
+  Given .sdd-installed.json has main at abc with no pack_complete
+  And the server pack is main at def with skills/tdd/SKILL.md "new pack tdd"
+  When sdd_update_framework runs over stdio
+  Then skills/tdd/SKILL.md becomes "new pack tdd"
+  And unrecorded files such as my-notes.md stay
+  And the ledger has commit def and pack_complete true
+```
+
+#### AC7a — feature-07
+
+```gherkin
+Scenario: pack_complete false with same commit stays already up to date
+  Given .sdd-installed.json has main at abc, lists skills/tdd/SKILL.md, and pack_complete is false
+  And all listed files exist
+  And the server pack is main at abc
+  When sdd_install_framework runs over stdio without force
+  Then the result is already_up_to_date
+  And the content is not replaced
+  And pack_complete stays false
+```
+
+#### AC7b — feature-08
+
+```gherkin
+Scenario: pack_complete false with new commit copies then sets true
+  Given .sdd-installed.json has pack_complete false for main at abc
+  And the server pack is main at def
+  When sdd_update_framework runs over stdio
+  Then recorded pack files are replaced
+  And unrecorded user files stay
+  And pack_complete becomes true for commit def
+```
+
+#### AC8 — feature-09
+
+```gherkin
+Scenario: Download failure writes nothing
+  Given .sdd-installed.json has pack_complete true for main at abc
+  And the package download fails
+  When sdd_install_framework runs over stdio
+  Then existing files are unchanged
+  And .sdd-installed.json is unchanged
+  And pack_complete stays true
+  And the tool reports the error
 ```
 
 ---
@@ -894,15 +1055,15 @@ Scenario: Admin manual sync trigger
 
 ---
 
-## `sdd-mcp-http-install-policy` — HTTP install policy (ADR-054)
+## `sdd-mcp-http-install-policy` — HTTP install policy (fallback, ADR-054 / ADR-058)
 
-HTTP MCP must not write Server 2 disk as if it were the user’s home. Install/update return tarball URL + metadata for AI extraction. (MCPI-03, MCPU-02)
+HTTP MCP must not write Server 2 disk as if it were the user’s home. When the client uses the HTTP fallback, install/update return tarball URL + metadata for AI extraction.
 
 ### User story 1 — Remote install returns tarball URL for AI extraction
 
-**As a** developer calling MCP over HTTP
+**As a** developer calling MCP over HTTP because stdio could not be set up
 **I want** install and update to return a package URL and extraction instructions
-**So that** the AI agent extracts files locally and the hosted server never writes another user’s `~/.cursor`
+**So that** the AI agent extracts files locally and the hosted server never writes another user’s client folder
 
 #### AC1
 
@@ -912,8 +1073,10 @@ Scenario: HTTP install returns package URL and instructions
   And the operator sync cache contains the requested version
   When the tool runs
   Then the result includes packageUrl pointing at GET /api/sdd/package
-  And the result includes paths, manifest, manifestPath, receipt, receiptPath, and instructions
+  And the result includes paths, manifest, manifestPath, and instructions
+  And the manifest includes pack_complete true for the AI to write last
   And the server disk is not written as a user config root
+  And a temp client home on the server process is unchanged
 ```
 
 #### AC2
@@ -928,22 +1091,54 @@ Scenario: HTTP update follows the same policy
 
 ---
 
-## `sdd-mcp-prompt-setup` — Prompt-based MCP setup (SETUP-01)
+## `sdd-mcp-prompt-setup` — Prompt-based MCP setup (SETUP-01, ADR-058)
 
-End users paste one prompt; the AI configures HTTP MCP. (ADR-054)
+End users paste one prompt. The AI downloads the local program and writes a `command` MCP entry. If that fails, the AI writes the HTTP URL. The person does not edit the MCP file by hand.
 
-### User story 1 — One-prompt setup
+### User story 1 — One-prompt stdio setup
 
-**As an** end user in Cursor
+**As an** end user in Cursor or CodeBuddy
 **I want** to paste one prompt to connect framework.sdd.works MCP
-**So that** I do not need to edit mcp.json manually or install a binary
+**So that** a local program writes pack files on install without me editing mcp.json
 
-#### AC1
+#### AC1 — feature-05
 
 ```gherkin
-Scenario: Agent setup endpoint serves markdown instructions
-  When GET /agent-setup is requested
+Scenario: Agent setup endpoint serves stdio instructions
+  When GET /setup is requested
   Then the response Content-Type is text/markdown
-  And the body includes https://framework.sdd.works/mcp
-  And the body includes agent-specific configuration steps
+  And the body instructs downloading ~/.sdd/sdd-mcp for the detected OS and arch
+  And the body shows a command MCP entry with SDD_SERVER_URL https://framework.sdd.works
+  And the body does not ask the person to edit the MCP file by hand
+  And the body does not authorize installing the framework pack in the same step
+  And the later install step says the local program writes files
+  And packageUrl is only for the HTTP fallback path
+```
+
+#### AC2 — feature-05
+
+```gherkin
+Scenario: Agent setup documents HTTP fallback
+  When GET /setup is requested
+  Then the body includes https://framework.sdd.works/mcp as the fallback when the binary cannot be installed or the client accepts only a URL
+```
+
+#### AC3 — backend-01
+
+```gherkin
+Scenario: Old setup path redirects
+  When GET /agent-setup is requested
+  Then the response redirects to GET /setup
+```
+
+#### AC4 — backend-01
+
+```gherkin
+Scenario: Local portal rewrites pack base and HTTP fallback
+  Given PUBLIC_BASE_URL is http://127.0.0.1:3040
+  When GET /setup is requested
+  Then the body sets SDD_SERVER_URL to http://127.0.0.1:3040
+  And the body uses the local MCP HTTP URL as the fallback
+  And the body does not use https://framework.sdd.works/mcp as the fallback
+  And the GitHub release download host is unchanged
 ```

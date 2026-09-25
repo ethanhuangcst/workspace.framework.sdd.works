@@ -90,11 +90,39 @@ describe("SDD package API", () => {
       expect(res.headers.get("Content-Type")).toContain("text/markdown");
       const body = await res.text();
       expect(body).toContain("framework.sdd.works");
+      expect(body).toContain("~/.sdd/sdd-mcp");
+      expect(body).toContain("command");
+      expect(body).toContain("SDD_SERVER_URL");
       expect(body).toContain("https://framework.sdd.works/mcp");
       expect(body).toContain("sdd_install_framework");
+      expect(body).toContain("Do not ask the person to copy commands or edit the MCP configuration file by hand");
+      expect(body).toContain("Do not ask the person to edit the MCP file by hand");
     } finally {
       if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
       else process.env.PUBLIC_BASE_URL = prevBase;
+    }
+  });
+
+  it("should_rewrite_pack_base_and_mcp_url_when_public_base_is_local", async () => {
+    const prevBase = process.env.PUBLIC_BASE_URL;
+    const prevMcp = process.env.MCP_PUBLIC_URL;
+    process.env.PUBLIC_BASE_URL = "http://127.0.0.1:3040";
+    delete process.env.MCP_PUBLIC_URL;
+    try {
+      const res = await getAgentSetup();
+      expect(res.status).toBe(200);
+      const body = await res.text();
+      expect(body).toContain('SDD_SERVER_URL": "http://127.0.0.1:3040"');
+      expect(body).toContain("http://127.0.0.1:3041/mcp");
+      expect(body).not.toContain("https://framework.sdd.works/mcp");
+      expect(body).toContain(
+        "https://github.com/ethanhuangcst/framework.sdd.works/releases/latest/download",
+      );
+    } finally {
+      if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
+      else process.env.PUBLIC_BASE_URL = prevBase;
+      if (prevMcp === undefined) delete process.env.MCP_PUBLIC_URL;
+      else process.env.MCP_PUBLIC_URL = prevMcp;
     }
   });
 

@@ -2,7 +2,7 @@
 
 Guided release for stack **`framework-sdd-works`**. Follow in order. Do **not** skip GHCR before Portainer pull.
 
-**Capability (Sprint 7, MVP-7):** Admin portal (Keys, Settings, Framework cache tree, accounts) plus **Streamable HTTP MCP** at `/mcp`. End users connect via `https://framework.sdd.works/mcp` (Bearer auth). Package install/update over HTTP returns tarball URLs (ADR-054); stdio binaries ship via **GitHub Releases only** — not on this node.
+**Capability (Sprint 7, MVP-7):** Admin portal (Keys, Settings, Framework cache tree, accounts) plus **Streamable HTTP MCP** at `/mcp` (fallback). End users connect primarily via a local stdio binary (`~/.sdd/sdd-mcp`) configured by `https://framework.sdd.works/setup` (ADR-058, ADR-061). HTTP URL `https://framework.sdd.works/mcp` remains the fallback (ADR-054). Package API and stdio binaries ship via **GitHub Releases** — binaries are not built on this node.
 
 **Unlike `places-agent`:** **two** containers in one stack — Next portal (`framework-sdd-web`) and sibling MCP HTTP (`framework-sdd-mcp`). NPM uses **one** Proxy Host for the domain plus a **Custom Location** for `/mcp` (kb-agent pattern). **Do not** route the whole hostname to the MCP container.
 
@@ -53,7 +53,7 @@ Guided release for stack **`framework-sdd-works`**. Follow in order. Do **not** 
 | Client | URL | Auth |
 | --- | --- | --- |
 | Cursor (Streamable HTTP) | `https://framework.sdd.works/mcp` | `Authorization: Bearer <MCP_AUTH_TOKEN>` |
-| Instructions / setup prompt | `https://framework.sdd.works/agent-setup` | none (public markdown) |
+| Instructions / setup prompt | `https://framework.sdd.works/setup` | none (public markdown). `GET /agent-setup` redirects here. |
 | Package API (stdio clients) | `https://framework.sdd.works/api/sdd/versions` · `/api/sdd/package` | none (public read) |
 
 **Do not** expose MCP on port `3204` to Cloudflare. Public MCP is **only** via NPM → Custom Location `/mcp`.
@@ -478,7 +478,7 @@ Run in order. Both surfaces must pass.
 
 - [ ] `GET https://framework.sdd.works/` → home with instructions link + sign-in
 - [ ] `GET https://framework.sdd.works/instructions` → MCP guide (hero, agents roster, setup prompt)
-- [ ] `GET https://framework.sdd.works/agent-setup` → markdown setup instructions (rewrite to `/api/agent-setup`)
+- [ ] `GET https://framework.sdd.works/setup` → markdown: download `~/.sdd/sdd-mcp`, write `command` MCP entry; HTTP URL as fallback (ADR-058, ADR-061). `GET /agent-setup` redirects to `/setup`.
 - [ ] `GET https://framework.sdd.works/login` → sign-in form
 - [ ] `GET https://framework.sdd.works/api/sdd/versions` → `200` with versions **or** `409` `sync_pending` (before first sync — acceptable)
 
@@ -505,7 +505,7 @@ Use a strong **`MCP_AUTH_TOKEN`** from Portainer (not chat).
 - [ ] **Cursor:** `.cursor/mcp.json` → `url` `https://framework.sdd.works/mcp`, header `Authorization: Bearer …` → **initialize** succeeds
 - [ ] **tools/list** includes: `sdd_list_versions`, `sdd_get_key`, `sdd_install_framework`, `sdd_update_framework`
 - [ ] **sdd_list_versions** returns `paths_version` and inventory (after sync)
-- [ ] **sdd_install_framework** over HTTP returns `packageUrl` + extraction instructions — **no** server-side writes to user home (ADR-054)
+- [ ] **sdd_install_framework** over HTTP (fallback) returns `packageUrl` + extraction instructions — **no** server-side writes to user home (ADR-054)
 - [ ] Missing / wrong Bearer → `401 unauthorized`
 
 Optional HTTP smoke:

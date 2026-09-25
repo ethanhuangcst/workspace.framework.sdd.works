@@ -654,7 +654,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout.
 
 ### User story 1 — Read instructions
 
@@ -662,7 +662,7 @@ How to connect MCP clients. Public and signed-in entries.
 **I want** instructions for connecting to framework.sdd.works over MCP
 **So that** I can configure Cursor, Chatbox, or another client
 
-#### AC1
+#### AC1 — feature-10
 
 ```gherkin
 Scenario: Public instructions are reachable from home
@@ -670,7 +670,8 @@ Scenario: Public instructions are reachable from home
   When the visitor opens instructions from home in a new browsing context
   Then the guide with key admin.guide.title is shown
   And the protocol id framework.sdd.works is shown as a literal
-  And the back-home control with test id guide-back-home links to /
+  And there is no back-home control
+  And the Setup and Features tabs are shown
   And the agents roster with test id guide-agents lists Claude Code, Codex, Cursor, CodeBuddy CN / CodeBuddy / WorkBuddy CN, TraeCode CN / TRAE, GitHub Copilot, and AWS Kiro in that order
 ```
 
@@ -681,6 +682,52 @@ Scenario: Signed-in instructions open from the header
   Given a signed-in admin
   When the admin opens instructions from the header in a new browsing context
   Then the guide with key admin.guide.title is shown
+```
+
+#### AC3 — feature-11
+
+```gherkin
+Scenario: Setup copy is the one-line fetch prompt
+  Given the visitor opens instructions
+  When the visitor uses the setup copy control
+  Then the copied text is Fetch and execute the setup instructions from https://framework.sdd.works/setup
+  And the setup label uses an i18n key
+```
+
+#### AC4 — feature-12
+
+```gherkin
+Scenario: Manual setup shows one mcp.json
+  Given the visitor opens instructions
+  Then manual setup shows one mcp.json
+  And that sample uses command ${userHome}/.sdd/sdd-mcp
+  And that sample sets SDD_SERVER_URL to https://framework.sdd.works
+  And the page does not show a second mcp.json
+  And the page does not show curl -fsSL https://framework.sdd.works/install
+```
+
+#### AC5 — feature-10
+
+```gherkin
+Scenario: Features tab lists fixed catalog rows
+  Given the visitor opens instructions
+  When the visitor selects the Features tab
+  Then Agents lists ethan
+  And Skills lists sdd-atdd, sdd-tdd, sdd-new-project, sdd-update-project, sdd-refine-pb, sdd-plan-sprint, sdd-update-status, sdd-retrospective, sdd-close-sprint, sdd-audit-artifacts, sdd-update-specs, and sdd-implement-feature
+  And Rules lists dod.mdc, incremental-delivery.mdc, and realtime-status.mdc
+  And Templates lists product-backlog.md, sprint-backlog.md, status.md, change-log.md, artifacts-map.md, architecture.md, design.md, test.md, and deployment.md
+  And each row shows a one-sentence summary from an i18n key
+```
+
+#### AC6 — feature-10
+
+```gherkin
+Scenario: Secret form is visible and does not return a value
+  Given the visitor opens the Features tab
+  Then the secret name field and Get secret button are shown
+  When the visitor submits a name
+  Then no stored secret value is shown
+  And the page does not call a keys API
 ```
 
 ---

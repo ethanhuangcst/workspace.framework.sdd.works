@@ -1,13 +1,14 @@
 # coach-ethan — agent design
 
 > **Purpose**: Define how coach-ethan is present, what it does, what it reads, how start-up resolves files, and how capabilities grow across MVPs.
-> **Status**: design · as_of 2026-09-25 · Sprint 1 SBI 2 not implemented
-> **Backlog**: [MCP-01 Installer: full pack + receipt](../product-backlog.md#pb-16) · [Agent-01 agent ethan — POC](../product-backlog.md#pb-6) · Sprint 1 SBI 2 in [`sprint-backlog.md`](../sprint-backlog.md)
+> **Status**: design · as_of 2026-09-25 · Sprint 2 feature-03 (Agent-07) ledger start gate
+> **Backlog**: [Agent-07 agent ethan — pack receipt start gate](../product-backlog.md#pb-17) · [Agent-15 Pack file: agents/ethan.md](../product-backlog.md#pb-63) · [MCP-01 Installer: pack allow-list + ledger](../product-backlog.md#pb-16) · [Agent-01 agent ethan — POC](../product-backlog.md#pb-6)
 > **Framework**: [`sdd-scrum-guide.md`](../framework.seeds/templates/EN/sdd-scrum-guide.md) · **Practices**: [`sdd-scrum-practices.md`](../framework.seeds/templates/EN/sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
-> **Tests**: [`agent-test.md`](./agent-test.md)
+> **Stories**: [`agent-stories.md`](./agent-stories.md) · **Tests**: [`agent-test.md`](./agent-test.md)
+> **Seed prompt**: [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md)
 
-This file is the design for the coach. It does not fill the Scrum guide, add a prompt file, or build skills.
+This file is the design for the coach. The installable prompt is §14 and the seed file. It does not fill the Scrum guide or build skills.
 
 ## 1. Goals and non-goals
 
@@ -58,7 +59,7 @@ The framework pack lives only in the user client root. [ADR-056](../adr/ADR-056-
 | Installed agents, skills, rules, workflows, templates | `{client_root}/`. Install and update copy every top-level folder from the pack source onto that root (path map in `specs/mcp/mcp-design.md`). |
 | Install ledger | `{client_root}/.sdd-installed.json`. Merge list and start gate. `pack_complete` is set true only when install or update finishes the copy. [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). |
 | `/ethan` | `{client_root}/{agents_dir}/ethan.md`. `client_root` is the parent of the folder that contains the loaded file. The prompt does not name a tool folder. |
-| `project-constants.md` | `{client_root}/templates/framework.sdd.works/project-constants.md` when the package includes templates |
+| `constants.md` | `{client_root}/templates/framework.sdd.works/constants.md` when the package includes templates |
 
 Ethan does not copy those trees into `<workspace>/.cursor/`. He does not download the pack again. He does not call install or update.
 
@@ -78,7 +79,7 @@ This repository has no `.cursor/` directory. It was removed on 2026-09-23. There
 
 **After a pass**, read, in order, when the file exists:
 
-1. `{client_root}/templates/framework.sdd.works/project-constants.md` (skill keys, dir names, `instructions_url`)
+1. `{client_root}/templates/framework.sdd.works/constants.md` (skill keys, dir names, `instructions_url`)
 2. `{artifacts_root}/artifacts-map.md` (default `specs/artifacts-map.md`), including `artifact_locale`
 3. `sdd-scrum-guide.md` for that locale
 4. `sdd-scrum-practices.md` for that locale
@@ -114,7 +115,7 @@ Project files may be absent: `artifacts-map.md`, `status.md`, and `sprint-backlo
 
 The pack source is [ethanhuangcst/framework.sdd.works](https://github.com/ethanhuangcst/framework.sdd.works). It holds framework artifacts only. This workspace is the MCP service and the live specs.
 
-`sdd_install_framework` and `sdd_update_framework` copy every top-level folder from that repo onto `{client_root}`. When the copy finishes they write `{client_root}/.sdd-installed.json` with `pack_complete: true` in the same write as the version, the commit, and the file groups. [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). There is no `framework.sdd.works.json`.
+`sdd_install_framework` and `sdd_update_framework` copy the pack allow-list onto `{client_root}`. When the copy finishes they write `{client_root}/.sdd-installed.json` with `pack_complete: true` in the same write as the version, the commit, and the file groups. Each `files` entry is a pack file path, not a folder name ([ADR-059](../adr/ADR-059-ledger-lists-pack-files.md)). [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). There is no `framework.sdd.works.json`.
 
 ```json
 {
@@ -124,11 +125,11 @@ The pack source is [ethanhuangcst/framework.sdd.works](https://github.com/ethanh
   "installed_at": "…",
   "pack_complete": true,
   "files": {
-    "skills": ["sdd-tdd/"],
-    "rules": ["sdd-dod.mdc"],
-    "agents": ["ethan.md"],
+    "skills": ["skills/sdd-tdd/SKILL.md"],
+    "rules": ["rules/sdd-dod.mdc"],
+    "agents": ["agents/ethan.md"],
     "workflows": [],
-    "templates": ["framework.sdd.works/"]
+    "templates": ["templates/framework.sdd.works/constants.md"]
   }
 }
 ```
@@ -150,7 +151,7 @@ Do not add a second skill named `kickoff-project`. Workflows stay empty until a 
 
 **What / how / when** for each job lives only in [`sdd-scrum-practices.md`](../framework.seeds/templates/EN/sdd-scrum-practices.md) **Jobs**. Ethan does not embed those steps in the agent prompt.
 
-The prompt keeps a one-line **job index**: job name → practices section → skill key in `project-constants.md`. The user may ask in `artifact_locale`. When the user asks for a job, ethan matches the key, opens `{client_root}/{skills_dir}/{folder}`, and follows that skill. Skills perform the work.
+The prompt keeps a one-line **job index**: job name → practices section → skill key in `constants.md`. The user may ask in `artifact_locale`. When the user asks for a job, ethan matches the key, opens `{client_root}/{skills_dir}/{folder}`, and follows that skill. Skills perform the work.
 
 | Job (practices) | Skill key |
 | --- | --- |
@@ -212,7 +213,7 @@ When repairing the **client-root** pack, call `sdd_install_framework` or `sdd_up
 
 ### 5.3 Project constants
 
-`project-constants.md` is read from `{client_root}/templates/framework.sdd.works/project-constants.md` ([ADR-056](../adr/ADR-056-single-user-root-framework-pack.md)). On Cursor, `client_root` is `~/.cursor`. It is not copied into the workspace or into `specs/`.
+`constants.md` is read from `{client_root}/templates/framework.sdd.works/constants.md` ([ADR-060](../adr/ADR-060-constants-on-client-root.md), [ADR-056](../adr/ADR-056-single-user-root-framework-pack.md)). On Cursor, `client_root` is `~/.cursor`. It is not copied into the workspace or into `specs/`.
 
 Until the install package includes `templates/`, that file is absent. §2.2 covers that case. `instructions_url` inside the file is used only after the user-root file exists. The bootstrap URL in §2.2 is the literal for a missing `agents/ethan.md`.
 
@@ -309,7 +310,7 @@ MVP 2 needs only a minimal `plan` skill. The rest ship with the full pack.
 ## 11. Out of scope
 
 - Filling [`sdd-scrum-guide.md`](../framework.seeds/templates/EN/sdd-scrum-guide.md) content (GUIDE-01 / sprint guide slices).
-- Implementing the agent prompt file or the six skills in this design turn.
+- Building the six skills in this design turn. The installable prompt is §14 and the seed file.
 - Hosting coach-ethan as a remote MCP tool or resource.
 - Treating templates as the live product SSOT when `specs/` already has the file.
 - Portal chat UI for the coach.
@@ -380,7 +381,9 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 
 | Doc | Role |
 | --- | --- |
-| [`agent-test.md`](./agent-test.md) | Load/recovery test plan and cases |
+| [`agent-stories.md`](./agent-stories.md) | Agent-07 start-gate stories and ACs |
+| [`agent-test.md`](./agent-test.md) | Load/recovery and CE-GATE cases |
+| [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md) | Seed prompt (same words as §14) |
 | [`../product-backlog.md`](../product-backlog.md) | Parent and MVP acceptance |
 | [`../sprint-backlog.md`](../sprint-backlog.md) | Schedule and D1 |
 | [`../architecture.md`](../architecture.md) | Stack pointer; presence decision |
@@ -389,5 +392,83 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 | [`../framework.seeds/templates/EN/sdd-scrum-practices.md`](../framework.seeds/templates/EN/sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
 | [`../mcp/mcp-design.md`](../mcp/mcp-design.md) | Installer MCP (`sdd_install_framework` / `sdd_update_framework`) |
 | [`../adr/ADR-056-single-user-root-framework-pack.md`](../adr/ADR-056-single-user-root-framework-pack.md) | One pack on the user root |
+| [`../adr/ADR-057-install-ledger-pack-complete.md`](../adr/ADR-057-install-ledger-pack-complete.md) | `pack_complete` on `.sdd-installed.json` |
 | [`../knowledge/agent/ide-asset-precedence.md`](../knowledge/agent/ide-asset-precedence.md) | Same-name project vs user-root assets |
 | [`../knowledge/agent/cursor-agent-callup.md`](../knowledge/agent/cursor-agent-callup.md) | Slash-invoke vs templates vs project `agents/` |
+
+## 14. Installable prompt (`agents/ethan.md`)
+
+Authoring copy: [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md). Pack publish is go-live. The words below match that seed file.
+
+````markdown
+---
+name: ethan
+description: Local sdd-scrum coach. Use when the user invokes /ethan.
+---
+
+You are ethan, the local sdd-scrum coach. You do not install yourself. Job steps live in skills and in `sdd-scrum-practices.md`, not in this prompt.
+
+This file is `{client_root}/{agents_dir}/ethan.md`. `client_root` is the parent of the folder that contains this file. `agents_dir` defaults to `agents` until `constants.md` names it. Do not assume a tool folder name.
+
+The framework pack lives only under `client_root`. Do not copy agents, skills, rules, workflows, or templates into the workspace. Do not call `sdd_install_framework` or `sdd_update_framework`.
+
+## Start load
+
+`client_root` is the parent of the folder that contains this file. Do not scan the five framework trees to decide completeness. Do not look for the install ledger in the workspace.
+
+### Install ledger — first
+
+Before any greeting or job list, read only `{client_root}/.sdd-installed.json`.
+
+If the pack is not complete, you cannot do your job. Stop.
+
+| Ledger | What you do |
+| --- | --- |
+| Missing, or `pack_complete` is absent, or `pack_complete` is not `true` | Send the user to `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise use `https://framework.sdd.works/instructions`. Then stop. No job list. No “what would you like to do?”. Do not read project files. Do not copy files. Do not call install or update. |
+| `pack_complete: true` | Treat the framework as complete. Continue start load below. |
+
+A ledger with no `pack_complete` field is not true. Example: a file that has `version`, `package_version`, `package_commit`, `installed_at`, and `files` but no `pack_complete` is incomplete. Stop and send the instructions URL.
+
+### After the gate passes
+
+Read, when the file exists, in this order:
+
+1. `{client_root}/templates/framework.sdd.works/constants.md` (skill keys, dir names, `instructions_url`)
+2. `{artifacts_root}/artifacts-map.md` (default `specs/artifacts-map.md`), including `artifact_locale`
+3. `sdd-scrum-guide.md` for that locale
+4. `sdd-scrum-practices.md` for that locale
+5. `{artifacts_root}/status.md` — Project Progress, current sprint / SBI / next, OGT
+6. `{artifacts_root}/sprint-backlog.md` when a sprint exists
+
+Guide and practices: `{client_root}/templates/framework.sdd.works/{artifact_locale}/` when `artifact_locale` is set and that folder exists. Otherwise the live files under `{artifacts_root}`.
+
+Answer what to do now and what is next from the files that exist. Missing `artifacts-map.md`, `status.md`, or `sprint-backlog.md` is a stage, not a stop. Say which file is missing and which job comes next. Do not create a file unless the user asks for that job and confirms.
+
+## Locale
+
+Read `artifact_locale` from `{artifacts_root}/artifacts-map.md` when it exists. Allowed values: `EN`, `HanS`, `HanT`.
+
+If it is missing, ask the user to pick one before a job that writes project files. Do not assume English.
+
+Chat with the user in that locale. Write job outputs in that locale.
+
+## Jobs
+
+Match the user’s request to a skill key in the Skills table of `constants.md`. The user may ask in the chosen locale. Open `{client_root}/{skills_dir}/{folder}` and follow the skill. Do not type skill folder names yourself. Detail for what / how / when is in `sdd-scrum-practices.md` Jobs for that locale.
+
+| Job | Skill key |
+| --- | --- |
+| Start a new project | `skill_start_project` |
+| Update project settings | `skill_update_project` |
+| Refine product backlog | `skill_refine_pb` |
+| Sprint planning | `skill_plan_sprint` |
+| Report status | `skill_update_status` |
+| Retrospective | `skill_retrospective` |
+| Close / start sprint | `skill_close_sprint` |
+
+There is no `kickoff-project` skill. An empty workflows list is not a failure.
+
+If a later job needs a skill folder, a rule file, or a seed template and that file cannot be read, set only `pack_complete` to `false` in `{client_root}/.sdd-installed.json`. Do not change `package_version` or `package_commit`. Do not set `pack_complete` back to `true`. Send the same instructions URL and stop. Do not look for the other skills, rules, or seeds on start.
+
+Do not edit project files unless the skill for that job says to, and the user has confirmed.
+````

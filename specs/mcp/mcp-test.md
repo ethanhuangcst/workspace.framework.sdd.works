@@ -34,7 +34,7 @@
 | `path-detect` (MCPI-05) | `detectClient` maps cursor / claude-code / aliases; unrecognized → `client_unknown`; env var overrides seed; config probe when present; missing env+config → seed; cache key stability |
 | `path-resolve-llm` | Valid JSON schema accepted; low confidence → seed; escape path → `path_rejected`; fixture Qwen responses |
 | `get-key` | Found → plaintext; missing → `not_found`; unauthorized → `unauthorized`; no other-key leakage |
-| install / update | Uses `package-fetch` mock (not `package-resolve`); idempotent when `package_version` + `package_commit` match and files intact → `already_up_to_date`; same ref label + new commit SHA → reinstall; manifest files deleted → self-heal; missing `package_commit` → reinstall; `force: true` → reinstall; summary includes `resolution_source`; **Feature-01:** stdio writes `framework.sdd.works.json` last with `pack_complete: true` and `files`; failed install does not write that receipt; `src`/`prisma` in the unpacked tree are not copied; `templates/` copies to `{client_root}/templates` |
+| install / update | Uses `package-fetch` mock (not `package-resolve`); idempotent when `package_version` + `package_commit` match and files intact → `already_up_to_date`; same ref label + new commit SHA → reinstall; manifest files deleted → self-heal; missing `package_commit` → reinstall; `force: true` → reinstall; summary includes `resolution_source`; **ADR-057 / ADR-058 / ADR-059:** stdio writes `.sdd-installed.json` once with `pack_complete: true` and `files` entries that are pack file paths, not folder names; failed install does not set `pack_complete` true; no `framework.sdd.works.json`; `src`/`prisma` in the unpacked tree are not copied; `templates/` copies to `{client_root}/templates`; client-root scenarios C1–C8 and C2b |
 | sync job | Initial sync stores files + manifest; same commit → unchanged; GitHub error preserves cache; new commit updates manifest |
 | package cache | resolveCachedVersion: sync_pending, latest, version_not_found; openCachedPackageTar streams tarball |
 | package-fetch | Override returns package or package_unavailable |
@@ -56,7 +56,7 @@ Commands: `npx vitest run packages/sdd-paths src/core src/app/api/sdd src/auth s
 | Admin sync | `POST /api/admin/sync` triggers sync job (admin auth) |
 | HTTP install (ADR-054) | Returns `packageUrl`, paths, manifest, instructions; no server disk writes |
 | HTTP install receipt (MCP-01) | Result includes `receipt` + `receiptPath`; instructions require writing the receipt after extract; `pack_complete` is true in the payload |
-| Agent setup (SETUP-01) | `GET /agent-setup` returns markdown with MCP URL |
+| Agent setup (SETUP-01) | `GET /setup` returns markdown with the stdio contract; `GET /agent-setup` redirects |
 | Install/update (stdio) | Writes local paths; fetches from REST API |
 | Install with injected env (Sprint 6+) | `CLAUDE_CONFIG_DIR` / `CODEX_HOME` → `resolution_source: "env"` |
 
@@ -71,7 +71,7 @@ Prerequisites: `npm run mcp:stdio` or `mcp:http` with Settings GitHub configured
 | List versions | Cursor HTTP MCP | Returns versions/inventory |
 | Get key | Cursor HTTP MCP | Returns `key_value` for a seeded key |
 | Install (Sprint 6+) | Cursor stdio | Files under allow-listed Cursor roots; summary has paths + `resolution_source` |
-| Pack + receipt (Sprint 2 Feature-01) | Cursor stdio (temp home) | Pack folders only; `framework.sdd.works.json` has `pack_complete: true` |
+| Pack + ledger (Sprint 2 Feature-01) | Cursor stdio (temp home) | Pack folders only; `.sdd-installed.json` has `pack_complete: true` |
 | Update same version | Cursor stdio | `already_up_to_date` |
 
 ---
@@ -224,18 +224,31 @@ npm run test:regression:freshness
 
 This runs fixture regression + webhook/cron/ensure-cache-fresh unit tests. Live GitHub cases skip when `SDD_E2E_GITHUB_REPO` / `GITHUB_TOKEN` unset.
 
-### 7.6 Pack receipt + allow-list (MCP-01 — Feature-01)
+### 7.6 Install ledger + allow-list + client-root scenarios (MCP-01 — Feature-01)
 
-Fixture CI. Implement with `src/core/tools/install.test.ts` and HTTP install tests. Do not treat Feature-01 as Done until these pass.
+Fixture CI. Implement with `src/core/tools/install.test.ts`, HTTP install tests, and agent-setup route tests. Do not treat Feature-01 as Done until these pass.
 
 | ID | Scenario | Given | When | Then |
 | --- | --- | --- | --- | --- |
-| **P1** | Stdio receipt after copy | Unpacked pack has `skills/tdd` and `templates/framework.sdd.works/x.md` | stdio `sdd_install_framework` | `{client_root}/framework.sdd.works.json` exists; `pack_complete` true; `files` includes those paths; `.sdd-installed.json` also exists |
-| **P2** | Stdio no receipt on reject | Path would escape home | stdio install | `path_rejected`; no receipt with `pack_complete` true |
+| **P1** | Stdio ledger after copy | Unpacked pack has `skills/tdd` and `templates/framework.sdd.works/x.md` | stdio `sdd_install_framework` | `.sdd-installed.json` exists; `pack_complete` true; `files` includes those paths; no `framework.sdd.works.json` |
+| **P2** | Stdio no complete ledger on reject | Path would escape home | stdio install | `path_rejected`; no ledger with `pack_complete` true |
 | **P3** | Non-pack folders ignored | Unpacked tree also has `src/app.ts` | stdio install | `{client_root}/src` does not exist |
 | **P4** | Templates target | Pack has `templates/` | stdio install | Files under `{client_root}/templates/`, not `{client_root}/sdd/` |
-| **P5** | HTTP receipt payload | Cache has pack | HTTP `sdd_install_framework` | Body has `receipt.pack_complete === true`, `receiptPath` ending `framework.sdd.works.json`, instructions mention writing the receipt last |
-| **P6** | HTTP still no already_up_to_date | Matching `installed_commit` | HTTP install | `packageUrl` present; receipt object still present |
+| **P5** | HTTP ledger payload | Cache has pack | HTTP `sdd_install_framework` | Body has `manifest.pack_complete === true`, `manifestPath` ending `.sdd-installed.json`, instructions mention writing the ledger last; temp home unchanged |
+| **P6** | HTTP still no already_up_to_date | Matching `installed_commit` | HTTP install | `packageUrl` present; manifest object still present |
+| **C1** | First install keeps other skills | `samectx` and edited `tdd` present; no ledger | stdio install | `samectx` kept; `tdd` replaced; ledger lists `tdd`; `pack_complete` true |
+| **C2** | Update keeps unlisted skill and files inside the skill folder | Ledger lists `skills/tdd/SKILL.md`; `samectx` and `my-notes.md` present | stdio update | `SKILL.md` replaced; directory not deleted; `samectx` and `my-notes.md` kept; new ledger lists the file path |
+| **C2b** | Old folder name is not a directory delete | Ledger lists folder name `tdd`; `my-notes.md` inside it | stdio update | `skills/tdd` directory remains; `my-notes.md` kept; new ledger lists `skills/tdd/SKILL.md` |
+| **C3** | Same commit leaves edit | Ledger main/abc; edited `tdd` | stdio install | `already_up_to_date`; edit stays |
+| **C4** | Notes folder kept | `notes/ideas.md` present | stdio install | notes unchanged |
+| **C5** | File-level keep | Ledger lists file paths; `my-notes.md` unlisted | stdio update | `my-notes.md` kept; obsolete pack file removed; new ledger is file-level |
+| **C6a** | Missing `pack_complete`, same commit | Old ledger shape; edit present | stdio install | content kept; ledger rewritten with `pack_complete` true |
+| **C6b** | Missing `pack_complete`, new commit | Old ledger; server def | stdio update | recorded files replaced; unrecorded kept; `pack_complete` true |
+| **C7a** | `pack_complete` false, same commit | Flag false; files present | stdio install | `already_up_to_date`; flag stays false |
+| **C7b** | `pack_complete` false, new commit | Flag false; server def | stdio update | copy; `pack_complete` true |
+| **C8** | Download fails | Complete ledger present | stdio install with fetch error | files and ledger unchanged |
+| **S1** | Agent-setup prompt | — | `GET /setup` | Markdown names `~/.sdd/sdd-mcp`, `command` entry, and fallback URL `https://framework.sdd.works/mcp`. `GET /agent-setup` redirects to `/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
+| **S1 local** | Local URL rewrite | `PUBLIC_BASE_URL=http://127.0.0.1:3040` | `GET /setup` | Body sets `SDD_SERVER_URL` to that origin; fallback is `getMcpHttpUrl()` (default `http://127.0.0.1:3041/mcp`); no production `https://framework.sdd.works/mcp` fallback; GitHub release host unchanged |
 
 ### 7.2 Live GitHub regression (opt-in — test.sdd)
 
@@ -277,10 +290,10 @@ Run after pushing to **test.sdd** when validating a release:
 | Step | Action | Expected |
 | --- | --- | --- |
 | M1 | Push skill rename (`atdd` → `a-tdd`) to test.sdd | Webhook or 30-min cron refreshes cache; HTTP install returns new skill list |
-| M2 | Delete `~/.cursor/skills/*` locally; run install in Cursor | AI receives `packageUrl`; runs `curl \| tar`; files restored; `framework.sdd.works.json` written last |
+| M2 | Delete `~/.cursor/skills/*` locally; run install in Cursor | AI receives package via stdio primary or HTTP fallback; files restored; `.sdd-installed.json` has `pack_complete: true` |
 | M3 | Change only `SKILL.md` text (same paths) | New commit SHA; install returns updated tarball |
 | M4 | Stop `GITHUB_TOKEN` / block GitHub | Sync errors logged; existing cache still installable (F3a) |
-| M5 | Feature-01 receipt | After a successful Cursor install | `{client_root}/framework.sdd.works.json` has `pack_complete: true`; `src/` is not under `{client_root}` |
+| M5 | Feature-01 ledger | After a successful Cursor install | `{client_root}/.sdd-installed.json` has `pack_complete: true`; `src/` is not under `{client_root}` |
 
 ### 7.5 Pass criteria
 
@@ -289,7 +302,15 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] F11a–F11b green in CI (tarball content assertions) — verified via `package-content.test.ts` in regression run
 - [x] M1 rename + HTTP install inventory — `src/core/sync/sync-scenarios.test.ts` (fixture)
 - [x] M2 force sync rematerializes Framework tree — `e2e/settings-framework.spec.ts` sync button
-- [ ] P1–P6 Feature-01 pack receipt + allow-list — not implemented yet
+- [x] P1–P4, P5–P6 Feature-01 install ledger + allow-list (stdio file-level ledger; HTTP returns ledger payload, no receipt)
+- [x] C1, C4 first-install client-root scenarios
+- [x] C5, C2b feature-06 update deletes recorded files only; old folder name is not a directory delete
+- [x] C3, C6a, C7a feature-07 same commit does not replace file bytes
+- [x] C2, C6b, C7b feature-08 new commit replaces recorded files and sets pack_complete
+- [x] C8 feature-09 failed download leaves folder and ledger unchanged
+- [x] S1 agent-setup stdio prompt body (feature-05) — markdown names `~/.sdd/sdd-mcp`, `command`, and HTTP fallback URL
+- [x] S1 path (`backend-01`) — public `GET /setup` serves that markdown; `GET /agent-setup` redirects to `/setup`
+- [x] S1 local (`backend-01`) — with local `PUBLIC_BASE_URL`, body rewrites pack base and MCP fallback URL; GitHub release host unchanged
 
 ---
 

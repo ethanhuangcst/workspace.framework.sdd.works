@@ -39,38 +39,41 @@ Initialization and sprint milestones. Sprint Backlog remains the SBI list. Do no
 - Phase 1 archive under `phase1-process-specs/` — Done
 - Sprint 1 closed — Done
 
+### Sprint 2
+
+- Current sprint. Status WIP.
+- feature-02 is Done: `specs/framework.seeds/agents/ethan.md`, frontmatter name `ethan`.
+- feature-01 is Done: first install copies the allow-list and writes a file-level `.sdd-installed.json` with `pack_complete: true`. No `framework.sdd.works.json`.
+- feature-03 is Done: ethan start reads only the ledger; stop without true `pack_complete`.
+- feature-06 is Done: update deletes only recorded pack files; an old folder name does not delete the skill directory.
+- feature-07 is Done: same commit does not replace file bytes; missing `pack_complete` rewrites the flag only.
+- feature-08 is Done: a new commit replaces recorded files and sets `pack_complete` true.
+- feature-09 is Done: a failed download leaves the client folder and ledger unchanged.
+- feature-05 is Done: the setup markdown downloads `~/.sdd/sdd-mcp`, writes a `command` entry, HTTP URL as fallback. Public path `GET /setup` is [ADR-061](./adr/ADR-061-setup-prompt-public-path.md); the route is `backend-01`.
+- Still ToDo: `constants.md` seed (feature-04). Seed and [ADR-060](./adr/ADR-060-constants-on-client-root.md) are written; user review and seed-tree cross-review are still open.
+- feature-10 is Done: instructions page re-design — Setup / Features tabs, fixed catalog, inert secret form ([Web-portal-05](./product-backlog.md#pb-71)). User confirmed usable 2026-09-25.
+- feature-11 is Done: the instructions page copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` in every locale ([Web-portal-06](./product-backlog.md#pb-72), [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)).
+- feature-12 and feature-13 are ToDo: manual setup shows one `command` `mcp.json`, and the page copy test covers that sample (page already matches; close after DoD).
+- backend-01 is Done: `GET /setup` serves the stdio prompt; local `PUBLIC_BASE_URL` rewrites pack base and MCP URL; `GET /agent-setup` redirects to `/setup`.
+- [Web-portal-07](./product-backlog.md#pb-73) (Features tab / `features.md`) moved to Sprint 3 as feature-07.
+- Sprint 3 also has feature-04 through feature-06: the Features tab looks up one secret by name ([Web-portal-08](./product-backlog.md#pb-74)). The setup prompt stays without a token.
+
 ## where we are now:
 
-- Which sprint are we working on now: **Sprint 1** is Done. **Sprint 2** is next and is not started.
-- What SBI are we working on now: none. Next is Sprint 2 feature-01 (installer + ledger).
-- Sprint 2 is the installer, `pack_complete` on `.sdd-installed.json`, and ethan start gate. It is not started.
+- Which sprint are we working on now: **Sprint 2** (WIP). Sprint 1 is Done.
+- What SBI are we working on now: none. Remaining ToDo: feature-04, feature-12, and feature-13.
+- Pack copy, GitHub push, and admin-portal sync are go-live. They are not a Spec-seeds task.
+- Design decision recorded: end-user stdio primary with HTTP fallback ([ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md)). The ledger lists pack files, not folder names ([ADR-059](./adr/ADR-059-ledger-lists-pack-files.md)). Pack lookup is `constants.md` on the client root ([ADR-060](./adr/ADR-060-constants-on-client-root.md)). The paste URL is `GET /setup` ([ADR-061](./adr/ADR-061-setup-prompt-public-path.md)). MCP-01 installer client-root scenarios C1–C8 and C2b are implemented. Agent-setup prompt body is feature-05. Instructions page re-design is feature-10.
 
 ## what could be the next:
 
-- Start Sprint 2: installer writes `pack_complete` on `.sdd-installed.json` (ADR-057), and ethan stops when the flag is not true.
-- Add `project-constants.md` to `specs/framework.seeds/templates/` as part of that sprint. It is not in the seed tree yet.
+- feature-12 / feature-13: close the remaining Web-portal-06 slices (manual `mcp.json` + copy test) — implementation already on `/instructions`.
+- feature-04: `specs/framework.seeds/templates/constants.md` holds `instructions_url`, dir names, skill keys, and rule keys. Confirm the seed and the practices writing guidance, then run the seed-tree cross-review.
 
 ## Current on-going tasks
 <!-- 
 To keep tracking the temporary on-going tasks. (OGT, On-Going-Tasks)
 OGT is different from the Sprint Backlog Items (SBIs) in sprint-backlog.md. They are the samller tasks created when AI agents are executing the SBI. Many of them are created by agents in PLAN mode and rely on agents to manage them, or created by human as the temporary tasks.
 -->
-OGT for guide outline (legacy Sprint 2 / Guide MVP 1 label — keep until reconciled) — taxonomy (1–8 Done) and guide outline (9–14):
-| # | On-going Task | Status |
-| --- | --- | --- |
-| 1 | Place `artifacts-map.md` in a category: process artifact (project map) or framework-definition pack (always installed) | Done — required process artifact (project index); not guide/practices, not tracking |
-| 2 | Move the 8-step playbook from `sdd-scrum-guide.md` into `sdd-scrum-practices.md`; guide only names events and artifacts | Done — jobs 1–8 live in practices; guide intro is names/meaning only |
-| 3 | Keep `status.md` as a tracking *projection* (current sprint, SBI, next, OGT). Sprint Backlog remains SBI execution truth. Do not duplicate ToDo/WIP/Done there | Done — same rule as EN/status.md comment (OGT ≠ SBI; OGT table only here) |
-| 4 | Name OGT in the guide as a tracking concept. Write OGT rows only in `status.md`, never in `sprint-backlog.md` | Done — guide §1 OGT; §2 process vs tracking |
-| 5 | Guide: architecture, deployment, and `{component}-stories/design/test` are optional until a component exists. This repo lists instances in `artifacts-map.md` | Done — optional/JIT; not required; users fill as they prefer |
-| 6 | Keep `agent-ethan/`, `adr/`, `knowledge/` off the three core lists (product/domain extras, not sdd-scrum core) | Done — fourth category **Knowledge** (`adr/`, `knowledge/`); `agent-ethan/` stays this product’s coach specs |
-| 7 | Practices: when to copy `.cursor/templates/...`. Templates are seeds, not live artifacts | Done — practices **Templates**; guide seeds vs working copies |
-| 8 | Rewrite pointers that still say practices = “columns only” (`artifacts-map`, agent-design, practices intro, product-backlog pb-5) to: guide = definition, practices = what/how/when, process vs tracking lists | Done — map, pb-5, product-backlog header, agent-design |
-| 9 | Adopt four-part guide outline: §1 definition, §2 classic Scrum map, §3 gaps in AI-agent SDD, §4 sdd-scrum (overview, responsibilities, artifacts & commitments, events, values) | ToDo |
-| 10 | §2 = 2020 Scrum as baseline (accountabilities, artifacts+commitments, events, values). Compact map + link is still preferred; a shortened local summary is OK while under review | ToDo |
-| 11 | Move current taxonomy content (OGT, artifact categories, event names, seeds vs copies) under §4; do not discard | ToDo |
-| 12 | Foundation: 2020 Scrum no longer fits AI-era SDD. sdd-scrum is a significant modification, not a faithful overlay. §3 names what no longer fits; §4 is the modified definition. Agents may take Scrum work (including SM). Humans may remain accountable where stated | Done — user 2026-09-22 |
-| 13 | Update `s2-guide` / pb-5 / pb-8 AC so MVP 1 means skeleton of §1–§4 exists (not the old terminologies-only headings) | ToDo |
-| 14 | Draft the §3 gap list as items only (still no full prose): team/agents vs 2020 roles; specs beyond classic three artifacts; dual status; events as skills/jobs; knowledge category; seeds vs working copies | ToDo |
-| 15 | Ethan prompt: no pack scan on start; skills run jobs; missing framework → instructions page (ADR-056) | Done — 2026-09-24 |
-| 16 | Practices job 1 still says re-install/update and copy templates; align with ADR-056 | ToDo |
+
+None.
