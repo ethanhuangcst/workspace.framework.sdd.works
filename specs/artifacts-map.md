@@ -1,15 +1,16 @@
 # Artifact index — framework.sdd.works
 
 > **Purpose**: Required **process artifact** — this project’s index of live files and trees. Not framework definition (that is the guide and practices). Tracking is `status.md` and `change-log.md`. Knowledge is `adr/` and `knowledge/` (retrospective). Other docs link here; they do not keep a second catalog.
-> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
-> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
+> **Practices**: [`sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
+> **Framework**: [`sdd-scrum-guide.md`](./framework.seeds/templates/EN/sdd-scrum-guide.md) (names and meaning).
 
 ## Framework definition
 
 | Artifact | Path | Role |
 | --- | --- | --- |
-| Scrum-in-SDD guide | [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) | Names and meaning: terminologies, artifacts (process / tracking / knowledge / optional), events |
-| Practices | [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) | What, how, when: eight jobs, templates, RID and backlog table conventions |
+| Scrum-in-SDD guide | [`framework.seeds/templates/EN/sdd-scrum-guide.md`](./framework.seeds/templates/EN/sdd-scrum-guide.md) | Names and meaning. HanS copy: [`sdd-scrum-guide-hans.md`](./framework.seeds/templates/HanS/sdd-scrum-guide.md). |
+| Practices | [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) | What, how, when: jobs, templates, RID and backlog table conventions |
+| Sprint shape | [`framework.seeds/templates/EN/framework-design.md`](./framework.seeds/templates/EN/framework-design.md) | Sprint columns, Feature vs Task, and the retrospective block |
 
 ## Process
 
@@ -57,9 +58,10 @@ Not created until their backlog item is the active story.
 
 | Artifact | Backlog | Role |
 | --- | --- | --- |
-| coach-ethan (MVP 1–3) | [coach-ethan](./product-backlog.md#pb-3) · [MVP 1](./product-backlog.md#pb-8) · [MVP 2](./product-backlog.md#pb-9) · [MVP 3](./product-backlog.md#pb-10) | Local Cursor agent. Design: [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md). Tests: [`agent-ethan/agent-test.md`](./agent-ethan/agent-test.md). D1 closed. |
-| Process skills | [Process skills](./product-backlog.md#pb-6) | Full pack; MVP 2 needs a minimal `plan` skill only |
-| Process templates | [Artifact templates](./product-backlog.md#pb-4) | `product-backlog.md`, `change-log.md`, `sprint-backlog.md`, `artifacts-map.md` |
+| ethan | [Agent-01](./product-backlog.md#pb-6) through [Agent-15](./product-backlog.md#pb-63) | Local Cursor agent. Design: [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md). |
+| Rules | [Rule-01](./product-backlog.md#pb-18) · [Rule-02](./product-backlog.md#pb-19) · [Rule-03](./product-backlog.md#pb-20) | Harness rules in the pack |
+| Skills | [Skill-01](./product-backlog.md#pb-21) through [Skill-13](./product-backlog.md#pb-65) | Harness skills in the pack. Skill-11 is unused. |
+| Seeds | [Spec-seeds-01](./product-backlog.md#pb-32) through [Spec-seeds-11](./product-backlog.md#pb-66) | Pack templates, including `.secrets` |
 
 ## Archive (Phase 1 — closed)
 
@@ -67,10 +69,10 @@ Index only. Do not copy Release 1 tables into the live backlog.
 
 | Artifact | Path |
 | --- | --- |
-| Archive index | [`phase1-specs/README.md`](./phase1-specs/README.md) |
-| Product backlog | [`phase1-specs/r1-product-backlog.md`](./phase1-specs/r1-product-backlog.md) |
-| Requirements | [`phase1-specs/r1-req-spec.md`](./phase1-specs/r1-req-spec.md) |
-| Tech stack | [`phase1-specs/r1-tech-spec.md`](./phase1-specs/r1-tech-spec.md) |
-| Sprint plans MVP-1…7 | [`phase1-specs/sprint1-plan.md`](./phase1-specs/sprint1-plan.md) … [`sprint7-plan.md`](./phase1-specs/sprint7-plan.md) |
+| Archive index | [`phase1-process-specs/README.md`](./phase1-process-specs/README.md) |
+| Product backlog | [`phase1-process-specs/r1-product-backlog.md`](./phase1-process-specs/r1-product-backlog.md) |
+| Requirements | [`phase1-process-specs/r1-req-spec.md`](./phase1-process-specs/r1-req-spec.md) |
+| Tech stack | [`phase1-process-specs/r1-tech-spec.md`](./phase1-process-specs/r1-tech-spec.md) |
+| Sprint plans MVP-1…7 | [`phase1-process-specs/sprint1-plan.md`](./phase1-process-specs/sprint1-plan.md) … [`sprint7-plan.md`](./phase1-process-specs/sprint7-plan.md) |
 
 

@@ -2,7 +2,7 @@
 
 **Area:** MCP install/update (MCPI-01 / MCPI-02 / MCPI-04)
 **Source of truth for:** `packages/sdd-paths/paths.json` seed map expansion (Sprint 7 / MCPI-02).
-**Related:** [`mcp-stories.md`](./mcp-stories.md) · [`r1-req-spec.md`](../phase1-specs/r1-req-spec.md) §3 · [ADR-047](../adr/ADR-047-qwen-install-path-discovery.md)
+**Related:** [`mcp-stories.md`](./mcp-stories.md) · [`r1-req-spec.md`](../phase1-process-specs/r1-req-spec.md) §3 · [ADR-047](../adr/ADR-047-qwen-install-path-discovery.md)
 
 Research date: 2026-09-17. Confirm before relying on a path — clients ship new versions frequently.
 

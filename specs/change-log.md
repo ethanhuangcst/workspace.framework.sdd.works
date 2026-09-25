@@ -2,10 +2,44 @@
 
 > This file records conclusion-level changes for Phase 2: what changed, why, and how it was verified.
 > Step-by-step detail stays in `git log` and in each spec. This file does not replace any spec.
-> **Scope**: [`product-backlog.md`](./product-backlog.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md) · [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) · [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) · [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md)
-> Phase 1 history stays in git and [`phase1-specs/`](./phase1-specs/). Do not put secrets here.
+> **Scope**: [`product-backlog.md`](./product-backlog.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md) · [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) · [`framework.seeds/templates/EN/sdd-scrum-guide.md`](./framework.seeds/templates/EN/sdd-scrum-guide.md) · [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md)
+> Phase 1 history stays in git and [`phase1-process-specs/`](./phase1-process-specs/). Do not put secrets here.
 
 ---
+
+## 2026-09-25
+
+### Sprint 1 closed
+
+**Why**: The EN guide and practices seeds were confirmed. The archive path still said `phase1-specs/`.
+
+**What changed**: Sprint 1 feature-01 and documentation-01 are Done. Spec-seeds-02 and Spec-seeds-03 are Done. Phase 1 archive links point at [`phase1-process-specs/`](./phase1-process-specs/). Sprint 1 status is Done. Next is Sprint 2.
+
+**Verification**: Every Sprint 1 SBI is Done. Seed files are under `templates/EN/`. No remaining `phase1-specs/` path under live `specs/`.
+
+**Boundary**: Does not add `project-constants.md`, `.secrets`, or HanS/HanT translations. Does not implement the installer.
+
+## 2026-09-24
+
+### Every product item has a sprint row
+
+**Why**: `.secrets` is named in the guide and had no product item. Change-log, architecture, and deployment seeds had no sprint. Spec-01 and the remaining locale copies of the guide and practices had no sprint row.
+
+**What changed**: [Spec-seeds-11](./product-backlog.md#pb-66) is the `.secrets` seed (the guide spelling). [Spec-seeds-08](./product-backlog.md#pb-39) is Sprint 5. [Spec-seeds-09](./product-backlog.md#pb-40), [Spec-seeds-10](./product-backlog.md#pb-41), and Spec-seeds-11 are Sprint 14. Sprint 1 records Spec-01 and the open HanT guide and HanS/HanT practices copies.
+
+**Verification**: Each PBI code in `product-backlog.md` appears as a parent on at least one sprint row. No product row has an empty Sprint cell.
+
+**Boundary**: Does not write the `.secrets` file or copy secret values.
+
+### Sprint item columns and one retrospective per sprint
+
+**Why**: Sprint rows used `#` and Category. A second retrospective in the same sprint was a second section.
+
+**What changed**: Sprint tables use Code, Parent PBI, Module, Type, SBI. Code is the type plus a number, such as `feature-01`. A seed is a Feature. Research, Bug-fix, and Documentation are the other named types. Task is supporting work that is none of those. An SBI and a PBI status is only `ToDo`, `WIP`, or `Done`. Apply the Definition of Done rule before `Done`. Parent PBI shows the code and the name. The product backlog column stays Category. One Retrospective section per sprint, with timestamped Learnings and Opportunities. Shape: [`framework.seeds/templates/EN/framework-design.md`](./framework.seeds/templates/EN/framework-design.md). Same-category product rows: [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) §3.1.
+
+**Verification**: Live and seed `sprint-backlog.md` use the new columns. No second Retrospective heading in Sprint 1.
+
+**Boundary**: Does not implement the installer or call `/ethan`.
 
 ## 2026-09-22
 
@@ -65,7 +99,7 @@
 
 **Why**: Phase 1 Scrum files and the copied sample product cannot both be the live backlog. Phase 2 needs process files that can take new stories.
 
-**What changed**: Phase 1 Scrum files stay archived under [`phase1-specs/`](./phase1-specs/). Live [`product-backlog.md`](./product-backlog.md), [`sprint-backlog.md`](./sprint-backlog.md), and [`artifacts-map.md`](./artifacts-map.md) now describe framework.sdd.works Phase 2 only (SPEC-01 done; ARTIFACTS-01, COACH-01, TEMPLATES-01 not started). Earlier portal and MCP entries were removed from this log.
+**What changed**: Phase 1 Scrum files stay archived under [`phase1-process-specs/`](./phase1-process-specs/). Live [`product-backlog.md`](./product-backlog.md), [`sprint-backlog.md`](./sprint-backlog.md), and [`artifacts-map.md`](./artifacts-map.md) now describe framework.sdd.works Phase 2 only (SPEC-01 done; ARTIFACTS-01, COACH-01, TEMPLATES-01 not started). Earlier portal and MCP entries were removed from this log.
 
 **Verification**: Live process files contain no sample-product rows. `*-old.md` copies are deleted. Links among backlog, sprint backlog, and artifacts map resolve.
 

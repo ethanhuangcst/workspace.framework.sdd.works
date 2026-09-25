@@ -34,7 +34,7 @@
 | `path-detect` (MCPI-05) | `detectClient` maps cursor / claude-code / aliases; unrecognized → `client_unknown`; env var overrides seed; config probe when present; missing env+config → seed; cache key stability |
 | `path-resolve-llm` | Valid JSON schema accepted; low confidence → seed; escape path → `path_rejected`; fixture Qwen responses |
 | `get-key` | Found → plaintext; missing → `not_found`; unauthorized → `unauthorized`; no other-key leakage |
-| install / update | Uses `package-fetch` mock (not `package-resolve`); idempotent when `package_version` + `package_commit` match and files intact → `already_up_to_date`; same ref label + new commit SHA → reinstall; manifest files deleted → self-heal; missing `package_commit` → reinstall; `force: true` → reinstall; summary includes `resolution_source` |
+| install / update | Uses `package-fetch` mock (not `package-resolve`); idempotent when `package_version` + `package_commit` match and files intact → `already_up_to_date`; same ref label + new commit SHA → reinstall; manifest files deleted → self-heal; missing `package_commit` → reinstall; `force: true` → reinstall; summary includes `resolution_source`; **Feature-01:** stdio writes `framework.sdd.works.json` last with `pack_complete: true` and `files`; failed install does not write that receipt; `src`/`prisma` in the unpacked tree are not copied; `templates/` copies to `{client_root}/templates` |
 | sync job | Initial sync stores files + manifest; same commit → unchanged; GitHub error preserves cache; new commit updates manifest |
 | package cache | resolveCachedVersion: sync_pending, latest, version_not_found; openCachedPackageTar streams tarball |
 | package-fetch | Override returns package or package_unavailable |
@@ -55,6 +55,7 @@ Commands: `npx vitest run packages/sdd-paths src/core src/app/api/sdd src/auth s
 | Package API | `GET /api/sdd/versions` 200 after sync, 409 sync_pending; `GET /api/sdd/package` tarball + headers, 404 unknown version |
 | Admin sync | `POST /api/admin/sync` triggers sync job (admin auth) |
 | HTTP install (ADR-054) | Returns `packageUrl`, paths, manifest, instructions; no server disk writes |
+| HTTP install receipt (MCP-01) | Result includes `receipt` + `receiptPath`; instructions require writing the receipt after extract; `pack_complete` is true in the payload |
 | Agent setup (SETUP-01) | `GET /agent-setup` returns markdown with MCP URL |
 | Install/update (stdio) | Writes local paths; fetches from REST API |
 | Install with injected env (Sprint 6+) | `CLAUDE_CONFIG_DIR` / `CODEX_HOME` → `resolution_source: "env"` |
@@ -70,6 +71,7 @@ Prerequisites: `npm run mcp:stdio` or `mcp:http` with Settings GitHub configured
 | List versions | Cursor HTTP MCP | Returns versions/inventory |
 | Get key | Cursor HTTP MCP | Returns `key_value` for a seeded key |
 | Install (Sprint 6+) | Cursor stdio | Files under allow-listed Cursor roots; summary has paths + `resolution_source` |
+| Pack + receipt (Sprint 2 Feature-01) | Cursor stdio (temp home) | Pack folders only; `framework.sdd.works.json` has `pack_complete: true` |
 | Update same version | Cursor stdio | `already_up_to_date` |
 
 ---
@@ -222,6 +224,19 @@ npm run test:regression:freshness
 
 This runs fixture regression + webhook/cron/ensure-cache-fresh unit tests. Live GitHub cases skip when `SDD_E2E_GITHUB_REPO` / `GITHUB_TOKEN` unset.
 
+### 7.6 Pack receipt + allow-list (MCP-01 — Feature-01)
+
+Fixture CI. Implement with `src/core/tools/install.test.ts` and HTTP install tests. Do not treat Feature-01 as Done until these pass.
+
+| ID | Scenario | Given | When | Then |
+| --- | --- | --- | --- | --- |
+| **P1** | Stdio receipt after copy | Unpacked pack has `skills/tdd` and `templates/framework.sdd.works/x.md` | stdio `sdd_install_framework` | `{client_root}/framework.sdd.works.json` exists; `pack_complete` true; `files` includes those paths; `.sdd-installed.json` also exists |
+| **P2** | Stdio no receipt on reject | Path would escape home | stdio install | `path_rejected`; no receipt with `pack_complete` true |
+| **P3** | Non-pack folders ignored | Unpacked tree also has `src/app.ts` | stdio install | `{client_root}/src` does not exist |
+| **P4** | Templates target | Pack has `templates/` | stdio install | Files under `{client_root}/templates/`, not `{client_root}/sdd/` |
+| **P5** | HTTP receipt payload | Cache has pack | HTTP `sdd_install_framework` | Body has `receipt.pack_complete === true`, `receiptPath` ending `framework.sdd.works.json`, instructions mention writing the receipt last |
+| **P6** | HTTP still no already_up_to_date | Matching `installed_commit` | HTTP install | `packageUrl` present; receipt object still present |
+
 ### 7.2 Live GitHub regression (opt-in — test.sdd)
 
 Implementation: `src/core/sync/sync-e2e.test.ts`.
@@ -262,9 +277,10 @@ Run after pushing to **test.sdd** when validating a release:
 | Step | Action | Expected |
 | --- | --- | --- |
 | M1 | Push skill rename (`atdd` → `a-tdd`) to test.sdd | Webhook or 30-min cron refreshes cache; HTTP install returns new skill list |
-| M2 | Delete `~/.cursor/skills/*` locally; run install in Cursor | AI receives `packageUrl`; runs `curl \| tar`; files restored |
+| M2 | Delete `~/.cursor/skills/*` locally; run install in Cursor | AI receives `packageUrl`; runs `curl \| tar`; files restored; `framework.sdd.works.json` written last |
 | M3 | Change only `SKILL.md` text (same paths) | New commit SHA; install returns updated tarball |
 | M4 | Stop `GITHUB_TOKEN` / block GitHub | Sync errors logged; existing cache still installable (F3a) |
+| M5 | Feature-01 receipt | After a successful Cursor install | `{client_root}/framework.sdd.works.json` has `pack_complete: true`; `src/` is not under `{client_root}` |
 
 ### 7.5 Pass criteria
 
@@ -273,6 +289,7 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] F11a–F11b green in CI (tarball content assertions) — verified via `package-content.test.ts` in regression run
 - [x] M1 rename + HTTP install inventory — `src/core/sync/sync-scenarios.test.ts` (fixture)
 - [x] M2 force sync rematerializes Framework tree — `e2e/settings-framework.spec.ts` sync button
+- [ ] P1–P6 Feature-01 pack receipt + allow-list — not implemented yet
 
 ---
 

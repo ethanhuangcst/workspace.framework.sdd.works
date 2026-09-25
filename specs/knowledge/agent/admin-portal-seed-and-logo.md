@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-14 (updated SEED-01)  
 **Area:** admin portal (MVP-1 / MVP-2)  
-**Related:** [`sprint2-plan.md`](../../phase1-specs/sprint2-plan.md), [`app-design.md`](../../admin-portal/app-design.md), [`sdd-admin-seed`](../../admin-portal/app-stories.md#sdd-admin-seed)
+**Related:** [`sprint2-plan.md`](../../phase1-process-specs/sprint2-plan.md), [`app-design.md`](../../admin-portal/app-design.md), [`sdd-admin-seed`](../../admin-portal/app-stories.md#sdd-admin-seed)
 
 ## Default admin (SEED-01)
 

@@ -558,4 +558,168 @@ describe("installFramework", () => {
     expect(body.version).toBe("v1.0.0");
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
   });
+
+  it("P1_should_write_receipt_after_stdio_copy_with_templates", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const pkg = makePkg("v1.0.0");
+    mkdirSync(join(pkg, "templates/framework.sdd.works"), { recursive: true });
+    writeFileSync(
+      join(pkg, "templates/framework.sdd.works/x.md"),
+      "# const\n",
+    );
+    setPackageFetchForTests(async () => resolved("v1.0.0", pkg, "sha-p1"));
+    const result = await installFramework(
+      { client: "cursor", os: "darwin" },
+      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    const body = parseToolJson<{ receiptPath: string }>(result);
+    expect(body.receiptPath).toContain("framework.sdd.works.json");
+    expect(existsSync(join(home, ".cursor/.sdd-installed.json"))).toBe(true);
+    const receiptPath = join(home, ".cursor/framework.sdd.works.json");
+    expect(existsSync(receiptPath)).toBe(true);
+    const receipt = JSON.parse(readFileSync(receiptPath, "utf8")) as {
+      pack_complete: boolean;
+      package_commit: string;
+      files: string[];
+    };
+    expect(receipt.pack_complete).toBe(true);
+    expect(receipt.package_commit).toBe("sha-p1");
+    expect(receipt.files.some((f) => f.includes("skills/tdd"))).toBe(true);
+    expect(
+      receipt.files.some((f) => f.includes("templates/framework.sdd.works")),
+    ).toBe(true);
+    expect(
+      existsSync(join(home, ".cursor/templates/framework.sdd.works/x.md")),
+    ).toBe(true);
+  });
+
+  it("P2_should_not_write_true_receipt_on_reject", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    setPackageFetchForTests(async () => ({
+      code: "package_unavailable" as const,
+      message: "gone",
+    }));
+    const result = await installFramework(
+      { client: "cursor", os: "darwin" },
+      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    const body = parseToolJson<{ error: { code: string } }>(result);
+    expect(body.error.code).toBe("package_unavailable");
+    const receiptPath = join(home, ".cursor/framework.sdd.works.json");
+    if (existsSync(receiptPath)) {
+      const receipt = JSON.parse(readFileSync(receiptPath, "utf8")) as {
+        pack_complete?: boolean;
+      };
+      expect(receipt.pack_complete).not.toBe(true);
+    }
+  });
+
+  it("P3_should_ignore_non_pack_folders_like_src", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const pkg = makePkg("v1.0.0");
+    mkdirSync(join(pkg, "src"), { recursive: true });
+    writeFileSync(join(pkg, "src/app.ts"), "export {}\n");
+    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    await installFramework(
+      { client: "cursor", os: "darwin" },
+      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    expect(existsSync(join(home, ".cursor/src"))).toBe(false);
+    expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
+  });
+
+  it("P4_should_install_templates_under_client_templates_not_sdd", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const pkg = makePkg("v1.0.0");
+    mkdirSync(join(pkg, "templates/framework.sdd.works"), { recursive: true });
+    writeFileSync(
+      join(pkg, "templates/framework.sdd.works/project-constants.md"),
+      "# pc\n",
+    );
+    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    await installFramework(
+      { client: "cursor", os: "darwin" },
+      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    expect(
+      existsSync(
+        join(home, ".cursor/templates/framework.sdd.works/project-constants.md"),
+      ),
+    ).toBe(true);
+    expect(existsSync(join(home, ".cursor/sdd"))).toBe(false);
+  });
+
+  it("P5_should_include_receipt_payload_on_http", async () => {
+    seedHttpCache("sha-http-receipt", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const result = await installFramework(
+      { client: "cursor", os: "darwin" },
+      {
+        channel: "http",
+        home,
+        userProfile: home,
+        env: { HOME: home },
+        skipLlm: true,
+      },
+    );
+    const body = parseToolJson<{
+      receiptPath: string;
+      receipt: { pack_complete: boolean; files: string[] };
+      paths: { templates?: string };
+      instructions: string;
+    }>(result);
+    expect(body.receiptPath).toMatch(/framework\.sdd\.works\.json$/);
+    expect(body.receipt.pack_complete).toBe(true);
+    expect(body.paths.templates).toContain("templates");
+    expect(body.instructions.toLowerCase()).toContain("receipt");
+    expect(body.instructions).toContain("last");
+  });
+
+  it("P6_should_still_return_packageUrl_and_receipt_when_commit_matches", async () => {
+    seedHttpCache("sha-old", "main");
+    mockCacheFreshAsMatchingCache();
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const result = await installFramework(
+      {
+        client: "cursor",
+        os: "darwin",
+        installed_commit: "sha-old",
+        installed_version: "main",
+      },
+      {
+        channel: "http",
+        home,
+        userProfile: home,
+        env: { HOME: home },
+        skipLlm: true,
+      },
+    );
+    const body = parseToolJson<{
+      packageUrl: string;
+      receipt: { pack_complete: boolean };
+      error?: { code: string };
+    }>(result);
+    expect(body.error).toBeUndefined();
+    expect(body.packageUrl).toContain("/api/sdd/package");
+    expect(body.receipt.pack_complete).toBe(true);
+  });
+
+  it("should_map_skill_and_Rules_aliases_on_stdio", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const pkg = mkdtempSync(join(tmpdir(), "sdd-alias-"));
+    mkdirSync(join(pkg, "skill/tdd"), { recursive: true });
+    mkdirSync(join(pkg, "Rules"), { recursive: true });
+    mkdirSync(join(pkg, "agents"), { recursive: true });
+    writeFileSync(join(pkg, "skill/tdd/SKILL.md"), "# tdd\n");
+    writeFileSync(join(pkg, "Rules/dod.mdc"), "# dod\n");
+    writeFileSync(join(pkg, "agents/code-reviewer.md"), "# agent\n");
+    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    await installFramework(
+      { client: "cursor", os: "darwin" },
+      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
+    expect(existsSync(join(home, ".cursor/rules/dod.mdc"))).toBe(true);
+  });
 });

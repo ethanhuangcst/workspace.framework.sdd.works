@@ -14,6 +14,8 @@ export type PackageInventory = {
   rules: string[];
   agents: string[];
   workflows: string[];
+  /** Top-level entries under templates/ (pack allow-list). Optional on older manifests. */
+  templates?: string[];
   other: string[];
 };
 
@@ -25,37 +27,44 @@ export type PackageManifest = {
   syncedAt: string;
 };
 
+function pushChildren(node: TreeNode, into: string[]): void {
+  for (const child of node.children ?? []) {
+    into.push(child.name.replace(/\/$/, ""));
+  }
+}
+
 export function inventoryFromTree(tree: TreeNode[]): PackageInventory {
   const skills: string[] = [];
   const rules: string[] = [];
   const agents: string[] = [];
   const workflows: string[] = [];
+  const templates: string[] = [];
   const other: string[] = [];
 
   for (const node of tree) {
     const base = node.name.replace(/\/$/, "");
-    if (base === "skills" && node.type === "dir") {
-      for (const child of node.children ?? []) {
-        skills.push(child.name.replace(/\/$/, ""));
-      }
-    } else if (base === "rules" && node.type === "dir") {
-      for (const child of node.children ?? []) {
-        rules.push(child.name.replace(/\/$/, ""));
-      }
-    } else if (base === "agents" && node.type === "dir") {
-      for (const child of node.children ?? []) {
-        agents.push(child.name.replace(/\/$/, ""));
-      }
-    } else if (base === "workflows" && node.type === "dir") {
-      for (const child of node.children ?? []) {
-        workflows.push(child.name.replace(/\/$/, ""));
-      }
+    const lower = base.toLowerCase();
+    if (node.type !== "dir") {
+      other.push(base);
+      continue;
+    }
+    if (base === "skills" || base === "skill") {
+      pushChildren(node, skills);
+    } else if (lower === "rules") {
+      pushChildren(node, rules);
+    } else if (base === "agents") {
+      pushChildren(node, agents);
+    } else if (base === "workflows") {
+      pushChildren(node, workflows);
+    } else if (base === "templates") {
+      pushChildren(node, templates);
     } else {
-      other.push(node.name.replace(/\/$/, ""));
+      // Non-pack names (src, .gitignore, *.code-workspace, …) stay in other only
+      other.push(base);
     }
   }
 
-  return { skills, rules, agents, workflows, other };
+  return { skills, rules, agents, workflows, templates, other };
 }
 
 export function readPackageManifest(): PackageManifest | null {

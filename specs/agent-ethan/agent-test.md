@@ -1,7 +1,7 @@
 # coach-ethan — test strategy and plan
 
 **Area:** coach-ethan local Cursor agent (start load, missing-file recovery, MVP coaching)
-**Design:** [`agent-design.md`](./agent-design.md) · **Backlog:** [coach-ethan](../product-backlog.md#pb-3) · [MVP 1](../product-backlog.md#pb-8)
+**Design:** [`agent-design.md`](./agent-design.md) · **Backlog:** [Agent-01](../product-backlog.md#pb-6) · [Agent-03](../product-backlog.md#pb-8)
 **Installer reference:** [`../mcp/mcp-design.md`](../mcp/mcp-design.md) (`sdd_install_framework`, `sdd_update_framework`)
 **Quality bar:** common-test-strategy — critical path 100% for load/recovery once the prompt exists; overall ≥80% where measurable.
 

@@ -1,6 +1,6 @@
 # framework.sdd.works — Admin portal design
 
-Operator web app. Stories: [`app-stories.md`](./app-stories.md). Mockups: [`ui-mockup/`](./ui-mockup/). Stack lock: [`r1-tech-spec.md`](../phase1-specs/r1-tech-spec.md) (Phase 1 archive). MCP: [`mcp-design.md`](../mcp/mcp-design.md).
+Operator web app. Stories: [`app-stories.md`](./app-stories.md). Mockups: [`ui-mockup/`](./ui-mockup/). Stack lock: [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) (Phase 1 archive). MCP: [`mcp-design.md`](../mcp/mcp-design.md).
 
 **Status:** draft — one user story at a time.
 
@@ -217,7 +217,7 @@ Admin BFF may import Prisma. Shared install/key core used by MCP must not import
 
 ## 13. Tests
 
-Test plan: write `app-test.md` when automation lands. Until then follow **common-test-strategy** + [`r1-tech-spec.md`](../phase1-specs/r1-tech-spec.md) quality bar. E2E: login, reset request, invite, Keys CRUD, Settings URL + framework view. Assert keys / roles / test ids. CI fixture-only; live GitHub / Resend opt-in.
+Test plan: write `app-test.md` when automation lands. Until then follow **common-test-strategy** + [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) quality bar. E2E: login, reset request, invite, Keys CRUD, Settings URL + framework view. Assert keys / roles / test ids. CI fixture-only; live GitHub / Resend opt-in.
 
 ## 14. Anti-patterns
 

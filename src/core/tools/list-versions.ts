@@ -12,6 +12,7 @@ export type ListVersionsResult = {
     rules: string[];
     agents: string[];
     workflows: string[];
+    templates?: string[];
     other: string[];
   };
   paths_version: number;

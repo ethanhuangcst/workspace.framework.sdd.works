@@ -3,7 +3,7 @@
 title: the current status of sdd-scrum execution
 type: tracking-spec
 status: active
-as_of: 2026-09-22
+as_of: 2026-09-25
 tags:
   - sdd
   - scrum
@@ -19,26 +19,43 @@ related:
 
 
 # status of the current sdd-scrum process
-## where we are now:
-<!-- This artifact tracks the current status of the sdd-scrum process 
-Sprint number
-SBI number
--->
-- Which sprint are we working on now: Sprint 2
-- What SBI are we working on now: SBI 1 — Guide MVP 1 slice ([s2-guide](./sprint-backlog.md#s2-guide))
 
+## Project Progress
+
+Initialization and sprint milestones. Sprint Backlog remains the SBI list. Do not duplicate ToDo/WIP/Done columns here.
+
+### Project initialization
+
+- framework.sdd.works installed at `~/.cursor/` — Done (user root; ADR-056)
+- artifacts root and map: `specs/artifacts-map.md` — Done
+- `specs/product-backlog.md` created and in use — Done
+
+### Sprint 1
+
+- Seed tree `specs/framework.seeds/templates/EN/` holds the EN guide and practices — Done (user confirmed 2026-09-25)
+- HanS guide is Sprint 15 — not a Sprint 1 item
+- Root `specs/sdd-scrum-guide.md` and `specs/sdd-scrum-practices.md` removed; process docs point at the seed tree — Done
+- Agent spike: call-up and job recorded in agent-design — Done
+- Phase 1 archive under `phase1-process-specs/` — Done
+- Sprint 1 closed — Done
+
+## where we are now:
+
+- Which sprint are we working on now: **Sprint 1** is Done. **Sprint 2** is next and is not started.
+- What SBI are we working on now: none. Next is Sprint 2 feature-01 (installer + ledger).
+- Sprint 2 is the installer, `pack_complete` on `.sdd-installed.json`, and ethan start gate. It is not started.
 
 ## what could be the next:
-<!-- based on the current status, what are the next things to work on -->
-- Resolve guide-outline OGTs 9–14 one by one (user leads). Do not fill the guide body until those OGTs close.
-- After those OGTs: update AC if OGT 13 Done, then draft §1–§4 skeleton; then Sprint 2 SBI 2 (Coach MVP 1).
+
+- Start Sprint 2: installer writes `pack_complete` on `.sdd-installed.json` (ADR-057), and ethan stops when the flag is not true.
+- Add `project-constants.md` to `specs/framework.seeds/templates/` as part of that sprint. It is not in the seed tree yet.
 
 ## Current on-going tasks
 <!-- 
 To keep tracking the temporary on-going tasks. (OGT, On-Going-Tasks)
 OGT is different from the Sprint Backlog Items (SBIs) in sprint-backlog.md. They are the samller tasks created when AI agents are executing the SBI. Many of them are created by agents in PLAN mode and rely on agents to manage them, or created by human as the temporary tasks.
 -->
-OGT for Sprint #2, SBI #1, Guide MVP 1 slice — taxonomy (1–8 Done) and guide outline (9–14):
+OGT for guide outline (legacy Sprint 2 / Guide MVP 1 label — keep until reconciled) — taxonomy (1–8 Done) and guide outline (9–14):
 | # | On-going Task | Status |
 | --- | --- | --- |
 | 1 | Place `artifacts-map.md` in a category: process artifact (project map) or framework-definition pack (always installed) | Done — required process artifact (project index); not guide/practices, not tracking |
@@ -55,3 +72,5 @@ OGT for Sprint #2, SBI #1, Guide MVP 1 slice — taxonomy (1–8 Done) and guide
 | 12 | Foundation: 2020 Scrum no longer fits AI-era SDD. sdd-scrum is a significant modification, not a faithful overlay. §3 names what no longer fits; §4 is the modified definition. Agents may take Scrum work (including SM). Humans may remain accountable where stated | Done — user 2026-09-22 |
 | 13 | Update `s2-guide` / pb-5 / pb-8 AC so MVP 1 means skeleton of §1–§4 exists (not the old terminologies-only headings) | ToDo |
 | 14 | Draft the §3 gap list as items only (still no full prose): team/agents vs 2020 roles; specs beyond classic three artifacts; dual status; events as skills/jobs; knowledge category; seeds vs working copies | ToDo |
+| 15 | Ethan prompt: no pack scan on start; skills run jobs; missing framework → instructions page (ADR-056) | Done — 2026-09-24 |
+| 16 | Practices job 1 still says re-install/update and copy templates; align with ADR-056 | ToDo |

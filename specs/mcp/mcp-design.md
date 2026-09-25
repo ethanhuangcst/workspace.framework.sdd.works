@@ -1,8 +1,8 @@
 # framework.sdd.works — MCP design
 
-MCP server for install, update, list, and get-key. Stories: [`mcp-stories.md`](./mcp-stories.md). Portal: [`app-design.md`](../admin-portal/app-design.md). Stack: [`r1-tech-spec.md`](../phase1-specs/r1-tech-spec.md) (Phase 1 archive).
+MCP server for install, update, list, and get-key. Stories: [`mcp-stories.md`](./mcp-stories.md). Portal: [`app-design.md`](../admin-portal/app-design.md). Stack: [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) (Phase 1 archive).
 
-**Status:** implemented (Sprint 6 + ADR-054 Hybrid + ADR-055 sync freshness). ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md), [055](../adr/ADR-055-layered-sync-freshness.md).
+**Status:** implemented (Sprint 6 + ADR-054 Hybrid + ADR-055 sync freshness). **Sprint 2 Feature-01 (MCP-01) is designed, not implemented:** pack allow-list + `templates/` + pack receipt. Stories: [`mcp-stories.md`](./mcp-stories.md) `sdd-mcp-pack-receipt`. Tests: [`mcp-test.md`](./mcp-test.md) §7.6. ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md), [055](../adr/ADR-055-layered-sync-freshness.md), [056](../adr/ADR-056-single-user-root-framework-pack.md).
 
 ## 1. Goals and non-goals
 
@@ -13,11 +13,30 @@ MCP server for install, update, list, and get-key. Stories: [`mcp-stories.md`](.
 | Prompt-based MCP setup — one paste, no binary path in `mcp.json` (SETUP-01) | Third-party skill marketplace |
 | Stdio direct writes for **dev contributors** only (ADR-051, ADR-053) | MCP transport session as business state |
 | `sdd_list_versions` from operator sync cache / REST API | Editing skills/rules inside an MCP session |
-| `sdd_get_key` from the admin key store (HTTP only) | |
+| `sdd_get_key` from the admin key store (HTTP only) | Hard-coding a GitHub owner/repo for the pack |
 | Path allow-list; structured errors | Trusting LLM paths without allow-list validation |
 | Qwen-assisted path discovery on stdio (ADR-047) | |
 
 `serverInfo.name` = `framework.sdd.works` (literal). Tool names unprefixed. Descriptions SHOULD contain the literal `framework.sdd.works`.
+
+## 1.1 Pack GitHub repository (admin Settings)
+
+Two workspaces. Do not mix them.
+
+| Workspace | Remote | What it is |
+| --- | --- | --- |
+| This workspace (`framework.sdd.works`) | [workspace.framework.sdd.works](https://github.com/ethanhuangcst/workspace.framework.sdd.works.git) | Build the product: framework pack authoring, MCP, and the web portal |
+| Framework pack | [framework.sdd.works](https://github.com/ethanhuangcst/framework.sdd.works.git) | Published pack only |
+
+This git working copy is the service repo. Sync and install never read this checkout’s remote and never treat `specs/` or `src/` here as the pack tree. Pack files are copied into the pack repo by hand.
+
+Pack source is the singleton **`Setting.githubUrl`** stored by the admin portal ([`app-design.md`](../admin-portal/app-design.md) Settings). Sync (`syncFrameworkRepo`), `sdd_list_versions`, and `sdd_install_framework` / `sdd_update_framework` read that field at runtime. **Do not hard-code** an owner, repo, or clone URL in application code, path maps, or tool defaults.
+
+Operators may change the URL in `/admin/settings`. The service validates `https://github.com/{owner}/{repo}` (optional `.git`) and persists the canonical form. An empty URL means no pack: sync and install fail with a structured error (`sync_pending` / package unavailable), not a baked-in fallback repo.
+
+**Current operator value (example, changeable):** [https://github.com/ethanhuangcst/framework.sdd.works.git](https://github.com/ethanhuangcst/framework.sdd.works.git)
+
+That URL is a **pack-only** tree. Observed top-level names on `main` (2026-09-24): `agents/`, `skill/`, `rules/`, `templates/framework.sdd.works/`, plus non-pack files (`.gitignore`, workspace file). It is not the portal/`src` service repo. Feature-01 still copies only the pack allow-list (with name mapping below), never every GitHub top-level file.
 
 ## 2. Transport and roles
 
@@ -52,9 +71,10 @@ flowchart LR
 
   subgraph install [Install — AI-driven]
     UserChat[User: install framework] --> AICall[AI calls sdd_install_framework via HTTP MCP]
-    AICall --> Server[Server returns packageUrl + paths + manifest]
+    AICall --> Server[Server returns packageUrl + paths + manifest + receipt]
     Server --> AIShell[AI runs curl URL pipe tar xz -C clientRoot]
     AIShell --> AIManifest[AI writes .sdd-installed.json]
+    AIShell --> AIReceipt[AI writes framework.sdd.works.json last]
   end
 
   subgraph server [Operator server — ADR-053 + ADR-055]
@@ -104,6 +124,7 @@ The prompt instructs the AI to add the HTTP MCP URL only. **Install is a separat
 | Delete previous package-owned files | AI agent | Per `previousManifest.files` |
 | `curl \| tar xz --strip-components 1` | AI agent | User machine (`extractTarget`) |
 | Write new `.sdd-installed.json` | AI agent | User machine (`manifestPath`) |
+| Write pack receipt last | AI agent | User machine (`receiptPath`) |
 
 **Why `tar` not Write tool for content:** GitHub tarball bytes are deterministic; AI Write tool would risk drift or truncation on large skill trees. Manifest JSON is small and safe for Write.
 
@@ -217,8 +238,9 @@ Shared steps (both transports):
 #### stdio behavior (dev contributors)
 
 4. Fetch package: `GET ${SDD_SERVER_URL}/api/sdd/package?version=<v>` → unpack to temp.
-5. Manifest-tracked merge (§ Write policy): delete old package files, write new, update `.sdd-installed.json`.
-6. Return `{ version, paths, asset_counts, resolution_source }`.
+5. Manifest-tracked merge (§ Write policy): delete old package files, write **pack allow-list** folders only, update `.sdd-installed.json`.
+6. After a successful copy, write `{client_root}/framework.sdd.works.json` (`pack_complete: true`). Do not write this file when the copy failed.
+7. Return `{ version, paths, asset_counts, resolution_source, receiptPath }`.
 
 #### HTTP behavior (end users, ADR-054)
 
@@ -233,9 +255,17 @@ Shared steps (both transports):
   "version": "v1.0.0",
   "commitSha": "abc123…",
   "client": "cursor",
-  "paths": { "skills": "…", "rules": "…", "agents": "…", "workflows": "…" },
+  "paths": { "skills": "…", "rules": "…", "agents": "…", "workflows": "…", "templates": "…" },
   "manifestPath": "~/.cursor/.sdd-installed.json",
   "manifest": { "version": 1, "package_version": "…", "package_commit": "…", "files": { … } },
+  "receiptPath": "~/.cursor/framework.sdd.works.json",
+  "receipt": {
+    "pack_complete": true,
+    "installed_at": "…",
+    "package_version": "…",
+    "package_commit": "…",
+    "files": ["skills/tdd/", "templates/framework.sdd.works/project-constants.md"]
+  },
   "previousManifest": null,
   "extractTarget": "~/.cursor",
   "instructions": "…",
@@ -248,10 +278,63 @@ Shared steps (both transports):
 **AI executor steps** (from `instructions`):
 1. Read `manifestPath`; if present, delete files listed in `previousManifest.files.*`.
 2. `curl -fsSL "<packageUrl>" | tar xz -C "<extractTarget>" --strip-components 1`
-3. Write `manifest` JSON to `manifestPath`.
-4. Verify artifacts exist under `paths`.
+3. Keep only pack allow-list folders under `extractTarget` if the tarball still contains extra top-level names (or extract into a temp dir and copy allow-list folders). Feature-01 implementation should prefer a tarball that already contains only pack folders.
+4. Write `manifest` JSON to `manifestPath`.
+5. Verify pack artifacts exist under `paths`.
+6. Write `receipt` JSON to `receiptPath` **last**. Do not write `pack_complete: true` if extract or verify failed.
+
+Do **not** commit `framework.sdd.works.json` with `pack_complete: true` in git. Generate it at install time. Baking it into the tarball before extract would mark an incomplete extract as complete.
 
 HTTP never writes operator server disk as user config. The operator server does not verify the caller’s local filesystem after the tool returns.
+
+#### Pack allow-list (MCP-01)
+
+Copy **only** pack folders from the **Settings GitHub** package onto `{client_root}`. Source names on disk may differ from client-root names.
+
+Canonical client-root names (path map): `agents`, `skills`, `rules`, `workflows`, `templates`.
+
+**Pack-repo name mapping** (current Settings repo, 2026-09-24):
+
+| GitHub top-level (pack repo) | Target |
+| --- | --- |
+| `agents/` | `{client_root}/agents/` (`paths.agents`) |
+| `skill/` or `skills/` | `{client_root}/skills/` (`paths.skills`) |
+| `Rules/` or `rules/` | `{client_root}/rules/` (`paths.rules`) |
+| `workflows/` | `{client_root}/workflows/` |
+| `templates/` | `{client_root}/templates/` (not `paths.other` / `sdd/`) |
+
+Missing pack folders are skipped; they do not fail install. `ethan.md` and `project-constants.md` are later Sprint 2 features; Feature-01 copies them when present.
+
+**Never copy** other GitHub top-level names (`.gitignore`, `*.code-workspace`, `src`, `prisma`, `package.json`, `specs`, `.github`, …). Sync **inventory** for install must use the same allow-list (including the aliases above); do not treat leftover tree nodes as install targets via `inventory.other`.
+
+`paths.other` (`~/.cursor/sdd/`) stays a seed-map slot for non-pack extras. Feature-01 does not write the pack into `other`.
+
+#### Pack receipt (MCP-01)
+
+Two files at `{client_root}`:
+
+| File | Role |
+| --- | --- |
+| `.sdd-installed.json` | Merge ledger (this section). Ethan does not use it as a start gate. |
+| `framework.sdd.works.json` | Pack receipt. Ethan reads only this on start ([agent-design](../agent-ethan/agent-design.md) §2.4). |
+
+Receipt shape:
+
+```json
+{
+  "pack_complete": true,
+  "installed_at": "2026-09-24T00:00:00Z",
+  "package_version": "main",
+  "package_commit": "a1b2c3d4e5f6789...",
+  "files": [
+    "agents/ethan.md",
+    "skills/sdd-tdd/",
+    "templates/framework.sdd.works/project-constants.md"
+  ]
+}
+```
+
+`files` is a flat list of pack-relative paths written in this install. `pack_complete` is true only after a successful copy (stdio) or after the AI has extracted and verified (HTTP). Ethan may later set it false; install/update are the only writers of true.
 
 #### Write policy — manifest-tracked merge (ADR-048)
 
@@ -259,7 +342,7 @@ HTTP never writes operator server disk as user config. The operator server does 
 
 1. Read the old manifest (if it exists) → those are package-owned files.
 2. Delete the old package-owned files (removes stale files on rename/remove).
-3. Write the new package files (per-artifact: overwrite each skill dir, rule, agent, workflow).
+3. Write the new package files (per-artifact: overwrite each skill dir, rule, agent, workflow, **and templates tree**).
 4. Update the manifest with the new file list.
 5. User-owned files (not in the manifest) are never touched.
 
@@ -275,7 +358,8 @@ Manifest shape (`~/.<client>/.sdd-installed.json`):
     "skills": ["tdd/", "dod/", "frontend-developer/"],
     "rules": ["common-test-strategy.mdc", "dod.mdc"],
     "agents": ["code-reviewer.md"],
-    "workflows": ["new-feature.md"]
+    "workflows": ["new-feature.md"],
+    "templates": ["framework.sdd.works/"]
   }
 }
 ```
@@ -285,6 +369,164 @@ Manifest shape (`~/.<client>/.sdd-installed.json`):
 - **Update (new version)**: read manifest → delete old package files → write new → update manifest.
 - **User customizations**: files not in the manifest are preserved across updates.
 - **Corrupted/missing manifest**: fall back to per-artifact merge (overwrite package artifacts, preserve others) and log a warning. Do not delete user files if the manifest is missing.
+
+#### Client-root scenarios (Sprint 2 feature-01)
+
+Cursor’s folder is `~/.cursor`. Expected behavior follows [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). Current behavior is what the code does today. A web address does not write files. A local command does.
+
+**Scenario 1. User skills, rules, agents, workflows, and templates exist. The framework pack is not installed.**
+
+Example:
+
+- `~/.cursor/skills/samectx/SKILL.md` already exists, and the content is “my skill”. The pack does not have `samectx`.
+- `~/.cursor/skills/tdd/SKILL.md` already exists, and the content is “my tdd notes”. The pack also has a file at this same path.
+- `~/.cursor/.sdd-installed.json` does not exist yet. Install has not recorded anything on this computer.
+
+Expected:
+
+- Copy in only the pack folders: skills, rules, agents, workflows, and templates.
+- Leave `samectx` as it is. The content stays “my skill”.
+- Replace `skills/tdd/SKILL.md`. The content becomes the pack’s text, not “my tdd notes”.
+- Write `~/.cursor/.sdd-installed.json` once. It lists `tdd`, not `samectx`, and `pack_complete` is true.
+- Do not write `framework.sdd.works.json`.
+
+Current:
+
+- A local command copies the pack folders and leaves `samectx` in place.
+- It replaces `skills/tdd/SKILL.md` with the pack file.
+- It writes `~/.cursor/.sdd-installed.json` without `pack_complete`.
+- It also writes `framework.sdd.works.json`.
+- A web-address tool writes nothing. It returns a download link and a separate receipt for the agent to save.
+
+**Scenario 2. An older framework is installed, and the user also has their own skill.**
+
+Example:
+
+- `~/.cursor/.sdd-installed.json` exists. It lists `skills: ["tdd"]` for the old pack. It does not list `samectx`.
+- `~/.cursor/skills/tdd/SKILL.md` exists, and the content is the old pack text.
+- `~/.cursor/skills/samectx/SKILL.md` exists, and the content is “my skill”.
+- The new pack still has `tdd` and does not have `samectx`.
+
+Expected:
+
+- Delete the old `skills/tdd/` folder, because it is listed in `.sdd-installed.json`.
+- Copy in the new pack’s `tdd`. The content of `SKILL.md` becomes the new pack text.
+- Leave `samectx` as it is. The content stays “my skill”.
+- Write `.sdd-installed.json` again. It lists `tdd`, and `pack_complete` is true.
+- Do not write `framework.sdd.works.json`.
+
+Current:
+
+- A local command deletes `skills/tdd/`, copies the new pack, and leaves `samectx` in place.
+- The new `.sdd-installed.json` has no `pack_complete`.
+- It also writes `framework.sdd.works.json`.
+- A web-address tool returns the download link and the old `.sdd-installed.json`, so the agent can delete `tdd` and unpack the new pack.
+
+**Scenario 3. The user edited a pack file. The pack version has not changed.**
+
+Example:
+
+- `~/.cursor/.sdd-installed.json` exists. Version is `main`, commit is `abc`, and it lists `skills: ["tdd"]`.
+- `~/.cursor/skills/tdd/SKILL.md` still exists. The user changed the content from “pack tdd” to “my edited tdd”.
+- The pack to install is still `main` at commit `abc`.
+
+Expected:
+
+- A local command stops and reports already up to date.
+- The content of `skills/tdd/SKILL.md` stays “my edited tdd”.
+- It does not look at `pack_complete` to make this decision.
+- A web-address tool still returns a download link. It does not report already up to date.
+
+Current:
+
+- A local command reports already up to date and leaves the content as “my edited tdd”.
+- A web-address tool returns a download link. If the agent then deletes `tdd` and unpacks the pack, the content becomes “pack tdd” again.
+
+**Scenario 4. The user has a notes folder that is not part of the pack.**
+
+Example:
+
+- `~/.cursor/notes/ideas.md` already exists, and the content is “my ideas”.
+- `~/.cursor/.sdd-installed.json` does not list `notes`.
+
+Expected:
+
+- Leave `notes/ideas.md` as it is. The content stays “my ideas”.
+- Copy only skills, rules, agents, workflows, and templates.
+
+Current:
+
+- A local command leaves `notes/ideas.md` as it is.
+- The web-address instructions tell the agent to unpack the archive into `~/.cursor`. That unpack can also add files that are not part of the pack, such as `.gitignore` or `src`.
+
+**Scenario 5. The user added a note inside a pack skill folder.**
+
+Example:
+
+- `~/.cursor/.sdd-installed.json` exists and lists `skills: ["tdd"]`.
+- `~/.cursor/skills/tdd/SKILL.md` is the pack file.
+- `~/.cursor/skills/tdd/my-notes.md` already exists, and the content is “my notes”. The pack does not have this file.
+
+Expected:
+
+- On update, delete the whole `skills/tdd/` folder, then copy the pack’s `tdd` back. `my-notes.md` is gone.
+- On a first install, when `.sdd-installed.json` does not exist yet, do not delete the folder first. `my-notes.md` can stay next to `SKILL.md`.
+
+Current:
+
+- A local command does the same. An update removes `my-notes.md`. A first install can leave it.
+
+**Scenario 6. The install record was written before `pack_complete` existed.**
+
+Example:
+
+- `~/.cursor/.sdd-installed.json` exists. Version is `main`, commit is `abc`, and it lists `skills: ["tdd"]`. There is no `pack_complete` field.
+- `~/.cursor/skills/tdd/SKILL.md` still exists.
+- The pack to install is still `main` at commit `abc`.
+
+Expected:
+
+- Ethan stops at start, because `pack_complete` is missing.
+- A local command reports already up to date and does not add `pack_complete: true`.
+
+Current:
+
+- A local command reports already up to date and does not rewrite `.sdd-installed.json`.
+
+**Scenario 7. Ethan set `pack_complete` to false. The pack version has not changed.**
+
+Example:
+
+- `~/.cursor/.sdd-installed.json` exists. Version is `main`, commit is `abc`, it lists `skills: ["tdd"]`, and `pack_complete` is false.
+- `~/.cursor/skills/tdd/SKILL.md` still exists.
+- The pack to install is still `main` at commit `abc`.
+
+Expected:
+
+- A local command reports already up to date.
+- `pack_complete` stays false.
+- It becomes true only when a real copy runs: force, a new commit, or a listed file is missing.
+
+Current:
+
+- The installer does not read `pack_complete`. Matching version, commit, and files produce already up to date. The flag stays false.
+
+**Scenario 8. The download fails before any file is copied.**
+
+Example:
+
+- `~/.cursor/skills/samectx/SKILL.md` already exists, and the content is “my skill”.
+- The tool cannot download the pack.
+
+Expected:
+
+- Leave `samectx` as it is. The content stays “my skill”.
+- Do not write `.sdd-installed.json` with `pack_complete: true`.
+- Do not write `framework.sdd.works.json`.
+
+Current:
+
+- The tool returns an error and writes neither file. `samectx` is unchanged.
 
 ### `sdd_update_framework`
 
@@ -559,7 +801,7 @@ Cache resolved paths per stdio session (the server process lives for the duratio
 **Operator server (sync job):**
 
 ```text
-Settings GitHub URL
+Setting.githubUrl (admin portal; never hard-coded)
   → list tags / resolve latest ref
   → materializePackage (GITHUB_TOKEN server-side)
   → store unpacked + tarball in .data/sdd-packages/<commit-sha>/
@@ -572,7 +814,8 @@ Settings GitHub URL
 GET ${SDD_SERVER_URL}/api/sdd/package?version=<v>
   → download tarball (X-SDD-Commit, X-SDD-Version headers)
   → unpack to temp dir
-  → copy into allowed client roots (manifest-tracked merge)
+  → copy pack allow-list folders into client roots (manifest-tracked merge)
+  → write framework.sdd.works.json last
 ```
 
 **HTTP MCP + AI agent (end users — hybrid, ADR-054):**
@@ -582,7 +825,8 @@ sdd_install_framework (HTTP)
   → resolveCachedVersion from sync cache
   → return packageUrl pointing at GET /api/sdd/package?version=<v>
   → AI agent: curl | tar xz -C extractTarget --strip-components 1
-  → AI agent: write manifest to manifestPath
+  → AI agent: write merge ledger to manifestPath
+  → AI agent: write receipt to receiptPath last
 ```
 
 `GITHUB_TOKEN` stays on the operator server only. End users never call GitHub directly.
@@ -630,7 +874,7 @@ Tool **descriptions** shown in clients: English source + overlay for `zh-Hans` /
 
 ## 9. Tests
 
-Test plan: [`mcp-test.md`](./mcp-test.md). Follow **common-test-strategy** + [`r1-tech-spec.md`](../phase1-specs/r1-tech-spec.md) quality bar. Unit: **PATH-01 table validation + resolver + path-policy + path-detect** (100% of those paths), idempotent update, key lookup, **LLM JSON schema + allow-list rejection of escaped paths**. Integration: tool contracts on stdio fixture + HTTP. Default CI: fixture GitHub payloads and **fixture Qwen responses** (live Qwen opt-in). E2E path-detection scenarios on a real Mac: see [`mcp-test.md`](./mcp-test.md) § Client path determination E2E.
+Test plan: [`mcp-test.md`](./mcp-test.md). Follow **common-test-strategy** + [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) quality bar. Unit: **PATH-01 table validation + resolver + path-policy + path-detect** (100% of those paths), idempotent update, key lookup, **LLM JSON schema + allow-list rejection of escaped paths**. Integration: tool contracts on stdio fixture + HTTP. Default CI: fixture GitHub payloads and **fixture Qwen responses** (live Qwen opt-in). E2E path-detection scenarios on a real Mac: see [`mcp-test.md`](./mcp-test.md) § Client path determination E2E.
 
 ## 10. Anti-patterns
 

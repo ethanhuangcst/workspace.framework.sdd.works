@@ -1,8 +1,8 @@
 # framework.sdd.works — MCP service user stories
 
-MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
+MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Phase 2 upcoming (no Gherkin yet):** [Install whole git artifacts](../product-backlog.md#pb-2) will extend install/update beyond skills, rules, agents, and workflows. Acceptance scenarios are written when that story starts.
+**Sprint 2 Feature-01 (MCP-01):** full pack copy + pack receipt. Stories: [`sdd-mcp-install`](#sdd-mcp-install) (extended) and [`sdd-mcp-pack-receipt`](#sdd-mcp-pack-receipt). Design: [`mcp-design.md`](./mcp-design.md) §3 install / pack allow-list / receipt. Tests: [`mcp-test.md`](./mcp-test.md) §2–3 and §7.6.
 
 **Tools:** `sdd_install_framework`, `sdd_update_framework`, `sdd_list_versions`, `sdd_get_key`. Protocol ids are not localized.
 
@@ -263,27 +263,40 @@ Scenario: Unauthorized get_key
 
 ## `sdd-mcp-install` — `sdd_install_framework` (stdio + HTTP, Cursor)
 
-Install skills (with `SKILL.md`), rules, and other folders into Cursor paths. Stdio writes locally; HTTP returns tarball URL for AI extraction (ADR-054). Path allow-list. Structured summary. (MCPI-01)
+Install the **pack allow-list** (`agents`, `skills`, `rules`, `workflows`, `templates`) onto `{client_root}`. Stdio writes locally; HTTP returns tarball URL for AI extraction (ADR-054). Path allow-list. Structured summary. (MCPI-01, [MCP-01](../product-backlog.md#pb-16))
+
+Phase 1 already copies skills/rules/agents/workflows. Feature-01 adds `templates/` and forbids copying product trees (`src`, `prisma`, app files) even when Settings GitHub URL is this service repo.
 
 ### User story 1 — Install SDD framework for Cursor
 
 **As a** developer on Cursor
-**I want** to install the SDD framework into Cursor skill and rule paths
-**So that** the IDE can use the package skills and rules
+**I want** to install the SDD framework pack into Cursor client-root folders
+**So that** the IDE can load agents, skills, rules, workflows, and templates
 
 #### AC1
 
 ```gherkin
-Scenario: Install writes skills, rules, and other folders
+Scenario: Install writes every present pack folder under client_root
   Given the client is Cursor on the developer machine over stdio
-  And the operator server has synced the requested package version
+  And the operator server has synced a package that contains some of agents, skills, rules, workflows, templates
   And SDD_SERVER_URL points at the operator server
   When the client calls sdd_install_framework for that version
   Then the stdio process fetches the package from GET /api/sdd/package
-  And skills each containing SKILL.md are written under the Cursor skills root
-  And rules are written under the Cursor rules root
-  And other package folders are written to documented paths
+  And each pack folder that exists in the package is written under the matching Cursor root
+  And skills each containing SKILL.md are written under the Cursor skills root when present
+  And rules are written under the Cursor rules root when present
+  And templates are written under {client_root}/templates when present
   And the result includes paths, version, and asset counts
+```
+
+#### AC1b
+
+```gherkin
+Scenario: Non-pack top-level names are not copied
+  Given the synced package (or GitHub tree) also contains application folders such as src or prisma
+  When the client calls sdd_install_framework over stdio
+  Then those names are not written under {client_root}
+  And only agents, skills, rules, workflows, and templates from the package are copied
 ```
 
 #### AC2
@@ -328,6 +341,80 @@ Scenario: Same ref label but repo content changed
   Then the tool reinstalls all package files from SHA-B
   And stale package-owned skills from SHA-A are removed
   And the result is not already_up_to_date
+```
+
+---
+
+## `sdd-mcp-pack-receipt` — Pack receipt (`framework.sdd.works.json`)
+
+After a successful install or update, write `{client_root}/framework.sdd.works.json` with `pack_complete: true`. Ethan’s start gate ([Agent-07](../product-backlog.md#pb-17)) reads only this file. `.sdd-installed.json` remains the merge ledger. ([MCP-01](../product-backlog.md#pb-16), Sprint 2 Feature-01)
+
+### User story 1 — Receipt after a successful copy
+
+**As a** developer who installed the framework
+**I want** a pack receipt at `{client_root}/framework.sdd.works.json`
+**So that** Ethan can tell the pack copy finished without scanning skills and rules
+
+#### AC1
+
+```gherkin
+Scenario: Stdio install writes the receipt last
+  Given a successful stdio sdd_install_framework that copied the present pack folders
+  When the tool returns success
+  Then {client_root}/framework.sdd.works.json exists
+  And pack_complete is true
+  And installed_at, package_version, and package_commit are set
+  And files lists the pack-relative paths that were written
+  And .sdd-installed.json still exists as the merge ledger
+```
+
+#### AC2
+
+```gherkin
+Scenario: Failed install does not mark the pack complete
+  Given sdd_install_framework over stdio is rejected with path_rejected or package_unavailable
+  When the tool returns
+  Then no new framework.sdd.works.json is written with pack_complete true
+  And no pack folders are written
+```
+
+#### AC3
+
+```gherkin
+Scenario: Update rewrites the receipt after a successful merge
+  Given an existing install with a receipt
+  When sdd_update_framework completes a new package_commit over stdio
+  Then framework.sdd.works.json is rewritten with pack_complete true
+  And files matches the new pack contents
+```
+
+### User story 2 — HTTP install returns a receipt for the AI to write last
+
+**As a** developer using HTTP MCP
+**I want** the tool response to include the receipt payload and path
+**So that** the AI writes the receipt only after a successful extract
+
+#### AC4
+
+```gherkin
+Scenario: HTTP install includes receipt in the tool result
+  Given the client calls sdd_install_framework over Streamable HTTP
+  And the operator sync cache contains the requested version
+  When the tool runs
+  Then the result includes receiptPath {client_root}/framework.sdd.works.json
+  And the result includes a receipt object with pack_complete true, installed_at, package_version, package_commit, and files
+  And instructions tell the AI to write that receipt only after extract succeeds
+  And the operator server is not written as a user config root
+```
+
+#### AC5
+
+```gherkin
+Scenario: HTTP already_up_to_date is still not returned
+  Given the AI passes installed_commit matching the cache
+  When sdd_install_framework runs over HTTP
+  Then the result still includes packageUrl and extract_recommended true
+  And the result still includes the receipt object for a successful extract
 ```
 
 ---
@@ -825,7 +912,7 @@ Scenario: HTTP install returns package URL and instructions
   And the operator sync cache contains the requested version
   When the tool runs
   Then the result includes packageUrl pointing at GET /api/sdd/package
-  And the result includes paths, manifest, manifestPath, and instructions
+  And the result includes paths, manifest, manifestPath, receipt, receiptPath, and instructions
   And the server disk is not written as a user config root
 ```
 

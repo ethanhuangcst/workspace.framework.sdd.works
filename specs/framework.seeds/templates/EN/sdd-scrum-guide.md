@@ -317,17 +317,18 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 - **realtime-status.mdc**: track status in real time and update **status.md** when each task is done
 
 ### Skills
-- **atdd**
-- **tdd**
-- **start-new-project**
-- **update-project**
-- **refine-pb**
-- **plan-sprint**
-- **update-status**
-- **retrospective**
-- **close-sprint**
-- **audit-artifacts**
-- **update-artifacts**
+- **sdd-atdd**
+- **sdd-tdd**
+- **sdd-new-project**
+- **sdd-update-project**
+- **sdd-refine-pb**
+- **sdd-plan-sprint**
+- **sdd-update-status**
+- **sdd-retrospective**
+- **sdd-close-sprint**
+- **sdd-audit-artifacts**
+- **sdd-update-specs**
+- **sdd-implement-feature**
 
 ### Agents
 - **scrum-master**, in this service: **ethan**
@@ -345,7 +346,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 - **Real-time status**: **status.md**
 - **Change management**: **change-log.md**
 - **Artifact path definition and project mapping**: **artifacts-map.md**
-- **Spec templates**: **architecture.md; design.md; test.md; deployment.md**
+- **Engineering artifacts templates**: **architecture.md; design.md; test.md; deployment.md**
 
 ## Scrum concepts that need to be modified in sdd-scrum
 
@@ -381,13 +382,14 @@ As there is no current need for **workflows** at this stage, this folder remains
 - **Sprint Planning** can take only a **few minutes**: AI agents update the **Sprint Backlog**, and humans review and confirm it.
 
 #### Daily Scrum
-- **Inspection and adaptation** can happen continuously in **real time**.
+- The classic **Daily Scrum** might still be needed.
+- But more frequent **Inspection and adaptation** between human and agents can happen continuously in **real time**.
 - With the **realtime-status rule**, each completed task triggers a **small retrospective** and updates **status.md**.
 
 #### Sprint Review
 
 #### Sprint Retrospective
-- **Retrospectives** have **three forms**:
+- **Retrospective** has three forms; the latter two are captured as ADR or Knowledge by the retrospective skill.
 1. **Sprint-end**: the classic human-human retrospective.
 2. **On demand**: a human-agent retrospective initiated by a human.
 3. **By rule**: an agent-agent retrospective triggered before work is marked done.
@@ -453,7 +455,7 @@ This guide is for both humans and AI agents.
 - **Increment**: usable output that meets the Definition of Done.
 - **OGT**: on-going tasks:different from the Sprint Backlog Items (SBIs) in sprint-backlog.md. They are the samller tasks created when AI agents are executing the SBI. Many of them are created by agents in PLAN mode and rely on agents to manage them, or created by human as the temporary tasks.
 
-## What remains unchanged
+## **KEEP** - what remains unchanged
 
 ### Scrum theory
 - Empiricism remains the foundation.
@@ -477,7 +479,7 @@ This guide is for both humans and AI agents.
 - The **Sprint Backlog** remains the source of current Sprint work.
 - The **Increment** remains the unit of delivered value.
 
-## What is added
+## **ADD** - what is added
 
 ### Harness layers
 - **Rules**: constrain execution.
@@ -492,22 +494,26 @@ This guide is for both humans and AI agents.
 - **realtime-status.mdc**: real-time status update policy.
 
 ### Skills
-- **atdd**
-- **tdd**
-- **start-new-project**
-- **update-project**
-- **refine-pb**
-- **plan-sprint**
-- **update-status**
-- **retrospective**
-- **close-sprint**
-- **audit-artifacts**
-- **update-artifacts**
+- **sdd-atdd**
+- **sdd-tdd**
+- **sdd-new-project**
+- **sdd-update-project**
+- **sdd-refine-pb**
+- **sdd-plan-sprint**
+- **sdd-update-status**
+- **sdd-retrospective**
+- **sdd-close-sprint**
+- **sdd-audit-artifacts**
+- **sdd-update-specs**
+- **sdd-implement-feature**
 
 ### Framework Artifacts
 - **status.md**: real-time status.
 - **change-log.md**: change history.
 - **artifacts-map.md**: artifact mapping.
+- **product-backlog.md**: Product Backlog
+- **sprint-backlog.md**: Sprint Backlog
+
 
 ### Engineering Artifacts
 - **architecture.md**: architecture spec.
@@ -521,7 +527,7 @@ This guide is for both humans and AI agents.
 - **ADR**: Architecture Decision Record.
 - **knowledge/**: project knowledge learned during execution.
 
-## What changes
+## **MODIFY**: What changes
 
 ### Scrum Team
 - Teams may be smaller.
@@ -554,8 +560,8 @@ This guide is for both humans and AI agents.
 - AI agents may prepare backlog updates for human review.
 
 #### Daily Scrum
-- Real-time inspection may supplement the daily event.
-- Rules may trigger status updates and small retrospectives.
+- More frequent real-time inspection may supplement the daily Scrum event.
+- Rules like realtime-smay trigger status updates and small retrospectives.
 
 #### Sprint Review
 - Sprint Review remains the event for inspecting outcomes and deciding next steps.
@@ -586,18 +592,15 @@ This guide is for both humans and AI agents.
 ## Minimum sdd-scrum setup
 
 - One **Product Owner**
-- One **Scrum Master**
-- One or more **Developers**
+- One part-time **Scrum Master**
+- One or more human **Developers**
 - One shared **spec**
-- One **Product Backlog**
-- One **Sprint Backlog**
-- One **Definition of Done** rule
-- One **status** artifact
+- One **sdd framework** including **rules**, **skills**, and other boundaries needed
+- One **AI agent tool** providing AI agents to perform work
 - Defined human approval boundaries
 - Defined agent execution boundaries
 
 ## Operating principles
-
 - Spec before implementation.
 - Rules before autonomy.
 - Humans keep accountability.

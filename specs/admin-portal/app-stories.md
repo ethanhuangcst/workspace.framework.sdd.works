@@ -1,6 +1,6 @@
 # framework.sdd.works — Admin portal user stories
 
-Operator web app at `framework.sdd.works`. Stories and ACs for the **app**. MCP tools live in [`mcp-stories.md`](../mcp/mcp-stories.md). Design: [`app-design.md`](./app-design.md). Mockups: [`ui-mockup/`](./ui-mockup/). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
+Operator web app at `framework.sdd.works`. Stories and ACs for the **app**. MCP tools live in [`mcp-stories.md`](../mcp/mcp-stories.md). Design: [`app-design.md`](./app-design.md). Mockups: [`ui-mockup/`](./ui-mockup/). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
 **Phase 2 upcoming (no Gherkin yet):** [Instructions page](../product-backlog.md#pb-7) will update the Instructions page for full-repo install, templates, process skills, and coach-ethan. Acceptance scenarios are written when that story starts.
 

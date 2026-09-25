@@ -25,6 +25,7 @@ import { fetchPackage, getSddServerUrl } from "./package-fetch";
 import { toolError, toolOk } from "./errors";
 
 const MANIFEST_NAME = ".sdd-installed.json";
+const RECEIPT_NAME = "framework.sdd.works.json";
 
 export type InstallArgs = {
   version?: string;
@@ -41,17 +42,28 @@ export type InstallContext = PathDetectOptions & {
   clientInfo?: { name?: string };
 };
 
+type ManifestFiles = {
+  skills: string[];
+  rules: string[];
+  agents: string[];
+  workflows: string[];
+  templates: string[];
+};
+
 type Manifest = {
   version: number;
   package_version: string;
   package_commit?: string;
   installed_at: string;
-  files: {
-    skills: string[];
-    rules: string[];
-    agents: string[];
-    workflows: string[];
-  };
+  files: ManifestFiles;
+};
+
+type PackReceipt = {
+  pack_complete: true;
+  installed_at: string;
+  package_version: string;
+  package_commit?: string;
+  files: string[];
 };
 
 function listNames(dir: string): string[] {
@@ -78,7 +90,17 @@ function readManifest(clientRoot: string): Manifest | null {
   const path = join(clientRoot, MANIFEST_NAME);
   if (!existsSync(path)) return null;
   try {
-    return JSON.parse(readFileSync(path, "utf8")) as Manifest;
+    const parsed = JSON.parse(readFileSync(path, "utf8")) as Manifest;
+    return {
+      ...parsed,
+      files: {
+        skills: parsed.files?.skills ?? [],
+        rules: parsed.files?.rules ?? [],
+        agents: parsed.files?.agents ?? [],
+        workflows: parsed.files?.workflows ?? [],
+        templates: parsed.files?.templates ?? [],
+      },
+    };
   } catch {
     return null;
   }
@@ -89,12 +111,25 @@ function writeManifest(clientRoot: string, manifest: Manifest): void {
   writeFileSync(join(clientRoot, MANIFEST_NAME), JSON.stringify(manifest, null, 2));
 }
 
-function verifyManifestIntegrity(roots: PathRoots, manifest: Manifest): boolean {
+function templatesRoot(clientRoot: string): string {
+  return join(clientRoot, "templates");
+}
+
+function receiptPathFor(clientRoot: string): string {
+  return join(clientRoot, RECEIPT_NAME);
+}
+
+function verifyManifestIntegrity(
+  roots: PathRoots,
+  clientRoot: string,
+  manifest: Manifest,
+): boolean {
   const checks: [string, string[]][] = [
     [roots.skills, manifest.files.skills],
     [roots.rules, manifest.files.rules],
     [roots.agents, manifest.files.agents],
     [roots.workflows, manifest.files.workflows],
+    [templatesRoot(clientRoot), manifest.files.templates],
   ];
   for (const [root, names] of checks) {
     for (const name of names) {
@@ -121,28 +156,87 @@ function hasInstallHome(ctx: InstallContext): boolean {
   return Boolean(ctx.home);
 }
 
-function inventoryFromUnpacked(unpackedPath: string): Manifest["files"] {
+/** Resolve pack source dir with aliases: skill→skills, Rules→rules (case-insensitive). */
+function resolvePackSourceDir(pkgDir: string, kind: "skills" | "rules"): string | null {
+  if (kind === "skills") {
+    for (const name of ["skills", "skill"]) {
+      const p = join(pkgDir, name);
+      if (existsSync(p)) return p;
+    }
+    return null;
+  }
+  for (const name of ["rules", "Rules"]) {
+    const p = join(pkgDir, name);
+    if (existsSync(p)) return p;
+  }
+  // Case-insensitive scan for rules*
+  if (existsSync(pkgDir)) {
+    for (const entry of readdirSync(pkgDir)) {
+      if (entry.toLowerCase() === "rules") {
+        return join(pkgDir, entry);
+      }
+    }
+  }
+  return null;
+}
+
+function inventoryFromUnpacked(unpackedPath: string): ManifestFiles {
+  const skillsDir = resolvePackSourceDir(unpackedPath, "skills");
+  const rulesDir = resolvePackSourceDir(unpackedPath, "rules");
   return {
-    skills: listNames(join(unpackedPath, "skills")),
-    rules: listNames(join(unpackedPath, "rules")),
+    skills: skillsDir ? listNames(skillsDir) : [],
+    rules: rulesDir ? listNames(rulesDir) : [],
     agents: listNames(join(unpackedPath, "agents")),
     workflows: listNames(join(unpackedPath, "workflows")),
+    templates: listNames(join(unpackedPath, "templates")),
   };
+}
+
+function flattenReceiptFiles(files: ManifestFiles): string[] {
+  const out: string[] = [];
+  for (const name of files.agents) out.push(`agents/${name}`);
+  for (const name of files.skills) out.push(`skills/${name}/`);
+  for (const name of files.rules) out.push(`rules/${name}`);
+  for (const name of files.workflows) out.push(`workflows/${name}`);
+  for (const name of files.templates) out.push(`templates/${name}/`);
+  return out;
+}
+
+function buildReceipt(
+  packageVersion: string,
+  packageCommit: string | undefined,
+  files: ManifestFiles,
+  installedAt = new Date().toISOString(),
+): PackReceipt {
+  return {
+    pack_complete: true,
+    installed_at: installedAt,
+    package_version: packageVersion,
+    package_commit: packageCommit,
+    files: flattenReceiptFiles(files),
+  };
+}
+
+function writeReceipt(clientRoot: string, receipt: PackReceipt): void {
+  mkdirSync(clientRoot, { recursive: true });
+  writeFileSync(receiptPathFor(clientRoot), JSON.stringify(receipt, null, 2));
 }
 
 function buildHttpInstallInstructions(
   extractTarget: string,
   manifestPath: string,
+  receiptPath: string,
   packageUrl: string,
   options?: { cacheStale?: boolean; cacheAgeMinutes?: number },
 ): string {
   const lines = [
     "HTTP MCP cannot write the local filesystem. Execute these steps on the developer machine:",
-    "Always verify local files from the manifest exist before skipping extraction. If any skill, rule, agent, or workflow file is missing, you MUST run step 2.",
+    "Always verify local files from the manifest exist before skipping extraction. If any skill, rule, agent, workflow, or template file is missing, you MUST run step 2.",
     `1. Read ${manifestPath} if it exists (previousManifest). Remove files listed under files.* before extracting.`,
-    `2. Download and extract: curl -fsSL "${packageUrl}" | tar xz -C "${extractTarget}" --strip-components 1`,
+    `2. Download and extract only pack allow-list folders (agents, skills|skill, rules|Rules, workflows, templates): curl -fsSL "${packageUrl}" | tar xz -C "${extractTarget}" --strip-components 1`,
     `3. Write the manifest JSON returned in this response to ${manifestPath}.`,
-    "4. Verify skills, rules, agents, and workflows exist under the paths returned.",
+    "4. Verify skills, rules, agents, workflows, and templates exist under the paths returned.",
+    `5. Write the receipt JSON from this response to ${receiptPath} last (after extract and verify).`,
   ];
   if (options?.cacheStale) {
     const age = Math.round(options.cacheAgeMinutes ?? CACHE_STALE_MINUTES);
@@ -153,17 +247,32 @@ function buildHttpInstallInstructions(
   return lines.join("\n");
 }
 
-function applyPackage(pkgDir: string, roots: PathRoots): Manifest["files"] {
-  const files: Manifest["files"] = {
-    skills: listNames(join(pkgDir, "skills")),
-    rules: listNames(join(pkgDir, "rules")),
-    agents: listNames(join(pkgDir, "agents")),
-    workflows: listNames(join(pkgDir, "workflows")),
+function applyPackage(
+  pkgDir: string,
+  roots: PathRoots,
+  clientRoot: string,
+): ManifestFiles {
+  const skillsSrc = resolvePackSourceDir(pkgDir, "skills");
+  const rulesSrc = resolvePackSourceDir(pkgDir, "rules");
+  const agentsSrc = join(pkgDir, "agents");
+  const workflowsSrc = join(pkgDir, "workflows");
+  const templatesSrc = join(pkgDir, "templates");
+  const templatesDest = templatesRoot(clientRoot);
+
+  const files: ManifestFiles = {
+    skills: skillsSrc ? listNames(skillsSrc) : [],
+    rules: rulesSrc ? listNames(rulesSrc) : [],
+    agents: listNames(agentsSrc),
+    workflows: listNames(workflowsSrc),
+    templates: listNames(templatesSrc),
   };
-  copyTree(join(pkgDir, "skills"), roots.skills);
-  copyTree(join(pkgDir, "rules"), roots.rules);
-  copyTree(join(pkgDir, "agents"), roots.agents);
-  copyTree(join(pkgDir, "workflows"), roots.workflows);
+
+  if (skillsSrc) copyTree(skillsSrc, roots.skills);
+  if (rulesSrc) copyTree(rulesSrc, roots.rules);
+  if (existsSync(agentsSrc)) copyTree(agentsSrc, roots.agents);
+  if (existsSync(workflowsSrc)) copyTree(workflowsSrc, roots.workflows);
+  if (existsSync(templatesSrc)) copyTree(templatesSrc, templatesDest);
+
   return files;
 }
 
@@ -291,15 +400,23 @@ export async function installFramework(
     const versionParam = args.version?.trim() || "latest";
     const packageUrl = `${getSddServerUrl()}/api/sdd/package?version=${encodeURIComponent(versionParam)}`;
     const manifestPath = join(clientRoot, MANIFEST_NAME);
+    const receiptPath = receiptPathFor(clientRoot);
     const previousManifest = hasInstallHome(ctx) ? readManifest(clientRoot) : null;
     const files = inventoryFromUnpacked(cached.unpackedPath);
+    const installedAt = new Date().toISOString();
     const manifest: Manifest = {
       version: 1,
       package_version: cached.version,
       package_commit: cached.commitSha,
-      installed_at: new Date().toISOString(),
+      installed_at: installedAt,
       files,
     };
+    const receipt = buildReceipt(
+      cached.version,
+      cached.commitSha,
+      files,
+      installedAt,
+    );
 
     const cacheAgeMinutes =
       (Date.now() - Date.parse(cached.syncedAt)) / (60 * 1000);
@@ -316,11 +433,16 @@ export async function installFramework(
       extract_recommended: true,
       local_commit_matches: localCommitMatches,
       client: detected,
-      paths: roots,
+      paths: {
+        ...roots,
+        templates: templatesRoot(clientRoot),
+      },
       manifestPath,
       manifest,
       previousManifest,
       extractTarget: clientRoot,
+      receiptPath,
+      receipt,
       cache_synced_at: cached.syncedAt,
       cache_age_minutes: Math.round(cacheAgeMinutes * 10) / 10,
       cache_stale: cacheStale,
@@ -328,6 +450,7 @@ export async function installFramework(
       instructions: buildHttpInstallInstructions(
         clientRoot,
         manifestPath,
+        receiptPath,
         packageUrl,
         { cacheStale, cacheAgeMinutes },
       ),
@@ -346,7 +469,11 @@ export async function installFramework(
       Boolean(previous.package_commit) &&
       previous.package_commit === pkg.commitSha;
     const sameVersion = previous.package_version === pkg.version;
-    if (sameCommit && sameVersion && verifyManifestIntegrity(roots, previous)) {
+    if (
+      sameCommit &&
+      sameVersion &&
+      verifyManifestIntegrity(roots, clientRoot, previous)
+    ) {
       return toolError(
         "already_up_to_date",
         `Framework ${pkg.version} is already installed.`,
@@ -359,25 +486,37 @@ export async function installFramework(
     removeListed(roots.rules, previous.files.rules);
     removeListed(roots.agents, previous.files.agents);
     removeListed(roots.workflows, previous.files.workflows);
+    removeListed(templatesRoot(clientRoot), previous.files.templates);
   }
 
-  const files = applyPackage(pkg.tempDir, roots);
+  const files = applyPackage(pkg.tempDir, roots, clientRoot);
+  const installedAt = new Date().toISOString();
   writeManifest(clientRoot, {
     version: 1,
     package_version: pkg.version,
     package_commit: pkg.commitSha,
-    installed_at: new Date().toISOString(),
+    installed_at: installedAt,
     files,
   });
 
+  const receipt = buildReceipt(pkg.version, pkg.commitSha, files, installedAt);
+  writeReceipt(clientRoot, receipt);
+  const receiptPath = receiptPathFor(clientRoot);
+
   return toolOk({
     version: pkg.version,
-    paths: roots,
+    paths: {
+      ...roots,
+      templates: templatesRoot(clientRoot),
+    },
+    receiptPath,
+    receipt,
     asset_counts: {
       skills: files.skills.length,
       rules: files.rules.length,
       agents: files.agents.length,
       workflows: files.workflows.length,
+      templates: files.templates.length,
     },
     resolution_source: resolved.source,
   });
