@@ -247,8 +247,12 @@ Fixture CI. Implement with `src/core/tools/install.test.ts`, HTTP install tests,
 | **C7a** | `pack_complete` false, same commit | Flag false; files present | stdio install | `already_up_to_date`; flag stays false |
 | **C7b** | `pack_complete` false, new commit | Flag false; server def | stdio update | copy; `pack_complete` true |
 | **C8** | Download fails | Complete ledger present | stdio install with fetch error | files and ledger unchanged |
-| **S1** | Agent-setup prompt | — | `GET /setup` | Markdown names `~/.sdd/sdd-mcp`, `command` entry, and fallback URL `https://framework.sdd.works/mcp`. `GET /agent-setup` redirects to `/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
-| **S1 local** | Local URL rewrite | `PUBLIC_BASE_URL=http://127.0.0.1:3040` | `GET /setup` | Body sets `SDD_SERVER_URL` to that origin; fallback is `getMcpHttpUrl()` (default `http://127.0.0.1:3041/mcp`); no production `https://framework.sdd.works/mcp` fallback; GitHub release host unchanged |
+| **S1** | Agent-setup prompt | — | `GET /setup` | Markdown names `~/.sdd/sdd-mcp`, `command` entry, and fallback URL `https://framework.sdd.works/mcp`. Body tells the agent not to download an executable and does not name a GitHub `releases/latest/download` URL. `GET /agent-setup` redirects to `/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
+| **S1 local** | Local URL rewrite | `PUBLIC_BASE_URL=http://127.0.0.1:3040` | `GET /setup` | Body sets `SDD_SERVER_URL` to that origin; fallback is `getMcpHttpUrl()` (default `http://127.0.0.1:3041/mcp`); no production `https://framework.sdd.works/mcp` fallback |
+| **B1** | Compiled host binary handshake | Host `dist/sdd-mcp-*` built with Bun | stdio `initialize` + `tools/list` | Tool list has install, update, list; no `sdd_get_key`. Process runs with PATH that has no Node, npm, or Bun |
+| **B2** | Five build targets | `npm run mcp:build` | `dist/` | Files `sdd-mcp-darwin-arm64`, `sdd-mcp-darwin-x64`, `sdd-mcp-linux-arm64`, `sdd-mcp-linux-x64`, `sdd-mcp-windows-x64.exe` |
+| **B3** | Setup has no binary download | — | `GET /setup` | Body does not contain `releases/latest/download`; body tells the agent not to download an executable |
+| **B4** | Compiled binary writes pack ledger via fixture package server | Host binary + local `GET /api/sdd/package` fixture (gzip + `X-SDD-Commit` / `X-SDD-Version`; archive has `skills/spike/SKILL.md`) | stdio `sdd_install_framework` for `cursor` then `trae-cn` with temp `HOME`, `PATH=/usr/bin:/bin` | `~/.cursor/.sdd-installed.json` has `pack_complete: true` and `files` contain `skills/spike/SKILL.md`; skill file exists; no `framework.sdd.works.json`. `trae-cn` writes under `~/.trae-cn`, not `.cursor` |
 
 ### 7.2 Live GitHub regression (opt-in — test.sdd)
 
@@ -310,7 +314,11 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] C8 feature-09 failed download leaves folder and ledger unchanged
 - [x] S1 agent-setup stdio prompt body (feature-05) — markdown names `~/.sdd/sdd-mcp`, `command`, and HTTP fallback URL
 - [x] S1 path (`backend-01`) — public `GET /setup` serves that markdown; `GET /agent-setup` redirects to `/setup`
-- [x] S1 local (`backend-01`) — with local `PUBLIC_BASE_URL`, body rewrites pack base and MCP fallback URL; GitHub release host unchanged
+- [x] S1 local (`backend-01`) — with local `PUBLIC_BASE_URL`, body rewrites pack base and MCP fallback URL
+- [x] B1 feature-14 — compiled host binary handshake (install, update, list; no get_key)
+- [x] B2 feature-14 — five OS/arch build outputs
+- [x] B3 feature-14 — `GET /setup` has no release-download instruction for the binary
+- [x] B4 feature-14 — compiled host binary writes pack ledger via fixture package server (cursor + trae-cn)
 
 ---
 

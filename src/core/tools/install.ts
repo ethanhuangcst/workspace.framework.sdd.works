@@ -17,15 +17,10 @@ import {
   type PathDetectOptions,
   type ResolvedClientPaths,
 } from "@/core/path-detect";
-import {
-  CACHE_STALE_MINUTES,
-  resolveCachedVersion,
-} from "@/core/sync/cache";
-import { ensurePackageCacheFresh } from "@/core/sync/ensure-cache-fresh";
-import { fetchPackage, getSddServerUrl } from "./package-fetch";
+import { fetchPackage } from "./package-fetch";
 import { toolError, toolOk } from "./errors";
 
-const MANIFEST_NAME = ".sdd-installed.json";
+export const MANIFEST_NAME = ".sdd-installed.json";
 
 export type InstallArgs = {
   version?: string;
@@ -232,12 +227,27 @@ function buildHttpInstallInstructions(
     "4. Verify skills, rules, agents, workflows, and templates exist under the paths returned.",
   ];
   if (options?.cacheStale) {
-    const age = Math.round(options.cacheAgeMinutes ?? CACHE_STALE_MINUTES);
+    const age = Math.round(options.cacheAgeMinutes ?? 30);
     lines.push(
       `Note: package cache may be stale (last synced ${age} min ago). Ask the operator to run sync, or retry shortly.`,
     );
   }
   return lines.join("\n");
+}
+
+export {
+  buildHttpInstallInstructions,
+  inventoryFromUnpacked,
+  hasInstallHome,
+  templatesRoot,
+  readManifest as readInstallManifest,
+};
+
+export async function resolveInstallContextForHttp(
+  args: InstallArgs,
+  ctx: InstallContext,
+): Promise<InstallContextResult> {
+  return resolveInstallContext(args, ctx);
 }
 
 function applyPackage(
@@ -370,75 +380,16 @@ export async function installFramework(
   args: InstallArgs,
   ctx: InstallContext,
 ): Promise<CallToolResult> {
+  if (ctx.channel === "http") {
+    return toolError(
+      "package_unavailable",
+      "HTTP install uses installFrameworkHttp from install-http.",
+    );
+  }
+
   const installCtx = await resolveInstallContext(args, ctx);
   if (!installCtx.ok) return installCtx.result;
   const { detected, resolved, roots, clientRoot } = installCtx.ctx;
-
-  if (ctx.channel === "http") {
-    const fresh = await ensurePackageCacheFresh();
-
-    const cached = resolveCachedVersion(args.version);
-    if ("code" in cached) {
-      if (cached.code === "sync_pending") {
-        return toolError(
-          "sync_pending",
-          "Package cache not ready. Operator must run sync first.",
-        );
-      }
-      return toolError("version_not_found", "Requested version not in cache.");
-    }
-
-    const versionParam = args.version?.trim() || "latest";
-    const packageUrl = `${getSddServerUrl()}/api/sdd/package?version=${encodeURIComponent(versionParam)}`;
-    const manifestPath = join(clientRoot, MANIFEST_NAME);
-    const previousManifest = hasInstallHome(ctx) ? readManifest(clientRoot) : null;
-    const files = inventoryFromUnpacked(cached.unpackedPath);
-    const installedAt = new Date().toISOString();
-    const manifest: Manifest = {
-      version: 1,
-      package_version: cached.version,
-      package_commit: cached.commitSha,
-      installed_at: installedAt,
-      pack_complete: true,
-      files,
-    };
-
-    const cacheAgeMinutes =
-      (Date.now() - Date.parse(cached.syncedAt)) / (60 * 1000);
-    const cacheStale = cacheAgeMinutes > CACHE_STALE_MINUTES;
-    const localCommitMatches =
-      Boolean(args.installed_commit) &&
-      args.installed_commit === cached.commitSha &&
-      args.installed_version === cached.version;
-
-    return toolOk({
-      packageUrl,
-      version: cached.version,
-      commitSha: cached.commitSha,
-      extract_recommended: true,
-      local_commit_matches: localCommitMatches,
-      client: detected,
-      paths: {
-        ...roots,
-        templates: templatesRoot(clientRoot),
-      },
-      manifestPath,
-      manifest,
-      previousManifest,
-      extractTarget: clientRoot,
-      cache_synced_at: cached.syncedAt,
-      cache_age_minutes: Math.round(cacheAgeMinutes * 10) / 10,
-      cache_stale: cacheStale,
-      cache_refresh: "code" in fresh ? undefined : fresh.status,
-      instructions: buildHttpInstallInstructions(
-        clientRoot,
-        manifestPath,
-        packageUrl,
-        { cacheStale, cacheAgeMinutes },
-      ),
-      resolution_source: resolved.source,
-    });
-  }
 
   const pkg = await fetchPackage(args.version);
   if ("code" in pkg) {

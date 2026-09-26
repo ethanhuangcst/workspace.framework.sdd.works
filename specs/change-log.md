@@ -7,7 +7,49 @@
 
 ---
 
+## 2026-09-26
+
+### Web-app UI fixes (Web-portal-09)
+
+**Why**: `/` still showed the logo-card home. Footer scrolled away. Reset success linked to home. Accounts with a password stayed on the empty-account set-password screen.
+
+**What changed**: [Web-portal-09](./product-backlog.md#pb-76). Issues WA-01–WA-04 in [`issues-log.md`](./issues-log.md). `/` serves the instructions guide. Footer is fixed. Reset success uses Back to login. Set-password redirects when `passwordHash` is already set. E2E setup does not overwrite an existing seed password hash.
+
+**Verification**: Stories, design, tests, mockups. Unit: `ResetPasswordPage` + `InstructionsPage`. Playwright `e2e/auth.spec.ts` + `e2e/instructions.spec.ts` (10 passed). WA-01–WA-04 closed in [`issues-log.md`](./issues-log.md).
+
+**Boundary**: Does not implement secret lookup (feature-05 / feature-06).
+
+### Sprint 3 feature-04 — secret form design
+
+**Why**: Feature-04 is the Features-tab form chrome for [Web-portal-08](./product-backlog.md#pb-74). The sprint row named 繁體 without writing the strings. Stories, design, and tests needed enough coverage before implementation.
+
+**What changed**: [`app-stories.md`](./admin-portal/app-stories.md) AC7 covers placement, three locale strings, Setup-tab absence, and inert submit. [`app-design.md`](./admin-portal/app-design.md) `/instructions` specifies the form layout, keys, CSS sizes, and reserves result nodes for feature-06. [`app-test.md`](./admin-portal/app-test.md) adds unit and E2E cases. Sprint 3 feature-04 and [Web-portal-08](./product-backlog.md#pb-74) name the 繁體 hint and button.
+
+**Verification**: Specs only. Catalog already in `messages/{en,zh-Hans,zh-Hant}.json` and mock [`13-instructions.html`](./admin-portal/ui-mockup/13-instructions.html).
+
+**Boundary**: No UI code in this pass. Feature-05 owns the lookup. Feature-06 owns showing a value or not-found. Status stays ToDo until implementation.
+
 ## 2026-09-25
+
+### Spec-seeds-01 constants.md confirmed
+
+**Why**: Sprint 2 feature-04. Pack lookup needs a confirmed seed on the client root.
+
+**What changed**: Spec-seeds-01 and Sprint 2 feature-04 are Done. User confirmed the seed and practices writing guidance. Cross-review: seed, practices, ADR-060, and ethan/agent links match. Filename is `constants.md`; not copied into workspace `specs/`.
+
+**Verification**: User confirmed 2026-09-25. Seed at [`templates/constants.md`](./framework.seeds/templates/constants.md).
+
+**Boundary**: Go-live pack copy stays separate. Does not close Sprint 2.
+
+### Local binary ~/.sdd/sdd-mcp (MCP-02)
+
+**Why**: The setup prompt named `~/.sdd/sdd-mcp`, and no Product Backlog row owned building that program. Agent tools block downloading an executable from the network.
+
+**What changed**: [MCP-02](./product-backlog.md#pb-75) is Sprint 2 feature-14. `npm run mcp:build` compiles five OS/arch targets. `npm run mcp:place` copies the host file to `~/.sdd/sdd-mcp`. The stdio entry uses `createStdioMcpServer` so Prisma stays out of the binary. `GET /setup` starts that local file when present and does not download an executable. `npm run mcp:stdio` stays the contributor entry.
+
+**Verification**: [`mcp/mcp-stories.md`](./mcp/mcp-stories.md) `sdd-mcp-local-binary`; [`src/mcp/local-binary.test.ts`](../src/mcp/local-binary.test.ts); `/setup` tests in [`sdd-api.test.ts`](../src/app/api/sdd/sdd-api.test.ts). Host binary placed at `~/.sdd/sdd-mcp`. Ethan confirmed usable from TRAE CN on 2026-09-26 (`tools/list` + `sdd_list_versions` against local `SDD_SERVER_URL`).
+
+**Boundary**: GitHub Release upload is not this story.
 
 ### Instructions page re-design (feature-10)
 

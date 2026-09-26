@@ -97,6 +97,10 @@ describe("SDD package API", () => {
       expect(body).toContain("sdd_install_framework");
       expect(body).toContain("Do not ask the person to copy commands or edit the MCP configuration file by hand");
       expect(body).toContain("Do not ask the person to edit the MCP file by hand");
+      expect(body).toContain("Do not download an executable");
+      expect(body).not.toContain("releases/latest/download");
+      expect(body).toContain("Library/Application Support/Trae CN/User/mcp.json");
+      expect(body).toContain("Do not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for TRAE CN");
     } finally {
       if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
       else process.env.PUBLIC_BASE_URL = prevBase;
@@ -115,9 +119,7 @@ describe("SDD package API", () => {
       expect(body).toContain('SDD_SERVER_URL": "http://127.0.0.1:3040"');
       expect(body).toContain("http://127.0.0.1:3041/mcp");
       expect(body).not.toContain("https://framework.sdd.works/mcp");
-      expect(body).toContain(
-        "https://github.com/ethanhuangcst/framework.sdd.works/releases/latest/download",
-      );
+      expect(body).not.toContain("releases/latest/download");
     } finally {
       if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
       else process.env.PUBLIC_BASE_URL = prevBase;

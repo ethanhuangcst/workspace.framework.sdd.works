@@ -17,6 +17,7 @@
     "test:regression:freshness": "vitest run src/core/sync/freshness-regression.test.ts src/core/sync/package-content.test.ts src/core/sync/sync-e2e.test.ts src/core/sync/ensure-cache-fresh.test.ts src/core/sync/run-scheduled-sync.test.ts src/app/api/github/webhook/route.test.ts src/app/api/sync/cron/route.test.ts",
     "mcp:stdio": "tsx src/mcp/stdio.ts",
     "mcp:build": "bash scripts/build-mcp-binary.sh",
+    "mcp:place": "bash scripts/place-mcp-binary.sh",
     "mcp:http": "tsx --env-file=.env.local src/mcp/http-server.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",

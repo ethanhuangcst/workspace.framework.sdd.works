@@ -214,11 +214,18 @@ Memory: `~/.codebuddy/CODEBUDDY.md` (user), `./CODEBUDDY.md` or `./.codebuddy/CO
 | User (global) | `~/.trae/skills/<name>/SKILL.md` | `~/.trae/user_rules` (file) | `~/.trae-cn/agents/<name>.md` (CN) / `~/.trae/agents/` | `~/.trae/` |
 | Project | `.trae/skills/<name>/SKILL.md` | `.trae/rules/` (dir, recursive ≤3 levels) | `.trae/agents/<name>.md` | `.trae/` |
 
-MCP: `.trae/mcp.json` (project), `~/.trae/mcp.json` (user). Settings: `.trae/settings.json` + `.trae/settings.local.json` (gitignored). Compatible: `AGENTS.md`, `CLAUDE.md`, `CLAUDE.local.md` at project root.
+MCP:
+
+| Client | User MCP file | Project MCP (Enable Project MCP) |
+| --- | --- | --- |
+| TRAE CN | `~/Library/Application Support/Trae CN/User/mcp.json` (sibling of that app's `settings.json`; confirmed 2026-09-26) | `<workspace>/.trae/mcp.json` |
+| TRAE (international) | `~/.trae/mcp.json` | `<workspace>/.trae/mcp.json` |
+
+`~/.trae-cn/mcp.json` is not the Manage-page user MCP list for TRAE CN. Settings: `.trae/settings.json` + `.trae/settings.local.json` (gitignored). Compatible: `AGENTS.md`, `CLAUDE.md`, `CLAUDE.local.md` at project root.
 
 **Read customized paths**
 
-- No documented env var for relocating `~/.trae` in the docs reviewed. TRAE CN uses `~/.trae-cn/` for user-level agents (distinct from `~/.trae/`).
+- No documented env var for relocating `~/.trae` in the docs reviewed. TRAE CN uses `~/.trae-cn/` for user-level skills, rules, and agents (distinct from `~/.trae/`).
 - Subagents require Settings > Beta > Subagents toggle ON; `name` must start with a letter, ≤50 chars; `description` required.
 - MCP server names in agent `mcpServers` must match configured servers.
 

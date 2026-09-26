@@ -2,7 +2,7 @@
 
 MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-test.md`](./mcp-test.md) §7.6.
+**Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). **Sprint 2 feature-14 (MCP-02):** local program at `~/.sdd/sdd-mcp` ([`sdd-mcp-local-binary`](#sdd-mcp-local-binary)). Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09, feature-14. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy), [`sdd-mcp-local-binary`](#sdd-mcp-local-binary). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-test.md`](./mcp-test.md) §7.6.
 
 **Tools:** `sdd_install_framework`, `sdd_update_framework`, `sdd_list_versions`, `sdd_get_key`. Protocol ids are not localized.
 
@@ -1093,7 +1093,7 @@ Scenario: HTTP update follows the same policy
 
 ## `sdd-mcp-prompt-setup` — Prompt-based MCP setup (SETUP-01, ADR-058)
 
-End users paste one prompt. The AI downloads the local program and writes a `command` MCP entry. If that fails, the AI writes the HTTP URL. The person does not edit the MCP file by hand.
+End users paste one prompt. The AI starts the local program at `~/.sdd/sdd-mcp` when that file is already on the machine and writes a `command` MCP entry. If the file is missing, or the client accepts only a URL, the AI writes the HTTP URL. The person does not edit the MCP file by hand. The agent does not download an executable.
 
 ### User story 1 — One-prompt stdio setup
 
@@ -1101,18 +1101,20 @@ End users paste one prompt. The AI downloads the local program and writes a `com
 **I want** to paste one prompt to connect framework.sdd.works MCP
 **So that** a local program writes pack files on install without me editing mcp.json
 
-#### AC1 — feature-05
+#### AC1 — feature-05 / feature-14
 
 ```gherkin
 Scenario: Agent setup endpoint serves stdio instructions
   When GET /setup is requested
   Then the response Content-Type is text/markdown
-  And the body instructs downloading ~/.sdd/sdd-mcp for the detected OS and arch
-  And the body shows a command MCP entry with SDD_SERVER_URL https://framework.sdd.works
+  And the body names ~/.sdd/sdd-mcp as the local program path
+  And the body tells the agent not to download an executable from the network
+  And the body shows a command MCP entry with SDD_SERVER_URL https://framework.sdd.works when that file is present
   And the body does not ask the person to edit the MCP file by hand
   And the body does not authorize installing the framework pack in the same step
   And the later install step says the local program writes files
   And packageUrl is only for the HTTP fallback path
+  And the body does not name a GitHub releases/latest/download URL for the binary
 ```
 
 #### AC2 — feature-05
@@ -1120,7 +1122,7 @@ Scenario: Agent setup endpoint serves stdio instructions
 ```gherkin
 Scenario: Agent setup documents HTTP fallback
   When GET /setup is requested
-  Then the body includes https://framework.sdd.works/mcp as the fallback when the binary cannot be installed or the client accepts only a URL
+  Then the body includes https://framework.sdd.works/mcp as the fallback when ~/.sdd/sdd-mcp is missing or the client accepts only a URL
 ```
 
 #### AC3 — backend-01
@@ -1140,5 +1142,75 @@ Scenario: Local portal rewrites pack base and HTTP fallback
   Then the body sets SDD_SERVER_URL to http://127.0.0.1:3040
   And the body uses the local MCP HTTP URL as the fallback
   And the body does not use https://framework.sdd.works/mcp as the fallback
-  And the GitHub release download host is unchanged
+```
+
+#### AC5 — OGT-2 / TRAE CN user MCP path
+
+```gherkin
+Scenario: Agent setup names the TRAE CN user MCP file
+  When GET /setup is requested
+  Then the body names ~/Library/Application Support/Trae CN/User/mcp.json as the TRAE CN user MCP file
+  And the body tells the agent not to write ~/.trae-cn/mcp.json or ~/.trae/mcp.json for TRAE CN
+```
+
+---
+
+## `sdd-mcp-local-binary` — Local program ~/.sdd/sdd-mcp (MCP-02, feature-14)
+
+Zero client runtime. The build machine compiles one executable per OS and CPU (ADR-051). The host copy lands at `~/.sdd/sdd-mcp`. That program is the stdio writer for install and update.
+
+### User story 1 — Host binary speaks MCP and writes the pack
+
+**As an** end user with `~/.sdd/sdd-mcp` already on the machine
+**I want** that program to register install, update, and list over stdio
+**So that** my agent tool can write the pack without Node, npm, or Bun on the client
+
+#### AC1 — feature-14
+
+```gherkin
+Scenario: Compiled host binary advertises stdio tools
+  Given the matching sdd-mcp binary for this OS and CPU has been built
+  And that file is started over stdio with no Node, npm, or Bun on PATH
+  When the client completes initialize and lists tools
+  Then the tool list includes sdd_install_framework, sdd_update_framework, and sdd_list_versions
+  And the tool list does not include sdd_get_key
+```
+
+#### AC2 — feature-14
+
+```gherkin
+Scenario: Compiled binary uses the stdio write contract
+  Given the compiled host binary is running over stdio
+  And SDD_SERVER_URL points at a package server with a pack
+  When the client calls sdd_install_framework
+  Then the program copies the pack allow-list onto {client_root}
+  And it writes {client_root}/.sdd-installed.json with pack_complete true and file paths
+  And it does not write framework.sdd.works.json
+```
+
+#### AC3 — feature-14
+
+```gherkin
+Scenario: One build emits five OS and CPU targets
+  When npm run mcp:build completes
+  Then dist holds sdd-mcp-darwin-arm64, sdd-mcp-darwin-x64, sdd-mcp-linux-arm64, sdd-mcp-linux-x64, and sdd-mcp-windows-x64.exe
+```
+
+#### AC4 — feature-14
+
+```gherkin
+Scenario: Same command path for every listed client
+  Given ~/.sdd/sdd-mcp is the MCP command for Cursor, Cursor Agents, CodeBuddy CN, TRAE, TRAE CN, Claude Code, or Cline
+  When that client starts the program
+  Then the program chooses the client root from the caller
+  And there is not a separate binary per client
+```
+
+#### AC5 — feature-14
+
+```gherkin
+Scenario: Source does not embed operator secrets
+  Given the stdio entry and the tools it imports for channel stdio
+  Then the application source does not embed DATABASE_URL, GITHUB_TOKEN, or KEYS_ENCRYPTION_KEY as string literals for operator config
+  And the stdio channel does not statically import the Prisma sync job
 ```

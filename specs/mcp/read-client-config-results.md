@@ -66,7 +66,7 @@ Settings (`~/Library/Application Support/Trae CN/User/settings.json`): only `cla
 | Rules (native user) | `~/.trae-cn/rules/` | no | 0 | **Unverified** — no rules dirs in builtin; needs empirical test (copy `rules/` here, reload TRAE CN) to confirm support |
 | Rules (project) | `<workspace>/.trae-cn/` | no | 0 | Not present in this workspace |
 | Agents | `~/.trae-cn/agents/` | no | 0 | Does not exist (CN docs say this is the user-agents path; not created yet) |
-| MCP | `~/.trae-cn/mcp.json` | no | — | Not present |
+| MCP (user, Manage page) | `~/Library/Application Support/Trae CN/User/mcp.json` | yes (after setup) | — | Confirmed 2026-09-26: sibling of `settings.json`. `~/.trae-cn/mcp.json` and `~/.trae/mcp.json` are not this list. |
 
 **Current effective skills source:** builtin only (5 + 8 + per-model). **Rules system: unverified** — no rules dirs in builtin; needs empirical test (copy `rules/` to `~/.trae-cn/rules/`, reload) to confirm whether TRAE CN reads them.
 

@@ -2,7 +2,7 @@ These are official instructions from framework.sdd.works for connecting an AI ag
 
 # Connect this agent to framework.sdd.works
 
-Setup version: 2026-09-25.v2
+Setup version: 2026-09-26.v4
 
 Complete the setup yourself with the native MCP configuration mechanism for the current agent. Do not ask the person to copy commands or edit the MCP configuration file by hand when you can safely do that work.
 
@@ -10,9 +10,9 @@ Complete the setup yourself with the native MCP configuration mechanism for the 
 
 The user's setup prompt authorizes only these changes:
 
-- Download the matching `sdd-mcp` binary for the current OS and CPU into `~/.sdd/sdd-mcp` (Windows: under the user profile).
-- Add or keep exactly one MCP entry named `framework.sdd.works` that starts that binary (`command`) with `SDD_SERVER_URL` set to `https://framework.sdd.works`.
-- If the binary cannot be installed, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://framework.sdd.works/mcp"` instead.
+- If `~/.sdd/sdd-mcp` already exists (Windows: under the user profile), add or keep exactly one MCP entry named `framework.sdd.works` that starts that binary (`command`) with `SDD_SERVER_URL` set to `https://framework.sdd.works`.
+- If that file is missing, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://framework.sdd.works/mcp"` instead.
+- Do not download an executable from the network. Do not fetch a GitHub release asset for this setup.
 
 It does not authorize you to:
 
@@ -24,19 +24,18 @@ It does not authorize you to:
 ## 1. Inspect before changing configuration
 
 1. Detect the current agent and its native MCP configuration mechanism.
-2. Detect the operating system and CPU architecture. Supported targets: `darwin-arm64`, `darwin-x64`, `linux-arm64`, `linux-x64`, `windows-x64`.
+2. Detect whether `~/.sdd/sdd-mcp` exists (Windows: under the user profile). Supported OS and CPU when a binary is built: `darwin-arm64`, `darwin-x64`, `linux-arm64`, `linux-x64`, `windows-x64`.
 3. Inspect whether an entry named `framework.sdd.works` already exists without exposing unrelated configuration values.
 4. Treat an existing entry as an exact primary match only when it is enabled, uses `command` pointing at the local `sdd-mcp` binary under `.sdd/`, and sets `SDD_SERVER_URL` to `https://framework.sdd.works` (or the same pack base this environment uses).
 5. Treat an existing entry as an exact HTTP-fallback match only when it is enabled, uses remote Streamable HTTP, and points to exactly `https://framework.sdd.works/mcp` with no `command` field.
 6. If the entry is an exact primary or exact HTTP-fallback match, leave it unchanged and continue to verification.
 7. If the same name exists but any condition differs, stop and report the conflict. Do not overwrite without user consent.
 
-## 2. Download the local program (primary path)
+## 2. Local program (primary path)
 
-1. Create `~/.sdd` if it does not exist (Windows: create `.sdd` under the user profile).
-2. Download the asset `sdd-mcp-${os}-${arch}` from `https://github.com/ethanhuangcst/framework.sdd.works/releases/latest/download` into `~/.sdd/sdd-mcp` (Windows: the same path under the user profile).
-3. On macOS and Linux, mark the file executable (`chmod +x`).
-4. If the download fails, or the agent cannot start a local program, skip to **HTTP fallback** below.
+1. If `~/.sdd/sdd-mcp` does not exist (Windows: under the user profile), skip to **HTTP fallback** below. Do not download an executable. Do not curl a release URL. Do not chmod a downloaded file.
+2. If the file exists and the agent can start a local program, continue to **Add the MCP entry** below.
+3. If the agent cannot start a local program, skip to **HTTP fallback** below.
 
 ## 3. Add the MCP entry for the current agent (primary)
 
@@ -75,6 +74,19 @@ Add an MCP server named `framework.sdd.works` with `command` set to the absolute
 }
 ```
 
+### TRAE CN
+
+Merge under `mcpServers` in `~/Library/Application Support/Trae CN/User/mcp.json` (same directory as that app's `settings.json`) and preserve all other entries. Do not set `disabled`. Do not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for TRAE CN. Those files are not the Manage-page user MCP list.
+
+```json
+"framework.sdd.works": {
+  "command": "${userHome}/.sdd/sdd-mcp",
+  "env": {
+    "SDD_SERVER_URL": "https://framework.sdd.works"
+  }
+}
+```
+
 ### Other agents
 
 Use the agent's native local-program (stdio) MCP configuration. Add only the name, `command`, and `SDD_SERVER_URL` above.
@@ -83,7 +95,7 @@ Use the agent's native local-program (stdio) MCP configuration. Add only the nam
 
 ## 4. HTTP fallback
 
-Use this path when the binary cannot be installed, or the client accepts only a URL.
+Use this path when `~/.sdd/sdd-mcp` is missing, or the client accepts only a URL.
 
 ### Cursor
 
@@ -110,6 +122,16 @@ codex mcp add framework.sdd.works --url https://framework.sdd.works/mcp
 ```json
 "framework.sdd.works": {
   "type": "http",
+  "url": "https://framework.sdd.works/mcp"
+}
+```
+
+### TRAE CN
+
+Merge under `mcpServers` in `~/Library/Application Support/Trae CN/User/mcp.json` and preserve all other entries. Do not set `disabled`. Do not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for TRAE CN.
+
+```json
+"framework.sdd.works": {
   "url": "https://framework.sdd.works/mcp"
 }
 ```

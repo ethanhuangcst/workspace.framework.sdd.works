@@ -21,7 +21,32 @@ import {
 } from "@/core/sync/ensure-cache-fresh";
 import { readPackageManifest } from "@/core/sync/manifest";
 import { parseToolJson } from "./errors";
-import { installFramework, updateFramework } from "./install";
+import {
+  installFramework,
+  updateFramework,
+  type InstallArgs,
+  type InstallContext,
+} from "./install";
+import {
+  installFrameworkHttp,
+  updateFrameworkHttp,
+} from "./install-http";
+
+async function install(
+  args: InstallArgs,
+  ctx: InstallContext,
+) {
+  if (ctx.channel === "http") return installFrameworkHttp(args, ctx);
+  return installFramework(args, ctx);
+}
+
+async function update(
+  args: InstallArgs,
+  ctx: InstallContext,
+) {
+  if (ctx.channel === "http") return updateFrameworkHttp(args, ctx);
+  return updateFramework(args, ctx);
+}
 
 const originalCacheDir = process.env.SDD_PACKAGE_CACHE_DIR;
 
@@ -101,12 +126,12 @@ afterEach(() => {
   }
 });
 
-describe("installFramework", () => {
+describe("install", () => {
   it("should_write_skills_rules_agents_workflows_and_manifest", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const pkg = makePkg("v1.0.0");
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -136,11 +161,11 @@ describe("installFramework", () => {
       env: { HOME: home },
       skipLlm: true,
     };
-    await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    await install({ client: "cursor", os: "darwin" }, ctx);
     rmSync(join(home, ".cursor/skills/tdd"), { recursive: true, force: true });
     rmSync(join(home, ".cursor/rules/dod.mdc"), { force: true });
 
-    const second = await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    const second = await install({ client: "cursor", os: "darwin" }, ctx);
     const body = parseToolJson<{ version: string }>(second);
     expect(body.version).toBe("v1.0.0");
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
@@ -158,10 +183,10 @@ describe("installFramework", () => {
       env: { HOME: home },
       skipLlm: true,
     };
-    await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    await install({ client: "cursor", os: "darwin" }, ctx);
     writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "stale\n");
 
-    const second = await installFramework(
+    const second = await install(
       { client: "cursor", os: "darwin", force: true },
       ctx,
     );
@@ -183,7 +208,7 @@ describe("installFramework", () => {
     };
     const pkgV1 = makePkg("main");
     setPackageFetchForTests(async () => resolved("main", pkgV1, "sha-main-1"));
-    await installFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    await install({ client: "cursor", os: "darwin", version: "main" }, ctx);
 
     const pkgV2 = mkdtempSync(join(tmpdir(), "sdd-src-"));
     mkdirSync(join(pkgV2, "skills/test-driven-dev"), { recursive: true });
@@ -197,7 +222,7 @@ describe("installFramework", () => {
     writeFileSync(join(pkgV2, "rules/dod.mdc"), "# dod\n");
     setPackageFetchForTests(async () => resolved("main", pkgV2, "sha-main-2"));
 
-    const second = await installFramework(
+    const second = await install(
       { client: "cursor", os: "darwin", version: "main" },
       ctx,
     );
@@ -220,7 +245,7 @@ describe("installFramework", () => {
       skipLlm: true,
     };
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg, "sha-v1"));
-    await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    await install({ client: "cursor", os: "darwin" }, ctx);
 
     const manifestPath = join(home, ".cursor/.sdd-installed.json");
     const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as Record<
@@ -230,7 +255,7 @@ describe("installFramework", () => {
     delete manifest.package_commit;
     writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
-    const second = await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    const second = await install({ client: "cursor", os: "darwin" }, ctx);
     const body = parseToolJson<{ version: string }>(second);
     expect(body.version).toBe("v1.0.0");
     const saved = JSON.parse(readFileSync(manifestPath, "utf8")) as {
@@ -250,8 +275,8 @@ describe("installFramework", () => {
       env: { HOME: home },
       skipLlm: true,
     };
-    await installFramework({ client: "cursor", os: "darwin" }, ctx);
-    const second = await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    await install({ client: "cursor", os: "darwin" }, ctx);
+    const second = await install({ client: "cursor", os: "darwin" }, ctx);
     const body = parseToolJson<{ error: { code: string } }>(second);
     expect(body.error.code).toBe("already_up_to_date");
   });
@@ -268,7 +293,7 @@ describe("installFramework", () => {
     setPackageFetchForTests(async () =>
       resolved("v1.0.0", makePkg("v1.0.0")),
     );
-    await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    await install({ client: "cursor", os: "darwin" }, ctx);
     mkdirSync(join(home, ".cursor/skills/my-skill"), { recursive: true });
     writeFileSync(join(home, ".cursor/skills/my-skill/SKILL.md"), "mine\n");
 
@@ -276,7 +301,7 @@ describe("installFramework", () => {
     mkdirSync(join(v2, "skills/atdd"), { recursive: true });
     writeFileSync(join(v2, "skills/atdd/SKILL.md"), "# atdd v2\n");
     setPackageFetchForTests(async () => resolved("v2.0.0", v2, "sha-v2.0.0"));
-    const result = await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    const result = await install({ client: "cursor", os: "darwin" }, ctx);
     const body = parseToolJson<{ version: string }>(result);
     expect(body.version).toBe("v2.0.0");
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toContain(
@@ -287,7 +312,7 @@ describe("installFramework", () => {
 
   it("should_reject_unknown_client_without_writes", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await installFramework(
+    const result = await install(
       { client: "unknown-cli-xyz", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -299,7 +324,7 @@ describe("installFramework", () => {
   it("should_return_portable_paths_on_http_without_install_home", async () => {
     seedHttpCache("sha-http-portable", "v1.0.0");
     mockCacheFreshAsMatchingCache();
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin" },
       { channel: "http" },
     );
@@ -324,7 +349,7 @@ describe("installFramework", () => {
     seedHttpCache("sha-http-v1", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin" },
       {
         channel: "http",
@@ -369,7 +394,7 @@ describe("installFramework", () => {
       join(home, ".cursor/.sdd-installed.json"),
       JSON.stringify(previous, null, 2),
     );
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin" },
       {
         channel: "http",
@@ -391,7 +416,7 @@ describe("installFramework", () => {
     setPackageFetchForTests(async () =>
       resolved("v1.0.0", makePkg("v1.0.0")),
     );
-    const result = await installFramework(
+    const result = await install(
       { client: "claude", os: "darwin" },
       {
         channel: "stdio",
@@ -410,7 +435,7 @@ describe("installFramework", () => {
     seedHttpCache("sha-http-v1", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin" },
       {
         channel: "http",
@@ -449,7 +474,7 @@ describe("installFramework", () => {
       }),
     );
 
-    const result = await installFramework(
+    const result = await install(
       {
         client: "cursor",
         os: "darwin",
@@ -517,7 +542,7 @@ describe("installFramework", () => {
       }),
     );
 
-    const result = await installFramework(
+    const result = await install(
       {
         client: "cursor",
         os: "darwin",
@@ -551,7 +576,7 @@ describe("installFramework", () => {
     setPackageFetchForTests(async () =>
       resolved("v1.0.0", makePkg("v1.0.0")),
     );
-    const result = await updateFramework(
+    const result = await update(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -569,7 +594,7 @@ describe("installFramework", () => {
       "# const\n",
     );
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg, "sha-p1"));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -606,7 +631,7 @@ describe("installFramework", () => {
       code: "package_unavailable" as const,
       message: "gone",
     }));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -630,7 +655,7 @@ describe("installFramework", () => {
     mkdirSync(join(pkg, "src"), { recursive: true });
     writeFileSync(join(pkg, "src/app.ts"), "export {}\n");
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
-    await installFramework(
+    await install(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -647,7 +672,7 @@ describe("installFramework", () => {
       "# pc\n",
     );
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
-    await installFramework(
+    await install(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -663,7 +688,7 @@ describe("installFramework", () => {
     seedHttpCache("sha-http-receipt", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin" },
       {
         channel: "http",
@@ -699,7 +724,7 @@ describe("installFramework", () => {
     seedHttpCache("sha-old", "main");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await installFramework(
+    const result = await install(
       {
         client: "cursor",
         os: "darwin",
@@ -732,7 +757,7 @@ describe("installFramework", () => {
     writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "my tdd notes");
     const pkg = makePkg("v1.0.0");
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg, "sha-c1"));
-    await installFramework(
+    await install(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -762,7 +787,7 @@ describe("installFramework", () => {
     writeFileSync(join(home, ".cursor/notes/ideas.md"), "my ideas");
     const pkg = makePkg("v1.0.0");
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
-    await installFramework(
+    await install(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -781,7 +806,7 @@ describe("installFramework", () => {
     writeFileSync(join(pkg, "Rules/dod.mdc"), "# dod\n");
     writeFileSync(join(pkg, "agents/code-reviewer.md"), "# agent\n");
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
-    await installFramework(
+    await install(
       { client: "cursor", os: "darwin" },
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
@@ -823,7 +848,7 @@ describe("installFramework", () => {
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
     setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
-    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
 
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "new pack tdd",
@@ -875,7 +900,7 @@ describe("installFramework", () => {
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
     setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
-    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
 
     expect(existsSync(join(home, ".cursor/skills/tdd"))).toBe(true);
     expect(readFileSync(join(home, ".cursor/skills/tdd/my-notes.md"), "utf8")).toBe(
@@ -926,7 +951,7 @@ describe("installFramework", () => {
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
     setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin", version: "main" },
       ctx,
     );
@@ -967,7 +992,7 @@ describe("installFramework", () => {
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
     setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin", version: "main" },
       ctx,
     );
@@ -1024,7 +1049,7 @@ describe("installFramework", () => {
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
     setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin", version: "main" },
       ctx,
     );
@@ -1073,7 +1098,7 @@ describe("installFramework", () => {
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
     setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
-    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "new pack tdd",
     );
@@ -1128,7 +1153,7 @@ describe("installFramework", () => {
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
     setPackageFetchForTests(async () => resolved("main", pkg, "def"));
-    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "new pack tdd",
     );
@@ -1174,7 +1199,7 @@ describe("installFramework", () => {
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
     setPackageFetchForTests(async () => resolved("main", pkg, "def"));
-    await updateFramework({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "new pack tdd",
     );
@@ -1220,7 +1245,7 @@ describe("installFramework", () => {
       code: "package_unavailable" as const,
       message: "download failed",
     }));
-    const result = await installFramework(
+    const result = await install(
       { client: "cursor", os: "darwin", version: "main" },
       ctx,
     );

@@ -24,7 +24,7 @@ ADR-051 already defines a zero-dependency binary (`~/.sdd/sdd-mcp`) for stdio. C
 
 ## Consequences
 - ADR-054 is no longer the primary end-user path. HTTP install behavior in ADR-054 remains the fallback contract.
-- `public/agent-setup/prompt.md` must change from “add the HTTP URL only” to “download the binary and write `command`,” with the URL as the documented fallback. **Sprint 2 feature-05** owns that markdown rewrite. Binary publish for all targets stays ADR-051 / go-live. The public URL in the paste sentence is `https://framework.sdd.works/setup` ([ADR-061](./ADR-061-setup-prompt-public-path.md)).
+- `public/agent-setup/prompt.md` must change from “add the HTTP URL only” to “download the binary and write `command`,” with the URL as the documented fallback. **Sprint 2 feature-05** owns that markdown rewrite. Building and publishing the binary for all targets is [MCP-02](../product-backlog.md#pb-75) (Sprint 2 feature-14, ADR-051). The public URL in the paste sentence is `https://framework.sdd.works/setup` ([ADR-061](./ADR-061-setup-prompt-public-path.md)).
 - Pack updates do not require a new binary. Installer-rule changes do.
 
 ## Date
