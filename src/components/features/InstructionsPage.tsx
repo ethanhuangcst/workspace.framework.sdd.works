@@ -52,43 +52,6 @@ const TOOLS = [
   },
 ] as const;
 
-const FEATURE_AGENTS = [
-  { name: "ethan", summaryKey: "admin.guide.feat_ethan" },
-] as const;
-
-const FEATURE_SKILLS = [
-  { name: "sdd-atdd", summaryKey: "admin.guide.feat_sdd_atdd" },
-  { name: "sdd-tdd", summaryKey: "admin.guide.feat_sdd_tdd" },
-  { name: "sdd-new-project", summaryKey: "admin.guide.feat_sdd_new_project" },
-  { name: "sdd-update-project", summaryKey: "admin.guide.feat_sdd_update_project" },
-  { name: "sdd-refine-pb", summaryKey: "admin.guide.feat_sdd_refine_pb" },
-  { name: "sdd-plan-sprint", summaryKey: "admin.guide.feat_sdd_plan_sprint" },
-  { name: "sdd-update-status", summaryKey: "admin.guide.feat_sdd_update_status" },
-  { name: "sdd-retrospective", summaryKey: "admin.guide.feat_sdd_retrospective" },
-  { name: "sdd-close-sprint", summaryKey: "admin.guide.feat_sdd_close_sprint" },
-  { name: "sdd-audit-artifacts", summaryKey: "admin.guide.feat_sdd_audit_artifacts" },
-  { name: "sdd-update-specs", summaryKey: "admin.guide.feat_sdd_update_specs" },
-  { name: "sdd-implement-feature", summaryKey: "admin.guide.feat_sdd_implement_feature" },
-] as const;
-
-const FEATURE_RULES = [
-  { name: "dod.mdc", summaryKey: "admin.guide.feat_dod" },
-  { name: "incremental-delivery.mdc", summaryKey: "admin.guide.feat_incremental" },
-  { name: "realtime-status.mdc", summaryKey: "admin.guide.feat_realtime" },
-] as const;
-
-const FEATURE_TEMPLATES = [
-  { name: "product-backlog.md", summaryKey: "admin.guide.feat_product_backlog" },
-  { name: "sprint-backlog.md", summaryKey: "admin.guide.feat_sprint_backlog" },
-  { name: "status.md", summaryKey: "admin.guide.feat_status" },
-  { name: "change-log.md", summaryKey: "admin.guide.feat_change_log" },
-  { name: "artifacts-map.md", summaryKey: "admin.guide.feat_artifacts_map" },
-  { name: "architecture.md", summaryKey: "admin.guide.feat_architecture" },
-  { name: "design.md", summaryKey: "admin.guide.feat_design" },
-  { name: "test.md", summaryKey: "admin.guide.feat_test" },
-  { name: "deployment.md", summaryKey: "admin.guide.feat_deployment" },
-] as const;
-
 type GuideTab = "setup" | "features";
 
 function AgentToolIcons() {
@@ -132,34 +95,18 @@ function CmdBlock({
   );
 }
 
-function FeatureList({
-  locale,
-  items,
-}: {
-  locale: Locale;
-  items: readonly { name: string; summaryKey: string }[];
-}) {
-  return (
-    <ul className="feature-list">
-      {items.map((item) => (
-        <li key={item.name}>
-          <span className="feature-name">{item.name}</span>
-          <span className="feature-summary">{t(locale, item.summaryKey)}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export function InstructionsPage({
   locale,
   onLocaleChange,
   tab: tabFromServer = "setup",
+  featuresHtml = "",
 }: {
   locale: Locale;
   onLocaleChange: (locale: Locale) => void;
   /** From `?tab=`. A full navigation still opens Features if the click handler does not run. */
   tab?: GuideTab;
+  /** Server-rendered catalog HTML from the package markdown files. */
+  featuresHtml?: string;
 }) {
   const pathname = usePathname() || "/";
   const [tab, setTab] = useState<GuideTab>(tabFromServer);
@@ -415,33 +362,12 @@ export function InstructionsPage({
           hidden={tab !== "features"}
           data-testid="panel-features"
         >
-          <section className="guide-section feature-section" id="features-agents">
-            <h2 className="section-subtitle">
-              {t(locale, "admin.guide.features_h_agents")}
-            </h2>
-            <FeatureList locale={locale} items={FEATURE_AGENTS} />
-          </section>
-
-          <section className="guide-section feature-section" id="features-skills">
-            <h2 className="section-subtitle">
-              {t(locale, "admin.guide.features_h_skills")}
-            </h2>
-            <FeatureList locale={locale} items={FEATURE_SKILLS} />
-          </section>
-
-          <section className="guide-section feature-section" id="features-rules">
-            <h2 className="section-subtitle">
-              {t(locale, "admin.guide.features_h_rules")}
-            </h2>
-            <FeatureList locale={locale} items={FEATURE_RULES} />
-          </section>
-
-          <section className="guide-section feature-section" id="features-templates">
-            <h2 className="section-subtitle">
-              {t(locale, "admin.guide.features_h_templates")}
-            </h2>
-            <FeatureList locale={locale} items={FEATURE_TEMPLATES} />
-          </section>
+          <article
+            className="guide-section features-body"
+            id="features-body"
+            data-testid="features-body"
+            dangerouslySetInnerHTML={{ __html: featuresHtml }}
+          />
 
           <section className="guide-section" id="features-secret">
             <div className="secret-stack">

@@ -61,7 +61,7 @@ Not created until their backlog item is the active story.
 | --- | --- | --- |
 | ethan | [Agent-01](./product-backlog.md#pb-6) through [Agent-15](./product-backlog.md#pb-63) | Local Cursor agent. Design: [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md). |
 | Rules | [Rule-01](./product-backlog.md#pb-18) · [Rule-02](./product-backlog.md#pb-19) · [Rule-03](./product-backlog.md#pb-20) | Harness rules in the pack |
-| Skills | [Skill-01](./product-backlog.md#pb-21) through [Skill-13](./product-backlog.md#pb-65) | Harness skills in the pack. Skill-11 is unused. |
+| Skills | [Skill-01](./product-backlog.md#pb-21) through [Skill-13](./product-backlog.md#pb-65) · [Skill-14](./product-backlog.md#pb-80) | Harness skills in the pack. Skill-11 is unused. |
 | Seeds | [Spec-seeds-01](./product-backlog.md#pb-32) through [Spec-seeds-11](./product-backlog.md#pb-66) | Pack templates, including `.secrets` |
 
 ## Archive (Phase 1 — closed)

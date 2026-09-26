@@ -150,6 +150,34 @@ describe("install", () => {
     expect(existsSync(join(home, ".cursor/.sdd-installed.json"))).toBe(true);
   });
 
+  it("should_omit_features_markdown_files_from_client_root", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const pkg = makePkg("v1.0.0");
+    writeFileSync(join(pkg, "features.en.md"), "## Features\n");
+    writeFileSync(join(pkg, "features.zh-Hans.md"), "## 功能\n");
+    writeFileSync(join(pkg, "features.zh-Hant.md"), "## 功能\n");
+    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    const result = await install(
+      { client: "cursor", os: "darwin" },
+      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    expect(result.isError).toBeFalsy();
+    const clientRoot = join(home, ".cursor");
+    expect(existsSync(join(clientRoot, "features.en.md"))).toBe(false);
+    expect(existsSync(join(clientRoot, "features.zh-Hans.md"))).toBe(false);
+    expect(existsSync(join(clientRoot, "features.zh-Hant.md"))).toBe(false);
+    const manifest = JSON.parse(
+      readFileSync(join(clientRoot, ".sdd-installed.json"), "utf8"),
+    ) as { files: Record<string, string[]> };
+    const allPaths = Object.values(manifest.files).flat();
+    expect(allPaths).not.toContain("features.en.md");
+    expect(allPaths).not.toContain("features.zh-Hans.md");
+    expect(allPaths).not.toContain("features.zh-Hant.md");
+    expect(allPaths.some((p) => p.includes("features.en.md"))).toBe(false);
+    expect(allPaths.some((p) => p.includes("features.zh-Hans.md"))).toBe(false);
+    expect(allPaths.some((p) => p.includes("features.zh-Hant.md"))).toBe(false);
+  });
+
   it("should_reinstall_when_manifest_exists_but_files_deleted", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const pkg = makePkg("v1.0.0");

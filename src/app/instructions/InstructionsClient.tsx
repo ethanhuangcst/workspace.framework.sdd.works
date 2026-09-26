@@ -1,38 +1,38 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useTransition } from "react";
 import { InstructionsPage } from "@/components/features/InstructionsPage";
 import type { Locale } from "@/i18n/t";
 
 export function InstructionsClient({
   initialLocale,
   tab = "setup",
+  featuresHtml,
 }: {
   initialLocale: Locale;
   tab?: "setup" | "features";
+  featuresHtml: string;
 }) {
-  const [locale, setLocale] = useState(initialLocale);
   const [, startTransition] = useTransition();
 
   const onLocaleChange = useCallback((next: Locale) => {
-    setLocale(next);
     startTransition(() => {
       void fetch("/api/admin/locale", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ locale: next }),
       }).then(() => {
-        document.documentElement.lang =
-          next === "zh-Hans" ? "zh-CN" : next === "zh-Hant" ? "zh-Hant" : "en";
+        window.location.reload();
       });
     });
   }, []);
 
   return (
     <InstructionsPage
-      locale={locale}
+      locale={initialLocale}
       onLocaleChange={onLocaleChange}
       tab={tab}
+      featuresHtml={featuresHtml}
     />
   );
 }

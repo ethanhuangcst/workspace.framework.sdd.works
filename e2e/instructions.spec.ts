@@ -93,16 +93,16 @@ test.describe("MCP instructions", () => {
 
     await page.getByTestId("guide-tab-features").click();
 
-    const templates = page.locator("#features-templates");
+    const featuresBody = page.getByTestId("features-body");
     const secret = page.getByTestId("secret-lookup");
-    await expect(templates).toBeVisible();
+    await expect(featuresBody).toBeVisible();
     await expect(secret).toBeVisible();
 
-    const templatesBox = await templates.boundingBox();
+    const bodyBox = await featuresBody.boundingBox();
     const secretBox = await secret.boundingBox();
-    expect(templatesBox).not.toBeNull();
+    expect(bodyBox).not.toBeNull();
     expect(secretBox).not.toBeNull();
-    expect(secretBox!.y).toBeGreaterThan(templatesBox!.y);
+    expect(secretBox!.y).toBeGreaterThan(bodyBox!.y);
 
     await expect(page.getByTestId("secret-name")).toHaveAttribute(
       "placeholder",

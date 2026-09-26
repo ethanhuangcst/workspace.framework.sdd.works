@@ -8,12 +8,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { GET as getVersions } from "./versions/route";
 import { GET as getPackage } from "./package/route";
+import { GET as getFeatures } from "./features/route";
 import { GET as getAgentSetup } from "../agent-setup/route";
 import {
   MANIFEST_FILENAME,
   packageTarPath,
   unpackedDir,
 } from "@/core/sync/paths";
+import { NextRequest } from "next/server";
 
 const originalCacheDir = process.env.SDD_PACKAGE_CACHE_DIR;
 
@@ -142,5 +144,100 @@ describe("SDD package API", () => {
     expect(res.status).toBe(404);
     const body = (await res.json()) as { error: { code: string } };
     expect(body.error.code).toBe("version_not_found");
+  });
+});
+
+describe("GET /api/sdd/features", () => {
+  function featuresRequest(locale: string): NextRequest {
+    return new NextRequest(
+      `http://localhost/api/sdd/features?locale=${encodeURIComponent(locale)}`,
+    );
+  }
+
+  function seedFeaturesCache(files: Record<string, string>): void {
+    const { sha } = seedCache();
+    const unpacked = unpackedDir(sha);
+    for (const [name, body] of Object.entries(files)) {
+      writeFileSync(join(unpacked, name), body);
+    }
+  }
+
+  it("should_return_cache_english_html", async () => {
+    seedFeaturesCache({
+      "features.en.md": "## Features\n\n- ethan — Cache EN API.\n",
+    });
+    const res = await getFeatures(featuresRequest("en"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      locale: string;
+      sourceLocale: string;
+      source: string;
+      html: string;
+      key_value?: string;
+    };
+    expect(body.source).toBe("cache");
+    expect(body.sourceLocale).toBe("en");
+    expect(body.locale).toBe("en");
+    expect(body.html).toContain("Cache EN API");
+    expect(body.key_value).toBeUndefined();
+    expect(JSON.stringify(body)).not.toMatch(/sk-|api[_-]?key/i);
+  });
+
+  it("should_return_cache_chinese_when_present", async () => {
+    seedFeaturesCache({
+      "features.en.md": "## Features\n\n- ethan — English.\n",
+      "features.zh-Hans.md": "## 功能\n\n- ethan — 简体缓存。\n",
+    });
+    const res = await getFeatures(featuresRequest("zh-Hans"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      source: string;
+      sourceLocale: string;
+      html: string;
+    };
+    expect(body.source).toBe("cache");
+    expect(body.sourceLocale).toBe("zh-Hans");
+    expect(body.html).toContain("简体缓存");
+  });
+
+  it("should_return_cache_english_when_zh_Hant_missing", async () => {
+    seedFeaturesCache({
+      "features.en.md": "## Features\n\n- ethan — Fallback EN.\n",
+    });
+    const res = await getFeatures(featuresRequest("zh-Hant"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      source: string;
+      sourceLocale: string;
+      html: string;
+    };
+    expect(body.source).toBe("cache");
+    expect(body.sourceLocale).toBe("en");
+    expect(body.html).toContain("Fallback EN");
+  });
+
+  it("should_return_package_when_cache_missing", async () => {
+    process.env.SDD_PACKAGE_CACHE_DIR = mkdtempSync(
+      join(tmpdir(), "sdd-api-features-empty-"),
+    );
+    const res = await getFeatures(featuresRequest("en"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      source: string;
+      html: string;
+    };
+    expect(body.source).toBe("package");
+    expect(body.html).toContain('class="feature-name">ethan</span>');
+  });
+
+  it("should_escape_raw_html_in_response", async () => {
+    seedFeaturesCache({
+      "features.en.md":
+        '## Features\n\n- ethan — <script>alert(1)</script>\n',
+    });
+    const res = await getFeatures(featuresRequest("en"));
+    const body = (await res.json()) as { html: string };
+    expect(body.html).not.toContain("<script>");
+    expect(body.html).toContain("&lt;script&gt;");
   });
 });

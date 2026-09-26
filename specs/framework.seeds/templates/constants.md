@@ -26,14 +26,15 @@ Live path after install: `{client_root}/templates/framework.sdd.works/constants.
 | `skill_update_project` | `sdd-update-project` |
 | `skill_refine_pb` | `sdd-refine-pb` |
 | `skill_plan_sprint` | `sdd-plan-sprint` |
-| `skill_update_status` | `sdd-update-status` |
+| `skill_tracking` | `sdd-tracking` |
 | `skill_retrospective` | `sdd-retrospective` |
 | `skill_close_sprint` | `sdd-close-sprint` |
 | `sdd-atdd` | `sdd-atdd` |
 | `sdd-tdd` | `sdd-tdd` |
 | `sdd-audit-artifacts` | `sdd-audit-artifacts` |
 | `sdd-update-specs` | `sdd-update-specs` |
-| `sdd-implement-feature` | `sdd-implement-feature` |
+| `sdd-design` | `sdd-design` |
+| `sdd-implement` | `sdd-implement` |
 
 ## Rules
 

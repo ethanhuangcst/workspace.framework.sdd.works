@@ -39,7 +39,7 @@
 | Keys / settings Zod | Valid names; reject CJK in `key_value`; invalid GitHub URL |
 | ResetPasswordPage | After sent, link uses `admin.common.back_login` and href `/login` (WA-03). Failed request keeps the form and shows `reset-error` with a keyed message; no navigation (WA-05). Success callout uses the previous `admin.reset.sent` sentence with no `{email}`; request lead is hidden; URL has no `?email=` (WA-08 / WA-10 / Web-portal-11) |
 | Password set gate | No token + existing hash → redirect away from empty-account form; empty hash still allows set (WA-04) |
-| InstructionsPage | Tab switch Setup / Features; Features `aria-selected` and `panel-features` visibility (WA-06); copy value is the `/setup` sentence; one stdio `mcp.json`; Features lists ethan and fixed skill/rule/template names. **feature-04:** `secret-lookup` is after the Templates list; Setup panel has no `secret-lookup`; `admin.guide.secret_hint` and `admin.guide.secret_button` resolve in `en`, `zh-Hans`, and `zh-Hant` to the three catalog sentences in [`app-stories.md`](./app-stories.md) AC7. **feature-06 / WA-09 / WA-11:** Get secret stays on Features (`?tab=features`, `#features-secret`); after a result, `secret-result` or `secret-error` is scrolled into view; known exact name shows plaintext in a code block with copy control at lookup-row width; unknown name shows `admin.guide.secret_missing` on `secret-error` at the same width; empty name shows `admin.guide.secret_empty` and does not call the lookup API |
+| InstructionsPage | Tab switch Setup / Features; Features `aria-selected` and `panel-features` visibility (WA-06); copy value is the `/setup` sentence; one stdio `mcp.json`. **feature-07:** `features-body` shows fixture markdown for the active locale; a missing zh file in the cache shows the English cache file; a missing cache shows the file from `src/content/features/`; a `<script>` in the fixture is not executed; the fixed Agents / Skills / Rules / Templates lists are absent. **feature-04:** `secret-lookup` is after `features-body`; Setup panel has no `secret-lookup`; `admin.guide.secret_hint` and `admin.guide.secret_button` resolve in `en`, `zh-Hans`, and `zh-Hant` to the three catalog sentences in [`app-stories.md`](./app-stories.md) AC7. **feature-05 / WA-09 / WA-11:** Get secret stays on Features (`?tab=features`, `#features-secret`); after a result, `secret-result` or `secret-error` is scrolled into view; known exact name shows plaintext in a code block with copy control at lookup-row width; unknown name shows `admin.guide.secret_missing` on `secret-error` at the same width; empty name shows `admin.guide.secret_empty` and does not call the lookup API |
 
 Commands: `npx vitest run src/auth src/lib src/components/features/InstructionsPage.test.ts`
 
@@ -52,12 +52,15 @@ Commands: `npx vitest run src/auth src/lib src/components/features/InstructionsP
 | `POST /api/admin/login` | Success; wrong password → `errors.login_failed`; no rate-limit 429 |
 | Password reset | Request creates token; set-password consumes token; expired → error |
 | Public secret lookup (feature-05) | Exact known `key_name` returns only that plaintext; unknown name → keyed not found; response lists no other names; empty name rejected |
+| `GET /api/sdd/features` (feature-07) | Cache `en` returns that file’s HTML with `source` `cache`; cache `zh-Hans` returns the Chinese file when present; missing cache `zh-Hant` returns cache English HTML, `source` `cache`, and `sourceLocale` `en`; no cache English file returns the package file with `source` `package`; response has no key values; raw HTML in the file is escaped |
 | Keys CRUD | Create / list / update / delete; decrypt with current `KEYS_ENCRYPTION_KEY` |
 | Users invite | Rate-limit invite; cannot delete self / last admin |
 | Settings | Dirty-only Save; unreachable URL does not persist |
 | Framework | Tree from SYNK cache; top-level one-level expand + indented child rows; force sync; sync error keeps shell |
 
-**feature-04 / feature-05 / feature-06:** Feature-04 is the form. Feature-05 owns the public exact-name lookup route. Feature-06 owns the Features-tab UI for value / not-found / empty.
+**feature-04 / feature-05:** Feature-04 is the form. Feature-05 owns the public exact-name lookup and the Features-tab UI for value / not-found / empty. The old feature-06 row is merged into feature-05.
+
+**feature-07:** task-03 owns the cache read. task-04 owns the body. task-05 owns the package-file fallback. task-06 runs §7 before the feature is Done.
 
 ---
 
@@ -66,7 +69,7 @@ Commands: `npx vitest run src/auth src/lib src/components/features/InstructionsP
 | Spec area | Scenarios |
 | --- | --- |
 | Public home | `/` shows `instructions-guide` (not logo-card home); footer fixed (WA-01, WA-02) |
-| Instructions | Guide title visible; Setup and Features tabs; Features click shows `panel-features` and the tab is the hit target at its center (WA-06); Features shows ethan; agents roster lists seven names in order. **feature-04:** Features shows `secret-name` and `secret-get` after Templates; Setup does not show `secret-lookup`; switching locale to `zh-Hans` and `zh-Hant` changes the placeholder and button to the catalog sentences. **feature-06 / WA-09 / WA-11:** Get secret keeps `?tab=features` and stays on `#features-secret`; after a result, `secret-result` or `secret-error` is in view; known exact name shows a code block with copy at lookup-row width; unknown name shows `secret-error` with `admin.guide.secret_missing`; empty name shows `admin.guide.secret_empty` and does not navigate to Setup |
+| Instructions | Guide title visible; Setup and Features tabs; Features click shows `panel-features` and the tab is the hit target at its center (WA-06); agents roster lists seven names in order. **feature-07:** Features shows `features-body` text from the cache fixture for `en` and `zh-Hans`; `zh-Hant` with no cache file shows the English cache body; a missing cache shows the body from `src/content/features/`; Setup still shows `copy-setup-prompt`. **feature-04:** Features shows `secret-name` and `secret-get` after the catalog; Setup does not show `secret-lookup`; switching locale to `zh-Hans` and `zh-Hant` changes the placeholder and button to the catalog sentences. **feature-05 / WA-09 / WA-11:** Get secret keeps `?tab=features` and stays on `#features-secret`; after a result, `secret-result` or `secret-error` is in view; known exact name shows a code block with copy at lookup-row width; unknown name shows `secret-error` with `admin.guide.secret_missing`; empty name shows `admin.guide.secret_empty` and does not navigate to Setup |
 | Login | Seeded admin reaches keys landing; empty-password admin → set-password; hashed admin is not trapped on empty-account set-password (WA-04) |
 | Password reset | Submit keeps URL `/reset-password` and shows success callout or `reset-error` (WA-05); success callout is the previous `admin.reset.sent` sentence with no `{email}` and has no `?email=` query (WA-08 / WA-10); mail capture / fixture path when configured; after send, Back to login → `/login` (WA-03) |
 | Keys | Create, list shows value, copy, edit, delete, bulk delete |
@@ -91,7 +94,23 @@ Portal must stay green while MCP install lands:
 
 ---
 
-## 6. Out of scope
+## 7. Regression after feature-07
+
+Run this after task-04 and task-05, before feature-07 is marked Done. Use `/` and `/instructions`. Desktop and a viewport under 640px for the secret row.
+
+- [x] Setup copy control still copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup`
+- [x] Manual setup still shows one `mcp.json` and no `curl`
+- [x] Tools table has `sdd_install_framework` and `sdd_update_framework` and no `sdd_list_versions` row
+- [x] Features tab switch still sets `aria-selected` and shows `panel-features` (WA-06)
+- [x] Get secret: known name shows `secret-result` in view; unknown name shows `secret-missing`; empty name shows `secret-empty` and does not call the API
+- [x] Reset success still uses the previous `admin.reset.sent` sentence and stays on `/reset-password` with no `?email=`
+- [x] Locale switch still changes tab labels, the secret hint, and the secret button
+- [x] A missing sync cache still shows `features-body` from `src/content/features/` and does not remove Setup or Get secret
+- [x] No console or server error on these paths
+
+---
+
+## 8. Out of scope
 
 - MCP tool contracts and path detection E2E → [`../mcp/mcp-test.md`](../mcp/mcp-test.md)
 - Live Resend / live GitHub in default CI

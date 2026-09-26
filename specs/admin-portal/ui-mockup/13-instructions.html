@@ -236,129 +236,46 @@
           data-panel="features"
           hidden
         >
-          <section class="guide-section feature-section" id="features-agents">
-            <h2 class="section-subtitle" data-i18n="admin.guide.features_h_agents">Agents</h2>
-            <ul class="feature-list">
-              <li>
-                <span class="feature-name">ethan</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_ethan">The scrum-master agent for this service.</span>
-              </li>
+          <!-- Sample catalog only. The live page shows whatever markdown is in the synced file. -->
+          <article class="guide-section features-body" id="features-body" data-testid="features-body">
+            <p class="features-version">0.1.1</p>
+            <p>A short description of this pack.</p>
+            <h2>What the framework does</h2>
+            <ul>
+              <li>Installs the SDD pack into the AI client.</li>
+              <li>Gives Ethan jobs for the scrum events.</li>
+              <li>Keeps project specs in a known shape.</li>
             </ul>
-          </section>
-
-          <section class="guide-section feature-section" id="features-skills">
-            <h2 class="section-subtitle" data-i18n="admin.guide.features_h_skills">Skills</h2>
-            <ul class="feature-list">
-              <li>
-                <span class="feature-name">sdd-atdd</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_atdd">Acceptance Test Driven Development.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-tdd</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_tdd">Test Driven Development.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-new-project</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_new_project">Start a new project.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-update-project</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_update_project">Update project settings.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-refine-pb</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_refine_pb">Refine the product backlog.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-plan-sprint</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_plan_sprint">Plan a sprint.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-update-status</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_update_status">Report status.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-retrospective</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_retrospective">Run a retrospective.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-close-sprint</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_close_sprint">Close or start a sprint.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-audit-artifacts</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_audit_artifacts">Audit project artifacts.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-update-specs</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_update_specs">Keep specs aligned with the implementation.</span>
-              </li>
-              <li>
-                <span class="feature-name">sdd-implement-feature</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sdd_implement_feature">Update specs, then implement with TDD.</span>
-              </li>
+            <h2>Features</h2>
+            <h3>Agents</h3>
+            <ul>
+              <li><span class="feature-name">ethan</span><span class="feature-desc">Your local sdd-scrum coach</span></li>
             </ul>
-          </section>
-
-          <section class="guide-section feature-section" id="features-rules">
-            <h2 class="section-subtitle" data-i18n="admin.guide.features_h_rules">Rules</h2>
-            <ul class="feature-list">
-              <li>
-                <span class="feature-name">dod.mdc</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_dod">Definition of Done.</span>
-              </li>
-              <li>
-                <span class="feature-name">incremental-delivery.mdc</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_incremental">Incremental Delivery.</span>
-              </li>
-              <li>
-                <span class="feature-name">realtime-status.mdc</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_realtime">Track status in real time and update status.md when each task is done.</span>
-              </li>
+            <h3>Skills</h3>
+            <ul>
+              <li><span class="feature-name">sdd-new-project</span><span class="feature-desc">Starts a new project</span></li>
+              <li><span class="feature-name">sdd-tdd</span><span class="feature-desc">Writes the test before the code</span></li>
             </ul>
-          </section>
-
-          <section class="guide-section feature-section" id="features-templates">
-            <h2 class="section-subtitle" data-i18n="admin.guide.features_h_templates">Templates</h2>
-            <ul class="feature-list">
-              <li>
-                <span class="feature-name">product-backlog.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_product_backlog">Product Backlog.</span>
-              </li>
-              <li>
-                <span class="feature-name">sprint-backlog.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_sprint_backlog">Sprint Backlog.</span>
-              </li>
-              <li>
-                <span class="feature-name">status.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_status">Real-time status.</span>
-              </li>
-              <li>
-                <span class="feature-name">change-log.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_change_log">Change management.</span>
-              </li>
-              <li>
-                <span class="feature-name">artifacts-map.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_artifacts_map">Artifact path definition and project mapping.</span>
-              </li>
-              <li>
-                <span class="feature-name">architecture.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_architecture">Engineering artifact template.</span>
-              </li>
-              <li>
-                <span class="feature-name">design.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_design">Engineering artifact template.</span>
-              </li>
-              <li>
-                <span class="feature-name">test.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_test">Engineering artifact template.</span>
-              </li>
-              <li>
-                <span class="feature-name">deployment.md</span>
-                <span class="feature-summary" data-i18n="admin.guide.feat_deployment">Engineering artifact template.</span>
-              </li>
+            <h3>Rules</h3>
+            <ul>
+              <li><span class="feature-name">sdd-dod.mdc</span><span class="feature-desc">Says when a story is done</span></li>
             </ul>
-          </section>
+            <h2>Artifacts</h2>
+            <h3>sdd-scrum framework</h3>
+            <ul>
+              <li><span class="feature-name">sdd-scrum-guide.md</span><span class="feature-desc">Defines the framework</span></li>
+              <li><span class="feature-name">sdd-scrum-practices.md</span><span class="feature-desc">Says what to do, and when</span></li>
+            </ul>
+            <h3>sdd-scrum process</h3>
+            <ul>
+              <li><span class="feature-name">product-backlog.md</span><span class="feature-desc">Lists what the product must do</span></li>
+              <li><span class="feature-name">status.md</span><span class="feature-desc">Says where the work stands now</span></li>
+            </ul>
+            <h3>Engineering</h3>
+            <ul>
+              <li><span class="feature-name">architecture.md</span><span class="feature-desc">Says how the system is built</span></li>
+            </ul>
+          </article>
 
           <section class="guide-section" id="features-secret">
             <div class="secret-stack">

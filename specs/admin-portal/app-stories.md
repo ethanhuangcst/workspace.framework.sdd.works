@@ -751,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the Features-tab secret form chrome. Feature-05 owns the server lookup. Feature-06 owns showing a value or not-found.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the Features-tab secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body.
 
 ### User story 1 — Read instructions
 
@@ -803,14 +803,16 @@ Scenario: Manual setup shows one mcp.json
   And the page does not show curl -fsSL https://framework.sdd.works/install
 ```
 
-#### AC5 — feature-10
+#### AC5 — feature-10, superseded by AC12 (feature-07)
+
+The fixed Agents, Skills, Rules, and Templates lists shipped with the page redesign. Feature-07 replaces that body. Do not assert those fixed names after feature-07.
 
 ```gherkin
 Scenario: Features tab lists fixed catalog rows
   Given the visitor opens instructions
   When the visitor selects the Features tab
   Then Agents lists ethan
-  And Skills lists sdd-atdd, sdd-tdd, sdd-new-project, sdd-update-project, sdd-refine-pb, sdd-plan-sprint, sdd-update-status, sdd-retrospective, sdd-close-sprint, sdd-audit-artifacts, sdd-update-specs, and sdd-implement-feature
+  And Skills lists sdd-atdd, sdd-tdd, sdd-new-project, sdd-update-project, sdd-refine-pb, sdd-plan-sprint, sdd-tracking, sdd-retrospective, sdd-close-sprint, sdd-audit-artifacts, sdd-update-specs, sdd-design, and sdd-implement
   And Rules lists dod.mdc, incremental-delivery.mdc, and realtime-status.mdc
   And Templates lists product-backlog.md, sprint-backlog.md, status.md, change-log.md, artifacts-map.md, architecture.md, design.md, test.md, and deployment.md
   And each row shows a one-sentence summary from an i18n key
@@ -841,10 +843,10 @@ Scenario: Secret form is visible on Features
 #### AC7 — feature-04
 
 ```gherkin
-Scenario: Secret form sits after Templates with three locale strings
+Scenario: Secret form sits after the catalog with three locale strings
   Given the visitor opens instructions
   When the visitor selects the Features tab
-  Then the control with test id secret-lookup is after the Templates list
+  Then the control with test id secret-lookup is after features-body
   And the input with test id secret-name has placeholder key admin.guide.secret_hint
   And the button with test id secret-get has label key admin.guide.secret_button
   And in locale en the placeholder is Enter the name of the secret, example: sdd-trial-googlemaps
@@ -856,7 +858,7 @@ Scenario: Secret form sits after Templates with three locale strings
   And the Setup tab panel does not contain test id secret-lookup
 ```
 
-#### AC8 — feature-06 / WA-09
+#### AC8 — feature-05 / WA-09
 
 ```gherkin
 Scenario: Get secret stays on Features
@@ -868,7 +870,7 @@ Scenario: Get secret stays on Features
   And the document does not navigate to the Setup panel
 ```
 
-#### AC9 — feature-06 / WA-09 / WA-11
+#### AC9 — feature-05 / WA-09 / WA-11
 
 ```gherkin
 Scenario: Known secret name shows the value in a code block with copy
@@ -883,7 +885,7 @@ Scenario: Known secret name shows the value in a code block with copy
   And secret-error is not shown
 ```
 
-#### AC10 — feature-06 / WA-09 / WA-11
+#### AC10 — feature-05 / WA-09 / WA-11
 
 ```gherkin
 Scenario: Unknown secret name shows not found in view
@@ -897,7 +899,7 @@ Scenario: Unknown secret name shows not found in view
   And no other key values are shown
 ```
 
-#### AC11 — feature-06 / WA-09
+#### AC11 — feature-05 / WA-09
 
 ```gherkin
 Scenario: Empty secret name does not call the API
@@ -906,6 +908,64 @@ Scenario: Empty secret name does not call the API
   Then secret-error uses key admin.guide.secret_empty
   And the page does not call the secret lookup API
   And secret-result is empty or hidden
+```
+
+#### AC12 — feature-07
+
+```gherkin
+Scenario: Features body comes from the synced file for the active locale
+  Given the latest sync cache contains features.en.md and features.zh-Hans.md
+  And features.en.md contains the heading "Version info"
+  And features.zh-Hans.md contains the heading "版本信息"
+  When the visitor opens / or /instructions in locale en and selects the Features tab
+  Then features-body shows Version info
+  And features-body does not require Agents, Skills, Rules, or Templates headings
+  When the visitor switches to locale zh-Hans and opens the Features tab again
+  Then features-body shows 版本信息
+  And the Setup tab is unchanged
+```
+
+#### AC13 — feature-07
+
+```gherkin
+Scenario: A missing Chinese file shows the English file
+  Given the latest sync cache contains features.en.md
+  And the cache does not contain features.zh-Hant.md
+  When the visitor opens the Features tab in locale zh-Hant
+  Then features-body shows the English file from the sync cache
+```
+
+#### AC14 — feature-07
+
+```gherkin
+Scenario: A missing sync cache shows the package file
+  Given the sync cache has no features markdown
+  And src/content/features/features.en.md contains the heading "Package copy"
+  When the visitor opens the Features tab in locale en
+  Then features-body shows Package copy
+  And the old fixed Agents, Skills, Rules, and Templates lists are not shown
+  And the Setup tab still shows the setup copy control
+  And secret-lookup is still shown on the Features tab
+```
+
+#### AC15 — feature-07
+
+```gherkin
+Scenario: Raw HTML in the catalog file is not executed
+  Given features.en.md contains a script tag and a javascript link
+  When the visitor opens the Features tab in locale en
+  Then the page does not run that script
+  And the link is not a javascript URL
+```
+
+#### AC16 — feature-07
+
+```gherkin
+Scenario: A failed sync still shows the previous file
+  Given the cache already has features.en.md
+  And a later sync fails
+  When the visitor opens the Features tab in locale en
+  Then features-body still shows the previous file
 ```
 
 ---

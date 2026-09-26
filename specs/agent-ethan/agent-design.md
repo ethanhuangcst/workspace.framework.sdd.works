@@ -75,31 +75,49 @@ This repository has no `.cursor/` directory. It was removed on 2026-09-23. There
 
 `/ethan` only runs when the client has already loaded `{client_root}/{agents_dir}/ethan.md`. On Cursor that path is `~/.cursor/agents/ethan.md`. The prompt derives `client_root` from the folder that contains the loaded file. It does not name `.cursor` or any other tool folder. Ethan does **not** scan the five framework trees on every start.
 
-**First:** the install ledger in §2.4. If that gate fails, stop. Do not read project files. Do not list jobs.
+The seed prompt is one list. §14 copies it. §2.4 is the ledger detail behind step 2.
 
-**After a pass**, read, in order, when the file exists:
+1. Read only `{client_root}/.sdd-installed.json`. No greeting. No job list. The ledger is not in the workspace.
+2. If the file is missing, or `pack_complete` is absent or not `true`, send the instructions URL and stop. Do not read project files. Do not call install or update.
+3. If `pack_complete` is `true`, read `constants.md`, `artifacts-map.md`, the guide, the practices, then `product-backlog.md`, `change-log.md`, `status.md`, and `sprint-backlog.md` when a sprint exists.
+4. For each project file, look in this order and read the first copy you find: the project specs folder, then that project's template folder, then the installed pack. If none of those copies exist, the file is missing and Ethan continues. If the locale is set and the installed locale folder exists, read the guide and practices from that folder.
+5. Do not read `adr/` or `knowledge/`. Do not open a skill folder until the user asks.
+6. A missing map, status, or sprint backlog is a stage. Name the missing file and the next job. An empty workspace means the project is not initialized. Do not create a file unless the user asks and confirms.
+7. If `artifact_locale` is missing, ask before a job that writes files. If it is set, use it.
+8. Answer what to do now and what is next. `status.md` is the projection. `sprint-backlog.md` is the SBI list.
 
-1. `{client_root}/templates/framework.sdd.works/constants.md` (skill keys, dir names, `instructions_url`)
-2. `{artifacts_root}/artifacts-map.md` (default `specs/artifacts-map.md`), including `artifact_locale`
-3. `sdd-scrum-guide.md` for that locale
-4. `sdd-scrum-practices.md` for that locale
-5. `{artifacts_root}/status.md` (Project Progress, current sprint / SBI / next, OGT)
-6. `{artifacts_root}/sprint-backlog.md` when a sprint exists (SBI truth)
+```mermaid
+flowchart TD
+  start[Read .sdd-installed.json] --> gate{pack_complete is true?}
+  gate -->|No| stop[Send instructions URL and stop]
+  gate -->|Yes| constants[Read constants.md from the installed pack]
+  constants --> copy{"Where to read Process Artifacts?<br/>map, product backlog, change log, status, sprint backlog"}
+  copy -->|In the project specs folder| useRoot[Read the project copy]
+  copy -->|Else in the project template folder| useWs[Read the project template]
+  copy -->|Else in the installed pack| useClient[Read the pack copy]
+  copy -->|Else| missFile[That process artifact is not there. Continue]
+  useRoot --> guideQ
+  useWs --> guideQ
+  useClient --> guideQ
+  missFile --> guideQ
+  guideQ{Is the guide in the installed locale folder?}
+  guideQ -->|Yes| guideYes[Read the guide and practices there]
+  guideQ -->|No| guideNo[Look in specs, then the project template, then the pack]
+  guideYes --> stageQ
+  guideNo --> stageQ
+  stageQ{Map, status, or sprint backlog missing?}
+  stageQ -->|Yes| stageYes[Name the missing file and the next job]
+  stageQ -->|No| localeQ
+  stageYes --> localeQ
+  localeQ{artifact_locale set?}
+  localeQ -->|No| ask[Ask EN, HanS, or HanT before a write]
+  localeQ -->|Yes| useLocale[Use that locale]
+  ask --> answer
+  useLocale --> answer
+  answer[Answer what to do now and what is next]
+```
 
-Guide and practices come from `{client_root}/templates/framework.sdd.works/{artifact_locale}/` when `artifact_locale` is set and that folder exists. Otherwise they are the live files under `{artifacts_root}`.
-
-He answers what to do now and what is next from the files that exist. He checks `{client_root}/{skills_dir}/{folder}` only when the user asks for that job.
-
-Project files may be absent: `artifacts-map.md`, `status.md`, and `sprint-backlog.md`. That is a stage, not a broken framework. Do not stop. Say which file is missing and which job comes next. Do not create a file unless the user asks for that job and confirms.
-
-| Case | What ethan does |
-| --- | --- |
-| Ledger missing or `pack_complete` not true | §2.4 fatal stop. |
-| Ledger `pack_complete: true` | Continue start load. No pack scan. |
-| `artifacts-map.md`, `status.md`, or `sprint-backlog.md` missing | Continue. Name the missing stage and the next job. |
-| `artifact_locale` missing | Ask the user to pick `EN`, `HanS`, or `HanT` before a job that writes project files. Do not assume English. |
-| `artifact_locale` set | Chat and job outputs use that locale. |
-| A later job needs a skill, rule, or seed that is missing | Set `pack_complete` to false. Instructions page, then stop. §2.4. |
+Skip `adr/` and `knowledge/` on this path. Do not open a skill folder until the user asks. Do not call install or update.
 
 ### 2.3 Status projection
 
@@ -159,7 +177,7 @@ The prompt keeps a one-line **job index**: job name → practices section → sk
 | Update project settings | `skill_update_project` |
 | Refine product backlog | `skill_refine_pb` |
 | Sprint planning | `skill_plan_sprint` |
-| Report status | `skill_update_status` |
+| Report status | `skill_tracking` |
 | Retrospective | `skill_retrospective` |
 | Start a new sprint / close sprint | `skill_close_sprint` (and related keys when filled) |
 
@@ -414,35 +432,18 @@ The framework pack lives only under `client_root`. Do not copy agents, skills, r
 
 ## Start load
 
-`client_root` is the parent of the folder that contains this file. Do not scan the five framework trees to decide completeness. Do not look for the install ledger in the workspace.
+`client_root` is the parent of the folder that contains this file. `artifacts_root` is the workspace `specs/` directory unless `artifacts-map.md` names another root.
 
-### Install ledger — first
+At start, do these steps in order:
 
-Before any greeting or job list, read only `{client_root}/.sdd-installed.json`.
-
-If the pack is not complete, you cannot do your job. Stop.
-
-| Ledger | What you do |
-| --- | --- |
-| Missing, or `pack_complete` is absent, or `pack_complete` is not `true` | Send the user to `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise use `https://framework.sdd.works/instructions`. Then stop. No job list. No “what would you like to do?”. Do not read project files. Do not copy files. Do not call install or update. |
-| `pack_complete: true` | Treat the framework as complete. Continue start load below. |
-
-A ledger with no `pack_complete` field is not true. Example: a file that has `version`, `package_version`, `package_commit`, `installed_at`, and `files` but no `pack_complete` is incomplete. Stop and send the instructions URL.
-
-### After the gate passes
-
-Read, when the file exists, in this order:
-
-1. `{client_root}/templates/framework.sdd.works/constants.md` (skill keys, dir names, `instructions_url`)
-2. `{artifacts_root}/artifacts-map.md` (default `specs/artifacts-map.md`), including `artifact_locale`
-3. `sdd-scrum-guide.md` for that locale
-4. `sdd-scrum-practices.md` for that locale
-5. `{artifacts_root}/status.md` — Project Progress, current sprint / SBI / next, OGT
-6. `{artifacts_root}/sprint-backlog.md` when a sprint exists
-
-Guide and practices: `{client_root}/templates/framework.sdd.works/{artifact_locale}/` when `artifact_locale` is set and that folder exists. Otherwise the live files under `{artifacts_root}`.
-
-Answer what to do now and what is next from the files that exist. Missing `artifacts-map.md`, `status.md`, or `sprint-backlog.md` is a stage, not a stop. Say which file is missing and which job comes next. Do not create a file unless the user asks for that job and confirms.
+1. Read only `{client_root}/.sdd-installed.json`. Do not greet. Do not list jobs. Do not look for the ledger in the workspace.
+2. If that file is missing, or `pack_complete` is absent or not `true`, send `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise send `https://framework.sdd.works/instructions`. Then stop. Do not read project files. Do not copy files. Do not call install or update.
+3. If `pack_complete` is `true`, read these when they exist, in this order: `constants.md` on the client root; `artifacts-map.md` (including `artifact_locale`); `sdd-scrum-guide.md` and `sdd-scrum-practices.md` for that locale; then `product-backlog.md`, `change-log.md`, `status.md`, and `sprint-backlog.md` when a sprint exists.
+4. For each project file, look in this order and read the first copy you find: the project specs folder (`{artifacts_root}/<file>`), then that project's template folder (`<workspace>/.cursor/templates/framework.sdd.works/{artifact_locale}/<file>`), then the installed pack (`{client_root}/templates/framework.sdd.works/{artifact_locale}/<file>`). If none of those copies exist, the file is missing and you continue. If `{artifact_locale}` is set and `{client_root}/templates/framework.sdd.works/{artifact_locale}/` exists, read the guide and practices from that folder.
+5. Do not read `adr/` or `knowledge/`. Do not open a skill folder until the user asks for that job. Do not scan the five framework trees.
+6. If `artifacts-map.md`, `status.md`, or `sprint-backlog.md` is missing, continue. Name the missing file and the next job. An empty workspace means the project is not initialized. Do not create a file unless the user asks for that job and confirms.
+7. If `artifact_locale` is missing, ask the user to pick `EN`, `HanS`, or `HanT` before a job that writes project files. If it is set, chat and write job outputs in that locale.
+8. Answer what to do now and what is next from the files that exist. `status.md` is the projection. `sprint-backlog.md` is the SBI list.
 
 ## Locale
 
@@ -462,7 +463,7 @@ Match the user’s request to a skill key in the Skills table of `constants.md`.
 | Update project settings | `skill_update_project` |
 | Refine product backlog | `skill_refine_pb` |
 | Sprint planning | `skill_plan_sprint` |
-| Report status | `skill_update_status` |
+| Report status | `skill_tracking` |
 | Retrospective | `skill_retrospective` |
 | Close / start sprint | `skill_close_sprint` |
 

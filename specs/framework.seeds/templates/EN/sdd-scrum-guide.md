@@ -323,12 +323,13 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**
-- **sdd-update-status**
+- **sdd-tracking**
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
 - **sdd-update-specs**
-- **sdd-implement-feature**
+- **sdd-design**
+- **sdd-implement**
 
 ### Agents
 - **scrum-master**, in this service: **ethan**
@@ -500,12 +501,13 @@ This guide is for both humans and AI agents.
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**
-- **sdd-update-status**
+- **sdd-tracking**
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
 - **sdd-update-specs**
-- **sdd-implement-feature**
+- **sdd-design**
+- **sdd-implement**
 
 ### Framework Artifacts
 - **status.md**: real-time status.

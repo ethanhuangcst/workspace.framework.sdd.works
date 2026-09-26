@@ -323,12 +323,13 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**
-- **sdd-update-status**
+- **sdd-tracking**
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
 - **sdd-update-specs**
-- **sdd-implement-feature**
+- **sdd-design**
+- **sdd-implement**
 
 ### Agents
 - **scrum-master**，在本服务中为：**ethan**
@@ -501,12 +502,13 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**
-- **sdd-update-status**
+- **sdd-tracking**
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
 - **sdd-update-specs**
-- **sdd-implement-feature**
+- **sdd-design**
+- **sdd-implement**
 
 ### 框架工件
 - **status.md**：实时状态。

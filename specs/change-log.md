@@ -9,6 +9,70 @@
 
 ## 2026-09-26
 
+### Sprint 3 feature-16 and Sprint 15 feature-07: two new backlog items
+
+**Why**: The instructions page needs a tab for the sdd-scrum guide. The three Features markdown files at the pack root still need a review before go-live.
+
+**What changed**: [Web-portal-12](./product-backlog.md#pb-81) is Sprint 3 feature-16. [Spec-seeds-12](./product-backlog.md#pb-82) is Sprint 15 feature-07, before the go-live copy.
+
+**Verification**: Backlog rows only. No page change in this entry.
+
+### Sprint 3 feature-07: Features tab reads synced markdown
+
+**Why**: The Features tab needed the pack’s own markdown, in three locales, without an admin editor and without copying those files onto the client.
+
+**What changed**: `/` and `/instructions` render `#features-body` from the latest unpack, then from `src/content/features/` when that unpack has no English file. `GET /api/sdd/features` uses the same reader. Install does not copy `features.en.md`, `features.zh-Hans.md`, or `features.zh-Hant.md`. Lists in that body use a disc and sit inset from the heading.
+
+**Verification**: Unit and API tests cover cache, Chinese cache, English fallback, package fallback, and HTML escaping. Install test omits the three files. Ethan synced commit `30cde7ac` and confirmed the page usable on 2026-09-26. `source` was `cache`.
+
+### Sprint 3 feature-15: implementation skill is sdd-implement
+
+**Why**: The Features catalog already called the skill `sdd-implement`. The backlog id was still `sdd-implement-feature`.
+
+**What changed**: [Skill-13](./product-backlog.md#pb-65) is `sdd-implement`. [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md) records the rename in the same decision as `sdd-design`. Initial file: `specs/framework.seeds/skills/sdd-implement/SKILL.md`. It loads `sdd-update-specs` and `sdd-tdd` when the SBI needs them, and it stops after that SBI.
+
+**Verification**: Living specs, Features markdown, and locale strings use `sdd-implement`. The old id remains only in the 2026-09-24 backlog history lines and in this change log.
+
+### Sprint 3 feature-13 and feature-14: sdd-design and initial sdd-tracking
+
+**Why**: An SBI needs a design gate before implementation. The tracking skill id existed, and the file did not.
+
+**What changed**: [Skill-14](./product-backlog.md#pb-80) is `sdd-design`. [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md). Initial skills are `specs/framework.seeds/skills/sdd-design/SKILL.md` and `specs/framework.seeds/skills/sdd-tracking/SKILL.md`. Practices job 6 is still unfilled. Sprint 7 still owns that section and the install check. `sdd-design` is not a practices job. Implementation stays `sdd-implement-feature`.
+
+**Verification**: Skill lists in the guides, constants, Features markdown, locale strings, and the instructions story include `sdd-design`. Both `SKILL.md` files use a frontmatter name that matches the folder.
+
+### Sprint 3 feature-12: status skill is sdd-tracking
+
+**Why**: The unbuilt skill id `sdd-update-status` named one file edit. Job 6 keeps the live project picture current.
+
+**What changed**: The skill folder is `sdd-tracking` and the constants key is `skill_tracking`. Practices job 6 stays titled Report status. [ADR-065](./adr/ADR-065-skill-tracking-not-update-status.md). Sprint 7 still writes the skill file.
+
+**Verification**: A search of living specs, Features markdown, and locale strings no longer finds `sdd-update-status` or `skill_update_status`.
+
+### Sprint 3 feature-11: ethan start load
+
+**Why**: The seed prompt stopped after six files. It did not say which copy to read, and it did not read the other process and tracking files named in the map.
+
+**What changed**: Sprint 3 feature-11 updates `agents/ethan.md`. Start load is one numbered list: read the ledger, stop when `pack_complete` is not true, then read constants, the map, the guide, the practices, and the other process and tracking files. The first existing copy wins. `adr/` and `knowledge/` stay unread. Design §2.2 and §14 match that list. Toggle A install recovery stays out of the prompt.
+
+**Verification**: Seed and [`agent-design.md`](./agent-ethan/agent-design.md) §14 use the same eight steps. Feature-11 is WIP until the start is confirmed usable.
+
+### Features catalog plan, and Get secret is one feature
+
+**Why**: The Features tab should show whatever markdown the pack publishes, in three languages, and still be usable when that file cannot be loaded. Get secret’s server lookup and its button were two feature rows for one product behavior.
+
+**What changed**: [Web-portal-07](./product-backlog.md#pb-73) describes the three files. The page prefers the sync cache. If that cache cannot be read, it reads `src/content/features/features.en.md`, `features.zh-Hans.md`, and `features.zh-Hant.md` from the deployed `src/` tree. There is no unavailable message. Sprint 3 feature-05 absorbs the old feature-06. feature-07 stays ToDo, with task-01 through task-06 as the build order. Stories AC12–AC16, the instructions design, the mockups, and app-test §7 record the plan. No application code in this change.
+
+**Verification**: Spec review only. Implementation has not started.
+
+### MCP-01 scheduled on Sprint 15
+
+**Why**: The installer stories are Done in Sprint 2. The remaining ToDo slice is go-live, and it waits until the seed folder is finalized.
+
+**What changed**: [MCP-01](./product-backlog.md#pb-16) sprint is Sprint 15. Sprint 15 feature-06 covers pack copy, GitHub Releases for the five `sdd-mcp` binaries, and admin-portal sync. Sprint 2 installer stories stay Done.
+
+**Verification**: Product backlog sprint column, Sprint 15 feature-06, and `status.md` name Sprint 15 for that slice.
+
 ### Sprint 2 closed
 
 **Why**: Every Sprint 2 SBI is Done. Go-live pack copy, GitHub Releases, and admin-portal sync were never Sprint 2 stories.

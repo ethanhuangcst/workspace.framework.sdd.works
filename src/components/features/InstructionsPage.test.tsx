@@ -116,7 +116,21 @@ describe("InstructionsPage", () => {
 
   it("should_switch_to_features_tab_and_list_ethan", () => {
     render(
-      <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
+      <InstructionsPage
+        locale="en"
+        onLocaleChange={() => undefined}
+        featuresHtml={`
+          <h2>Features</h2>
+          <h3>Agents</h3>
+          <ul><li><span class="feature-name">ethan</span><span class="feature-desc">The scrum-master agent for this service.</span></li></ul>
+          <h3>Skills</h3>
+          <ul><li><span class="feature-name">sdd-atdd</span><span class="feature-desc">Acceptance Test Driven Development.</span></li></ul>
+          <h3>Rules</h3>
+          <ul><li><span class="feature-name">dod.mdc</span><span class="feature-desc">Definition of Done.</span></li></ul>
+          <h2>Artifacts</h2>
+          <ul><li><span class="feature-name">product-backlog.md</span><span class="feature-desc">Product Backlog.</span></li></ul>
+        `}
+      />,
     );
 
     expect(screen.getByTestId("panel-features")).not.toBeVisible();
@@ -234,25 +248,30 @@ describe("InstructionsPage", () => {
     expect(screen.getByTestId("panel-features")).toBeVisible();
   });
 
-  it("should_place_secret_form_after_templates_on_features_tab", () => {
+  it("should_place_secret_form_after_features_body_on_features_tab", () => {
     const { container } = render(
-      <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
+      <InstructionsPage
+        locale="en"
+        onLocaleChange={() => undefined}
+        featuresHtml="<h2>Features</h2><p>ethan</p>"
+      />,
     );
 
     fireEvent.click(screen.getByTestId("guide-tab-features"));
 
-    const templates = container.querySelector("#features-templates");
+    const body = container.querySelector("#features-body");
     const secret = container.querySelector("#features-secret");
-    expect(templates).not.toBeNull();
+    expect(body).not.toBeNull();
     expect(secret).not.toBeNull();
     expect(
       Boolean(
-        templates &&
+        body &&
           secret &&
-          Boolean(templates.compareDocumentPosition(secret) & Node.DOCUMENT_POSITION_FOLLOWING),
+          Boolean(body.compareDocumentPosition(secret) & Node.DOCUMENT_POSITION_FOLLOWING),
       ),
     ).toBe(true);
     expect(screen.getByTestId("secret-lookup")).toBeVisible();
+    expect(screen.getByTestId("features-body")).toHaveTextContent("ethan");
   });
 
   it("should_hide_secret_form_on_setup_tab", () => {
