@@ -1,3 +1,5 @@
+v.0.1.0
+
 ## What the framework does
 
 - Provide a guide and practice book for SDD-Scrum: Spec-Driven Development with Scrum for agentic programming under Harness Engineering.

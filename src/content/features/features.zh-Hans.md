@@ -1,4 +1,6 @@
-## 框架做什么
+v.0.1.0
+
+## sdd-scrum 框架做什么
 
 - 提供 SDD-Scrum 的指南与实践手册：在 Harness Engineering 下，把规格驱动开发(SDD)与 Scrum 用于智能体编程。
 - 在 Agent Tools 中安装框架产物，为 AI 智能体划定边界，包括规则(rules)、技能(skills)及相关资产(artifacts)。

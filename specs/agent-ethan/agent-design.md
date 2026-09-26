@@ -75,49 +75,24 @@ This repository has no `.cursor/` directory. It was removed on 2026-09-23. There
 
 `/ethan` only runs when the client has already loaded `{client_root}/{agents_dir}/ethan.md`. On Cursor that path is `~/.cursor/agents/ethan.md`. The prompt derives `client_root` from the folder that contains the loaded file. It does not name `.cursor` or any other tool folder. Ethan does **not** scan the five framework trees on every start.
 
-The seed prompt is one list. §14 copies it. §2.4 is the ledger detail behind step 2.
+§2.4 is the ledger detail behind step 1. The seed prompt in §14 still has the older list.
 
-1. Read only `{client_root}/.sdd-installed.json`. No greeting. No job list. The ledger is not in the workspace.
-2. If the file is missing, or `pack_complete` is absent or not `true`, send the instructions URL and stop. Do not read project files. Do not call install or update.
-3. If `pack_complete` is `true`, read `constants.md`, `artifacts-map.md`, the guide, the practices, then `product-backlog.md`, `change-log.md`, `status.md`, and `sprint-backlog.md` when a sprint exists.
-4. For each project file, look in this order and read the first copy you find: the project specs folder, then that project's template folder, then the installed pack. If none of those copies exist, the file is missing and Ethan continues. If the locale is set and the installed locale folder exists, read the guide and practices from that folder.
-5. Do not read `adr/` or `knowledge/`. Do not open a skill folder until the user asks.
-6. A missing map, status, or sprint backlog is a stage. Name the missing file and the next job. An empty workspace means the project is not initialized. Do not create a file unless the user asks and confirms.
-7. If `artifact_locale` is missing, ask before a job that writes files. If it is set, use it.
-8. Answer what to do now and what is next. `status.md` is the projection. `sprint-backlog.md` is the SBI list.
+1. Read only `{client_root}/.sdd-installed.json`. No greeting. No job list. The ledger is not in the workspace. If the file is missing, or `pack_complete` is absent or not `true`, send the instructions URL and stop. Do not read project files. Do not call install or update.
+2. Locate `specs/artifacts-map.md`. If that file can be read, this is an on-going project. If it is missing, this is a new project: say the project is not initialized, name start-a-new-project as the next job, and stop the file search. Do not look in template folders for the other files.
+3. On an on-going project, read `constants.md` from the installed pack, then read the Process and Tracking paths named in the map. Skip `adr/` and `knowledge/`. Do not open a skill folder until the user asks.
+4. If `artifact_locale` is missing from the map, ask before a job that writes files. If it is set, use it.
+5. Answer what to do now and what is next. `status.md` is the projection. `sprint-backlog.md` is the SBI list. A missing status or sprint backlog on an on-going project is a gap. Name the missing file. Do not create a file unless the user asks and confirms.
 
 ```mermaid
 flowchart TD
   start[Read .sdd-installed.json] --> gate{pack_complete is true?}
   gate -->|No| stop[Send instructions URL and stop]
-  gate -->|Yes| constants[Read constants.md from the installed pack]
-  constants --> copy{"Where to read Process Artifacts?<br/>map, product backlog, change log, status, sprint backlog"}
-  copy -->|In the project specs folder| useRoot[Read the project copy]
-  copy -->|Else in the project template folder| useWs[Read the project template]
-  copy -->|Else in the installed pack| useClient[Read the pack copy]
-  copy -->|Else| missFile[That process artifact is not there. Continue]
-  useRoot --> guideQ
-  useWs --> guideQ
-  useClient --> guideQ
-  missFile --> guideQ
-  guideQ{Is the guide in the installed locale folder?}
-  guideQ -->|Yes| guideYes[Read the guide and practices there]
-  guideQ -->|No| guideNo[Look in specs, then the project template, then the pack]
-  guideYes --> stageQ
-  guideNo --> stageQ
-  stageQ{Map, status, or sprint backlog missing?}
-  stageQ -->|Yes| stageYes[Name the missing file and the next job]
-  stageQ -->|No| localeQ
-  stageYes --> localeQ
-  localeQ{artifact_locale set?}
-  localeQ -->|No| ask[Ask EN, HanS, or HanT before a write]
-  localeQ -->|Yes| useLocale[Use that locale]
-  ask --> answer
-  useLocale --> answer
-  answer[Answer what to do now and what is next]
+  gate -->|Yes| map{Can specs/artifacts-map.md be read?}
+  map -->|No| newProj[New project. Next job: start a new project]
+  map -->|Yes| ongoing[On-going project]
+  ongoing --> read[Read Process and Tracking paths named in the map]
+  read --> answer[Answer what to do now and what is next]
 ```
-
-Skip `adr/` and `knowledge/` on this path. Do not open a skill folder until the user asks. Do not call install or update.
 
 ### 2.3 Status projection
 
