@@ -177,7 +177,6 @@ describe("InstructionsPage", () => {
       <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
     );
 
-    fireEvent.click(screen.getByTestId("guide-tab-features"));
     fireEvent.click(screen.getByTestId("secret-get"));
 
     expect(fetchSpy).not.toHaveBeenCalled();
@@ -185,7 +184,11 @@ describe("InstructionsPage", () => {
       /Enter the name of the secret/i,
     );
     expect(screen.queryByTestId("secret-result")).not.toBeInTheDocument();
-    expect(screen.getByTestId("panel-features")).toBeVisible();
+    expect(screen.getByTestId("guide-tab-setup")).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(screen.getByTestId("secret-lookup")).toBeVisible();
 
     fetchSpy.mockRestore();
   });
@@ -200,7 +203,6 @@ describe("InstructionsPage", () => {
       <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
     );
 
-    fireEvent.click(screen.getByTestId("guide-tab-features"));
     fireEvent.change(screen.getByTestId("secret-name"), {
       target: { value: "sdd-trial-googlemaps" },
     });
@@ -215,7 +217,11 @@ describe("InstructionsPage", () => {
     expect(result.closest(".secret-stack")).not.toBeNull();
     expect(screen.getByTestId("secret-result-copy")).toBeInTheDocument();
     expect(screen.queryByTestId("secret-error")).not.toBeInTheDocument();
-    expect(screen.getByTestId("panel-features")).toBeVisible();
+    expect(screen.getByTestId("guide-tab-setup")).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(screen.getByTestId("secret-lookup")).toBeVisible();
   });
 
   it("should_show_secret_missing_when_lookup_returns_not_found", async () => {
@@ -231,7 +237,6 @@ describe("InstructionsPage", () => {
       <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
     );
 
-    fireEvent.click(screen.getByTestId("guide-tab-features"));
     fireEvent.change(screen.getByTestId("secret-name"), {
       target: { value: "add-trail-googlemaps" },
     });
@@ -245,10 +250,14 @@ describe("InstructionsPage", () => {
     );
     expect(screen.getByTestId("secret-error").closest(".secret-stack")).not.toBeNull();
     expect(screen.queryByTestId("secret-result")).not.toBeInTheDocument();
-    expect(screen.getByTestId("panel-features")).toBeVisible();
+    expect(screen.getByTestId("guide-tab-setup")).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(screen.getByTestId("secret-lookup")).toBeVisible();
   });
 
-  it("should_place_secret_form_after_features_body_on_features_tab", () => {
+  it("should_place_secret_form_after_tools_on_setup_tab", () => {
     const { container } = render(
       <InstructionsPage
         locale="en"
@@ -257,30 +266,35 @@ describe("InstructionsPage", () => {
       />,
     );
 
-    fireEvent.click(screen.getByTestId("guide-tab-features"));
-
-    const body = container.querySelector("#features-body");
-    const secret = container.querySelector("#features-secret");
-    expect(body).not.toBeNull();
+    const tools = container.querySelector("#tools");
+    const secret = container.querySelector("#setup-secret");
+    const setupPanel = container.querySelector("#panel-setup");
+    const featuresPanel = container.querySelector("#panel-features");
+    expect(tools).not.toBeNull();
     expect(secret).not.toBeNull();
+    expect(setupPanel?.querySelector("[data-testid='secret-lookup']")).not.toBeNull();
+    expect(featuresPanel?.querySelector("[data-testid='secret-lookup']")).toBeNull();
     expect(
       Boolean(
-        body &&
+        tools &&
           secret &&
-          Boolean(body.compareDocumentPosition(secret) & Node.DOCUMENT_POSITION_FOLLOWING),
+          Boolean(tools.compareDocumentPosition(secret) & Node.DOCUMENT_POSITION_FOLLOWING),
       ),
     ).toBe(true);
     expect(screen.getByTestId("secret-lookup")).toBeVisible();
-    expect(screen.getByTestId("features-body")).toHaveTextContent("ethan");
   });
 
-  it("should_hide_secret_form_on_setup_tab", () => {
+  it("should_hide_secret_form_on_features_tab", () => {
     const { container } = render(
       <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
     );
 
-    const setupPanel = container.querySelector("#panel-setup");
-    expect(setupPanel?.querySelector("[data-testid='secret-lookup']")).toBeNull();
+    expect(screen.getByTestId("secret-lookup")).toBeVisible();
+
+    fireEvent.click(screen.getByTestId("guide-tab-features"));
+
+    const featuresPanel = container.querySelector("#panel-features");
+    expect(featuresPanel?.querySelector("[data-testid='secret-lookup']")).toBeNull();
     expect(screen.getByTestId("secret-lookup")).not.toBeVisible();
   });
 
@@ -290,8 +304,6 @@ describe("InstructionsPage", () => {
       render(
         <InstructionsPage locale={locale} onLocaleChange={() => undefined} />,
       );
-
-      fireEvent.click(screen.getByTestId("guide-tab-features"));
 
       const copy = SECRET_COPY[locale];
       expect(screen.getByTestId("secret-name")).toHaveAttribute(

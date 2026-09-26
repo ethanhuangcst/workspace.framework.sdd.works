@@ -83,26 +83,22 @@ test.describe("MCP instructions", () => {
     await expect(page.getByTestId("panel-features")).toBeHidden();
   });
 
-  test("should_show_secret_form_on_features_with_locale_strings", async ({
+  test("should_show_secret_form_on_setup_with_locale_strings", async ({
     page,
   }) => {
     await page.goto("/instructions");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.getByTestId("secret-lookup")).toBeHidden();
-
-    await page.getByTestId("guide-tab-features").click();
-
-    const featuresBody = page.getByTestId("features-body");
+    const tools = page.locator("#tools");
     const secret = page.getByTestId("secret-lookup");
-    await expect(featuresBody).toBeVisible();
     await expect(secret).toBeVisible();
+    await expect(page.locator("#setup-secret")).toBeVisible();
 
-    const bodyBox = await featuresBody.boundingBox();
+    const toolsBox = await tools.boundingBox();
     const secretBox = await secret.boundingBox();
-    expect(bodyBox).not.toBeNull();
+    expect(toolsBox).not.toBeNull();
     expect(secretBox).not.toBeNull();
-    expect(secretBox!.y).toBeGreaterThan(bodyBox!.y);
+    expect(secretBox!.y).toBeGreaterThan(toolsBox!.y);
 
     await expect(page.getByTestId("secret-name")).toHaveAttribute(
       "placeholder",
@@ -130,22 +126,32 @@ test.describe("MCP instructions", () => {
       SECRET_COPY["zh-Hant"].button,
     );
 
-    await page.getByTestId("guide-tab-setup").click();
+    await page.getByTestId("guide-tab-features").click();
     await expect(page.getByTestId("secret-lookup")).toBeHidden();
+    await expect(
+      page.getByTestId("panel-features").locator("[data-testid='secret-lookup']"),
+    ).toHaveCount(0);
   });
 
-  test("should_stay_on_features_and_show_not_found_for_unknown_secret", async ({
+  test("should_stay_on_setup_and_show_not_found_for_unknown_secret", async ({
     page,
   }) => {
-    await page.goto("/?tab=features");
+    await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.getByTestId("panel-features")).toBeVisible();
+    await expect(page.getByTestId("guide-tab-setup")).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
     await page.getByTestId("secret-name").fill("add-trail-googlemaps");
     await page.getByTestId("secret-get").click();
 
-    await expect(page).toHaveURL(/tab=features/);
-    await expect(page.getByTestId("panel-features")).toBeVisible();
+    await expect(page).not.toHaveURL(/tab=features/);
+    await expect(page.getByTestId("guide-tab-setup")).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await expect(page.getByTestId("secret-lookup")).toBeVisible();
     await expect(page.getByTestId("secret-error")).toBeVisible();
     await expect(page.getByTestId("secret-error")).toContainText(
       /No secret with that name/i,

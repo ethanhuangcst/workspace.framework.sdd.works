@@ -40,7 +40,7 @@ The other templates in this folder use Pokymon Card Collection as the worked exa
 - Decide language of project artifacts (EN, HanS, HanT).
 - Decide workspace folder structure from sub-systems, architecture, and components.
 - Specify the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
-- Record that structure in `artifacts-map.md` (required process artifact; this project’s index).
+- Record that structure in `{workspace}/artifacts-map.md` (required process artifact; this project’s index). Name `artifacts_root` there. Default `specs`. The user may set `docs`.
 - Copy artifact templates to the locations named in `artifacts-map.md`, for the chosen language.
 - Ensure agent ethan can operate those files.
 - Record current status in `status.md` and tell the user the project is initialized, with suggestions for what to do next.
@@ -189,7 +189,7 @@ The status column contains only the enum value. Put dates, scope completed, rema
 
 #### Sprint items
 
-Columns are fixed, in this order: `Code`, `Parent PBI`, `Module`, `Type`, `SBI`, `Acceptance criteria`, `Related docs`, `Note`, `Status`. `Code` is the Type in lowercase plus a two-digit number inside that sprint, such as `feature-01` or `research-01`. `Type` is one word. Rows of the same Type stay together. `Parent PBI` shows the PBI code and the PBI name. The full shape is in [`framework-design.md`](./framework-design.md).
+Columns are fixed, in this order: `Code`, `Parent PBI`, `Module`, `Type`, `SBI`, `Acceptance criteria`, `Related docs`, `Note`, `Status`. `Code` is the Type in lowercase plus a two-digit number inside that sprint, such as `feature-01` or `research-01`. `Type` is one word. Rows of the same Type stay together. `Parent PBI` shows the PBI code and the PBI name. The full shape is in [`framework-design.md`](../../framework-design.md).
 
 | Type | Meaning |
 | --- | --- |
@@ -224,12 +224,12 @@ Put dates, remaining work, and evidence in the note. Do not put them in the stat
 **Numbers, references, and retrospective**
 
 - `Code` locates the row inside that sprint. Across documents, prefer the SBI name. The row anchor is unique in the file (`s1-task-01` when another sprint also has `task-01`).
-- Every sprint has one `Retrospective`, with Learnings and then Opportunities. A later retrospective in the same sprint is appended to that section, with a timestamp, a trigger, and a line of dashes between blocks. Link an ADR or a knowledge note only when one was written. The block shape is in [`framework-design.md`](./framework-design.md). After each story or task, write the retrospective into the sprint that delivered the work.
+- Every sprint has one `Retrospective`, with Learnings and then Opportunities. A later retrospective in the same sprint is appended to that section, with a timestamp, a trigger, and a line of dashes between blocks. Link an ADR or a knowledge note only when one was written. The block shape is in [`framework-design.md`](../../framework-design.md). After each story or task, write the retrospective into the sprint that delivered the work.
 - When the schedule changes, update the Product Backlog `Sprint` projection in the same change. When implementation status changes, write each table back according to its own job. Do not let one table stand in for the other.
 
 ### artifacts-map.md
 
-[`artifacts-map.md`](./artifacts-map.md) is the required index of live files and trees for this project. It is not the framework definition. Other docs link paths here. They do not keep a second catalog.
+[`artifacts-map.md`](./artifacts-map.md) is the required index of live files and trees for this project. On a project it lives at `{workspace}/artifacts-map.md` and names `artifacts_root` (default `specs`; the user may set `docs`). Paths in the map are relative to that folder. It is not the framework definition. Other docs link paths here. They do not keep a second catalog.
 
 ### status.md
 
@@ -261,7 +261,7 @@ This file. What, how, and when. It does not redefine guide terms.
 
 ### framework-design.md
 
-[`framework-design.md`](./framework-design.md) is the sprint-item shape: columns, Type, status, and the retrospective block. This practices file states how to apply that shape.
+[`framework-design.md`](../../framework-design.md) is the sprint-item shape: columns, Type, status, and the retrospective block. It also places `artifacts-map.md` at the workspace root and names `artifacts_root` there. This practices file states how to apply that shape.
 
 ## Single source of truth
 

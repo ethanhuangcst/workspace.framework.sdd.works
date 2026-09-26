@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | Scrum-in-SDD guide | [`framework.seeds/templates/EN/sdd-scrum-guide.md`](./framework.seeds/templates/EN/sdd-scrum-guide.md) | Names and meaning. HanS copy: [`sdd-scrum-guide-hans.md`](./framework.seeds/templates/HanS/sdd-scrum-guide.md). |
 | Practices | [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) | What, how, when: jobs, templates, RID and backlog table conventions |
-| Sprint shape | [`framework.seeds/templates/EN/framework-design.md`](./framework.seeds/templates/EN/framework-design.md) | Sprint columns, Feature vs Task, and the retrospective block |
+| Sprint shape | [`framework.seeds/framework-design.md`](./framework.seeds/framework-design.md) | Sprint columns, Feature vs Task, the retrospective block, and the workspace-root artifact index |
 | Pack lookup | [`framework.seeds/templates/constants.md`](./framework.seeds/templates/constants.md) | Path names, instructions URL, skill and rule keys. Live copy on client root only ([ADR-060](./adr/ADR-060-constants-on-client-root.md)) |
 
 ## Process

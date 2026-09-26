@@ -9,6 +9,38 @@
 
 ## 2026-09-26
 
+### Pokymon sample for the artifact index
+
+**Why**: The labeled-list decision needed a worked file, and artifact seeds do not need their own status or last-update line.
+
+**What changed**: [`framework-design.md`](./framework.seeds/framework-design.md) records that seeds omit status and last-update. The EN seed [`artifacts-map.md`](./framework.seeds/templates/EN/artifacts-map.md) is the Pokymon Card Collection labeled list. It replaces the old table catalog.
+
+**Verification**: The seed is a labeled list with product name, `artifacts_root`, locale, and one block per file the example project already has. No status line and no timestamp on a row.
+
+### Artifact index is a labeled config
+
+**Why**: The map was acting as a reading catalog. Ethan needs a short config that names the product, the artifacts root, and the files this project has.
+
+**What changed**: [`framework-design.md`](./framework.seeds/framework-design.md) now specifies a labeled list with no tables. Header fields are product name, `artifacts_root`, and locale. There is no new-project flag in the file. Each existing artifact has a name and a workspace-relative local path. Seed paths are pack-relative and omitted when they follow `templates/{locale}/<name>`. The seed template is not rewritten yet.
+
+**Verification**: The Artifact index section in `framework-design.md` states this shape.
+
+### Artifact index at the workspace root
+
+**Why**: Ethan has to find the project index before he knows whether the artifacts root is `specs` or `docs`.
+
+**What changed**: `{workspace}/artifacts-map.md` names `artifacts_root`. The default is `specs`. The user may set `docs`. Paths in the map are relative to that folder. The filename stays `artifacts-map.md`. [`framework-design.md`](./framework.seeds/framework-design.md) moved from `templates/EN/` to `specs/framework.seeds/`.
+
+**Verification**: The old path is gone. Live links point at `specs/framework.seeds/framework-design.md`.
+
+### Sprint 3 feature-17: Get secret moves to Setup
+
+**Why**: Get secret is a setup action. The Features tab is the catalog.
+
+**What changed**: [Web-portal-13](./product-backlog.md#pb-83) is Sprint 3 feature-17. [ADR-067](./adr/ADR-067-get-secret-on-setup.md). The form sits after the tools table on Setup. Features has no form. Lookup behavior is unchanged. The page matches the mockup.
+
+**Verification**: InstructionsPage unit tests and Playwright instructions spec. Browser: Setup shows Get secret after Tools; Features does not; unknown name stays on Setup.
+
 ### Sprint 3 feature-16 and Sprint 15 feature-07: two new backlog items
 
 **Why**: The instructions page needs a tab for the sdd-scrum guide. The three Features markdown files at the pack root still need a review before go-live.
@@ -300,7 +332,7 @@
 
 **Why**: Sprint rows used `#` and Category. A second retrospective in the same sprint was a second section.
 
-**What changed**: Sprint tables use Code, Parent PBI, Module, Type, SBI. Code is the type plus a number, such as `feature-01`. A seed is a Feature. Research, Bug-fix, and Documentation are the other named types. Task is supporting work that is none of those. An SBI and a PBI status is only `ToDo`, `WIP`, or `Done`. Apply the Definition of Done rule before `Done`. Parent PBI shows the code and the name. The product backlog column stays Category. One Retrospective section per sprint, with timestamped Learnings and Opportunities. Shape: [`framework.seeds/templates/EN/framework-design.md`](./framework.seeds/templates/EN/framework-design.md). Same-category product rows: [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) §3.1.
+**What changed**: Sprint tables use Code, Parent PBI, Module, Type, SBI. Code is the type plus a number, such as `feature-01`. A seed is a Feature. Research, Bug-fix, and Documentation are the other named types. Task is supporting work that is none of those. An SBI and a PBI status is only `ToDo`, `WIP`, or `Done`. Apply the Definition of Done rule before `Done`. Parent PBI shows the code and the name. The product backlog column stays Category. One Retrospective section per sprint, with timestamped Learnings and Opportunities. Shape: [`framework.seeds/framework-design.md`](./framework.seeds/framework-design.md). Same-category product rows: [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) §3.1.
 
 **Verification**: Live and seed `sprint-backlog.md` use the new columns. No second Retrospective heading in Sprint 1.
 

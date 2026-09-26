@@ -78,8 +78,8 @@ This repository has no `.cursor/` directory. It was removed on 2026-09-23. There
 §2.4 is the ledger detail behind step 1. The seed prompt in §14 still has the older list.
 
 1. Read only `{client_root}/.sdd-installed.json`. No greeting. No job list. The ledger is not in the workspace. If the file is missing, or `pack_complete` is absent or not `true`, send the instructions URL and stop. Do not read project files. Do not call install or update.
-2. Locate `specs/artifacts-map.md`. If that file can be read, this is an on-going project. If it is missing, this is a new project: say the project is not initialized, name start-a-new-project as the next job, and stop the file search. Do not look in template folders for the other files.
-3. On an on-going project, read `constants.md` from the installed pack, then read the Process and Tracking paths named in the map. Skip `adr/` and `knowledge/`. Do not open a skill folder until the user asks.
+2. Locate `{workspace}/artifacts-map.md`. If that file can be read, this is an on-going project: read `artifacts_root` from it (default `specs`; the user may set `docs`). If it is missing, this is a new project: say the project is not initialized, name start-a-new-project as the next job, and stop the file search. Do not look in template folders for the other files.
+3. On an on-going project, read `constants.md` from the installed pack, then read the Process and Tracking paths named in the map, under `artifacts_root`. Skip `adr/` and `knowledge/`. Do not open a skill folder until the user asks.
 4. If `artifact_locale` is missing from the map, ask before a job that writes files. If it is set, use it.
 5. Answer what to do now and what is next. `status.md` is the projection. `sprint-backlog.md` is the SBI list. A missing status or sprint backlog on an on-going project is a gap. Name the missing file. Do not create a file unless the user asks and confirms.
 
@@ -87,7 +87,7 @@ This repository has no `.cursor/` directory. It was removed on 2026-09-23. There
 flowchart TD
   start[Read .sdd-installed.json] --> gate{pack_complete is true?}
   gate -->|No| stop[Send instructions URL and stop]
-  gate -->|Yes| map{Can specs/artifacts-map.md be read?}
+  gate -->|Yes| map{Can workspace/artifacts-map.md be read?}
   map -->|No| newProj[New project. Next job: start a new project]
   map -->|Yes| ongoing[On-going project]
   ongoing --> read[Read Process and Tracking paths named in the map]

@@ -4,7 +4,7 @@
 > **Example**: Pokymon Card Collection. After you copy this file, replace the product name and the items.
 > **Single source of truth for schedule and status**: this file. The `Sprint` column in `product-backlog.md` is a projection of this file.
 > **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md) · [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) · [`status.md`](./status.md)
-> **Numbering**: `Code` is the Type plus a two-digit number inside that sprint, such as `feature-01` or `task-01`. Feature, Research, Bug-fix, Documentation, and Task are defined in [`framework-design.md`](./framework-design.md). A seed is a Feature. When citing another document, prefer the item name.
+> **Numbering**: `Code` is the Type plus a two-digit number inside that sprint, such as `feature-01` or `task-01`. Feature, Research, Bug-fix, Documentation, and Task are defined in [`framework-design.md`](../../framework-design.md). A seed is a Feature. When citing another document, prefer the item name.
 > **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
 > **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
 > **as_of**: 2026-09-24

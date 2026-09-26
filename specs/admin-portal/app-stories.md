@@ -751,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the Features-tab secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is the placement to build.
 
 ### User story 1 — Read instructions
 
@@ -966,6 +966,22 @@ Scenario: A failed sync still shows the previous file
   And a later sync fails
   When the visitor opens the Features tab in locale en
   Then features-body still shows the previous file
+```
+
+#### AC17 — feature-17 / ADR-067
+
+```gherkin
+Scenario: Get secret sits at the bottom of Setup
+  Given the visitor opens / or /instructions
+  When the visitor selects the Setup tab
+  Then secret-lookup is after the tools table
+  And the section id is setup-secret
+  And the Features tab panel does not contain secret-lookup
+  And the placeholder and button keys stay admin.guide.secret_hint and admin.guide.secret_button
+  When the visitor activates Get secret with a non-empty name
+  Then the URL does not set tab=features
+  And the Setup panel stays shown
+  And the viewport stays on #setup-secret
 ```
 
 ---

@@ -351,25 +351,8 @@ export function InstructionsPage({
               </table>
             </div>
           </section>
-        </div>
 
-        <div
-          className="guide-tab-panel"
-          role="tabpanel"
-          id="panel-features"
-          aria-labelledby="tab-features"
-          data-panel="features"
-          hidden={tab !== "features"}
-          data-testid="panel-features"
-        >
-          <article
-            className="guide-section features-body"
-            id="features-body"
-            data-testid="features-body"
-            dangerouslySetInnerHTML={{ __html: featuresHtml }}
-          />
-
-          <section className="guide-section" id="features-secret">
+          <section className="guide-section" id="setup-secret">
             <div className="secret-stack">
               <form
                 className="secret-lookup"
@@ -426,6 +409,23 @@ export function InstructionsPage({
               ) : null}
             </div>
           </section>
+        </div>
+
+        <div
+          className="guide-tab-panel"
+          role="tabpanel"
+          id="panel-features"
+          aria-labelledby="tab-features"
+          data-panel="features"
+          hidden={tab !== "features"}
+          data-testid="panel-features"
+        >
+          <article
+            className="guide-section features-body"
+            id="features-body"
+            data-testid="features-body"
+            dangerouslySetInnerHTML={{ __html: featuresHtml }}
+          />
         </div>
       </article>
     </AuthShell>

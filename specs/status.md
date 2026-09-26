@@ -26,7 +26,7 @@ Sprint Backlog is the SBI list. This file records sprint status, the current SBI
 | --- | --- | --- |
 | Sprint 1 | Done | Closed 2026-09-25. EN guide and practices confirmed. |
 | Sprint 2 | Done | Closed 2026-09-26. Installer stories are Done. [MCP-01](./product-backlog.md#pb-16) go-live is Sprint 15. |
-| Sprint 3 | WIP | feature-11 is WIP. feature-07 is Done (Ethan confirmed 2026-09-26). ToDo: feature-01, feature-02, feature-03, feature-16 (sdd-scrum guide tab). |
+| Sprint 3 | WIP | feature-11 is WIP. feature-07 is Done. feature-17 is WIP (Get secret on Setup). ToDo: feature-01, feature-02, feature-03, feature-16 (guide tab). |
 | Sprint 4–15 | ToDo | Not started. Sprint 15 includes [MCP-01](./product-backlog.md#pb-16) go-live. |
 
 ## where we are now:

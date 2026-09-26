@@ -1,8 +1,8 @@
 # Design — framework
 
-> **Purpose**: Sprint backlog shape. Read this before adding a sprint item or a retrospective entry.
-> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when). Product backlog category grouping lives there.
-> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
+> **Purpose**: Sprint backlog shape, and where the project index lives. Read this before adding a sprint item or a retrospective entry.
+> **Practices**: [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md) (what, how, when). Product backlog category grouping lives there.
+> **Framework**: [`sdd-scrum-guide.md`](./templates/EN/sdd-scrum-guide.md) (names and meaning).
 
 ## Two repositories
 
@@ -25,22 +25,64 @@ Do not add the pack copy, the GitHub push, or the server sync to a Spec-seeds ta
 
 ## Install ledger
 
-One file, `{client_root}/.sdd-installed.json`, is the merge ledger and the start gate. [ADR-057](../../../adr/ADR-057-install-ledger-pack-complete.md). Do not add `framework.sdd.works.json`.
+One file, `{client_root}/.sdd-installed.json`, is the merge ledger and the start gate. [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). Do not add `framework.sdd.works.json`.
 
-The installer sets `pack_complete` to `true` in the same write as `package_version`, `package_commit`, and `files`, and only after the copy succeeds. `files` stays grouped by skills, rules, agents, workflows, and templates. Each entry is a pack file path, not a folder name ([ADR-059](../../../adr/ADR-059-ledger-lists-pack-files.md)). Idempotency uses the version, the commit, and those files on disk. It does not use the flag.
+The installer sets `pack_complete` to `true` in the same write as `package_version`, `package_commit`, and `files`, and only after the copy succeeds. `files` stays grouped by skills, rules, agents, workflows, and templates. Each entry is a pack file path, not a folder name ([ADR-059](../adr/ADR-059-ledger-lists-pack-files.md)). Idempotency uses the version, the commit, and those files on disk. It does not use the flag.
 
 Ethan reads this file on start. A missing file, or `pack_complete` not `true`, is a fatal stop. He may set the flag `false`. He does not change `package_version` or `package_commit`. Only install or update sets the flag `true`.
 
 ## Constants
 
-Lookup file for pack path names, the instructions URL, skill keys, and rule keys. Filename: `constants.md`. [ADR-060](../../../adr/ADR-060-constants-on-client-root.md).
+Lookup file for pack path names, the instructions URL, skill keys, and rule keys. Filename: `constants.md`. [ADR-060](../adr/ADR-060-constants-on-client-root.md).
 
 | Role | Path |
 | --- | --- |
 | Authoring seed in this workspace | `specs/framework.seeds/templates/constants.md` (beside `EN/` and `HanS/`, not inside a locale folder) |
 | After install | `{client_root}/templates/framework.sdd.works/constants.md` |
 
-Do not copy `constants.md` into the workspace, into `{workspace}/specs`, or into the artifacts root. Writing rules live in [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) under Templates.
+Do not copy `constants.md` into the workspace, into `{workspace}/specs`, or into the artifacts root. Writing rules live in [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md) under Templates.
+
+## Artifact index
+
+`artifacts-map.md` is the project config for where artifacts live. It sits at the workspace root. Ethan reads that fixed path. He does not already need to know whether the user chose `specs/` or `docs/`.
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/artifacts-map.md` |
+| Authoring seed | `specs/framework.seeds/templates/EN/artifacts-map.md` |
+
+Keep the name `artifacts-map.md`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`. Process files stay in the artifacts root. Only the index sits at the workspace root.
+
+The file is a labeled list. It is not a reading document and it does not use tables. Role essays and "when to add" stay in the guide and the practices. This file records only what this project has.
+
+### Header
+
+Three fields, in this order:
+
+1. **Product name.** Display only. It does not locate files.
+2. **`artifacts_root`.** One folder name relative to the workspace. The default is `specs`. The user may set `docs`. Do not store an absolute workspace path. A local file `product-backlog.md` means `{workspace}/{artifacts_root}/product-backlog.md`.
+3. **Locale.** `EN`, `HanS`, or `HanT`.
+
+On start, after the install ledger passes, Ethan reads `{workspace}/artifacts-map.md`.
+
+| Map | What it means |
+| --- | --- |
+| Missing | New project. The next job is start a new project. Do not search template folders for the other files. |
+| Present | On-going project. Read `artifacts_root`, then the Process and Tracking local paths named in the map. |
+
+Do not put a new-project or on-going flag in the file. The missing file is that signal. While start-a-new-project is still copying files, the header may say `initialized: no`. Remove that line when the copy finishes.
+
+### Rows
+
+One block per artifact that exists. Each block has a name and a local path relative to the workspace. The map's own local path is `{workspace}/artifacts-map.md`.
+
+Purpose stays in the guide. A row may carry one line of purpose when that line prevents a wrong copy.
+
+A seed path is pack-relative, for example `templates/EN/product-backlog.md`. Resolve `{client_root}` at install time. Do not write a machine path or an agent-tool root into the project file. When the file follows `templates/{locale}/<name>`, omit the seed path. List it only when the file does not follow that convention.
+
+`constants.md` has no row. It stays on the client root. `adr/` and `knowledge/` may appear in the tree. Ethan does not read them on start. Optional surfaces appear only after they exist. Do not leave empty rows.
+
+An artifact seed does not start with a status (`initialized`, `draft`, `confirmed`, `updated`) or a last-update line (timestamp and editor). Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the timestamp and the author. The change log holds conclusion-level changes. The only init signal is `initialized: no` on this map's header while start-a-new-project is still copying files.
 
 ## Sprint item table
 
