@@ -38,7 +38,7 @@ v.0.1.0
 
 ### sdd-scrum framework
 
-- sdd-scrum-guide.md — Single source of truth for the SDD-Scrum framework.
+- scrum-in-sdd.md — Single source of truth for the SDD-Scrum framework.
 - sdd-scrum-practices.md — Single source of truth for Harness Engineering and SDD practices when developers work with AI agents.
 - artifacts-map.md — Artifact paths and project mapping.
 

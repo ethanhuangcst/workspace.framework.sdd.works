@@ -2,7 +2,7 @@
 
 > **Purpose**: Sprint backlog shape, and where the project index lives. Read this before adding a sprint item or a retrospective entry.
 > **Practices**: [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md) (what, how, when). Product backlog category grouping lives there.
-> **Framework**: [`sdd-scrum-guide.md`](./templates/EN/sdd-scrum-guide.md) (names and meaning).
+> **Framework**: [`scrum-in-sdd.md`](./templates/EN/scrum-in-sdd.md) (names and meaning).
 
 ## Two repositories
 

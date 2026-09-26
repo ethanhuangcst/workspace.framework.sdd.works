@@ -5,7 +5,7 @@
 > **Status**: v1.0 · as_of 2026-09-24
 > **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md) · [`status.md`](./status.md)
 > **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
-> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
+> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
 > **Schedule**: The `Sprint` column is a projection of [`sprint-backlog.md`](./sprint-backlog.md). Schedule changes belong in that file.
 
 Pokymon Card Collection lets a collector catalog a card, place it in a binder, search by set or rarity, and record one trade. The cards are fictional Pokymon. The sample does not use a licensed brand.

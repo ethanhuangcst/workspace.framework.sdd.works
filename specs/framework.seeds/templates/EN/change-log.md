@@ -2,10 +2,10 @@
 
 > This file records conclusion-level changes: what changed, why, and how it was verified.
 > Step-by-step detail stays in `git log` and in each spec. This file does not replace any spec.
-> Tracking artifact (not a second sprint backlog). See [`sdd-scrum-guide.md`](./sdd-scrum-guide.md).
+> Tracking artifact (not a second sprint backlog). See [`scrum-in-sdd.md`](./scrum-in-sdd.md).
 > **Example**: Pokymon Card Collection. After you copy it, keep only real changes.
 > **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
-> **Framework**: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (names and meaning).
+> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
 
 ---
 

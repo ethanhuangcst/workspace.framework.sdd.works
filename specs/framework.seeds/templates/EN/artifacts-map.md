@@ -34,7 +34,7 @@
 ## Scrum-in-SDD guide
 
 - name: Scrum-in-SDD guide
-- local: specs/sdd-scrum-guide.md
+- local: specs/scrum-in-sdd.md
 
 ## Practices
 

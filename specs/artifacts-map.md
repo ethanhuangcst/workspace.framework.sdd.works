@@ -2,13 +2,13 @@
 
 > **Purpose**: Required **process artifact** — this project’s index of live files and trees. Not framework definition (that is the guide and practices). Tracking is `status.md` and `change-log.md`. Knowledge is `adr/` and `knowledge/` (retrospective). Other docs link here; they do not keep a second catalog.
 > **Practices**: [`sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
-> **Framework**: [`sdd-scrum-guide.md`](./framework.seeds/templates/EN/sdd-scrum-guide.md) (names and meaning).
+> **Framework**: [`scrum-in-sdd.md`](./framework.seeds/templates/EN/scrum-in-sdd.md) (names and meaning).
 
 ## Framework definition
 
 | Artifact | Path | Role |
 | --- | --- | --- |
-| Scrum-in-SDD guide | [`framework.seeds/templates/EN/sdd-scrum-guide.md`](./framework.seeds/templates/EN/sdd-scrum-guide.md) | Names and meaning. HanS copy: [`sdd-scrum-guide-hans.md`](./framework.seeds/templates/HanS/sdd-scrum-guide.md). |
+| Scrum-in-SDD guide | [`framework.seeds/templates/EN/scrum-in-sdd.md`](./framework.seeds/templates/EN/scrum-in-sdd.md) | Names and meaning. HanS copy: [`scrum-in-sdd.md`](./framework.seeds/templates/HanS/scrum-in-sdd.md). |
 | Practices | [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) | What, how, when: jobs, templates, RID and backlog table conventions |
 | Sprint shape | [`framework.seeds/framework-design.md`](./framework.seeds/framework-design.md) | Sprint columns, Feature vs Task, the retrospective block, and the workspace-root artifact index |
 | Pack lookup | [`framework.seeds/templates/constants.md`](./framework.seeds/templates/constants.md) | Path names, instructions URL, skill and rule keys. Live copy on client root only ([ADR-060](./adr/ADR-060-constants-on-client-root.md)) |

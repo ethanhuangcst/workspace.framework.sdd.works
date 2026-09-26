@@ -14,7 +14,7 @@ related:
   - change-log.md
   - artifacts-map.md
   - sprint-backlog.md
-  - sdd-scrum-guide.md
+  - scrum-in-sdd.md
   - sdd-scrum-practices.md
 ---
 

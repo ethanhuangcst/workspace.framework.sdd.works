@@ -2,12 +2,20 @@
 
 > This file records conclusion-level changes for Phase 2: what changed, why, and how it was verified.
 > Step-by-step detail stays in `git log` and in each spec. This file does not replace any spec.
-> **Scope**: [`product-backlog.md`](./product-backlog.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md) · [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) · [`framework.seeds/templates/EN/sdd-scrum-guide.md`](./framework.seeds/templates/EN/sdd-scrum-guide.md) · [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md)
+> **Scope**: [`product-backlog.md`](./product-backlog.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md) · [`framework.seeds/templates/EN/sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) · [`framework.seeds/templates/EN/scrum-in-sdd.md`](./framework.seeds/templates/EN/scrum-in-sdd.md) · [`agent-ethan/agent-design.md`](./agent-ethan/agent-design.md)
 > Phase 1 history stays in git and [`phase1-process-specs/`](./phase1-process-specs/). Do not put secrets here.
 
 ---
 
 ## 2026-09-26
+
+### Guide filename is scrum-in-sdd.md
+
+**Why**: The guide’s common name is Scrum-in-SDD; the seed path still said `sdd-scrum-guide.md`, so Ethan and catalogs opened a name that did not match the artifact label.
+
+**What changed**: EN and HanS seeds are [`scrum-in-sdd.md`](./framework.seeds/templates/EN/scrum-in-sdd.md). Living pointers (Ethan, practices, maps, process headers, Spec-seeds-02 / i18n-01, Features catalog, instruction mocks, feature-16 / Web-portal-12) use the new name. [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md). Sprint 3 feature-18 (rename) and feature-19 (portal catalog and unbuilt tab path). Dated history keeps the old name. Practices stay `sdd-scrum-practices.md`.
+
+**Verification**: Both locale seeds exist under the new name. Ethan start load names `scrum-in-sdd.md`. A search of living specs and Features markdown finds no `sdd-scrum-guide.md` except dated history and `samectx-notes/`.
 
 ### Pokymon sample for the artifact index
 
@@ -39,7 +47,7 @@
 
 **What changed**: [Web-portal-13](./product-backlog.md#pb-83) is Sprint 3 feature-17. [ADR-067](./adr/ADR-067-get-secret-on-setup.md). The form sits after the tools table on Setup. Features has no form. Lookup behavior is unchanged. The page matches the mockup.
 
-**Verification**: InstructionsPage unit tests and Playwright instructions spec. Browser: Setup shows Get secret after Tools; Features does not; unknown name stays on Setup.
+**Verification**: InstructionsPage unit tests (14) and Playwright instructions (4) pass. Ethan confirmed usable 2026-09-26. Browser: Setup shows Get secret after Tools; Features does not; blank and unknown names stay on Setup.
 
 ### Sprint 3 feature-16 and Sprint 15 feature-07: two new backlog items
 

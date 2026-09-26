@@ -9,7 +9,7 @@ tags:
   - docs
 related_spec: sprint-backlog.md
 related:
-  - sdd-scrum-guide.md
+  - scrum-in-sdd.md
   - product-backlog.md
   - change-log.md
   - artifacts-map.md
@@ -20,7 +20,7 @@ related:
 
 # SDD Scrum practices
 
-This file is the **single source of truth** for what, how, and when AI agents apply sdd-scrum (Cursor, Claude Code, Codex, CodeBuddy, and similar). Names and meaning stay in [`sdd-scrum-guide.md`](./sdd-scrum-guide.md).
+This file is the **single source of truth** for what, how, and when AI agents apply sdd-scrum (Cursor, Claude Code, Codex, CodeBuddy, and similar). Names and meaning stay in [`scrum-in-sdd.md`](./scrum-in-sdd.md).
 
 Table conventions for each template seed are under **Templates**. Product facts, design, and test criteria stay in their own specs.
 
@@ -81,7 +81,7 @@ The other templates in this folder use Pokymon Card Collection as the worked exa
 
 **From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy listed locale files into the artifacts root named in `artifacts-map.md`. Read `constants.md` from `{client_root}/templates/framework.sdd.works/constants.md` after install; do not copy it into the artifacts root.
 
-**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`sdd-scrum-guide.md`](./sdd-scrum-guide.md) (seeds vs working copies). `constants.md` is pack lookup on the client root, not a working copy under the artifacts root.
+**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (seeds vs working copies). `constants.md` is pack lookup on the client root, not a working copy under the artifacts root.
 
 Each heading below is one seed file. The RID Registry is a section inside `sprint-backlog.md`. It is not a separate seed. `constants.md` is listed first because it is not a locale seed.
 
@@ -251,9 +251,9 @@ Put dates, remaining work, and evidence in the note. Do not put them in the stat
 
 `.secrets` stores secret names and where the values live. It does not store secret values. This file is optional and written when the project has secrets. Do not commit real values.
 
-### sdd-scrum-guide.md
+### scrum-in-sdd.md
 
-[`sdd-scrum-guide.md`](./sdd-scrum-guide.md) is framework text: names and meaning. Locale copies share this filename. It does not take what, how, and when from this practices file.
+[`scrum-in-sdd.md`](./scrum-in-sdd.md) is framework text: names and meaning. Locale copies share this filename. It does not take what, how, and when from this practices file.
 
 ### sdd-scrum-practices.md
 
@@ -289,7 +289,7 @@ State each fact in full only in the document that owns it. When the wording chan
 - [`status.md`](./status.md): current sprint, SBI, next, OGT
 - [`change-log.md`](./change-log.md): tracking — process evidence and change record
 - [`artifacts-map.md`](./artifacts-map.md): process artifact index
-- [`sdd-scrum-guide.md`](./sdd-scrum-guide.md): names and meaning
+- [`scrum-in-sdd.md`](./scrum-in-sdd.md): names and meaning
 - [`architecture.md`](./architecture.md): optional / JIT — architecture and decisions
 - [`deployment.md`](./deployment.md): optional / JIT — deploy and upgrade
 - `.secrets`: optional — secret names and where values live. Not a file of secret values.

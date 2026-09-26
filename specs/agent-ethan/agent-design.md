@@ -3,7 +3,7 @@
 > **Purpose**: Define how coach-ethan is present, what it does, what it reads, how start-up resolves files, and how capabilities grow across MVPs.
 > **Status**: design · as_of 2026-09-25 · Sprint 2 feature-03 (Agent-07) ledger start gate
 > **Backlog**: [Agent-07 agent ethan — pack receipt start gate](../product-backlog.md#pb-17) · [Agent-15 Pack file: agents/ethan.md](../product-backlog.md#pb-63) · [MCP-01 Installer: pack allow-list + ledger](../product-backlog.md#pb-16) · [Agent-01 agent ethan — POC](../product-backlog.md#pb-6)
-> **Framework**: [`sdd-scrum-guide.md`](../framework.seeds/templates/EN/sdd-scrum-guide.md) · **Practices**: [`sdd-scrum-practices.md`](../framework.seeds/templates/EN/sdd-scrum-practices.md) (what, how, when)
+> **Framework**: [`scrum-in-sdd.md`](../framework.seeds/templates/EN/scrum-in-sdd.md) · **Practices**: [`sdd-scrum-practices.md`](../framework.seeds/templates/EN/sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
 > **Stories**: [`agent-stories.md`](./agent-stories.md) · **Tests**: [`agent-test.md`](./agent-test.md)
 > **Seed prompt**: [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md)
@@ -190,7 +190,7 @@ Coach start (status + sprint backlog, no pack scan) is §2.2. This section is ho
    2. `workspace/.cursor/templates/framework.sdd.works/<locale>/artifacts-map.md`
    3. Client-root template path from install `paths` (when the pack includes templates)
 3. **Locale**: first existing of `EN`, then `HanS`.
-4. Load **every process-doc row** named in that map. Template pack today typically lists: practices, product-backlog, sprint-backlog (or legacy `sprint_plan.md` / HanS), change-log, architecture, deployment; include `sdd-scrum-guide.md` when the map lists it. Domain trees are not loaded at start.
+4. Load **every process-doc row** named in that map. Template pack today typically lists: practices, product-backlog, sprint-backlog (or legacy `sprint_plan.md` / HanS), change-log, architecture, deployment; include `scrum-in-sdd.md` when the map lists it. Domain trees are not loaded at start.
 5. For each filename, use the same search order. **Live `specs/` wins** over WS-t, which wins over CR templates when choosing a read source for coaching (after recovery).
 6. Chat history is ongoing context for the thread. No memory store, embeddings, or MCP resource for knowledge content.
 
@@ -302,7 +302,7 @@ MVP 2 needs only a minimal `plan` skill. The rest ship with the full pack.
 
 ## 11. Out of scope
 
-- Filling [`sdd-scrum-guide.md`](../framework.seeds/templates/EN/sdd-scrum-guide.md) content (GUIDE-01 / sprint guide slices).
+- Filling [`scrum-in-sdd.md`](../framework.seeds/templates/EN/scrum-in-sdd.md) content (GUIDE-01 / sprint guide slices).
 - Building the six skills in this design turn. The installable prompt is §14 and the seed file.
 - Hosting coach-ethan as a remote MCP tool or resource.
 - Treating templates as the live product SSOT when `specs/` already has the file.
@@ -381,7 +381,7 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 | [`../sprint-backlog.md`](../sprint-backlog.md) | Schedule and D1 |
 | [`../architecture.md`](../architecture.md) | Stack pointer; presence decision |
 | [`../artifacts-map.md`](../artifacts-map.md) | Project index (framework / process / tracking / knowledge / optional / this product) |
-| [`../framework.seeds/templates/EN/sdd-scrum-guide.md`](../framework.seeds/templates/EN/sdd-scrum-guide.md) | Names and meaning |
+| [`../framework.seeds/templates/EN/scrum-in-sdd.md`](../framework.seeds/templates/EN/scrum-in-sdd.md) | Names and meaning |
 | [`../framework.seeds/templates/EN/sdd-scrum-practices.md`](../framework.seeds/templates/EN/sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
 | [`../mcp/mcp-design.md`](../mcp/mcp-design.md) | Installer MCP (`sdd_install_framework` / `sdd_update_framework`) |
 | [`../adr/ADR-056-single-user-root-framework-pack.md`](../adr/ADR-056-single-user-root-framework-pack.md) | One pack on the user root |
@@ -413,7 +413,7 @@ At start, do these steps in order:
 
 1. Read only `{client_root}/.sdd-installed.json`. Do not greet. Do not list jobs. Do not look for the ledger in the workspace.
 2. If that file is missing, or `pack_complete` is absent or not `true`, send `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise send `https://framework.sdd.works/instructions`. Then stop. Do not read project files. Do not copy files. Do not call install or update.
-3. If `pack_complete` is `true`, read these when they exist, in this order: `constants.md` on the client root; `artifacts-map.md` (including `artifact_locale`); `sdd-scrum-guide.md` and `sdd-scrum-practices.md` for that locale; then `product-backlog.md`, `change-log.md`, `status.md`, and `sprint-backlog.md` when a sprint exists.
+3. If `pack_complete` is `true`, read these when they exist, in this order: `constants.md` on the client root; `artifacts-map.md` (including `artifact_locale`); `scrum-in-sdd.md` and `sdd-scrum-practices.md` for that locale; then `product-backlog.md`, `change-log.md`, `status.md`, and `sprint-backlog.md` when a sprint exists.
 4. For each project file, look in this order and read the first copy you find: the project specs folder (`{artifacts_root}/<file>`), then that project's template folder (`<workspace>/.cursor/templates/framework.sdd.works/{artifact_locale}/<file>`), then the installed pack (`{client_root}/templates/framework.sdd.works/{artifact_locale}/<file>`). If none of those copies exist, the file is missing and you continue. If `{artifact_locale}` is set and `{client_root}/templates/framework.sdd.works/{artifact_locale}/` exists, read the guide and practices from that folder.
 5. Do not read `adr/` or `knowledge/`. Do not open a skill folder until the user asks for that job. Do not scan the five framework trees.
 6. If `artifacts-map.md`, `status.md`, or `sprint-backlog.md` is missing, continue. Name the missing file and the next job. An empty workspace means the project is not initialized. Do not create a file unless the user asks for that job and confirms.

@@ -38,7 +38,7 @@ v.0.1.0
 
 ### sdd-scrum 框架
 
-- sdd-scrum-guide.md — SDD-Scrum 框架的唯一事实来源。
+- scrum-in-sdd.md — SDD-Scrum 框架的唯一事实来源。
 - sdd-scrum-practices.md — 开发者与 AI 智能体协作时，Harness Engineering 与 SDD 实践的唯一事实来源。
 - artifacts-map.md — 产物路径定义与项目映射。
 
