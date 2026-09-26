@@ -33,12 +33,29 @@ CI sets `ADMIN_SEED_PASSWORD` and `E2E_ADMIN_PASSWORD` to the same fixture value
 
 | Capture env | Purpose |
 | --- | --- |
-| `E2E_RESET_FILE` | Password-reset link (Playwright fixture; **skips** Resend) |
-| `E2E_INVITE_FILE` | Admin-invite accept URL (Playwright fixture; **skips** Resend) |
+| `E2E_SKIP_MAIL=1` | Skip Resend for Playwright / CI; write the URL to the capture file instead |
+| `E2E_RESET_FILE` | Path for the password-reset link (used only when `E2E_SKIP_MAIL=1`) |
+| `E2E_INVITE_FILE` | Path for the admin-invite accept URL (used only when `E2E_SKIP_MAIL=1`) |
 
-When either capture env is set, the server writes the URL to that file and does **not** call Resend (logs a warning if a Resend key is also present). Default CI sets both capture paths and does not set Resend.
+Playwright’s `webServer` sets `E2E_SKIP_MAIL=1` plus both capture paths and does **not** reuse an existing server on port 3040. When `E2E_SKIP_MAIL=1`, the server writes the URL to the capture file and does **not** call Resend (logs a warning if a Resend key is also present). Default CI sets both capture paths and does not set Resend; Playwright injects `E2E_SKIP_MAIL=1`.
 
-**Operator pitfall:** do not export `E2E_INVITE_FILE` / `E2E_RESET_FILE` in a long-lived `npm run dev` shell if you expect real inbox delivery — restart `make dev` / `npm run dev` without those vars so Resend runs.
+**Operator pitfall:** do not export `E2E_SKIP_MAIL=1` in a long-lived `npm run dev` shell if you expect real inbox delivery. Capture file paths alone no longer skip Resend. Restart `make dev` / `npm run dev` without `E2E_SKIP_MAIL` so Resend runs.
+
+## Local reset “success” with no inbox mail (WA-10)
+
+**Finding (2026-09-26):** Local `/reset-password` showed the success callout while the inbox stayed empty. Production still delivered reset mail for the same operator address.
+
+**Cause (order checked):**
+
+1. **Shared port-3040 process historically ran with capture env.** Browser and Playwright reused one `next dev` on 3040. When that process was started with `E2E_SKIP_MAIL=1` (and `E2E_RESET_FILE`), a human click returned `{ ok: true }` and skipped Resend. Production never sets `E2E_SKIP_MAIL`. Capture paths alone no longer skip mail (see table above); the flag must be unset for interactive use.
+2. **Latest live clicks were the no-send branch, not a Resend failure.** Server log: `POST /api/admin/password/reset` **200 in 49ms** and **200 in 17ms**, right after a login **401**. A Resend send on this app takes about **1–10 seconds**. A sub-100ms `200` means the handler did **not** call `sendResetMail`: the address was not an ACTIVE admin (or historically capture mode). The page still shows success because unknown / inactive addresses return `{ ok: true }` (no account leak). A **429** would have kept the form and shown an error, so those clicks were not rate-limited.
+3. **Production differs because the request hits Resend for an ACTIVE admin.** Same route, no `E2E_SKIP_MAIL`, ACTIVE row → Resend accepts → inbox delivery.
+
+**Do not log** `RESEND_API_KEY`, `MAIL_FROM`, or the reset URL when diagnosing. Record only whether Resend was called (timing / one dev line on a later code pass).
+
+**Guard for the next code pass:** do not start interactive `npm run dev` with `E2E_SKIP_MAIL`; after a reset change, one browser click must show the previous `admin.reset.sent` sentence and a Resend-duration response (about 1s or more), not a sub-100ms `200`.
+
+**2026-09-26 15:56:** `POST /api/admin/password/reset` was **200 in 62ms** with `[mail] password reset: no mail sent (admin missing or not ACTIVE)`, right after login **401**. Resend was not called. The local database had only `e2e-admin@ethanhuang.com`. `e2e/accounts.spec.ts` `should_invite_accept_list_and_delete_other_admin` had deleted every admin except the Playwright account, including the seed admin, during the web-app Playwright run. That delete now keeps `ADMIN_SEED_EMAIL` (default `me@ethanhuang.com`).
 
 ## Keys at rest (KEYS-01)
 

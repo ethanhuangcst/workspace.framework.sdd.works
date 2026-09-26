@@ -2,7 +2,6 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { installFramework, updateFramework } from "@/core/tools/install";
 import type { InstallContext } from "@/core/tools/install";
-import { listVersions } from "@/core/tools/list-versions";
 import { getMcpBrandIcons, getMcpWebsiteUrl } from "./brand";
 import { mcpToolDescription } from "./tool-descriptions";
 import type { CreateSddMcpServerOptions } from "./server-options";
@@ -44,20 +43,6 @@ export function createStdioMcpServer(
     websiteUrl: getMcpWebsiteUrl(),
     icons: getMcpBrandIcons(),
   });
-
-  server.registerTool(
-    "sdd_list_versions",
-    {
-      description: mcpToolDescription("sdd_list_versions"),
-      inputSchema: {
-        client: z
-          .string()
-          .optional()
-          .describe("Optional client id for future path hints"),
-      },
-    },
-    async () => listVersions({ channel: "stdio" }),
-  );
 
   server.registerTool(
     "sdd_install_framework",

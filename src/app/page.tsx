@@ -1,10 +1,16 @@
 import { cookies } from "next/headers";
-import { HomePageClient } from "@/components/features/HomePageClient";
+import { InstructionsClient } from "./instructions/InstructionsClient";
 import { getLocaleFromCookieValue } from "@/lib/locale";
 
-export default async function HomePageRoute() {
+export default async function HomePageRoute({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
   const cookieStore = await cookies();
   const locale = getLocaleFromCookieValue(cookieStore.get("sdd_locale")?.value);
+  const params = await searchParams;
+  const tab = params.tab === "features" ? "features" : "setup";
 
-  return <HomePageClient initialLocale={locale} />;
+  return <InstructionsClient initialLocale={locale} tab={tab} />;
 }

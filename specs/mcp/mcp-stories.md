@@ -2,9 +2,9 @@
 
 MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). **Sprint 2 feature-14 (MCP-02):** local program at `~/.sdd/sdd-mcp` ([`sdd-mcp-local-binary`](#sdd-mcp-local-binary)). Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09, feature-14. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy), [`sdd-mcp-local-binary`](#sdd-mcp-local-binary). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-test.md`](./mcp-test.md) §7.6.
+**Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). **Sprint 2 feature-14 (MCP-02):** local program at `~/.sdd/sdd-mcp` ([`sdd-mcp-local-binary`](#sdd-mcp-local-binary)). **Sprint 3 (MCP-03):** model-facing tools omit `sdd_list_versions` ([`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface), [ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09, feature-14; Sprint 3 feature-08–09. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy), [`sdd-mcp-local-binary`](#sdd-mcp-local-binary), [`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-test.md`](./mcp-test.md) §7.6.
 
-**Tools:** `sdd_install_framework`, `sdd_update_framework`, `sdd_list_versions`, `sdd_get_key`. Protocol ids are not localized.
+**Tools:** `sdd_install_framework`, `sdd_update_framework`, and on HTTP only `sdd_get_key`. Protocol ids are not localized. `sdd_list_versions` is not registered ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)).
 
 **Roles:** MCP client (IDE/agent), Developer, Admin.
 
@@ -92,7 +92,7 @@ Scenario: CI rejects an invalid map
 ```gherkin
 Scenario: Map version is exposed for staleness warnings
   Given the path map has version N
-  When sdd_list_versions is implemented (Sprint 5)
+  When GET /api/sdd/versions returns a successful payload
   Then its output includes paths_version N
   So a local install whose stored map version is older than N can warn the user
 ```
@@ -112,17 +112,18 @@ Node stdio entry registers tools with pinned `@modelcontextprotocol/sdk`. Core i
 ### User story 1 — Local client connects over stdio
 
 **As a** developer using a local MCP client
-**I want** the server to start on stdio and advertise the four SDD tools
-**So that** my IDE can call install, update, list, and get_key
+**I want** the server to start on stdio and advertise the install and update tools
+**So that** my IDE can call install and update without a catalog tool
 
 #### AC1
 
 ```gherkin
-Scenario: stdio server advertises SDD tools (no get_key)
+Scenario: stdio server advertises SDD tools (no get_key, no list_versions)
   Given the MCP stdio process is started
   When the client completes initialize and lists tools
-  Then the tool list includes sdd_install_framework, sdd_update_framework, and sdd_list_versions
+  Then the tool list includes sdd_install_framework and sdd_update_framework
   And the tool list does not include sdd_get_key
+  And the tool list does not include sdd_list_versions
   And each tool description states parameters, success shape, and failure modes
 ```
 
@@ -156,7 +157,8 @@ Scenario: Authorized HTTP client lists tools
   Given Streamable HTTP MCP is available at /mcp
   And the client sends a valid bearer token
   When the client completes initialize and lists tools
-  Then the tool list includes the same four SDD tools as stdio
+  Then the tool list includes sdd_install_framework, sdd_update_framework, and sdd_get_key
+  And the tool list does not include sdd_list_versions
 ```
 
 #### AC2
@@ -172,47 +174,55 @@ Scenario: Missing or invalid bearer is rejected
 
 ---
 
-## `sdd-mcp-list-versions` — `sdd_list_versions`
+## `sdd-mcp-tool-surface` — MCP tools without `sdd_list_versions` (MCP-03)
 
-List available package versions and a high-level inventory. Read-only. No key values. (MCPL-01)
+The model cannot call `sdd_list_versions`. Version listing stays on `GET /api/sdd/versions` and `listVersions()`. ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md), [MCP-03](../product-backlog.md#pb-78))
 
-### User story 1 — Discover versions before install
+### User story 1 — Model sees only install, update, and (HTTP) get_key
 
-**As an** MCP client
-**I want** to list available framework versions and inventory
-**So that** the model can choose a version before install or update
+**As a** person using an agent that connects to framework.sdd.works MCP
+**I want** the tool list to omit `sdd_list_versions`
+**So that** install and update use latest without a catalog round trip
 
-#### AC1
+#### AC1 — feature-08
 
 ```gherkin
-Scenario: List versions and inventory from sync cache
+Scenario: stdio tools/list omits sdd_list_versions
+  Given the MCP stdio process is started
+  When the client completes initialize and lists tools
+  Then the tool list is exactly sdd_install_framework and sdd_update_framework
+  And the tool list does not include sdd_list_versions
+```
+
+#### AC2 — feature-08
+
+```gherkin
+Scenario: HTTP tools/list omits sdd_list_versions and keeps get_key
+  Given the HTTP MCP server is started
+  When the client completes initialize and lists tools
+  Then the tool list includes sdd_install_framework, sdd_update_framework, and sdd_get_key
+  And the tool list does not include sdd_list_versions
+```
+
+#### AC3 — feature-08
+
+```gherkin
+Scenario: Install with omitted version still resolves latest
   Given the operator server has run a successful package sync
-  When the client calls sdd_list_versions over HTTP
-  Then the result includes one or more version identifiers from the sync manifest
-  And the result includes a high-level inventory of skills, rules, agents, and workflows
+  When the client calls sdd_install_framework without a version argument
+  Then the install uses the latest version from the sync cache
+  And the call does not require sdd_list_versions
+```
+
+#### AC4 — feature-08
+
+```gherkin
+Scenario: Versions REST still returns the sync cache
+  Given the operator server has run a successful package sync
+  When GET /api/sdd/versions is requested
+  Then the response includes version identifiers from the sync manifest
+  And the response includes paths_version
   And no key values are present
-  And no files are written
-```
-
-#### AC3
-
-```gherkin
-Scenario: stdio list_versions fetches from operator REST API
-  Given the stdio binary is configured with SDD_SERVER_URL pointing at the operator server
-  And the operator server has run a successful package sync
-  When the client calls sdd_list_versions over stdio
-  Then the result includes versions and inventory from GET /api/sdd/versions
-  And no database or GitHub calls are made from the stdio process
-```
-
-#### AC2
-
-```gherkin
-Scenario: List fails when the package source is unavailable
-  Given the configured GitHub repository cannot be read
-  When the client calls sdd_list_versions
-  Then the result is a structured error
-  And the call is not reported as empty success
 ```
 
 ---
@@ -1162,7 +1172,7 @@ Zero client runtime. The build machine compiles one executable per OS and CPU (A
 ### User story 1 — Host binary speaks MCP and writes the pack
 
 **As an** end user with `~/.sdd/sdd-mcp` already on the machine
-**I want** that program to register install, update, and list over stdio
+**I want** that program to register install and update over stdio
 **So that** my agent tool can write the pack without Node, npm, or Bun on the client
 
 #### AC1 — feature-14
@@ -1172,8 +1182,9 @@ Scenario: Compiled host binary advertises stdio tools
   Given the matching sdd-mcp binary for this OS and CPU has been built
   And that file is started over stdio with no Node, npm, or Bun on PATH
   When the client completes initialize and lists tools
-  Then the tool list includes sdd_install_framework, sdd_update_framework, and sdd_list_versions
+  Then the tool list includes sdd_install_framework and sdd_update_framework
   And the tool list does not include sdd_get_key
+  And the tool list does not include sdd_list_versions
 ```
 
 #### AC2 — feature-14

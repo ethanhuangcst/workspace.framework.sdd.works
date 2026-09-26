@@ -87,15 +87,22 @@ export async function POST(request: NextRequest) {
     request.cookies.get("sdd_locale")?.value,
   );
 
-  // Playwright / CI fixture capture wins over live mail (do not export
-  // E2E_INVITE_FILE in a long-lived operator `npm run dev` shell).
-  if (process.env.E2E_INVITE_FILE) {
-    if (process.env.RESEND_API_KEY) {
-      console.warn(
-        "[mail] E2E_INVITE_FILE is set; skipping Resend and writing invite URL to the capture file",
+  // Playwright sets E2E_SKIP_MAIL=1; interactive `npm run dev` must not.
+  const e2eSkipMail = process.env.E2E_SKIP_MAIL === "1";
+  if (e2eSkipMail) {
+    const capture = process.env.E2E_INVITE_FILE;
+    if (!capture) {
+      return NextResponse.json(
+        { error: { key: "errors.invite_mail_send_failed" } },
+        { status: 502 },
       );
     }
-    await writeFile(process.env.E2E_INVITE_FILE, inviteUrl, "utf8");
+    if (process.env.RESEND_API_KEY) {
+      console.warn(
+        "[mail] E2E_SKIP_MAIL=1; skipping Resend and writing invite URL to the capture file",
+      );
+    }
+    await writeFile(capture, inviteUrl, "utf8");
   } else if (process.env.RESEND_API_KEY && process.env.MAIL_FROM) {
     const sent = await sendInviteMail({ to: email, locale, inviteUrl });
     if (!sent.ok) {

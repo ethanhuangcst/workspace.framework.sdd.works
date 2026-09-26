@@ -12,7 +12,7 @@ MCP server for install, update, list, and get-key. Stories: [`mcp-stories.md`](.
 | Prompt-based setup: one paste; agent downloads the binary and writes MCP config | Asking the person to edit `mcp.json` by hand |
 | Local program writes pack files on `sdd_install_framework` / `sdd_update_framework` | Writing Server 2 disk as `~/.cursor` |
 | HTTP fallback returns tarball URL; AI extracts when stdio cannot be used (ADR-054) | Third-party skill marketplace |
-| `sdd_list_versions` from operator sync cache / REST API | MCP transport session as business state |
+| `listVersions` / `GET /api/sdd/versions` from operator sync cache | MCP transport session as business state |
 | `sdd_get_key` from the admin key store (HTTP only) | Editing skills/rules inside an MCP session |
 | Path allow-list; structured errors | Hard-coding a GitHub owner/repo for the pack |
 | Qwen-assisted path discovery on stdio (ADR-047) | Trusting LLM paths without allow-list validation |
@@ -30,7 +30,7 @@ Two workspaces. Do not mix them.
 
 This git working copy is the service repo. Sync and install never read this checkout’s remote and never treat `specs/` or `src/` here as the pack tree. Pack files are copied into the pack repo by hand.
 
-Pack source is the singleton **`Setting.githubUrl`** stored by the admin portal ([`app-design.md`](../admin-portal/app-design.md) Settings). Sync (`syncFrameworkRepo`), `sdd_list_versions`, and `sdd_install_framework` / `sdd_update_framework` read that field at runtime. **Do not hard-code** an owner, repo, or clone URL in application code, path maps, or tool defaults.
+Pack source is the singleton **`Setting.githubUrl`** stored by the admin portal ([`app-design.md`](../admin-portal/app-design.md) Settings). Sync (`syncFrameworkRepo`), `GET /api/sdd/versions` / `listVersions()`, and `sdd_install_framework` / `sdd_update_framework` read that field at runtime. **Do not hard-code** an owner, repo, or clone URL in application code, path maps, or tool defaults.
 
 Operators may change the URL in `/admin/settings`. The service validates `https://github.com/{owner}/{repo}` (optional `.git`) and persists the canonical form. An empty URL means no pack: sync and install fail with a structured error (`sync_pending` / package unavailable), not a baked-in fallback repo.
 
@@ -120,7 +120,7 @@ These are official instructions from framework.sdd.works for connecting an AI ag
 
 # Connect this agent to framework.sdd.works
 
-Setup version: 2026-09-26.v4
+Setup version: 2026-09-26.v5
 
 Complete the setup yourself with the native MCP configuration mechanism for the current agent. Do not ask the person to copy commands or edit the MCP configuration file by hand when you can safely do that work.
 
@@ -260,7 +260,7 @@ Use the agent's native remote Streamable HTTP MCP configuration. Add only the na
 
 ## 5. Verify the connection
 
-After saving configuration, reload MCP if the client requires it. Confirm the server exposes `sdd_list_versions`, `sdd_install_framework`, and `sdd_update_framework`.
+After saving configuration, reload MCP if the client requires it. Confirm the server exposes `sdd_install_framework` and `sdd_update_framework`. On HTTP, it also exposes `sdd_get_key`.
 
 ## 6. Install framework (separate step)
 
@@ -352,18 +352,17 @@ Register with Zod input schemas. Descriptions state parameters, success shape, a
 
 | Tool | Side effects | Transport |
 | --- | --- | --- |
-| `sdd_list_versions` | None | stdio (REST API) + HTTP (sync cache) |
 | `sdd_get_key` | None (returns plaintext `key_value`) | **HTTP only**; auth required |
 | `sdd_install_framework` | **stdio:** writes client paths. **HTTP:** returns tarball URL + metadata; AI extracts locally | stdio + HTTP |
 | `sdd_update_framework` | Alias of install; idempotent on same version + commit | stdio + HTTP |
 
-Optional resources (no side effects, no key values): `sdd://framework/versions`.
+`sdd_list_versions` is **not** registered on either transport ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md), [MCP-03](../product-backlog.md#pb-78)). Version listing is server-only: `listVersions()` in `src/core/tools/list-versions.ts` and `GET /api/sdd/versions`. Do not expose the same payload as an MCP resource.
 
-### `sdd_list_versions`
+Setup confirm sentence: the agent confirms `sdd_install_framework` and `sdd_update_framework` (HTTP also has `sdd_get_key`). It does not name `sdd_list_versions`. The embedded prompt body in §2.1 matches `public/agent-setup/prompt.md`.
 
-Input: optional `client`. Output: `{ versions: [{ id, published_at? }], inventory: { skills: string[], rules: string[], agents: string[], workflows: string[], other: string[] } }`.
+### Server-only version listing
 
-Source: operator sync cache (HTTP MCP) or `GET /api/sdd/versions` (stdio binary, ADR-053). Sync job populates cache from Settings GitHub repo. Failure → structured error, never silent empty success. Never include key values.
+`listVersions()` / `GET /api/sdd/versions` return `{ versions: [{ id, published_at? }], inventory: { skills, rules, agents, workflows, other }, paths_version }`. Source: operator sync cache. Failure → structured error, never silent empty success. Never include key values. Used by tests, operators, and install resolution of latest — not by the model via MCP tools.
 
 ### `sdd_get_key`
 
@@ -831,7 +830,7 @@ Maintenance:
 - **Reactive, not scheduled.** No daily job, no auto-discovery in v1. Update on vendor changelog, new first-class client (Sprint 7), or user report of a wrong path. Bump `version` on every change.
 - **Validate the table, not the logic.** CI runs `paths.test.ts` on every PR: every entry resolves under HOME/USERPROFILE, no `..`, every client has a `default`, trailing slashes consistent. Logic tests use a fixture map.
 - **Release-time smoke** on macOS / Windows / Linux for the top 2–3 clients is the drift gate.
-- **Staleness:** `sdd_list_versions` (Sprint 5) exposes `paths_version` so a stale local install can warn.
+- **Staleness:** `GET /api/sdd/versions` / `listVersions()` expose `paths_version` so a stale local install can warn. That field is not delivered through an MCP tool ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)).
 - **Security:** expand `~` / `%USERPROFILE%` server-side only; reject absolute paths escaping the user home after expansion; never log raw caller overrides at info level.
 - **Scope guard:** the map is mechanism (where to write files), not product knowledge. Do not grow it into a per-client POI encyclopedia (`no-city-encyclopedia`).
 
@@ -1107,7 +1106,7 @@ Test plan: [`mcp-test.md`](./mcp-test.md). Follow **common-test-strategy** + [`r
 - Using AI Write tool to recreate skill trees instead of `tar` extraction
 - Expecting HTTP install to verify local filesystem state without AI passing `installed_commit` / `installed_version`
 - Security through tool-name obscurity
-- Returning key values from `sdd_list_versions` or resources
+- Returning key values from `GET /api/sdd/versions`, `listVersions()`, or resources
 - Silent empty success when GitHub is down
 - Auto-detect client incorrectly and writing the wrong product's config dir
 - Writing paths from Qwen without allow-list validation

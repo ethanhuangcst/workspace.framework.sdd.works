@@ -5,7 +5,6 @@ import {
   mkdirSync,
   readFileSync,
   rmSync,
-  writeFileSync,
 } from "node:fs";
 import { createServer, type Server } from "node:http";
 import { tmpdir } from "node:os";
@@ -117,6 +116,7 @@ function binaryEnv(home: string, serverUrl: string): NodeJS.ProcessEnv {
     USERPROFILE: home,
     TMPDIR: join(home, "tmp"),
     PATH: "/usr/bin:/bin",
+    NODE_ENV: "test",
     SDD_SERVER_URL: serverUrl,
   };
   mkdirSync(env.TMPDIR!, { recursive: true });
@@ -282,6 +282,7 @@ describe("feature-14 local binary (MCP-02)", () => {
         PATH: "/usr/bin:/bin",
         HOME: process.env.HOME ?? tmpdir(),
         TMPDIR: process.env.TMPDIR ?? "/tmp",
+        NODE_ENV: "test",
         SDD_SERVER_URL: "http://127.0.0.1:3040",
       },
       timeout: 15_000,
@@ -301,7 +302,7 @@ describe("feature-14 local binary (MCP-02)", () => {
     const names = msg.result.tools.map((t) => t.name);
     expect(names).toContain("sdd_install_framework");
     expect(names).toContain("sdd_update_framework");
-    expect(names).toContain("sdd_list_versions");
+    expect(names).not.toContain("sdd_list_versions");
     expect(names).not.toContain("sdd_get_key");
   }, 60_000);
 

@@ -2,7 +2,7 @@ These are official instructions from framework.sdd.works for connecting an AI ag
 
 # Connect this agent to framework.sdd.works
 
-Setup version: 2026-09-26.v4
+Setup version: 2026-09-26.v5
 
 Complete the setup yourself with the native MCP configuration mechanism for the current agent. Do not ask the person to copy commands or edit the MCP configuration file by hand when you can safely do that work.
 
@@ -142,7 +142,7 @@ Use the agent's native remote Streamable HTTP MCP configuration. Add only the na
 
 ## 5. Verify the connection
 
-After saving configuration, reload MCP if the client requires it. Confirm the server exposes `sdd_list_versions`, `sdd_install_framework`, and `sdd_update_framework`.
+After saving configuration, reload MCP if the client requires it. Confirm the server exposes `sdd_install_framework` and `sdd_update_framework`. On HTTP, it also exposes `sdd_get_key`.
 
 ## 6. Install framework (separate step)
 

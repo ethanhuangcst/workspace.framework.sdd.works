@@ -16,11 +16,7 @@ import {
   packageTarPath,
   unpackedDir,
 } from "@/core/sync/paths";
-import { parseToolJson, toolOk } from "@/core/tools/errors";
-import {
-  clearListVersionsCache,
-  setListVersionsForTests,
-} from "@/core/tools/list-versions";
+import { parseToolJson } from "@/core/tools/errors";
 import { encryptKeyValue } from "@/lib/keys-crypto";
 import {
   createSddMcpServer,
@@ -34,12 +30,7 @@ const FIXTURE_KEY =
   "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 
 describe("createSddMcpServer tool contracts", () => {
-  afterEach(() => {
-    clearListVersionsCache();
-    setListVersionsForTests(null);
-  });
-
-  it("should_advertise_three_tools_on_stdio", async () => {
+  it("should_advertise_two_tools_on_stdio", async () => {
     const server = createSddMcpServer({ channel: "stdio", authorized: true });
     const [clientTransport, serverTransport] =
       InMemoryTransport.createLinkedPair();
@@ -50,6 +41,7 @@ describe("createSddMcpServer tool contracts", () => {
     const names = listed.tools.map((t) => t.name).sort();
     expect(names).toEqual([...SDD_STDIO_TOOL_NAMES].sort());
     expect(names).not.toContain("sdd_get_key");
+    expect(names).not.toContain("sdd_list_versions");
     const init = client.getServerVersion();
     expect(init?.name).toBe("framework.sdd.works");
     expect(init?.icons?.length).toBeGreaterThanOrEqual(2);
@@ -78,7 +70,7 @@ describe("createSddMcpServer tool contracts", () => {
     await server.close();
   });
 
-  it("should_advertise_four_tools_on_http", async () => {
+  it("should_advertise_three_tools_on_http", async () => {
     const server = createSddMcpServer({ channel: "http", authorized: true });
     const [clientTransport, serverTransport] =
       InMemoryTransport.createLinkedPair();
@@ -88,6 +80,8 @@ describe("createSddMcpServer tool contracts", () => {
     const listed = await client.listTools();
     const names = listed.tools.map((t) => t.name).sort();
     expect(names).toEqual([...SDD_TOOL_NAMES].sort());
+    expect(names).toContain("sdd_get_key");
+    expect(names).not.toContain("sdd_list_versions");
     await client.close();
     await server.close();
   });
@@ -246,13 +240,12 @@ describe("MCP install/update contracts", () => {
   });
 });
 
-describe.skipIf(!hasDb)("MCP get_key and list_versions with DB", () => {
+describe.skipIf(!hasDb)("MCP get_key with DB", () => {
   const db = new PrismaClient();
   const keyName = `mcp_it_${Date.now()}`;
 
   beforeEach(async () => {
     process.env.KEYS_ENCRYPTION_KEY = FIXTURE_KEY;
-    clearListVersionsCache();
     await db.key.deleteMany({ where: { keyName } });
     await db.key.create({
       data: {
@@ -265,8 +258,6 @@ describe.skipIf(!hasDb)("MCP get_key and list_versions with DB", () => {
 
   afterEach(async () => {
     await db.key.deleteMany({ where: { keyName } });
-    clearListVersionsCache();
-    setListVersionsForTests(null);
     if (process.env.KEYS_ENCRYPTION_KEY === FIXTURE_KEY) {
       delete process.env.KEYS_ENCRYPTION_KEY;
     }
@@ -308,44 +299,6 @@ describe.skipIf(!hasDb)("MCP get_key and list_versions with DB", () => {
     expect(raw).not.toContain("sk-mcp-secret");
     const body = parseToolJson<{ error: { code: string } }>(result as never);
     expect(body.error.code).toBe("not_found");
-    await client.close();
-    await server.close();
-  });
-
-  it("should_list_versions_from_cache_on_http", async () => {
-    setListVersionsForTests(async () =>
-      toolOk({
-        versions: [{ id: "v1.0.0" }],
-        inventory: {
-          skills: ["tdd"],
-          rules: ["dod"],
-          agents: [],
-          workflows: [],
-          other: [],
-        },
-        paths_version: 2,
-      }),
-    );
-
-    const server = createSddMcpServer({ channel: "http", authorized: true });
-    const [clientTransport, serverTransport] =
-      InMemoryTransport.createLinkedPair();
-    const client = new Client({ name: "test", version: "0.0.0" });
-    await server.connect(serverTransport);
-    await client.connect(clientTransport);
-    const result = await client.callTool({
-      name: "sdd_list_versions",
-      arguments: {},
-    });
-    const body = parseToolJson<{
-      versions: { id: string }[];
-      inventory: { skills: string[]; rules: string[] };
-      paths_version: number;
-    }>(result as never);
-    expect(body.versions.length).toBeGreaterThan(0);
-    expect(body.inventory.skills.length).toBeGreaterThan(0);
-    expect(body.paths_version).toBeGreaterThanOrEqual(1);
-    expect(JSON.stringify(body)).not.toContain("sk-mcp-secret");
     await client.close();
     await server.close();
   });

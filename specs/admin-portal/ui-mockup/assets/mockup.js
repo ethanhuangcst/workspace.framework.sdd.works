@@ -163,9 +163,13 @@
       var sent = document.querySelector("[data-sent]");
       var lead = document.querySelector("[data-reset-lead]");
       var form = document.querySelector("[data-reset-form]");
+      var backHome = document.querySelector("[data-reset-back-home]");
+      var backLogin = document.querySelector("[data-reset-back-login]");
       if (sent) sent.hidden = false;
       if (lead) lead.hidden = true;
       if (form) form.hidden = true;
+      if (backHome) backHome.hidden = true;
+      if (backLogin) backLogin.hidden = false;
     }
     if (params.get("done") === "1") {
       var done = document.querySelector("[data-set-done]");
@@ -355,29 +359,119 @@
     var form = document.querySelector("[data-testid='secret-lookup']");
     if (!form) return;
     var input = form.querySelector("[data-testid='secret-name']");
+    var button = form.querySelector("[data-testid='secret-get']");
     var result = document.querySelector("[data-testid='secret-result']");
+    var resultText = result ? result.querySelector(".secret-result-text") : null;
+    var resultCopy = result ? result.querySelector("[data-testid='secret-result-copy']") : null;
     var error = document.querySelector("[data-testid='secret-error']");
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
+
+    function scrollResultIntoView(node) {
+      if (node && typeof node.scrollIntoView === "function") {
+        node.scrollIntoView({ block: "start", behavior: "smooth" });
+      }
+    }
+
+    function showLookup() {
       var name = (input && input.value ? input.value : "").trim();
       if (result) {
         result.hidden = true;
-        result.textContent = "";
+        if (resultText) resultText.textContent = "";
+        if (resultCopy) {
+          resultCopy.hidden = true;
+          resultCopy.removeAttribute("data-copy");
+        }
+      }
+      if (error) {
+        error.hidden = true;
+        error.removeAttribute("data-i18n");
+        error.textContent = "";
       }
       if (!name) {
         if (error) {
           error.hidden = false;
           error.setAttribute("data-i18n", "admin.guide.secret_empty");
           applyI18n();
+          scrollResultIntoView(error);
         }
         return;
       }
-      if (error) error.hidden = true;
-      if (result) {
-        result.hidden = false;
-        result.removeAttribute("data-i18n");
-        result.textContent = "sample-secret-value";
+      // Mock: exact demo name only; any other name is not found (no fuzzy match).
+      if (name === "sdd-trial-googlemaps") {
+        if (result && resultText) {
+          result.hidden = false;
+          resultText.textContent = "sample-secret-value";
+          if (resultCopy) {
+            resultCopy.hidden = false;
+            resultCopy.setAttribute("data-copy", "sample-secret-value");
+          }
+          scrollResultIntoView(result);
+        }
+        return;
       }
+      if (error) {
+        error.hidden = false;
+        error.setAttribute("data-i18n", "admin.guide.secret_missing");
+        applyI18n();
+        scrollResultIntoView(error);
+      }
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      showLookup();
+    });
+    if (button) {
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        showLookup();
+      });
+    }
+  }
+
+  function bindResetForm() {
+    var form = document.querySelector("[data-reset-form]");
+    if (!form) return;
+    var submit = form.querySelector("[data-testid='reset-submit']");
+
+    function showSent() {
+      var sent = document.querySelector("[data-sent]");
+      var sentBody = document.querySelector("[data-reset-sent]");
+      var lead = document.querySelector("[data-reset-lead]");
+      var backHome = document.querySelector("[data-reset-back-home]");
+      var backLogin = document.querySelector("[data-reset-back-login]");
+      if (sentBody) {
+        sentBody.setAttribute("data-i18n", "admin.reset.sent");
+        applyI18n();
+      }
+      if (sent) sent.hidden = false;
+      if (lead) lead.hidden = true;
+      form.hidden = true;
+      if (backHome) backHome.hidden = true;
+      if (backLogin) backLogin.hidden = false;
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      showSent();
+    });
+    if (submit) {
+      submit.addEventListener("click", function (event) {
+        event.preventDefault();
+        showSent();
+      });
+    }
+  }
+
+  function showGuideTab(name) {
+    var tabs = document.querySelectorAll(".guide-tab[data-tab]");
+    if (!tabs.length) return;
+    tabs.forEach(function (btn) {
+      var on = btn.getAttribute("data-tab") === name;
+      btn.classList.toggle("is-active", on);
+      btn.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    document.querySelectorAll(".guide-tab-panel[data-panel]").forEach(function (panel) {
+      panel.hidden = panel.getAttribute("data-panel") !== name;
     });
   }
 
@@ -386,17 +480,13 @@
     if (!tabs.length) return;
     tabs.forEach(function (tab) {
       tab.addEventListener("click", function () {
-        var name = tab.getAttribute("data-tab");
-        tabs.forEach(function (btn) {
-          var on = btn.getAttribute("data-tab") === name;
-          btn.classList.toggle("is-active", on);
-          btn.setAttribute("aria-selected", on ? "true" : "false");
-        });
-        document.querySelectorAll(".guide-tab-panel[data-panel]").forEach(function (panel) {
-          panel.hidden = panel.getAttribute("data-panel") !== name;
-        });
+        showGuideTab(tab.getAttribute("data-tab"));
       });
     });
+    var initial = new URLSearchParams(location.search).get("tab");
+    if (initial === "features" || initial === "setup") {
+      showGuideTab(initial);
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -408,6 +498,7 @@
     bindKeysSelection();
     bindSettingsForm();
     bindGuideTabs();
+    bindResetForm();
     bindSecretLookup();
     applyQueryState();
     applyI18n();

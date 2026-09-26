@@ -6,7 +6,6 @@ import {
   updateFrameworkHttp,
 } from "@/core/tools/install-http";
 import type { InstallContext } from "@/core/tools/install";
-import { listVersions } from "@/core/tools/list-versions";
 import { getMcpBrandIcons, getMcpWebsiteUrl } from "./brand";
 import { mcpToolDescription } from "./tool-descriptions";
 import type { CreateSddMcpServerOptions } from "./server-options";
@@ -18,14 +17,12 @@ export { createStdioMcpServer };
 export const SDD_TOOL_NAMES = [
   "sdd_install_framework",
   "sdd_update_framework",
-  "sdd_list_versions",
   "sdd_get_key",
 ] as const;
 
 export const SDD_STDIO_TOOL_NAMES = [
   "sdd_install_framework",
   "sdd_update_framework",
-  "sdd_list_versions",
 ] as const;
 
 /**
@@ -70,20 +67,6 @@ export function createSddMcpServer(
     websiteUrl: getMcpWebsiteUrl(),
     icons: getMcpBrandIcons(),
   });
-
-  server.registerTool(
-    "sdd_list_versions",
-    {
-      description: mcpToolDescription("sdd_list_versions"),
-      inputSchema: {
-        client: z
-          .string()
-          .optional()
-          .describe("Optional client id for future path hints"),
-      },
-    },
-    async () => listVersions({ channel }),
-  );
 
   server.registerTool(
     "sdd_get_key",

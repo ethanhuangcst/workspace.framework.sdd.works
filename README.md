@@ -18,7 +18,7 @@ MCP service + admin portal for the SDD framework.
 | `make up` / `make down` | Start / stop local Postgres |
 | `make test` | Unit + integration (Vitest) |
 | `make lint` | ESLint + typecheck |
-| `npm run test:e2e` | Playwright (fixture-only; mocks Resend via `E2E_RESET_FILE`) |
+| `npm run test:e2e` | Playwright (fixture-only; skips Resend via `E2E_SKIP_MAIL=1`) |
 
 ## Packages
 

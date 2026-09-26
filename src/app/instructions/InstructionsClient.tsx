@@ -6,8 +6,10 @@ import type { Locale } from "@/i18n/t";
 
 export function InstructionsClient({
   initialLocale,
+  tab = "setup",
 }: {
   initialLocale: Locale;
+  tab?: "setup" | "features";
 }) {
   const [locale, setLocale] = useState(initialLocale);
   const [, startTransition] = useTransition();
@@ -27,6 +29,10 @@ export function InstructionsClient({
   }, []);
 
   return (
-    <InstructionsPage locale={locale} onLocaleChange={onLocaleChange} />
+    <InstructionsPage
+      locale={locale}
+      onLocaleChange={onLocaleChange}
+      tab={tab}
+    />
   );
 }

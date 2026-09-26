@@ -47,10 +47,11 @@ Commands: `npx vitest run packages/sdd-paths src/core src/app/api/sdd src/auth s
 
 | Scenario | Assert |
 | --- | --- |
-| stdio tool list | Three tools registered (no `sdd_get_key`); HTTP lists four tools; `serverInfo.name` = `framework.sdd.works` |
+| stdio tool list | Two tools registered (`sdd_install_framework`, `sdd_update_framework`); no `sdd_get_key`; no `sdd_list_versions`; `serverInfo.name` = `framework.sdd.works` |
 | HTTP unauthorized | Missing/wrong bearer → 401 / `unauthorized` before tool body |
 | HTTP open mode (ADR-050) | Unset `MCP_AUTH_TOKEN` → tools callable on loopback |
-| `sdd_list_versions` | HTTP reads sync cache; stdio fetches REST API; no key values; `paths_version` present |
+| HTTP tool list | Three tools: install, update, `sdd_get_key`; `sdd_list_versions` absent ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)) |
+| Versions REST (not MCP tool) | `GET /api/sdd/versions` reads sync cache; no key values; `paths_version` present; 409 when sync_pending |
 | `sdd_get_key` | HTTP only; authorized plaintext for known `key_name` |
 | Package API | `GET /api/sdd/versions` 200 after sync, 409 sync_pending; `GET /api/sdd/package` tarball + headers, 404 unknown version |
 | Admin sync | `POST /api/admin/sync` triggers sync job (admin auth) |
@@ -68,7 +69,7 @@ Prerequisites: `npm run mcp:stdio` or `mcp:http` with Settings GitHub configured
 
 | Scenario | Client | Assert |
 | --- | --- | --- |
-| List versions | Cursor HTTP MCP | Returns versions/inventory |
+| Versions API (not MCP tool) | HTTP `GET /api/sdd/versions` | Returns versions/inventory after sync; out of scope as a model tool call ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)) |
 | Get key | Cursor HTTP MCP | Returns `key_value` for a seeded key |
 | Install (Sprint 6+) | Cursor stdio | Files under allow-listed Cursor roots; summary has paths + `resolution_source` |
 | Pack + ledger (Sprint 2 Feature-01) | Cursor stdio (temp home) | Pack folders only; `.sdd-installed.json` has `pack_complete: true` |
@@ -315,7 +316,7 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] S1 agent-setup stdio prompt body (feature-05) — markdown names `~/.sdd/sdd-mcp`, `command`, and HTTP fallback URL
 - [x] S1 path (`backend-01`) — public `GET /setup` serves that markdown; `GET /agent-setup` redirects to `/setup`
 - [x] S1 local (`backend-01`) — with local `PUBLIC_BASE_URL`, body rewrites pack base and MCP fallback URL
-- [x] B1 feature-14 — compiled host binary handshake (install, update, list; no get_key)
+- [x] B1 feature-14 — compiled host binary handshake (install, update; no get_key). After [MCP-03](../product-backlog.md#pb-78) feature-08: no `sdd_list_versions` on tools/list either.
 - [x] B2 feature-14 — five OS/arch build outputs
 - [x] B3 feature-14 — `GET /setup` has no release-download instruction for the binary
 - [x] B4 feature-14 — compiled host binary writes pack ledger via fixture package server (cursor + trae-cn)

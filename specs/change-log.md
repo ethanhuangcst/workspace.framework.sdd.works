@@ -9,6 +9,88 @@
 
 ## 2026-09-26
 
+### Sprint 2 closed
+
+**Why**: Every Sprint 2 SBI is Done. Go-live pack copy, GitHub Releases, and admin-portal sync were never Sprint 2 stories.
+
+**What changed**: Sprint 2 status is Done. Current sprint is Sprint 3. [MCP-01](./product-backlog.md#pb-16) stays ToDo for the go-live slice. [ADR-064](./adr/ADR-064-e2e-must-not-wipe-seed-admin.md): Playwright must not delete the operator seed admin.
+
+**Verification**: Sprint backlog SBI rows are Done. Retrospective recorded on the Sprint 2 section.
+
+### Tracking cleanup
+
+**Why**: `status.md` had copied every Sprint 2 SBI and still listed finished on-going tasks.
+
+**What changed**: Sprint status is a projection table. Finished OGTs are removed. Sprint 2’s section heading is Done. [Agent-01](./product-backlog.md#pb-6) is Done with the closed Sprint 1 spike.
+
+**Verification**: Sprint 3 remains WIP. Open SBIs are feature-01, feature-02, feature-03, and feature-07.
+
+### Fix reset copy, Get secret layout, and local admin (WA-10 / WA-11 / WA-12)
+
+**Why**: Previous reset sentence and Get secret layout were still wrong in application code. Local Postgres had no seed admin and leftover empty-hash Playwright rows forced set-password.
+
+**What changed**: Restored `admin.reset.sent` without `{email}`; reset route logs skip / Resend-accepted without printing the URL. Get secret scrolls the result; found value is `.codeblock` + copy at lookup-row width. Deleted leftover `empty-*` admins; Playwright cleans up its fixture; seed created the local seed admin and keeps an existing non-empty hash. WA-10, WA-11, and WA-12 closed.
+
+**Verification**: Unit tests for ResetPasswordPage and InstructionsPage (17 passed). Browser: reset success shows the previous sentence; Get secret not-found stays on `?tab=features`, matches lookup width, and is in view.
+
+### Reset copy, local mail cause, Get secret layout (WA-10 / WA-11) — specs only
+
+**Why**: Success copy must be the previous `admin.reset.sent` (no `{email}`). Local reset showed success with no inbox mail while production sent. Get secret result must scroll into view as a code block with copy at lookup-row width. Same class of bugs kept returning after “fixes.”
+
+**What changed**: Opened WA-10 and WA-11. Restored previous sent sentences in backlog, stories, design, mockups, app-test, and Sprint 3 feature-10 / feature-06. Documented local-vs-production mail cause in [`knowledge/agent/admin-portal-seed-and-logo.md`](./knowledge/agent/admin-portal-seed-and-logo.md). Documented regression pattern in [`knowledge/agent/web-app-fix-regression.md`](./knowledge/agent/web-app-fix-regression.md).
+
+**Verification**: Specs and mockups updated. Application code (catalog restore, logging, Get secret UI) is a later pass.
+
+### Reset success copy and Get secret (WA-08 / WA-09)
+
+**Why**: Reset success did not name the email and could disappear on a document GET. Get secret left Features and never showed a value or not-found.
+
+**What changed**: Reset control is `type="button"`; `admin.reset.sent` interpolates `{email}`. Public `POST /api/sdd/secret` exact-name lookup. Features Get secret stays on `?tab=features` and shows a code block or `admin.guide.secret_missing`. WA-08 and WA-09 closed. Web-portal-11 and Web-portal-08 Done.
+
+**Verification**: Unit ResetPasswordPage + InstructionsPage. Playwright auth + instructions (12 passed). Browser: reset names email; Get secret not-found stays on Features.
+
+**Boundary**: Exact name only; no fuzzy match.
+
+### Reset success copy and Get secret display (specs)
+
+**Why**: After reset mail sends, the success callout does not name the email and can disappear on a document GET. Get secret leaves Features and never shows a value or not-found.
+
+**What changed**: Issues WA-08 and WA-09. [Web-portal-11](./product-backlog.md#pb-79). Extended [Web-portal-08](./product-backlog.md#pb-74). Stories, design, mockups, app-test, Sprint 3 feature-10 and feature-06. Specs and mockups only.
+
+**Verification**: Specs and mockups updated. Application code is a later pass (feature-10 then feature-06).
+
+**Boundary**: Does not change live React or API routes in this change.
+
+### Reset mail skipped on interactive dev (WA-07)
+
+**Why**: Port 3040 was left with Playwright capture env. Reset returned `{ ok: true }` without Resend; the success screen kept the request lead, so the page looked unchanged and no mail arrived.
+
+**What changed**: Skip Resend only when `E2E_SKIP_MAIL=1`. Capture paths (`E2E_RESET_FILE` / `E2E_INVITE_FILE`) name the file only. Playwright `webServer` sets the skip flag and does not reuse an existing server. Reset success hides `admin.reset.lead`. Issue WA-07 in [`issues-log.md`](./issues-log.md).
+
+**Verification**: Unit `ResetPasswordPage` (lead hidden on success). Playwright `e2e/auth.spec.ts` + `e2e/accounts.spec.ts`. Browser reset on clean `npm run dev` (no skip flag).
+
+**Boundary**: Does not change Resend templates or set-password token rules.
+
+### MCP tools without sdd_list_versions (MCP-03)
+
+**Why**: The person installs latest. `sdd_install_framework` already resolves omitted `version`. MCP has no private tool, so a registered catalog tool is a wasted round trip. Pack inventory for people is the Features tab.
+
+**What changed**: [MCP-03](./product-backlog.md#pb-78) and [ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md). Sprint 3 feature-08 unregisters the tool on stdio and HTTP and updates the tool-list tests. Feature-09 updates `GET /setup` (setup version `2026-09-26.v5`) and the instructions Tools table. `listVersions()` and `GET /api/sdd/versions` stay server-internal. No MCP resource.
+
+**Verification**: `create-server.test.ts`, `local-binary.test.ts`, `InstructionsPage.test.tsx`, `sdd-api.test.ts`, `list-versions.test.ts`. Ethan confirmed both stories usable on 2026-09-26.
+
+**Boundary**: Does not delete `listVersions()`. Does not rebuild `~/.sdd/sdd-mcp`. The placed binary stays on the previous tool list until `npm run mcp:build` and `npm run mcp:place`.
+
+### Reset submit and Features tab (Web-portal-10)
+
+**Why**: Reset mail submit reloaded the form with no success or error. The Features tab on the instructions guide did not open the features panel.
+
+**What changed**: [Web-portal-10](./product-backlog.md#pb-77). Issues WA-05–WA-06. Reset stays on `/reset-password` with success callout or keyed error. Features tabs sit above the hero hit area. Mockup reset form intercepts submit.
+
+**Verification**: Stories, design, tests, mockups. Unit: `ResetPasswordPage` + `InstructionsPage`. Playwright `e2e/auth.spec.ts` + `e2e/instructions.spec.ts` (11 passed). Browser: Features selects panel; reset stays on `/reset-password` with success callout. WA-05–WA-06 closed in [`issues-log.md`](./issues-log.md).
+
+**Boundary**: Does not implement secret lookup (feature-05 / feature-06).
+
 ### Web-app UI fixes (Web-portal-09)
 
 **Why**: `/` still showed the logo-card home. Footer scrolled away. Reset success linked to home. Accounts with a password stayed on the empty-account set-password screen.

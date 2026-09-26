@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../src/auth/password";
 
 const E2E_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? "Sprint1Pass!";
+const E2E_EMAIL =
+  process.env.E2E_ADMIN_EMAIL ?? "e2e-admin@ethanhuang.com";
 
 export default async function globalSetup() {
   process.env.DATABASE_URL ??=
@@ -10,13 +12,15 @@ export default async function globalSetup() {
 
   const db = new PrismaClient();
   const passwordHash = await hashPassword(E2E_PASSWORD);
+
+  // Fixture account for Playwright. Never overwrite me@ethanhuang.com.
   await db.admin.upsert({
-    where: { email: "me@ethanhuang.com" },
+    where: { email: E2E_EMAIL },
     update: { passwordHash, status: "ACTIVE" },
     create: {
-      email: "me@ethanhuang.com",
-      username: "admin",
-      name: "Admin",
+      email: E2E_EMAIL,
+      username: "e2eadmin",
+      name: "E2E Admin",
       passwordHash,
       status: "ACTIVE",
     },

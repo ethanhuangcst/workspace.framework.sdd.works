@@ -2,11 +2,9 @@ import { test, expect } from "@playwright/test";
 import { readFile, unlink } from "node:fs/promises";
 import { PrismaClient } from "@prisma/client";
 
-const ADMIN_EMAIL = process.env.ADMIN_SEED_EMAIL ?? "me@ethanhuang.com";
-const ADMIN_PASSWORD =
-  process.env.E2E_ADMIN_PASSWORD ??
-  process.env.ADMIN_SEED_PASSWORD ??
-  "Sprint1Pass!";
+const ADMIN_EMAIL =
+  process.env.E2E_ADMIN_EMAIL ?? "e2e-admin@ethanhuang.com";
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? "Sprint1Pass!";
 
 async function loginAsSeedAdmin(page: import("@playwright/test").Page) {
   await page.goto("/login");
@@ -20,9 +18,16 @@ test.describe("admin accounts invite", () => {
   test("should_invite_accept_list_and_delete_other_admin", async ({ page }) => {
     test.setTimeout(60_000);
     const db = new PrismaClient();
+    const seedEmail = (
+      process.env.ADMIN_SEED_EMAIL ?? "me@ethanhuang.com"
+    )
+      .trim()
+      .toLowerCase();
+    // Keep the operator seed admin. A blanket delete of every non-E2E
+    // address removed me@ethanhuang.com and made reset skip Resend.
     await db.admin.deleteMany({
       where: {
-        email: { not: ADMIN_EMAIL },
+        AND: [{ email: { not: ADMIN_EMAIL } }, { email: { not: seedEmail } }],
       },
     });
     await db.inviteToken.deleteMany({});

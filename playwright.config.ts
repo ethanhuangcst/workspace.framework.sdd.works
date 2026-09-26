@@ -21,7 +21,9 @@ export default defineConfig({
   webServer: {
     command: "npm run dev",
     url: "http://localhost:3040",
-    reuseExistingServer: !process.env.CI,
+    // Always own the server so interactive `npm run dev` is never left in
+    // capture mode (E2E_SKIP_MAIL) after a local Playwright run.
+    reuseExistingServer: false,
     timeout: 120_000,
     env: {
       ...process.env,
@@ -31,6 +33,7 @@ export default defineConfig({
       SESSION_SECRET:
         process.env.SESSION_SECRET ?? "ci-session-secret-at-least-16",
       PUBLIC_BASE_URL: process.env.PUBLIC_BASE_URL ?? "http://localhost:3040",
+      E2E_SKIP_MAIL: "1",
       E2E_RESET_FILE: process.env.E2E_RESET_FILE ?? "/tmp/sdd-reset-url.txt",
       E2E_INVITE_FILE:
         process.env.E2E_INVITE_FILE ?? "/tmp/sdd-invite-url.txt",

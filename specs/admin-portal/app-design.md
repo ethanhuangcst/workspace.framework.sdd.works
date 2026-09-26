@@ -269,27 +269,28 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | Shell | Used by | Chrome |
 | --- | --- | --- |
-| `AuthShell` (`home` \| `auth`) | `/`, `/login`, reset, set-password, accept-invite | Locale top-right; logo; footer copyright |
-| `AppShell` | All `/admin/*` | Logo → `/admin/keys`; MCP instructions **new tab**; hello; locale; left nav Keys / Framework / Settings / Admins / Sign out; mobile menu toggle |
+| `AuthShell` (`home` \| `auth`) | `/`, `/login`, reset, set-password, accept-invite | Locale top-right; logo; **fixed** footer copyright (guide variant on `/`) |
+| `AppShell` | All `/admin/*` | Logo → `/admin/keys`; MCP instructions **new tab**; hello; locale; left nav Keys / Framework / Settings / Admins / Sign out; mobile menu toggle; **fixed** footer |
+
+**Footer (Web-portal-09 / WA-02):** `.site-footer` is `position: fixed; bottom: 0; left: 0; right: 0; z-index` above content. Shells add bottom padding equal to the footer height so content is not covered. Same rule in mockup CSS.
 
 ### 15.3 Page-by-page
 
-#### `/` — Home · mockup `01-home.html` · `HomePage`
+#### `/` — Instructions landing · mockup `01-home.html` · `InstructionsPage`
 
 | | |
 | --- | --- |
-| Job | Brand + path to instructions or sign-in |
-| Layout | Centered `home-card`: logo → tagline → actions |
-| Actions | MCP instructions → `/instructions` (`target=_blank`); Sign in → `/login` |
-| Keys | `admin.home.*` |
-| Test ids | `admin-home-instructions`, `admin-login` |
+| Job | Public install guide (same body as `/instructions`) |
+| Layout | Same as `/instructions` (Setup / Features, fixed guide footer with Admin portal) |
+| Forbidden | Logo-card home (`admin-home-instructions`, `admin-login`) |
+| Test ids | `instructions-guide`, `guide-tab-setup`, `guide-tab-features`, `footer-admin-portal` |
 
 #### `/login` — Sign-in · `02-login.html` · `LoginPage`
 
 | | |
 | --- | --- |
 | Job | Email/password session |
-| Layout | Logo; closed-registration status + WeChat QR on “Contact an admin”; form email + password (show/hide); Sign in; Reset password link; Back to home |
+| Layout | Logo; closed-registration status + WeChat QR on “Contact an admin”; form email + password (show/hide); Sign in; Reset password link; Back to home → `/` (instructions) |
 | Errors | `errors.login_failed` via `.error` |
 | Keys | `admin.login.*`, `admin.register.*` |
 | Test ids | `login-submit`, `login-error`, `contact-admin`, `register-disabled` |
@@ -299,14 +300,18 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | Request Resend reset mail |
-| Layout | Auth card; email; Submit; success callout hides form when `?sent=1` |
-| Keys | `admin.reset.*` |
+| Layout | Auth card; email; Submit; success callout hides form and lead. Before send: Back to home → `/`. After send: Back to login (`admin.common.back_login`) → `/login` |
+| Client submit (WA-05 / WA-08 / WA-10) | Form has no navigational `action`. Submit control cannot issue a document GET (`type="button"` or `preventDefault` before any await). Success → `admin.reset.sent` callout with the previous catalog sentence (no `{email}`), form and `admin.reset.lead` hidden. Failure → `.error` with API key or `errors.reset_mail_send_failed`, form stays. Document stays on `/reset-password` with no `?email=` query. |
+| Mail path | Known ACTIVE admin: skip Resend only when `E2E_SKIP_MAIL=1` (writes `E2E_RESET_FILE`); else Resend when configured; else keyed `errors.reset_mail_send_failed`. Capture file paths alone do not skip mail. Unknown email → `{ ok: true }` with the same success callout (no account leak). A sub-100ms `200` means Resend was not called. |
+| Keys | `admin.reset.*` (`admin.reset.sent` en: “If that email is an admin account, a reset mail is on its way. Check inbox and junk.”; zh-Hans / zh-Hant matching; no `{email}`), `admin.common.back_home`, `admin.common.back_login`, `errors.reset_mail_send_failed`, `errors.rate_limited`, `errors.csrf` |
+| Test ids | `reset-email`, `reset-submit`, `reset-back-login` (success state), `reset-error` (failure) |
 
 #### `/set-password` — Set / reset password · `04-set-password.html`
 
 | | |
 | --- | --- |
 | Job | Set password from empty account or reset token |
+| Gate (WA-04) | No reset token and `passwordHash` non-empty → redirect `/login` (or `/admin/keys` when session is valid). No token and empty hash → `admin.set_password.lead` + form. Reset token path unchanged. |
 | Layout | New + confirm password; mismatch error; done state → Sign in |
 | Modes | Empty-password session vs `?token=` reset; expired → dedicated callout |
 | Keys | `admin.set_password.*`, `errors.password_mismatch`, `errors.reset_link_expired_*` |
@@ -382,10 +387,12 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | Install framework.sdd.works to AI tools |
-| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES`; **Setup** / **Features** tabs (`guide-tabs`, labels flush to content left edge); Setup: pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)), install phrase + `sdd_install_framework`, Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: fixed Agents / Skills / Rules / Templates lists; secret name field (~32rem) + Get secret button (height 2.125rem) after templates — submit does not call a keys API in feature-10; footer Admin portal link then copyright |
-| Test ids | `instructions-guide`, `guide-agents`, `copy-setup-prompt`, `copy-mcp-config`, `secret-lookup`, `secret-name`, `secret-get` |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES`; **Setup** / **Features** tabs (`guide-tabs`, labels flush to content left edge); Setup: pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)), install phrase + `sdd_install_framework`, Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: fixed Agents / Skills / Rules / Templates lists, then the secret form (feature-04); footer Admin portal link then copyright |
+| Tabs (WA-06) | Setup and Features are links (`?tab=features` on the current path). Click updates client state and the URL, so a full load still opens Features. `.guide-tabs` is `position: relative; z-index: 10`. Inactive panel uses `hidden` with `display: none !important`. Same on `/` and `/instructions`. |
+| Secret form (feature-04 / feature-06 / WA-09 / WA-11) | On Features only, after Templates, section `#features-secret` with no heading. Wrapper `.secret-stack`: column, `width: fit-content`, `max-width: 100%`, `gap: 1.25rem` between the lookup row and the result. Form `.secret-lookup` inside the stack: placeholder input (`admin.guide.secret_hint`) + Get secret control (`admin.guide.secret_button`) as `button type="button"` (must not issue a document GET). Catalog: en `Enter the name of the secret, example: sdd-trial-googlemaps` / `Get secret`; zh-Hans `输入要获得的密钥名称，例如：sdd-trial-googlemaps` / `获取密钥`; zh-Hant `輸入要取得的密鑰名稱，例如：sdd-trial-googlemaps` / `獲取密鑰`. CSS: row gap `0.75rem`; input `flex: 0 0 32rem` (does not shrink), width/min/max `32rem`, height `2.125rem`; button content-sized, height `2.125rem`. Found result and not-found notice stretch to the stack (`width: 0; min-width: 100%`) so the right edge lines up with Get secret. Found UI: existing portal `.codeblock` with `CopyButton`, `data-testid="secret-result"`, `aria-live="polite"`. Missing / empty: `.secret-error` (`data-testid="secret-error"`) with `admin.guide.secret_missing` or `admin.guide.secret_empty`. After the result renders, scroll `secret-result` or `secret-error` into view (`block: "start"`). Below `640px`: stack and field full width, button stacks under the field. Setup panel does not include the form. **Lookup (feature-05 / feature-06):** `POST` one exact `key_name` to a public route that decrypts via the same store as `getKey`; response is only that plaintext value or keyed `admin.guide.secret_missing` (lists no other names). Viewport stays on `#features-secret` with `?tab=features`. Exact name match only (no fuzzy match). Mock: [`13-instructions.html`](./ui-mockup/13-instructions.html) (same form in [`01-home.html`](./ui-mockup/01-home.html)). |
+| Test ids | `instructions-guide`, `guide-tab-setup`, `guide-tab-features`, `panel-features`, `guide-agents`, `copy-setup-prompt`, `copy-mcp-config`, `secret-lookup`, `secret-name`, `secret-get`, `secret-result`, `secret-error` |
 | Entry | Home + header open **new tab** |
-| Keys | `admin.guide.*` |
+| Keys | `admin.guide.*` (secret form: `secret_hint`, `secret_button`, `secret_empty`, `secret_missing`) |
 
 #### Mail — `14-email-reset.html` / `15-email-invite.html`
 

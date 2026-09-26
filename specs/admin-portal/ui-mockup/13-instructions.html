@@ -361,24 +361,38 @@
           </section>
 
           <section class="guide-section" id="features-secret">
-            <form class="secret-lookup" data-testid="secret-lookup">
-              <input
-                class="input-box"
-                type="text"
-                name="secret_name"
-                autocomplete="off"
-                spellcheck="false"
-                data-i18n="admin.guide.secret_hint"
-                data-i18n-attr="placeholder"
-                placeholder="Enter the name of the secret, example: sdd-trial-googlemaps"
-                data-testid="secret-name"
-              />
-              <button class="btn" type="submit" data-i18n="admin.guide.secret_button" data-testid="secret-get">
-                Get secret
-              </button>
-            </form>
-            <p class="secret-result mono" hidden data-testid="secret-result" aria-live="polite"></p>
-            <p class="field-note secret-error" hidden data-testid="secret-error" aria-live="polite"></p>
+            <div class="secret-stack">
+              <form class="secret-lookup" data-testid="secret-lookup">
+                <input
+                  class="input-box"
+                  type="text"
+                  name="secret_name"
+                  autocomplete="off"
+                  spellcheck="false"
+                  value="sdd-trial-googlemaps"
+                  data-i18n="admin.guide.secret_hint"
+                  data-i18n-attr="placeholder"
+                  placeholder="Enter the name of the secret, example: sdd-trial-googlemaps"
+                  data-testid="secret-name"
+                />
+                <button class="btn" type="button" data-i18n="admin.guide.secret_button" data-testid="secret-get">
+                  Get secret
+                </button>
+              </form>
+              <div class="codeblock secret-result-block" data-testid="secret-result" aria-live="polite">
+                <pre class="codeblock-text mono secret-result-text">sample-secret-value</pre>
+                <button
+                  type="button"
+                  class="codeblock-copy"
+                  data-i18n="admin.keys.copy"
+                  data-copy="sample-secret-value"
+                  data-testid="secret-result-copy"
+                >
+                  Copy
+                </button>
+              </div>
+              <p class="field-note secret-error" hidden data-testid="secret-error" aria-live="polite"></p>
+            </div>
           </section>
         </div>
       </article>

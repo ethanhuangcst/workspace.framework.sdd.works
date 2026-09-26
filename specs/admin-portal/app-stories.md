@@ -14,23 +14,39 @@ Operator web app at `framework.sdd.works`. Stories and ACs for the **app**. MCP 
 
 ## `sdd-admin-home` — Public home
 
-Public landing. Labels and controls use i18n keys (`sdd-admin-i18n`).
+Public landing is the instructions guide. Labels and controls use i18n keys (`sdd-admin-i18n`). [Web-portal-09](../product-backlog.md#pb-76).
 
-### User story 1 — Home shows instructions and sign-in
+### User story 1 — `/` shows the instructions guide
 
 **As a** visitor
-**I want** a home page with an instructions link and a sign-in control
-**So that** I can learn how to connect MCP clients or sign in to operate the portal
+**I want** the site root to be the MCP instructions page
+**So that** I can connect an agent without finding a separate home card
 
-#### AC1
+#### AC1 — Web-portal-09 / WA-01
 
 ```gherkin
-Scenario: Visitor sees instructions link and sign-in
+Scenario: Public root is the instructions guide
   Given the visitor is not signed in
-  When the visitor opens the admin home page
-  Then the control with key admin.home.instructions_link is available
-  And that control opens MCP instructions in a new browsing context
-  And the control with key admin.home.login is available
+  When the visitor opens /
+  Then the guide with test id instructions-guide is shown
+  And the Setup and Features tabs are shown
+  And the logo-card controls admin-home-instructions and admin-login are not shown
+```
+
+### User story 2 — Footer stays fixed
+
+**As a** visitor or admin
+**I want** the site footer fixed to the bottom of the viewport
+**So that** copyright and Admin portal stay visible while I scroll
+
+#### AC1 — Web-portal-09 / WA-02
+
+```gherkin
+Scenario: Footer is fixed on public and admin shells
+  Given the visitor is on / or /login or a signed-in admin page
+  When the page content is taller than the viewport
+  Then the site-footer stays visible at the bottom of the viewport
+  And main content is not covered by the footer
 ```
 
 ---
@@ -188,6 +204,65 @@ Scenario: Resend cannot send
   And the password is unchanged
 ```
 
+#### AC3 — Web-portal-09 / WA-03
+
+```gherkin
+Scenario: After reset mail is sent the link is Back to login
+  Given the visitor is on /reset-password
+  When the visitor submits a valid admin email and the success callout is shown
+  Then the back link uses key admin.common.back_login
+  And that link goes to /login
+```
+
+#### AC4 — Web-portal-10 / WA-05
+
+```gherkin
+Scenario: Reset submit stays on the page with a success callout
+  Given the visitor is on /reset-password
+  And Resend is configured or the E2E capture file path is set
+  When the visitor submits a valid admin email
+  Then the document stays on /reset-password without a full reload
+  And the success callout uses key admin.reset.sent
+  And the email form is hidden
+```
+
+#### AC4b — Web-portal-11 / WA-08 / WA-10
+
+```gherkin
+Scenario: Reset success callout uses the previous sentence
+  Given the visitor is on /reset-password
+  And Resend is configured or E2E_SKIP_MAIL=1 with a capture file
+  When the visitor submits email "e2e-admin@ethanhuang.com"
+  Then the document stays on /reset-password with no email query string
+  And the success callout uses key admin.reset.sent
+  And in locale en the callout text is If that email is an admin account, a reset mail is on its way. Check inbox and junk.
+  And the callout does not interpolate the submitted address
+  And the request lead admin.reset.lead is hidden
+  And the email form is hidden
+  And the back link is Back to login
+```
+
+#### AC5 — Web-portal-10 / WA-05
+
+```gherkin
+Scenario: Failed reset request shows a keyed error and keeps the form
+  Given the visitor is on /reset-password
+  When the visitor submits and the reset request fails
+  Then a keyed error is shown (errors.reset_mail_send_failed or the API error key)
+  And the email form remains
+  And the document stays on /reset-password
+```
+
+#### AC6 — Web-portal-10 / WA-05
+
+```gherkin
+Scenario: Unknown email still shows the success callout
+  Given the visitor is on /reset-password
+  When the visitor submits an email that is not an admin account
+  Then the success callout uses key admin.reset.sent
+  And no account existence is revealed
+```
+
 ### User story 2 — Set password from reset link
 
 **As an** admin with a valid reset token
@@ -229,6 +304,28 @@ Scenario: Empty password blocks the landing
   When that admin tries to use the signed-in app
   Then the admin must set a password before the landing is available
   And the result key is errors.password_required until the password is set
+```
+
+#### AC2 — Web-portal-09 / WA-04
+
+```gherkin
+Scenario: Account with a password is not trapped on empty-account set-password
+  Given an admin account exists with a non-empty passwordHash
+  When that admin opens /set-password without a reset token
+  Then the empty-account lead admin.set_password.lead is not shown
+  And the visitor is redirected to /login or /admin/keys
+  When that admin signs in with the correct password
+  Then /admin/keys is available
+```
+
+#### AC3 — Web-portal-09 / WA-04
+
+```gherkin
+Scenario: Empty-hash account still sees the empty-account lead
+  Given an admin account exists with an empty passwordHash
+  When that admin reaches /set-password without a reset token
+  Then the lead admin.set_password.lead is shown
+  And the set-password form can be submitted
 ```
 
 ---
@@ -654,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the Features-tab secret form chrome. Feature-05 owns the server lookup. Feature-06 owns showing a value or not-found.
 
 ### User story 1 — Read instructions
 
@@ -719,15 +816,96 @@ Scenario: Features tab lists fixed catalog rows
   And each row shows a one-sentence summary from an i18n key
 ```
 
+#### AC5b — Web-portal-10 / WA-06
+
+```gherkin
+Scenario: Features tab switches the panel and is the hit target
+  Given the visitor opens / or /instructions
+  When the visitor activates guide-tab-features
+  Then guide-tab-features has aria-selected true
+  And panel-features is shown
+  And the element at the center of guide-tab-features is that control
+  When the visitor activates guide-tab-setup
+  Then panel-features is hidden
+```
+
 #### AC6 — feature-10
 
 ```gherkin
-Scenario: Secret form is visible and does not return a value
+Scenario: Secret form is visible on Features
   Given the visitor opens the Features tab
   Then the secret name field and Get secret button are shown
-  When the visitor submits a name
-  Then no stored secret value is shown
-  And the page does not call a keys API
+  And the Setup tab panel does not contain test id secret-lookup
+```
+
+#### AC7 — feature-04
+
+```gherkin
+Scenario: Secret form sits after Templates with three locale strings
+  Given the visitor opens instructions
+  When the visitor selects the Features tab
+  Then the control with test id secret-lookup is after the Templates list
+  And the input with test id secret-name has placeholder key admin.guide.secret_hint
+  And the button with test id secret-get has label key admin.guide.secret_button
+  And in locale en the placeholder is Enter the name of the secret, example: sdd-trial-googlemaps
+  And in locale en the button label is Get secret
+  And in locale zh-Hans the placeholder is 输入要获得的密钥名称，例如：sdd-trial-googlemaps
+  And in locale zh-Hans the button label is 获取密钥
+  And in locale zh-Hant the placeholder is 輸入要取得的密鑰名稱，例如：sdd-trial-googlemaps
+  And in locale zh-Hant the button label is 獲取密鑰
+  And the Setup tab panel does not contain test id secret-lookup
+```
+
+#### AC8 — feature-06 / WA-09
+
+```gherkin
+Scenario: Get secret stays on Features
+  Given the visitor is on / or /instructions with the Features tab open
+  When the visitor activates Get secret with a non-empty name
+  Then the URL keeps tab=features
+  And panel-features stays shown
+  And the viewport stays on #features-secret
+  And the document does not navigate to the Setup panel
+```
+
+#### AC9 — feature-06 / WA-09 / WA-11
+
+```gherkin
+Scenario: Known secret name shows the value in a code block with copy
+  Given a key named "sdd-trial-googlemaps" exists in the admin key store
+  And the visitor is on the Features tab
+  When the visitor enters that exact name and activates Get secret
+  Then test id secret-result is a code block that shows only that key's plaintext value
+  And secret-result includes a copy control
+  And secret-result width matches the secret-lookup row (name input plus Get secret button)
+  And secret-result is scrolled into view
+  And no other key names or values are shown
+  And secret-error is not shown
+```
+
+#### AC10 — feature-06 / WA-09 / WA-11
+
+```gherkin
+Scenario: Unknown secret name shows not found in view
+  Given no key named "add-trail-googlemaps" exists
+  And the visitor is on the Features tab
+  When the visitor enters that name and activates Get secret
+  Then secret-error uses key admin.guide.secret_missing
+  And secret-error is scrolled into view
+  And secret-error width matches the secret-lookup row
+  And secret-result is empty or hidden
+  And no other key values are shown
+```
+
+#### AC11 — feature-06 / WA-09
+
+```gherkin
+Scenario: Empty secret name does not call the API
+  Given the visitor is on the Features tab
+  When the visitor activates Get secret with an empty name
+  Then secret-error uses key admin.guide.secret_empty
+  And the page does not call the secret lookup API
+  And secret-result is empty or hidden
 ```
 
 ---

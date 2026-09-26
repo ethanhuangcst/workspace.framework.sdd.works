@@ -25,19 +25,19 @@
         <h1 data-i18n="admin.reset.title">Reset password</h1>
         <p class="lead" data-reset-lead data-i18n="admin.reset.lead">Enter the email on the admin account. A reset mail will be sent.</p>
         <div class="callout callout-success" data-sent hidden>
-          <p class="callout-body" data-i18n="admin.reset.sent">If that email is an admin account, a reset mail is on its way. Check inbox and junk.</p>
+          <p class="callout-body" data-reset-sent data-i18n="admin.reset.sent">If that email is an admin account, a reset mail is on its way. Check inbox and junk.</p>
         </div>
-        <form class="form" data-reset-form action="03-reset.html">
-          <input type="hidden" name="sent" value="1" />
+        <form class="form" data-reset-form>
           <label>
             <span data-i18n="admin.reset.email">Email</span>
-            <input type="email" name="email" autocomplete="email" required />
+            <input type="email" name="email" autocomplete="email" required data-testid="reset-email" />
           </label>
           <div class="form-actions">
-            <button class="btn" type="submit" data-i18n="admin.reset.submit">Send reset mail</button>
+            <button class="btn" type="button" data-i18n="admin.reset.submit" data-testid="reset-submit">Send reset mail</button>
           </div>
         </form>
-        <a class="back-link" href="01-home.html" data-i18n="admin.common.back_home">Back to home</a>
+        <a class="back-link" href="01-home.html" data-reset-back-home data-i18n="admin.common.back_home">Back to home</a>
+        <a class="back-link" href="02-login.html" data-reset-back-login hidden data-i18n="admin.common.back_login" data-testid="reset-back-login">Back to login</a>
       </div>
     </main>
     <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>

@@ -243,7 +243,7 @@ After stack is healthy, configure in the **admin portal** (stored in Postgres, n
 
 | Item | Where | Required for |
 | --- | --- | --- |
-| **GitHub repository URL** | Settings → save reachable repo URL | SYNK sync, Framework tree, `sdd_list_versions`, HTTP install inventory |
+| **GitHub repository URL** | Settings → save reachable repo URL | SYNK sync, Framework tree, `GET /api/sdd/versions`, HTTP install inventory |
 | **API keys** (`key_name` / `key_value`) | Keys → create | `sdd_get_key` MCP tool |
 | **Admin password rotation** | Login / profile | Replace known `ADMIN_SEED_PASSWORD` after bootstrap |
 | **Additional admins** | Accounts → invite | Team access (needs P1 mail) |
@@ -503,8 +503,8 @@ Run in order. Both surfaces must pass.
 Use a strong **`MCP_AUTH_TOKEN`** from Portainer (not chat).
 
 - [ ] **Cursor:** `.cursor/mcp.json` → `url` `https://framework.sdd.works/mcp`, header `Authorization: Bearer …` → **initialize** succeeds
-- [ ] **tools/list** includes: `sdd_list_versions`, `sdd_get_key`, `sdd_install_framework`, `sdd_update_framework`
-- [ ] **sdd_list_versions** returns `paths_version` and inventory (after sync)
+- [ ] **tools/list** includes: `sdd_get_key`, `sdd_install_framework`, `sdd_update_framework` ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). `sdd_list_versions` is absent.
+- [ ] After sync, `GET /api/sdd/versions` returns versions (not an MCP tool)
 - [ ] **sdd_install_framework** over HTTP (fallback) returns `packageUrl` + extraction instructions — **no** server-side writes to user home (ADR-054)
 - [ ] Missing / wrong Bearer → `401 unauthorized`
 

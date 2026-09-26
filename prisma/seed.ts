@@ -31,22 +31,35 @@ async function main() {
 
   const passwordHash = await hashPassword(password);
 
-  await prisma.admin.upsert({
-    where: { email },
-    update: {
-      username,
-      name: DEFAULT_NAME,
-      passwordHash,
-      status: "ACTIVE",
-    },
-    create: {
-      email,
-      username,
-      name: DEFAULT_NAME,
-      passwordHash,
-      status: "ACTIVE",
-    },
-  });
+  const existing = await prisma.admin.findUnique({ where: { email } });
+  if (existing?.passwordHash) {
+    // Keep an existing non-empty hash (WA-12 / Web-portal-09).
+    await prisma.admin.update({
+      where: { email },
+      data: {
+        username,
+        name: DEFAULT_NAME,
+        status: "ACTIVE",
+      },
+    });
+  } else {
+    await prisma.admin.upsert({
+      where: { email },
+      update: {
+        username,
+        name: DEFAULT_NAME,
+        passwordHash,
+        status: "ACTIVE",
+      },
+      create: {
+        email,
+        username,
+        name: DEFAULT_NAME,
+        passwordHash,
+        status: "ACTIVE",
+      },
+    });
+  }
 
   await prisma.setting.upsert({
     where: { id: "singleton" },

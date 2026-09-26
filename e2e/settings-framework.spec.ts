@@ -1,11 +1,9 @@
 import { test, expect } from "@playwright/test";
 import { PrismaClient } from "@prisma/client";
 
-const ADMIN_EMAIL = process.env.ADMIN_SEED_EMAIL ?? "me@ethanhuang.com";
-const ADMIN_PASSWORD =
-  process.env.E2E_ADMIN_PASSWORD ??
-  process.env.ADMIN_SEED_PASSWORD ??
-  "Sprint1Pass!";
+const ADMIN_EMAIL =
+  process.env.E2E_ADMIN_EMAIL ?? "e2e-admin@ethanhuang.com";
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? "Sprint1Pass!";
 
 async function loginAsSeedAdmin(page: import("@playwright/test").Page) {
   await page.goto("/login");

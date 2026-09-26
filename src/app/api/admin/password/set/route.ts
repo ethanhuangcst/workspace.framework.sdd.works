@@ -105,11 +105,17 @@ export async function POST(request: NextRequest) {
   }
 
   const admin = await db.admin.findUnique({ where: { id: payload.adminId } });
-  if (!admin || admin.status !== "ACTIVE" || admin.passwordHash) {
+  if (!admin || admin.status !== "ACTIVE") {
     return NextResponse.json(
-      { error: { key: "errors.password_required" } },
-      { status: 400 },
+      { error: { key: "errors.unauthorized" } },
+      { status: 401 },
     );
+  }
+  if (admin.passwordHash) {
+    return NextResponse.json({
+      ok: true,
+      redirect: "/admin/keys",
+    });
   }
 
   const updated = await db.admin.update({

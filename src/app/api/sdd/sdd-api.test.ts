@@ -95,6 +95,11 @@ describe("SDD package API", () => {
       expect(body).toContain("SDD_SERVER_URL");
       expect(body).toContain("https://framework.sdd.works/mcp");
       expect(body).toContain("sdd_install_framework");
+      expect(body).toContain("2026-09-26.v5");
+      expect(body).toContain(
+        "Confirm the server exposes `sdd_install_framework` and `sdd_update_framework`. On HTTP, it also exposes `sdd_get_key`.",
+      );
+      expect(body).not.toContain("sdd_list_versions");
       expect(body).toContain("Do not ask the person to copy commands or edit the MCP configuration file by hand");
       expect(body).toContain("Do not ask the person to edit the MCP file by hand");
       expect(body).toContain("Do not download an executable");

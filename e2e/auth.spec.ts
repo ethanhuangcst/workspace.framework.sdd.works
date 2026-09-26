@@ -3,17 +3,30 @@ import { readFile } from "node:fs/promises";
 import { PrismaClient } from "@prisma/client";
 import { hashToken } from "../src/auth/token";
 
-const ADMIN_EMAIL = process.env.ADMIN_SEED_EMAIL ?? "me@ethanhuang.com";
-const ADMIN_PASSWORD =
-  process.env.E2E_ADMIN_PASSWORD ??
-  process.env.ADMIN_SEED_PASSWORD ??
-  "Sprint1Pass!";
+const ADMIN_EMAIL =
+  process.env.E2E_ADMIN_EMAIL ?? "e2e-admin@ethanhuang.com";
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? "Sprint1Pass!";
 
 test.describe("public home", () => {
-  test("should_show_instructions_and_login", async ({ page }) => {
+  test("should_show_instructions_guide_on_root", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByTestId("admin-home-instructions")).toBeVisible();
-    await expect(page.getByTestId("admin-login")).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    await expect(page.getByTestId("instructions-guide")).toBeVisible();
+    await expect(page.getByTestId("guide-tab-setup")).toBeVisible();
+    await expect(page.getByTestId("admin-home-instructions")).toHaveCount(0);
+    await expect(page.getByTestId("admin-login")).toHaveCount(0);
+
+    const footer = page.locator(".site-footer");
+    await expect(footer).toBeVisible();
+    const before = await footer.boundingBox();
+    expect(before).toBeTruthy();
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const after = await footer.boundingBox();
+    expect(after).toBeTruthy();
+    const viewport = page.viewportSize();
+    expect(viewport).toBeTruthy();
+    expect(after!.y + after!.height).toBeLessThanOrEqual(viewport!.height + 1);
+    expect(Math.abs(after!.y - before!.y)).toBeLessThan(2);
   });
 });
 
@@ -21,26 +34,30 @@ test.describe("admin login", () => {
   test("should_send_empty_password_admin_to_set_password", async ({ page }) => {
     const unique = `empty-${Date.now()}@ethanhuang.com`;
     const db = new PrismaClient();
-    await db.admin.create({
-      data: {
-        email: unique,
-        username: `empty${Date.now()}`,
-        name: "Empty Password",
-        passwordHash: "",
-        status: "ACTIVE",
-      },
-    });
-    await db.$disconnect();
+    try {
+      await db.admin.create({
+        data: {
+          email: unique,
+          username: `empty${Date.now()}`,
+          name: "Empty Password",
+          passwordHash: "",
+          status: "ACTIVE",
+        },
+      });
 
-    await page.goto("/login");
-    await page.locator('input[name="email"]').fill(unique);
-    await page.locator("form").evaluate((form) => {
-      (form as HTMLFormElement).noValidate = true;
-    });
-    await page.getByTestId("login-password").fill("");
-    await page.getByTestId("login-submit").click();
-    await page.waitForURL("**/set-password**");
-    await expect(page.getByTestId("set-password-submit")).toBeVisible();
+      await page.goto("/login");
+      await page.locator('input[name="email"]').fill(unique);
+      await page.locator("form").evaluate((form) => {
+        (form as HTMLFormElement).noValidate = true;
+      });
+      await page.getByTestId("login-password").fill("");
+      await page.getByTestId("login-submit").click();
+      await page.waitForURL("**/set-password**");
+      await expect(page.getByTestId("set-password-submit")).toBeVisible();
+    } finally {
+      await db.admin.deleteMany({ where: { email: unique } });
+      await db.$disconnect();
+    }
   });
 
   test("should_reject_wrong_password", async ({ page }) => {
@@ -60,19 +77,45 @@ test.describe("admin login", () => {
     await expect(page.getByTestId("issue-key")).toBeVisible();
   });
 
+  test("should_redirect_hashed_admin_away_from_empty_set_password", async ({
+    page,
+  }) => {
+    await page.goto("/set-password?reason=password_required");
+    await page.waitForURL("**/login");
+    await expect(page.getByTestId("login-submit")).toBeVisible();
+  });
 });
 
 test.describe("password reset", () => {
-  test("should_set_password_from_reset_mail_capture", async ({ page }) => {
+  test("should_show_back_to_login_after_reset_mail_sent", async ({ page }) => {
+    await page.goto("/reset-password");
+    const urlBefore = page.url();
+    await page.getByTestId("reset-email").fill(ADMIN_EMAIL);
+    await page.getByTestId("reset-submit").click();
+    await expect(page.locator(".callout-success")).toBeVisible();
+    expect(page.url()).toMatch(/\/reset-password\/?$/);
+    expect(new URL(page.url()).pathname).toBe(new URL(urlBefore).pathname);
+    await expect(page.getByTestId("reset-submit")).toHaveCount(0);
+    const back = page.getByTestId("reset-back-login");
+    await expect(back).toBeVisible();
+    await expect(back).toHaveAttribute("href", "/login");
+    await back.click();
+    await page.waitForURL("**/login");
+  });
+
+  test("should_set_password_from_reset_mail_capture", async ({ page, baseURL }) => {
     const capture = process.env.E2E_RESET_FILE ?? "/tmp/sdd-reset-url.txt";
     await page.goto("/reset-password");
     await page.getByTestId("reset-email").fill(ADMIN_EMAIL);
     await page.getByTestId("reset-submit").click();
     await expect(page.locator(".callout-success")).toBeVisible();
 
-    const url = (await readFile(capture, "utf8")).trim();
-    expect(url).toContain("/set-password?token=");
-    await page.goto(url);
+    const captured = (await readFile(capture, "utf8")).trim();
+    expect(captured).toContain("/set-password?token=");
+    // Prefer Playwright origin so session cookies stay on the same host
+    // (capture may use 127.0.0.1 while tests use localhost).
+    const path = new URL(captured).pathname + new URL(captured).search;
+    await page.goto(new URL(path, baseURL).toString());
     await page.locator('input[name="password"]').fill("Sprint1Pass!");
     await page.getByTestId("set-password-confirm").fill("Sprint1Pass!");
     await page.getByTestId("set-password-submit").click();
