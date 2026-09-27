@@ -52,7 +52,7 @@ const TOOLS = [
   },
 ] as const;
 
-type GuideTab = "setup" | "features";
+type GuideTab = "setup" | "features" | "scrum-in-sdd";
 
 function AgentToolIcons() {
   return (
@@ -100,6 +100,7 @@ export function InstructionsPage({
   onLocaleChange,
   tab: tabFromServer = "setup",
   featuresHtml = "",
+  scrumHtml = "",
 }: {
   locale: Locale;
   onLocaleChange: (locale: Locale) => void;
@@ -107,6 +108,8 @@ export function InstructionsPage({
   tab?: GuideTab;
   /** Server-rendered catalog HTML from the package markdown files. */
   featuresHtml?: string;
+  /** Server-rendered Scrum in SDD HTML. */
+  scrumHtml?: string;
 }) {
   const pathname = usePathname() || "/";
   const [tab, setTab] = useState<GuideTab>(tabFromServer);
@@ -232,6 +235,22 @@ export function InstructionsPage({
             onClick={() => setTab("features")}
           >
             {t(locale, "admin.guide.tab_features")}
+          </Link>
+          <Link
+            href={`${pathname}?tab=scrum-in-sdd`}
+            scroll={false}
+            className={
+              tab === "scrum-in-sdd" ? "guide-tab is-active" : "guide-tab"
+            }
+            role="tab"
+            id="tab-scrum"
+            aria-selected={tab === "scrum-in-sdd"}
+            aria-controls="panel-scrum"
+            data-tab="scrum-in-sdd"
+            data-testid="guide-tab-scrum"
+            onClick={() => setTab("scrum-in-sdd")}
+          >
+            {t(locale, "admin.guide.tab_scrum")}
           </Link>
         </div>
 
@@ -425,6 +444,23 @@ export function InstructionsPage({
             id="features-body"
             data-testid="features-body"
             dangerouslySetInnerHTML={{ __html: featuresHtml }}
+          />
+        </div>
+
+        <div
+          className="guide-tab-panel"
+          role="tabpanel"
+          id="panel-scrum"
+          aria-labelledby="tab-scrum"
+          data-panel="scrum-in-sdd"
+          hidden={tab !== "scrum-in-sdd"}
+          data-testid="panel-scrum"
+        >
+          <article
+            className="guide-section scrum-body"
+            id="scrum-body"
+            data-testid="scrum-body"
+            dangerouslySetInnerHTML={{ __html: scrumHtml }}
           />
         </div>
       </article>

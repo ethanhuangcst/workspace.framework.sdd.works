@@ -16,7 +16,7 @@ v.0.1.0
 
 - sdd-atdd — Acceptance Test Driven Development: User Story Mapping with User Stories and Acceptance Criteria.
 - sdd-tdd — Test Driven Development, the Extreme Programming practice.
-- sdd-new-project — Start a project in the agent tools under SDD-Scrum, including settings such as the specs folder path.
+- sdd-kickoff-project — Start a project in the agent tools under SDD-Scrum, including settings such as the specs folder path.
 - sdd-update-project — Update project settings in the agent tools.
 - sdd-refine-pb — Refine the Product Backlog: elaborate the initial requirement, create PBIs, and add User Stories and Acceptance Criteria.
 - sdd-plan-sprint — Plan a sprint: assign PBIs across sprints, check coverage and traceability, and break PBIs into granular SBIs.

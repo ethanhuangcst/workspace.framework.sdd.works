@@ -4,14 +4,18 @@ import { useCallback, useTransition } from "react";
 import { InstructionsPage } from "@/components/features/InstructionsPage";
 import type { Locale } from "@/i18n/t";
 
+type GuideTab = "setup" | "features" | "scrum-in-sdd";
+
 export function InstructionsClient({
   initialLocale,
   tab = "setup",
   featuresHtml,
+  scrumHtml,
 }: {
   initialLocale: Locale;
-  tab?: "setup" | "features";
+  tab?: GuideTab;
   featuresHtml: string;
+  scrumHtml: string;
 }) {
   const [, startTransition] = useTransition();
 
@@ -33,6 +37,7 @@ export function InstructionsClient({
       onLocaleChange={onLocaleChange}
       tab={tab}
       featuresHtml={featuresHtml}
+      scrumHtml={scrumHtml}
     />
   );
 }

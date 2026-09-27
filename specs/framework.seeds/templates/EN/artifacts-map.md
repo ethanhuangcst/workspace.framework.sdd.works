@@ -35,6 +35,7 @@
 
 - name: Scrum-in-SDD guide
 - local: specs/scrum-in-sdd.md
+- purpose: Official definition of how Scrum is adopted in Spec-Driven Development, with Agentic Programming under Harness Engineering principles. The Scrum Guide defines Scrum. This document does not replace it. Part I summarizes the 2020 Scrum Guide. Part II names Agentic Programming, Harness Engineering, and Spec-Driven Development. Part III states what classic Scrum does not cover. Part IV is the definition: what stays, what is added, and what changes.
 
 ## Practices
 

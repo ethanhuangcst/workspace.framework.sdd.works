@@ -38,7 +38,7 @@ function formatListItemText(text: string): string {
   return `<span class="feature-name">${escapeHtml(name)}</span><span class="feature-desc">${escapeHtml(desc)}</span>`;
 }
 
-function createRenderer(): Renderer {
+function createRenderer(splitEmDash: boolean): Renderer {
   const renderer = new Renderer();
   renderer.html = () => "";
   renderer.link = ({ href, text }: Tokens.Link) => {
@@ -47,21 +47,33 @@ function createRenderer(): Renderer {
     }
     return `<a href="${escapeHtml(href)}">${escapeHtml(text)}</a>`;
   };
-  renderer.listitem = (item: Tokens.ListItem) => {
-    const raw = item.text?.trim() ?? "";
-    const body = formatListItemText(raw);
+  renderer.listitem = function (item: Tokens.ListItem) {
+    if (splitEmDash) {
+      const raw = item.text?.trim() ?? "";
+      return `<li>${formatListItemText(raw)}</li>\n`;
+    }
+    const body = this.parser.parseInline(item.tokens);
     return `<li>${body}</li>\n`;
   };
   return renderer;
 }
 
-export function renderFeaturesMarkdown(markdown: string): string {
+function renderMarkdown(markdown: string, splitEmDash: boolean): string {
   const html = marked.parse(markdown, {
     async: false,
-    renderer: createRenderer(),
+    renderer: createRenderer(splitEmDash),
     gfm: true,
   }) as string;
   return html.replace(/<\/?script\b[^>]*>/gi, "");
+}
+
+export function renderFeaturesMarkdown(markdown: string): string {
+  return renderMarkdown(markdown, true);
+}
+
+/** Portal markdown without the Features em-dash name/description split. */
+export function renderPortalMarkdown(markdown: string): string {
+  return renderMarkdown(markdown, false);
 }
 
 /**
@@ -103,14 +115,16 @@ function resultFromDir(
 }
 
 /**
- * Prefer the latest sync unpack; fall back to package files under src/content/features.
+ * Prefer the latest sync unpack at content/features; fall back to src/content/features.
  * Locale fallback stays inside the chosen source. A failed sync that leaves the previous
- * unpack in place still resolves as source "cache".
+ * unpack in place still resolves as source "cache". Unpack-root features.*.md is ignored
+ * ([ADR-071](../../specs/adr/ADR-071-portal-content-paths.md)).
  */
 export function readFeaturesCatalog(locale: Locale): FeaturesCatalogResult {
   const resolved = resolveCachedVersion();
   if (!("code" in resolved)) {
-    const fromCache = resultFromDir(resolved.unpackedPath, locale, "cache");
+    const cacheDir = join(resolved.unpackedPath, "content", "features");
+    const fromCache = resultFromDir(cacheDir, locale, "cache");
     if (fromCache) return fromCache;
   }
 

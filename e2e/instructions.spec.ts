@@ -83,6 +83,36 @@ test.describe("MCP instructions", () => {
     await expect(page.getByTestId("panel-features")).toBeHidden();
   });
 
+  test("should_open_scrum_in_sdd_tab_after_features", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    const featuresTab = page.getByTestId("guide-tab-features");
+    const scrumTab = page.getByTestId("guide-tab-scrum");
+    await expect(scrumTab).toBeVisible();
+    await expect(scrumTab).toHaveText("Scrum in SDD");
+    await expect(page.getByTestId("panel-scrum")).toBeHidden();
+
+    const featuresBox = await featuresTab.boundingBox();
+    const scrumBox = await scrumTab.boundingBox();
+    expect(featuresBox).toBeTruthy();
+    expect(scrumBox).toBeTruthy();
+    expect(scrumBox!.x).toBeGreaterThan(featuresBox!.x);
+
+    await scrumTab.click();
+    await expect(page).toHaveURL(/tab=scrum-in-sdd/);
+    await expect(scrumTab).toHaveAttribute("aria-selected", "true");
+    await expect(page.getByTestId("panel-scrum")).toBeVisible();
+    await expect(page.getByTestId("scrum-body")).toContainText(/Scrum in SDD/i);
+    await expect(page.getByTestId("secret-lookup")).toBeHidden();
+    await expect(
+      page.getByTestId("panel-scrum").locator("[data-testid='secret-lookup']"),
+    ).toHaveCount(0);
+    await expect(
+      page.getByTestId("scrum-body").locator(".feature-name"),
+    ).toHaveCount(0);
+  });
+
   test("should_show_secret_form_on_setup_with_locale_strings", async ({
     page,
   }) => {

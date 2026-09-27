@@ -70,17 +70,61 @@ On start, after the install ledger passes, Ethan reads `{workspace}/artifacts-ma
 | Missing | New project. The next job is start a new project. Do not search template folders for the other files. |
 | Present | On-going project. Read `artifacts_root`, then the Process and Tracking local paths named in the map. |
 
-Do not put a new-project or on-going flag in the file. The missing file is that signal. While start-a-new-project is still copying files, the header may say `initialized: no`. Remove that line when the copy finishes.
+Do not put a new-project or on-going flag in the file. The missing file is that signal.
+
+### Kickoff
+
+`sdd-kickoff-project` runs when the map is missing. It does not start by reading a map that is not there.
+
+1. Ask for the product name, `artifacts_root`, locale, and module folders. A module uses the folder name as its stem unless the user sets a shorter stem.
+2. Write `{workspace}/artifacts-map.md` from those answers. While the copy is still running, the header may say `initialized: no`. Remove that line when the copy finishes.
+3. Copy a seed only where the target file is missing. Do not overwrite a file that already has content. Do not copy `scrum-in-sdd.md` or `sdd-scrum-practices.md` into the project.
+
+### Framework files
+
+`scrum-in-sdd.md` and `sdd-scrum-practices.md` stay on the client root at `{client_root}/templates/framework.sdd.works/{locale}/`. Ethan reads them from that folder. They are not project files under `artifacts_root`.
+
+The rule `artifacts-map.mdc` requires the same change to update `{workspace}/artifacts-map.md` when a project artifact is created, renamed, or deleted. [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `sdd-audit-artifacts` stays the skill that lists gaps and waits for an instruction.
+
+These artifact-index decisions stay in this file, in [ADR-070](../adr/ADR-070-change-log-and-issues-log.md), and in [ADR-072](../adr/ADR-072-rule-artifacts-map.md). They are not restated in one combined ADR.
 
 ### Rows
 
-One block per artifact that exists. Each block has a name and a local path relative to the workspace. The map's own local path is `{workspace}/artifacts-map.md`.
+One block per artifact that exists. Each block has a name and a local path relative to `artifacts_root`. The line does not repeat `specs/` or `docs/`. `product-backlog.md` means `{workspace}/{artifacts_root}/product-backlog.md`. Switching the root changes the header only. The map file itself stays at `{workspace}/artifacts-map.md`.
 
 Purpose stays in the guide. A row may carry one line of purpose when that line prevents a wrong copy.
 
 A seed path is pack-relative, for example `templates/EN/product-backlog.md`. Resolve `{client_root}` at install time. Do not write a machine path or an agent-tool root into the project file. When the file follows `templates/{locale}/<name>`, omit the seed path. List it only when the file does not follow that convention.
 
 `constants.md` has no row. It stays on the client root. `adr/` and `knowledge/` may appear in the tree. Ethan does not read them on start. Optional surfaces appear only after they exist. Do not leave empty rows.
+
+### Module engineering files
+
+A module is a folder under `artifacts_root`. Its engineering files use a stem so each basename is unique when the user types `@`. The same filename in two folders, such as `design.md` under both `web-app/` and `mcp/`, shows up as several identical names in that menu. The stem makes `app-design.md` and `mcp-design.md` distinct before the folder is visible.
+
+- Names: `{stem}-design.md`, `{stem}-stories.md`, `{stem}-test.md`.
+- The default stem is the folder name.
+- A shorter stem is set once on that module. The map stores `stem` and the three local paths. A later read uses those paths.
+- Two modules cannot use the same stem.
+
+```
+- product name: Pokymon Card Collection
+- artifacts_root: specs
+- locale: EN
+
+## web-app
+- folder: web-app
+- stem: app
+- design: web-app/app-design.md
+```
+
+`web-app/app-design.md` means `{workspace}/specs/web-app/app-design.md`. The same module also has `web-app/app-stories.md` and `web-app/app-test.md`.
+
+### Process files
+
+Five files sit directly under `artifacts_root`: `product-backlog.md`, `sprint-backlog.md`, `status.md`, `change-log.md`, and `issues-log.md`.
+
+`change-log.md` records a conclusion: what changed, why, and how it was verified. `issues-log.md` records a defect from the time it is opened until it is closed. Status on an issues-log row is `Open` or `Closed`. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md). The OGT table in `status.md` is the list for the sprint item in progress. An open defect is not an OGT row.
 
 An artifact seed does not start with a status (`initialized`, `draft`, `confirmed`, `updated`) or a last-update line (timestamp and editor). Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the timestamp and the author. The change log holds conclusion-level changes. The only init signal is `initialized: no` on this map's header while start-a-new-project is still copying files.
 

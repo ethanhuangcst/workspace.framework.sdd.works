@@ -46,7 +46,7 @@ Match the user’s request to a skill key in the Skills table of `constants.md`.
 | Retrospective | `skill_retrospective` |
 | Close / start sprint | `skill_close_sprint` |
 
-There is no `kickoff-project` skill. An empty workflows list is not a failure.
+Start a new project uses only `sdd-kickoff-project` (`skill_start_project`). Do not add a second skill for that job. An empty workflows list is not a failure.
 
 If a later job needs a skill folder, a rule file, or a seed template and that file cannot be read, set only `pack_complete` to `false` in `{client_root}/.sdd-installed.json`. Do not change `package_version` or `package_commit`. Do not set `pack_complete` back to `true`. Send the same instructions URL and stop. Do not look for the other skills, rules, or seeds on start.
 

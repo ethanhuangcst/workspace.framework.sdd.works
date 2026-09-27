@@ -7,6 +7,80 @@
 
 ---
 
+## 2026-09-27
+
+### No combined ADR for the artifact index
+
+**Why**: The artifact-index decisions are already in `framework-design.md`, ADR-070, and ADR-072. One more ADR would repeat them.
+
+**What changed**: [`framework-design.md`](./framework.seeds/framework-design.md) states that those decisions are not restated in a combined ADR.
+
+**Verification**: That sentence is in the Framework files section.
+
+### Rule artifacts-map
+
+**Why**: `sdd-audit-artifacts` runs only when asked. An ordinary turn can add a project file and leave the project map unchanged.
+
+**What changed**: [ADR-072](./adr/ADR-072-rule-artifacts-map.md). The rule file is `artifacts-map.mdc`, with no `sdd-` prefix. The EN guide lists it. [Rule-04](./product-backlog.md#pb-85) is Sprint 3 feature-22, which still has to write `specs/framework.seeds/rules/artifacts-map.mdc` and update the remaining spec lists.
+
+**Verification**: Both Rules lists in `templates/EN/scrum-in-sdd.md` name `artifacts-map.mdc`. Sprint 3 feature-22 is ToDo.
+
+### Portal markdown paths move under content/
+
+**Why**: Features files at the pack root sit next to the installable pack. Scrum in SDD needs the same local-read path without joining that root.
+
+**What changed**: [ADR-071](./adr/ADR-071-portal-content-paths.md). Sync still stores the whole pack locally. Features reads `<unpacked>/content/features/`. Scrum in SDD reads `<unpacked>/content/scrum-in-sdd/` with fallback `src/content/scrum-in-sdd/`. Third tab on `/` and `/instructions` (`?tab=scrum-in-sdd`). Label stays `Scrum in SDD` in all locales.
+
+**Verification**: Unit tests for both readers and the tab. Install omit for both folders. Playwright instructions 5/5. Browser check on `localhost:3040`. Ethan confirmed the `.scrum-body` heading scale on 2026-09-27.
+
+### Guide and practices stay on the client root
+
+**Why**: The guide and the practices are framework text. Copying them into every project makes a second copy that drifts from the pack.
+
+**What changed**: [`framework-design.md`](./framework.seeds/framework-design.md) keeps `scrum-in-sdd.md` and `sdd-scrum-practices.md` at `{client_root}/templates/framework.sdd.works/{locale}/`. Kickoff does not copy them into the project.
+
+**Verification**: The Framework files section and kickoff step 3 state this.
+
+### Change log and issues log are both process files
+
+**Why**: A finished change and an open defect are different records. One file cannot hold both without mixing them.
+
+**What changed**: [ADR-070](./adr/ADR-070-change-log-and-issues-log.md). Process files under `artifacts_root` are the product backlog, the sprint backlog, status, the change log, and the issues log. [Spec-seeds-08](./product-backlog.md#pb-39) moves to Sprint 3. [Spec-seeds-13](./product-backlog.md#pb-84) is the issues-log seed. Sprint 3 feature-21 writes both EN starters. Sprint 5 no longer schedules the change-log seed.
+
+**Verification**: The ADR, the Process files section in `framework-design.md`, the product-backlog rows, and Sprint 3 feature-21 agree. Sprint 5 has no change-log seed row.
+
+### Kickoff writes the map, then copies missing seeds
+
+**Why**: A new project has no `artifacts-map.md`. Kickoff cannot start by reading that file.
+
+**What changed**: [`framework-design.md`](./framework.seeds/framework-design.md) states the `sdd-kickoff-project` order: ask for the product name, `artifacts_root`, locale, and module folders; write the map; copy a seed only where the target file is missing. A file that already has content is left as it is.
+
+**Verification**: The Kickoff section states this order.
+
+### Module engineering files use a stem
+
+**Why**: Identical basenames such as `design.md` collide in the `@` menu when a project has more than one module. The folder is not visible in that menu until the user picks a row.
+
+**What changed**: [`framework-design.md`](./framework.seeds/framework-design.md) names module files `{stem}-design.md`, `{stem}-stories.md`, and `{stem}-test.md`. The default stem is the folder name. A shorter stem is stored once on that module, with the three local paths. Stems are unique across modules. Paths in the map are relative to `artifacts_root`. The worked line is `web-app/app-design.md` with `stem: app`.
+
+**Verification**: The Module engineering files section states the stem rule, the `@` reason, and the path example.
+
+### Sprint 3 feature-20: start-project skill is sdd-kickoff-project
+
+**Why**: The designed folder `sdd-new-project` did not match how the job kicks off an SDD project, and Ethan’s “no kickoff-project skill” line would conflict once that folder name is used.
+
+**What changed**: [Skill-03](./product-backlog.md#pb-23) is `sdd-kickoff-project`. Constants key stays `skill_start_project`. Practices job 2 stays Start a new project. [ADR-069](./adr/ADR-069-skill-kickoff-project.md). Living guide lists, Features catalog, mocks, and locale keys updated. Ethan and agent-design say job 2 uses only that folder. No `SKILL.md` in this row; feature-01 still writes it.
+
+**Verification**: A search of living specs and Features markdown finds no `sdd-new-project`. `samectx-notes/` left as history.
+
+### Sprint 3 feature-16 design: Scrum in SDD tab
+
+**Why**: Readers need the guide next to Features without hard-coding the body.
+
+**What changed**: [Web-portal-12](#pb-81) requirement names the third tab, cache-first files, and `GET /api/sdd/scrum-in-sdd`. Feature-16 Notes list six tasks. Design pass builds HanT plus three `src/content/scrum-in-sdd/` files, AC18, and the mockup spike. Live page stays two tabs until Ethan confirms.
+
+**Verification**: Specs and mockup only in this entry.
+
 ## 2026-09-26
 
 ### Guide filename is scrum-in-sdd.md

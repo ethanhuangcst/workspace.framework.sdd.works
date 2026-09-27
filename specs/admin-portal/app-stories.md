@@ -751,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is the placement to build.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. Feature-16 ([Web-portal-12](../product-backlog.md#pb-81)) adds the Scrum in SDD tab. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is Get secret on Setup. AC18 is the guide tab.
 
 ### User story 1 — Read instructions
 
@@ -812,7 +812,7 @@ Scenario: Features tab lists fixed catalog rows
   Given the visitor opens instructions
   When the visitor selects the Features tab
   Then Agents lists ethan
-  And Skills lists sdd-atdd, sdd-tdd, sdd-new-project, sdd-update-project, sdd-refine-pb, sdd-plan-sprint, sdd-tracking, sdd-retrospective, sdd-close-sprint, sdd-audit-artifacts, sdd-update-specs, sdd-design, and sdd-implement
+  And Skills lists sdd-atdd, sdd-tdd, sdd-kickoff-project, sdd-update-project, sdd-refine-pb, sdd-plan-sprint, sdd-tracking, sdd-retrospective, sdd-close-sprint, sdd-audit-artifacts, sdd-update-specs, sdd-design, and sdd-implement
   And Rules lists dod.mdc, incremental-delivery.mdc, and realtime-status.mdc
   And Templates lists product-backlog.md, sprint-backlog.md, status.md, change-log.md, artifacts-map.md, architecture.md, design.md, test.md, and deployment.md
   And each row shows a one-sentence summary from an i18n key
@@ -914,7 +914,7 @@ Scenario: Empty secret name does not call the API
 
 ```gherkin
 Scenario: Features body comes from the synced file for the active locale
-  Given the latest sync cache contains features.en.md and features.zh-Hans.md
+  Given the latest sync cache contains content/features/features.en.md and content/features/features.zh-Hans.md
   And features.en.md contains the heading "Version info"
   And features.zh-Hans.md contains the heading "版本信息"
   When the visitor opens / or /instructions in locale en and selects the Features tab
@@ -929,8 +929,8 @@ Scenario: Features body comes from the synced file for the active locale
 
 ```gherkin
 Scenario: A missing Chinese file shows the English file
-  Given the latest sync cache contains features.en.md
-  And the cache does not contain features.zh-Hant.md
+  Given the latest sync cache contains content/features/features.en.md
+  And the cache does not contain content/features/features.zh-Hant.md
   When the visitor opens the Features tab in locale zh-Hant
   Then features-body shows the English file from the sync cache
 ```
@@ -982,6 +982,40 @@ Scenario: Get secret sits at the bottom of Setup
   Then the URL does not set tab=features
   And the Setup panel stays shown
   And the viewport stays on #setup-secret
+```
+
+#### AC18 — feature-16 / Web-portal-12
+
+```gherkin
+Scenario: Scrum in SDD tab reads the guide markdown
+  Given the visitor opens / or /instructions
+  Then the tab order is Setup, Features, Scrum in SDD
+  And the Scrum in SDD label is admin.guide.tab_scrum with string Scrum in SDD in en, zh-Hans, and zh-Hant
+  When the visitor selects the Scrum in SDD tab
+  Then the URL sets tab=scrum-in-sdd
+  And panel-scrum shows the rendered body of scrum-in-sdd for the active locale
+  And the Features em-dash name/description split is not applied
+  And secret-lookup is not in panel-scrum
+  And Setup and Features still switch
+
+Scenario: Guide locale falls back inside one source
+  Given the chosen source has scrum-in-sdd.en.md and no scrum-in-sdd.zh-Hant.md
+  When the visitor opens the Scrum in SDD tab in locale zh-Hant
+  Then panel-scrum shows the English guide
+  And sourceLocale is en
+
+Scenario: Guide prefers the sync unpack
+  Given the latest unpack has scrum-in-sdd.en.md
+  When the visitor opens the Scrum in SDD tab in locale en
+  Then the body is from the unpack with source cache
+  When the unpack has no English guide
+  Then the body is from src/content/scrum-in-sdd with source package
+
+Scenario: Install omits the portal guide files
+  Given a pack contains content/scrum-in-sdd/scrum-in-sdd.en.md, scrum-in-sdd.zh-Hans.md, and scrum-in-sdd.zh-Hant.md
+  When install runs
+  Then those three files are not on {client_root}
+  And they are not listed in .sdd-installed.json
 ```
 
 ---

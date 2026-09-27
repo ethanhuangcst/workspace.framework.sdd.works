@@ -4,7 +4,7 @@ import {
   writeFileSync,
   rmSync,
 } from "node:fs";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it } from "vitest";
 import {
@@ -35,7 +35,9 @@ function seedCache(files: Record<string, string>): { dir: string; sha: string } 
   mkdirSync(unpacked, { recursive: true });
   writeFileSync(packageTarPath(sha), "fake-tarball");
   for (const [name, body] of Object.entries(files)) {
-    writeFileSync(join(unpacked, name), body);
+    const path = join(unpacked, name);
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, body);
   }
   writeFileSync(
     join(dir, MANIFEST_FILENAME),
@@ -97,7 +99,8 @@ describe("renderFeaturesMarkdown", () => {
 describe("readFeaturesCatalog", () => {
   it("should_use_cache_english_when_present", () => {
     seedCache({
-      "features.en.md": "## Features\n\n### Agents\n\n- ethan — Cache English.\n",
+      "content/features/features.en.md":
+        "## Features\n\n### Agents\n\n- ethan — Cache English.\n",
     });
     const result = readFeaturesCatalog("en");
     expect(result.source).toBe("cache");
@@ -107,8 +110,9 @@ describe("readFeaturesCatalog", () => {
 
   it("should_use_cache_chinese_when_present", () => {
     seedCache({
-      "features.en.md": "## Features\n\n- ethan — English only.\n",
-      "features.zh-Hans.md":
+      "content/features/features.en.md":
+        "## Features\n\n- ethan — English only.\n",
+      "content/features/features.zh-Hans.md":
         "## 功能\n\n### Agents\n\n- ethan — 缓存简体。\n",
     });
     const result = readFeaturesCatalog("zh-Hans");
@@ -119,7 +123,8 @@ describe("readFeaturesCatalog", () => {
 
   it("should_use_cache_english_when_cache_chinese_missing", () => {
     seedCache({
-      "features.en.md": "## Features\n\n- ethan — Cache fallback English.\n",
+      "content/features/features.en.md":
+        "## Features\n\n- ethan — Cache fallback English.\n",
     });
     const result = readFeaturesCatalog("zh-Hant");
     expect(result.source).toBe("cache");
@@ -139,11 +144,33 @@ describe("readFeaturesCatalog", () => {
 
   it("should_use_package_when_cache_has_no_english_file", () => {
     seedCache({
-      "features.zh-Hans.md": "## 功能\n\n- ethan — Only Chinese in cache.\n",
+      "content/features/features.zh-Hans.md":
+        "## 功能\n\n- ethan — Only Chinese in cache.\n",
     });
     const result = readFeaturesCatalog("en");
     expect(result.source).toBe("package");
     expect(result.html).toContain('class="feature-name">ethan</span>');
+  });
+
+  it("should_use_package_when_features_only_at_unpack_root", () => {
+    seedCache({
+      "features.en.md": "## Features\n\n- ethan — Root only.\n",
+    });
+    const result = readFeaturesCatalog("en");
+    expect(result.source).toBe("package");
+    expect(result.html).not.toContain("Root only");
+  });
+
+  it("should_prefer_content_features_over_unpack_root", () => {
+    seedCache({
+      "features.en.md": "## Features\n\n- ethan — Root file.\n",
+      "content/features/features.en.md":
+        "## Features\n\n- ethan — Content folder.\n",
+    });
+    const result = readFeaturesCatalog("en");
+    expect(result.source).toBe("cache");
+    expect(result.html).toContain("Content folder");
+    expect(result.html).not.toContain("Root file");
   });
 });
 

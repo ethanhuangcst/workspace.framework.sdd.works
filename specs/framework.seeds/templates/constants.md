@@ -22,7 +22,7 @@ Live path after install: `{client_root}/templates/framework.sdd.works/constants.
 
 | Skill key | Folder |
 | --- | --- |
-| `skill_start_project` | `sdd-new-project` |
+| `skill_start_project` | `sdd-kickoff-project` |
 | `skill_update_project` | `sdd-update-project` |
 | `skill_refine_pb` | `sdd-refine-pb` |
 | `skill_plan_sprint` | `sdd-plan-sprint` |

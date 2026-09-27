@@ -298,6 +298,49 @@ describe("InstructionsPage", () => {
     expect(screen.getByTestId("secret-lookup")).not.toBeVisible();
   });
 
+  it("should_switch_to_scrum_tab_after_features_with_label", () => {
+    render(
+      <InstructionsPage
+        locale="en"
+        onLocaleChange={() => undefined}
+        featuresHtml="<h2>Features</h2>"
+        scrumHtml="<h1>Scrum in SDD</h1><p>Part I summary.</p><ul><li>KEEP — classic roles stay.</li></ul>"
+      />,
+    );
+
+    const setup = screen.getByTestId("guide-tab-setup");
+    const features = screen.getByTestId("guide-tab-features");
+    const scrum = screen.getByTestId("guide-tab-scrum");
+    expect(setup.compareDocumentPosition(features) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(features.compareDocumentPosition(scrum) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(scrum).toHaveTextContent("Scrum in SDD");
+    expect(screen.getByTestId("panel-scrum")).not.toBeVisible();
+
+    fireEvent.click(scrum);
+
+    expect(scrum).toHaveAttribute("href", "/?tab=scrum-in-sdd");
+    expect(scrum).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("panel-scrum")).toBeVisible();
+    expect(screen.getByTestId("scrum-body")).toHaveTextContent("Part I summary");
+    expect(screen.getByTestId("scrum-body").querySelector(".feature-name")).toBeNull();
+    expect(screen.getByTestId("scrum-body")).toHaveTextContent(
+      "KEEP — classic roles stay.",
+    );
+    expect(screen.getByTestId("secret-lookup")).not.toBeVisible();
+  });
+
+  it.each(["en", "zh-Hans", "zh-Hant"] as Locale[])(
+    "should_keep_scrum_tab_label_untranslated_when_locale_is_%s",
+    (locale) => {
+      render(
+        <InstructionsPage locale={locale} onLocaleChange={() => undefined} />,
+      );
+      expect(screen.getByTestId("guide-tab-scrum")).toHaveTextContent(
+        "Scrum in SDD",
+      );
+    },
+  );
+
   it.each(["en", "zh-Hans", "zh-Hant"] as Locale[])(
     "should_resolve_secret_hint_and_button_when_locale_is_%s",
     (locale) => {

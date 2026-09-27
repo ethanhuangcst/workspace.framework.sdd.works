@@ -1647,6 +1647,78 @@ td.table-check {
   color: var(--mute);
 }
 
+.guide-section.scrum-body {
+  max-width: 40rem;
+}
+
+.guide-section.scrum-body h1,
+.guide-section.scrum-body h2,
+.guide-section.scrum-body h3 {
+  font-family: var(--font-ui);
+  letter-spacing: 0;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.guide-section.scrum-body h1 {
+  margin: 2.75rem 0 0.85rem;
+  font-size: 1.65rem;
+  font-weight: 600;
+}
+
+.guide-section.scrum-body h1:first-child {
+  margin-top: 0;
+}
+
+.guide-section.scrum-body h2 {
+  margin: 1.65rem 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.guide-section.scrum-body h3 {
+  margin: 1.25rem 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.guide-section.scrum-body p,
+.guide-section.scrum-body li {
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+
+.guide-section.scrum-body p {
+  margin: 0.7rem 0 0;
+  max-width: none;
+}
+
+.guide-section.scrum-body ul,
+.guide-section.scrum-body ol {
+  margin: 0.55rem 0 0;
+  padding: 0 0 0 1.35rem;
+}
+
+.guide-section.scrum-body li {
+  margin: 0.35rem 0;
+}
+
+.guide-section.scrum-body strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.guide-section.scrum-body blockquote {
+  margin: 1rem 0 0;
+  padding: 0 0 0 0.9rem;
+  border-left: 2px solid var(--line);
+  color: var(--mute);
+}
+
+.guide-section.scrum-body blockquote p {
+  color: var(--mute);
+}
+
 .secret-lookup {
   display: flex;
   gap: 0.75rem;

@@ -16,7 +16,7 @@ v.0.1.0
 
 - sdd-atdd — 验收测试驱动开发：用用户故事和验收标准建立用户故事地图。
 - sdd-tdd — 测试驱动开发，极限编程中的工程实践。
-- sdd-new-project — 在智能体工具中按 SDD-Scrum 启动项目，包括规格文件夹路径等设置。
+- sdd-kickoff-project — 在智能体工具中按 SDD-Scrum 启动项目，包括规格文件夹路径等设置。
 - sdd-update-project — 在智能体工具中更新项目设置。
 - sdd-refine-pb — 梳理产品待办：细化初始需求，创建 PBI，并补充用户故事和验收标准。
 - sdd-plan-sprint — 规划冲刺：把 PBI 分配到各冲刺，检查覆盖与可追溯性，并把 PBI 拆成细粒度 SBI。

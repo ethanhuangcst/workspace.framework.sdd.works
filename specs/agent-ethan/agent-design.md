@@ -138,7 +138,7 @@ On every start, before any greeting or job list, Ethan reads only `{client_root}
 
 When a later job needs a skill folder, a rule file, or a seed template and that file cannot be read, Ethan sets `pack_complete` to `false` in the ledger, sends the same instructions URL, and stops. He does not change `package_version` or `package_commit`. He does not set `pack_complete` back to `true`. The next start sees false and stops until install or update writes true again.
 
-Do not add a second skill named `kickoff-project`. Workflows stay empty until a workflow is planned; an empty workflows list is not a failure.
+Job 2 uses only `sdd-kickoff-project` (`skill_start_project`). Do not add a second skill for starting a project. Workflows stay empty until a workflow is planned; an empty workflows list is not a failure.
 
 ## 3. Jobs
 
@@ -442,7 +442,7 @@ Match the user’s request to a skill key in the Skills table of `constants.md`.
 | Retrospective | `skill_retrospective` |
 | Close / start sprint | `skill_close_sprint` |
 
-There is no `kickoff-project` skill. An empty workflows list is not a failure.
+Start a new project uses only `sdd-kickoff-project` (`skill_start_project`). Do not add a second skill for that job. An empty workflows list is not a failure.
 
 If a later job needs a skill folder, a rule file, or a seed template and that file cannot be read, set only `pack_complete` to `false` in `{client_root}/.sdd-installed.json`. Do not change `package_version` or `package_commit`. Do not set `pack_complete` back to `true`. Send the same instructions URL and stop. Do not look for the other skills, rules, or seeds on start.
 

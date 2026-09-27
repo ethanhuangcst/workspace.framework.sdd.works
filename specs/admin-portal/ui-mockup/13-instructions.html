@@ -54,6 +54,19 @@
           >
             Features
           </button>
+          <button
+            type="button"
+            class="guide-tab"
+            role="tab"
+            id="tab-scrum"
+            aria-selected="false"
+            aria-controls="panel-scrum"
+            data-tab="scrum-in-sdd"
+            data-i18n="admin.guide.tab_scrum"
+            data-testid="guide-tab-scrum"
+          >
+            Scrum in SDD
+          </button>
 
         </div>
 
@@ -289,7 +302,7 @@
             </ul>
             <h3>Skills</h3>
             <ul>
-              <li><span class="feature-name">sdd-new-project</span><span class="feature-desc">Starts a new project</span></li>
+              <li><span class="feature-name">sdd-kickoff-project</span><span class="feature-desc">Starts a new project</span></li>
               <li><span class="feature-name">sdd-tdd</span><span class="feature-desc">Writes the test before the code</span></li>
             </ul>
             <h3>Rules</h3>
@@ -313,6 +326,35 @@
             </ul>
           </article>
 
+        </div>
+
+        <div
+          class="guide-tab-panel"
+          role="tabpanel"
+          id="panel-scrum"
+          aria-labelledby="tab-scrum"
+          data-panel="scrum-in-sdd"
+          hidden
+          data-testid="panel-scrum"
+        >
+          <!-- Spike sample only. The live page shows the full synced markdown. -->
+          <article class="guide-section features-body" id="scrum-body" data-testid="scrum-body">
+            <h2>Purpose of the Scrum Guide</h2>
+            <p>
+              The Scrum Guide defines Scrum, and every element serves a purpose.
+              Partial implementation can make Scrum ineffective.
+            </p>
+            <p>
+              Scrum applies to complex work beyond software. “Developers” refers
+              to anyone doing that work, so anyone who gains value from Scrum is
+              included.
+            </p>
+            <p>
+              People may apply patterns, processes, and insights within Scrum,
+              but this Guide does not cover them because they are not defined in
+              Scrum.
+            </p>
+          </article>
         </div>
       </article>
     </main>
