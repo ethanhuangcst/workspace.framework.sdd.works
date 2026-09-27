@@ -1,3 +1,5 @@
+v0.0.1
+
 # Scrum in SDD
 
 This document defines how Scrum is adopted in Spec-Driven Development, with Agentic Programming under Harness Engineering principles.
@@ -321,6 +323,7 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 - **dod.mdc**: Definition of Done
 - **incremental-delivery.mdc**: Incremental Delivery
 - **realtime-status.mdc**: track status in real time and update **status.md** when each task is done
+- **artifacts-map.mdc**: when a project artifact is created, renamed, or deleted, update **artifacts-map.md**
 
 ### Skills
 - **sdd-atdd**
@@ -499,6 +502,7 @@ This guide is for both humans and AI agents.
 - **dod.mdc**: Definition of Done.
 - **incremental-delivery.mdc**: incremental delivery policy.
 - **realtime-status.mdc**: real-time status update policy.
+- **artifacts-map.mdc**: keep **artifacts-map.md** current when a project artifact is created, renamed, or deleted.
 
 ### Skills
 - **sdd-atdd**

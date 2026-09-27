@@ -31,7 +31,7 @@ Live path after install: `{client_root}/templates/framework.sdd.works/constants.
 | `skill_close_sprint` | `sdd-close-sprint` |
 | `sdd-atdd` | `sdd-atdd` |
 | `sdd-tdd` | `sdd-tdd` |
-| `sdd-audit-artifacts` | `sdd-audit-artifacts` |
+| `skill_audit_artifacts` | `sdd-audit-artifacts` |
 | `sdd-update-specs` | `sdd-update-specs` |
 | `sdd-design` | `sdd-design` |
 | `sdd-implement` | `sdd-implement` |
@@ -40,6 +40,7 @@ Live path after install: `{client_root}/templates/framework.sdd.works/constants.
 
 | Rule key | File |
 | --- | --- |
-| `sdd-dod` | `sdd-dod.mdc` |
-| `sdd-incremental-delivery` | `sdd-incremental-delivery.mdc` |
-| `sdd-realtime-status` | `sdd-realtime-status.mdc` |
+| `dod` | `dod.mdc` |
+| `incremental-delivery` | `incremental-delivery.mdc` |
+| `realtime-status` | `realtime-status.mdc` |
+| `artifacts-map` | `artifacts-map.mdc` |

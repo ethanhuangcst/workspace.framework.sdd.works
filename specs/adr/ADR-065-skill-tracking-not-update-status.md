@@ -6,7 +6,7 @@ Accepted
 ## Context
 Practices job 6 is “Report status”. The pack named that job’s skill `sdd-update-status` with key `skill_update_status`. The folder does not exist yet. Sprint 7 is the first sprint that writes the skill.
 
-“Update status” names one file edit. The job keeps `status.md` current for the whole project: where the sprint is, what is in progress, and what is next. The skill id should name that job, and it should not collide with the rule `sdd-realtime-status`.
+“Update status” names one file edit. The job keeps `status.md` current for the whole project: where the sprint is, what is in progress, and what is next. The skill id should name that job, and it should not collide with the rule `realtime-status`.
 
 ## Decision
 1. The skill folder is `sdd-tracking`. The constants key is `skill_tracking`.

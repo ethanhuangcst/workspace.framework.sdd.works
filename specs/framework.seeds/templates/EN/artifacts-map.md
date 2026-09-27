@@ -8,7 +8,7 @@
 
 - name: Artifact index
 - local: artifacts-map.md
-- purpose: This file. It sits at the workspace root.
+- purpose: This file. It sits at the workspace root, not under artifacts_root.
 
 ## Product backlog
 
@@ -30,24 +30,18 @@
 
 - name: Change log
 - local: specs/change-log.md
+- purpose: Conclusion record. It is not the defect list.
 
-## Scrum-in-SDD guide
+## Issues log
 
-- name: Scrum-in-SDD guide
-- local: specs/scrum-in-sdd.md
-- purpose: Official definition of how Scrum is adopted in Spec-Driven Development, with Agentic Programming under Harness Engineering principles. The Scrum Guide defines Scrum. This document does not replace it. Part I summarizes the 2020 Scrum Guide. Part II names Agentic Programming, Harness Engineering, and Spec-Driven Development. Part III states what classic Scrum does not cover. Part IV is the definition: what stays, what is added, and what changes.
+- name: Issues log
+- local: specs/issues-log.md
+- purpose: Defect record. Row status is Open or Closed. It is not the change log.
 
-## Practices
+## web-app
 
-- name: Practices
-- local: specs/sdd-scrum-practices.md
-
-## Architecture
-
-- name: Architecture
-- local: specs/architecture.md
-
-## Deployment
-
-- name: Deployment
-- local: specs/deployment.md
+- folder: web-app
+- stem: app
+- design: specs/web-app/app-design.md
+- stories: specs/web-app/app-stories.md
+- test: specs/web-app/app-test.md

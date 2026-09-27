@@ -1,3 +1,5 @@
+v0.0.1
+
 # Scrum in SDD
 
 本文定义 Scrum in SDD: 结合 Scrum 和规格驱动开发（Spec-Driven Development, SDD），在 Harness Engineering 原则下使用 Agentic Programming。
@@ -320,6 +322,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **dod.mdc**：Definition of Done
 - **incremental-delivery.mdc**：增量交付
 - **realtime-status.mdc**：实时跟踪状态，并在每项任务完成时更新 **status.md**
+- **artifacts-map.mdc**：创建、重命名或删除项目产物时，同步更新 **artifacts-map.md**
 
 ### Skills
 - **sdd-atdd**
@@ -499,6 +502,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **dod.mdc**：Definition of Done。
 - **incremental-delivery.mdc**：增量交付策略。
 - **realtime-status.mdc**：实时状态更新策略。
+- **artifacts-map.mdc**：创建、重命名或删除项目产物时，保持 **artifacts-map.md** 最新。
 
 ### Skills
 - **sdd-atdd**

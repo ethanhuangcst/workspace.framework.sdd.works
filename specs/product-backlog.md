@@ -73,9 +73,9 @@ Practices jobs 4–8 are still unfilled. [Agent-10](#pb-44)–[Agent-14](#pb-48)
 ---------
 ## Rule
 
-- [Rule-01](#pb-18) `sdd-dod.mdc`
-- [Rule-02](#pb-19) `sdd-incremental-delivery.mdc`
-- [Rule-03](#pb-20) `sdd-realtime-status.mdc`
+- [Rule-01](#pb-18) `dod.mdc`
+- [Rule-02](#pb-19) `incremental-delivery.mdc`
+- [Rule-03](#pb-20) `realtime-status.mdc`
 - [Rule-04](#pb-85) `artifacts-map.mdc`
 
 ---------
@@ -188,9 +188,9 @@ Every Spec-seeds row has the same acceptance criteria: the user has reviewed and
 | Agent | <a id="pb-47"></a>Agent-13 | Job: Retrospective | Ethan runs practices job 7 via `skill_retrospective`. That practices section is still unfilled. This PBI includes writing it. | From a confirmed request, ethan opens `sdd-retrospective` and leaves a verifiable retrospective record per practices. | [`sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) · [Skill-08](#pb-28) | Sprint 8 | ToDo |
 | Agent | <a id="pb-48"></a>Agent-14 | Job: Close / start sprint | Ethan runs practices job 8 via `skill_close_sprint`. That practices section is still unfilled. This PBI includes writing it. | From a confirmed request, ethan opens `sdd-close-sprint` and leaves a verifiable close or next-sprint change in `sprint-backlog.md` and `status.md`. | [`sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) · [Skill-09](#pb-29) | Sprint 9 | ToDo |
 | Agent | <a id="pb-63"></a>Agent-15 | Pack file: agents/ethan.md | The ethan prompt in the seed tree. Pack publish is go-live, not this row. | `specs/framework.seeds/agents/ethan.md` exists and the frontmatter name is `ethan`. | [Agent-01](#pb-6) · [MCP-01](#pb-16) | Sprint 2 | Done |
-| Rule | <a id="pb-18"></a>Rule-01 | Rule: sdd-dod.mdc | Definition of Done rule file in the pack. | `sdd-dod.mdc` is in the artifact repo and installs under `{client_root}/rules/`. | [Spec-seeds-01](#pb-32) | Sprint 11 | ToDo |
-| Rule | <a id="pb-19"></a>Rule-02 | Rule: sdd-incremental-delivery.mdc | Incremental delivery rule file in the pack. | `sdd-incremental-delivery.mdc` is in the artifact repo and installs under `{client_root}/rules/`. | [Spec-seeds-01](#pb-32) | Sprint 11 | ToDo |
-| Rule | <a id="pb-20"></a>Rule-03 | Rule: sdd-realtime-status.mdc | Real-time status rule file in the pack. | `sdd-realtime-status.mdc` is in the artifact repo and installs under `{client_root}/rules/`. | [Spec-seeds-01](#pb-32) | Sprint 11 | ToDo |
+| Rule | <a id="pb-18"></a>Rule-01 | Rule: dod.mdc | Definition of Done rule file in the pack. | `dod.mdc` is in the artifact repo and installs under `{client_root}/rules/`. | [Spec-seeds-01](#pb-32) | Sprint 11 | ToDo |
+| Rule | <a id="pb-19"></a>Rule-02 | Rule: incremental-delivery.mdc | Incremental delivery rule file in the pack. | `incremental-delivery.mdc` is in the artifact repo and installs under `{client_root}/rules/`. | [Spec-seeds-01](#pb-32) | Sprint 11 | ToDo |
+| Rule | <a id="pb-20"></a>Rule-03 | Rule: realtime-status.mdc | Real-time status rule file in the pack. | `realtime-status.mdc` is in the artifact repo and installs under `{client_root}/rules/`. | [Spec-seeds-01](#pb-32) | Sprint 11 | ToDo |
 | Rule | <a id="pb-85"></a>Rule-04 | Rule: artifacts-map.mdc | When a project artifact is created, renamed, or deleted, the same change updates `{workspace}/artifacts-map.md`. No `sdd-` prefix. | `specs/framework.seeds/rules/artifacts-map.mdc` exists. Living spec lists that name the harness rules include this file. | [ADR-072](./adr/ADR-072-rule-artifacts-map.md) | Sprint 3 | ToDo |
 | Skill | <a id="pb-21"></a>Skill-01 | Skill: sdd-atdd | ATDD skill folder in the pack. | `sdd-atdd/` with `SKILL.md` is in the artifact repo and installs under `{client_root}/skills/`. | — | Sprint 12 | ToDo |
 | Skill | <a id="pb-22"></a>Skill-02 | Skill: sdd-tdd | TDD skill folder in the pack. | `sdd-tdd/` with `SKILL.md` is in the artifact repo and installs under `{client_root}/skills/`. | — | Sprint 12 | ToDo |

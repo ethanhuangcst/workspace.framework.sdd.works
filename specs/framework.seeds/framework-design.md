@@ -1,8 +1,10 @@
-# Design — framework
+# Design — framework artifacts
 
-> **Purpose**: Sprint backlog shape, and where the project index lives. Read this before adding a sprint item or a retrospective entry.
-> **Practices**: [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md) (what, how, when). Product backlog category grouping lives there.
-> **Framework**: [`scrum-in-sdd.md`](./templates/EN/scrum-in-sdd.md) (names and meaning).
+> **Purpose**: One section per framework artifact: where the file lives, and the shape that file keeps. What, how, and when stay in [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md). Names and meaning stay in [`scrum-in-sdd.md`](./templates/EN/scrum-in-sdd.md).
+> **Practices**: [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md).
+> **Framework**: [`scrum-in-sdd.md`](./templates/EN/scrum-in-sdd.md).
+
+An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`) and no last-update line. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the timestamp and the author. The only init signal is `initialized: no` on a live `artifacts-map.md` while `sdd-kickoff-project` is still copying files.
 
 ## Two repositories
 
@@ -11,7 +13,7 @@ Do not mix these workspaces. They are separate git remotes.
 | Workspace | Remote | What it is |
 | --- | --- | --- |
 | This workspace (`framework.sdd.works`) | [workspace.framework.sdd.works](https://github.com/ethanhuangcst/workspace.framework.sdd.works.git) | Build the product: framework pack authoring, MCP, and the web portal |
-| Framework pack | [framework.sdd.works](https://github.com/ethanhuangcst/framework.sdd.works.git) | Published pack only (`agents/`, `skill/`, `rules/`, `templates/`) |
+| Framework pack | [framework.sdd.works](https://github.com/ethanhuangcst/framework.sdd.works.git) | Published pack only (`agents/`, `skills/`, `rules/`, `templates/`) |
 
 Author pack files here. Copying the finalized seed folder into the pack repo is [Go-live](#go-live). Do not point this checkout’s git remote at the pack repo. Do not put portal, MCP, or `src/` into the pack repo.
 
@@ -31,110 +33,108 @@ The installer sets `pack_complete` to `true` in the same write as `package_versi
 
 Ethan reads this file on start. A missing file, or `pack_complete` not `true`, is a fatal stop. He may set the flag `false`. He does not change `package_version` or `package_commit`. Only install or update sets the flag `true`.
 
-## Constants
+## constants.md
 
-Lookup file for pack path names, the instructions URL, skill keys, and rule keys. Filename: `constants.md`. [ADR-060](../adr/ADR-060-constants-on-client-root.md).
+Lookup file for pack path names, the instructions URL, skill keys, and rule keys. [ADR-060](../adr/ADR-060-constants-on-client-root.md).
 
 | Role | Path |
 | --- | --- |
-| Authoring seed in this workspace | `specs/framework.seeds/templates/constants.md` (beside `EN/` and `HanS/`, not inside a locale folder) |
+| Authoring seed | `specs/framework.seeds/templates/constants.md` (beside the locale folders, not inside one) |
 | After install | `{client_root}/templates/framework.sdd.works/constants.md` |
 
-Do not copy `constants.md` into the workspace, into `{workspace}/specs`, or into the artifacts root. Writing rules live in [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md) under Templates.
+Do not copy `constants.md` into the workspace, into `{workspace}/specs`, or into the artifacts root. It has no row in `artifacts-map.md`.
 
-## Artifact index
+## scrum-in-sdd.md
 
-`artifacts-map.md` is the project config for where artifacts live. It sits at the workspace root. Ethan reads that fixed path. He does not already need to know whether the user chose `specs/` or `docs/`.
+Names and meaning. It does not take what, how, and when from practices.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework.seeds/templates/{EN\|HanS\|HanT}/scrum-in-sdd.md` |
+| After install | `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md` |
+
+It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads it from the client-root locale folder.
+
+## sdd-scrum-practices.md
+
+What, how, and when. It does not redefine guide terms.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework.seeds/templates/{EN\|HanS\|HanT}/sdd-scrum-practices.md` |
+| After install | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` |
+
+It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads it from the client-root locale folder.
+
+## artifacts-map.md
+
+Project config for where artifacts live. It records only what this project has. It is a labeled list, not a reading document, and it does not use tables.
 
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/artifacts-map.md` |
 | Authoring seed | `specs/framework.seeds/templates/EN/artifacts-map.md` |
 
-Keep the name `artifacts-map.md`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`. Process files stay in the artifacts root. Only the index sits at the workspace root.
+Keep the name `artifacts-map.md`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`.
 
-The file is a labeled list. It is not a reading document and it does not use tables. Role essays and "when to add" stay in the guide and the practices. This file records only what this project has.
-
-### Header
-
-Three fields, in this order:
+Header, in this order:
 
 1. **Product name.** Display only. It does not locate files.
-2. **`artifacts_root`.** One folder name relative to the workspace. The default is `specs`. The user may set `docs`. Do not store an absolute workspace path. A local file `product-backlog.md` means `{workspace}/{artifacts_root}/product-backlog.md`.
+2. **`artifacts_root`.** One folder name relative to the workspace. When the field is absent, use `specs`. `docs` is an example. Any other single folder name is valid. Do not store an absolute machine path.
 3. **Locale.** `EN`, `HanS`, or `HanT`.
+
+Each block has a name and a workspace-relative path. Join `{workspace}` and that path. Do not prefix `artifacts_root` again.
+
+A file under the artifacts root includes that folder in the path. `specs/product-backlog.md` is `{workspace}/specs/product-backlog.md`. Changing `artifacts_root` rewrites those paths and the header.
+
+The map file itself is the exception. Its path is `artifacts-map.md`, which is `{workspace}/artifacts-map.md`. That path does not include the artifacts-root folder.
+
+In the authoring seed, `local` values are concrete paths that use the default root `specs`. Do not write `{artifacts_root}` inside a `local` value. Do not add HTML example comments. `purpose` is the rule that stays in the working file. Path fields are the sample.
+
+One block per artifact that exists. A row may carry one line of purpose when that line prevents a wrong copy. Do not leave empty rows. Omit a seed path when the file follows `templates/{locale}/<name>`. List a pack-relative seed path only when the file does not follow that convention. Do not write a machine path into the project file.
 
 On start, after the install ledger passes, Ethan reads `{workspace}/artifacts-map.md`.
 
 | Map | What it means |
 | --- | --- |
 | Missing | New project. The next job is start a new project. Do not search template folders for the other files. |
-| Present | On-going project. Read `artifacts_root`, then the Process and Tracking local paths named in the map. |
+| Present | On-going project. Read `artifacts_root`, then open each stored path as `{workspace}/<path>`. |
 
 Do not put a new-project or on-going flag in the file. The missing file is that signal.
 
-### Kickoff
+`sdd-kickoff-project` writes this file when it is missing. It asks for the product name, `artifacts_root`, locale, and module folders. While the copy is still running, the header may say `initialized: no`. Remove that line when the copy finishes. Copy a seed only where the target file is missing. Do not overwrite a file that already has content.
 
-`sdd-kickoff-project` runs when the map is missing. It does not start by reading a map that is not there.
+A module is a folder under `artifacts_root`. The map stores `folder`, `stem`, and the three workspace-relative paths. The default stem is the folder name. A shorter stem is set once. Two modules cannot use the same stem. A later read uses the stored paths.
 
-1. Ask for the product name, `artifacts_root`, locale, and module folders. A module uses the folder name as its stem unless the user sets a shorter stem.
-2. Write `{workspace}/artifacts-map.md` from those answers. While the copy is still running, the header may say `initialized: no`. Remove that line when the copy finishes.
-3. Copy a seed only where the target file is missing. Do not overwrite a file that already has content. Do not copy `scrum-in-sdd.md` or `sdd-scrum-practices.md` into the project.
+The rule `artifacts-map.mdc` updates this file when a project artifact is created, renamed, or deleted. [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `sdd-audit-artifacts` lists gaps and waits for an instruction. It does not replace the rule.
 
-### Framework files
+## product-backlog.md
 
-`scrum-in-sdd.md` and `sdd-scrum-practices.md` stay on the client root at `{client_root}/templates/framework.sdd.works/{locale}/`. Ethan reads them from that folder. They are not project files under `artifacts_root`.
+Product requirements and acceptance for the project. The seed is an example a new project copies. It is not this repo's product backlog.
 
-The rule `artifacts-map.mdc` requires the same change to update `{workspace}/artifacts-map.md` when a project artifact is created, renamed, or deleted. [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `sdd-audit-artifacts` stays the skill that lists gaps and waits for an instruction.
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/product-backlog.md` |
+| Authoring seed | `specs/framework.seeds/templates/EN/product-backlog.md` |
 
-These artifact-index decisions stay in this file, in [ADR-070](../adr/ADR-070-change-log-and-issues-log.md), and in [ADR-072](../adr/ADR-072-rule-artifacts-map.md). They are not restated in one combined ADR.
+The column name stays Category. Do not rename it to Type. An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
 
-### Rows
+## sprint-backlog.md
 
-One block per artifact that exists. Each block has a name and a local path relative to `artifacts_root`. The line does not repeat `specs/` or `docs/`. `product-backlog.md` means `{workspace}/{artifacts_root}/product-backlog.md`. Switching the root changes the header only. The map file itself stays at `{workspace}/artifacts-map.md`.
+Sprint schedule and the SBI list. The seed is a starter for a new project. It is not this repo's sprint backlog.
 
-Purpose stays in the guide. A row may carry one line of purpose when that line prevents a wrong copy.
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/sprint-backlog.md` |
+| Authoring seed | `specs/framework.seeds/templates/EN/sprint-backlog.md` |
 
-A seed path is pack-relative, for example `templates/EN/product-backlog.md`. Resolve `{client_root}` at install time. Do not write a machine path or an agent-tool root into the project file. When the file follows `templates/{locale}/<name>`, omit the seed path. List it only when the file does not follow that convention.
-
-`constants.md` has no row. It stays on the client root. `adr/` and `knowledge/` may appear in the tree. Ethan does not read them on start. Optional surfaces appear only after they exist. Do not leave empty rows.
-
-### Module engineering files
-
-A module is a folder under `artifacts_root`. Its engineering files use a stem so each basename is unique when the user types `@`. The same filename in two folders, such as `design.md` under both `web-app/` and `mcp/`, shows up as several identical names in that menu. The stem makes `app-design.md` and `mcp-design.md` distinct before the folder is visible.
-
-- Names: `{stem}-design.md`, `{stem}-stories.md`, `{stem}-test.md`.
-- The default stem is the folder name.
-- A shorter stem is set once on that module. The map stores `stem` and the three local paths. A later read uses those paths.
-- Two modules cannot use the same stem.
-
-```
-- product name: Pokymon Card Collection
-- artifacts_root: specs
-- locale: EN
-
-## web-app
-- folder: web-app
-- stem: app
-- design: web-app/app-design.md
-```
-
-`web-app/app-design.md` means `{workspace}/specs/web-app/app-design.md`. The same module also has `web-app/app-stories.md` and `web-app/app-test.md`.
-
-### Process files
-
-Five files sit directly under `artifacts_root`: `product-backlog.md`, `sprint-backlog.md`, `status.md`, `change-log.md`, and `issues-log.md`.
-
-`change-log.md` records a conclusion: what changed, why, and how it was verified. `issues-log.md` records a defect from the time it is opened until it is closed. Status on an issues-log row is `Open` or `Closed`. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md). The OGT table in `status.md` is the list for the sprint item in progress. An open defect is not an OGT row.
-
-An artifact seed does not start with a status (`initialized`, `draft`, `confirmed`, `updated`) or a last-update line (timestamp and editor). Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the timestamp and the author. The change log holds conclusion-level changes. The only init signal is `initialized: no` on this map's header while start-a-new-project is still copying files.
-
-## Sprint item table
+### Sprint item table
 
 Columns, in this order: Code, Parent PBI, Module, Type, SBI, then Acceptance criteria, Related docs, Note, and Status.
 
 **Code** is the Type in lowercase, a hyphen, and a two-digit number inside that sprint. Examples: `feature-01`, `research-01`, `bug-fix-01`, `documentation-01`, `task-01`. Numbering restarts at `01` for each Type in each sprint. The visible code may repeat in a later sprint. The row anchor must be unique in the file, so prefix the sprint: `s1-feature-01`.
 
-**Type** is one word. The product backlog keeps the column name Category. Do not rename that column to Type.
+**Type** is one word.
 
 - **Feature**: the item delivers something the product ships for use. That includes an agent capability, an MCP behavior, a web page, a seed, and a product behavior such as recording a card.
 - **Research**: the item finds and records evidence before a feature is specified. It does not ship the feature.
@@ -144,9 +144,9 @@ Columns, in this order: Code, Parent PBI, Module, Type, SBI, then Acceptance cri
 
 **Parent PBI** shows the PBI code and the PBI name, and links the product-backlog anchor.
 
-Rows of the same Type stay together. Keep the order the rows were added inside that Type. Put the Type that appeared first in the sprint ahead of a Type that appeared later.
+**Row order is priority, top to bottom.** In each sprint's item table, the first row is the highest priority. When updating `sprint-backlog.md`, insert or move a row to that place. Do not append a row only because it is new. Do not group rows by Type, and do not keep the order in which the rows were added. `WIP` sits above `ToDo`. `Done` sits below open work.
 
-## Status
+### Status values
 
 An SBI and a PBI use only three statuses: `ToDo`, `WIP`, and `Done`.
 
@@ -156,11 +156,11 @@ An SBI and a PBI use only three statuses: `ToDo`, `WIP`, and `Done`.
 | `WIP` | Started, and either an acceptance criterion is still open or the Definition of Done has not been applied. | One part of the item works. Another part of the same acceptance criteria does not. |
 | `Done` | Every acceptance criterion is met, and the Definition of Done rule has been applied to this item. | The item meets its acceptance criteria, and the DoD rule has been applied with nothing left open for this item. |
 
-**Apply the Definition of Done rule before marking an SBI or a PBI `Done`.** Do not mark it `Done` because a file exists or a check passed while a DoD item for that row is still open. Leave it `WIP`.
+Apply the Definition of Done rule before marking an SBI or a PBI `Done`. Do not mark it `Done` because a file exists or a check passed while a DoD item for that row is still open. Leave it `WIP`.
 
 The sprint line uses the same three words. `Done` only when every SBI in that sprint is `Done`. The RID Registry keeps its own statuses.
 
-## Retrospective
+### Retrospective
 
 Each sprint has one Retrospective section. A later retrospective in that sprint is appended to the same section. Do not open a second Retrospective heading.
 
@@ -193,3 +193,95 @@ Opportunities:
 ```
 
 Write the ADR or knowledge note only when the decision or lesson is reusable. A summary with no such note has no link. Do not invent a note so the bullet can link.
+
+## status.md
+
+Current sprint projection. It is not a second sprint backlog. It is not the defect list.
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/status.md` |
+| Authoring seed | `specs/framework.seeds/templates/EN/status.md` |
+
+It records the current sprint, the current SBI, what is next, and the OGT table for the sprint item in progress. An open defect is not an OGT row. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+
+## change-log.md
+
+Conclusion record: what changed, why, and how it was verified. A row is written when a change is done. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/change-log.md` |
+| Authoring seed | `specs/framework.seeds/templates/EN/change-log.md` |
+
+It is not the defect list. An open defect does not go here.
+
+## issues-log.md
+
+Defect record. A row is opened when a defect is found and stays until it is closed. Status on a row is `Open` or `Closed`. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/issues-log.md` |
+| Authoring seed | `specs/framework.seeds/templates/EN/issues-log.md` |
+
+It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded.
+
+## architecture.md
+
+Architecture starter for a new project. It is not this repo's architecture spec.
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/architecture.md` |
+| Authoring seed | `specs/framework.seeds/templates/EN/architecture.md` |
+
+The EN seed is Sprint 14. Do not add a row for it in a project map until the file exists.
+
+## {stem}-stories.md
+
+User stories and acceptance criteria for one module.
+
+The filename is `{stem}-stories.md`. The stem is the module folder name unless `artifacts-map.md` stores a shorter stem. The file sits in that module folder. `specs/web-app/app-stories.md` is `{workspace}/specs/web-app/app-stories.md` when the stem is `app`.
+
+## {stem}-design.md
+
+Design spec for one module.
+
+The filename is `{stem}-design.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-design.md` is `{workspace}/specs/web-app/app-design.md` when the stem is `app`.
+
+## {stem}-test.md
+
+Test spec for one module.
+
+The filename is `{stem}-test.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-test.md` is `{workspace}/specs/web-app/app-test.md` when the stem is `app`.
+
+## deployment.md
+
+Deployment starter for a new project. It is not this repo's deployment spec.
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/deployment.md` |
+| Authoring seed | `specs/framework.seeds/templates/EN/deployment.md` |
+
+The EN seed is Sprint 14. Do not add a row for it in a project map until the file exists.
+
+## .secrets
+
+Secret names and where the values live. It holds no secret values.
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/.secrets` |
+| Authoring seed | `specs/framework.seeds/templates/EN/.secrets` |
+
+The EN seed is Sprint 14. Do not add a row for it in a project map until the file exists.
+
+## adr/
+
+Durable decisions. A project may have this tree under `artifacts_root`. Ethan does not read it on start. Create a file when a retrospective finds a decision worth keeping. Do not leave an empty row in `artifacts-map.md` before the tree exists.
+
+## knowledge/
+
+Reusable research and ops notes. A project may have this tree under `artifacts_root`. Ethan does not read it on start. Create a file when a retrospective finds a lesson worth keeping. Do not leave an empty row in `artifacts-map.md` before the tree exists.

@@ -40,7 +40,7 @@ The other templates in this folder use Pokymon Card Collection as the worked exa
 - Decide language of project artifacts (EN, HanS, HanT).
 - Decide workspace folder structure from sub-systems, architecture, and components.
 - Specify the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
-- Record that structure in `{workspace}/artifacts-map.md` (required process artifact; this project’s index). Name `artifacts_root` there. Default `specs`. The user may set `docs`.
+- Record that structure in `{workspace}/artifacts-map.md` (required process artifact; this project’s index). Name `artifacts_root` there. It is one folder name relative to the workspace. When the field is absent, use `specs`. `docs` is an example. Any other single folder name is valid.
 - Copy artifact templates to the locations named in `artifacts-map.md`, for the chosen language.
 - Ensure agent ethan can operate those files.
 - Record current status in `status.md` and tell the user the project is initialized, with suggestions for what to do next.
@@ -79,7 +79,7 @@ The other templates in this folder use Pokymon Card Collection as the worked exa
 
 **When**: copy or refresh locale seeds during on-board (job 1) if working copies are missing; on new project (job 2); on update settings (job 3) only when relocating or filling a gap — never overwrite filled working copies without the user confirming. Do not copy `constants.md` into the artifacts root.
 
-**From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy listed locale files into the artifacts root named in `artifacts-map.md`. Read `constants.md` from `{client_root}/templates/framework.sdd.works/constants.md` after install; do not copy it into the artifacts root.
+**From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy each listed locale seed to the workspace-relative `local` path named in `artifacts-map.md`. Do not place every file under `artifacts_root`. The map file itself stays `{workspace}/artifacts-map.md`. Read `constants.md` from `{client_root}/templates/framework.sdd.works/constants.md` after install; do not copy it into the artifacts root.
 
 **What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (seeds vs working copies). `constants.md` is pack lookup on the client root, not a working copy under the artifacts root.
 
@@ -229,7 +229,7 @@ Put dates, remaining work, and evidence in the note. Do not put them in the stat
 
 ### artifacts-map.md
 
-[`artifacts-map.md`](./artifacts-map.md) is the required index of live files and trees for this project. On a project it lives at `{workspace}/artifacts-map.md` and names `artifacts_root` (default `specs`; the user may set `docs`). Paths in the map are relative to that folder. It is not the framework definition. Other docs link paths here. They do not keep a second catalog.
+[`artifacts-map.md`](./artifacts-map.md) is the required index of live files and trees for this project. On a project it lives at `{workspace}/artifacts-map.md` and names `artifacts_root`. That field is one folder name relative to the workspace. When it is absent, use `specs`. `docs` is an example. Any other single folder name is valid. Paths in the map are workspace-relative. Open `{workspace}/<path>`. Do not prefix `artifacts_root` again. Example: `specs/product-backlog.md` is `{workspace}/specs/product-backlog.md`. It is not the framework definition. Other docs link paths here. They do not keep a second catalog.
 
 ### status.md
 

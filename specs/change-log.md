@@ -9,6 +9,14 @@
 
 ## 2026-09-27
 
+### Constants rules and audit skill key
+
+**Why**: The guide names rule files without an `sdd-` prefix and includes `artifacts-map.mdc`. `constants.md` still used the old prefixed names, omitted that rule, and keyed the audit skill by folder name while Skill-10 names `skill_audit_artifacts`.
+
+**What changed**: [`constants.md`](./framework.seeds/templates/constants.md) rules are `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `artifacts-map.mdc`. The audit skill key is `skill_audit_artifacts`. Rule-01–03, Sprint 11 rows, the agent-design ledger example, ADR-065, and instruction mocks use the no-prefix names. Guide Rules lists and Features catalogs name `artifacts-map.mdc`. Feature-22 stays ToDo and does not write the `.mdc` file.
+
+**Verification**: A search of living specs finds no `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, or `sdd-realtime-status.mdc`. `constants.md` lists four rules and `skill_audit_artifacts`.
+
 ### No combined ADR for the artifact index
 
 **Why**: The artifact-index decisions are already in `framework-design.md`, ADR-070, and ADR-072. One more ADR would repeat them.
