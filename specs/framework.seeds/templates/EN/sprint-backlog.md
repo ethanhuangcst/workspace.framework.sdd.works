@@ -4,7 +4,7 @@
 > **Example**: Pokymon Card Collection. After you copy this file, replace the product name and the items.
 > **Single source of truth for schedule and status**: this file. The `Sprint` column in `product-backlog.md` is a projection of this file.
 > **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`artifacts-map.md`](./artifacts-map.md) · [`scrum-in-sdd.md`](./scrum-in-sdd.md) · [`status.md`](./status.md)
-> **Numbering**: `Code` is the Type plus a two-digit number inside that sprint, such as `feature-01` or `task-01`. Feature, Research, Bug-fix, Documentation, and Task are defined in [`framework-design.md`](../../framework-design.md). A seed is a Feature. When citing another document, prefer the item name.
+> **Numbering**: `#` is the row’s place in that table, from 1 to n. It changes when the row moves. `Code` is the second column, between `#` and `SBI`. `Code` stays. `Code` is the Type plus a two-digit number inside that sprint, such as `feature-01` or `task-01`. Feature, Research, Bug-fix, Documentation, and Task are defined in [`framework-design.md`](../../framework-design.md). A seed is a Feature. When citing another document, prefer the item name.
 > **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
 > **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
 > **as_of**: 2026-09-24
@@ -40,11 +40,11 @@ Sprint Goal: A collector can catalog a card on this machine, and the same card d
 
 ### ToDo
 
-| Code | Parent PBI | Module | Type | SBI | Acceptance criteria | Related docs | Note | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <a id="s1-task-01"></a>task-01 | [Local-01 Local startup](./product-backlog.md#pb-6) | Runtime | Task | Local startup | - After `make up`, the app opens and an empty collection is visible. | [`deployment.md`](./deployment.md) §1 | - The local stack starts. | Done |
-| <a id="s1-task-02"></a>task-02 | [Scope-01 Scope gate](./product-backlog.md#pb-5) | Product | Task | Scope gate | - No prices, no public marketplace, no real brand names. | [`architecture.md`](./architecture.md) §1 | - Sample copy uses Pokymon only. | Done |
-| <a id="s1-feature-01"></a>feature-01 | [Collect-01 Catalog a card](./product-backlog.md#pb-1) | Collection | Feature | Catalog a card | - A second catalog of the same set and card number increases quantity by 1 and does not add a row. | [`architecture.md`](./architecture.md) §2 | - Unique constraint and duplicate-catalog test passed. | Done |
+| # | Code | SBI | Parent PBI | Module/Type | DoD | Related specs | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | <a id="s1-task-01"></a>task-01 | Local startup | [Local-01 Local startup](./product-backlog.md#pb-6) | Runtime/Task | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [`deployment.md`](./deployment.md) §1 | Done |
+| 2 | <a id="s1-task-02"></a>task-02 | Scope gate | [Scope-01 Scope gate](./product-backlog.md#pb-5) | Product/Task | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [`architecture.md`](./architecture.md) §1 | Done |
+| 3 | <a id="s1-feature-01"></a>feature-01 | Catalog a card | [Collect-01 Catalog a card](./product-backlog.md#pb-1) | Collection/Feature | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [`architecture.md`](./architecture.md) §2 | Done |
 
 ### Retrospective
 
@@ -70,11 +70,11 @@ Sprint Goal: A collector can find their own cards by set or rarity, place a card
 
 ### ToDo
 
-| Code | Parent PBI | Module | Type | SBI | Acceptance criteria | Related docs | Note | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <a id="s2-feature-01"></a>feature-01 | [Collect-02 Search by set and rarity](./product-backlog.md#pb-2) | Collection | Feature | Search by set and rarity | - After filtering, the list contains only matches.<br>- No matches shows an empty state. | — | - Set filter can be demonstrated.<br>- Rarity filter is not done. | WIP |
-| <a id="s2-feature-02"></a>feature-02 | [Collect-03 Binder](./product-backlog.md#pb-3) | Collection | Feature | Binder | - Placing a card in a binder and removing it does not change the quantity in the full catalog. | [`architecture.md`](./architecture.md) §2 | — | ToDo |
-| <a id="s2-feature-03"></a>feature-03 | [Collect-04 Record a trade](./product-backlog.md#pb-4) | Collection | Feature | Record a trade | - Giving decreases quantity by 1.<br>- Receiving increases it by 1.<br>- Quantity 0 cannot be given. | — | — | ToDo |
+| # | Code | SBI | Parent PBI | Module/Type | DoD | Related specs | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | <a id="s2-feature-01"></a>feature-01 | Search by set and rarity | [Collect-02 Search by set and rarity](./product-backlog.md#pb-2) | Collection/Feature | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | — | WIP |
+| 2 | <a id="s2-feature-02"></a>feature-02 | Binder | [Collect-03 Binder](./product-backlog.md#pb-3) | Collection/Feature | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [`architecture.md`](./architecture.md) §2 | ToDo |
+| 3 | <a id="s2-feature-03"></a>feature-03 | Record a trade | [Collect-04 Record a trade](./product-backlog.md#pb-4) | Collection/Feature | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | — | ToDo |
 
 ### Retrospective
 

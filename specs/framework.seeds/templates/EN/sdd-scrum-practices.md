@@ -122,15 +122,16 @@ Add the skill or rule row here in the same change as the skill or rule. Do not l
 
 ### product-backlog.md
 
-[`product-backlog.md`](./product-backlog.md) records product items, description, acceptance criteria, relations, the schedule projection, and product-level status.
+[`product-backlog.md`](./product-backlog.md) records product items, description, the DoD for each item, relations, the schedule projection, and product-level status.
 
 #### Columns and maintenance boundary
 
-Columns are fixed: `Category`, `PBI Code`, `PBI`, `Description`, `Acceptance criteria`, `Related`, `Sprint`, `Status`. `Category` is one word. `PBI Code` is that word plus a two-digit number, such as `Collect-01`, and it carries the row anchor. Rows with the same category stay together. Do not insert a row by pb number when that would split the category. Inside a category, order by PBI code. The category list belongs to the product. A file or skill that already has its own row is not also a parent row. Skill folders start with `sdd-`.
+Columns are fixed: `Category`, `PBI Code`, `PBI`, `Description`, `DoD`, `Related`, `Sprint`, `Status`. `Category` is one word. `PBI Code` is that word plus a two-digit number, such as `Collect-01`, and it carries the row anchor. Rows with the same category stay together. Do not insert a row by pb number when that would split the category. Inside a category, order by PBI code. The category list belongs to the product. A file or skill that already has its own row is not also a parent row. Skill folders start with `sdd-`.
 
-- Description, acceptance criteria, related links, and status are owned by the Product Backlog.
+The DoD cell uses the same default checks as a sprint item. A row may replace them. The checks must be executable and observable, and they carry the verification method for a RID solution.
+
+- Description, the DoD cell, related links, and status are owned by the Product Backlog.
 - `Sprint` is a projection of the schedule in `sprint-backlog.md`. It must not become a second schedule.
-- Acceptance criteria must be executable and observable, and they carry the verification method for a RID solution.
 - A Product Backlog item cited by a RID must have a stable item anchor. The `Related` column must link the Sprint Backlog item and the design or test source, so the path from product solution to implementation and verification is navigable.
 - Back-references prefer the PBI code and the item name. The anchor stays on the PBI Code cell.
 
@@ -138,7 +139,7 @@ Columns are fixed: `Category`, `PBI Code`, `PBI`, `Description`, `Acceptance cri
 
 A PBI uses the same three statuses as an SBI: `ToDo`, `WIP`, and `Done`. See Status under `sprint-backlog.md` for the meanings and the examples.
 
-**Apply the Definition of Done rule before marking a PBI `Done`.** Do not mark the PBI `Done` while any of its acceptance criteria is open, or while the DoD rule has not been applied to that PBI. A related SBI can be `Done` while the PBI stays `ToDo` or `WIP` when the PBI acceptance is wider than that SBI.
+**Apply the Definition of Done rule before marking a PBI `Done`.** Do not mark the PBI `Done` while any check in its DoD cell is open, or while the DoD rule has not been applied to that PBI. A related SBI can be `Done` while the PBI stays `ToDo` or `WIP` when the PBI DoD is wider than that SBI.
 
 The status cell contains only the word. Put the completion date and the evidence in the sprint note or in `change-log.md`.
 
@@ -189,7 +190,34 @@ The status column contains only the enum value. Put dates, scope completed, rema
 
 #### Sprint items
 
-Columns are fixed, in this order: `Code`, `Parent PBI`, `Module`, `Type`, `SBI`, `Acceptance criteria`, `Related docs`, `Note`, `Status`. `Code` is the Type in lowercase plus a two-digit number inside that sprint, such as `feature-01` or `research-01`. `Type` is one word. Rows of the same Type stay together. `Parent PBI` shows the PBI code and the PBI name. The full shape is in [`framework-design.md`](../../framework-design.md).
+Columns are fixed, in this order: `#`, `Code`, `SBI`, `Parent PBI`, `Module/Type`, `DoD`, `Related specs`, `Status`. `Code` is the second column, between `#` and `SBI`. The shape is in [`framework-design.md`](../../framework-design.md).
+
+The default DoD cell is:
+
+- Follow rule DoD
+- Feature confirmed usable by user
+- Acceptance criteria (story mapping spec names with links) passed
+- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done)
+
+Point the quality link at the project's test strategy. This seed links the guide section that names the DoD rule. That rule applies the common-test-strategy quality checklist.
+
+`#` is the row’s place in that table, from 1 to n. It is not the SBI. When a row moves, renumber `#`. The Code stays. Example: the row that was `#2` can become `#3`, and `feature-01` is still `feature-01`.
+
+`Code` is the Type in lowercase plus a two-digit number inside that sprint, such as `feature-01` or `research-01`. `Module/Type` is one cell, such as `Framework/Feature`. `Parent PBI` shows the PBI code and the PBI name.
+
+**Row order**
+
+The table is the order to implement, one row at a time.
+
+- Done rows stay on top, in the order they were finished.
+- Open rows follow. The next row is first. The last row is last.
+- `WIP` is the next row when that item has started.
+- Do not group rows by Type, and do not append a row only because it is new.
+
+**Concise and readable**
+
+- Use bullets or numbers inside a cell when there is more than one check.
+- Prefer one line. Link the spec that holds the detail. Do not copy that spec into the cell.
 
 | Type | Meaning |
 | --- | --- |
@@ -199,11 +227,9 @@ Columns are fixed, in this order: `Code`, `Parent PBI`, `Module`, `Type`, `SBI`,
 | Documentation | Writes or retargets an explanation. Does not ship the capability the explanation describes. |
 | Task | Supporting work that is not one of the types above. |
 
-- Acceptance criteria must be verifiable when the item is implemented. They must not depend on another item that does not exist yet. Move a cross-item deliverable to the item that actually produces it.
-- `Acceptance criteria` and `Note` are bullet lists inside the cell. One bullet is one check or one note. Separate bullets with a line break. A cell with nothing to say is `—`.
-- Related docs point at the Product Backlog item, requirement, design, test, decision, or process evidence. Do not copy their body text. If a RID uses the item as an execution landing point, the item must have a stable anchor so the RID and Product Backlog can link back.
-- The note is a conclusion-level summary, remaining boundary, and evidence pointer. Do not paste command output, step-by-step logs, or a long investigation.
-- If an item has not started and there is nothing else to say, write `—`. Do not repeat “not started” in the note.
+- The DoD cell uses the default checks above. A sprint may replace them when that sprint has its own checks. One bullet is one check. Separate bullets with a line break.
+- Acceptance criteria stay in the linked story specs. They must be verifiable, and they must not depend on an item that does not exist yet.
+- Related specs link the Product Backlog item, requirement, design, test, decision, or process evidence. Do not copy their body text. If a RID uses the item as an execution landing point, the item must have a stable anchor so the RID and Product Backlog can link back.
 
 **Status**
 
@@ -219,7 +245,7 @@ An SBI status is only `ToDo`, `WIP`, or `Done`. The cell contains that word and 
 
 The sprint line above the table uses the same three words. `ToDo` when every SBI is `ToDo`. `WIP` when any SBI is `WIP`, or when the sprint mixes `ToDo` and `Done`. `Done` when every SBI is `Done`.
 
-Put dates, remaining work, and evidence in the note. Do not put them in the status cell. The RID Registry uses its own statuses. This section does not change those.
+Do not put dates or evidence in the status cell. Point them at [`change-log.md`](./change-log.md) or the related spec. The RID Registry uses its own statuses. This section does not change those.
 
 **Numbers, references, and retrospective**
 
@@ -271,7 +297,7 @@ This file. What, how, and when. It does not redefine guide terms.
 | Product solution and acceptance criteria | `product-backlog.md` | RID links the item anchor; the item’s `Related` column links the sprint item and design or test source |
 | Sprint schedule and execution status | Sprint Backlog in `sprint-backlog.md` | Product Backlog `Sprint` is only a projection; `Related` may link the execution item |
 | Detailed design and verification matrix | The design or test spec | Process tables keep a summary and a section link |
-| Process evidence and reason for change | `change-log.md` | Tracking artifact; the note column keeps the date, conclusion, and link |
+| Process evidence and reason for change | `change-log.md` | Tracking artifact; the entry keeps the date, the conclusion, and the link |
 | Current sprint, SBI, next, and OGT rows | `status.md` | Tracking projection; not a second sprint backlog |
 | Table shape and status meanings | Templates in this file | Process docs link this file from the header |
 | Artifact index | `artifacts-map.md` | Other docs link paths; they do not keep a second catalog |

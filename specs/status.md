@@ -3,7 +3,7 @@
 title: the current status of sdd-scrum execution
 type: tracking-spec
 status: active
-as_of: 2026-09-28
+as_of: 2026-09-29
 tags:
   - sdd
   - scrum
@@ -26,28 +26,47 @@ Sprint Backlog is the SBI list. This file records sprint status, the current SBI
 | --- | --- | --- |
 | Sprint 1 | Done | Closed 2026-09-25. EN guide and practices confirmed. |
 | Sprint 2 | Done | Closed 2026-09-26. Installer stories are Done. [MCP-01](./product-backlog.md#pb-16) go-live is Sprint 15. |
-| Sprint 3 | WIP | feature-11 is WIP. The start-load design is in `agent-design.md` §2.2 and §2.4. The seed `agents/ethan.md` is not updated yet. Remaining order after feature-11: feature-03 (map seed), feature-22 (rule `artifacts-map`), feature-21 (change-log and issues-log seeds) and the status seed, feature-01 (skill), feature-02 (Ethan runs it). |
+| Sprint 3 | WIP | feature-03 (map seed) is Done. Current SBI is feature-27 (seed `status.md`, WIP). Then feature-23 (`sdd-audit-artifacts`), feature-24 (`sdd-get-status`), feature-25, feature-26, feature-21, feature-01, feature-02, feature-22. |
 | Sprint 4–15 | ToDo | Not started. Sprint 15 includes [MCP-01](./product-backlog.md#pb-16) go-live. |
 
 ## where we are now:
 
 - Which sprint are we working on now: **Sprint 3** (WIP). Sprint 1 and Sprint 2 are Done.
-- What SBI are we working on now: **feature-11** (update `ethan.md` start load). The design text is updated. The seed file is the open OGT. Mark owns this. After feature-11, Dave and Mark follow the remaining order: feature-03 map seed, feature-22, feature-21 and the status seed, feature-01, feature-02. Sprint 4 holds `sdd-audit-artifacts`, `sdd-get-status`, and `sdd-update-project`.
+- What SBI are we working on now: **feature-27** (seed `status.md`, WIP). feature-03 is Done. Then feature-23 (`sdd-audit-artifacts`), feature-24 (`sdd-get-status`), feature-25, feature-26, feature-21, feature-01, feature-02, feature-22. Sprint 4 has no SBIs.
 
 ## what could be the next:
 
 - Dan: Sprint 3 feature-07 is Done. The Features tab reads the synced markdown.
-- Mark: Sprint 3 feature-11, then feature-03 (map seed), feature-22, feature-21 and the status seed, feature-01, and feature-02 with Dave.
+- Mark: Sprint 3 feature-27 (seed `status.md`) is WIP. Then feature-23, feature-24, feature-25, feature-26, feature-21, feature-01, feature-02, and feature-22. feature-03 is Done.
 - [MCP-01](./product-backlog.md#pb-16) go-live is Sprint 15 feature-06: pack copy, GitHub Releases for the five `sdd-mcp` binaries, admin-portal sync.
 
 ## Current on-going tasks
 
-OGT for Sprint 3, feature-11. The path-rule tasks are Done. The open tasks follow the 2026-09-28 start-load design.
+Open tasks only. Closed tasks move to the section below. Keep the latest 15 closed rows.
 
 | # | On-going Task | Status |
 | --- | --- | --- |
-| 1 | Update `specs/framework.seeds/agents/ethan.md` from [`agent-design.md`](./agent-ethan/agent-design.md) §2.2 and §2.4, and from the job index in §3. | ToDo |
-| 2 | Review [`agent-design.md`](./agent-ethan/agent-design.md) and [`framework-design.md`](./framework.seeds/framework-design.md) against that start load. | ToDo |
-| 3 | Review [`product-backlog.md`](./product-backlog.md) and [`sprint-backlog.md`](./sprint-backlog.md): Skill-10, Skill-15, Skill-04, and Sprint 4 feature-01 through feature-04. | ToDo |
-| 4 | `templates/EN/sdd-scrum-practices.md` still says map paths are relative to `artifacts_root`, and that the user may set `docs`. The seed and `framework-design.md` store workspace-relative paths such as `specs/product-backlog.md`, and `artifacts_root` may be any one folder name. Update the practices sentences so an agent does not prefix `artifacts_root` again. | Done |
-| 5 | In `templates/EN/artifacts-map.md` and `framework-design.md`, keep seed `local` values as concrete paths with the default root `specs`. Do not use `{artifacts_root}` placeholders. `purpose` holds the rule that stays in the working file. Path fields hold the sample. Do not add HTML example comments. | Done |
+| 3 | Review [`product-backlog.md`](./product-backlog.md) and [`sprint-backlog.md`](./sprint-backlog.md): Skill-10 `sdd-audit-artifacts` (Sprint 3 feature-23), Skill-15 `sdd-get-status` (Sprint 3 feature-24), Skill-04 `sdd-update-project` (Sprint 3 feature-25), and Sprint 3 feature-26 (Ethan runs update-project). | ToDo |
+| 6 | Check that the MCP tools `sdd_install_framework` and `sdd_update_framework` find the IDE skills folder correctly (Cursor: `~/.cursor/skills/`, not `~/.cursor/skills-cursor/` or `~/.claude/skills/`). Confirm that installed skills land at `{client_root}/skills/<name>/SKILL.md` and that a new IDE session lists them. | ToDo |
+
+## Last 15 closed OGTs
+
+Newest closed task first. `#` here is the place in this list, not the number the task had while it was open.
+
+| # | Closed task | Status |
+| --- | --- | --- |
+| 1 | Sprint columns are `#`, `Code`, `SBI`. `Code` is column 2. | Done |
+| 2 | Review [`agent-design.md`](./agent-ethan/agent-design.md) and [`framework-design.md`](./framework.seeds/framework-design.md) against the start load. | Done |
+| 3 | Update `specs/framework.seeds/agents/ethan.md` from [`agent-design.md`](./agent-ethan/agent-design.md) §2.2, §2.4, and the job index in §3. | Done |
+| 4 | Seed `local` paths in `artifacts-map.md` and `framework-design.md` stay concrete paths under `specs`. No `{artifacts_root}` placeholder. | Done |
+| 5 | Practices open a map path as `{workspace}/<path>` and do not prefix `artifacts_root` again. | Done |
+| 6 | If the sync cache cannot be read, the Features page reads `src/content/features/`. | Done |
+| 7 | feature-05 includes the old feature-06. The row was not renamed to a task. | Done |
+| 8 | Dan builds the Features page. Mark and Dave build start-a-new-project. | Done |
+| 9 | Three files: `features.en.md`, `features.zh-Hans.md`, `features.zh-Hant.md`. A missing file falls back to English. | Done |
+| 10 | Version text is part of the Features markdown, not a separate lookup. | Done |
+| 11 | The Features page shows the markdown file as written. No fixed sections. | Done |
+| 12 | Ethan prompt: no pack scan on start; skills run jobs; a missing framework sends the instructions page ([ADR-056](./adr/ADR-056-single-user-root-framework-pack.md)). | Done |
+| 13 | Pointers that called practices “columns only” now say the guide is definition and practices are what, how, and when. | Done |
+| 14 | Practices say when to copy template seeds. Templates are seeds, not live artifacts. | Done |
+| 15 | `adr/` and `knowledge/` are the Knowledge category, not one of the three core artifact lists. | Done |

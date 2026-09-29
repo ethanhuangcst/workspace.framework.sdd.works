@@ -33,7 +33,7 @@ Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 ---------
 # Requirements
 
-> Executable detail, acceptance criteria, and status are in the Product Backlog table. Each requirement has a row. Back-references use the PBI code and the item name. The row anchor sits on the PBI Code cell.
+> Executable detail, the DoD for each item, and status are in the Product Backlog table. Each requirement has a row. Back-references use the PBI code and the item name. The row anchor sits on the PBI Code cell.
 > `Category` is one word. `PBI Code` is that word plus a two-digit number. A file that already has its own row is not also a parent row.
 
 ---------
@@ -52,14 +52,14 @@ Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 ---------
 # Product Backlog
 
-| Category | PBI Code | PBI | Description | Acceptance criteria | Related | Sprint | Status |
+| Category | PBI Code | PBI | Description | DoD | Related | Sprint | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Collect | <a id="pb-1"></a>Collect-01 | Catalog a card | The collector records name, set, card number, rarity, and quantity. Set plus card number is unique. | A second catalog of the same set and card number increases quantity by 1 and does not add a row. An empty name is rejected. | [Sprint 1 feature-01](./sprint-backlog.md#s1-feature-01) · [`architecture.md`](./architecture.md) §2 | Sprint 1 | Done |
-| Collect | <a id="pb-2"></a>Collect-02 | Search by set and rarity | Search only the current collector’s cards. | After a set filter, the list contains only that set. After a rarity filter, the list contains only that rarity. No matches shows an empty state. | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-01](./sprint-backlog.md#s2-feature-01) | Sprint 2 | WIP |
-| Collect | <a id="pb-3"></a>Collect-03 | Binder | The collector creates a binder and places a card in it. | Placing a card in a binder and removing it does not change the quantity in the full catalog. | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-02](./sprint-backlog.md#s2-feature-02) · [`architecture.md`](./architecture.md) §2 | Sprint 2 | ToDo |
-| Collect | <a id="pb-4"></a>Collect-04 | Record a trade | Record the card given, the card received, and the date. | Giving decreases quantity by 1. Receiving increases it by 1. Quantity 0 cannot be given. | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-03](./sprint-backlog.md#s2-feature-03) | Sprint 2 | ToDo |
-| Scope | <a id="pb-5"></a>Scope-01 | Scope gate | No payments, no public marketplace, no licensed brand content. | The UI and the API have no prices, no matching with strangers, and no real brand names or marks. | [`architecture.md`](./architecture.md) §1 | Sprint 1 | Done |
-| Local | <a id="pb-6"></a>Local-01 | Local startup | The default configuration starts on this machine. | After `make up`, the app opens, an empty collection is visible, and one catalog succeeds. | [Sprint 1 task-01](./sprint-backlog.md#s1-task-01) · [`deployment.md`](./deployment.md) §1 | Sprint 1 | Done |
+| Collect | <a id="pb-1"></a>Collect-01 | Catalog a card | The collector records name, set, card number, rarity, and quantity. Set plus card number is unique. | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [Sprint 1 feature-01](./sprint-backlog.md#s1-feature-01) · [`architecture.md`](./architecture.md) §2 | Sprint 1 | Done |
+| Collect | <a id="pb-2"></a>Collect-02 | Search by set and rarity | Search only the current collector’s cards. | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-01](./sprint-backlog.md#s2-feature-01) | Sprint 2 | WIP |
+| Collect | <a id="pb-3"></a>Collect-03 | Binder | The collector creates a binder and places a card in it. | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-02](./sprint-backlog.md#s2-feature-02) · [`architecture.md`](./architecture.md) §2 | Sprint 2 | ToDo |
+| Collect | <a id="pb-4"></a>Collect-04 | Record a trade | Record the card given, the card received, and the date. | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-03](./sprint-backlog.md#s2-feature-03) | Sprint 2 | ToDo |
+| Scope | <a id="pb-5"></a>Scope-01 | Scope gate | No payments, no public marketplace, no licensed brand content. | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [`architecture.md`](./architecture.md) §1 | Sprint 1 | Done |
+| Local | <a id="pb-6"></a>Local-01 | Local startup | The default configuration starts on this machine. | - Follow rule DoD<br>- Feature confirmed usable by user<br>- Acceptance criteria (story mapping spec names with links) passed<br>- Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done) | [Sprint 1 task-01](./sprint-backlog.md#s1-task-01) · [`deployment.md`](./deployment.md) §1 | Sprint 1 | Done |
 
 ---------
 

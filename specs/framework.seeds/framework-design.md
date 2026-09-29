@@ -101,11 +101,13 @@ On start, after the install ledger passes, Ethan follows the skill `sdd-audit-ar
 | `Index broken` | At least one process file opened, and the map is missing or its paths do not open those files | Tell the user the next step is to update the project. When the user confirms, follow the skill `sdd-update-project`. |
 | `Usable` | The map opens the process files, including `status.md` and `sprint-backlog.md` | Follow the skill `sdd-get-status`. |
 
+An empty `locale` does not change the verdict. `sdd-audit-artifacts` reports `locale` empty only when it opened the map and the field is missing. Ethan uses that report. He does not decide that the field is empty. On `Usable`, start load still follows `sdd-get-status`. When a later job needs a locale and the audit reported it empty, the next step is `sdd-update-project` after the user confirms. Do not assume English.
+
 Do not put a verdict flag in the map file.
 
 `sdd-kickoff-project` writes this file when it is missing. It asks for the product name, `artifacts_root`, locale, and module folders. While the copy is still running, the header may say `initialized: no`. Remove that line when the copy finishes. Copy a seed only where the target file is missing. Do not overwrite a file that already has content.
 
-`sdd-update-project` repairs a missing or wrong map after the user confirms an `Index broken` verdict. It does not overwrite a process file that already has content. It also updates locale or map settings when a map is already in use.
+`sdd-update-project` repairs a missing or wrong map after the user confirms an `Index broken` verdict. It does not overwrite a process file that already has content. It also writes `locale` when the audit reported that field empty and the user confirmed, and it updates other map settings when a map is already in use.
 
 A module is a folder under `artifacts_root`. The map stores `folder`, `stem`, and the three workspace-relative paths. The default stem is the folder name. A shorter stem is set once. Two modules cannot use the same stem. A later read uses the stored paths.
 
@@ -120,7 +122,7 @@ Read-only skill. [Skill-10](../product-backlog.md#pb-30). Sprint 4 writes the in
 | Authoring seed | `specs/framework.seeds/skills/sdd-audit-artifacts/SKILL.md` |
 | After install | `{client_root}/skills/sdd-audit-artifacts/SKILL.md` |
 
-Start load follows this skill after `pack_complete` is true. The skill returns one verdict — `Uninitialized`, `Index broken`, or `Usable` — plus the paths it opened and the paths that failed. It does not create or edit a project file. It does not replace `artifacts-map.mdc`.
+Start load follows this skill after `pack_complete` is true. The skill returns one verdict — `Uninitialized`, `Index broken`, or `Usable` — the paths it opened, the paths that failed, and whether `locale` is empty. It reports `locale` empty only when it opened the map and the field is missing. An empty `locale` does not change the verdict. It does not create or edit a project file. It does not replace `artifacts-map.mdc`.
 
 ## sdd-get-status
 
@@ -165,7 +167,9 @@ Product requirements and acceptance for the project. The seed is an example a ne
 | On a project | `{workspace}/{artifacts_root}/product-backlog.md` |
 | Authoring seed | `specs/framework.seeds/templates/EN/product-backlog.md` |
 
-The column name stays Category. Do not rename it to Type. An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
+Columns, in this order: Category, PBI Code, PBI, Description, DoD, Related, Sprint, Status.
+
+The column name stays Category. Do not rename it to Type. The DoD cell uses the same default checks as a sprint item. Those checks are in [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md). A row may replace them. An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
 
 ## sprint-backlog.md
 
@@ -178,9 +182,17 @@ Sprint schedule and the SBI list. The seed is a starter for a new project. It is
 
 ### Sprint item table
 
-Columns, in this order: Code, Parent PBI, Module, Type, SBI, then Acceptance criteria, Related docs, Note, and Status.
+Columns, in this order: `#`, Code, SBI, Parent PBI, Module/Type, DoD, Related specs, Status.
+
+`Code` is the second column, between `#` and SBI.
+
+The DoD cell is the check for that row. The default checks are in [`sdd-scrum-practices.md`](./templates/EN/sdd-scrum-practices.md). Story-specific checks stay in the linked specs. Do not copy those specs into the cell.
+
+`#` is the row’s place in that table, from 1 to n. It is not part of the SBI. When a row moves, renumber `#`. The Code stays.
 
 **Code** is the Type in lowercase, a hyphen, and a two-digit number inside that sprint. Examples: `feature-01`, `research-01`, `bug-fix-01`, `documentation-01`, `task-01`. Numbering restarts at `01` for each Type in each sprint. The visible code may repeat in a later sprint. The row anchor must be unique in the file, so prefix the sprint: `s1-feature-01`.
+
+**Module/Type** is one cell: the module name, a slash, and the Type. Example: `Framework/Feature`.
 
 **Type** is one word.
 
@@ -192,7 +204,7 @@ Columns, in this order: Code, Parent PBI, Module, Type, SBI, then Acceptance cri
 
 **Parent PBI** shows the PBI code and the PBI name, and links the product-backlog anchor.
 
-**Row order is priority, top to bottom.** In each sprint's item table, the first row is the highest priority. When updating `sprint-backlog.md`, insert or move a row to that place. Do not append a row only because it is new. Do not group rows by Type, and do not keep the order in which the rows were added. `WIP` sits above `ToDo`. `Done` sits below open work.
+**Row order is the implementation order.** Done rows stay on top, in the order they were finished. Open rows follow, next first and last last. `WIP` is the next row when work has started. Do not group rows by Type. Do not append a row only because it is new. When a row moves, its Code stays and `#` changes.
 
 ### Status values
 
@@ -251,7 +263,7 @@ Current sprint projection. It is not a second sprint backlog. It is not the defe
 | On a project | `{workspace}/{artifacts_root}/status.md` |
 | Authoring seed | `specs/framework.seeds/templates/EN/status.md` |
 
-It records the current sprint, the current SBI, what is next, and the OGT table for the sprint item in progress. An open defect is not an OGT row. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+It records the current sprint, the current SBI, what is next, and the OGT table for the sprint item in progress. Closed OGT rows leave that table. The file keeps the latest 15 closed OGTs in their own section, newest first. An open defect is not an OGT row. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
 
 ## change-log.md
 

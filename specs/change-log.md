@@ -7,6 +7,98 @@
 
 ---
 
+## 2026-09-29
+
+### status.md keeps the last 15 closed OGTs
+
+**Why**: Finished on-going tasks were either struck through in the open list or dropped. The open list was no longer only open work.
+
+**What changed**: [`status.md`](./status.md) keeps open OGTs in the current table. A new section holds the latest 15 closed OGTs, newest first. [`framework-design.md`](./framework.seeds/framework-design.md) states that rule.
+
+**Verification**: The current table has tasks 3 and 6. The closed section has 15 rows.
+
+### status.md is its own Sprint 3 item
+
+**Why**: A Usable audit opens `status.md`, and `sdd-get-status` reads it. The seed was only a parent on the Done map-seed row, while [Spec-seeds-07](./product-backlog.md#pb-38) stayed ToDo.
+
+**What changed**: Sprint 3 feature-27 is the `status.md` seed, after feature-23 and before feature-24. feature-03 now parents only the artifacts-map seed.
+
+**Verification**: The open list names feature-27. Spec-seeds-07 remains Sprint 3 ToDo.
+
+### Next SBI is sdd-audit-artifacts
+
+**Why**: Start load follows `sdd-audit-artifacts` immediately after the ledger. The row was Sprint 3 feature-23 at open place 26, after the artifacts-map rule.
+
+**What changed**: Open Sprint 3 order follows start load. Next is feature-23 `sdd-audit-artifacts`. Then feature-24 `sdd-get-status`, feature-25 `sdd-update-project`, feature-26 Ethan runs that skill, feature-21 the remaining seeds, feature-01 kickoff, feature-02 Ethan runs kickoff, and feature-22 the artifacts-map rule. Sprint 4 has no SBIs. Skill-15, Skill-04, and Agent-09 project Sprint 3.
+
+**Verification**: The first open Sprint 3 row is feature-23.
+
+### sdd-audit-artifacts moves to Sprint 3
+
+**Why**: Start load follows `sdd-audit-artifacts` before kickoff. The skill was scheduled in Sprint 4.
+
+**What changed**: The initial skill is Sprint 3 feature-23, after the remaining seeds and before `sdd-kickoff-project`. Sprint 3 already uses feature-03 for the map seed, so the code is feature-23. [Skill-10](./product-backlog.md#pb-30) projects Sprint 3. Sprint 4 keeps `sdd-get-status` and `sdd-update-project`.
+
+**Verification**: Sprint 3 open order is feature-22, feature-21, feature-23, feature-01, feature-02. Sprint 4 no longer contains the audit skill.
+
+### Sprint 1 and Sprint 2 use the DoD rule
+
+**Why**: Those sprint rows still held the old acceptance text after the column became DoD.
+
+**What changed**: Every Sprint 1 and Sprint 2 row in [`sprint-backlog.md`](./sprint-backlog.md) uses the four default checks. Sprint 2 feature-12 and feature-13 are one row each again, with their related specs restored.
+
+**Verification**: Sprint 1 has 4 rows and Sprint 2 has 15. Each DoD cell is the default checks. Status on the repaired rows is Done.
+
+### Product Backlog DoD cells use the default checks
+
+**Why**: The column was renamed to DoD, and the cells still held the old acceptance text.
+
+**What changed**: Every row in [`product-backlog.md`](./product-backlog.md) uses the four default checks: the DoD rule, user confirmation, linked acceptance criteria, and the quality bar in [`agent-test.md`](./agent-ethan/agent-test.md), [`mcp-test.md`](./mcp/mcp-test.md), and [`app-test.md`](./admin-portal/app-test.md).
+
+**Verification**: The Product Backlog table has one DoD cell shape on every row.
+
+### Code is the second sprint column, and Product Backlog uses DoD
+
+**Why**: `Code` was hard to scan after the item name. The Product Backlog still called its done-check column acceptance criteria after the sprint table had moved to DoD.
+
+**What changed**: Sprint item columns are `#`, `Code`, `SBI`, Parent PBI, Module/Type, DoD, Related specs, Status. The Product Backlog column is `DoD`. The English product-backlog seed uses the same default DoD checks as the sprint seed. This repo’s product backlog keeps each row’s existing checks under that header. [`framework-design.md`](./framework.seeds/framework-design.md) and [`sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md) match.
+
+**Verification**: Sprint tables have eight cells and `Code` is column 2. Product Backlog headers say `DoD`.
+
+### Sprint item column is DoD
+
+**Why**: The sprint row was mixing story acceptance criteria with the check that marks the row done.
+
+**What changed**: The sprint-item column is `DoD` in [`sprint-backlog.md`](./sprint-backlog.md), the EN seed, [`framework-design.md`](./framework.seeds/framework-design.md), and [`sdd-scrum-practices.md`](./framework.seeds/templates/EN/sdd-scrum-practices.md). The seed default is the DoD rule, user confirmation, linked acceptance criteria, and the quality standard. Sprint 3 uses its own three checks: confirmed usable, pack cross-review, and TRUE AGENT. Product Backlog acceptance criteria stay on the PBI.
+
+**Verification**: Sprint tables use `DoD`. Sprint 4 and earlier sprints keep their previous cell text under that header. Sprint 3 feature-18 is one row again.
+
+### Seed prompt matches the audit start load
+
+**Why**: `agents/ethan.md` still classified a project from a missing `artifacts-map.md`. The design already moved that judgment into `sdd-audit-artifacts`.
+
+**What changed**: [`agents/ethan.md`](./framework.seeds/agents/ethan.md) now follows §2.2, §2.4, and the §3 job index in [`agent-design.md`](./agent-ethan/agent-design.md). Start load is the pack gate, then `sdd-audit-artifacts`, then one of `sdd-kickoff-project`, `sdd-update-project`, or `sdd-get-status`. Report status stays `skill_update_status`, and the prompt says to use `skill_tracking` until `constants.md` is renamed.
+
+**Verification**: The seed no longer treats a missing map as a new project. It does not call `sdd_install_framework` or `sdd_update_framework`.
+
+### Prompt wording and §14 stay identical
+
+**Why**: Locale is an address the job reads, and the job table must not invent skill folder names. The design and the seed had started to diverge.
+
+**What changed**: [`agents/ethan.md`](./framework.seeds/agents/ethan.md) reads `locale` from `{workspace}/artifacts-map.md` when a job needs it. Allowed values include `EN`, `HanS`, and `HanT`. Start load names four skills by folder. Jobs in the table use the folder from `constants.md`. [`agent-design.md`](./agent-ethan/agent-design.md) §14 is that same prompt. Sprint 3 feature-11 is Done.
+
+**Verification**: §14 and the seed file match. Feature-11 acceptance criteria are met. Parent [Agent-02](./product-backlog.md#pb-7) stays ToDo.
+
+### Audit reports an empty locale
+
+**Why**: A missing `locale` is a header field. Ethan was left to notice it himself, and a chat question does not write the map.
+
+**What changed**: `sdd-audit-artifacts` reports `locale` empty only when it opened the map and the field is missing. That report does not change the verdict. On `Usable`, start load still follows `sdd-get-status`. When a later job needs a locale and the report says it is empty, Ethan proposes `sdd-update-project` and waits for confirm. [`framework-design.md`](./framework.seeds/framework-design.md), [`agent-design.md`](./agent-ethan/agent-design.md) §2.2 and §14, and the seed prompt match. Skill-10 and Sprint 4 feature-03 include the report.
+
+**Verification**: An empty `locale` is not `Uninitialized` or `Index broken`. §14 and the seed match.
+
+---
+
 ## 2026-09-28
 
 ### Start load uses an audit verdict
