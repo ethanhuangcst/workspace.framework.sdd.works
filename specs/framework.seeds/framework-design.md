@@ -93,20 +93,68 @@ In the authoring seed, `local` values are concrete paths that use the default ro
 
 One block per artifact that exists. A row may carry one line of purpose when that line prevents a wrong copy. Do not leave empty rows. Omit a seed path when the file follows `templates/{locale}/<name>`. List a pack-relative seed path only when the file does not follow that convention. Do not write a machine path into the project file.
 
-On start, after the install ledger passes, Ethan reads `{workspace}/artifacts-map.md`.
+On start, after the install ledger passes, Ethan follows the skill `sdd-audit-artifacts`. That skill returns one verdict. Ethan does not decide the verdict from a missing root file.
 
-| Map | What it means |
-| --- | --- |
-| Missing | New project. The next job is start a new project. Do not search template folders for the other files. |
-| Present | On-going project. Read `artifacts_root`, then open each stored path as `{workspace}/<path>`. |
+| Verdict | What it means | What Ethan does |
+| --- | --- | --- |
+| `Uninitialized` | No process file opened | Tell the user the next step is to start a new project. When the user confirms, follow the skill `sdd-kickoff-project`. |
+| `Index broken` | At least one process file opened, and the map is missing or its paths do not open those files | Tell the user the next step is to update the project. When the user confirms, follow the skill `sdd-update-project`. |
+| `Usable` | The map opens the process files, including `status.md` and `sprint-backlog.md` | Follow the skill `sdd-get-status`. |
 
-Do not put a new-project or on-going flag in the file. The missing file is that signal.
+Do not put a verdict flag in the map file.
 
 `sdd-kickoff-project` writes this file when it is missing. It asks for the product name, `artifacts_root`, locale, and module folders. While the copy is still running, the header may say `initialized: no`. Remove that line when the copy finishes. Copy a seed only where the target file is missing. Do not overwrite a file that already has content.
 
+`sdd-update-project` repairs a missing or wrong map after the user confirms an `Index broken` verdict. It does not overwrite a process file that already has content. It also updates locale or map settings when a map is already in use.
+
 A module is a folder under `artifacts_root`. The map stores `folder`, `stem`, and the three workspace-relative paths. The default stem is the folder name. A shorter stem is set once. Two modules cannot use the same stem. A later read uses the stored paths.
 
-The rule `artifacts-map.mdc` updates this file when a project artifact is created, renamed, or deleted. [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `sdd-audit-artifacts` lists gaps and waits for an instruction. It does not replace the rule.
+The rule `artifacts-map.mdc` updates this file when a project artifact is created, renamed, or deleted. [ADR-072](../adr/ADR-072-rule-artifacts-map.md). It does not classify the workspace on start, and it does not set `pack_complete`.
+
+## sdd-audit-artifacts
+
+Read-only skill. [Skill-10](../product-backlog.md#pb-30). Sprint 4 writes the initial `SKILL.md`.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework.seeds/skills/sdd-audit-artifacts/SKILL.md` |
+| After install | `{client_root}/skills/sdd-audit-artifacts/SKILL.md` |
+
+Start load follows this skill after `pack_complete` is true. The skill returns one verdict — `Uninitialized`, `Index broken`, or `Usable` — plus the paths it opened and the paths that failed. It does not create or edit a project file. It does not replace `artifacts-map.mdc`.
+
+## sdd-get-status
+
+Read-only skill. [Skill-15](../product-backlog.md#pb-86). [ADR-073](../adr/ADR-073-skill-get-status.md). Not a practices job.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework.seeds/skills/sdd-get-status/SKILL.md` |
+| After install | `{client_root}/skills/sdd-get-status/SKILL.md` |
+
+Start load follows this skill when the audit verdict is `Usable`. A user who asks where the project is follows it. It reads the five process files the audit opened:
+
+| File | Authority |
+| --- | --- |
+| `status.md` | Current sprint, current item, and what is next |
+| `sprint-backlog.md` | Sprint item list and schedule |
+| `product-backlog.md` | Requirements and acceptance |
+| `change-log.md` | Decisions already recorded |
+| `issues-log.md` | Open defects |
+
+It states where the project is and proposes the next-step options those files support. In a long file, it reads the current sprint and the open items. It does not create or edit a project file.
+
+## sdd-update-status
+
+Confirmed write of `status.md`. [ADR-065](../adr/ADR-065-skill-update-status.md). Practices job 6 stays titled Report status. The constants key is `skill_update_status`.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework.seeds/skills/sdd-update-status/SKILL.md` |
+| After install | `{client_root}/skills/sdd-update-status/SKILL.md` |
+
+The skill drafts the picture from the sprint backlog, waits for confirm, and writes only the confirmed text into `status.md`. It does not mark a product item Done. It does not answer “where are we”. That read is `sdd-get-status`.
+
+The seed folder on disk is still `skills/sdd-tracking/` until that rename is done. Do not ship both folders.
 
 ## product-backlog.md
 

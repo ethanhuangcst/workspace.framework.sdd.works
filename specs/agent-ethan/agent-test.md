@@ -5,7 +5,7 @@
 **Installer reference:** [`../mcp/mcp-design.md`](../mcp/mcp-design.md) (`sdd_install_framework`, `sdd_update_framework`)
 **Quality bar:** common-test-strategy — critical path 100% for load/recovery once the prompt exists; overall ≥80% where measurable.
 
-> **Status:** plan · as_of 2026-09-25 · seed prompt exists at [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md). CE-GATE cases match Sprint 2 feature-03. Automation waits on fixture harness. Cases below are expected outcomes for fixture and manual verification.
+> **Status:** plan · as_of 2026-09-28 · CE-GATE still matches the pack gate. `CE-LOAD-01` … `CE-LOAD-16` record the retired Toggle A / Toggle B table in [`agent-design.md`](./agent-design.md) §6. New start-load cases follow §2.2 and §2.4 and are not written here yet.
 
 ---
 

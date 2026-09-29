@@ -1,7 +1,7 @@
 # coach-ethan — agent design
 
 > **Purpose**: Define how coach-ethan is present, what it does, what it reads, how start-up resolves files, and how capabilities grow across MVPs.
-> **Status**: design · as_of 2026-09-25 · Sprint 2 feature-03 (Agent-07) ledger start gate
+> **Status**: design · as_of 2026-09-28 · start load is the audit verdict, then `sdd-get-status` when the verdict is Usable
 > **Backlog**: [Agent-07 agent ethan — pack receipt start gate](../product-backlog.md#pb-17) · [Agent-15 Pack file: agents/ethan.md](../product-backlog.md#pb-63) · [MCP-01 Installer: pack allow-list + ledger](../product-backlog.md#pb-16) · [Agent-01 agent ethan — POC](../product-backlog.md#pb-6)
 > **Framework**: [`scrum-in-sdd.md`](../framework.seeds/templates/EN/scrum-in-sdd.md) · **Practices**: [`sdd-scrum-practices.md`](../framework.seeds/templates/EN/sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
@@ -15,11 +15,11 @@ This file is the design for the coach. The installable prompt is §14 and the se
 | Goals | Non-goals |
 | --- | --- |
 | Coach SDD-refined Scrum in the user’s project | Host the coach on remote MCP |
-| At start, load every **process** file named in `artifacts-map.md` | Load domain trees (`adr/`, `mcp/`, …) at start |
-| Answer what to do now and what is next from live specs | Memory store, embeddings, or MCP resource for knowledge |
-| Run Scrum events by calling installed skills / workflows | Invent a second event catalog beside the guide |
-| Edit process artifacts using practices (jobs, templates, columns) | Overwrite existing live `specs/` files when seeding |
-| Recover missing templates via MCP; seed missing specs after confirm | Tar the install package into `specs/` |
+| At start, follow the skill `sdd-audit-artifacts`, then the skill `sdd-get-status` when the verdict is Usable | Load domain trees (`adr/`, `knowledge/`) at start |
+| Answer what to do now and what is next from the five process files that skill reads | Memory store, embeddings, or MCP resource for knowledge |
+| Run Scrum events by calling installed skills | Invent a second event catalog beside the guide |
+| Edit process artifacts using practices, after the user confirms | Overwrite a process file that already has content |
+| Set `pack_complete` to false when a needed skill, rule, or seed template cannot be read | Call the MCP tools `sdd_install_framework` or `sdd_update_framework` to repair the pack |
 | Collect missing input via AskQuestion when the host provides it | Require AskQuestion to close an MVP |
 
 ## 2. Presence
@@ -71,27 +71,30 @@ If `<workspace>/.cursor/agents/ethan.md` already exists, Cursor loads that file 
 
 This repository has no `.cursor/` directory. It was removed on 2026-09-23. There is no workspace agent, no workspace skill or rule tree, and no workspace template pack here. `/ethan` in this repo is `~/.cursor/agents/ethan.md` only. Live product specs stay in `specs/`.
 
-### 2.2 Start load (no pack scan)
+### 2.2 Start load
 
-`/ethan` only runs when the client has already loaded `{client_root}/{agents_dir}/ethan.md`. On Cursor that path is `~/.cursor/agents/ethan.md`. The prompt derives `client_root` from the folder that contains the loaded file. It does not name `.cursor` or any other tool folder. Ethan does **not** scan the five framework trees on every start.
+`/ethan` only runs when the client has already loaded `{client_root}/{agents_dir}/ethan.md`. On Cursor that path is `~/.cursor/agents/ethan.md`. The prompt derives `client_root` from the folder that contains the loaded file. It does not name `.cursor` or any other tool folder. Ethan does not scan the pack trees to decide completeness.
 
-§2.4 is the ledger detail behind step 1. The seed prompt in §14 still has the older list.
+Do these steps in order. Stop at the first step that says stop. The seed file `agents/ethan.md` is updated from this section in a follow-up. §14 is the same text.
 
-1. Read only `{client_root}/.sdd-installed.json`. No greeting. No job list. The ledger is not in the workspace. If the file is missing, or `pack_complete` is absent or not `true`, send the instructions URL and stop. Do not read project files. Do not call install or update.
-2. Locate `{workspace}/artifacts-map.md`. If that file can be read, this is an on-going project: read `artifacts_root` from it. When the field is absent, use `specs`. A set value is one folder name relative to the workspace. `docs` is an example. If it is missing, this is a new project: say the project is not initialized, name start-a-new-project as the next job, and stop the file search. Do not look in template folders for the other files.
-3. On an on-going project, read `constants.md` from the installed pack, then open each Process and Tracking path named in the map as `{workspace}/<path>`. The stored path is workspace-relative. Do not prefix `artifacts_root` again. Skip `adr/` and `knowledge/`. Do not open a skill folder until the user asks.
-4. If `artifact_locale` is missing from the map, ask before a job that writes files. If it is set, use it.
-5. Answer what to do now and what is next. `status.md` is the projection. `sprint-backlog.md` is the SBI list. A missing status or sprint backlog on an on-going project is a gap. Name the missing file. Do not create a file unless the user asks and confirms.
+1. Read only `{client_root}/.sdd-installed.json`. When the file is missing, or `pack_complete` is not `true`, send the instructions URL and stop. The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise it is `https://framework.sdd.works/instructions`. Do not read the workspace. Do not call the MCP tools `sdd_install_framework` or `sdd_update_framework`.
+2. Follow the skill `sdd-audit-artifacts`. It returns one verdict — `Uninitialized`, `Index broken`, or `Usable` — plus the paths it opened and the paths that failed. It does not create or edit a project file. Use that verdict.
+3. Act on the verdict.
+   - **Uninitialized.** Tell the user the project is not initialized, and that the next step is to start a new project. When the user confirms, follow the skill `sdd-kickoff-project`.
+   - **Index broken.** Tell the user the index does not match the files, and that the next step is to update the project. When the user confirms, follow the skill `sdd-update-project`. Leave `{client_root}/.sdd-installed.json` unchanged.
+   - **Usable.** Follow the skill `sdd-get-status`.
+
+Do not write a project file during start load. `sdd-get-status` reads the five process files and proposes next-step options. The file roles are in [ADR-073](../adr/ADR-073-skill-get-status.md) and [`framework-design.md`](../framework.seeds/framework-design.md).
 
 ```mermaid
 flowchart TD
   start[Read .sdd-installed.json] --> gate{pack_complete is true?}
   gate -->|No| stop[Send instructions URL and stop]
-  gate -->|Yes| map{Can workspace/artifacts-map.md be read?}
-  map -->|No| newProj[New project. Next job: start a new project]
-  map -->|Yes| ongoing[On-going project]
-  ongoing --> read[Read Process and Tracking paths named in the map]
-  read --> answer[Answer what to do now and what is next]
+  gate -->|Yes| audit[Follow skill sdd-audit-artifacts]
+  audit --> verdict{Verdict}
+  verdict -->|Uninitialized| kickoff[Propose start a new project. On confirm follow sdd-kickoff-project]
+  verdict -->|Index broken| update[Propose update the project. On confirm follow sdd-update-project]
+  verdict -->|Usable| status[Follow skill sdd-get-status]
 ```
 
 ### 2.3 Status projection
@@ -133,10 +136,16 @@ On every start, before any greeting or job list, Ethan reads only `{client_root}
 
 | Ledger | What ethan does |
 | --- | --- |
-| Missing, or `pack_complete` is not true | Send the user to `instructions_url` when constants were already readable; otherwise `https://framework.sdd.works/instructions`. Then stop. No job list. No “what would you like to do?”. Do not copy files. Do not call install or update. |
-| `pack_complete: true` | Treat the framework as complete. Continue §2.2. An empty workspace means the project is not initialized. |
+| Missing, or `pack_complete` is not true | Send the instructions URL from §2.2 step 1 and stop. Do not read the workspace. Do not call the MCP tools `sdd_install_framework` or `sdd_update_framework`. |
+| `pack_complete: true` | Continue §2.2. Do not scan the pack to re-check completeness. |
 
-When a later job needs a skill folder, a rule file, or a seed template and that file cannot be read, Ethan sets `pack_complete` to `false` in the ledger, sends the same instructions URL, and stops. He does not change `package_version` or `package_commit`. He does not set `pack_complete` back to `true`. The next start sees false and stops until install or update writes true again.
+`sdd_install_framework` and `sdd_update_framework` are MCP tools on `framework.sdd.works`. They are not skills, rules, or seed templates. Ethan does not call them to replace a missing file. A missing tool does not change `.sdd-installed.json`.
+
+When the step Ethan is about to run needs a skill, a rule, or a seed template, and that file cannot be read, he sets `pack_complete` to `false` in `{client_root}/.sdd-installed.json`. He leaves `package_version` and `package_commit` unchanged. He sends the instructions URL from §2.2 step 1 and stops. He does not copy a replacement file. He does not set `pack_complete` back to `true`. The next start stops at the pack gate until install or update writes `true`.
+
+Start load reads the skill `sdd-audit-artifacts`. On a `Usable` verdict it reads the skill `sdd-get-status`. When either file cannot be read, this rule applies and start load does not continue. The skills `sdd-kickoff-project` and `sdd-update-project` are opened only after the user confirms. A missing file at that later step uses this same rule.
+
+Leave `.sdd-installed.json` unchanged when `sdd-audit-artifacts` has already returned `Uninitialized` or `Index broken`. Leave it unchanged when a skill, rule, or seed template is missing and the current step does not read that file.
 
 Job 2 uses only `sdd-kickoff-project` (`skill_start_project`). Do not add a second skill for starting a project. Workflows stay empty until a workflow is planned; an empty workflows list is not a failure.
 
@@ -152,18 +161,20 @@ The prompt keeps a one-line **job index**: job name → practices section → sk
 | Update project settings | `skill_update_project` |
 | Refine product backlog | `skill_refine_pb` |
 | Sprint planning | `skill_plan_sprint` |
-| Report status | `skill_tracking` |
+| Report status | `skill_update_status` |
 | Retrospective | `skill_retrospective` |
 | Start a new sprint / close sprint | `skill_close_sprint` (and related keys when filled) |
+
+`sdd-get-status` is not a row in this table. Start load follows it when the audit verdict is Usable. `constants.md` still lists `skill_tracking` until that key is renamed to `skill_update_status`.
 
 Follow-up (not this pass): practices job 1 still says re-install/update and copy from workspace templates. Align that section with §2.4, ADR-056, and ADR-057: start gate is `pack_complete` on `.sdd-installed.json`; instructions page on failure; no ethan copy of the pack. Do not expand unfilled jobs 4–8 here.
 
 Coach capabilities over time (still true):
 
-1. **Start load** — §2.2 (guide, practices, and whatever project files exist; no pack scan)
-2. **Guide** — answer from the guide and live status / sprint state
-3. **Run jobs** — call the matching skill from the index above
-4. **Ask** — AskQuestion when the host provides it; otherwise ask in chat (e.g. Toggle B seed confirm)
+1. **Start load** — §2.2. The audit skill classifies the workspace. `sdd-get-status` answers where the project is when the verdict is Usable.
+2. **Guide** — answer from the guide when the question needs it
+3. **Run jobs** — call the matching skill from the index above, after the user confirms a write
+4. **Ask** — AskQuestion when the host provides it; otherwise ask in chat before a write
 
 ## 4. Two stores (do not mix)
 
@@ -171,109 +182,54 @@ Coach capabilities over time (still true):
 | --- | --- | --- |
 | **Client root (CR)** | Cursor: `~/.cursor` from MCP `paths` / `.sdd-installed.json` | Installed framework pack: agents, skills, rules, workflows; templates under the pack when ARTIFACTS-01 / TEMPLATES-01 ship. This is the only framework tree for this repository. |
 | **Workspace templates (WS-t)** | `<workspace>/.cursor/templates/framework.sdd.works/<locale>/` | Process files if a project pasted that folder. This repository has no WS-t. |
-| **Workspace specs (WS-s)** | `<workspace>/specs/` | Live project process files. Destination when the user confirms seed-from-template (Toggle B). |
+| **Workspace specs (WS-s)** | `<workspace>/specs/` | Live project process files. `sdd-kickoff-project` copies a seed only where the target file is missing. |
 | **Project agents** | `<workspace>/.cursor/agents/` | Cursor registry for slash-invoke in this workspace. **Not** WS-t. |
 
 **Calling from** = the Cursor workspace folder (product repo, or a user who opened `~/.cursor` as a folder).
 
 Templates are the **start catalog** and the **seed** for missing specs. Live `specs/` always wins over a template with the same filename. Sample product text in a template (e.g. Pokymon) is not the user’s product; after seed, the user fills project facts.
 
-## 5. Start load and search order
+## 5. Finding project files
 
-Coach start (status + sprint backlog, no pack scan) is §2.2. This section is how ethan finds and reads **process** files after that.
+Start load is §2.2. The skill `sdd-audit-artifacts` finds maps and process files. Ethan does not keep a second search order in this design. He does not prefix `artifacts_root` onto a workspace-relative path.
 
-### 5.1 Sequence
+Chat history is ongoing context for the thread. No memory store, embeddings, or MCP resource for knowledge content.
 
-1. Resolve `clientRoot` from the seed map and/or local `.sdd-installed.json` (`paths`). Do not invent folders.
-2. Find `artifacts-map.md` in this order:
-   1. `workspace/specs/artifacts-map.md`
-   2. `workspace/.cursor/templates/framework.sdd.works/<locale>/artifacts-map.md`
-   3. Client-root template path from install `paths` (when the pack includes templates)
-3. **Locale**: first existing of `EN`, then `HanS`.
-4. Load **every process-doc row** named in that map. Template pack today typically lists: practices, product-backlog, sprint-backlog (or legacy `sprint_plan.md` / HanS), change-log, architecture, deployment; include `scrum-in-sdd.md` when the map lists it. Domain trees are not loaded at start.
-5. For each filename, use the same search order. **Live `specs/` wins** over WS-t, which wins over CR templates when choosing a read source for coaching (after recovery).
-6. Chat history is ongoing context for the thread. No memory store, embeddings, or MCP resource for knowledge content.
+### 5.1 Installer extract
 
-“Load” means the agent prompt instructs the model to **read those files into the chat**.
+The MCP tools `sdd_install_framework` and `sdd_update_framework` copy the pack. Ethan does not call them. The installer behavior stays in [`mcp-design.md`](../mcp/mcp-design.md).
 
-### 5.2 MCP extract discipline
+- **stdio**: the local program writes into resolved `paths` and updates `.sdd-installed.json`.
+- **HTTP** (ADR-054): the server returns `packageUrl`, `extractTarget`, `paths`, `manifestPath`, `manifest`, `instructions`. Extract only to `extractTarget` / `paths`. Never extract the tarball into `workspace/specs/`.
 
-When repairing the **client-root** pack, call `sdd_install_framework` or `sdd_update_framework` (`sdd_update_framework` is an alias of install).
-
-- **stdio**: MCP writes into resolved `paths` and updates `.sdd-installed.json`.
-- **HTTP** (ADR-054): server returns `packageUrl`, `extractTarget`, `paths`, `manifestPath`, `manifest`, `instructions`. The agent extracts **only** to `extractTarget` / `paths`. Never extract the tarball into `workspace/specs/`.
-- After extract, verify every name in `manifest.files.*` exists under `paths`. If any listed file is missing, do not skip extraction.
-
-### 5.3 Project constants
+### 5.2 Project constants
 
 `constants.md` is read from `{client_root}/templates/framework.sdd.works/constants.md` ([ADR-060](../adr/ADR-060-constants-on-client-root.md), [ADR-056](../adr/ADR-056-single-user-root-framework-pack.md)). On Cursor, `client_root` is `~/.cursor`. It is not copied into the workspace or into `specs/`.
 
-Until the install package includes `templates/`, that file is absent. §2.2 covers that case. `instructions_url` inside the file is used only after the user-root file exists. The bootstrap URL in §2.2 is the literal for a missing `agents/ethan.md`.
+On a pack-gate stop, Ethan reads `instructions_url` from this file when it can be read. When it cannot, he sends `https://framework.sdd.works/instructions`. A missing `constants.md` on that stop does not change `pack_complete`.
 
-## 6. Missing-file recovery
+## 6. Missing files
 
-Two toggles. Do not collapse them.
+Two different misses. Do not treat them as one recovery path.
 
-### Toggle A — template / pack missing
-
-Covers incomplete CR pack and/or missing WS-t.
-
-| Situation | Action |
+| What is missing | What Ethan does |
 | --- | --- |
-| Incomplete **client-root** pack (agents, skills, templates when in the tarball) | Call install/update; extract to `extractTarget` / `paths` only |
-| WS-t missing, CR has templates | Use CR for this session. Do not require a workspace `.cursor` copy |
-| CR missing, WS-t present (pasted templates) | Use WS-t. Optional later: install to CR for other projects; do not block this chat |
-| Both missing | MCP install, then retry search. If MCP unavailable or extract fails, stop and tell the user |
+| A skill, a rule, or a seed template the current step needs | §2.4. Set `pack_complete` to false, send the instructions URL, and stop. |
+| Process files in the workspace | The audit verdict. `Uninitialized` proposes `sdd-kickoff-project`. `Index broken` proposes `sdd-update-project`. Ethan waits for confirm before either skill writes. |
 
-### Toggle B — live `specs/` missing
-
-Separate from A. Templates must exist first (either store); if not, run Toggle A first.
-
-| Situation | Action |
-| --- | --- |
-| Templates exist; WS-s missing or incomplete | **AskQuestion** (else ask in chat). After confirm, copy template files listed in artifacts-map into `workspace/specs/`, then load those |
-| Some specs exist, some names missing | Same ask; copy **only the missing names**. Never overwrite an existing `specs/` file |
-| No template anywhere after Toggle A | Do not invent specs. Stop and tell the user |
-
-**Copy source order for Toggle B:** WS-t first, then CR templates.
-
-**MVP 1 note:** Toggle B seed-copy after confirm is **start recovery**, not coaching mutation. MVP 1 still forbids backlog/sprint status edits and skill calls. Coaching writes begin in MVP 2/3.
-
-### Case table
-
-`CR` = client root pack/templates. `WS-t` = workspace templates. `WS-s` = workspace specs. Call = Cursor workspace.
-
-| # | CR | WS-t | Call from | Missing | Toggle | Recovery |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | yes | no | CR | CR files | A | MCP install/update → `extractTarget` |
-| 2 | no | yes | WS | WS-t files | A | MCP then retry; else fail |
-| 3 | yes | no | WS | WS-s | B | Ask; copy CR templates → specs |
-| 4 | yes | no | WS | CR | A | MCP repair CR; if WS-s exists keep coaching from specs |
-| 5 | yes | no | WS | CR and WS-s | A then B | MCP repair CR; ask; copy to specs |
-| 6 | no | yes | WS | WS-s | B | Ask; copy WS-t → specs |
-| 7 | no | yes | WS | WS-t | A | MCP to create CR; then B if specs still empty |
-| 8 | no | yes | CR | CR | A | MCP install to CR; WS-t is extra |
-| 9 | yes | yes | WS | CR | A | MCP repair CR; load WS-s if present else WS-t |
-| 10 | yes | yes | WS | WS-t | A | Ignore WS-t; use CR and/or WS-s |
-| 11 | yes | yes | WS | WS-s | B | Ask; copy from WS-t first, else CR |
-| 12 | yes | yes | WS | both CR and WS-t | A | MCP; then B if specs empty |
-| 13 | yes | yes | WS | CR, WS-t, WS-s | A then B | MCP; ask; copy to specs |
-| 14 | yes | yes | CR | CR | A | MCP; do not write a product `specs/` |
-| 15 | yes | yes | CR | WS-t or WS-s | — | Out of this call; coach from CR templates |
-| 16 | no | no | WS or CR | all | A | MCP install; if still no map, stop |
-
-Test ids: `CE-LOAD-01` … `CE-LOAD-16` in [`agent-test.md`](./agent-test.md).
+The earlier Toggle A / Toggle B case table is retired. It told Ethan to call install. [`agent-test.md`](./agent-test.md) `CE-LOAD-01` … `CE-LOAD-16` record that retired table. New cases follow §2.2 and §2.4.
 
 ## 7. Knowledge (after start load)
 
 | Source | When loaded |
 | --- | --- |
-| Every process file listed in the resolved `artifacts-map.md` | At start (search order §5) |
-| Live guide + backlog + sprint backlog (subset of the above when present in WS-s) | Every “what now / what next” turn |
-| Live practices | When about to write an artifact (also loaded at start if listed in the map) |
+| The five process files named in `sdd-get-status` | When the audit verdict is Usable, and when the user asks where the project is |
+| The guide and practices | When the question needs them |
 | Chat history | Ongoing context for the thread |
 
 ## 8. MVP capabilities
+
+The table below is the Sprint 2–4 sketch. Live start load is §2.2. Live missing-file behavior is §6.
 
 | MVP | Sprint | Capabilities | Explicitly not yet |
 | --- | --- | --- | --- |
@@ -376,7 +332,7 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 | --- | --- |
 | [`agent-stories.md`](./agent-stories.md) | Agent-07 start-gate stories and ACs |
 | [`agent-test.md`](./agent-test.md) | Load/recovery and CE-GATE cases |
-| [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md) | Seed prompt (same words as §14) |
+| [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md) | Seed prompt. Start load text is §2.2 and §2.4. The seed file is not updated yet. |
 | [`../product-backlog.md`](../product-backlog.md) | Parent and MVP acceptance |
 | [`../sprint-backlog.md`](../sprint-backlog.md) | Schedule and D1 |
 | [`../architecture.md`](../architecture.md) | Stack pointer; presence decision |
@@ -391,60 +347,4 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 
 ## 14. Installable prompt (`agents/ethan.md`)
 
-Authoring copy: [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md). Pack publish is go-live. The words below match that seed file.
-
-````markdown
----
-name: ethan
-description: Local sdd-scrum coach. Use when the user invokes /ethan.
----
-
-You are ethan, the local sdd-scrum coach. You do not install yourself. Job steps live in skills and in `sdd-scrum-practices.md`, not in this prompt.
-
-This file is `{client_root}/{agents_dir}/ethan.md`. `client_root` is the parent of the folder that contains this file. `agents_dir` defaults to `agents` until `constants.md` names it. Do not assume a tool folder name.
-
-The framework pack lives only under `client_root`. Do not copy agents, skills, rules, workflows, or templates into the workspace. Do not call `sdd_install_framework` or `sdd_update_framework`.
-
-## Start load
-
-`client_root` is the parent of the folder that contains this file. `artifacts_root` is the workspace `specs/` directory unless `artifacts-map.md` names another root.
-
-At start, do these steps in order:
-
-1. Read only `{client_root}/.sdd-installed.json`. Do not greet. Do not list jobs. Do not look for the ledger in the workspace.
-2. If that file is missing, or `pack_complete` is absent or not `true`, send `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise send `https://framework.sdd.works/instructions`. Then stop. Do not read project files. Do not copy files. Do not call install or update.
-3. If `pack_complete` is `true`, read these when they exist, in this order: `constants.md` on the client root; `artifacts-map.md` (including `artifact_locale`); `scrum-in-sdd.md` and `sdd-scrum-practices.md` for that locale; then `product-backlog.md`, `change-log.md`, `status.md`, and `sprint-backlog.md` when a sprint exists.
-4. For each project file, look in this order and read the first copy you find: the project specs folder (`{artifacts_root}/<file>`), then that project's template folder (`<workspace>/.cursor/templates/framework.sdd.works/{artifact_locale}/<file>`), then the installed pack (`{client_root}/templates/framework.sdd.works/{artifact_locale}/<file>`). If none of those copies exist, the file is missing and you continue. If `{artifact_locale}` is set and `{client_root}/templates/framework.sdd.works/{artifact_locale}/` exists, read the guide and practices from that folder.
-5. Do not read `adr/` or `knowledge/`. Do not open a skill folder until the user asks for that job. Do not scan the five framework trees.
-6. If `artifacts-map.md`, `status.md`, or `sprint-backlog.md` is missing, continue. Name the missing file and the next job. An empty workspace means the project is not initialized. Do not create a file unless the user asks for that job and confirms.
-7. If `artifact_locale` is missing, ask the user to pick `EN`, `HanS`, or `HanT` before a job that writes project files. If it is set, chat and write job outputs in that locale.
-8. Answer what to do now and what is next from the files that exist. `status.md` is the projection. `sprint-backlog.md` is the SBI list.
-
-## Locale
-
-Read `artifact_locale` from `{artifacts_root}/artifacts-map.md` when it exists. Allowed values: `EN`, `HanS`, `HanT`.
-
-If it is missing, ask the user to pick one before a job that writes project files. Do not assume English.
-
-Chat with the user in that locale. Write job outputs in that locale.
-
-## Jobs
-
-Match the user’s request to a skill key in the Skills table of `constants.md`. The user may ask in the chosen locale. Open `{client_root}/{skills_dir}/{folder}` and follow the skill. Do not type skill folder names yourself. Detail for what / how / when is in `sdd-scrum-practices.md` Jobs for that locale.
-
-| Job | Skill key |
-| --- | --- |
-| Start a new project | `skill_start_project` |
-| Update project settings | `skill_update_project` |
-| Refine product backlog | `skill_refine_pb` |
-| Sprint planning | `skill_plan_sprint` |
-| Report status | `skill_tracking` |
-| Retrospective | `skill_retrospective` |
-| Close / start sprint | `skill_close_sprint` |
-
-Start a new project uses only `sdd-kickoff-project` (`skill_start_project`). Do not add a second skill for that job. An empty workflows list is not a failure.
-
-If a later job needs a skill folder, a rule file, or a seed template and that file cannot be read, set only `pack_complete` to `false` in `{client_root}/.sdd-installed.json`. Do not change `package_version` or `package_commit`. Do not set `pack_complete` back to `true`. Send the same instructions URL and stop. Do not look for the other skills, rules, or seeds on start.
-
-Do not edit project files unless the skill for that job says to, and the user has confirmed.
-````
+Authoring copy: [`../framework.seeds/agents/ethan.md`](../framework.seeds/agents/ethan.md). Pack publish is go-live. The start-load and missing-file words are §2.2 and §2.4. The job index is §3. Copy those sections into the seed file when that follow-up runs. Do not keep a second prompt in this design. The seed file still has the previous start load until that copy.

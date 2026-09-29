@@ -7,6 +7,18 @@
 
 ---
 
+## 2026-09-28
+
+### Start load uses an audit verdict
+
+**Why**: A missing root `artifacts-map.md` is not enough to call a project new, and a readable map is not enough to call the tree healthy. Listing every layout in `ethan.md` does not scale.
+
+**What changed**: [`agent-design.md`](./agent-ethan/agent-design.md) §2.2 and §2.4. After the pack gate, Ethan follows the skill `sdd-audit-artifacts`. `Uninitialized` proposes `sdd-kickoff-project`. `Index broken` proposes `sdd-update-project`. `Usable` follows the skill `sdd-get-status` ([ADR-073](./adr/ADR-073-skill-get-status.md)). A missing skill, rule, or seed template sets `pack_complete` to false. The MCP tools `sdd_install_framework` and `sdd_update_framework` are not pack files, and Ethan does not call them to repair a missing file. [`framework-design.md`](./framework.seeds/framework-design.md) records the three skills. [Skill-15](./product-backlog.md#pb-86) is Sprint 4. [Skill-10](./product-backlog.md#pb-30) and [Skill-04](./product-backlog.md#pb-24) move their initial files to Sprint 4. The seed `agents/ethan.md` is not updated yet.
+
+**Verification**: §2.2 names the three verdicts. §6 no longer tells Ethan to call install. Sprint 4 lists feature-03 (`sdd-audit-artifacts`), feature-04 (`sdd-get-status`), feature-01 (`sdd-update-project`), and feature-02.
+
+---
+
 ## 2026-09-27
 
 ### Constants rules and audit skill key
@@ -167,7 +179,7 @@
 
 **Why**: The unbuilt skill id `sdd-update-status` named one file edit. Job 6 keeps the live project picture current.
 
-**What changed**: The skill folder is `sdd-tracking` and the constants key is `skill_tracking`. Practices job 6 stays titled Report status. [ADR-065](./adr/ADR-065-skill-tracking-not-update-status.md). Sprint 7 still writes the skill file.
+**What changed**: The skill folder is `sdd-tracking` and the constants key is `skill_tracking`. Practices job 6 stays titled Report status. [ADR-065](./adr/ADR-065-skill-update-status.md). Sprint 7 still writes the skill file.
 
 **Verification**: A search of living specs, Features markdown, and locale strings no longer finds `sdd-update-status` or `skill_update_status`.
 

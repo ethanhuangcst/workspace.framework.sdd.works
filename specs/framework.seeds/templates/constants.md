@@ -32,6 +32,7 @@ Live path after install: `{client_root}/templates/framework.sdd.works/constants.
 | `sdd-atdd` | `sdd-atdd` |
 | `sdd-tdd` | `sdd-tdd` |
 | `skill_audit_artifacts` | `sdd-audit-artifacts` |
+| `skill_get_status` | `sdd-get-status` |
 | `sdd-update-specs` | `sdd-update-specs` |
 | `sdd-design` | `sdd-design` |
 | `sdd-implement` | `sdd-implement` |

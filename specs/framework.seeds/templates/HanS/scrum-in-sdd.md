@@ -333,6 +333,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
+- **sdd-get-status**
 - **sdd-update-specs**
 - **sdd-design**
 - **sdd-implement**
@@ -513,6 +514,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
+- **sdd-get-status**
 - **sdd-update-specs**
 - **sdd-design**
 - **sdd-implement**
