@@ -351,12 +351,10 @@ As there is no current need for **workflows** at this stage, this folder remains
 - **knowledge**: knowledge learned from the project, default path: **{workspace-folder}/specs/knowledge**
 
 ### Artifacts
-- **Product Backlog**: **product-backlog.md**
-- **Sprint Backlog**: **sprint-backlog.md**
-- **Real-time status**: **status.md**
-- **Change management**: **change-log.md**
-- **Artifact path definition and project mapping**: **artifacts-map.md**
-- **Engineering artifacts templates**: **architecture.md; design.md; test.md; deployment.md**
+- **Core artifacts**: **scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.md**
+- **Framework artifacts**: **product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
+- **Engineering artifacts**: **architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-test.md; deployment.md; .secrets; issues-log.md**
+- **Pack files beside these groups**: **constants.md** (pack lookup on the client root); **.sdd-installed.json** (install ledger on the client root)
 
 ## Scrum concepts that need to be modified in Scrum in SDD
 
@@ -519,21 +517,31 @@ This guide is for both humans and AI agents.
 - **sdd-design**
 - **sdd-implement**
 
-### Framework Artifacts
-- **status.md**: real-time status.
-- **change-log.md**: change history.
-- **artifacts-map.md**: artifact mapping.
-- **product-backlog.md**: Product Backlog
-- **sprint-backlog.md**: Sprint Backlog
+### Core Artifacts
+These are the SDD core artifacts. They are not the Scrum core artifacts under KEEP (Product Backlog, Sprint Backlog, and Increment).
+- **scrum-in-sdd.md**: names and meaning. Stays on the client root.
+- **sdd-scrum-practices.md**: what, how, and when. Stays on the client root.
+- **artifacts-map.md**: where this project's artifacts live. Sits at the workspace root.
 
+### Framework Artifacts
+- **product-backlog.md**: Product Backlog.
+- **sprint-backlog.md**: Sprint Backlog.
+- **status.md**: real-time status.
+- **changes-log.md**: change history.
 
 ### Engineering Artifacts
 - **architecture.md**: architecture spec.
-- **{model_name}-stories**: user stories and acceptance criterias
-- **{model_name}-design.md**: design spec.
-- **{model_name}-test.md**: test spec.
+- **{stem}-stories.md**: user stories and acceptance criteria.
+- **{stem}-design.md**: design spec.
+- **{stem}-test.md**: test spec.
 - **deployment.md**: deployment spec.
-- **.secrets**: file to store secrets.
+- **.secrets**: secret names and where the values live. No secret values.
+- **issues-log.md**: defect record. It is also one of the five process files the audit opens.
+
+### Pack files
+These are not project artifacts. They are not in any group above.
+- **constants.md**: pack lookup for path names, skill keys, and rule keys, on the client root.
+- **.sdd-installed.json**: install ledger on the client root. The installer writes it. `pack_complete: true` means the pack copy finished.
 
 ### Knowledge
 - **ADR**: Architecture Decision Record.

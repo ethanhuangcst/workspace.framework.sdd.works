@@ -6,7 +6,7 @@ Accepted
 ## Context
 The framework guide is the names-and-meaning document. Its seed lived as `sdd-scrum-guide.md` under each locale folder (`EN`, `HanS`). Practices stay in `sdd-scrum-practices.md`. The guide title and role already read as Scrum-in-SDD; the filename did not.
 
-Ethan’s start load, process headers, artifacts maps, Features catalog copy, and the unbuilt guide tab all named the old file. No TypeScript reads the filename; Features markdown and the agent prompt do.
+Ethan’s onboard, process headers, artifacts maps, Features catalog copy, and the unbuilt guide tab all named the old file. No TypeScript reads the filename; Features markdown and the agent prompt do.
 
 ## Decision
 1. The guide filename is `scrum-in-sdd.md` in every locale folder under `templates/{EN|HanS|HanT}/`.

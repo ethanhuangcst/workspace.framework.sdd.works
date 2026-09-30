@@ -1,0 +1,31 @@
+---
+description: Definition of Done. Apply the project checklist before any item is marked Done.
+alwaysApply: true
+---
+
+# Rule - Definition of Done
+
+Open the project files through `{workspace}/artifacts-map.md`. Join `{workspace}` and each stored path. Do not prefix `artifacts_root` again.
+
+## Where the checklist lives
+
+- A product backlog item (PBI) uses the Definition of Done section above the Product Backlog table in `product-backlog.md`.
+- A sprint backlog item (SBI) uses the Definition of Done section above the first sprint table in `sprint-backlog.md`. A sprint may state a replacement checklist above its own tables. That checklist applies to that sprint only.
+- An item acceptance line under a sprint adds to the checklist. It does not replace it.
+
+## Before marking an item Done
+
+1. Check every item in the checklist that applies.
+2. Every acceptance criterion linked to the item has passed.
+3. The user has confirmed the item is usable.
+4. If any check is open, keep the status `WIP`.
+
+A file on disk, a green local check, or met acceptance criteria alone is not Done.
+
+An SBI can be `Done` while its parent PBI stays `ToDo` or `WIP` when the PBI checklist covers more than that SBI.
+
+## Do not
+
+- Mark an item Done without the user's confirmation.
+- Remove or weaken a check to reach Done.
+- Write Done into `status.md` for an item the backlog does not show as Done.

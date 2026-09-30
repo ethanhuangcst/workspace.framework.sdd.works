@@ -20,7 +20,7 @@ Ethan still needs a bit he can set false when a later job cannot read a skill, r
 5. On start, Ethan reads only `{client_root}/.sdd-installed.json`. Missing file, or `pack_complete` not `true`, is a fatal stop: instructions URL, then stop. He does not scan the pack to decide completeness.
 6. When a later job cannot read a required skill, rule, or seed, Ethan sets `pack_complete` to `false` and stops. He does not change `package_version` or `package_commit`. He does not set the flag back to `true`. The next install or update sets it `true` only when that copy succeeds.
 7. HTTP still does not write the caller disk. The tool result names this ledger path. The model writes the file last, after extract and verify, with `pack_complete: true`. Do not ship a finished ledger inside the tarball.
-8. `specs/framework.seeds/framework.sdd.works.json` is not a pack receipt and must not be installed as proof that the pack is complete.
+8. `specs/framework/seeds/framework.sdd.works.json` is not a pack receipt and must not be installed as proof that the pack is complete.
 
 ## Rationale
 One file cannot drift from a second copy of the same version and file list. The version and commit stay the installer’s identity. The flag is the only field Ethan may change, so a stop does not destroy merge or idempotency.

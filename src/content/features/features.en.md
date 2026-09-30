@@ -24,7 +24,7 @@ v.0.1.0
 - sdd-retrospective — Run a retrospective between a developer and the agents, or between agents.
 - sdd-close-sprint — Close a sprint.
 - sdd-audit-artifacts — Read the workspace index and the process files. Return whether the project is uninitialized, the index is broken, or the index is usable. Do not edit files.
-- sdd-get-status — Read the five process files and propose the next-step options they support. Do not edit files.
+- sdd-review-status — Read the five process files and propose the next-step options they support. Do not edit files.
 - sdd-update-specs — Keep specs aligned with the implementation.
 - sdd-design — Design and plan before implementing an SBI: clarify unknowns with developers, finish the design, and prepare for implementation.
 - sdd-implement — Load the skills needed to implement the SBI against DoD and its acceptance criteria.
@@ -49,7 +49,7 @@ v.0.1.0
 - product-backlog.md — Product Backlog.
 - sprint-backlog.md — Sprint Backlog.
 - status.md — Real-time status.
-- change-log.md — Change management.
+- changes-log.md — Change management.
 
 ### Engineering artifacts
 

@@ -217,7 +217,6 @@ To determine where a client **supports** storing skills/rules, the reliable sign
 3. **CodeBuddy CN ALSO reads `~/.claude/skills/`** (confirmed). This is likely because the ClaudeCode plugin is installed in CodeBuddy CN. Skills installed at `~/.claude/skills/` appear in CodeBuddy CN too. This means `~/.claude/skills/` is a **shared skills root** for Cursor, CodeBuddy CN (with plugin), and Claude Code.
 
 4. **TRAE CN reads BOTH `~/.trae-cn/skills/` AND `~/.trae/skills/`** (confirmed). TRAE CN scans the international TRAE path in addition to its own CN path. TRAE (international) only reads `~/.trae/skills/`. So `~/.trae/skills/` is a **shared skills root** for both TRAE and TRAE CN.
-
    **Follow-up confirmation (user test):**
    - Skills in `~/.trae/skills/` → both TRAE CN and TRAE find them ✅
    - Skills moved to `~/.trae-cn/skills/` only (deleted from `~/.trae/skills/`) → only TRAE CN finds them ✅

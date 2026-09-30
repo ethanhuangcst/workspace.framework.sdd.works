@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "package_version": "",
+  "package_commit": "",
+  "installed_at": "",
+  "pack_complete": false,
+  "files": {
+    "skills": [],
+    "rules": [],
+    "agents": [],
+    "workflows": [],
+    "templates": []
+  }
+}

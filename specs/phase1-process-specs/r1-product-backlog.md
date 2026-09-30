@@ -2,7 +2,7 @@
 
 Source of truth: [`r1-req-spec.md`](./r1-req-spec.md) · [`r1-tech-spec.md`](./r1-tech-spec.md).  
 Sprint plans (1 MVP = 1 sprint): [`sprint1-plan.md`](./sprint1-plan.md) … [`sprint7-plan.md`](./sprint7-plan.md).  
-Change log: [`change-log.md`](../change-log.md).
+Change log: [`changes-log.md`](../changes-log.md).
 
 ## Part 1 — Feature List and MVP Batches
 

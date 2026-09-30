@@ -1,0 +1,21 @@
+---
+description: Incremental delivery. Finish one sprint item before starting the next.
+alwaysApply: true
+---
+
+# Rule - Incremental Delivery
+
+Finish one sprint backlog item (SBI) before starting the next. An SBI is finished when [`dod.mdc`](./dod.mdc) passes for it.
+
+## Behavior
+
+- Work on the current SBI named in `status.md`. Open `status.md` through `{workspace}/artifacts-map.md`.
+- Do not start another SBI while the current one is not Done.
+- When the current SBI depends on another item, do only the part that unblocks the current SBI.
+- When a blocker stops the current SBI, tell the user what blocks it and wait for a decision before moving on.
+- A new requirement found during the work becomes a new backlog item after the user confirms it. It is not added to the current SBI.
+
+## Granularity
+
+- The unit of delivery is one SBI, not a feature or an epic.
+- Do not bundle two SBIs into one implementation pass.

@@ -13,7 +13,7 @@ The product needs a shorter name and a durable rule that the live copy stays on 
 ## Decision
 1. The lookup file is named **`constants.md`**.
 2. After install it lives at `{client_root}/templates/framework.sdd.works/constants.md`. On Cursor, `client_root` is `~/.cursor`.
-3. The authoring seed in this workspace is `specs/framework.seeds/templates/constants.md`. It sits beside `templates/EN/` and `templates/HanS/`, not inside a locale folder.
+3. The authoring seed in this workspace is `specs/framework/seeds/templates/constants.md`. It sits beside `templates/EN/` and `templates/HanS/`, not inside a locale folder.
 4. Do not copy `constants.md` into the workspace, into `{workspace}/specs`, or into the artifacts root. Locale seeds still copy into that root.
 5. ADR-056 decisions 1–5 stay. ADR-056 decision 6’s filename `project-constants.md` is superseded by this ADR. The home (user-root templates tree) and the no-copy rule stay.
 
@@ -22,8 +22,8 @@ One pack on the user root already means ethan reads harness lookup from `client_
 
 ## Consequences
 - Ethan, agent specs, MCP ledger examples, and Spec-seeds-01 name `constants.md`.
-- Writing rules for the file live in [`sdd-scrum-practices.md`](../framework.seeds/templates/EN/sdd-scrum-practices.md) under Templates.
-- Path and no-copy summary live in [`framework-design.md`](../framework.seeds/framework-design.md).
+- Writing rules for the file live in [`sdd-scrum-practices.md`](../framework/seeds/templates/EN/sdd-scrum-practices.md) under Templates.
+- Path and no-copy summary live in [`framework-design.md`](../framework/framework-design.md).
 
 ## Date
 2026-09-25

@@ -14,6 +14,6 @@ This folder holds the **Phase 1 / Release 1** Scrum artifacts for framework.sdd.
 - [`../product-backlog.md`](../product-backlog.md)
 - [`../sprint-backlog.md`](../sprint-backlog.md)
 - [`../artifacts-map.md`](../artifacts-map.md)
-- [`../change-log.md`](../change-log.md)
+- [`../changes-log.md`](../changes-log.md)
 
 Domain specs that remain live (not archived): [`../mcp/`](../mcp/), [`../admin-portal/`](../admin-portal/), [`../adr/`](../adr/), [`../knowledge/`](../knowledge/), [`../release/`](../release/).

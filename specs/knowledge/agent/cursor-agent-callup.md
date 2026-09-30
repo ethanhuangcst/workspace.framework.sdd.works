@@ -7,10 +7,10 @@ tags:
   - cursor
   - coach-ethan
   - agents
-related_spec: specs/agent-ethan/agent-design.md
+related_spec: specs/framework/framework-design.md
 related:
   - specs/mcp/client.paths.md
-  - specs/agent-ethan/agent-test.md
+  - specs/framework/framework-test.md
 ---
 
 # Cursor slash-invoke is agents/, not templates
@@ -31,7 +31,7 @@ Keep **call-up** and **knowledge load** separate:
 
 1. Install the coach prompt into **`agents/`** (CR for all projects; project `.cursor/agents/` only when this workspace should override).
 2. Do not expect a paste of templates (WS-t) to change `/ethan`.
-3. After the agent starts, load process files per [`agent-design.md`](../../agent-ethan/agent-design.md) §5: live `specs/` first, then WS-t, then CR templates.
+3. After the agent starts, load process files per [`framework-design.md`](../../framework/framework-design.md) §5: live `specs/` first, then WS-t, then CR templates.
 
 | Agent file location | `/ethan` |
 | --- | --- |
@@ -42,5 +42,5 @@ Keep **call-up** and **knowledge load** separate:
 
 ## Links
 
-- [`agent-design.md`](../../agent-ethan/agent-design.md) §2 Presence
+- [`framework-design.md`](../../framework/framework-design.md) §2 Presence
 - [`client.paths.md`](../../mcp/client.paths.md) — Cursor agents paths

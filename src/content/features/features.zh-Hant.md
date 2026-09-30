@@ -24,7 +24,7 @@ v.0.1.0
 - sdd-retrospective — 在開發者與智能體之間，或智能體之間進行回顧。
 - sdd-close-sprint — 關閉衝刺。
 - sdd-audit-artifacts — 讀取工作區索引和過程檔案。回傳專案未初始化、索引已損壞，或索引可用。不編輯檔案。
-- sdd-get-status — 讀取五份過程檔案，並提出這些檔案支持的下一步選項。不編輯檔案。
+- sdd-review-status — 讀取五份過程檔案，並提出這些檔案支持的下一步選項。不編輯檔案。
 - sdd-update-specs — 使規格與實作保持一致。
 - sdd-design — 在實作 SBI 之前完成設計與規劃：與開發者釐清未知項，完成設計，並做好實作準備。
 - sdd-implement — 載入實作該 SBI 所需的技能，對照 DoD 及其驗收標準。
@@ -49,7 +49,7 @@ v.0.1.0
 - product-backlog.md — 產品待辦。
 - sprint-backlog.md — 衝刺待辦。
 - status.md — 即時狀態。
-- change-log.md — 變更管理。
+- changes-log.md — 變更管理。
 
 ### 工程產物
 
