@@ -11,6 +11,7 @@
 | Scrum-in-SDD guide | [`framework/seeds/templates/EN/scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) | Names and meaning. HanS copy: [`scrum-in-sdd.md`](./framework/seeds/templates/HanS/scrum-in-sdd.md). |
 | Practices | [`framework/seeds/templates/EN/sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) | What, how, when: jobs, templates, RID and backlog table conventions |
 | Framework design | [`framework/framework-design.md`](./framework/framework-design.md) | Overall design for framework artifacts: framework-artifacts, agents, rules, skills, and templates |
+| Seed building guide | [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) | Method for writing an artifact seed, one section at a time |
 | Pack lookup | [`framework/seeds/templates/constants.md`](./framework/seeds/templates/constants.md) | Path names, instructions URL, skill and rule keys. Live copy on client root only ([ADR-060](./adr/ADR-060-constants-on-client-root.md)) |
 
 ## Process

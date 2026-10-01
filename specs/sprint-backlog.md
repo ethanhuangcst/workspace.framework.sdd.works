@@ -1,46 +1,63 @@
-# sprint-backlog — [framework.sdd.works](http://framework.sdd.works)
+# sprint-backlog, framework.sdd.works
 
-> **Purpose**: Short-cycle execution list — what to do, what is blocked, and how to accept it.
-> **Single source of truth for schedule and status**: this file. The `Sprint` column in `product-backlog.md` is a projection of this file.
-> **Related**: `[architecture.md](./architecture.md)` · `[deployment.md](./deployment.md)` · `[artifacts-map.md](./artifacts-map.md)` · `[framework/seeds/templates/EN/scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` · `[status.md](./status.md)`
-> **Numbering**: `Code` is the second column, between `#` and `SBI`. `Code` is the Type plus a two-digit number inside that sprint, such as `task-01`. When citing another document, prefer the item name. Shape: `[framework/framework-design.md](./framework/framework-design.md)`.
-> **Order**: In each sprint table, row order is priority, top to bottom. When updating this file, place a row by priority. `WIP` sits above `ToDo`. `Done` sits below open work. Do not append a row only because it is new, and do not group by Type or by the order the row was added. [framework-design.md](./framework/framework-design.md) Sprint item table.
-> **Practices**: `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` (what, how, when: jobs, templates, table conventions).
-> **Framework**: `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` (names and meaning). HanS: `[scrum-in-sdd.md](./framework/seeds/templates/HanS/scrum-in-sdd.md)`.
-> **as_of**: 2026-09-29
+> **Purpose**: `sprint-backlog.md` is the Sprint Backlog artifact in [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md), and, unlike the Sprint Backlog in classic Scrum, `sprint-backlog.md` lists every sprint.
+> **Single source of truth**: `sprint-backlog.md` owns the schedule and the item status, and represents the latest project progress.
+> **Projection**: The `Sprint` column in [`product-backlog.md`](./product-backlog.md) copies the schedule from `sprint-backlog.md`.
+> **Related**: [`artifacts-map.md`](./artifacts-map.md), [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md), [`status.md`](./status.md), [`product-backlog.md`](./product-backlog.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md)
+> **as_of**: 2026-10-01
+> **Sprint planning principles**:
+> - Each sprint states one [Sprint Goal](./framework/seeds/templates/EN/sdd-scrum-practices.md#sprint-goal) and the [Increments](./framework/seeds/templates/EN/sdd-scrum-practices.md#increment) planned to reach that goal.
+> - Each sprint delivers an [MVP](./framework/seeds/templates/EN/sdd-scrum-practices.md#mvp) (minimum viable product) with the fewest dependencies, and ships without waiting on an Increment from a later sprint.
+> - [SBIs](./framework/seeds/templates/EN/sdd-scrum-practices.md#sbi) (sprint backlog items) are the items required to build those Increments, such as Features and Tasks.
+> - A side task or a temporary task found during the sprint, and not needed to deliver those Increments, is an [OGT](./framework/seeds/templates/EN/sdd-scrum-practices.md#ogt) (on-going task) in [`status.md`](./status.md).
 
-Current sprint: Sprint 4. Status: WIP. Sprint 1, Sprint 2, and Sprint 3 are Done.
+## Current project progress
 
-Each later sprint is one small MVP. It ships a complete slice and does not wait on a later sprint.
+- Total sprints: 16
+- Current WIP sprint: [**Sprint 4**](#sprint-4). Click the link to jump to Sprint 4.
+- Sprint goal: Agent Ethan completes his onboard.
+
+### Index
+
+- [RID Log](#rid-log-risksimpediments-dependencies)
+- [Sprint 1](#sprint-1)
+- [Sprint 2](#sprint-2)
+- [Sprint 3](#sprint-3)
+- [Sprint 4](#sprint-4)
+- [Sprint 5](#sprint-5)
+- [Sprint 6](#sprint-6)
+- [Sprint 7](#sprint-7)
+- [Sprint 8](#sprint-8)
+- [Sprint 9](#sprint-9)
+- [Sprint 10](#sprint-10)
+- [Sprint 11](#sprint-11)
+- [Sprint 12](#sprint-12)
+- [Sprint 13](#sprint-13)
+- [Sprint 14](#sprint-14)
+- [Sprint 15](#sprint-15)
+- [Sprint 16](#sprint-16)
 
 ---
 
-## RID Registry (Risks / Impediments / Dependencies)
+## RID Log (Risks,Impediments, Dependencies)
 
-> This section records risks, impediments, and dependencies only. It does not belong to any sprint.
+[Back to the top](#sprint-backlog-frameworksddworks)
 
+> This section records risks, impediments, and dependencies for the entire project. It does not belong to any sprint.
 
-| #      | Severity     | Type       | Title                                             | Description                                                                                                                                                                                                                                                                                                                                      | Impact                                                           | Solution (→ product-backlog)                                                       | Related docs                                                                                                              | Handling note                                                                                                                               | Status | Updated    |
-| ------ | ------------ | ---------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
-| **D1** | **Blocking** | Dependency | coach-ethan product presence (local Cursor agent) | Ship coach-ethan as a local Cursor agent (installable prompt in the client `agents/` tree). Remote MCP stays the installer.                                                                                                                                                                                                                      | Resolved: one presence model for product and MVPs.               | [Agent-01](./product-backlog.md#pb-6)                                              | `[framework/framework-design.md](./framework/framework-design.md)` · `[architecture.md](./architecture.md)` §2                | Decision recorded in framework-design.md, agents section. No separate ADR required for this choice.                                                             | Closed | 2026-09-22 |
-| **D2** | **Blocking** | Dependency | Pack allow-list vs extra GitHub top-level files   | Pack GitHub is `Setting.githubUrl` (not this service workspace; not hard-coded). Current operator URL is a pack-only tree ([framework.sdd.works](https://github.com/ethanhuangcst/framework.sdd.works)) with `skill/`, `Rules/`, `agents/`, `templates/`, plus non-pack files. Copying every top-level name onto `{client_root}` is still wrong. | Feature-01 cannot ship an unbounded git-tree copy.               | [MCP-01](./product-backlog.md#pb-16)                                               | `[mcp/mcp-design.md](./mcp/mcp-design.md)` §1.1 and pack allow-list · `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` AC1b   | Copy allow-list only; map `skill`→`skills`, `Rules`→`rules`. Admin may change the URL.                                                      | Open   | 2026-09-24 |
-| **D3** | **Blocking** | Dependency | `templates/` has no installer root                | ADR-056 and MCP-01 need `{client_root}/templates/`. Seed map `PathRoots` has `other` (`~/.cursor/sdd/`), not `templates`. Current `applyPackage` copies only skills/rules/agents/workflows.                                                                                                                                                      | Templates would land in the wrong place or not at all.           | [MCP-01](./product-backlog.md#pb-16) · [Spec-seeds-01](./product-backlog.md#pb-32) | `[mcp/mcp-design.md](./mcp/mcp-design.md)` · `[packages/sdd-paths](../packages/sdd-paths)`                                | Feature-01 maps `templates/` → `{client_root}/templates/`. Seed-map schema change is in this feature if HTTP `paths.templates` is required. | Open   | 2026-09-24 |
-| **R1** | **Medium**   | Risk       | HTTP fallback ledger is AI-written                | HTTP MCP cannot write the caller disk. If the AI extracts the tarball but skips writing `.sdd-installed.json` with `pack_complete: true`, Ethan’s start gate never passes. Baking a finished ledger into the tarball would mark a failed extract as complete. Primary path is stdio (ADR-058), which writes the ledger in-process.               | Install looks successful on HTTP fallback; `/ethan` still stops. | [MCP-01](./product-backlog.md#pb-16) · [Agent-07](./product-backlog.md#pb-17)      | `[mcp/mcp-design.md](./mcp/mcp-design.md)` HTTP fallback steps · [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) | Write ledger last, after verify. Instructions must name `manifestPath`. Do not commit a true ledger in the pack git tree.                   | Open   | 2026-09-25 |
+### Open RIDs
 
+| #   | Severity | Title                                   | Description                                                                                                                                                                                                                                                  | Impact                                                                         | Solution                                                                                                                            | Related                                                                                              | Created Sprint |
+| --- | -------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | -------------- |
+| D-2 | Blocking | Pack copy must use an allow-list        | - The pack tree includes files that are not pack files.<br>- Copying every top-level name onto the client root is wrong.                                                                                                                                        | MCP-01 cannot be delivered, because the install would copy the whole git tree. | Copy the allow-list only, and map `skill` to `skills` and `Rules` to `rules`.                                                       | [mcp-design.md](./mcp/mcp-design.md) MCP design                                                      | Sprint 2       |
+| D-3 | Blocking | templates/ has no installer root        | - ADR-056 and MCP-01 need `{client_root}/templates/`.<br>- The seed map has no templates root.<br>- applyPackage copies skills, rules, agents, and workflows only.                                                                                                 | MCP-01 cannot be delivered, because templates have no install path.            | Map `templates/` to `{client_root}/templates/`.                                                                                     | [ADR-056](./adr/ADR-056-single-user-root-framework-pack.md) One framework pack, on the user root     | Sprint 2       |
+| R-1 | Medium   | HTTP MCP cannot write local ledger file | - HTTP MCP cannot write the local `.sdd-installed.json` with `pack_complete: true`.<br>- Skipping that file blocks Ethan's start gate.<br>- stdio (ADR-058) writes the ledger in-process. A ledger baked into the tarball would mark a failed extract as complete. | MCP-01 and Agent-07 cannot be delivered, because Ethan does not start.         | Write the ledger last, after verify, name `manifestPath` in the instructions, and do not commit a true ledger in the pack git tree. | [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) End-user stdio installer with HTTP fallback | Sprint 2       |
 
-> **Severity**: **Blocking** = blocked product ship until closed. D1 is Closed (local Cursor agent). D2 and D3 block Sprint 2 Feature-01 until the allow-list and templates root are implemented. R1 is accepted residual on HTTP.
-> **Type**: dependency = work or decision required before the related product item ships. risk = residual after the planned design.
+### Closed RIDs
 
-### RID coverage
-
-
-| RID | Solution (Backlog item)               | Acceptance criteria and design/test location                                                               | Sprint location                                 |
-| --- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| D1  | [Agent-01](./product-backlog.md#pb-6) | `[framework/framework-design.md](./framework/framework-design.md)` · `[architecture.md](./architecture.md)` §2 | Closed: local Cursor agent for MVPs and product |
-| D2  | [MCP-01](./product-backlog.md#pb-16)  | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` AC1b · `[mcp/mcp-test.md](./mcp/mcp-test.md)` P3              | Sprint 2 Feature-01                             |
-| D3  | [MCP-01](./product-backlog.md#pb-16)  | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` AC1 · `[mcp/mcp-test.md](./mcp/mcp-test.md)` P4               | Sprint 2 Feature-01                             |
-| R1  | [MCP-01](./product-backlog.md#pb-16)  | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` AC4–AC5 · `[mcp/mcp-test.md](./mcp/mcp-test.md)` P5–P6        | Sprint 2 Feature-01                             |
-
+| #   | Severity | Title                                     | Description                                                                                           | Impact                                                                     | Solution                                                                | Related                                                                     | Closed Sprint |
+| --- | -------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------- |
+| D-1 | Blocking | coach-ethan ships as a local Cursor agent | - coach-ethan is a local Cursor agent in the client `agents/` tree.<br>- Remote MCP stays the installer. | Agent-01 is delivered. One presence model covers the product and the MVPs. | Record the local Cursor agent in the framework design. No separate ADR. | [framework-design.md](./framework/framework-design.md) Design for framework | Sprint 1      |
 
 ---
 
@@ -59,66 +76,68 @@ Sprints 3, 4, and 5 use this checklist instead:
 - Whole pack cross-reviewed and updated accordingly
 - Reviewed to ensure it follows TRUE AGENT principle
 
-A line under a sprint named Item acceptance is the check for that row. It does not add a table column.
+Additional Done Criteria, on top of the Definition of Done, is the check for one row under that sprint. It does not add a table column.
 
 ---
 
 ## Sprint 1
 
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: framework.sdd.works R2 with an agent spike and POC. The pack seeds live in this repo, and ethan can be called as a local agent.
 
 **Status: Done** (EN guide and practices confirmed; call-up recorded; Phase 1 archive under `phase1-process-specs/`). HanS and HanT are Sprint 16.
 
-### Done
+### **Done**
 
-
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Store the latest guide and practices seeds | [Spec-seeds-02 Seed: scrum-in-sdd.md](./product-backlog.md#pb-33) · [Spec-seeds-03 Seed: sdd-scrum-practices.md](./product-backlog.md#pb-34) | Framework/Feature | `[framework/seeds/templates/EN/scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` · `[framework/seeds/templates/EN/sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` | Done |
-| 2 | feature-03 | Agent spike: call ethan | [Agent-01 agent ethan — POC](./product-backlog.md#pb-6) | Agent/Feature | `[framework/framework-design.md](./framework/framework-design.md)` · [D1](#rid-d1) | Done |
-| 3 | feature-04 | Archive Phase 1 Scrum files | [Spec-01 Archive Phase 1 Scrum files](./product-backlog.md#pb-1) | Framework/Feature | `[artifacts-map.md](./artifacts-map.md)` | Done |
-| 4 | documentation-01 | Point process docs at the seed tree | [Spec-seeds-02 Seed: scrum-in-sdd.md](./product-backlog.md#pb-33) | Framework/Documentation | `[artifacts-map.md](./artifacts-map.md)` | Done |
-
+| #   | Code             | SBI                                   | Parent PBI                                                                                                                                   | Module/Type             | Related specs                                                                                                                                                                                                 | Status |
+| --- | ---------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1 | feature-04 | Archived Phase 1 Scrum files | [Spec-01 Archive Phase 1 Scrum files](./product-backlog.md#pb-1) | Framework/Feature | [artifacts-map.md](./artifacts-map.md) | **Done** |
+| 2 | feature-03 | Agent call to ethan | [Agent-01 agent ethan: POC](./product-backlog.md#pb-6) | Agent/Feature | - [framework/framework-design.md](./framework/framework-design.md)<br>- [D-1](#rid-log-risksimpediments-dependencies) | **Done** |
+| 3 | feature-01 | Latest guide and practices seeds | - [Spec-seeds-02 Seed: scrum-in-sdd.md](./product-backlog.md#pb-33)<br>- [Spec-seeds-03 Seed: sdd-scrum-practices.md](./product-backlog.md#pb-34) | Framework/Feature | - [framework/seeds/templates/EN/scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)<br>- [framework/seeds/templates/EN/sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md) | **Done** |
+| 4 | documentation-01 | Process docs pointed at the seed tree | [Spec-seeds-02 Seed: scrum-in-sdd.md](./product-backlog.md#pb-33) | Framework/Documentation | [artifacts-map.md](./artifacts-map.md) | **Done** |
 
 ### Retrospective
 
-Learnings:
+**Learnings**
 
-[Sep 24, 2026], feature-01 completed
+#### 1. [Sep 24, 2026], feature-01 done
 
 - [The guide and practices have one authoring place](./framework/seeds/templates/EN/sdd-scrum-practices.md)
 - `/ethan` [uses Cursor agents trees](./knowledge/agent/cursor-agent-callup.md)
 - [A second pack copy in the workspace does not override the user root](./adr/ADR-056-single-user-root-framework-pack.md)
 
----
+#### 2. [Sep 25, 2026], feature-03 done
 
-[Sep 25, 2026], feature-03 completed
+- The `/ethan` spike is recorded.
 
-- The `/ethan` spike is recorded. Receipt enforcement stays on Sprint 2.
-
----
-
-[Sep 25, 2026], Sprint 1 closed
+#### 3. [Sep 25, 2026], Sprint-end
 
 - User confirmed the EN guide and practices seeds.
 - Cross-review: Sprint 1 seeds match `templates/EN/`. Later sprints own `constants.md`, `.secrets`, empty pack folders, `framework-design.md`, and HanS/HanT.
 - Phase 1 archive path is `phase1-process-specs/`.
 
-Opportunities:
+**Opportunities**
 
-[Sep 25, 2026], HanS and HanT moved to Sprint 15
+#### 4. [Sep 25, 2026], On demand
 
-- The HanS guide, the HanT guide, and the HanS and HanT practices are [Sprint 15](#s15-feature-01). `constants.md` is Sprint 2.
+- The HanS guide, the HanT guide, and the HanS and HanT practices are [Sprint 15](#sprint-15). `constants.md` is Sprint 2.
 
----
+**Future actions**
 
-[Sep 25, 2026], Sprint 1 closed
+#### 2. [Sep 25, 2026], feature-03 done
 
-- Start Sprint 2: installer ledger with `pack_complete`, then ethan start gate.
+- Receipt enforcement stays on Sprint 2.
+
+#### 3. [Sep 25, 2026], Sprint-end
+
+- Start Sprint 2: installer ledger with `pack_complete`, then the ethan start gate.
 
 ---
 
 ## Sprint 2
+
+[Back to the top](#sprint-backlog-frameworksddworks)
 
 Sprint Goal: Install or update writes the pack and a ledger that lists each pack file (ADR-059). End users connect via a local program (ADR-058) with HTTP as fallback. Ethan starts only when `pack_complete` is true.
 
@@ -126,58 +145,66 @@ Depends on Sprint 1 only for the seed files already in this repo. It does not wa
 
 **Status: Done**
 
-### Done
+### **Done**
 
-
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | First install copies allow-list files and writes a file-level ledger | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` scenarios 1 and 4 · `[mcp/mcp-test.md](./mcp/mcp-test.md)` C1, C4, P1–P4 · [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md) · [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md) | Done |
-| 2 | feature-06 | Update deletes recorded pack files only | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` scenario 5 and AC2b · `[mcp/mcp-test.md](./mcp/mcp-test.md)` C5, C2b · [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md) | Done |
-| 3 | feature-07 | Same commit does not replace file bytes | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` scenarios 3, 6a, 7a · `[mcp/mcp-test.md](./mcp/mcp-test.md)` C3, C6a, C7a | Done |
-| 4 | feature-08 | New commit replaces recorded files and sets the flag | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` scenarios 2, 6b, 7b · `[mcp/mcp-test.md](./mcp/mcp-test.md)` C2, C6b, C7b | Done |
-| 5 | feature-09 | Failed download leaves the client folder unchanged | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` scenario 8 · `[mcp/mcp-test.md](./mcp/mcp-test.md)` C8, P2 | Done |
-| 6 | feature-02 | Ship ethan.md in the pack | [Agent-15 Pack file: agents/ethan.md](./product-backlog.md#pb-63) | Agent/Feature | `[framework/framework-design.md](./framework/framework-design.md)` · `[framework/framework-design.md](./framework/framework-design.md)` | Done |
-| 7 | feature-03 | Ethan start reads only the ledger | [Agent-07 agent ethan — pack receipt start gate](./product-backlog.md#pb-17) | Agent/Feature | `[framework/framework-design.md](./framework/framework-design.md)` §2.4 · `[framework/framework-stories.md](./framework/framework-stories.md)` · `[framework/framework-test.md](./framework/framework-test.md)` CE-GATE · `[framework/seeds/agents/ethan.md](./framework/seeds/agents/ethan.md)` | Done |
-| 8 | feature-04 | Seed constants | [Spec-seeds-01 Seed: constants.md](./product-backlog.md#pb-32) | Framework/Feature | `[framework/seeds/templates/constants.md](./framework/seeds/templates/constants.md)` · `[framework/seeds/templates/EN/sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` · [ADR-060](./adr/ADR-060-constants-on-client-root.md) | Done |
-| 9 | feature-05 | Website paste prompt configures stdio MCP | [Web-portal-04 Agent-setup: stdio prompt + HTTP fallback](./product-backlog.md#pb-70) | Web-portal/Feature | `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 · `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-prompt-setup` · [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) · `public/agent-setup/prompt.md` | Done |
-| 10 | feature-10 | Instructions page re-design | [Web-portal-05 Instructions page re-design](./product-backlog.md#pb-71) | Web-portal/Feature | `[admin-portal/ui-mockup/01-home.html](./admin-portal/ui-mockup/01-home.html)` · `src/components/features/InstructionsPage.tsx` · [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) | Done |
-| 11 | feature-11 | Instructions page copies the one-line setup prompt | [Web-portal-06 Instructions: MCP auto-connect prompt](./product-backlog.md#pb-72) | Web-portal/Feature | `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 · [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) · `src/components/features/InstructionsPage.tsx` | Done |
-| 12 | backend-01 | One-line prompt automatically connects agent tools to MCP | [Web-portal-06 Instructions: MCP auto-connect prompt](./product-backlog.md#pb-72) | MCP/Backend | `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 · `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-prompt-setup` · [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) · `public/agent-setup/prompt.md` · `next.config.ts` | Done |
-| 13 | feature-14 | Build and publish ~/.sdd/sdd-mcp | [MCP-02 Local binary: ~/.sdd/sdd-mcp](./product-backlog.md#pb-75) | MCP/Feature | [ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md) · `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 and §4.1 · `spikes/feature-14-zero-dep/` | Done |
-| 14 | feature-12 | Manual setup shows one mcp.json | [Web-portal-06 Instructions: MCP auto-connect prompt](./product-backlog.md#pb-72) | Web-portal/Feature | `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 · [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) · `src/components/features/InstructionsPage.tsx` | Done |
-| 15 | feature-13 | Copied prompt is the one-line setup URL | [Web-portal-06 Instructions: MCP auto-connect prompt](./product-backlog.md#pb-72) | Web-portal/Feature | `src/components/features/InstructionsPage.test.tsx` | Done |
-
+| #   | Code       | SBI                                                  | Parent PBI                                                                            | Module/Type        | Related specs                                                                                                                                                                                                                                                                            | Status |
+| --- | ---------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1 | feature-14 | Published binary at ~/.sdd/sdd-mcp | [MCP-02 Local binary: ~/.sdd/sdd-mcp](./product-backlog.md#pb-75) | MCP/Feature | - [ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md)<br>- [mcp/mcp-design.md](./mcp/mcp-design.md) §2.1 and §4.1<br>- [feature-14-zero-dep](../spikes/feature-14-zero-dep/) | **Done** |
+| 2 | feature-13 | One-line setup URL as the copied prompt | [Web-portal-06 Instructions: MCP auto-connect prompt](./product-backlog.md#pb-72) | Web-portal/Feature | [InstructionsPage.test.tsx](../src/components/features/InstructionsPage.test.tsx) | **Done** |
+| 3 | feature-12 | One mcp.json for manual setup | [Web-portal-06 Instructions: MCP auto-connect prompt](./product-backlog.md#pb-72) | Web-portal/Feature | - [mcp/mcp-design.md](./mcp/mcp-design.md) §2.1<br>- [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)<br>- [InstructionsPage.tsx](../src/components/features/InstructionsPage.tsx) | **Done** |
+| 4 | feature-11 | One-line setup prompt on the instructions page | [Web-portal-06 Instructions: MCP auto-connect prompt](./product-backlog.md#pb-72) | Web-portal/Feature | - [mcp/mcp-design.md](./mcp/mcp-design.md) §2.1<br>- [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)<br>- [InstructionsPage.tsx](../src/components/features/InstructionsPage.tsx) | **Done** |
+| 5 | feature-10 | Instructions page re-design | [Web-portal-05 Instructions page re-design](./product-backlog.md#pb-71) | Web-portal/Feature | - [admin-portal/ui-mockup/01-home.html](./admin-portal/ui-mockup/01-home.html)<br>- [InstructionsPage.tsx](../src/components/features/InstructionsPage.tsx)<br>- [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) | **Done** |
+| 6 | feature-09 | Unchanged client folder after a failed download | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | - [mcp/mcp-stories.md](./mcp/mcp-stories.md) scenario 8<br>- [mcp/mcp-test.md](./mcp/mcp-test.md) C8, P2 | **Done** |
+| 7 | feature-08 | Replaced recorded files and the flag on a new commit | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | - [mcp/mcp-stories.md](./mcp/mcp-stories.md) scenarios 2, 6b, 7b<br>- [mcp/mcp-test.md](./mcp/mcp-test.md) C2, C6b, C7b | **Done** |
+| 8 | feature-07 | Unchanged file bytes on the same commit | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | - [mcp/mcp-stories.md](./mcp/mcp-stories.md) scenarios 3, 6a, 7a<br>- [mcp/mcp-test.md](./mcp/mcp-test.md) C3, C6a, C7a | **Done** |
+| 9 | feature-06 | Update that deletes recorded pack files only | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | - [mcp/mcp-stories.md](./mcp/mcp-stories.md) scenario 5 and AC2b<br>- [mcp/mcp-test.md](./mcp/mcp-test.md) C5, C2b<br>- [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md) | **Done** |
+| 10 | feature-05 | Website paste prompt for stdio MCP | [Web-portal-04 Agent-setup: stdio prompt + HTTP fallback](./product-backlog.md#pb-70) | Web-portal/Feature | - [mcp/mcp-design.md](./mcp/mcp-design.md) §2.1<br>- [mcp/mcp-stories.md](./mcp/mcp-stories.md) `sdd-mcp-prompt-setup`<br>- [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md)<br>- [prompt.md](../public/agent-setup/prompt.md) | **Done** |
+| 11 | feature-04 | Seed constants | [Spec-seeds-01 Seed: constants.md](./product-backlog.md#pb-32) | Framework/Feature | - [framework/seeds/templates/constants.md](./framework/seeds/templates/constants.md)<br>- [framework/seeds/templates/EN/sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)<br>- [ADR-060](./adr/ADR-060-constants-on-client-root.md) | **Done** |
+| 12 | feature-03 | Ethan start from the ledger only | [Agent-07 agent ethan: pack receipt start gate](./product-backlog.md#pb-17) | Agent/Feature | - [framework/framework-design.md](./framework/framework-design.md) §2.4<br>- [framework/framework-stories.md](./framework/framework-stories.md)<br>- [framework/framework-test.md](./framework/framework-test.md) CE-GATE<br>- [framework/seeds/agents/ethan.md](./framework/seeds/agents/ethan.md) | **Done** |
+| 13 | feature-02 | ethan.md shipped in the pack | [Agent-15 Pack file: agents/ethan.md](./product-backlog.md#pb-63) | Agent/Feature | - [framework/framework-design.md](./framework/framework-design.md)<br>- [framework/framework-design.md](./framework/framework-design.md) | **Done** |
+| 14 | feature-01 | First install with an allow-list and a file ledger | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | - [mcp/mcp-stories.md](./mcp/mcp-stories.md) scenarios 1 and 4<br>- [mcp/mcp-test.md](./mcp/mcp-test.md) C1, C4, P1–P4<br>- [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md)<br>- [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md) | **Done** |
+| 15 | backend-01 | Automatic MCP connection from the one-line prompt | [Web-portal-06 Instructions: MCP auto-connect prompt](./product-backlog.md#pb-72) | MCP/Backend | - [mcp/mcp-design.md](./mcp/mcp-design.md) §2.1<br>- [mcp/mcp-stories.md](./mcp/mcp-stories.md) `sdd-mcp-prompt-setup`<br>- [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)<br>- [prompt.md](../public/agent-setup/prompt.md)<br>- [next.config.ts](../next.config.ts) | **Done** |
 
 ### Retrospective
 
-Learnings:
+**Learnings**
 
-[Sep 26, 2026], feature-14 completed
+#### 1. [Sep 25, 2026], feature-04 done
 
-- `npm run mcp:build` + `npm run mcp:place` place `~/.sdd/sdd-mcp`. Stdio uses `createStdioMcpServer` so Prisma stays out of the binary.
-- TRAE CN Manage-page MCP is `~/Library/Application Support/Trae CN/User/mcp.json`, not `~/.trae-cn/mcp.json` or `~/.trae/mcp.json`.
+- [Pack lookup is](./adr/ADR-060-constants-on-client-root.md) `constants.md` [on the client root](./adr/ADR-060-constants-on-client-root.md)
+- Writing rules live under Templates in the EN practices. The seed is not copied into workspace `specs/`.
+
+#### 2. [Sep 26, 2026], feature-14 done
+
+- `npm run mcp:build` and `npm run mcp:place` place `~/.sdd/sdd-mcp`. Stdio uses `createStdioMcpServer` so Prisma stays out of the binary.
+- TRAE CN Manage-page MCP is `~/Library/Application Support/Trae CN/User/mcp.json`.
 - Ethan confirmed tools/list and `sdd_list_versions` from TRAE CN against a local server.
 
-[Sep 26, 2026], feature-12 and feature-13 completed
+#### 3. [Sep 26, 2026], feature-12 and feature-13 done
 
 - Manual setup on `/instructions` is one `command` `mcp.json`. The copy-sentence test covers `en`, `zh-Hans`, and `zh-Hant`.
 
-[Sep 25, 2026], feature-04 completed
+#### 4. [Sep 26, 2026], Sprint-end
 
-- [Pack lookup is](./adr/ADR-060-constants-on-client-root.md) `constants.md` [on the client root](./adr/ADR-060-constants-on-client-root.md)
-- Writing rules live under Templates in the EN practices; the seed is not copied into workspace `specs/`
+- Local reset must keep the seed admin. Playwright must not delete `ADMIN_SEED_EMAIL`. Decision: [ADR-064](./adr/ADR-064-e2e-must-not-wipe-seed-admin.md). Lesson: [web-app-fix-regression](./knowledge/agent/web-app-fix-regression.md).
 
-Opportunities:
+**Opportunities**
 
-[Sep 26, 2026], Sprint 2 closed
+#### 4. [Sep 26, 2026], Sprint-end
 
-- Go-live is Sprint 16 feature-06: GitHub Releases for the five `sdd-mcp` binaries, pack copy, admin-portal sync. Those are not Sprint 2 SBIs.
-- [MCP-01](./product-backlog.md#pb-16) is ToDo on Sprint 15. Sprint 2 installer stories stay Done.
-- Local reset must keep the seed admin. Playwright must not delete `ADMIN_SEED_EMAIL`. Decision: [ADR-064](./adr/ADR-064-e2e-must-not-wipe-seed-admin.md). Lesson: `[knowledge/agent/web-app-fix-regression.md](./knowledge/agent/web-app-fix-regression.md)`.
+- [MCP-01](./product-backlog.md#pb-16) is **ToDo** on Sprint 15. Sprint 2 installer stories stay **Done**.
+
+**Future actions**
+
+#### 4. [Sep 26, 2026], Sprint-end
+
+- Go-live is Sprint 16 feature-06: GitHub Releases for the five `sdd-mcp` binaries, pack copy, and admin-portal sync.
 
 ---
 
 ## Sprint 3
+
+[Back to the top](#sprint-backlog-frameworksddworks)
 
 Sprint Goal: Update the web portal and MCP to support framework.sdd.works R2.
 
@@ -185,52 +212,62 @@ Depends on Sprint 2.
 
 **Status: Done**
 
-MCP and web-portal rows stay here. A task that only completes another row is not its own increment. task-02 stays: it puts the framework files in the pack. Column rules: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md).
+MCP and web-portal rows stay here. A task that only completes another row is not its own increment. task-02 stays: it puts the framework files in the pack. Column rules: [sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md).
 
-### Done
+### **Done**
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-04 | Secret form at the bottom of Features | [Web-portal-08 Instructions page — Get secret](./product-backlog.md#pb-74) | Web-portal/Feature | `[app-stories.md](./admin-portal/app-stories.md)` AC7 · `[app-design.md](./admin-portal/app-design.md)` `/instructions` · `[app-test.md](./admin-portal/app-test.md)` · `[13-instructions.html](./admin-portal/ui-mockup/13-instructions.html)` | Done |
-| 2 | feature-05 | Get secret returns and shows one value | [Web-portal-08 Instructions page — Get secret](./product-backlog.md#pb-74) | Web-portal/Feature | `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-get-key` · `src/core/tools/get-key.ts` · `[product-backlog.md](./product-backlog.md#pb-74)` · `src/components/features/InstructionsPage.tsx` · `[issues-log.md](./issues-log.md)` WA-09 · WA-11 | Done |
-| 3 | feature-07 | Features tab reads synced markdown | [Web-portal-07 Features tab reads pack features.md](./product-backlog.md#pb-73) | Web-portal/Feature | `[product-backlog.md](./product-backlog.md#pb-73)` · `[app-design.md](./admin-portal/app-design.md)` Features catalog · `[app-stories.md](./admin-portal/app-stories.md)` AC12–AC16 · `[app-test.md](./admin-portal/app-test.md)` | Done |
-| 4 | feature-08 | Unregister sdd_list_versions | [MCP-03 MCP tools without sdd_list_versions](./product-backlog.md#pb-78) | MCP/Feature | [ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md) · `[mcp/mcp-design.md](./mcp/mcp-design.md)` §3 · `[mcp/mcp-test.md](./mcp/mcp-test.md)` · `src/mcp/create-server.ts` · `src/mcp/create-server-stdio.ts` · `src/mcp/create-server.test.ts` · `src/mcp/local-binary.test.ts` · `src/app/api/sdd/sdd-api.test.ts` | Done |
-| 5 | feature-09 | Setup and instructions omit list tool | [MCP-03 MCP tools without sdd_list_versions](./product-backlog.md#pb-78) | MCP/Feature | `public/agent-setup/prompt.md` · `src/components/features/InstructionsPage.tsx` · `messages/en.json` · `messages/zh-Hans.json` · `messages/zh-Hant.json` | Done |
-| 6 | feature-10 | Reset success uses previous sentence | [Web-portal-11 Reset success stays on page with previous sentence](./product-backlog.md#pb-79) | Web-portal/Feature | `[issues-log.md](./issues-log.md)` WA-08 · WA-10 · `[app-stories.md](./admin-portal/app-stories.md)` AC4b · `[app-design.md](./admin-portal/app-design.md)` `/reset-password` · `[app-test.md](./admin-portal/app-test.md)` | Done |
-| 7 | feature-16 | Guide tab on instructions | [Web-portal-12 Instructions tab: Scrum in SDD](./product-backlog.md#pb-81) | Web-portal/Feature | `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` · `[app-design.md](./admin-portal/app-design.md)` · `[app-stories.md](./admin-portal/app-stories.md)` AC18 | Done |
-| 8 | feature-17 | Move Get secret to Setup | [Web-portal-13 Get secret moves to Setup](./product-backlog.md#pb-83) | Web-portal/Feature | [ADR-067](./adr/ADR-067-get-secret-on-setup.md) · `[app-design.md](./admin-portal/app-design.md)` · `[13-instructions.html](./admin-portal/ui-mockup/13-instructions.html)` | Done |
-| 9 | feature-19 | Retarget guide name in portal catalog | [Web-portal-12 Instructions tab: sdd-scrum guide](./product-backlog.md#pb-81) | Web-portal/Feature | [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md) · `[features.en.md](../src/content/features/features.en.md)` · `[app-design.md](./admin-portal/app-design.md)` | Done |
-| 10 | task-02 | Put the files in the pack | [Web-portal-07 Features tab reads pack features.md](./product-backlog.md#pb-73) | Web-portal/Task | `[mcp/mcp-design.md](./mcp/mcp-design.md)` sync cache · `[app-design.md](./admin-portal/app-design.md)` | Done |
+| #   | Code       | SBI                                          | Parent PBI                                                                                     | Module/Type        | Related specs                                                                                                                                                                                                                                                                                                                                                                                                                               | Status |
+| --- | ---------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1 | feature-19 | Portal catalog with the scrum-in-sdd name | [Web-portal-12 Instructions tab: sdd-scrum guide](./product-backlog.md#pb-81) | Web-portal/Feature | - [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md)<br>- [features.en.md](../src/content/features/features.en.md)<br>- [app-design.md](./admin-portal/app-design.md) | **Done** |
+| 2 | feature-17 | Get secret on Setup | [Web-portal-13 Get secret moves to Setup](./product-backlog.md#pb-83) | Web-portal/Feature | - [ADR-067](./adr/ADR-067-get-secret-on-setup.md)<br>- [app-design.md](./admin-portal/app-design.md)<br>- [13-instructions.html](./admin-portal/ui-mockup/13-instructions.html) | **Done** |
+| 3 | feature-16 | Guide tab on instructions | [Web-portal-12 Instructions tab: Scrum in SDD](./product-backlog.md#pb-81) | Web-portal/Feature | - [scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)<br>- [app-design.md](./admin-portal/app-design.md)<br>- [app-stories.md](./admin-portal/app-stories.md) AC18 | **Done** |
+| 4 | feature-10 | Reset success with the previous sentence | [Web-portal-11 Reset success stays on page with previous sentence](./product-backlog.md#pb-79) | Web-portal/Feature | - [issues-log.md](./issues-log.md) WA-08<br>- WA-10<br>- [app-stories.md](./admin-portal/app-stories.md) AC4b<br>- [app-design.md](./admin-portal/app-design.md) [reset-password](..//reset-password)<br>- [app-test.md](./admin-portal/app-test.md) | **Done** |
+| 5 | feature-09 | Setup and instructions without the list tool | [MCP-03 MCP tools without sdd_list_versions](./product-backlog.md#pb-78) | MCP/Feature | - [prompt.md](../public/agent-setup/prompt.md)<br>- [InstructionsPage.tsx](../src/components/features/InstructionsPage.tsx)<br>- [en.json](../messages/en.json)<br>- [zh-Hans.json](../messages/zh-Hans.json)<br>- [zh-Hant.json](../messages/zh-Hant.json) | **Done** |
+| 6 | feature-08 | MCP tools without sdd_list_versions | [MCP-03 MCP tools without sdd_list_versions](./product-backlog.md#pb-78) | MCP/Feature | - [ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md)<br>- [mcp/mcp-design.md](./mcp/mcp-design.md) §3<br>- [mcp/mcp-test.md](./mcp/mcp-test.md)<br>- [create-server.ts](../src/mcp/create-server.ts)<br>- [create-server-stdio.ts](../src/mcp/create-server-stdio.ts)<br>- [create-server.test.ts](../src/mcp/create-server.test.ts)<br>- [local-binary.test.ts](../src/mcp/local-binary.test.ts)<br>- [sdd-api.test.ts](../src/app/api/sdd/sdd-api.test.ts) | **Done** |
+| 7 | feature-07 | Features tab of synced markdown | [Web-portal-07 Features tab reads pack features.md](./product-backlog.md#pb-73) | Web-portal/Feature | - [product-backlog.md](./product-backlog.md#pb-73)<br>- [app-design.md](./admin-portal/app-design.md) Features catalog<br>- [app-stories.md](./admin-portal/app-stories.md) AC12–AC16<br>- [app-test.md](./admin-portal/app-test.md) | **Done** |
+| 8 | feature-05 | One secret value from Get secret | [Web-portal-08 Instructions page: Get secret](./product-backlog.md#pb-74) | Web-portal/Feature | - [mcp/mcp-stories.md](./mcp/mcp-stories.md) `sdd-mcp-get-key`<br>- [get-key.ts](../src/core/tools/get-key.ts)<br>- [product-backlog.md](./product-backlog.md#pb-74)<br>- [InstructionsPage.tsx](../src/components/features/InstructionsPage.tsx)<br>- [issues-log.md](./issues-log.md) WA-09<br>- WA-11 | **Done** |
+| 9 | feature-04 | Secret form at the bottom of Features | [Web-portal-08 Instructions page: Get secret](./product-backlog.md#pb-74) | Web-portal/Feature | - [app-stories.md](./admin-portal/app-stories.md) AC7<br>- [app-design.md](./admin-portal/app-design.md) [instructions](..//instructions)<br>- [app-test.md](./admin-portal/app-test.md)<br>- [13-instructions.html](./admin-portal/ui-mockup/13-instructions.html) | **Done** |
+| 10 | task-02 | Pack files for the Features tab | [Web-portal-07 Features tab reads pack features.md](./product-backlog.md#pb-73) | Web-portal/Task | - [mcp/mcp-design.md](./mcp/mcp-design.md) sync cache<br>- [app-design.md](./admin-portal/app-design.md) | **Done** |
 
 ### Retrospective
 
-Learnings:
+**Learnings**
 
-[Sep 26, 2026], feature-07 Features catalog
+#### 1. [Sep 26, 2026], feature-07 done
 
-- The page reads the latest unpack first and `src/content/features/` only when that unpack has no English file. That choice is already in [`app-design.md`](./admin-portal/app-design.md). No new ADR.
-- A prose bullet that contains `—` is split into a name and a description. Keep the em dash for `name — description` rows only. See [`knowledge/agent/features-markdown-em-dash.md`](./knowledge/agent/features-markdown-em-dash.md).
-- Ethan confirmed the page usable 2026-09-26 after sync.
+- The page reads the latest unpack first and `src/content/features/` only when that unpack has no English file. That choice is already in [app-design.md](./admin-portal/app-design.md).
+- A prose bullet that contains `—` is split into a name and a description. Keep the em dash for `name — description` rows only. See [features-markdown-em-dash](./knowledge/agent/features-markdown-em-dash.md).
+- Ethan confirmed the page usable on 2026-09-26 after sync.
 
-[Sep 26, 2026], feature-05 and feature-06 merged
+#### 2. [Sep 26, 2026], feature-05 done
 
 - Get secret is one feature. The server lookup and the button that shows the value are both feature-05. The old feature-06 row is removed. feature-07 and later codes are unchanged.
 
-[Sep 26, 2026], feature-06 and feature-10 completed
+#### 3. [Sep 26, 2026], feature-10 done
 
 - Reset success uses the previous `admin.reset.sent` sentence and does not name the address.
-- Get secret result is a code block whose right edge matches the Get secret button. The field stays 32rem and does not shrink.
+- The Get secret result is a code block whose right edge matches the Get secret button. The field stays 32rem and does not shrink.
 - A sub-100ms reset `200` means Resend was not called. Playwright must keep the seed admin: [ADR-064](./adr/ADR-064-e2e-must-not-wipe-seed-admin.md).
 
-[Sep 26, 2026], feature-08 and feature-09 completed
+#### 4. [Sep 26, 2026], feature-08 and feature-09 done
 
 - MCP has no private tool. Unregister `sdd_list_versions`. Keep `listVersions()` and `GET /api/sdd/versions`. Decision: [ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md).
-- Cursor loads `tsx src/mcp/stdio.ts`. `~/.sdd/sdd-mcp` stays on the previous tool list until `npm run mcp:build` and `npm run mcp:place`. See [`knowledge/ops/mcp-stdio-source-vs-binary.md`](./knowledge/ops/mcp-stdio-source-vs-binary.md).
-- Ethan confirmed both stories usable 2026-09-26.
+- Cursor loads `tsx src/mcp/stdio.ts`. `~/.sdd/sdd-mcp` stays on the previous tool list until `npm run mcp:build` and `npm run mcp:place`. See [mcp-stdio-source-vs-binary](./knowledge/ops/mcp-stdio-source-vs-binary.md).
+- Ethan confirmed both stories usable on 2026-09-26.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 4
+
+[Back to the top](#sprint-backlog-frameworksddworks)
 
 Sprint Goal: Agent Ethan completes his onboard.
 
@@ -238,33 +275,60 @@ Depends on Sprint 2 (the pack receipt) and Sprint 3 (the portal and MCP surface)
 
 **Status: WIP**
 
-Done rows stay on top. feature-23 is Done. No row is WIP. The next item in order is feature-24, still ToDo.
+feature-27 is WIP. The first ToDo row is feature-30.
 
 Draft files exist for feature-24 and feature-22. Those rows stay ToDo until each item's own checks pass. feature-28 reads `scrum-in-sdd.md` when the user asks what a name means, and `sdd-scrum-practices.md` when a job is about to run. Onboard does not open either file.
 
-### WIP
+### **WIP**
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-11 | Update ethan.md onboard | [Agent-02 agent ethan — initial capabilities](./product-backlog.md#pb-7) | Agent/Feature | `[framework-design.md](./framework/framework-design.md)` §2.2 · §2.4 · [ADR-073](./adr/ADR-073-skill-get-status.md) | Done |
-| 2 | feature-12 | Rename update-status to tracking | [Skill-07 Skill: sdd-tracking](./product-backlog.md#pb-27) | Skill/Feature | [ADR-065](./adr/ADR-065-skill-update-status.md) · `[constants.md](./framework/seeds/templates/constants.md)` | Done |
-| 3 | feature-13 | Skill sdd-design | [Skill-14 Skill: sdd-design](./product-backlog.md#pb-80) | Skill/Feature | [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md) · `[constants.md](./framework/seeds/templates/constants.md)` | Done |
-| 4 | feature-14 | Initial sdd-tracking skill | [Skill-07 Skill: sdd-tracking](./product-backlog.md#pb-27) | Skill/Feature | [ADR-065](./adr/ADR-065-skill-update-status.md) | Done |
-| 5 | feature-15 | Rename implement-feature to implement | [Skill-13 Skill: sdd-implement](./product-backlog.md#pb-65) | Skill/Feature | [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md) · `[constants.md](./framework/seeds/templates/constants.md)` | Done |
-| 6 | feature-18 | Rename guide to scrum-in-sdd.md | [Spec-seeds-02 Seed: scrum-in-sdd.md](./product-backlog.md#pb-33) | Framework/Feature | [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md) · `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` | Done |
-| 7 | feature-20 | Rename new-project to kickoff-project | [Skill-03 Skill: sdd-kickoff-project](./product-backlog.md#pb-23) | Skill/Feature | [ADR-069](./adr/ADR-069-skill-kickoff-project.md) · `[constants.md](./framework/seeds/templates/constants.md)` | Done |
-| 8 | feature-03 | Seeds the job copies | [Spec-seeds-04 Seed: artifacts-map.md](./product-backlog.md#pb-35) | Framework/Feature | [Spec-seeds-01 Seed: constants.md](./product-backlog.md#pb-32) · [Spec-seeds-03 Seed: sdd-scrum-practices.md](./product-backlog.md#pb-34) | Done |
-| 9 | feature-29 | Merge agent-design into framework-design | [Agent-02 agent ethan — initial capabilities](./product-backlog.md#pb-7) | Framework/Documentation | `[framework-design.md](./framework/framework-design.md)` | Done |
-| 10 | feature-27 | Seed status.md | [Spec-seeds-07 Seed: status.md](./product-backlog.md#pb-38) | Framework/Feature | `[status.md](./framework/seeds/templates/EN/status.md)` · `[framework-design.md](./framework/framework-design.md)` | Done |
-| 11 | feature-28 | ethan.md reads the guide and practices when the step needs them | [Agent-02 agent ethan — initial capabilities](./product-backlog.md#pb-7) · [Agent-15 Pack file: agents/ethan.md](./product-backlog.md#pb-63) | Agent/Feature | `[ethan.md](./framework/seeds/agents/ethan.md)` · `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` · `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` | Done |
-| 12 | feature-21 | Change-log and issues-log seeds | [Spec-seeds-08 Seed: changes-log.md](./product-backlog.md#pb-39) · [Spec-seeds-13 Seed: issues-log.md](./product-backlog.md#pb-84) | Framework/Feature | [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) · [ADR-075](./adr/ADR-075-issues-log-tables.md) | Done |
-| 13 | feature-23 | Initial sdd-audit-artifacts | [Skill-10 Skill: sdd-audit-artifacts](./product-backlog.md#pb-30) | Skill/Feature | [`framework-design.md`](./framework/framework-design.md#sdd-audit-artifacts) · [`framework-stories.md`](./framework/framework-stories.md#sdd-audit-artifacts) | Done |
-| 14 | feature-24 | Skill sdd-review-status | [Skill-15 Skill: sdd-review-status](./product-backlog.md#pb-86) | Skill/Feature | [ADR-073](./adr/ADR-073-skill-get-status.md) | ToDo |
-| 15 | feature-22 | Add rule artifacts-map | [Rule-04 Rule: artifacts-map.mdc](./product-backlog.md#pb-85) | Rule/Feature | [ADR-072](./adr/ADR-072-rule-artifacts-map.md) · `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` | ToDo |
+Additional Done Criteria, on top of the Definition of Done:
+
+- `feature-04`: The user has reviewed and confirmed this seed. It is stored in the seed tree. Associated specs are updated. The whole seed tree has been cross-reviewed and is consistent.
+
+| #   | Code       | SBI                                                      | Parent PBI                                                                                                                                  | Module/Type             | Related specs                                                                                                                                                                                       | Status |
+| --- | ---------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1 | feature-28 | ethan.md that reads the guide and practices for the step | - [Agent-02 agent ethan: initial capabilities](./product-backlog.md#pb-7)<br>- [Agent-15 Pack file: agents/ethan.md](./product-backlog.md#pb-63) | Agent/Feature | - [ethan.md](./framework/seeds/agents/ethan.md)<br>- [scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)<br>- [sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md) | **Done** |
+| 2 | feature-23 | Initial sdd-audit-artifacts | [Skill-10 Skill: sdd-audit-artifacts](./product-backlog.md#pb-30) | Skill/Feature | - [framework-design.md](./framework/framework-design.md#sdd-audit-artifacts)<br>- [framework-stories.md](./framework/framework-stories.md#sdd-audit-artifacts) | **Done** |
+| 3 | feature-21 | Change-log and issues-log seeds | - [Spec-seeds-08 Seed: changes-log.md](./product-backlog.md#pb-39)<br>- [Spec-seeds-13 Seed: issues-log.md](./product-backlog.md#pb-84) | Framework/Feature | - [ADR-070](./adr/ADR-070-change-log-and-issues-log.md)<br>- [ADR-075](./adr/ADR-075-issues-log-tables.md) | **Done** |
+| 4 | feature-20 | Renamed skill from new-project to kickoff-project | [Skill-03 Skill: sdd-kickoff-project](./product-backlog.md#pb-23) | Skill/Feature | - [ADR-069](./adr/ADR-069-skill-kickoff-project.md)<br>- [constants.md](./framework/seeds/templates/constants.md) | **Done** |
+| 5 | feature-18 | Renamed guide file to scrum-in-sdd.md | [Spec-seeds-02 Seed: scrum-in-sdd.md](./product-backlog.md#pb-33) | Framework/Feature | - [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md)<br>- [scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md) | **Done** |
+| 6 | feature-15 | Renamed skill from implement-feature to implement | [Skill-13 Skill: sdd-implement](./product-backlog.md#pb-65) | Skill/Feature | - [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md)<br>- [constants.md](./framework/seeds/templates/constants.md) | **Done** |
+| 7 | feature-14 | Initial sdd-tracking skill | [Skill-07 Skill: sdd-tracking](./product-backlog.md#pb-27) | Skill/Feature | [ADR-065](./adr/ADR-065-skill-update-status.md) | **Done** |
+| 8 | feature-13 | Skill sdd-design | [Skill-14 Skill: sdd-design](./product-backlog.md#pb-80) | Skill/Feature | - [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md)<br>- [constants.md](./framework/seeds/templates/constants.md) | **Done** |
+| 9 | feature-12 | Renamed skill from update-status to tracking | [Skill-07 Skill: sdd-tracking](./product-backlog.md#pb-27) | Skill/Feature | - [ADR-065](./adr/ADR-065-skill-update-status.md)<br>- [constants.md](./framework/seeds/templates/constants.md) | **Done** |
+| 10 | feature-11 | Updated agent ethan.md with onboard capability | [Agent-02 agent ethan: initial capabilities](./product-backlog.md#pb-7) | Agent/Feature | - [framework-design.md](./framework/framework-design.md) §2.2<br>- §2.4<br>- [ADR-073](./adr/ADR-073-skill-get-status.md) | **Done** |
+| 11 | feature-04 | Sprint-backlog seed | [Spec-seeds-06 Seed: sprint-backlog.md](./product-backlog.md#pb-37) | Framework/Feature | - [sprint-backlog.md](./framework/seeds/templates/EN/sprint-backlog.md)<br>- [sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md#sprint-backlogmd)<br>- [framework-design.md](./framework/framework-design.md#sprint-backlogmd)<br>- [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md) | **Done** |
+| 12 | feature-03 | Job-copy seeds | [Spec-seeds-04 Seed: artifacts-map.md](./product-backlog.md#pb-35) | Framework/Feature | - [Spec-seeds-01 Seed: constants.md](./product-backlog.md#pb-32)<br>- [Spec-seeds-03 Seed: sdd-scrum-practices.md](./product-backlog.md#pb-34) | **Done** |
+| 13 | feature-29 | Merged agent-design in framework-design | [Agent-02 agent ethan: initial capabilities](./product-backlog.md#pb-7) | Framework/Documentation | [framework-design.md](./framework/framework-design.md) | **Done** |
+| 14 | feature-27 | Seed status.md | [Spec-seeds-07 Seed: status.md](./product-backlog.md#pb-38) | Framework/Feature | - [status.md](./framework/seeds/templates/EN/status.md)<br>- [framework-design.md](./framework/framework-design.md)<br>- [sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md#statusmd)<br>- [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md) | **WIP** |
+| 15 | feature-30 | Practices job 6 and the sdd-update-status skill | [Skill-07 Skill: sdd-update-status](./product-backlog.md#pb-27) | Skill/Feature | [ADR-065](./adr/ADR-065-skill-update-status.md) | **ToDo** |
+| 16 | feature-24 | Skill sdd-review-status | [Skill-15 Skill: sdd-review-status](./product-backlog.md#pb-86) | Skill/Feature | [ADR-073](./adr/ADR-073-skill-get-status.md) | **ToDo** |
+| 17 | feature-22 | Rule artifacts-map | [Rule-04 Rule: artifacts-map.mdc](./product-backlog.md#pb-85) | Rule/Feature | - [ADR-072](./adr/ADR-072-rule-artifacts-map.md)<br>- [scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md) | **ToDo** |
+
+### Retrospective
+
+**Learnings**
+
+#### 1. [Oct 1, 2026], feature-04 done
+
+- A section rule lives once in the practices file, as a template plus one note per placeholder. See [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md).
+- A table cell with more than one fact uses `- ` bullets separated by `<br>`. See [markdown-table-cell-bullets](./knowledge/agent/markdown-table-cell-bullets.md).
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+#### 1. [Oct 1, 2026], feature-04 done
+
+- The HanS and HanT sprint-backlog seeds follow on Sprint 16 i18n-02.
 
 ---
 
 ## Sprint 5
+
+[Back to the top](#sprint-backlog-frameworksddworks)
 
 Sprint Goal: Ethan helps kick off a new project, and update an on-going project.
 
@@ -272,278 +336,440 @@ Depends on Sprint 4 (onboard can return a verdict).
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Skill sdd-kickoff-project | [Skill-03 Skill: sdd-kickoff-project](./product-backlog.md#pb-23) | Skill/Feature | [Agent-08 Job: Start a new project](./product-backlog.md#pb-42) | ToDo |
-| 2 | feature-02 | Ethan runs start-a-new-project | [Agent-08 Job: Start a new project](./product-backlog.md#pb-42) | Agent/Feature | `[framework/seeds/templates/EN/sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` | ToDo |
-| 3 | feature-25 | Skill sdd-update-project | [Skill-04 Skill: sdd-update-project](./product-backlog.md#pb-24) | Skill/Feature | [Agent-09](./product-backlog.md#pb-43) | ToDo |
-| 4 | feature-26 | Ethan runs update-project-settings | [Agent-09 Job: Update project settings](./product-backlog.md#pb-43) | Agent/Feature | — | ToDo |
+| #   | Code       | SBI                                  | Parent PBI                                                          | Module/Type   | Related specs                                                                                                | Status |
+| --- | ---------- | ------------------------------------ | ------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------ | ------ |
+| 1 | feature-26 | Ethan run of update-project-settings | [Agent-09 Job: Update project settings](./product-backlog.md#pb-43) | Agent/Feature | [Agent-09 Job: Update project settings](./product-backlog.md#pb-43) | **ToDo** |
+| 2 | feature-25 | Skill sdd-update-project | [Skill-04 Skill: sdd-update-project](./product-backlog.md#pb-24) | Skill/Feature | [Agent-09](./product-backlog.md#pb-43) | **ToDo** |
+| 3 | feature-02 | Ethan run of start-a-new-project | [Agent-08 Job: Start a new project](./product-backlog.md#pb-42) | Agent/Feature | [framework/seeds/templates/EN/sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md) | **ToDo** |
+| 4 | feature-01 | Skill sdd-kickoff-project | [Skill-03 Skill: sdd-kickoff-project](./product-backlog.md#pb-23) | Skill/Feature | [Agent-08 Job: Start a new project](./product-backlog.md#pb-42) | **ToDo** |
+
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 6
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: Ethan can refine the product backlog.
 
 Depends on Sprint 5. A project exists to refine.
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: Practices job 4 is no longer *(to fill)*. The skill installs.
 - `feature-02`: A confirmed request leaves a verifiable change in `product-backlog.md`.
 - `feature-03`: Ethan applies one small backlog refinement and one change-log entry inside the guide rules.
 - `feature-04`: The user has reviewed and confirmed this seed. It is stored in the seed tree. Associated specs are updated. The whole seed tree has been cross-reviewed and is consistent.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Fill practices job 4 and ship sdd-refine-pb | [Skill-05 Skill: sdd-refine-pb](./product-backlog.md#pb-25) · [Spec-seeds-03 Seed: sdd-scrum-practices.md](./product-backlog.md#pb-34) | Skill/Feature | — | ToDo |
-| 2 | feature-02 | Ethan refines the backlog | [Agent-10 Job: Refine product backlog](./product-backlog.md#pb-44) | Agent/Feature | — | ToDo |
-| 3 | feature-03 | One governance edit | [Agent-04 agent ethan — governance artifacts](./product-backlog.md#pb-9) | Agent/Feature | — | ToDo |
-| 4 | feature-04 | Product-backlog seed | [Spec-seeds-05 Seed: product-backlog.md](./product-backlog.md#pb-36) | Framework/Feature | — | ToDo |
+| #   | Code       | SBI                                         | Parent PBI                                                                                                                             | Module/Type       | Related specs                                                                                                                          | Status |
+| --- | ---------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1 | feature-04 | Product-backlog seed | [Spec-seeds-05 Seed: product-backlog.md](./product-backlog.md#pb-36) | Framework/Feature | [Spec-seeds-05 Seed: product-backlog.md](./product-backlog.md#pb-36) | **ToDo** |
+| 2 | feature-03 | One governance edit | [Agent-04 agent ethan: governance artifacts](./product-backlog.md#pb-9) | Agent/Feature | [Agent-04 agent ethan: governance artifacts](./product-backlog.md#pb-9) | **ToDo** |
+| 3 | feature-02 | Ethan refinement of the backlog | [Agent-10 Job: Refine product backlog](./product-backlog.md#pb-44) | Agent/Feature | [Agent-10 Job: Refine product backlog](./product-backlog.md#pb-44) | **ToDo** |
+| 4 | feature-01 | Practices job 4 and the sdd-refine-pb skill | - [Skill-05 Skill: sdd-refine-pb](./product-backlog.md#pb-25)<br>- [Spec-seeds-03 Seed: sdd-scrum-practices.md](./product-backlog.md#pb-34) | Skill/Feature | - [Skill-05 Skill: sdd-refine-pb](./product-backlog.md#pb-25)<br>- [Spec-seeds-03 Seed: sdd-scrum-practices.md](./product-backlog.md#pb-34) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 7
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: Ethan can plan a sprint.
 
 Depends on Sprint 6 (a backlog exists to plan from).
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: Practices job 5 is written. The skill installs.
 - `feature-02`: A confirmed request leaves a Sprint Backlog for the planned sprint.
 - `feature-03`: The planning run is the one named event, with a verifiable change in the sprint backlog.
-- `feature-04`: The user has reviewed and confirmed this seed. It is stored in the seed tree. Associated specs are updated. The whole seed tree has been cross-reviewed and is consistent.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Fill practices job 5 and ship sdd-plan-sprint | [Skill-06 Skill: sdd-plan-sprint](./product-backlog.md#pb-26) | Skill/Feature | — | ToDo |
-| 2 | feature-02 | Ethan plans a sprint | [Agent-11 Job: Sprint planning](./product-backlog.md#pb-45) | Agent/Feature | — | ToDo |
-| 3 | feature-03 | One facilitated event | [Agent-03 agent ethan — facilitate events](./product-backlog.md#pb-8) | Agent/Feature | — | ToDo |
-| 4 | feature-04 | Sprint-backlog seed | [Spec-seeds-06 Seed: sprint-backlog.md](./product-backlog.md#pb-37) | Framework/Feature | — | ToDo |
+| #   | Code       | SBI                                           | Parent PBI                                                           | Module/Type   | Related specs                                                        | Status |
+| --- | ---------- | --------------------------------------------- | -------------------------------------------------------------------- | ------------- | -------------------------------------------------------------------- | ------ |
+| 1 | feature-03 | One facilitated event | [Agent-03 agent ethan: facilitate events](./product-backlog.md#pb-8) | Agent/Feature | [Agent-03 agent ethan: facilitate events](./product-backlog.md#pb-8) | **ToDo** |
+| 2 | feature-02 | Ethan plan for a sprint | [Agent-11 Job: Sprint planning](./product-backlog.md#pb-45) | Agent/Feature | [Agent-11 Job: Sprint planning](./product-backlog.md#pb-45) | **ToDo** |
+| 3 | feature-01 | Practices job 5 and the sdd-plan-sprint skill | [Skill-06 Skill: sdd-plan-sprint](./product-backlog.md#pb-26) | Skill/Feature | [Skill-06 Skill: sdd-plan-sprint](./product-backlog.md#pb-26) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 8
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: Ethan can report status.
 
 Depends on Sprint 4 (`status.md` exists). Does not depend on Sprint 5–7.
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
+Additional Done Criteria, on top of the Definition of Done:
 
-Item acceptance:
-
-- `feature-01`: Practices job 6 is written. The skill installs as `sdd-tracking`.
 - `feature-02`: A confirmed request leaves a verifiable update in `status.md`.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Fill practices job 6 and ship sdd-tracking | [Skill-07 Skill: sdd-tracking](./product-backlog.md#pb-27) | Skill/Feature | [ADR-065](./adr/ADR-065-skill-update-status.md) | ToDo |
-| 2 | feature-02 | Ethan updates status | [Agent-12 Job: Report status](./product-backlog.md#pb-46) | Agent/Feature | — | ToDo |
+| #   | Code       | SBI                    | Parent PBI                                                | Module/Type   | Related specs                                             | Status |
+| --- | ---------- | ---------------------- | --------------------------------------------------------- | ------------- | --------------------------------------------------------- | ------ |
+| 1 | feature-02 | Ethan update of status | [Agent-12 Job: Report status](./product-backlog.md#pb-46) | Agent/Feature | [Agent-12 Job: Report status](./product-backlog.md#pb-46) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 9
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: Ethan can run a retrospective.
 
 Depends on Sprint 7 (a sprint exists to review).
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: Practices job 7 is written. The skill installs.
 - `feature-02`: A confirmed request leaves the retrospective record practices describes.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Fill practices job 7 and ship sdd-retrospective | [Skill-08 Skill: sdd-retrospective](./product-backlog.md#pb-28) | Skill/Feature | — | ToDo |
-| 2 | feature-02 | Ethan records a retrospective | [Agent-13 Job: Retrospective](./product-backlog.md#pb-47) | Agent/Feature | — | ToDo |
+| #   | Code       | SBI                                             | Parent PBI                                                      | Module/Type   | Related specs                                                   | Status |
+| --- | ---------- | ----------------------------------------------- | --------------------------------------------------------------- | ------------- | --------------------------------------------------------------- | ------ |
+| 1 | feature-02 | Ethan retrospective record | [Agent-13 Job: Retrospective](./product-backlog.md#pb-47) | Agent/Feature | [Agent-13 Job: Retrospective](./product-backlog.md#pb-47) | **ToDo** |
+| 2 | feature-01 | Practices job 7 and the sdd-retrospective skill | [Skill-08 Skill: sdd-retrospective](./product-backlog.md#pb-28) | Skill/Feature | [Skill-08 Skill: sdd-retrospective](./product-backlog.md#pb-28) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 10
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: Ethan can start the next sprint.
 
 Depends on Sprint 9.
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: Practices job 8 (Start a new sprint) is written. The skill installs.
 - `feature-02`: A confirmed request leaves the next sprint in `sprint-backlog.md` and `status.md`.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Fill practices job 8 and ship sdd-close-sprint | [Skill-09 Skill: sdd-close-sprint](./product-backlog.md#pb-29) | Skill/Feature | — | ToDo |
-| 2 | feature-02 | Ethan opens the next sprint | [Agent-14 Job: Close / start sprint](./product-backlog.md#pb-48) | Agent/Feature | — | ToDo |
+| #   | Code       | SBI                                            | Parent PBI                                                       | Module/Type   | Related specs                                                    | Status |
+| --- | ---------- | ---------------------------------------------- | ---------------------------------------------------------------- | ------------- | ---------------------------------------------------------------- | ------ |
+| 1 | feature-02 | Next sprint opened by Ethan | [Agent-14 Job: Close / start sprint](./product-backlog.md#pb-48) | Agent/Feature | [Agent-14 Job: Close / start sprint](./product-backlog.md#pb-48) | **ToDo** |
+| 2 | feature-01 | Practices job 8 and the sdd-close-sprint skill | [Skill-09 Skill: sdd-close-sprint](./product-backlog.md#pb-29) | Skill/Feature | [Skill-09 Skill: sdd-close-sprint](./product-backlog.md#pb-29) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 11
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: Ethan answers from the guide and the live project files without editing them.
 
 Depends on Sprint 4 (onboard) and Sprint 5 (a project to read).
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: A chat turn answers from the guide plus backlog and sprint backlog, without writing files.
 - `feature-02`: A coaching question is answered with a citation and no invented process rule.
 - `feature-03`: A turn that is not an event verb still gets a useful reply and does not edit files.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | What now / what next | [Agent-02 agent ethan — initial capabilities](./product-backlog.md#pb-7) | Agent/Feature | — | ToDo |
-| 2 | feature-02 | Coaching answer cites the guide | [Agent-05 agent ethan — knowledgeable coach](./product-backlog.md#pb-10) | Agent/Feature | — | ToDo |
-| 3 | feature-03 | Free-form chat stays inside the harness | [Agent-06 agent ethan — chat](./product-backlog.md#pb-11) | Agent/Feature | — | ToDo |
+| #   | Code       | SBI                                   | Parent PBI                                                              | Module/Type   | Related specs                                                           | Status |
+| --- | ---------- | ------------------------------------- | ----------------------------------------------------------------------- | ------------- | ----------------------------------------------------------------------- | ------ |
+| 1 | feature-03 | Free-form chat inside the harness | [Agent-06 agent ethan: chat](./product-backlog.md#pb-11) | Agent/Feature | [Agent-06 agent ethan: chat](./product-backlog.md#pb-11) | **ToDo** |
+| 2 | feature-02 | Coaching answer with a guide citation | [Agent-05 agent ethan: knowledgeable coach](./product-backlog.md#pb-10) | Agent/Feature | [Agent-05 agent ethan: knowledgeable coach](./product-backlog.md#pb-10) | **ToDo** |
+| 3 | feature-01 | What now / what next | [Agent-02 agent ethan: initial capabilities](./product-backlog.md#pb-7) | Agent/Feature | [Agent-02 agent ethan: initial capabilities](./product-backlog.md#pb-7) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 12
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: The three harness rules install and are named in constants.md.
 
 Depends on Sprint 2 (the pack copy). Does not depend on the scrum jobs.
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: The file installs under `{client_root}/rules/` and the key is in constants.md.
 - `feature-02`: Same install bar.
 - `feature-03`: Same install bar.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Rule dod.mdc | [Rule-01 Rule: dod.mdc](./product-backlog.md#pb-18) | Rule/Feature | — | ToDo |
-| 2 | feature-02 | Rule incremental-delivery.mdc | [Rule-02 Rule: incremental-delivery.mdc](./product-backlog.md#pb-19) | Rule/Feature | — | ToDo |
-| 3 | feature-03 | Rule realtime-status.mdc | [Rule-03 Rule: realtime-status.mdc](./product-backlog.md#pb-20) | Rule/Feature | — | ToDo |
+| #   | Code       | SBI                           | Parent PBI                                                           | Module/Type  | Related specs                                                        | Status |
+| --- | ---------- | ----------------------------- | -------------------------------------------------------------------- | ------------ | -------------------------------------------------------------------- | ------ |
+| 1 | feature-03 | Rule realtime-status.mdc | [Rule-03 Rule: realtime-status.mdc](./product-backlog.md#pb-20) | Rule/Feature | [Rule-03 Rule: realtime-status.mdc](./product-backlog.md#pb-20) | **ToDo** |
+| 2 | feature-02 | Rule incremental-delivery.mdc | [Rule-02 Rule: incremental-delivery.mdc](./product-backlog.md#pb-19) | Rule/Feature | [Rule-02 Rule: incremental-delivery.mdc](./product-backlog.md#pb-19) | **ToDo** |
+| 3 | feature-01 | Rule dod.mdc | [Rule-01 Rule: dod.mdc](./product-backlog.md#pb-18) | Rule/Feature | [Rule-01 Rule: dod.mdc](./product-backlog.md#pb-18) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 13
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: A feature can be implemented by updating specs, then TDD.
 
 Depends on Sprint 3 (a project) and Sprint 12 (the rules the work follows).
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: Both folders install under `{client_root}/skills/`.
 - `feature-02`: The skill names which spec files to update and does not leave them describing the previous behavior.
 - `feature-03`: The skill loads the skills the SBI needs, including spec update and TDD, and finishes that one SBI.
 - `feature-04`: The skill installs under `{client_root}/skills/`. The initial `SKILL.md` is Sprint 4 feature-23.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Skills sdd-atdd and sdd-tdd | [Skill-01 Skill: sdd-atdd](./product-backlog.md#pb-21) · [Skill-02 Skill: sdd-tdd](./product-backlog.md#pb-22) | Skill/Feature | — | ToDo |
-| 2 | feature-02 | Skill sdd-update-specs | [Skill-12 Skill: sdd-update-specs](./product-backlog.md#pb-64) | Skill/Feature | — | ToDo |
-| 3 | feature-03 | Skill sdd-implement | [Skill-13 Skill: sdd-implement](./product-backlog.md#pb-65) | Skill/Feature | [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md) | ToDo |
-| 4 | feature-04 | Install sdd-audit-artifacts | [Skill-10 Skill: sdd-audit-artifacts](./product-backlog.md#pb-30) | Skill/Feature | — | ToDo |
+| #   | Code       | SBI                                 | Parent PBI                                                                                                     | Module/Type   | Related specs                                                                                                  | Status |
+| --- | ---------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------- | ------ |
+| 1 | feature-04 | Installed sdd-audit-artifacts skill | [Skill-10 Skill: sdd-audit-artifacts](./product-backlog.md#pb-30) | Skill/Feature | [Skill-10 Skill: sdd-audit-artifacts](./product-backlog.md#pb-30) | **ToDo** |
+| 2 | feature-03 | Skill sdd-implement | [Skill-13 Skill: sdd-implement](./product-backlog.md#pb-65) | Skill/Feature | [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md) | **ToDo** |
+| 3 | feature-02 | Skill sdd-update-specs | [Skill-12 Skill: sdd-update-specs](./product-backlog.md#pb-64) | Skill/Feature | [Skill-12 Skill: sdd-update-specs](./product-backlog.md#pb-64) | **ToDo** |
+| 4 | feature-01 | Skills sdd-atdd and sdd-tdd | - [Skill-01 Skill: sdd-atdd](./product-backlog.md#pb-21)<br>- [Skill-02 Skill: sdd-tdd](./product-backlog.md#pb-22) | Skill/Feature | - [Skill-01 Skill: sdd-atdd](./product-backlog.md#pb-21)<br>- [Skill-02 Skill: sdd-tdd](./product-backlog.md#pb-22) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 14
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: The public instructions page covers call-up, install, the receipt, and the fatal stop.
 
 Depends on Sprint 2 for the behavior the page describes. The page is not required for Sprint 2 to send the URL.
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: The section cites each client's docs. Cursor `/ethan` and TRAE CN `@` are the known cases.
 - `feature-02`: A reader can install or update, find the receipt, and see that Ethan stops without a true flag.
 - `feature-03`: The instructions URL on framework.sdd.works shows this content. No new portal features.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Per-client call-up, after research | [Web-portal-01 Instructions: per-client agent call-up](./product-backlog.md#pb-15) | Web-portal/Feature | — | ToDo |
-| 2 | feature-02 | Install, receipt, and fatal stop | [Web-portal-02 Instructions: install, receipt, fatal stop](./product-backlog.md#pb-49) | Web-portal/Feature | — | ToDo |
-| 3 | feature-03 | The live site shows that page | [Web-portal-03 Website shows instructions](./product-backlog.md#pb-50) | Web-portal/Feature | — | ToDo |
+| #   | Code       | SBI                                | Parent PBI                                                                             | Module/Type        | Related specs                                                                          | Status |
+| --- | ---------- | ---------------------------------- | -------------------------------------------------------------------------------------- | ------------------ | -------------------------------------------------------------------------------------- | ------ |
+| 1 | feature-03 | Live site page for that content | [Web-portal-03 Website shows instructions](./product-backlog.md#pb-50) | Web-portal/Feature | [Web-portal-03 Website shows instructions](./product-backlog.md#pb-50) | **ToDo** |
+| 2 | feature-02 | Install, receipt, and fatal stop | [Web-portal-02 Instructions: install, receipt, fatal stop](./product-backlog.md#pb-49) | Web-portal/Feature | [Web-portal-02 Instructions: install, receipt, fatal stop](./product-backlog.md#pb-49) | **ToDo** |
+| 3 | feature-01 | Per-client call-up, after research | [Web-portal-01 Instructions: per-client agent call-up](./product-backlog.md#pb-15) | Web-portal/Feature | [Web-portal-01 Instructions: per-client agent call-up](./product-backlog.md#pb-15) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 15
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: A new project can copy the optional engineering starters: architecture, deployment, and the secrets file.
 
 Depends on Sprint 2 (the pack copy). Does not depend on the scrum jobs.
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: The user has reviewed and confirmed this seed. It is stored in the seed tree. Associated specs are updated. The whole seed tree has been cross-reviewed and is consistent.
 - `feature-02`: The user has reviewed and confirmed this seed. It is stored in the seed tree. Associated specs are updated. The whole seed tree has been cross-reviewed and is consistent.
 - `feature-03`: The user has reviewed and confirmed this seed. It is stored in the seed tree. Associated specs are updated. The whole seed tree has been cross-reviewed and is consistent.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Architecture seed | [Spec-seeds-09 Seed: architecture.md](./product-backlog.md#pb-40) | Framework/Feature | — | ToDo |
-| 2 | feature-02 | Deployment seed | [Spec-seeds-10 Seed: deployment.md](./product-backlog.md#pb-41) | Framework/Feature | — | ToDo |
-| 3 | feature-03 | Secrets seed | [Spec-seeds-11 Seed: .secrets](./product-backlog.md#pb-66) | Framework/Feature | `[framework/seeds/templates/EN/scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` | ToDo |
+| #   | Code       | SBI               | Parent PBI                                                        | Module/Type       | Related specs                                                                                  | Status |
+| --- | ---------- | ----------------- | ----------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------- | ------ |
+| 1 | feature-03 | Secrets seed | [Spec-seeds-11 Seed: .secrets](./product-backlog.md#pb-66) | Framework/Feature | [framework/seeds/templates/EN/scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md) | **ToDo** |
+| 2 | feature-02 | Deployment seed | [Spec-seeds-10 Seed: deployment.md](./product-backlog.md#pb-41) | Framework/Feature | [Spec-seeds-10 Seed: deployment.md](./product-backlog.md#pb-41) | **ToDo** |
+| 3 | feature-01 | Architecture seed | [Spec-seeds-09 Seed: architecture.md](./product-backlog.md#pb-40) | Framework/Feature | [Spec-seeds-09 Seed: architecture.md](./product-backlog.md#pb-40) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 
 ---
 
 ## Sprint 16
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
 Sprint Goal: Add i18n support, then publish the pack. Locale template bodies are HanS and HanT translations of the EN seeds. [MCP-01](./product-backlog.md#pb-16) go-live copies the finalized seed folder, publishes the five `sdd-mcp` binaries, and syncs the admin portal.
 
 Depends on the EN seeds from earlier sprints. It does not replace those Spec-seeds items. File existence stays on those items. This sprint owns the translated bodies. Go-live starts after those bodies are finalized.
 
 **Status: ToDo**
 
-### ToDo
+### **ToDo**
 
-
-Item acceptance:
+Additional Done Criteria, on top of the Definition of Done:
 
 - `feature-01`: `specs/framework/seeds/templates/HanS/scrum-in-sdd.md` matches `~/.cursor/templates/framework.sdd.works/HanS/scrum-in-sdd.md`, including the `sdd-` skill names.
 - `feature-02`: `specs/framework/seeds/templates/HanT/scrum-in-sdd.md` matches the HanT template meaning, including the `sdd-` skill names.
@@ -553,14 +779,27 @@ Item acceptance:
 - `feature-06`: The finalized seed folder is copied into the framework pack repo and pushed. GitHub Releases exist for the five `sdd-mcp` binaries. The admin portal has synced that pack.
 - `feature-07`: The user has reviewed and confirmed `features.en.md`, `features.zh-Hans.md`, and `features.zh-Hant.md`. The three files sit at `content/features/` in the pack repo ([ADR-071](./adr/ADR-071-portal-content-paths.md)). Associated specs are updated. Install does not copy them onto `{client_root}`.
 
-| # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Add the HanS guide to the seed tree | [i18n-01 Framework definition locales](./product-backlog.md#pb-67) | i18n/Feature | `[framework/seeds/templates/HanS/scrum-in-sdd.md](./framework/seeds/templates/HanS/scrum-in-sdd.md)` | Done |
-| 2 | feature-02 | Add the HanT guide to the seed tree | [i18n-01 Framework definition locales](./product-backlog.md#pb-67) | i18n/Feature | `[framework/seeds/templates/EN/scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` | ToDo |
-| 3 | feature-03 | Add the HanS and HanT practices to the seed tree | [i18n-01 Framework definition locales](./product-backlog.md#pb-67) | i18n/Feature | `[framework/seeds/templates/EN/sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` | ToDo |
-| 4 | feature-04 | Translate the five process artifacts | [i18n-02 Process artifact locales](./product-backlog.md#pb-68) | i18n/Feature | [i18n-02](./product-backlog.md#pb-68) | ToDo |
-| 5 | feature-05 | Translate the engineering artifacts | [i18n-03 Engineering artifact locales](./product-backlog.md#pb-69) | i18n/Feature | [i18n-03](./product-backlog.md#pb-69) | ToDo |
-| 6 | feature-06 | Go-live: pack copy, binary releases, admin sync | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | `[framework-design.md](./framework/framework-design.md#go-live)` · `[status.md](./status.md)` | ToDo |
-| 7 | feature-07 | Finalize the three features.md seeds | [Spec-seeds-12 Seeds: features.md at pack root](./product-backlog.md#pb-82) | Framework/Feature | [Web-portal-07](./product-backlog.md#pb-73) | ToDo |
+| #   | Code       | SBI                                                | Parent PBI                                                                  | Module/Type       | Related specs                                                                                                | Status |
+| --- | ---------- | -------------------------------------------------- | --------------------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------ | ------ |
+| 1 | feature-01 | HanS guide in the seed tree | [i18n-01 Framework definition locales](./product-backlog.md#pb-67) | i18n/Feature | [framework/seeds/templates/HanS/scrum-in-sdd.md](./framework/seeds/templates/HanS/scrum-in-sdd.md) | **Done** |
+| 2 | feature-07 | Three finalized features.md seeds | [Spec-seeds-12 Seeds: features.md at pack root](./product-backlog.md#pb-82) | Framework/Feature | [Web-portal-07](./product-backlog.md#pb-73) | **ToDo** |
+| 3 | feature-06 | Go-live pack copy, binary releases, and admin sync | [MCP-01 Installer: pack allow-list + ledger](./product-backlog.md#pb-16) | MCP/Feature | - [framework-design.md](./framework/framework-design.md#go-live)<br>- [status.md](./status.md) | **ToDo** |
+| 4 | feature-05 | Translated engineering artifacts | [i18n-03 Engineering artifact locales](./product-backlog.md#pb-69) | i18n/Feature | [i18n-03](./product-backlog.md#pb-69) | **ToDo** |
+| 5 | feature-04 | Five translated process artifacts | [i18n-02 Process artifact locales](./product-backlog.md#pb-68) | i18n/Feature | [i18n-02](./product-backlog.md#pb-68) | **ToDo** |
+| 6 | feature-03 | HanS and HanT practices in the seed tree | [i18n-01 Framework definition locales](./product-backlog.md#pb-67) | i18n/Feature | [framework/seeds/templates/EN/sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md) | **ToDo** |
+| 7 | feature-02 | HanT guide in the seed tree | [i18n-01 Framework definition locales](./product-backlog.md#pb-67) | i18n/Feature | [framework/seeds/templates/EN/scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md) | **ToDo** |
 
+### Retrospective
+
+**Learnings**
+
+No learning is recorded yet.
+
+**Opportunities**
+
+No opportunity is recorded yet.
+
+**Future actions**
+
+No future action is recorded yet.
 

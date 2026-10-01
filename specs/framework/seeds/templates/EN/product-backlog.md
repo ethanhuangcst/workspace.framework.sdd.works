@@ -10,6 +10,17 @@
 
 Pokymon Card Collection lets a collector catalog a card, place it in a binder, search by set or rarity, and record one trade. The cards are fictional Pokymon. The sample does not use a licensed brand.
 
+## Index
+
+- [Scope boundary](#scope-boundary)
+- [Requirements](#requirements)
+  - [Collect](#collect)
+  - [Scope](#scope)
+  - [Local](#local)
+  - [Definition of Done](#definition-of-done)
+- [Product Backlog](#product-backlog)
+- [Change record](#change-record)
+
 ---------
 
 ## Scope boundary
@@ -31,6 +42,8 @@ Acceptance: those four behaviors stay in scope. Any expansion is recorded here a
 
 Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 
+[Back to top](#index)
+
 ---------
 
 # Requirements
@@ -51,6 +64,8 @@ Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 - [Collect-04](#pb-4) Record a trade
   Record the card given, the card received, and the date. Quantities change with the record.
 
+[Back to top](#index)
+
 ---------
 
 ## Scope
@@ -58,12 +73,16 @@ Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 - [Scope-01](#pb-5) Scope gate
   No payments, no public marketplace, and no licensed brand content.
 
+[Back to top](#index)
+
 ---------
 
 ## Local
 
 - [Local-01](#pb-6) Local startup
   The default configuration starts the app on this machine.
+
+[Back to top](#index)
 
 ---------
 
@@ -75,6 +94,8 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 - Feature confirmed usable by user
 - Acceptance criteria (story mapping spec names with links) passed
 - Quality meets [quality standard](./scrum-in-sdd.md#commitment-definition-of-done)
+
+[Back to top](#index)
 
 ---------
 
@@ -89,6 +110,8 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | Scope | Scope-01 | Scope gate | No payments, marketplace, or licensed brand. | [`architecture.md`](./architecture.md) §1 | Sprint 1 | Done |
 | Local | Local-01 | Local startup | Start with the default configuration. | [Sprint 1 task-01](./sprint-backlog.md#sprint-1) · [`deployment.md`](./deployment.md) §1 | Sprint 1 | Done |
 
+[Back to top](#index)
+
 ---------
 
 ## Change record
@@ -101,3 +124,5 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | 2026-09-30 | Feature lines are plain Markdown. HTML anchors are not used. |
 | 2026-09-30 | Requirements use tight lists: each requirement sits on the line after its feature name, with no blank line. See Writing markdown in `sdd-scrum-practices.md`. |
 | 2026-09-30 | Sprint links use the sprint heading. The sprint backlog Code cell is plain Markdown. |
+
+[Back to top](#index)

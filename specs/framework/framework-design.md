@@ -1134,15 +1134,17 @@ Sprint schedule and the SBI list. The seed is a starter for a new project. It is
 
 #### Sprint item table
 
+The template and one note per placeholder are in [Sprint item table](./seeds/templates/EN/sdd-scrum-practices.md#sprint-item-table) in `sdd-scrum-practices.md`. This section keeps the facts that the stories and tests check.
+
 Columns, in this order: `#`, Code, SBI, Parent PBI, Module/Type, Related specs, Status.
 
 `Code` is the second column, between `#` and SBI.
 
-There is no DoD column. The Definition of Done section above the first sprint table lists the checks. Every SBI uses that list. A sprint may state a replacement checklist above its own tables. Item acceptance, when a row has a check of its own, is a line under that sprint beside the code. Story-specific checks stay in the linked specs. Do not copy those specs into the table.
+There is no DoD column. The Definition of Done section above the first sprint table lists the checks. Every SBI uses that list. A sprint may state a replacement checklist above its own tables. Additional Done Criteria, on top of the Definition of Done, is the check for one row. That check is a line above the sprint table beside the code. It does not add a column. Story-specific checks stay in the linked specs. Do not copy those specs into the table.
 
 `#` is the row’s place in that table, from 1 to n. It is not part of the SBI. When a row moves, renumber `#`. The Code stays.
 
-**Code** is the Type in lowercase, a hyphen, and a two-digit number inside that sprint. Examples: `feature-01`, `research-01`, `bug-fix-01`, `documentation-01`, `task-01`. Numbering restarts at `01` for each Type in each sprint. The visible code may repeat in a later sprint. The row anchor must be unique in the file, so prefix the sprint: `s1-feature-01`.
+**Code** is the Type in lowercase, a hyphen, and a two-digit number inside that sprint. Examples: `feature-01`, `research-01`, `bug-fix-01`, `documentation-01`, `task-01`. Numbering restarts at `01` for each Type in each sprint. The visible code may repeat in a later sprint. The Code cell is plain text. A link to a row uses the sprint heading, such as `#sprint-1`.
 
 **Module/Type** is one cell: the module name, a slash, and the Type. Example: `Framework/Feature`.
 
@@ -1156,7 +1158,13 @@ There is no DoD column. The Definition of Done section above the first sprint ta
 
 **Parent PBI** shows the PBI code and the PBI name, and links the product-backlog anchor.
 
-**Row order is the implementation order.** Done rows stay on top, in the order they were finished. Open rows follow, next first and last last. `WIP` is the next row when work has started. Do not group rows by Type. Do not append a row only because it is new. When a row moves, its Code stays and `#` changes.
+**Row order** has three keys, in this order.
+
+1. Status: `Done`, then `WIP`, then `ToDo`.
+2. Type: Feature, then Task, then Bug-fix, then Documentation, then Research.
+3. Created time: a newer row comes before an older row.
+
+When a row moves, its Code stays and `#` changes.
 
 #### Status values
 
@@ -1170,39 +1178,18 @@ An SBI and a PBI use only three statuses: `ToDo`, `WIP`, and `Done`.
 
 Apply the Definition of Done rule before marking an SBI or a PBI `Done`. Do not mark it `Done` because a file exists or a check passed while a DoD item for that row is still open. Leave it `WIP`.
 
-The sprint line uses the same three words. `Done` only when every SBI in that sprint is `Done`. The RID Registry keeps its own statuses.
+The sprint line uses the same three words. `Done` only when every SBI in that sprint is `Done`. The RID Log keeps its own statuses.
 
 #### Retrospective
 
-Each sprint has one Retrospective section. A later retrospective in that sprint is appended to the same section. Do not open a second Retrospective heading.
+The template and one note per placeholder are in [Retrospective](./seeds/templates/EN/sdd-scrum-practices.md#retrospective) in `sdd-scrum-practices.md`.
 
-Two headings, in this order: Learnings, then Opportunities.
-
-Each run is one block under the heading it belongs to:
-
-1. One line: timestamp, then the trigger. Example: `[10:12, Sep 24, 2026], feature-01 completed`.
-2. Bullets: a short summary. When the learning was written to an ADR or a knowledge note, the summary links that file.
-3. A line of dashes before the next block under the same heading.
-
-```
-Learnings:
-
-[10:12, Sep 24, 2026], feature-01 completed
-
-- [summary](link to the ADR or knowledge note)
-
-----------------
-
-[16:14, Sep 24, 2026], DoD rule for feature-02
-
-- [summary](link to the ADR or knowledge note)
-
-Opportunities:
-
-[16:20, Sep 24, 2026], feature-02 still open
-
-- summary of what to change next
-```
+- Each sprint has one Retrospective section. A later retrospective in that sprint is appended to the same section. Do not open a second Retrospective heading.
+- Three labels, in this order: Learnings, Opportunities, and Future actions. A later retrospective adds a record under those same labels.
+- Each record is a heading `{number}. {when}, {trigger}`, then one or more bullets. One retrospective uses the same number under each label that has a point.
+- `{trigger}` is `Sprint-end`, `On demand`, or the incident that fired the rule, such as `feature-01 done`.
+- A label with no record has one sentence that says nothing is recorded yet.
+- A bullet is one key point from the end user's view. The detail goes in the ADR or the knowledge note, and the bullet links that file.
 
 Write the ADR or knowledge note only when the decision or lesson is reusable. A summary with no such note has no link. Do not invent a note so the bullet can link.
 

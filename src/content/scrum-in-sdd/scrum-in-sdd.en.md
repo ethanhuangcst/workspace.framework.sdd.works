@@ -400,7 +400,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 - **Retrospective** has three forms; the latter two are captured as ADR or Knowledge by the retrospective skill.
 1. **Sprint-end**: the classic human-human retrospective.
 2. **On demand**: a human-agent retrospective initiated by a human.
-3. **By rule**: an agent-agent retrospective triggered before work is marked done.
+3. **By rule**: an agent-agent retrospective triggered before work is marked done. The record names the incident that fired the rule, such as `feature-01 done`.
 
 - **Retrospectives** have **four triggers**:
 1. **Sprint-end**.

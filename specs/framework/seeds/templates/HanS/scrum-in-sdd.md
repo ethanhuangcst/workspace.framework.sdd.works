@@ -401,7 +401,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **Retrospective** 有**三种形式**，由 **retrospective** 技能确保后两种形式的过程资产形成 **ADR** 或 **Knowledge**.
 1. **Sprint 结束时**：经典的人与人回顾。
 2. **按需发起**：由人发起的人和 agents 的回顾。
-3. **按规则触发**：在工作被标记为完成前，由 agent-agent 触发的回顾。
+3. **按规则触发**：在工作被标记为完成前，由 agent-agent 触发的回顾。记录写明触发规则的事件，例如 `feature-01 done`。
 
 
 - **Retrospective** 有**四种触发条件**：

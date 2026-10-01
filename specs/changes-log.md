@@ -10,6 +10,270 @@
 
 ---
 
+## 2026-10-01
+
+### Feature-04 sprint-backlog seed is Done
+
+**Why**: The user confirmed every sprint-backlog section. The design file still carried the old item table and retrospective rules.
+
+**What changed**: [`framework-design.md`](./framework/framework-design.md) `sprint-backlog.md` links the practices rules and states Additional Done Criteria, the sprint-heading row link, the three-key row order, and the three-label retrospective. [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md), the HanS guide, and the three portal guide copies say the By-rule record names the incident. Sprint 4 feature-04 and [Spec-seeds-06](./product-backlog.md#pb-37) are Done. The live [`sprint-backlog.md`](./sprint-backlog.md) header and RID description cells are restored after an editor format pass. [markdown-table-cell-bullets](./knowledge/agent/markdown-table-cell-bullets.md) records the table-cell and heading-id lesson.
+
+**Verification**: The design no longer says Item acceptance, `s1-feature-01`, or implementation order. The guide catalog and install tests pass, 46 of 46. The Sprint 4 table lists feature-04 Done between feature-11 and feature-03.
+
+**Boundary**: The HanS and HanT sprint-backlog seeds stay on Sprint 16 i18n-02.
+
+### Retrospective rules are Done
+
+**Why**: The user confirmed the retrospective in the live file and the EN seed.
+
+**What changed**: Retrospective rules left Current OGT and is row 1 of Last 15 closed OGTs in [`status.md`](./status.md). Current OGT has no open row. feature-04 stays open.
+
+**Verification**: Closed row 1 is Retrospective rules. The live file and the EN seed name the incident, such as `feature-01 done`.
+
+### Retrospective examples use three labels
+
+**Why**: The user asked to test the retrospective shape on the live file and the EN seed.
+
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the template. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use Learnings, Opportunities, and Future actions. A later run is the next number under those labels.
+
+**Verification**: Sprint 1 has records 1 through 4 under the labels that have a point. Sprint 2 in the EN seed has the three empty sentences.
+
+### Skill-08 names the three retrospective headings
+
+**Why**: The retrospective record must use Learnings, Opportunities, and Future actions. The skill that writes that record is `sdd-retrospective`.
+
+**What changed**: [Skill-08](./product-backlog.md#pb-28) in [`product-backlog.md`](./product-backlog.md) states those three headings. The PBI already existed. It stays in Sprint 9.
+
+**Verification**: The Skill-08 line and the Skill-08 table row both name Learnings, Opportunities, and Future actions.
+
+### Sprint item table rules are Done
+
+**Why**: The user confirmed the sprint item table in the live file and the EN seed.
+
+**What changed**: Sprint item table rules left Current OGT and is row 1 of Last 15 closed OGTs in [`status.md`](./status.md). Retrospective rules is WIP.
+
+**Verification**: Current OGT row 1 is Retrospective rules, status WIP. Closed row 1 is Sprint item table rules.
+
+### Status words are bold
+
+**Why**: The user required every status `ToDo`, `WIP`, and `Done` to be highlighted with `**`.
+
+**What changed**: The sprint body and sprint item table rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) say the status word is bold. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use that bold word in the table heading and the status cell. The sprint line was already `**Status: {status}**`.
+
+**Verification**: The live file has 16 bold table headings and 85 bold status cells. The EN seed has 2 bold headings and 6 bold status cells.
+
+### Sprint 4 feature-28 parent cell breaks onto two lines
+
+**Why**: The preview still showed Agent-02 and Agent-15 on one line, separated by a middle dot.
+
+**What changed**: Multi-fact cells in [`sprint-backlog.md`](./sprint-backlog.md) use `- ` bullets separated by `<br>`. The feature-28 Parent PBI cell is the check. The how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) shows that cell as the example.
+
+**Verification**: No SBI table cell still contains ` · `. The feature-28 parent cell is two bullets.
+
+### SBI cells with more than one fact use bullets
+
+**Why**: The user added a sprint item table rule: more than one fact in a cell uses bullet points on separate lines.
+
+**What changed**: The how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) states that rule. Multi-fact cells in [`sprint-backlog.md`](./sprint-backlog.md) use `- ` bullets separated by `<br>`. The EN seed cells each have one fact, so they stay one line.
+
+**Verification**: A cell with one fact is one line. A cell that had ` · ` between facts is now a bullet list.
+
+### Sprint item tables match the related-spec rule
+
+**Why**: A review of the live sprint backlog and the EN seed found related cells that were not links, and em dashes in the seed retrospective.
+
+**What changed**: Related cells in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed are links. A row with no other spec links its parent PBI. The seed retrospective no longer uses an em dash.
+
+**Verification**: Every SBI related cell contains a Markdown link. The seed retrospective lines are sentences.
+
+### Sprint item table rule is a template
+
+**Why**: The user confirmed the sprint item table, including Additional Done Criteria on top of the Definition of Done.
+
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the template and the how-to. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow that table. Sprint item table rules stays WIP until the user confirms both files.
+
+**Verification**: The practices file has the sprint item table template. The live Sprint 4 table and the EN seed tables use the new heading, the noun SBI, and the sort.
+
+### Sprint body rules are Done
+
+**Why**: The user confirmed the live sprint bodies and the EN seed.
+
+**What changed**: Sprint body rules left Current OGT and is row 1 of Last 15 closed OGTs in [`status.md`](./status.md). Sprint item table rules is WIP.
+
+**Verification**: Current OGT row 1 is Sprint item table rules, status WIP. Closed row 1 is Sprint body rules.
+
+### Sprint body rule is a template
+
+**Why**: The sprint heading, Sprint Goal, and status line had no template in `sdd-scrum-practices.md`.
+
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the confirmed sprint body template and how-to notes. The old sprint heading notes are that template. The live sprint sections and the EN seed already follow it. Sprint body rules stays WIP until the user confirms both files.
+
+**Verification**: Sprint 4 has a Sprint Goal, a depends line, `**Status: WIP**`, and a progress note. EN Sprint 1 has `**Status: Done** (every item is complete)` and no depends line.
+
+### Definition of Done rules are Done
+
+**Why**: The user confirmed the live Definition of Done section and the EN seed.
+
+**What changed**: Definition of Done rules left Current OGT and is row 1 of Last 15 closed OGTs in [`status.md`](./status.md). Sprint body rules is WIP.
+
+**Verification**: Current OGT row 1 is Sprint body rules, status WIP. Closed row 1 is Definition of Done rules.
+
+### Definition of Done rule is a template
+
+**Why**: The Definition of Done section had no template in `sdd-scrum-practices.md`.
+
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the confirmed template and how-to notes. The live Definition of Done section in [`sprint-backlog.md`](./sprint-backlog.md) stays as it is. The EN seed names the quality link Definition of Done and adds the Item acceptance sentence. Definition of Done rules stays WIP until the user confirms both files.
+
+**Verification**: The practices file has `#### Definition of Done` with `##### Template` and `##### How to write`. The live checklist is unchanged.
+
+### RID Log rules are Done, and RID coverage is removed
+
+**Why**: The user confirmed the RID Log. The coverage table is not part of that section.
+
+**What changed**: RID Log rules left Current OGT. The RID coverage section is removed from [`sprint-backlog.md`](./sprint-backlog.md), the EN seed, and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). Definition of Done rules is WIP. The Definition of Done section is unchanged.
+
+**Verification**: Neither sprint-backlog file has a RID coverage heading. The Definition of Done heading and its checklist remain.
+
+### RID tables sort by time, then severity
+
+**Why**: The RID tables had no row order.
+
+**What changed**: The RID Log how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) sorts each table by time, newer first, then by severity: Fetal, Broken, Blocking, High, Medium, Low. Open RIDs use Created Sprint. Closed RIDs use Closed Sprint. The live Open RIDs already follow that order.
+
+**Verification**: D-2 and D-3 are Blocking in Sprint 2, and R-1 is Medium in Sprint 2, so R-1 stays last.
+
+### RID Log uses open and closed tables
+
+**Why**: The RID Log used one table with type, status, handling note, and an open severity scale.
+
+**What changed**: The RID Log rule in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) is a template and how-to notes. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use an intro, Open RIDs, and Closed RIDs. Severity is Fetal, Broken, Blocking, High, Medium, or Low. The id is `{type}-{number}`, such as `D-1` and `R-1`. RID Log rules stays WIP until the user confirms both files.
+
+**Verification**: The live file has D-2, D-3, and R-1 in Open RIDs, and D-1 in Closed RIDs. The EN seed has R-1 in Open RIDs and D-1 in Closed RIDs.
+
+### A section rule is a template plus how to write
+
+**Why**: A section rule in `sdd-scrum-practices.md` listed the same facts again as narrative bullets.
+
+**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) says a section rule has a template and a how-to note for each placeholder. The notes are not restated as a narrative list. The header in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) is that template and those notes. The template is in a code block.
+
+**Verification**: The header section has `##### Template` and `##### How to write`. It has no Content, Format, Writing, or Terms list.
+
+### Header rules for sprint-backlog.md are Done
+
+**Why**: The user confirmed the live header and the EN seed header.
+
+**What changed**: Header rules for `sprint-backlog.md` left Current OGT and is row 1 of Last 15 closed OGTs in [`status.md`](./status.md). RID Log rules for `sprint-backlog.md` is WIP. The oldest closed row dropped off the list of 15.
+
+**Verification**: Current OGT row 1 is RID Log rules, status WIP. Closed row 1 is Header rules, closed in Sprint 4.
+
+### Back to the top, and the section name is RID Log
+
+**Why**: The return link opened the Index, and the section name was still RID Registry.
+
+**What changed**: Each sprint and the RID section in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use `[Back to the top](#sprint-backlog-frameworksddworks)` in the live file and `[Back to the top](#sprint-backlog-pokymon-card-collection)` in the seed. The target is the H1. The section heading is `## RID Log (Risks,Impediments, Dependencies)`, and the Index link is `#rid-log-risksimpediments-dependencies`. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`status.md`](./status.md), and [`framework-design.md`](./framework/framework-design.md) use the name RID Log.
+
+**Verification**: The live file has the top link under the RID Log heading and under Sprint 1 through Sprint 16. The EN seed has the top link under the RID Log heading, Sprint 1, and Sprint 2.
+
+### Each sprint links back to the index
+
+**Why**: A reader who opens a sprint from the Index had no link back to that list.
+
+**What changed**: The line after each `## Sprint` heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `[Back to the index](#index)`. The heading stays `## Sprint` plus the number, so the preview id stays `sprint-1` and the same pattern for each later sprint. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records that line under Sprint heading.
+
+**Verification**: The live file has the link under Sprint 1 through Sprint 16. The EN seed has the link under Sprint 1 and Sprint 2. The target `#index` is the `### Index` heading.
+
+### Index heading returns under Current project progress
+
+**Why**: The jump links sat in the Current project progress list with no heading.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed place `### Index` after the Sprint goal bullet. The RID Registry link and the sprint links stay under that heading. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) require that heading.
+
+**Verification**: Both files show `### Index` before `[RID Registry](#rid-registry-risksimpediments-dependencies)`.
+
+### RID Registry heading uses commas
+
+**Why**: The heading with slashes produced the preview id `rid-registry-risks---impediments---dependencies`, and the jump link did not match it.
+
+**What changed**: The heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `## RID Registry (Risks,Impediments, Dependencies)`. The jump link is `#rid-registry-risksimpediments-dependencies`. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) use that heading and that id.
+
+**Verification**: Cursor turns spaces into hyphens, then removes commas and parentheses. That heading becomes `rid-registry-risksimpediments-dependencies`.
+
+### RID Registry jump link uses the heading name
+
+**Why**: The heading `RID Registry (Risks / Impediments / Dependencies)` gets the preview id `rid-registry-risks---impediments---dependencies`. The link `#rid-registry-risks-impediments-dependencies` did not match that id.
+
+**What changed**: The heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `## RID Registry`. The jump link is `[RID Registry](./sprint-backlog.md#rid-registry)`. The Index heading is removed. The jump links stay in the Current project progress list. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) match that shape.
+
+**Verification**: Cursor builds a heading id by turning spaces into hyphens, then removing punctuation. `## RID Registry` becomes `rid-registry`.
+
+### Current project progress adds an index
+
+**Why**: Current project progress named the WIP sprint and did not list a jump to the RID Registry or to every sprint.
+
+**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) add an Index under Current project progress. The Index links the RID Registry, then each sprint, in sprint order. The link text is the name only. [`sprint-backlog.md`](./sprint-backlog.md) lists Sprint 1 through Sprint 16. The EN seed lists Sprint 1 and Sprint 2. Header rules stays WIP until the user confirms both files.
+
+**Verification**: Each Index link uses the heading slug for that section. The RID Registry link is `#rid-registry-risks-impediments-dependencies`. A sprint link is `#sprint-1` and the same pattern for each later sprint.
+
+### Sprint planning principles link the terminology store
+
+**Why**: The principle lines named Sprint Goal, Increment, MVP, SBI, and OGT with no link, and the terminology store was not named in the seed building guide.
+
+**What changed**: [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice) adds Sprint Goal and MVP. The principle lines in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed link Sprint Goal, Increment, MVP, SBI, and OGT there. Current WIP sprint is a bold heading link, and the bullet says to click the link to jump to that sprint. [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) names Terminology in practice as the terminology store.
+
+**Verification**: The live file links those five headings under `sdd-scrum-practices.md` and shows `[**Sprint 4**](./sprint-backlog.md#sprint-4)`. The EN seed links the same headings and shows Sprint 2.
+
+### Sprint backlog header shows planning principles and progress
+
+**Why**: The header stated the current sprint in one sentence and the sprint rule in another, with no jump to the current sprint.
+
+**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) add Sprint planning principles as the last blockquote item, and add a Current project progress section after the blockquote. Current project progress names the total sprints, links the current WIP sprint heading, and copies that Sprint Goal. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow those rules. Header rules stays WIP until the user confirms both files.
+
+**Verification**: The live file links [Sprint 4](./sprint-backlog.md#sprint-4) and copies the Sprint 4 goal. The EN seed links Sprint 2 and copies the Sprint 2 goal. Sprint Goal, Increment, and OGT link [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md).
+
+### Sprint backlog header content
+
+**Why**: The header purpose still described a short-cycle list, and the header still had a Framework line.
+
+**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) say `sprint-backlog.md` is the Sprint Backlog artifact and lists every sprint. The file owns the schedule, the item status, and the latest project progress. Related links are `artifacts-map.md`, `scrum-in-sdd.md`, `status.md`, `product-backlog.md`, and `sdd-scrum-practices.md`. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow those rules. Header rules stays WIP until the user confirms both files.
+
+**Verification**: Neither header has a Framework line. The Sprint Backlog term links [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md#sprint-backlog). The SBI term links [Terminology](./framework/seeds/templates/EN/scrum-in-sdd.md#terminology).
+
+### The seed follows the live example
+
+**Why**: A section was done when only the live artifact passed.
+
+**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) adds a step before the stop. After the live example passes, the same section is updated in the EN seed under `specs/framework/seeds/templates/EN/`, using the Pokymon Card Collection example. The pass checks cover both files, and the user confirms both files.
+
+**Verification**: Step 5 is the seed update. Step 6 starts the next section only after both files are confirmed. The Pass section names both files.
+
+### Seed artifacts building guide
+
+**Why**: The method for writing an artifact seed was only in the chat.
+
+**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) records the method. Section rules stay only in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). A term that already has a meaning there is a link. [`artifacts-map.md`](./artifacts-map.md) lists the guide.
+
+**Verification**: The user confirmed the draft. The file matches that draft.
+
+### Sprint backlog header rules
+
+**Why**: The header of `sprint-backlog.md` restated row order, and that sentence disagreed with the practices.
+
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the header rules under `### sprint-backlog.md`. [`sprint-backlog.md`](./sprint-backlog.md) follows those rules. [`status.md`](./status.md) tracks seven section tasks, and Header rules is WIP. Sprint 4 feature-04 stays ToDo.
+
+**Verification**: The header has one H1, one tight blockquote, plain links, and two sentences before the rule. Numbering and row order are not in the header.
+
+**Boundary**: The RID Registry rules are not written yet.
+
+### sdd-update-status moves to Sprint 4
+
+**Why**: [ADR-065](./adr/ADR-065-skill-update-status.md) names the write skill `sdd-update-status`. The ship item was still Sprint 8 under the retired name `sdd-tracking`.
+
+**What changed**: Sprint 4 feature-30 is ToDo, immediately after feature-04. [Skill-07](./product-backlog.md#pb-27) projects Sprint 4. Sprint 8 keeps feature-02, Ethan updates status. [`status.md`](./status.md) lists feature-30 after feature-04.
+
+**Verification**: Sprint 4 order is feature-04, feature-30, feature-24, feature-22. Skill-07 names `sdd-update-status` and `skill_update_status`.
+
+**Boundary**: The seed folder is still `specs/framework/seeds/skills/sdd-tracking/`. `constants.md` still lists `skill_tracking`. This move does not rename those files.
+
 ## 2026-09-30
 
 ### Feature-23 initial sdd-audit-artifacts is Done
