@@ -1,15 +1,8 @@
 # sprint-backlog, Pokymon Card Collection
 
-> **Purpose**: `sprint-backlog.md` is the Sprint Backlog artifact in [`scrum-in-sdd.md`](./scrum-in-sdd.md), and, unlike the Sprint Backlog in classic Scrum, `sprint-backlog.md` lists every sprint.
-> **Single source of truth**: `sprint-backlog.md` owns the schedule and the item status, and represents the latest project progress.
-> **Projection**: The `Sprint` column in [`product-backlog.md`](./product-backlog.md) copies the schedule from `sprint-backlog.md`.
-> **Related**: [`artifacts-map.md`](./artifacts-map.md), [`scrum-in-sdd.md`](./scrum-in-sdd.md), [`status.md`](./status.md), [`product-backlog.md`](./product-backlog.md), [`sdd-scrum-practices.md`](./sdd-scrum-practices.md)
-> **Example**: Pokymon Card Collection, and after you copy `sprint-backlog.md`, replace the product name and the items.
-> **Sprint planning principles**:
-> - Each sprint states one [Sprint Goal](./sdd-scrum-practices.md#sprint-goal) and the [Increments](./sdd-scrum-practices.md#increment) planned to reach that goal.
-> - Each sprint delivers an [MVP](./sdd-scrum-practices.md#mvp) (minimum viable product) with the fewest dependencies, and ships without waiting on an Increment from a later sprint.
-> - [SBIs](./sdd-scrum-practices.md#sbi) (sprint backlog items) are the items required to build those Increments, such as Features and Tasks.
-> - A side task or a temporary task found during the sprint, and not needed to deliver those Increments, is an [OGT](./sdd-scrum-practices.md#ogt) (on-going task) in [`status.md`](./status.md).
+> Type: Framework (process) artifact of Pokymon Card Collection
+> as_of: 2026-10-01
+> [Definition](./sdd-scrum-practices.md#definition-of-sprint-backlogmd)
 
 ## Current project progress
 
@@ -106,9 +99,9 @@ Sprint Goal: A collector can find their own cards by set or rarity, place a card
 
 | # | Code | SBI | Parent PBI | Module/Type | Related specs | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | feature-01 | Search by set and rarity | [Collect-02 Search by set and rarity](./product-backlog.md#pb-2) | Collection/Feature | [Collect-02 Search by set and rarity](./product-backlog.md#pb-2) | **WIP** |
+| 1 | feature-01 | Found cards by set and rarity | [Collect-02 Search by set and rarity](./product-backlog.md#pb-2) | Collection/Feature | | **WIP** |
 | 2 | feature-03 | Recorded trade | [Collect-04 Record a trade](./product-backlog.md#pb-4) | Collection/Feature | [Collect-04 Record a trade](./product-backlog.md#pb-4) | **ToDo** |
-| 3 | feature-02 | Binder | [Collect-03 Binder](./product-backlog.md#pb-3) | Collection/Feature | [`architecture.md`](./architecture.md) §2 | **ToDo** |
+| 3 | feature-02 | Card placed in a binder | [Collect-03 Binder](./product-backlog.md#pb-3) | Collection/Feature | [`architecture.md`](./architecture.md) §2 | **ToDo** |
 
 ### Retrospective
 

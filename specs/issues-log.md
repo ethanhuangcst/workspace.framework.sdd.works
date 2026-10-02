@@ -1,9 +1,10 @@
-# Issues log — framework.sdd.works
+# Issues log (framework.sdd.works)
 
-> Defects for this product. A row stays after it is closed.
-> Not the change log. See [`changes-log.md`](./changes-log.md).
-> An open defect is not an OGT row in [`status.md`](./status.md).
-> Tables and sort: [ADR-075](./adr/ADR-075-issues-log-tables.md).
+> Type: Framework (process) artifact of framework.sdd.works
+> as_of: 2026-10-01
+> [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#definition-of-issues-logmd)
+
+---
 
 ## Open issues
 

@@ -1,14 +1,8 @@
-# Changes log ([product name])
+# Changes log (Pokymon Card Collection)
 
-> Conclusion record. An entry is written when a change is done. It states what changed, why, and how it was verified.
-> An open defect stays in [`issues-log.md`](./issues-log.md). A concluded fix still gets an entry here.
-> Days are `## YYYY-MM-DD`, newest day first. Under a day, the newest entry is first.
-> Each entry is a `###` title, then **Why**, **What changed**, and **Verification**. **Boundary** is present only when the entry must say what it does not cover.
-> Each of those labels is one short paragraph. **What changed** names the files and the backlog or sprint item when one exists. **Verification** names the check that passed.
-> Step-by-step detail stays in git and in the spec that owns the change. Do not put secrets here.
-> **Example**: Pokymon Card Collection. After you copy this file, remove the sample entries and keep only real changes.
-> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
-> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
+> Type: Framework (process) artifact of Pokymon Card Collection
+> as_of: 2026-10-01
+> [Definition](./sdd-scrum-practices.md#definition-of-changes-logmd)
 
 ---
 

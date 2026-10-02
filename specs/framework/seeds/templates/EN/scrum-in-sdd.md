@@ -330,7 +330,6 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**
-- **sdd-tracking**
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
@@ -509,7 +508,6 @@ This guide is for both humans and AI agents.
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**
-- **sdd-tracking**
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**

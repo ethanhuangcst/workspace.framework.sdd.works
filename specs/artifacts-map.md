@@ -1,80 +1,79 @@
-# Artifact index — framework.sdd.works
+# Artifacts map (framework.sdd.works)
 
-> **Purpose**: Required **process artifact** — this project’s index of live files and trees. Not framework definition (that is the guide and practices). Tracking is `status.md` and `changes-log.md`. Knowledge is `adr/` and `knowledge/` (retrospective). Other docs link here; they do not keep a second catalog.
-> **Practices**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
-> **Framework**: [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) (names and meaning).
+> Type: Core artifact of framework.sdd.works
+> as_of: 2026-10-01
+> [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#definition-of-artifacts-mapmd)
 
-## Framework definition
+---
 
-| Artifact | Path | Role |
-| --- | --- | --- |
-| Scrum-in-SDD guide | [`framework/seeds/templates/EN/scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) | Names and meaning. HanS copy: [`scrum-in-sdd.md`](./framework/seeds/templates/HanS/scrum-in-sdd.md). |
-| Practices | [`framework/seeds/templates/EN/sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) | What, how, when: jobs, templates, RID and backlog table conventions |
-| Framework design | [`framework/framework-design.md`](./framework/framework-design.md) | Overall design for framework artifacts: framework-artifacts, agents, rules, skills, and templates |
-| Seed building guide | [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) | Method for writing an artifact seed, one section at a time |
-| Pack lookup | [`framework/seeds/templates/constants.md`](./framework/seeds/templates/constants.md) | Path names, instructions URL, skill and rule keys. Live copy on client root only ([ADR-060](./adr/ADR-060-constants-on-client-root.md)) |
+- product name: framework.sdd.works
+- artifacts_root: specs
+- locale: EN
 
-## Process
+## Artifact index
 
-| Artifact | Path | Role |
-| --- | --- | --- |
-| Product backlog | [`product-backlog.md`](./product-backlog.md) | Phase 2 requirements and acceptance |
-| Sprint backlog | [`sprint-backlog.md`](./sprint-backlog.md) | Current schedule and execution status (SBI ToDo/WIP/Done) |
-| Artifact index | [`artifacts-map.md`](./artifacts-map.md) | This file — project index |
+- name: Artifact index
+- local: specs/artifacts-map.md
+- purpose: This file. This repo keeps the map under artifacts_root.
 
-## Tracking
+## Product backlog
 
-| Artifact | Path | Role |
-| --- | --- | --- |
-| Status | [`status.md`](./status.md) | Current sprint, current SBI, next, OGT table (not a second sprint backlog) |
-| Changes log | [`changes-log.md`](./changes-log.md) | Conclusion-level changes |
+- name: Product backlog
+- local: specs/product-backlog.md
 
-## Knowledge
+## Sprint backlog
 
-| Tree | Path | Role |
-| --- | --- | --- |
-| ADRs | [`adr/`](./adr/) | Durable architecture / process decisions (retrospective) |
-| Knowledge | [`knowledge/`](./knowledge/) | Reusable research and ops notes that are not themselves a decision |
+- name: Sprint backlog
+- local: specs/sprint-backlog.md
 
-## Optional / JIT
+## Status
 
-| Artifact | Path | Role |
-| --- | --- | --- |
-| Architecture | [`architecture.md`](./architecture.md) | Stack pointer and Phase 2 decisions |
-| Deployment | [`deployment.md`](./deployment.md) | Pointer to operator release docs |
-| IDE agent invoke | [`how-ide-invokes-agent.md`](./how-ide-invokes-agent.md) | Where each tool reads a custom agent, how to start it, and how long that start lasts |
+- name: Status
+- local: specs/status.md
+- purpose: Current sprint projection. It is not a second sprint backlog.
 
-## This product
+## Issues log
 
-| Tree | Path | Role |
-| --- | --- | --- |
-| Framework stories | [`framework/framework-stories.md`](./framework/framework-stories.md) | Stories. The agents section is the former coach stories. |
-| Framework tests | [`framework/framework-test.md`](./framework/framework-test.md) | Tests. The agents section is the former coach test plan (`CE-LOAD-01`…`16`). |
-| MCP | [`mcp/`](./mcp/) | MCP stories, design, tests, client paths |
-| Admin portal | [`admin-portal/`](./admin-portal/) | Portal stories, design, mockups, tests |
-| Release / deploy | [`release/`](./release/) | Operator deployment instructions |
+- name: Issues log
+- local: specs/issues-log.md
+- purpose: Issue record. An open issue is not an OGT row.
 
-## Planned framework artifacts
+## Changes log
 
-Not created until their backlog item is the active story.
+- name: Changes log
+- local: specs/changes-log.md
+- purpose: Conclusion record.
 
-| Artifact | Backlog | Role |
-| --- | --- | --- |
-| ethan | [Agent-01](./product-backlog.md#pb-6) through [Agent-15](./product-backlog.md#pb-63) | Local Cursor agent. Design: [`framework/framework-design.md`](./framework/framework-design.md). |
-| Rules | [Rule-01](./product-backlog.md#pb-18) · [Rule-02](./product-backlog.md#pb-19) · [Rule-03](./product-backlog.md#pb-20) | Harness rules in the pack |
-| Skills | [Skill-01](./product-backlog.md#pb-21) through [Skill-13](./product-backlog.md#pb-65) · [Skill-14](./product-backlog.md#pb-80) | Harness skills in the pack. Skill-11 is unused. |
-| Seeds | [Spec-seeds-01](./product-backlog.md#pb-32) through [Spec-seeds-11](./product-backlog.md#pb-66) | Pack templates, including `.secrets` |
+## Architecture
 
-## Archive (Phase 1 — closed)
+- name: Architecture
+- local: specs/architecture.md
 
-Index only. Do not copy Release 1 tables into the live backlog.
+## Deployment
 
-| Artifact | Path |
-| --- | --- |
-| Archive index | [`phase1-process-specs/README.md`](./phase1-process-specs/README.md) |
-| Product backlog | [`phase1-process-specs/r1-product-backlog.md`](./phase1-process-specs/r1-product-backlog.md) |
-| Requirements | [`phase1-process-specs/r1-req-spec.md`](./phase1-process-specs/r1-req-spec.md) |
-| Tech stack | [`phase1-process-specs/r1-tech-spec.md`](./phase1-process-specs/r1-tech-spec.md) |
-| Sprint plans MVP-1…7 | [`phase1-process-specs/sprint1-plan.md`](./phase1-process-specs/sprint1-plan.md) … [`sprint7-plan.md`](./phase1-process-specs/sprint7-plan.md) |
+- name: Deployment
+- local: specs/deployment.md
 
+## admin-portal
 
+- folder: admin-portal
+- stem: app
+- design: specs/admin-portal/app-design.md
+- stories: specs/admin-portal/app-stories.md
+- test: specs/admin-portal/app-test.md
+
+## mcp
+
+- folder: mcp
+- stem: mcp
+- design: specs/mcp/mcp-design.md
+- stories: specs/mcp/mcp-stories.md
+- test: specs/mcp/mcp-test.md
+
+## framework
+
+- folder: framework
+- stem: framework
+- design: specs/framework/framework-design.md
+- stories: specs/framework/framework-stories.md
+- test: specs/framework/framework-test.md

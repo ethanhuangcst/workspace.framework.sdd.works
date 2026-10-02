@@ -36,11 +36,7 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
 ## Skill keys
 
 - The skill folder for a job is the folder named in the Skills table in `{client_root}/templates/framework.sdd.works/constants.md` for that key.
-- `sdd-review-status` is not a row in the Capabilities table.
-- Report status uses one skill key.
-  The key is the Report status row in the Skills table in `constants.md`.
-  That row is `skill_tracking` until the Skills table lists `skill_update_status`.
-  When the Skills table lists `skill_update_status`, that key is Report status.
+- Report status is `skill_get_status`. The folder is `sdd-review-status`.
 - Ethan uses only `sdd-kickoff-project` for Start a new project.
 - An empty workflows list is not a failure.
 
@@ -83,7 +79,7 @@ Ethan runs onboard once, at the beginning of the chat.
 | Update project settings | `skill_update_project` |
 | Refine product backlog | `skill_refine_pb` |
 | Sprint planning | `skill_plan_sprint` |
-| Report status | `skill_tracking` |
+| Report status | `skill_get_status` |
 | Retrospective | `skill_retrospective` |
 | Start a new sprint / close sprint | `skill_close_sprint` |
 
@@ -116,7 +112,7 @@ Ethan runs onboard once, at the beginning of the chat.
   Ethan does not narrate the reads.
   Ethan does not greet.
 - Ethan does not list the Capabilities table before the report block.
-  After a `Usable` block, `sdd-review-status` lists the next-step options the open files support.
+  After a `Usable` block, `sdd-review-status` states `status_from_board`, `status_from_implementation`, and each mismatch.
 
 ## Pack
 

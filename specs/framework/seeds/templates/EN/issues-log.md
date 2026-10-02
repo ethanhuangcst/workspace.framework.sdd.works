@@ -1,10 +1,10 @@
-# Issues log ([product name])
+# Issues log (Pokymon Card Collection)
 
-> This file records defects. A row is opened when a defect is found and stays after it is closed.
-> Not the change log. When a fix is concluded, the change log gets its own entry. See [`changes-log.md`](./changes-log.md).
-> An open defect is not an OGT row in [`status.md`](./status.md).
-> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
-> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
+> Type: Framework (process) artifact of Pokymon Card Collection
+> as_of: 2026-10-01
+> [Definition](./sdd-scrum-practices.md#definition-of-issues-logmd)
+
+---
 
 `Id` stays the same when a row is sorted or moves. `Description` is under 3 lines. `Close Check` is shorter. Use bullets when a sentence is not enough. `Related` is a spec id, a link, and the name. `Component` is the part that owns the defect. Use one term for that part in the whole file. `Priority` is `Fatal`, `High`, `Medium`, or `Low`.
 

@@ -1,14 +1,22 @@
 # Changes log (framework.sdd.works)
 
-> Conclusion record. An entry is written when a change is done. It states what changed, why, and how it was verified.
-> An open defect stays in [`issues-log.md`](./issues-log.md). A concluded fix still gets an entry here.
-> Days are `## YYYY-MM-DD`, newest day first. Under a day, the newest entry is first.
-> Each entry is a `###` title, then **Why**, **What changed**, and **Verification**. **Boundary** is present only when the entry must say what it does not cover.
-> Each of those labels is one short paragraph. **What changed** names the files and the backlog or sprint item when one exists. **Verification** names the check that passed.
-> Step-by-step detail stays in git and in the spec that owns the change. Do not put secrets here.
-> Phase 1 history stays in git and [`phase1-process-specs/`](./phase1-process-specs/).
+> Type: Framework (process) artifact of framework.sdd.works
+> as_of: 2026-10-02
+> [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#definition-of-changes-logmd)
 
 ---
+
+## 2026-10-02
+
+### Status review and the confirmed write are one skill
+
+**Why**: A file-only status read can lag the implementation. The compare and the proposal are one job.
+
+**What changed**: [ADR-076](./adr/ADR-076-review-status-one-skill.md) makes `sdd-review-status` the status skill. [ADR-073](./adr/ADR-073-skill-get-status.md) decision 4 and decision 6 are superseded. [ADR-065](./adr/ADR-065-skill-update-status.md) no longer ships a second folder. The seed [`sdd-review-status/SKILL.md`](./framework/seeds/skills/sdd-review-status/SKILL.md) drafts the four steps and the second yes. Practices job 6 points at `skill_get_status`. [Skill-07](./product-backlog.md#pb-27) is retired. Sprint 4 feature-24 and feature-30 stay ToDo.
+
+**Verification**: Living specs name `sdd-review-status` for report status. `skill_update_status` is not a constants key.
+
+**Boundary**: The on-disk folder `specs/framework/seeds/skills/sdd-tracking/` stays and is not the status skill. HanS and HanT guides stay on i18n-02. Feature-24 and feature-30 are not Done.
 
 ## 2026-10-01
 

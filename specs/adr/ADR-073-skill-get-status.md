@@ -1,7 +1,7 @@
 # ADR-073: Read skill `sdd-review-status`
 
 ## Status
-Accepted
+Accepted. Decision 4 and decision 6 are superseded by [ADR-076](./ADR-076-review-status-one-skill.md) on 2026-10-02. The skill compares the board with the current sprint's named work and writes only after the second yes.
 
 ## Context
 On a Usable audit, onboard needs the current project picture. That picture is five process files, and each file has one authority. Putting that list in `ethan.md` front-loads the procedure into the agent prompt.

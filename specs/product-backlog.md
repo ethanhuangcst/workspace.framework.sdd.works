@@ -104,7 +104,7 @@ Practices jobs 4–8 are still unfilled. [Agent-10](#pb-44)–[Agent-14](#pb-48)
 - [Agent-11](#pb-45) Sprint planning
   Ethan runs practices job 5 via `skill_plan_sprint`. That practices section is still unfilled. This PBI includes writing it.
 - [Agent-12](#pb-46) Report status
-  Ethan runs practices job 6 via `skill_update_status`. That practices section is still unfilled. This PBI includes writing it.
+  Ethan runs practices job 6 via `skill_get_status`. The practices section points at `sdd-review-status`.
 - [Agent-13](#pb-47) Retrospective
   Ethan runs practices job 7 via `skill_retrospective`. That practices section is still unfilled. This PBI includes writing it.
 - [Agent-14](#pb-48) Close / start sprint
@@ -146,7 +146,7 @@ Workflows: none until a workflow is planned. No workflow PBI.
 - [Skill-06](#pb-26) `sdd-plan-sprint`
   Sprint-planning skill (`skill_plan_sprint`).
 - [Skill-07](#pb-27) `sdd-update-status`
-  Report-status skill (`skill_update_status`).
+  Retired by [ADR-076](./adr/ADR-076-review-status-one-skill.md). Do not add this folder. Report status is [Skill-15](#pb-86).
 - [Skill-08](#pb-28) `sdd-retrospective`
   Retrospective skill (`skill_retrospective`). The record uses three headings: Learnings, Opportunities, and Future actions.
 - [Skill-09](#pb-29) `sdd-close-sprint`
@@ -160,9 +160,11 @@ Workflows: none until a workflow is planned. No workflow PBI.
 - [Skill-14](#pb-80) `sdd-design`
   Design and plan before implementing an SBI (`sdd-design`).
 - [Skill-15](#pb-86) `sdd-review-status`
-  Read the five process files and propose next steps (`skill_get_status`). Not a practices job.
+  Compare the board with the current sprint's named work, list each mismatch, and write only after the second yes (`skill_get_status`).
 - [Skill-16](#pb-87) `sdd-create-skill`
   Create or revise a skill (`skill_create_skill`). Writes `{client_root}/{skills_dir}/<name>/SKILL.md` after confirm. Not a practices job. Not scheduled on the current sprint.
+- [Skill-17](#pb-89) `prompt-optimizer`
+  The pack skill `prompt-optimizer` optimizes a prompt. It does not match ECC components.
 
 [Back to top](#index)
 
@@ -313,7 +315,7 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | Agent | Agent-09 | Job: Update project settings | Ethan runs practices job 3 via `skill_update_project`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-04](#pb-24) · [ADR-073](./adr/ADR-073-skill-get-status.md) | Sprint 5 | ToDo |
 | Agent | Agent-10 | Job: Refine product backlog | Ethan runs practices job 4 via `skill_refine_pb`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-05](#pb-25) | Sprint 6 | ToDo |
 | Agent | Agent-11 | Job: Sprint planning | Ethan runs practices job 5 via `skill_plan_sprint`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-06](#pb-26) | Sprint 7 | ToDo |
-| Agent | Agent-12 | Job: Report status | Ethan runs practices job 6 via `skill_update_status`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-07](#pb-27) · [ADR-065](./adr/ADR-065-skill-update-status.md) | Sprint 8 | ToDo |
+| Agent | Agent-12 | Job: Report status | Ethan runs practices job 6 via `skill_get_status`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-15](#pb-86) · [ADR-076](./adr/ADR-076-review-status-one-skill.md) | Sprint 8 | ToDo |
 | Agent | Agent-13 | Job: Retrospective | Ethan runs practices job 7 via `skill_retrospective`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-08](#pb-28) | Sprint 9 | ToDo |
 | Agent | Agent-14 | Job: Close / start sprint | Ethan runs practices job 8 via `skill_close_sprint`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-09](#pb-29) | Sprint 10 | ToDo |
 | Agent | Agent-15 | Pack file: agents/ethan.md | The ethan prompt in the seed tree. | [Agent-01](#pb-6) · [MCP-01](#pb-16) | Sprint 2 | Done |
@@ -327,28 +329,29 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | Skill | Skill-04 | Skill: sdd-update-project | Update-project skill (`skill_update_project`). | [Agent-09](#pb-43) | Sprint 5 | ToDo |
 | Skill | Skill-05 | Skill: sdd-refine-pb | Refine-product-backlog skill (`skill_refine_pb`). | [Agent-10](#pb-44) | Sprint 6 | ToDo |
 | Skill | Skill-06 | Skill: sdd-plan-sprint | Sprint-planning skill (`skill_plan_sprint`). | [Agent-11](#pb-45) | Sprint 7 | ToDo |
-| Skill | Skill-07 | Skill: sdd-update-status | Report-status skill (`skill_update_status`). | [Agent-12](#pb-46) · [ADR-065](./adr/ADR-065-skill-update-status.md) | Sprint 4 | ToDo |
+| Skill | Skill-07 | Skill: sdd-update-status | Retired by [ADR-076](./adr/ADR-076-review-status-one-skill.md). Do not add `skill_update_status`. | [Skill-15](#pb-86) · [ADR-065](./adr/ADR-065-skill-update-status.md) | — | Retired |
 | Skill | Skill-08 | Skill: sdd-retrospective | Retrospective skill (`skill_retrospective`). The record uses three headings: Learnings, Opportunities, and Future actions. | [Agent-13](#pb-47) | Sprint 9 | ToDo |
 | Skill | Skill-09 | Skill: sdd-close-sprint | Close / start sprint skill (`skill_close_sprint`). | [Agent-14](#pb-48) | Sprint 10 | ToDo |
 | Skill | Skill-10 | Skill: sdd-audit-artifacts | Read-only audit (`skill_audit_artifacts`). | [`framework-design.md`](./framework/framework-design.md#sdd-audit-artifacts) · [`framework-stories.md`](./framework/framework-stories.md#sdd-audit-artifacts) · [ADR-073](./adr/ADR-073-skill-get-status.md) | Sprint 4 | Done |
 | Skill | Skill-12 | Skill: sdd-update-specs | Keep the specs that a change touches aligned with the implementation. | [Skill-13](#pb-65) | Sprint 13 | ToDo |
 | Skill | Skill-13 | Skill: sdd-implement | Implement one SBI (`sdd-implement`). | [Skill-12](#pb-64) · [Skill-02](#pb-22) · [Skill-14](#pb-80) · [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md) | Sprint 13 | ToDo |
-| Skill | Skill-14 | Skill: sdd-design | Design and plan before implementing an SBI (`sdd-design`). | [Skill-13](#pb-65) · [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md) | Sprint 3 | ToDo |
-| Skill | Skill-15 | Skill: sdd-review-status | Read the five process files and propose next steps (`skill_get_status`). | [ADR-073](./adr/ADR-073-skill-get-status.md) · [Skill-10](#pb-30) | Sprint 4 | ToDo |
+| Skill | Skill-14 | Skill: sdd-design | Design and plan before implementing an SBI (`sdd-design`). | [Skill-13](#pb-65) · [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md) | Sprint 13 | ToDo |
+| Skill | Skill-15 | Skill: sdd-review-status | Compare the board with the current sprint's named work and write only after the second yes (`skill_get_status`). | [ADR-076](./adr/ADR-076-review-status-one-skill.md) · [ADR-073](./adr/ADR-073-skill-get-status.md) · [Skill-10](#pb-30) | Sprint 4 | ToDo |
 | Skill | Skill-16 | Skill: sdd-create-skill | Create or revise a skill (`skill_create_skill`). | [ADR-074](./adr/ADR-074-sdd-create-skill.md) | — | ToDo |
+| Skill | Skill-17 | Skill: prompt-optimizer | The pack skill `prompt-optimizer` optimizes a prompt. It does not match ECC components. | [prompt-optimizer](./framework/seeds/skills/prompt-optimizer/SKILL.md) | Sprint 5 | ToDo |
 | Spec-seeds | Spec-seeds-01 | Seed: constants.md | Lookup file for path names, skill keys, and rule keys. | [MCP-01](#pb-16) · [ADR-060](./adr/ADR-060-constants-on-client-root.md) | Sprint 2 | Done |
 | Spec-seeds | Spec-seeds-02 | Seed: scrum-in-sdd.md | Framework guide for every project: names and meaning. | [MCP-01](#pb-16) · [i18n-01](#pb-67) | Sprint 1 | Done |
 | Spec-seeds | Spec-seeds-03 | Seed: sdd-scrum-practices.md | Framework practices for every project: what, how, and when. | [MCP-01](#pb-16) · [i18n-01](#pb-67) | Sprint 1 | Done |
-| Spec-seeds | Spec-seeds-04 | Seed: artifacts-map.md | Generic artifacts-map starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 4 | ToDo |
+| Spec-seeds | Spec-seeds-04 | Seed: artifacts-map.md | Generic artifacts-map starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 4 | WIP |
 | Spec-seeds | Spec-seeds-05 | Seed: product-backlog.md | Example product backlog a new project copies. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 6 | ToDo |
 | Spec-seeds | Spec-seeds-06 | Seed: sprint-backlog.md | Generic sprint-backlog starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 4 | Done |
-| Spec-seeds | Spec-seeds-07 | Seed: status.md | Generic status starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 4 | WIP |
-| Spec-seeds | Spec-seeds-08 | Seed: changes-log.md | Generic change-log starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) · [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) | Sprint 4 | Done |
+| Spec-seeds | Spec-seeds-07 | Seed: status.md | Generic status starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 4 | Done |
+| Spec-seeds | Spec-seeds-08 | Seed: changes-log.md | Generic change-log starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) · [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) | Sprint 4 | WIP |
 | Spec-seeds | Spec-seeds-09 | Seed: architecture.md | Generic architecture starter for a new project. | [MCP-01](#pb-16) · [i18n-03](#pb-69) | Sprint 15 | ToDo |
 | Spec-seeds | Spec-seeds-10 | Seed: deployment.md | Generic deployment starter for a new project. | [MCP-01](#pb-16) · [i18n-03](#pb-69) | Sprint 15 | ToDo |
 | Spec-seeds | Spec-seeds-11 | Seed: .secrets | Secrets file named in the guide. | [MCP-01](#pb-16) · [Spec-seeds-10](#pb-41) · [i18n-03](#pb-69) | Sprint 15 | ToDo |
 | Spec-seeds | Spec-seeds-12 | Seeds: features.md under content/features | Finalize the three Features catalog seeds. | [Web-portal-07](#pb-73) · [MCP-01](#pb-16) | Sprint 16 | ToDo |
-| Spec-seeds | Spec-seeds-13 | Seed: issues-log.md | Generic issues-log starter. Open and Closed tables. | [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) · [ADR-075](./adr/ADR-075-issues-log-tables.md) · [Spec-seeds-08](#pb-39) | Sprint 4 | Done |
+| Spec-seeds | Spec-seeds-13 | Seed: issues-log.md | Generic issues-log starter. Open and Closed tables. | [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) · [ADR-075](./adr/ADR-075-issues-log-tables.md) · [Spec-seeds-08](#pb-39) | Sprint 4 | WIP |
 | MCP | MCP-01 | Installer: pack allow-list + ledger | `sdd_install_framework` and `sdd_update_framework` copy the pack allow-list onto `{client_root}`. | [`mcp/mcp-design.md`](./mcp/mcp-design.md) · [`framework/framework-design.md`](./framework/framework-design.md) §2.4 · [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) · [MCP-02](#pb-75) | Sprint 16 | ToDo |
 | MCP | MCP-02 | Local binary: ~/.sdd/sdd-mcp | One local stdio program at `~/.sdd/sdd-mcp` for macOS, Windows, and Linux. | [ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md) · [ADR-053](./adr/ADR-053-server-side-sync-thin-stdio.md) · [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) · [`mcp/mcp-design.md`](./mcp/mcp-design.md) §2.1 and §4.1 · [MCP-01](#pb-16) | Sprint 2 | Done |
 | MCP | MCP-03 | MCP tools without sdd_list_versions | Unregister `sdd_list_versions` from stdio and HTTP MCP. | [ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md) · [`mcp/mcp-design.md`](./mcp/mcp-design.md) §3 · [`mcp/mcp-stories.md`](./mcp/mcp-stories.md) `sdd-mcp-tool-surface` · [MCP-02](#pb-75) · [Web-portal-07](#pb-73) | Sprint 3 | Done |
@@ -450,5 +453,11 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | 2026-10-01 | Moved [Spec-seeds-06](#pb-37) from Sprint 7 to Sprint 4. Sprint 4 feature-04 is the next ToDo, before feature-24. |
 | 2026-10-01 | [Spec-seeds-07](#pb-38) reopened. Sprint 4 feature-27 is WIP: the `status.md` seed is under review with the seed artifacts building guide. |
 | 2026-10-01 | [Spec-seeds-06](#pb-37) confirmed. Sprint 4 feature-04 is Done. |
+| 2026-10-01 | [Spec-seeds-08](#pb-39) and [Spec-seeds-13](#pb-84) reopened. Sprint 4 feature-21 is WIP: the `changes-log.md` and `issues-log.md` seeds are under review with the seed artifacts building guide. |
+| 2026-10-01 | Sprint 4 feature-20 moves to Sprint 5 as ToDo, with [Skill-03](#pb-23). Sprint 4 feature-13 and feature-15 move to Sprint 13 as ToDo: design before implement ([Skill-14](#pb-80), [Skill-13](#pb-65)). Sprint 4 feature-12 and feature-14 fold into feature-30 ([Skill-07](#pb-27)), still Sprint 4 ToDo. feature-29 is a task. |
+| 2026-10-01 | [Spec-seeds-07](#pb-38) confirmed. Sprint 4 feature-27 is Done. Section rules for `status.md` live as Template and How to write in `sdd-scrum-practices.md`. |
+| 2026-10-01 | Sprint 4 feature-03 is renamed Seed: artifacts-map.md. It builds the EN authoring seed for [Spec-seeds-04](#pb-35). |
+| 2026-10-01 | [Spec-seeds-04](#pb-35) reopened. Sprint 4 feature-03 is WIP: the `artifacts-map.md` seed is under review with the seed artifacts building guide. |
+| 2026-10-02 | Added [Skill-17](#pb-89) `prompt-optimizer`. Sprint 5 feature-31 removes ECC from that skill. |
 
 [Back to top](#index)

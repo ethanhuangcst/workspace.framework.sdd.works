@@ -190,7 +190,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 - **Layer:** L1. L2 on Cursor macOS.
 - **Pre-condition:** Ledger `pack_complete` is true. The audit returns `Usable`. `sdd-review-status` can be read.
 - **Test steps:** Start ethan.
-- **Expected results:** He follows `sdd-review-status`. No project write during onboard. Ledger unchanged.
+- **Expected results:** He follows `sdd-review-status`. No project write before the user says yes to the shown text. Ledger unchanged.
 
 #### CE-VERDICT-04 — He does not invent the verdict
 
@@ -355,14 +355,14 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Layer:** L1.
 - **Pre-condition:** Audit verdict is `Usable`. The five process files open. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
 - **Test steps:** Ask where the project is.
-- **Expected results:** The skill reads those five files. It does not create or edit a project file. It does not mark a product item Done.
+- **Expected results:** The skill states `status_from_board` and `status_from_implementation`. It lists each mismatch. It does not create or edit a project file before the user says yes to the shown text. It does not mark a product item Done.
 
-#### CE-SKILL-02 — sdd-update-status
+#### CE-SKILL-02 — Second yes on sdd-review-status
 
 - **Layer:** L1.
-- **Pre-condition:** The user asked to report status. Seed: `specs/framework/seeds/skills/sdd-update-status/SKILL.md`. The on-disk folder may still be `sdd-tracking` until the rename; this case uses the skill name `sdd-update-status`.
-- **Test steps:** Ask the skill to update `status.md`.
-- **Expected results:** It waits for confirm. Before confirm, `status.md` is unchanged. After confirm, it writes only the confirmed text into `status.md`. It does not mark a product item Done.
+- **Pre-condition:** Two mismatches are listed. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
+- **Test steps:** Pick "Update process artifacts now" for one mismatch and "Leave to me, I will manually update later" for the other. Say yes to the shown text for the first.
+- **Expected results:** Before the second yes, no project file changes. After the second yes, only the accepted text is written. The other mismatch writes nothing. An untracked defect uses the OGT text "track defect xyz in issues-log". The skill does not mark a product item Done.
 
 #### CE-SKILL-03 — sdd-create-skill
 
@@ -390,7 +390,7 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Layer:** L1.
 - **Pre-condition:** The seed tree is the authoring tree.
 - **Test steps:** List skill folders that would be copied to the pack.
-- **Expected results:** `sdd-tracking` and `sdd-update-status` are not both present as shippable folders. Until the rename, the seed folder is `specs/framework/seeds/skills/sdd-tracking/`.
+- **Expected results:** `sdd-review-status` is the status skill. `sdd-tracking` and `sdd-update-status` are not shippable status folders. The on-disk folder `specs/framework/seeds/skills/sdd-tracking/` is not copied as the status skill.
 
 #### CE-SKILL-07 — Backlog-only skills
 
@@ -874,7 +874,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** An authoring seed under `specs/framework/seeds/templates/`, including one file from `EN` and, when the file exists, one from `HanS` or `HanT`.
 - **Test steps:** Read the header.
-- **Expected results:** No status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`) and no last-update line (`as_of`).
+- **Expected results:** No status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header has three lines: `Type`, `as_of`, and a Definition link.
 
 #### CE-TPL-02 — Map path is not prefixed twice
 
@@ -923,7 +923,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** `specs/framework/seeds/templates/EN/status.md`.
 - **Test steps:** Read the title, the related list, Project progress, and both OGT tables.
-- **Expected results:** The title is `The latest status of [product name]`. The sections are Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), and Last 15 closed OGTs. Project progress has rows Project kickoff and Initial product backlog refined, then a sprint table with columns `Sprint`, `Status`, and `Note`. The where-we-are-now sprint line has room for one sentence after the sprint name. An Affected SBIs sample is a bullet list. Each bullet is a code and an SBI name. The file ends with Last updated, a timestamp, and the agent name. The open OGT columns are `#`, Task Name, Affected SBIs, Created, and Status. The closed OGT columns are `#`, Task Name, Affected SBIs, Created, and Closed. The header has no `status:` line and no `as_of` line. `scrum-in-sdd.md` and `sdd-scrum-practices.md` are not in the related list.
+- **Expected results:** The title is `The latest status of [product name]`. The header has three lines: `Type`, `as_of`, and a Definition link. The sections are Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), and Last 15 closed OGTs. Project progress has rows Project kickoff and Initial product backlog refined, then a sprint table with columns `Sprint`, `Status`, and `Note`. The where-we-are-now sprint line has room for one sentence after the sprint name. An Affected SBIs sample is a bullet list. Each bullet is a code and an SBI name. The file ends with Last updated, a timestamp, and the agent name. The open OGT columns are `#`, Task Name, Affected SBIs, Created, and Status. The closed OGT columns are `#`, Task Name, Affected SBIs, Created, and Closed.
 
 #### CE-TPL-09 — OGT move, cap, and defect exclusion
 
@@ -937,4 +937,4 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** `specs/framework/seeds/templates/EN/issues-log.md`.
 - **Test steps:** Read the two tables and the header comment.
-- **Expected results:** The sections are Open issues, then Closed issues. Open columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Status`, and `Added time`. Open status values are `Open`, `Fixed`, and `Deferred`. Closed columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Closed Sprint`, and `Closed time`. Priority values are `Fatal`, `High`, `Medium`, and `Low`. A sample row sits only in a comment. The header has no `status:` line and no `as_of` line. Pass is a person reading the seed and confirming those lines. No fixture workspace. Playwright does not apply.
+- **Expected results:** The sections are Open issues, then Closed issues. Open columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Status`, and `Added time`. Open status values are `Open`, `Fixed`, and `Deferred`. Closed columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Closed Sprint`, and `Closed time`. Priority values are `Fatal`, `High`, `Medium`, and `Low`. A sample row sits only in a comment. The header has three lines: `Type`, `as_of`, and a Definition link. Pass is a person reading the seed and confirming those lines. No fixture workspace. Playwright does not apply.

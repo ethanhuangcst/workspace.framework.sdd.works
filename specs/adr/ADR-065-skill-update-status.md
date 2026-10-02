@@ -1,7 +1,7 @@
 # ADR-065: Status write skill is `sdd-update-status`
 
 ## Status
-Accepted
+Superseded by [ADR-076](./ADR-076-review-status-one-skill.md) on 2026-10-02. Do not ship `sdd-update-status` or `skill_update_status`. Report status is `sdd-review-status` (`skill_get_status`). The decision below is the 2026-09-28 record.
 
 ## Context
 Practices job 6 is “Report status”. On 2026-09-26 this record named the write skill `sdd-tracking` with key `skill_tracking`, so the id would not sound like one field edit and would stay distinct from the rule `realtime-status.mdc`. The folder `sdd-update-status` was rejected. The file was `ADR-065-skill-tracking-not-update-status.md`.

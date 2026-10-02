@@ -5,24 +5,32 @@ alwaysApply: true
 
 # Rule - Friendly language
 
-Applies to every chat reply and every Markdown file. This replaces writing-style. The check is the gate. If any line fails, rewrite before sending.
+Applies to every chat reply and every Markdown file.
+
+- This file replaces writing-style.
+- The check is the gate.
+- If any line fails, rewrite before sending.
 
 ## Check
 
 1. The first sentence gives the result, the limit, or the next action.
-2. The reply does not tell the search story. A search story is what the agent searched, tried, or decided.
+2. The reply states the result, so the search story stays out. A search story is what the agent searched, tried, or decided.
 3. A Markdown section stands alone for a later agent.
 4. The wording is short, clear, and concise. A sentence has one meaning.
 5. A line passes or fails, except where both allowed outcomes are named.
-6. One concept keeps one name. No invented short form. A specialist term has its plain meaning beside it.
+6. One concept keeps one name. A short form is expanded on first use. A specialist term has its plain meaning beside it.
 7. State the fact. A sentence fails when it adds warmth, eagerness, or a clever contrast and adds no fact. A new phrase in that class fails the same way.
 8. A claim that the text does not show fails.
 9. Each paragraph has one idea. Two or more facts under one heading use a lower heading and a bullet list. A continuation is indented two spaces under its bullet. One fact stays one sentence. The substance is still complete.
 10. When the sentence names an action, name who does it, to what, and with what result. A result with no actor passes.
 11. Items at one level are parallel. One list uses one order: alphabetical, numeric, or the order the reader does the work. A comparison is a table.
-12. No emoji, icon, image, decorative symbol, checkmark, or decorative arrow. An image the user asked for is allowed.
-13. No em dash. No spaced double hyphen used as a break. A labeled bad example may show the banned mark.
-14. No raw HTML tag. Lists are tight: no blank line between the item and the indented next line. The last section is visible in Cursor preview.
+12. A line uses words. An image the user asked for is allowed.
+13. A break is a comma, a colon, or a new sentence. A labeled bad example may show an em dash.
+14. Write Markdown, so the file has no raw HTML tag. Lists are tight: no blank line between the item and the indented next line. The last section is visible in Cursor preview.
+15. An instruction names the verb, the work, and the result.
+16. A definition names what a term is. The verb, the work, and the result stay on an instruction.
+17. A ban names the result.
+18. A line the user reads uses words the user types.
 
 ## Principles
 
@@ -32,8 +40,8 @@ Write so a person can act on the text. A Markdown section stands alone for a lat
 - Clear. One meaning. A sentence that can be read two ways fails.
 - Concise. Cut filler. Keep the fact.
 - Binary when the case allows it. The line passes or it fails.
-- Do not write "prefer", "try", or "consider".
-- When two outcomes are both allowed, name both. Do not hide the second outcome inside "when possible".
+- Leave out "prefer", "try", and "consider", so the line states the fact.
+- When two outcomes are both allowed, name both, so the second outcome stays visible.
 
 **Bad example**
 
@@ -56,11 +64,16 @@ The first sentence gives that person one of these:
 
 Then:
 
-- Do not open with what the agent searched, tried, or decided.
-- Do not continue that search story in a later sentence.
-- Put the result in the section. When the section has a limit, put the limit in the section. When the section uses a specialist term, put the plain meaning in the section.
-
-Default language is English, unless the user asks for another language. On a bilingual term, give the industry term and the plain English in the same sentence.
+- Open with the result, the limit, or the next action, so the reply skips the search story.
+- Keep the search story out of later sentences, so the section stays on the result.
+- Put the result in the section.
+- When the section has a limit, put the limit in the section.
+- When the section uses a specialist term, put the plain meaning in the section.
+- A line the user reads uses words the user types.
+  bad example: "whether the board matches"
+  good example: "whether the plan matches the work"
+- Default language is English, unless the user asks for another language.
+- On a bilingual term, give the industry term and the plain English in the same sentence.
 
 **Bad example**
 
@@ -72,12 +85,14 @@ The remote server that answers web calls is down, so the save call cannot finish
 
 ## Diction
 
-- One concept keeps one name. Do not swap in a synonym for the same thing.
-- Expand a short form on first use. Do not invent a short form.
+- One concept keeps one name, so a synonym stays out.
+  bad example: call the same row an item after `SBI` (sprint backlog item) is defined
+  good example: use `SBI` for that row
+- Expand a short form on first use, so the name stays the full term.
 - Keep a specialist term only when it is the name of the thing. Put the plain meaning in the same sentence.
 - Use a concrete verb and a concrete noun.
-- Do not use "very", "really", or "absolutely".
-- No slang, buzzwords, or meme-speak.
+- Leave out "very", "really", and "absolutely", so the noun stays concrete.
+- Leave out slang, buzzwords, and meme-speak, so the line uses a concrete verb and a concrete noun.
 
 **Bad example**
 
@@ -91,12 +106,16 @@ A method helps recovery when the remote server that answers web calls is down.
 
 State the fact.
 
-- No hype, panic, or urgency.
-- No slogan label, such as a repeated tag "DO NOW".
+- Leave out hype, panic, and urgency, so the line states the fact.
+- Leave out a slogan label, such as a repeated tag "DO NOW", so the line states the fact.
 - A claim that the text does not show fails.
-- Do not write "deal-breaker", "guaranteed", or "completely solves".
+- Leave out "deal-breaker", "guaranteed", and "completely solves", so the claim stays the fact the text shows.
 
-Stock AI phrasing is any sentence that adds warmth, eagerness, or a clever contrast and adds no fact. A phrase fails when it belongs to that class. The list below is a sample, not the whole class.
+### Stock AI phrasing
+
+- Stock AI phrasing is any sentence that adds warmth, eagerness, or a clever contrast and adds no fact.
+- A phrase in that class fails.
+- The list below is a sample, not the whole class.
 
 - Praise for the question, such as "Great question".
 - An offer of eagerness, such as "I'd be happy to" or "Certainly".
@@ -116,21 +135,31 @@ The remote server that answers web calls is down.
 
 - One idea per paragraph.
 - Two or more points become a list.
-- Two or more facts under one heading use a lower heading and a bullet list. Do not leave those facts as sibling paragraphs.
+- Two or more facts under one heading use a lower heading and a bullet list.
 - A lower heading is one level under its parent.
 - Indent a continuation two spaces under its bullet.
-- One fact stays one sentence. Do not add a heading above that sentence.
+- One fact stays one sentence.
 - Use numbers when order matters. Use bullets when order does not matter.
-- Do not pad one sentence into a paragraph.
-- Cut filler. Keep the substance. Do not drop a fact to make the reply shorter.
+- Keep one sentence as one sentence, so a paragraph holds one fact.
+- Cut filler and keep the fact, so a shorter reply still holds the substance.
 - When the sentence names an action, name who does it, to what, and with what result. A result with no actor passes.
-- Repeat the noun. Do not point with "this", "it", or "the above" alone.
+- An instruction names the verb, the work, and the result.
+  "Read the work related to the SBI, to state the actual status of that SBI."
+  verb: Read
+  work: the work related to the SBI
+  result: the actual status of that SBI
+- A definition names what a term is. The verb, the work, and the result stay on an instruction.
+  "An SBI (sprint backlog item) is one row in the current sprint."
+- A ban names the result.
+  bad example: "Do not search the workspace."
+  good example: "Name `{workspace}/artifacts-map.md` and stop, so the stored path stays the path."
+- Repeat the noun, so the sentence names the thing.
 - Lead with the answer.
 - Items at the same level are parallel.
 - One list uses one order: alphabetical, numeric, or the order the reader does the work. A second order is a second list.
 - Use a table for a comparison.
 - Add a heading when the next block is a new topic.
-- Bold at most three words. Do not bold a whole sentence.
+- Bold at most three words, so a whole sentence stays plain.
 
 **Bad example**
 
@@ -171,17 +200,11 @@ The retry keeps running.
 
 ## Marks
 
-- No emoji.
-- No icons.
-- No image, unless the user asked for that image.
-- No decorative symbols.
-- No checkmarks.
-- No arrows used as decoration.
-- No em dash.
-- No spaced double hyphen used as a break.
-- Use a comma, a colon, or a new sentence.
+- Leave out emoji, icons, decorative symbols, checkmarks, and decorative arrows, so a line uses words.
+- An image the user asked for is allowed.
+- Use a comma, a colon, or a new sentence, so an em dash and a spaced double hyphen stay out.
 - Markdown syntax stays: headings, lists, tables, code spans, and links.
-- A labeled bad example may show a banned mark. Every other sentence may not.
+- A labeled bad example may show a banned mark. Every other sentence uses a comma, a colon, or a new sentence.
 
 **Bad example**
 
@@ -197,14 +220,12 @@ The save call failed. The remote server that answers web calls is down.
 - Two or more facts under one heading use a lower heading and a bullet list.
 - A lower heading is one level under its parent.
 - Indent a continuation two spaces under its bullet.
-- Do not use a raw HTML tag.
-- Write the heading, the list, the link, the emphasis, and the code in Markdown.
+- Write the heading, the list, the link, the emphasis, and the code in Markdown, so the file has no raw HTML tag.
 - Keep a list tight.
 - The continuation is the next line, indented two spaces, with no blank line after the item.
 - A loose list is an item line, a blank line, then an indented paragraph.
 - After a header blockquote with several links, that loose list stops Cursor preview before the rest of the file.
-- Use a plain Markdown link.
-- Do not write a raw HTML anchor.
+- Use a plain Markdown link, so the file has no raw HTML anchor.
 - Put a placeholder that uses angle brackets inside a code span.
 - After a long edit, check that the last section is visible in Cursor preview.
 

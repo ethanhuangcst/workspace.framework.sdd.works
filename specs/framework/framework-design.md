@@ -8,7 +8,7 @@
 
 ## framework-artifacts
 
-An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`) and no last-update line (`as_of`). Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the timestamp and the author. The only init signal is `initialized: no` on a live `artifacts-map.md` while `sdd-kickoff-project` is still copying files.
+An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header has three lines: `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.md` while `sdd-kickoff-project` is still copying files.
 
 ### Two repositories
 
@@ -161,7 +161,7 @@ This repository has no `.cursor/` directory. It was removed on 2026-09-23. There
    - **Index broken.** Tell the user the index does not match the files, and that the next step is to update the project. When the user confirms, follow the skill `sdd-update-project`. Leave `{client_root}/.sdd-installed.json` unchanged.
    - **Usable.** Follow the skill `sdd-review-status`.
 
-Do not write a project file during onboard. `sdd-review-status` reads the five process files and proposes next-step options. The file roles are in [ADR-073](../adr/ADR-073-skill-get-status.md) and [sdd-review-status](#sdd-review-status).
+On a `Usable` verdict, `sdd-review-status` compares the board with the current sprint's named work. It writes a project file only after the user says yes to the shown text. The steps are in [ADR-076](../adr/ADR-076-review-status-one-skill.md) and [sdd-review-status](#sdd-review-status).
 
 When a job needs a locale, use the locale the audit reported. Allowed values include `EN`, `HanS`, and `HanT`. An empty `locale` does not change a `Usable` verdict. Onboard still follows `sdd-review-status`. When a later job needs a locale and the audit reported `locale` empty, the next step is to update the project. When the user confirms, follow `sdd-update-project`. Do not assume English.
 
@@ -246,13 +246,13 @@ The prompt keeps a one-line **job index**: job name → skill key in `constants.
 | Update project settings | `skill_update_project` |
 | Refine product backlog | `skill_refine_pb` |
 | Sprint planning | `skill_plan_sprint` |
-| Report status | `skill_update_status` |
+| Report status | `skill_get_status` |
 | Retrospective | `skill_retrospective` |
 | Start a new sprint / close sprint | `skill_close_sprint` (and related keys when filled) |
 
-`sdd-review-status` is not a row in this table. Onboard follows it when the audit verdict is Usable. `constants.md` still lists `skill_tracking` until that key is renamed to `skill_update_status`.
+Report status is `sdd-review-status`. Onboard follows that same skill when the audit verdict is Usable. [ADR-076](../adr/ADR-076-review-status-one-skill.md).
 
-Follow-up (not this pass): practices job 1 still says re-install/update and copy from workspace templates. Align that section with §2.4, ADR-056, and ADR-057: start gate is `pack_complete` on `.sdd-installed.json`; instructions page on failure; no ethan copy of the pack. Do not expand unfilled jobs 4–8 here.
+Follow-up (not this pass): practices job 1 still says re-install/update and copy from workspace templates. Align that section with §2.4, ADR-056, and ADR-057: start gate is `pack_complete` on `.sdd-installed.json`; instructions page on failure; no ethan copy of the pack. Jobs 4, 5, 7, and 8 stay unfilled.
 
 Coach capabilities over time (still true):
 
@@ -474,11 +474,7 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
 ## Skill keys
 
 - The skill folder for a job is the folder named in the Skills table in `{client_root}/templates/framework.sdd.works/constants.md` for that key.
-- `sdd-review-status` is not a row in the Capabilities table.
-- Report status uses one skill key.
-  The key is the Report status row in the Skills table in `constants.md`.
-  That row is `skill_tracking` until the Skills table lists `skill_update_status`.
-  When the Skills table lists `skill_update_status`, that key is Report status.
+- Report status is `skill_get_status`. The folder is `sdd-review-status`.
 - Ethan uses only `sdd-kickoff-project` for Start a new project.
 - An empty workflows list is not a failure.
 
@@ -521,7 +517,7 @@ Ethan runs onboard once, at the beginning of the chat.
 | Update project settings | `skill_update_project` |
 | Refine product backlog | `skill_refine_pb` |
 | Sprint planning | `skill_plan_sprint` |
-| Report status | `skill_tracking` |
+| Report status | `skill_get_status` |
 | Retrospective | `skill_retrospective` |
 | Start a new sprint / close sprint | `skill_close_sprint` |
 
@@ -554,7 +550,7 @@ Ethan runs onboard once, at the beginning of the chat.
   Ethan does not narrate the reads.
   Ethan does not greet.
 - Ethan does not list the Capabilities table before the report block.
-  After a `Usable` block, `sdd-review-status` lists the next-step options the open files support.
+  After a `Usable` block, `sdd-review-status` states `status_from_board`, `status_from_implementation`, and each mismatch.
 
 ## Pack
 
@@ -963,37 +959,75 @@ The later `SKILL.md` copies these lines:
 
 ### sdd-review-status
 
-Read-only skill. [Skill-15](../product-backlog.md#pb-86). [ADR-073](../adr/ADR-073-skill-get-status.md). Not a practices job.
+The status skill is [Skill-15](../product-backlog.md#pb-86).
+
+[ADR-076](../adr/ADR-076-review-status-one-skill.md) is the decision.
+
+Practices job 6, Report status, points here.
 
 | Role | Path |
 | --- | --- |
 | Authoring seed | `specs/framework/seeds/skills/sdd-review-status/SKILL.md` |
 | After install | `{client_root}/skills/sdd-review-status/SKILL.md` |
 
-Onboard follows this skill when the audit verdict is `Usable`. A user who asks where the project is follows it. On `Usable`, open the paths under `opened` in the audit reply. Do not run the audit again. Each path has this authority when it is in that list:
+#### What the skill holds
+
+- The skill compares the board with the named work, lists each mismatch, and writes after the user says yes to the shown text.
+- How to write a process file stays in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md).
+- The skill loads that section when a file is about to change.
+
+#### The board
+
+The board is changes-log, issues-log, status, sprint-backlog, and product-backlog.
 
 | File | Authority |
 | --- | --- |
-| `status.md` | Project progress, current sprint, current SBI, what is next, the open OGT table, and the latest 15 closed OGTs. The sprint backlog stays the SBI list. |
-| `sprint-backlog.md` | Sprint item list and schedule |
+| `status.md` | Project progress, current sprint, current SBI, what is next, the open OGT table, and the latest 15 closed OGTs |
+| `sprint-backlog.md` | Sprint item list and schedule. This file stays the schedule when `status.md` disagrees. |
 | `product-backlog.md` | Requirements and acceptance |
 | `changes-log.md` | Decisions already recorded |
 | `issues-log.md` | Open, fixed, and deferred defects, and closed defects |
 
-It states where the project is and proposes the next-step options those files support. In a long file, it reads the current sprint and the open items. It does not create or edit a project file. Chat in the locale the audit reported. Do not rewrite the process files into that locale. If this session has no audit reply, run `sdd-audit-artifacts` once and continue only on `Usable`. Writing `status.md` is `sdd-update-status`.
+#### Audit
+
+- On a `Usable` audit, the skill reads the paths under `opened`.
+- When this session has no audit reply, the skill runs `sdd-audit-artifacts` once and continues only on `Usable`.
+
+#### Steps
+
+1. Summarize `status_from_board` from the five files.
+   When those files disagree, the summary says so.
+2. Summarize `status_from_implementation` from the open items in the current sprint and the actual work those items name.
+   An item that names no work is unchecked.
+3. List each mismatch.
+4. For each mismatch, the user picks one handling or types one.
+   The three default handlings are: update the process artifacts now, record an on-going task (OGT) and update later, or leave it for a manual update.
+5. The skill shows the exact text for that row.
+   The skill writes that text after the user says yes.
+   The skill writes accepted sentences in this order: changes-log, issues-log, status, sprint-backlog, product-backlog.
+   An OGT is one row in `status.md`.
+   When the mismatch is an untracked defect, the OGT text is "track defect xyz in issues-log".
+   "Leave to me, I will manually update later" writes nothing for that mismatch.
+
+#### Stops
+
+- The skill chats in the locale the audit reported.
+- The process files keep their current language.
+- A missing process file stops the skill.
+  The skill leaves that file uncreated.
+- A write stays inside the five process files named above.
+- The skill marks an item Done when the user says Done and that item's definition of done is met.
 
 ### sdd-update-status
 
-Confirmed write of `status.md`. [ADR-065](../adr/ADR-065-skill-update-status.md). Practices job 6 stays titled Report status. The constants key is `skill_update_status`.
+[ADR-076](../adr/ADR-076-review-status-one-skill.md) retires this name.
 
-| Role | Path |
-| --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-update-status/SKILL.md` |
-| After install | `{client_root}/skills/sdd-update-status/SKILL.md` |
+#### What remains
 
-The skill drafts the picture from the sprint backlog, waits for confirm, and writes only the confirmed text into `status.md`. It does not mark a product item Done. It does not answer “where are we”. That read is `sdd-review-status`.
-
-The seed folder on disk is still `skills/sdd-tracking/` until that rename is done. Do not ship both folders.
+- The seed tree has no `specs/framework/seeds/skills/sdd-update-status/` folder.
+- `sdd-review-status` is the status skill.
+- The on-disk folder `skills/sdd-tracking/` stays until a later removal.
+  The pack does not copy that folder as the status skill.
 
 ### sdd-create-skill
 
@@ -1023,7 +1057,7 @@ The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agen
 | --- | --- |
 | `sdd-design` | `specs/framework/seeds/skills/sdd-design/SKILL.md` |
 | `sdd-implement` | `specs/framework/seeds/skills/sdd-implement/SKILL.md` |
-| `sdd-tracking` | `specs/framework/seeds/skills/sdd-tracking/SKILL.md` (folder name until the [sdd-update-status](#sdd-update-status) rename) |
+| `sdd-tracking` | `specs/framework/seeds/skills/sdd-tracking/SKILL.md` (not the status skill; [ADR-076](../adr/ADR-076-review-status-one-skill.md)) |
 | `sdd-atdd`, `sdd-tdd`, `sdd-kickoff-project`, `sdd-update-project`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
 
 ## templates
@@ -1065,30 +1099,16 @@ It is not a project file under `artifacts_root`. Do not copy it into the project
 
 ### artifacts-map.md
 
-Project config for where artifacts live. It records only what this project has. It is a labeled list, not a reading document, and it does not use tables.
+Project config for where artifacts live. It records only what this project has. The header, the file block, and the module block are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapmd).
 
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/artifacts-map.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/artifacts-map.md` |
 
-Keep the name `artifacts-map.md`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`.
+Sprint 4 feature-03 builds this authoring seed. [Spec-seeds-04](../product-backlog.md#pb-35). `sdd-kickoff-project` copies the seed onto a new project. The rule `artifacts-map.mdc` updates the live map later. HanS and HanT copies are [i18n-02](../product-backlog.md#pb-68).
 
-Header, in this order:
-
-1. **Product name.** Display only. It does not locate files.
-2. **`artifacts_root`.** One folder name relative to the workspace. When the field is absent, use `specs`. `docs` is an example. Any other single folder name is valid. Do not store an absolute machine path.
-3. **Locale.** `EN`, `HanS`, or `HanT`.
-
-Each block has a name and a workspace-relative path. Join `{workspace}` and that path. Do not prefix `artifacts_root` again.
-
-A file under the artifacts root includes that folder in the path. `specs/product-backlog.md` is `{workspace}/specs/product-backlog.md`. Changing `artifacts_root` rewrites those paths and the header.
-
-The map file itself is the exception. Its path is `artifacts-map.md`, which is `{workspace}/artifacts-map.md`. That path does not include the artifacts-root folder.
-
-In the authoring seed, `local` values are concrete paths that use the default root `specs`. Do not write `{artifacts_root}` inside a `local` value. Do not add HTML example comments. `purpose` is the rule that stays in the working file. Path fields are the sample.
-
-One block per artifact that exists. A row may carry one line of purpose when that line prevents a wrong copy. Do not leave empty rows. Omit a seed path when the file follows `templates/{locale}/<name>`. List a pack-relative seed path only when the file does not follow that convention. Do not write a machine path into the project file.
+Keep the name `artifacts-map.md`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`. This repo's live file is still `specs/artifacts-map.md`.
 
 On start, after the install ledger passes, Ethan follows the skill `sdd-audit-artifacts`. That skill returns one verdict. Ethan does not decide the verdict from a missing root file.
 
@@ -1105,8 +1125,6 @@ Do not put a verdict flag in the map file.
 `sdd-kickoff-project` writes this file when it is missing. It asks for the product name, `artifacts_root`, locale, and module folders. While the copy is still running, the header may say `initialized: no`. Remove that line when the copy finishes. Copy a seed only where the target file is missing. Do not overwrite a file that already has content.
 
 `sdd-update-project` repairs a missing or wrong map after the user confirms an `Index broken` verdict. It does not overwrite a process file that already has content. It also writes `locale` when the audit reported that field empty and the user confirmed, and it updates other map settings when a map is already in use.
-
-A module is a folder under `artifacts_root`. The map stores `folder`, `stem`, and the three workspace-relative paths. The default stem is the folder name. A shorter stem is set once. Two modules cannot use the same stem. A later read uses the stored paths.
 
 When a project artifact is created, renamed, or deleted, the rule [`artifacts-map.mdc`](#artifacts-mapmdc) updates this file.
 
@@ -1125,7 +1143,7 @@ The column name stays Category. Do not rename it to Type. There is no DoD column
 
 ### sprint-backlog.md
 
-Sprint schedule and the SBI list. The seed is a starter for a new project. It is not this repo's sprint backlog.
+Sprint schedule and the SBI list. The seed is a starter for a new project. It is not this repo's sprint backlog. The header has three lines: `Type`, `as_of`, and a Definition link to [Definition of sprint-backlog.md](./seeds/templates/EN/sdd-scrum-practices.md#definition-of-sprint-backlogmd).
 
 | Role | Path |
 | --- | --- |
@@ -1202,7 +1220,7 @@ Current sprint projection. It is not a second sprint backlog. It is not the defe
 | On a project | `{workspace}/{artifacts_root}/status.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/status.md` |
 
-The title is `The latest status of [product name]`. Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings and empty lines. It may keep an HTML comment and a sample. It does not copy this repo's live sprint text. `scrum-in-sdd.md` and `sdd-scrum-practices.md` stay on the client root and are not listed in the seed's related files. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+The title is `The latest status of [product name]`. The header has three lines: `Type`, `as_of`, and a Definition link to [Definition of status.md](./seeds/templates/EN/sdd-scrum-practices.md#definition-of-statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings and a Pokymon sample. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
 
 ### changes-log.md
 
@@ -1213,9 +1231,7 @@ Conclusion record. An entry is written when a change is done. It states what cha
 | On a project | `{workspace}/{artifacts_root}/changes-log.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/changes-log.md` |
 
-The title is `Changes log ([product name])`. The seed has no `status:` line and no `as_of` line. Days are headings `## YYYY-MM-DD`. The newest day is first. Under a day, the newest entry is first. Each entry is a `###` title, then **Why**, **What changed**, and **Verification**. **Boundary** is present only when the entry must say what it does not cover. Each of those labels is one short paragraph. **What changed** names the files and the backlog or sprint item when one exists. **Verification** names the check that passed.
-
-It is not the defect list. An open defect stays in `issues-log.md`. A concluded fix still gets an entry here. The seed may keep the Pokymon sample entries. It does not copy this repo's live change log. After a project copies the seed, those samples are removed.
+Section rules for the header and the entry are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#changes-logmd). The header has three lines: `Type`, `as_of`, and a Definition link to [Definition of changes-log.md](./seeds/templates/EN/sdd-scrum-practices.md#definition-of-changes-logmd). The EN seed may keep the Pokymon sample entries. It does not copy this repo's live change log. After a project copies the seed, those samples are removed.
 
 ### issues-log.md
 
@@ -1234,7 +1250,7 @@ Closed issues: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`,
 
 Priority is `Fatal`, `High`, `Medium`, or `Low`. `Id` does not change when a row is sorted or moves. `Description` is under 3 lines. `Close Check` is shorter. Use bullets when a sentence is not enough. `Related` is a spec id, a link, and the name. Both tables sort by component A to Z, then by time, oldest first. Open uses `Added time`. Closed uses `Closed time`. The date shape is `30/Sep/2026`.
 
-It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The seed has no `status:` line and no `as_of` line. It does not copy this repo's live issues.
+It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The header has three lines: `Type`, `as_of`, and a Definition link to [Definition of issues-log.md](./seeds/templates/EN/sdd-scrum-practices.md#definition-of-issues-logmd). It does not copy this repo's live issues.
 
 ### architecture.md
 

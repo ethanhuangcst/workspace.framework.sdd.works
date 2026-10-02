@@ -684,22 +684,22 @@ Tests: CE-AUDIT-01 through CE-AUDIT-17.
 ### sdd-review-status
 
 **As the** user who asked where the project is
-**I want** a read of the five process files in my project locale
-**So that** the answer matches the sprint I am in and does not edit those files
+**I want** the board compared with the current sprint's named work
+**So that** each mismatch is listed and a file changes only after I accept the shown text
 
 #### AC1
 
 ```gherkin
-Scenario: Status read does not write
+Scenario: Status read does not write before the second yes
   Given the audit verdict is Usable
   And the five process files open
   When the user asks where the project is
-  Then sdd-review-status reads those five files
-  And it does not create or edit a project file
+  Then sdd-review-status states status_from_board
+  And it states status_from_implementation for the open items in the current sprint
+  And it lists each mismatch
+  And it does not create or edit a project file before the user says yes to the shown text
   And it does not mark a product item Done
 ```
-
-
 
 #### AC2
 
@@ -709,39 +709,38 @@ Scenario: HanS answer does not translate the files
   And the five process files still have English headings
   When the user asks where the project is
   Then the spoken answer is Chinese (Simplified)
-  And the five files stay unchanged
+  And the five files stay unchanged until the user says yes to shown text
 ```
 
-Tests: CE-SKILL-01, CE-SKILL-08.
-
-### sdd-update-status
-
-**As the** user who asked to report status
-**I want** status.md to change only after I confirm the text
-**So that** a draft is not stored as the project picture
-
-#### AC1
+#### AC3
 
 ```gherkin
-Scenario: A draft does not change status.md
-  Given the user asked to report status
-  When the skill drafts the picture
-  Then status.md is unchanged
+Scenario: Each mismatch has its own handling
+  Given two mismatches
+  When the user picks Update process artifacts now for the first
+  And the user picks Leave to me, I will manually update later for the second
+  Then the skill shows the new sentences for the first mismatch only
+  And the second mismatch writes nothing
 ```
 
-
-
-#### AC2
+#### AC4
 
 ```gherkin
-Scenario: Confirm writes only the agreed text
-  Given the user has confirmed one status draft
-  When the skill writes status.md
-  Then the file contains only that confirmed text
+Scenario: The second yes writes the accepted text
+  Given the user said yes to the shown text for one mismatch
+  When the skill writes
+  Then it writes only that text
+  And an untracked defect becomes the OGT text "track defect xyz in issues-log"
   And the skill does not mark a product item Done
 ```
 
-Tests: CE-SKILL-02.
+Tests: CE-SKILL-01, CE-SKILL-02, CE-SKILL-08.
+
+### sdd-update-status
+
+Retired by [ADR-076](../adr/ADR-076-review-status-one-skill.md). The confirmed write is AC4 of `sdd-review-status`. Do not add a second skill folder.
+
+Tests: CE-SKILL-06.
 
 ### sdd-create-skill
 
@@ -812,10 +811,11 @@ Tests: CE-SKILL-04, CE-SKILL-05.
 Scenario: Status skill ships as one folder
   Given the authoring seed tree
   When the pack copy list is reviewed
-  Then sdd-tracking and sdd-update-status are not both shippable folders
+  Then sdd-review-status is the status skill
+  And sdd-tracking and sdd-update-status are not shippable status folders
 ```
 
-Tests: CE-SKILL-06. Until the rename, the seed folder is `specs/framework/seeds/skills/sdd-tracking/`.
+Tests: CE-SKILL-06. The on-disk folder `specs/framework/seeds/skills/sdd-tracking/` is not the status skill.
 
 ## rules
 
@@ -956,7 +956,7 @@ Scenario: A seed header has no status line
   Given an authoring seed under specs/framework/seeds/templates/
   When the header is read
   Then it has no status line initialized, draft, confirmed, updated, or status: active
-  And it has no last-update line and no as_of line
+  And a Framework (process) artifact header has Type, as_of, and a Definition link
 ```
 
 Run AC3 on one `EN` seed and, when the file exists, one `HanS` or `HanT` seed.
@@ -1183,7 +1183,7 @@ Scenario: EN issues-log seed has two tables
   And the Closed columns are Id, Title, Component, Priority, Description, Related, Close Check, Closed Sprint, and Closed time
   And Priority values are Fatal, High, Medium, and Low
   And a sample row is only in a comment
-  And the header has no status line and no as_of line
+  And the header has Type, as_of, and a Definition link
 ```
 
 Tests: CE-TPL-10. A missing HanS or HanT issues-log seed stays on i18n-02. The EN change-log seed already records a conclusion and is not changed by this story.
