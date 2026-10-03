@@ -1,7 +1,7 @@
 # ADR-069: Start-project skill is `sdd-kickoff-project`
 
 ## Status
-Accepted
+Superseded by [ADR-078](./ADR-078-update-project-one-skill.md) on 2026-10-03. Do not ship `sdd-kickoff-project` or `skill_start_project`. The decision text below remains the 2026-09-27 record.
 
 ## Context
 Practices job 2 is “Start a new project”. The pack named that job’s skill folder `sdd-new-project` with key `skill_start_project`. The folder does not exist yet. Sprint 3 feature-01 writes the skill.

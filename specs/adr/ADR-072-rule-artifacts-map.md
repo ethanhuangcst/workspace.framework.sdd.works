@@ -1,7 +1,7 @@
 # ADR-072: Rule `artifacts-map`
 
 ## Status
-Accepted
+Superseded by [ADR-077](./ADR-077-no-artifacts-map-rule.md) on 2026-10-03. Do not ship `artifacts-map.mdc`. The decision text below remains the 2026-09-27 record.
 
 ## Context
 Harness rules in the guide have no `sdd-` prefix: `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`.

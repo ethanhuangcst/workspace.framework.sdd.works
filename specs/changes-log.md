@@ -1,10 +1,42 @@
 # Changes log (framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-02
+> as_of: 2026-10-03
 > [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#definition-of-changes-logmd)
 
 ---
+
+## 2026-10-03
+
+### The pack does not ship an artifacts-map rule
+
+**Why**: `artifacts-map.mdc` does not see a delete, rename, or move the user makes in the file tree, so it does not keep the map current.
+
+**What changed**: [ADR-077](./adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](./adr/ADR-072-rule-artifacts-map.md). The constants row, the EN guide, the HanS guide, and the portal catalogs drop `artifacts-map.mdc`. The seed file is removed. [Rule-04](./product-backlog.md#pb-85) and Sprint 4 feature-22 are Retired. `{workspace}/artifacts-map.md` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map.
+
+**Verification**: Living EN specs no longer list `artifacts-map` as a rule key. Feature-22 is Retired, not Done.
+
+**Boundary**: Feature-03 stays WIP. The map file stays.
+
+### Start and update are one skill
+
+**Why**: `sdd-kickoff-project` and `sdd-update-project` are the same write with two entry points.
+
+**What changed**: [ADR-078](./adr/ADR-078-update-project-one-skill.md) supersedes [ADR-069](./adr/ADR-069-skill-kickoff-project.md). The constants key is `skill_update_project`. The folder is `sdd-update-project`. Practices job 2 and job 3 both use that skill. `Uninitialized` and `Index broken` both follow that skill after confirm. [Skill-03](./product-backlog.md#pb-23) and Sprint 5 feature-01 and feature-20 are Retired. The EN guide, the HanS guide, and the portal catalogs drop `sdd-kickoff-project`.
+
+**Verification**: Living specs name `sdd-update-project` for both jobs. Feature-01 and feature-20 are Retired, not Done.
+
+**Boundary**: Sprint 5 feature-25, feature-02, and feature-26 stay ToDo. No `SKILL.md` is written in this change.
+
+### Start and update are one job
+
+**Why**: Two Capabilities rows used the same skill key, so the model had no second skill to choose.
+
+**What changed**: [ADR-079](./adr/ADR-079-one-job-update-project.md) supersedes [ADR-078](./adr/ADR-078-update-project-one-skill.md) decision 2. The job name is Update project settings. Practices job 2 is removed. Its steps sit under job 3 as the case where the map is missing. Onboard still says two next steps. [Agent-08](./product-backlog.md#pb-42) is Retired. [Agent-09](./product-backlog.md#pb-43) is the job.
+
+**Verification**: The Capabilities table has one row for `skill_update_project`. `ethan.md` matches the design prompt.
+
+**Boundary**: Sprint 5 feature-02 stays ToDo. It is the `Uninitialized` confirm of this job.
 
 ## 2026-10-02
 

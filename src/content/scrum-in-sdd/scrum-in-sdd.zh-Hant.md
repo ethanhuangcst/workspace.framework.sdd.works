@@ -322,12 +322,10 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - **dod.mdc**：Definition of Done
 - **incremental-delivery.mdc**：增量交付
 - **realtime-status.mdc**：實時跟蹤狀態，並在每項任務完成時更新 **status.md**
-- **artifacts-map.mdc**：建立、重新命名或刪除專案產物時，同步更新 **artifacts-map.md**
 
 ### Skills
 - **sdd-atdd**
 - **sdd-tdd**
-- **sdd-kickoff-project**
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**
@@ -500,12 +498,10 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - **dod.mdc**：Definition of Done。
 - **incremental-delivery.mdc**：增量交付策略。
 - **realtime-status.mdc**：實時狀態更新策略。
-- **artifacts-map.mdc**：建立、重新命名或刪除專案產物時，保持 **artifacts-map.md** 最新。
 
 ### Skills
 - **sdd-atdd**
 - **sdd-tdd**
-- **sdd-kickoff-project**
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**

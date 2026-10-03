@@ -8,7 +8,7 @@
 
 ## framework-artifacts
 
-An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header has three lines: `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.md` while `sdd-kickoff-project` is still copying files.
+An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header has three lines: `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.md` while `sdd-update-project` is still copying files.
 
 ### Two repositories
 
@@ -157,7 +157,7 @@ This repository has no `.cursor/` directory. It was removed on 2026-09-23. There
 1. Read only `{client_root}/.sdd-installed.json`. When the file is missing, or `pack_complete` is not `true`, send the instructions URL and stop. The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise it is `https://framework.sdd.works/instructions`. Do not read the workspace. Do not call the MCP tools `sdd_install_framework` or `sdd_update_framework`.
 2. Follow the skill `sdd-audit-artifacts`. It returns one verdict — `Uninitialized`, `Index broken`, or `Usable` — the paths it opened, the paths that failed, and whether `locale` is empty. It reports `locale` empty only when it opened the map and the field is missing. An empty `locale` does not change the verdict. It does not create or edit a project file. Read the labels `verdict`, `locale`, `opened`, and `failed` in that reply. Do not reshape them. `locale` is present only after the map opened. Do not decide the verdict or the locale yourself.
 3. Act on the verdict.
-   - **Uninitialized.** Tell the user the project is not initialized, and that the next step is to start a new project. When the user confirms, follow the skill `sdd-kickoff-project`.
+   - **Uninitialized.** Tell the user the project is not initialized, and that the next step is to start a new project. When the user confirms, follow the skill `sdd-update-project`.
    - **Index broken.** Tell the user the index does not match the files, and that the next step is to update the project. When the user confirms, follow the skill `sdd-update-project`. Leave `{client_root}/.sdd-installed.json` unchanged.
    - **Usable.** Follow the skill `sdd-review-status`.
 
@@ -171,7 +171,7 @@ flowchart TD
   gate -->|No| stop[Send instructions URL and stop]
   gate -->|Yes| audit[Follow skill sdd-audit-artifacts]
   audit --> verdict{Verdict}
-  verdict -->|Uninitialized| kickoff[Propose start a new project. On confirm follow sdd-kickoff-project]
+  verdict -->|Uninitialized| kickoff[Propose start a new project. On confirm follow sdd-update-project]
   verdict -->|Index broken| update[Propose update the project. On confirm follow sdd-update-project]
   verdict -->|Usable| status[Follow skill sdd-review-status]
 ```
@@ -228,21 +228,20 @@ On every start, before any greeting or job list, Ethan reads only `{client_root}
 
 When the step Ethan is about to run needs a skill, a rule, or a seed template, and that file cannot be read, he sets `pack_complete` to `false` in `{client_root}/.sdd-installed.json`. He leaves `package_version` and `package_commit` unchanged. He sends the instructions URL from §2.2 step 1 and stops. He does not copy a replacement file. He does not set `pack_complete` back to `true`. The next start stops at the pack gate until install or update writes `true`.
 
-Onboard reads the skill `sdd-audit-artifacts`. On a `Usable` verdict it reads the skill `sdd-review-status`. When either file cannot be read, this rule applies and onboard does not continue. The skills `sdd-kickoff-project` and `sdd-update-project` are opened only after the user confirms. A missing file at that later step uses this same rule.
+Onboard reads the skill `sdd-audit-artifacts`. On a `Usable` verdict it reads the skill `sdd-review-status`. When either file cannot be read, this rule applies and onboard does not continue. The skill `sdd-update-project` is opened only after the user confirms. A missing file at that later step uses this same rule.
 
 Leave `.sdd-installed.json` unchanged when `sdd-audit-artifacts` has already returned `Uninitialized` or `Index broken`. Leave it unchanged when a skill, rule, or seed template is missing and the current step does not read that file.
 
-Job 2 uses only `sdd-kickoff-project` (`skill_start_project`). Do not add a second skill for starting a project. Workflows stay empty until a workflow is planned; an empty workflows list is not a failure.
+Update project settings uses `sdd-update-project` (`skill_update_project`). [ADR-079](../adr/ADR-079-one-job-update-project.md). Workflows stay empty until a workflow is planned. An empty workflows list is not a failure.
 
 ### 3. Jobs
 
 **What / how / when** for each job lives only in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) **Jobs**. Ethan does not embed those steps in the agent prompt.
 
-The prompt keeps a one-line **job index**: job name → skill key in `constants.md`. The user may ask in `artifact_locale`. When the user asks for a job, ethan matches the key, opens `{client_root}/{skills_dir}/{folder}` from that table, and follows the skill. Onboard names `sdd-audit-artifacts`, `sdd-kickoff-project`, `sdd-update-project`, and `sdd-review-status` directly. For a job in the table below, use the folder the Skills table names for that key. Skills perform the work.
+The prompt keeps a one-line **job index**: job name → skill key in `constants.md`. The user may ask in `artifact_locale`. When the user asks for a job, ethan matches the key, opens `{client_root}/{skills_dir}/{folder}` from that table, and follows the skill. Onboard names `sdd-audit-artifacts`, `sdd-update-project`, and `sdd-review-status` directly. For a job in the table below, use the folder the Skills table names for that key. Skills perform the work.
 
 | Job (practices) | Skill key |
 | --- | --- |
-| Start a new project | `skill_start_project` |
 | Update project settings | `skill_update_project` |
 | Refine product backlog | `skill_refine_pb` |
 | Sprint planning | `skill_plan_sprint` |
@@ -267,7 +266,7 @@ Coach capabilities over time (still true):
 | --- | --- | --- |
 | **Client root (CR)** | Cursor: `~/.cursor` from MCP `paths` / `.sdd-installed.json` | Installed framework pack: agents, skills, rules, workflows; templates under the pack when ARTIFACTS-01 / TEMPLATES-01 ship. This is the only framework tree for this repository. |
 | **Workspace templates (WS-t)** | `<workspace>/.cursor/templates/framework.sdd.works/<locale>/` | Process files if a project pasted that folder. This repository has no WS-t. |
-| **Workspace specs (WS-s)** | `<workspace>/specs/` | Live project process files. `sdd-kickoff-project` copies a seed only where the target file is missing. |
+| **Workspace specs (WS-s)** | `<workspace>/specs/` | Live project process files. `sdd-update-project` copies a seed only where the target file is missing. |
 | **Project agents** | `<workspace>/.cursor/agents/` | Cursor registry for slash-invoke in this workspace. **Not** WS-t. |
 
 **Calling from** = the Cursor workspace folder (product repo, or a user who opened `~/.cursor` as a folder).
@@ -300,7 +299,7 @@ Two different misses. Do not treat them as one recovery path.
 | What is missing | What Ethan does |
 | --- | --- |
 | A skill, a rule, or a seed template the current step needs | §2.4. Set `pack_complete` to false, send the instructions URL, and stop. |
-| Process files in the workspace | The audit verdict. `Uninitialized` proposes `sdd-kickoff-project`. `Index broken` proposes `sdd-update-project`. Ethan waits for confirm before either skill writes. |
+| Process files in the workspace | The audit verdict. `Uninitialized` and `Index broken` both propose `sdd-update-project`. Ethan waits for confirm before that skill writes. |
 
 The earlier Toggle A / Toggle B case table is retired. It told Ethan to call install. [`framework-test.md`](./framework-test.md#agents) `CE-LOAD-01` … `CE-LOAD-16` record that retired table. New cases follow §2.2 and §2.4.
 
@@ -475,7 +474,7 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
 
 - The skill folder for a job is the folder named in the Skills table in `{client_root}/templates/framework.sdd.works/constants.md` for that key.
 - Report status is `skill_get_status`. The folder is `sdd-review-status`.
-- Ethan uses only `sdd-kickoff-project` for Start a new project.
+- Update project settings uses `sdd-update-project` (`skill_update_project`).
 - An empty workflows list is not a failure.
 
 ## Locale
@@ -497,7 +496,7 @@ Ethan runs onboard once, at the beginning of the chat.
 
 - Uninitialized. The project is not initialized.
   The next step is to start a new project.
-  After the user confirms, Ethan follows `sdd-kickoff-project`.
+  After the user confirms, Ethan follows `sdd-update-project`.
   Ethan leaves the ledger unchanged.
 - Index broken. The index does not match the files.
   The next step is to update the project.
@@ -513,7 +512,6 @@ Ethan runs onboard once, at the beginning of the chat.
 
 | Job | Skill key |
 | --- | --- |
-| Start a new project | `skill_start_project` |
 | Update project settings | `skill_update_project` |
 | Refine product backlog | `skill_refine_pb` |
 | Sprint planning | `skill_plan_sprint` |
@@ -569,7 +567,7 @@ Ethan runs onboard once, at the beginning of the chat.
   Ethan does not set `pack_complete` back to `true`.
   `sdd-audit-artifacts` is needed before an audit reply.
   A `Usable` verdict needs `sdd-review-status`.
-  Ethan opens `sdd-kickoff-project` and `sdd-update-project` only after the user confirms.
+  Ethan opens `sdd-update-project` only after the user confirms.
 - Ethan leaves the ledger unchanged when the audit has already returned `Uninitialized` or `Index broken`.
   Ethan leaves the ledger unchanged when a file is missing and the current step does not read the missing file.
 
@@ -591,18 +589,19 @@ Ethan runs onboard once, at the beginning of the chat.
 
 ## rules
 
-Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names the four rules. This design records the one rule whose behavior is already decided. The other three stay on their product-backlog rows until those files are written.
+Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names three rules: `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc`. Their bodies stay on their product-backlog rows until those files are written. The pack does not ship `artifacts-map.mdc`.
 
 | Rule | Authoring seed | After install |
 | --- | --- | --- |
 | `dod.mdc` | `specs/framework/seeds/rules/dod.mdc` | `{client_root}/rules/dod.mdc` |
 | `incremental-delivery.mdc` | `specs/framework/seeds/rules/incremental-delivery.mdc` | `{client_root}/rules/incremental-delivery.mdc` |
 | `realtime-status.mdc` | `specs/framework/seeds/rules/realtime-status.mdc` | `{client_root}/rules/realtime-status.mdc` |
-| `artifacts-map.mdc` | `specs/framework/seeds/rules/artifacts-map.mdc` | `{client_root}/rules/artifacts-map.mdc` |
+
+The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### artifacts-map.mdc
 
-The rule `artifacts-map.mdc` updates `{workspace}/artifacts-map.md` when a project artifact is created, renamed, or deleted. [ADR-072](../adr/ADR-072-rule-artifacts-map.md). It does not classify the workspace on start, and it does not set `pack_complete`. Draft seeds for all four `.mdc` files are in `specs/framework/seeds/rules/`. Rule-01 through Rule-04 stay open until each rule is confirmed.
+`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `{workspace}/artifacts-map.md` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. A turn updates a stored path when the user asks for that update. Rule-01 through Rule-03 stay open until each rule is confirmed. Rule-04 is retired.
 
 ### friendly-language.mdc
 
@@ -942,7 +941,7 @@ failed:
 - artifacts-map.md
 ```
 
-Do not create or edit a project file. Do not change `.sdd-installed.json`. Do not call install or update. Do not replace `artifacts-map.mdc`.
+Do not create or edit a project file. Do not change `.sdd-installed.json`. Do not call install or update. Do not write a rule that updates `artifacts-map.md`.
 
 The later `SKILL.md` copies these lines:
 
@@ -1058,7 +1057,7 @@ The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agen
 | `sdd-design` | `specs/framework/seeds/skills/sdd-design/SKILL.md` |
 | `sdd-implement` | `specs/framework/seeds/skills/sdd-implement/SKILL.md` |
 | `sdd-tracking` | `specs/framework/seeds/skills/sdd-tracking/SKILL.md` (not the status skill; [ADR-076](../adr/ADR-076-review-status-one-skill.md)) |
-| `sdd-atdd`, `sdd-tdd`, `sdd-kickoff-project`, `sdd-update-project`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
+| `sdd-atdd`, `sdd-tdd`, `sdd-update-project`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
 
 ## templates
 
@@ -1106,7 +1105,7 @@ Project config for where artifacts live. It records only what this project has. 
 | On a project | `{workspace}/artifacts-map.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/artifacts-map.md` |
 
-Sprint 4 feature-03 builds this authoring seed. [Spec-seeds-04](../product-backlog.md#pb-35). `sdd-kickoff-project` copies the seed onto a new project. The rule `artifacts-map.mdc` updates the live map later. HanS and HanT copies are [i18n-02](../product-backlog.md#pb-68).
+Sprint 4 feature-03 builds this authoring seed. [Spec-seeds-04](../product-backlog.md#pb-35). `sdd-update-project` copies the seed onto a new project. HanS and HanT copies are [i18n-02](../product-backlog.md#pb-68).
 
 Keep the name `artifacts-map.md`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`. This repo's live file is still `specs/artifacts-map.md`.
 
@@ -1114,7 +1113,7 @@ On start, after the install ledger passes, Ethan follows the skill `sdd-audit-ar
 
 | Verdict | What it means | What Ethan does |
 | --- | --- | --- |
-| `Uninitialized` | The map is missing and no process file opened, or the map lists no process-file path | Tell the user the next step is to start a new project. When the user confirms, follow the skill `sdd-kickoff-project`. |
+| `Uninitialized` | The map is missing and no process file opened, or the map lists no process-file path | Tell the user the next step is to start a new project. When the user confirms, follow the skill `sdd-update-project`. |
 | `Index broken` | The root map exists and cannot be read, or a stored path fails to open, including when `opened` is `none` | Tell the user the next step is to update the project. When the user confirms, follow the skill `sdd-update-project`. |
 | `Usable` | The map opens the process files, including `status.md` and `sprint-backlog.md` | Follow the skill `sdd-review-status`. |
 
@@ -1122,11 +1121,11 @@ An empty `locale` does not change the verdict. `sdd-audit-artifacts` reports `lo
 
 Do not put a verdict flag in the map file.
 
-`sdd-kickoff-project` writes this file when it is missing. It asks for the product name, `artifacts_root`, locale, and module folders. While the copy is still running, the header may say `initialized: no`. Remove that line when the copy finishes. Copy a seed only where the target file is missing. Do not overwrite a file that already has content.
+`sdd-update-project` writes this file when it is missing. It asks for the product name, `artifacts_root`, locale, and module folders. While the copy is still running, the header may say `initialized: no`. Remove that line when the copy finishes. Copy a seed only where the target file is missing. Do not overwrite a file that already has content. [ADR-078](../adr/ADR-078-update-project-one-skill.md).
 
 `sdd-update-project` repairs a missing or wrong map after the user confirms an `Index broken` verdict. It does not overwrite a process file that already has content. It also writes `locale` when the audit reported that field empty and the user confirmed, and it updates other map settings when a map is already in use.
 
-When a project artifact is created, renamed, or deleted, the rule [`artifacts-map.mdc`](#artifacts-mapmdc) updates this file.
+No standing rule updates this file. A turn updates a stored path when the user asks for that update. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### product-backlog.md
 

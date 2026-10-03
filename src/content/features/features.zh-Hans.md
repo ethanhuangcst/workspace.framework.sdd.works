@@ -16,8 +16,7 @@ v.0.1.0
 
 - sdd-atdd — 验收测试驱动开发：用用户故事和验收标准建立用户故事地图。
 - sdd-tdd — 测试驱动开发，极限编程中的工程实践。
-- sdd-kickoff-project — 在智能体工具中按 SDD-Scrum 启动项目，包括规格文件夹路径等设置。
-- sdd-update-project — 更新项目设置，并修复缺失或错误的产物索引。不覆盖已有内容的过程文件。
+- sdd-update-project — 在智能体工具中按 SDD-Scrum 启动项目并更新项目设置，包括规格文件夹路径。修复缺失或错误的产物索引。不覆盖已有内容的过程文件。
 - sdd-refine-pb — 梳理产品待办：细化初始需求，创建 PBI，并补充用户故事和验收标准。
 - sdd-plan-sprint — 规划冲刺：把 PBI 分配到各冲刺，检查覆盖与可追溯性，并把 PBI 拆成细粒度 SBI。
 - sdd-tracking — 跟踪并更新实时状态，包括临时 OGT（进行中任务）。
@@ -34,7 +33,6 @@ v.0.1.0
 - dod.mdc — 整个产品的完成定义。
 - incremental-delivery.mdc — 完成一个 SBI 后再开始下一个。
 - realtime-status.mdc — 实时跟踪状态，并在每个 SBI 完成时更新 status.md。
-- artifacts-map.mdc — 创建、重命名或删除项目产物时，同步更新 artifacts-map.md。
 
 ## 产物
 

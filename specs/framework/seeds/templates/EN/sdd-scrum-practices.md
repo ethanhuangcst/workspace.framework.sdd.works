@@ -34,7 +34,6 @@
     - [.secrets](#secrets)
 - [Jobs](#jobs-what-how-when)
   - [1. On-board agent](#1-on-board-agent)
-  - [2. Start a new project](#2-start-a-new-project)
   - [3. Update project settings](#3-update-project-settings)
   - [4. Refine product backlog](#4-refine-product-backlog)
   - [5. Sprint planning](#5-sprint-planning)
@@ -115,7 +114,7 @@ Names and meanings stay in [Terminology](./scrum-in-sdd.md#terminology) in `scru
 
 Read this before editing an artifact.
 
-**When**: copy or refresh locale seeds during on-board (job 1) if working copies are missing; on new project (job 2); on update settings (job 3) only when relocating or filling a gap. Do not overwrite filled working copies unless the user confirms. Do not copy `constants.md` into the artifacts root.
+**When**: copy or refresh locale seeds during on-board (job 1) if working copies are missing; on Update project settings (job 3) when the map is missing, or when relocating or filling a gap. Do not overwrite filled working copies unless the user confirms. Do not copy `constants.md` into the artifacts root.
 
 **From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy each listed locale seed to the workspace-relative `local` path named in `artifacts-map.md`. Do not place every file under `artifacts_root`. The map file itself stays `{workspace}/artifacts-map.md`. Read `constants.md` from `{client_root}/templates/framework.sdd.works/constants.md` after install; do not copy it into the artifacts root.
 
@@ -903,7 +902,11 @@ Section rules for a module file are written when that seed is in review. They fo
 
 [Back to top](#index)
 
-### 2. Start a new project
+### 3. Update project settings
+
+Follow `sdd-update-project` (`skill_update_project`). [ADR-079](../../../../adr/ADR-079-one-job-update-project.md).
+
+The map is missing:
 
 - Decide language of project artifacts (EN, HanS, HanT).
 - Decide workspace folder structure from sub-systems, architecture, and components.
@@ -913,9 +916,7 @@ Section rules for a module file are written when that seed is in review. They fo
 - Ensure agent ethan can operate those files.
 - Record current status in `status.md` and tell the user the project is initialized, with suggestions for what to do next.
 
-[Back to top](#index)
-
-### 3. Update project settings
+The map is already in use:
 
 - Update language of project artifacts (EN, HanS, HanT).
 - Update workspace folder structure from sub-systems, architecture, and components.

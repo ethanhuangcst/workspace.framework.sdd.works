@@ -96,9 +96,9 @@ Closed process note for this repo. Not a pack file.
 Practices jobs 4–8 are still unfilled. [Agent-10](#pb-44)–[Agent-14](#pb-48) include writing those sections.
 
 - [Agent-08](#pb-42) Start a new project
-  Ethan runs practices job 2 via `skill_start_project` after the pack receipt passes.
+  Retired by [ADR-079](./adr/ADR-079-one-job-update-project.md). The job is [Agent-09](#pb-43).
 - [Agent-09](#pb-43) Update project settings
-  Ethan runs practices job 3 via `skill_update_project`. On an `Index broken` verdict he proposes this job and, after confirm, follows `sdd-update-project`.
+  Ethan runs practices job 3 via `skill_update_project`. On `Uninitialized` he says the next step is to start a new project. On `Index broken` he says the next step is to update the project. After confirm, he follows `sdd-update-project`. [ADR-079](./adr/ADR-079-one-job-update-project.md).
 - [Agent-10](#pb-44) Refine product backlog
   Ethan runs practices job 4 via `skill_refine_pb`. That practices section is still unfilled. This PBI includes writing it.
 - [Agent-11](#pb-45) Sprint planning
@@ -123,7 +123,7 @@ Practices jobs 4–8 are still unfilled. [Agent-10](#pb-44)–[Agent-14](#pb-48)
 - [Rule-03](#pb-20) `realtime-status.mdc`
   Real-time status rule file in the pack.
 - [Rule-04](#pb-85) `artifacts-map.mdc`
-  When a project artifact is created, renamed, or deleted, the same change updates `{workspace}/artifacts-map.md`. No `sdd-` prefix.
+  Retired by [ADR-077](./adr/ADR-077-no-artifacts-map-rule.md). The pack does not ship this rule.
 
 [Back to top](#index)
 
@@ -138,9 +138,9 @@ Workflows: none until a workflow is planned. No workflow PBI.
 - [Skill-02](#pb-22) `sdd-tdd`
   TDD skill folder in the pack.
 - [Skill-03](#pb-23) `sdd-kickoff-project`
-  Start-a-new-project skill (`skill_start_project`).
+  Retired by [ADR-078](./adr/ADR-078-update-project-one-skill.md). The pack does not ship this skill. Update project settings uses `sdd-update-project`.
 - [Skill-04](#pb-24) `sdd-update-project`
-  Update-project skill (`skill_update_project`). Repairs a missing or wrong artifacts map after confirm, and updates locale or map settings when a map is already in use.
+  Update-project skill (`skill_update_project`). The job is Update project settings. [ADR-079](./adr/ADR-079-one-job-update-project.md).
 - [Skill-05](#pb-25) `sdd-refine-pb`
   Refine-product-backlog skill (`skill_refine_pb`).
 - [Skill-06](#pb-26) `sdd-plan-sprint`
@@ -311,8 +311,8 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | Agent | Agent-05 | agent ethan — knowledgeable coach | Ethan coaches from the guide, practices, and knowledge trees (`adr/`, `knowledge/`). | [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) · [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [`artifacts-map.md`](./artifacts-map.md) | Sprint 11 | ToDo |
 | Agent | Agent-06 | agent ethan — chat | Ethan replies from free-form chat input while staying inside harness and process boundaries. | [`framework/framework-design.md`](./framework/framework-design.md) · [Agent-02](#pb-7) | Sprint 11 | ToDo |
 | Agent | Agent-07 | agent ethan — pack receipt start gate | On start, Ethan reads only `{client_root}/.sdd-installed.json`. | [`framework/framework-design.md`](./framework/framework-design.md) §2.4 · [`framework/framework-stories.md`](./framework/framework-stories.md) · [MCP-01](#pb-16) | Sprint 2 | Done |
-| Agent | Agent-08 | Job: Start a new project | Ethan runs practices job 2 via `skill_start_project` after the pack receipt passes. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-03](#pb-23) · [Agent-07](#pb-17) | Sprint 5 | ToDo |
-| Agent | Agent-09 | Job: Update project settings | Ethan runs practices job 3 via `skill_update_project`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-04](#pb-24) · [ADR-073](./adr/ADR-073-skill-get-status.md) | Sprint 5 | ToDo |
+| Agent | Agent-08 | Job: Start a new project | Retired by [ADR-079](./adr/ADR-079-one-job-update-project.md). The job is Agent-09. | [Agent-09](#pb-43) · [ADR-078](./adr/ADR-078-update-project-one-skill.md) | — | Retired |
+| Agent | Agent-09 | Job: Update project settings | Ethan runs practices job 3 via `skill_update_project`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-04](#pb-24) · [ADR-079](./adr/ADR-079-one-job-update-project.md) | Sprint 5 | ToDo |
 | Agent | Agent-10 | Job: Refine product backlog | Ethan runs practices job 4 via `skill_refine_pb`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-05](#pb-25) | Sprint 6 | ToDo |
 | Agent | Agent-11 | Job: Sprint planning | Ethan runs practices job 5 via `skill_plan_sprint`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-06](#pb-26) | Sprint 7 | ToDo |
 | Agent | Agent-12 | Job: Report status | Ethan runs practices job 6 via `skill_get_status`. | [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) · [Skill-15](#pb-86) · [ADR-076](./adr/ADR-076-review-status-one-skill.md) | Sprint 8 | ToDo |
@@ -322,11 +322,11 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | Rule | Rule-01 | Rule: dod.mdc | Definition of Done rule file in the pack. | [Spec-seeds-01](#pb-32) | Sprint 12 | ToDo |
 | Rule | Rule-02 | Rule: incremental-delivery.mdc | Incremental delivery rule file in the pack. | [Spec-seeds-01](#pb-32) | Sprint 12 | ToDo |
 | Rule | Rule-03 | Rule: realtime-status.mdc | Real-time status rule file in the pack. | [Spec-seeds-01](#pb-32) | Sprint 12 | ToDo |
-| Rule | Rule-04 | Rule: artifacts-map.mdc | When a project artifact is created, renamed, or deleted, the same change updates `{workspace}/artifacts-map.md`. | [ADR-072](./adr/ADR-072-rule-artifacts-map.md) | Sprint 4 | ToDo |
+| Rule | Rule-04 | Rule: artifacts-map.mdc | Retired by [ADR-077](./adr/ADR-077-no-artifacts-map-rule.md). The pack does not ship this rule. | [ADR-077](./adr/ADR-077-no-artifacts-map-rule.md) · [ADR-072](./adr/ADR-072-rule-artifacts-map.md) | — | Retired |
 | Skill | Skill-01 | Skill: sdd-atdd | ATDD skill folder in the pack. | — | Sprint 13 | ToDo |
 | Skill | Skill-02 | Skill: sdd-tdd | TDD skill folder in the pack. | — | Sprint 13 | ToDo |
-| Skill | Skill-03 | Skill: sdd-kickoff-project | Start-a-new-project skill (`skill_start_project`). | [Agent-08](#pb-42) · [ADR-069](./adr/ADR-069-skill-kickoff-project.md) | Sprint 5 | ToDo |
-| Skill | Skill-04 | Skill: sdd-update-project | Update-project skill (`skill_update_project`). | [Agent-09](#pb-43) | Sprint 5 | ToDo |
+| Skill | Skill-03 | Skill: sdd-kickoff-project | Retired by [ADR-078](./adr/ADR-078-update-project-one-skill.md). Constants keep one key, `skill_update_project`. | [Skill-04](#pb-24) · [ADR-069](./adr/ADR-069-skill-kickoff-project.md) | — | Retired |
+| Skill | Skill-04 | Skill: sdd-update-project | Update project settings (`skill_update_project`). | [Agent-09](#pb-43) · [ADR-079](./adr/ADR-079-one-job-update-project.md) | Sprint 5 | ToDo |
 | Skill | Skill-05 | Skill: sdd-refine-pb | Refine-product-backlog skill (`skill_refine_pb`). | [Agent-10](#pb-44) | Sprint 6 | ToDo |
 | Skill | Skill-06 | Skill: sdd-plan-sprint | Sprint-planning skill (`skill_plan_sprint`). | [Agent-11](#pb-45) | Sprint 7 | ToDo |
 | Skill | Skill-07 | Skill: sdd-update-status | Retired by [ADR-076](./adr/ADR-076-review-status-one-skill.md). Do not add `skill_update_status`. | [Skill-15](#pb-86) · [ADR-065](./adr/ADR-065-skill-update-status.md) | — | Retired |

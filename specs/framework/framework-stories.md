@@ -346,7 +346,7 @@ Scenario: Uninitialized proposes a new project
   And ethan says the next step is to start a new project
   And ethan does not write a project file
   And the ledger stays unchanged
-  And ethan does not follow sdd-kickoff-project until the user confirms
+  And ethan does not follow sdd-update-project until the user confirms
 ```
 
 
@@ -385,10 +385,9 @@ Scenario: Usable follows get-status
 ```gherkin
 Scenario: Confirm runs only the skill for that verdict
   Given ethan has proposed starting a new project after Uninitialized
-  And sdd-kickoff-project can be read
+  And sdd-update-project can be read
   When the user confirms that next step
-  Then ethan follows sdd-kickoff-project
-  And ethan does not follow sdd-update-project
+  Then ethan follows sdd-update-project
 ```
 
 
@@ -821,24 +820,22 @@ Tests: CE-SKILL-06. The on-disk folder `specs/framework/seeds/skills/sdd-trackin
 
 Design: `[framework-design.md](./framework-design.md#rules)`. Tests: `[framework-test.md](./framework-test.md#rules)`.
 
-The four files install at `{client_root}/rules/<name>.mdc`. Names have no `sdd-` prefix. On Windows the directory is `rules\` under that client root. `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc` have no behavior story until their bodies are designed. Their path still has to match AC1.
+The three files install at `{client_root}/rules/<name>.mdc`. Names have no `sdd-` prefix. On Windows the directory is `rules\` under that client root. `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc` have no behavior story until their bodies are designed. Their path still has to match AC1. The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### `artifacts-map.mdc`
 
-**As the** user who added, renamed, or removed a project artifact
-**I want** the workspace map to list the new path
-**So that** the next audit sees the file I actually have
+Retired by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). AC2 through AC5 below are withdrawn.
 
 #### AC1
 
 ```gherkin
-Scenario Outline: The rule file lives on the client root
+Scenario Outline: The rule files live on the client root
   Given the client root is "<client root>"
   When the installed rules are listed
-  Then artifacts-map.mdc is at "<client root>/rules/artifacts-map.mdc"
-  And dod.mdc, incremental-delivery.mdc, and realtime-status.mdc use that same rules directory
-  And none of the four names starts with sdd-
-  And none of the four files is required under the workspace for the rule to be installed
+  Then dod.mdc, incremental-delivery.mdc, and realtime-status.mdc are at "<client root>/rules/"
+  And artifacts-map.mdc is not installed
+  And none of the three names starts with sdd-
+  And none of the three files is required under the workspace for the rule to be installed
 
   Examples:
     | client root |
@@ -850,55 +847,11 @@ Scenario Outline: The rule file lives on the client root
 
 
 
-#### AC2
+#### AC2 through AC5
 
-```gherkin
-Scenario: Create adds the artifact
-  Given the map does not list specs/notes.md
-  And a project artifact is created at specs/notes.md
-  When artifacts-map.mdc is applied
-  Then the map lists specs/notes.md
-  And the ledger is unchanged
-```
+Withdrawn by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). The pack does not apply `artifacts-map.mdc`. A create, a rename, or a delete updates the map when the user asks for that update.
 
-
-
-#### AC3
-
-```gherkin
-Scenario: Rename replaces the path
-  Given the map lists specs/notes.md
-  And that artifact is renamed to specs/decisions.md
-  When artifacts-map.mdc is applied
-  Then the map lists specs/decisions.md
-  And the map no longer lists specs/notes.md
-```
-
-
-
-#### AC4
-
-```gherkin
-Scenario: Delete removes the path
-  Given the map lists specs/notes.md
-  And that artifact is deleted
-  When artifacts-map.mdc is applied
-  Then the map no longer lists specs/notes.md
-```
-
-
-
-#### AC5
-
-```gherkin
-Scenario: The rule does not classify the workspace
-  Given onboard is running
-  When artifacts-map.mdc is applied
-  Then it does not return an audit verdict
-  And it does not set pack_complete
-```
-
-Tests: CE-RULE-01 through CE-RULE-06.
+Tests: CE-RULE-05 and CE-RULE-06. CE-RULE-01 through CE-RULE-04 are withdrawn.
 
 ## templates
 

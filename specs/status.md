@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-02
+> as_of: 2026-10-03
 > [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#definition-of-statusmd)
 
 ---
@@ -28,13 +28,14 @@
 
 - feature-30 Practices job 6 for report status
 - feature-24 Skill sdd-review-status
-- feature-22 Add rule artifacts-map
 
 ## Current OGT(On-going Tasks)
 
 | # | Task Name | Affected SBIs | Created | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Review the issues-log seed | - feature-21 Change-log and issues-log seeds | Sprint 4 | WIP |
+| 1 | Enhance sdd-review-status to give agents more room to conclude status and propose actions | - feature-24 Skill sdd-review-status | Sprint 4 | ToDo |
+| 2 | Review ethan.md | - | Sprint 4 | ToDo |
+| 3 | Review the issues-log seed | - feature-21 Change-log and issues-log seeds | Sprint 4 | WIP |
 
 ## Last 15 closed OGTs
 
@@ -56,4 +57,4 @@
 | 14 | RID coverage section removed from `sprint-backlog.md` | - feature-04 Sprint-backlog seed | Sprint 4 | Sprint 4 |
 | 15 | RID Log rules for `sprint-backlog.md` | - feature-04 Sprint-backlog seed | Sprint 4 | Sprint 4 |
 
-Last updated: 2026-10-01 17:54 ethan
+Last updated: 2026-10-03 08:42 cursor

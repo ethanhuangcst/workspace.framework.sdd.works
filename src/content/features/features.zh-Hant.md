@@ -16,8 +16,7 @@ v.0.1.0
 
 - sdd-atdd — 驗收測試驅動開發：用使用者故事和驗收標準建立使用者故事地圖。
 - sdd-tdd — 測試驅動開發，極限編程中的工程實務。
-- sdd-kickoff-project — 在智能體工具中依 SDD-Scrum 啟動專案，包括規格資料夾路徑等設定。
-- sdd-update-project — 更新專案設定，並修復缺失或錯誤的產物索引。不覆蓋已有內容的過程檔案。
+- sdd-update-project — 在智能體工具中依 SDD-Scrum 啟動專案並更新專案設定，包括規格資料夾路徑。修復缺失或錯誤的產物索引。不覆蓋已有內容的過程檔案。
 - sdd-refine-pb — 梳理產品待辦：細化初始需求，建立 PBI，並補充使用者故事和驗收標準。
 - sdd-plan-sprint — 規劃衝刺：把 PBI 分配到各衝刺，檢查覆蓋與可追溯性，並把 PBI 拆成細粒度 SBI。
 - sdd-tracking — 追蹤並更新即時狀態，包括臨時 OGT（進行中任務）。
@@ -34,7 +33,6 @@ v.0.1.0
 - dod.mdc — 整個產品的完成定義。
 - incremental-delivery.mdc — 完成一個 SBI 後再開始下一個。
 - realtime-status.mdc — 即時追蹤狀態，並在每個 SBI 完成時更新 status.md。
-- artifacts-map.mdc — 建立、重新命名或刪除專案產物時，同步更新 artifacts-map.md。
 
 ## 產物
 

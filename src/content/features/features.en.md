@@ -16,8 +16,7 @@ v.0.1.0
 
 - sdd-atdd — Acceptance Test Driven Development: User Story Mapping with User Stories and Acceptance Criteria.
 - sdd-tdd — Test Driven Development, the Extreme Programming practice.
-- sdd-kickoff-project — Start a project in the agent tools under SDD-Scrum, including settings such as the specs folder path.
-- sdd-update-project — Update project settings, and repair a missing or wrong artifacts map without overwriting process files that already have content.
+- sdd-update-project — Start a project and update project settings in the agent tools under SDD-Scrum, including the specs folder path. Repair a missing or wrong artifacts map without overwriting process files that already have content.
 - sdd-refine-pb — Refine the Product Backlog: elaborate the initial requirement, create PBIs, and add User Stories and Acceptance Criteria.
 - sdd-plan-sprint — Plan a sprint: assign PBIs across sprints, check coverage and traceability, and break PBIs into granular SBIs.
 - sdd-tracking — Track and update real-time status, including temporary OGT (On-going Tasks).
@@ -34,7 +33,6 @@ v.0.1.0
 - dod.mdc — Global Definition of Done for the product.
 - incremental-delivery.mdc — Finish one SBI before starting the next.
 - realtime-status.mdc — Track status in real time and update status.md when each SBI is done.
-- artifacts-map.mdc — When a project artifact is created, renamed, or deleted, update artifacts-map.md.
 
 ## Artifacts
 

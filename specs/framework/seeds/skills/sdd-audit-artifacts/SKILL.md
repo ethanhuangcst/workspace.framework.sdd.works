@@ -167,4 +167,4 @@ The skill does not write.
 - The skill does not create or edit a project file.
 - The skill does not change `{client_root}/.sdd-installed.json`.
 - The skill does not call the MCP tools `sdd_install_framework` or `sdd_update_framework`.
-- The skill does not replace the rule `artifacts-map.mdc`.
+- The skill does not write a rule that updates `artifacts-map.md`.

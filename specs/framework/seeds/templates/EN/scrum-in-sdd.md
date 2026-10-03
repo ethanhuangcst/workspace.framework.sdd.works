@@ -321,12 +321,10 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 - **dod.mdc**: Definition of Done
 - **incremental-delivery.mdc**: Incremental Delivery
 - **realtime-status.mdc**: track status in real time and update **status.md** when each task is done
-- **artifacts-map.mdc**: when a project artifact is created, renamed, or deleted, update **artifacts-map.md**
 
 ### Skills
 - **sdd-atdd**
 - **sdd-tdd**
-- **sdd-kickoff-project**
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**
@@ -499,12 +497,10 @@ This guide is for both humans and AI agents.
 - **dod.mdc**: Definition of Done.
 - **incremental-delivery.mdc**: incremental delivery policy.
 - **realtime-status.mdc**: real-time status update policy.
-- **artifacts-map.mdc**: keep **artifacts-map.md** current when a project artifact is created, renamed, or deleted.
 
 ### Skills
 - **sdd-atdd**
 - **sdd-tdd**
-- **sdd-kickoff-project**
 - **sdd-update-project**
 - **sdd-refine-pb**
 - **sdd-plan-sprint**

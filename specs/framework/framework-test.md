@@ -176,7 +176,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 - **Layer:** L1. L2 on Cursor macOS.
 - **Pre-condition:** Ledger `pack_complete` is true. The audit returns `Uninitialized`.
 - **Test steps:** Start ethan.
-- **Expected results:** He says the project is not initialized and the next step is to start a new project. No project write. Ledger unchanged. He does not call install or update. He does not follow `sdd-kickoff-project` until the user confirms.
+- **Expected results:** He says the project is not initialized and the next step is to start a new project. No project write. Ledger unchanged. He does not call install or update. He does not follow `sdd-update-project` until the user confirms.
 
 #### CE-VERDICT-02 — Index broken
 
@@ -202,9 +202,9 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 #### CE-VERDICT-05 — Confirm starts the matching skill
 
 - **Layer:** L1.
-- **Pre-condition:** Onboard already proposed "start a new project" after `Uninitialized`. `sdd-kickoff-project` can be read.
+- **Pre-condition:** Onboard already proposed "start a new project" after `Uninitialized`. `sdd-update-project` can be read.
 - **Test steps:** The user confirms that next step.
-- **Expected results:** He follows `sdd-kickoff-project`. He does not follow `sdd-update-project`. Ledger unchanged.
+- **Expected results:** He follows `sdd-update-project`. Ledger unchanged.
 
 #### CE-PACK-01 — Missing audit skill clears only the flag
 
@@ -237,7 +237,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 #### CE-PACK-05 — Missing rule the step needs
 
 - **Layer:** L1.
-- **Pre-condition:** Ledger `pack_complete` is true. The current step needs `artifacts-map.mdc` and that file cannot be read. Version and commit are set.
+- **Pre-condition:** Ledger `pack_complete` is true. The current step needs `dod.mdc` and that file cannot be read. Version and commit are set.
 - **Test steps:** He is about to apply that rule.
 - **Expected results:** He sets only `pack_complete` to false, sends the instructions URL, and stops. He does not copy the rule into the workspace.
 
@@ -395,7 +395,7 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 #### CE-SKILL-07 — Backlog-only skills
 
 - **Layer:** L1.
-- **Pre-condition:** The names `sdd-atdd`, `sdd-tdd`, `sdd-kickoff-project`, `sdd-update-project`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, and `sdd-update-specs` have no seed in the tree yet.
+- **Pre-condition:** The names `sdd-atdd`, `sdd-tdd`, `sdd-update-project`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, and `sdd-update-specs` have no seed in the tree yet.
 - **Test steps:** Read the design section for those names.
 - **Expected results:** This file adds no steps for them. Acceptance stays on the product-backlog row. A future case must still use `{client_root}`, must wait for confirm before a project write, and must not assume locale `EN`.
 
@@ -453,7 +453,7 @@ Quit CodeBuddy CN and open it again after the agent file is copied, so the agent
 2. Confirm the live paths above exist and `pack_complete` is true.
 3. Start a new chat and select `ethan` from the CodeBuddy CN agent list.
 4. Send `onboard`.
-5. Check both results. The skill result is the block in that case. The onboard result is the matching row below. Sentences sit outside the block. Compare the workspace and `~/.codebuddy/.sdd-installed.json` with their state before the run. Do not confirm a next step. Confirming would open `sdd-kickoff-project` or `sdd-update-project`, and those files are not part of this install.
+5. Check both results. The skill result is the block in that case. The onboard result is the matching row below. Sentences sit outside the block. Compare the workspace and `~/.codebuddy/.sdd-installed.json` with their state before the run. Do not confirm a next step. Confirming would open `sdd-update-project`, and that file is not part of this install.
 
 ### Onboard by verdict
 
@@ -461,7 +461,7 @@ The block is the skill. The sentence is onboard. Ethan does not greet and does n
 
 | Verdict | Cases | Onboard, besides the block |
 | --- | --- | --- |
-| `Uninitialized` | 01, 08, 12, 14 | The project is not initialized. The next step is to start a new project. He does not open `sdd-kickoff-project`. |
+| `Uninitialized` | 01, 08, 12, 14 | The project is not initialized. The next step is to start a new project. He does not open `sdd-update-project`. |
 | `Index broken` | 02, 03, 07, 13, 17 | The index does not match the files. The next step is to update the project. He does not open `sdd-update-project`. |
 | `Usable` | 04, 09, 16 | He follows `sdd-review-status`. The reply includes `Sprint 1` and `feature-01`. |
 | `Usable`, locale empty | 05 | He follows `sdd-review-status`. The reply includes `Sprint 1` and `feature-01`. He does not treat the locale as `EN`. |
@@ -801,13 +801,13 @@ No `locale` line. `specs/status.md` is not opened. No project write. Ledger unch
 
 A rule case is a fixture workspace and the `.mdc` text. Assert the map edit or the install path. Do not render a page and do not score the rule as application code.
 
-`artifacts-map.mdc` is the only rule with decided behavior. The other three rules have a name and a client-root path. Their bodies are not designed yet, so L1 does not invent steps for them.
+`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) withdraws CE-RULE-01 through CE-RULE-04. CE-RULE-05 and CE-RULE-06 check that the file is absent. `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc` have a name and a client-root path. Their bodies are not designed yet, so L1 does not invent steps for them.
 
-The install path is `{client_root}/rules/<name>.mdc` on every OS. L1 uses that logical path. L2 checks the expanded Cursor path once per OS when a machine is available. The rule does not classify the workspace and does not set `pack_complete`.
+The install path is `{client_root}/rules/<name>.mdc` on every OS. L1 uses that logical path. L2 checks the expanded Cursor path once per OS when a machine is available. The pack does not ship a rule that classifies the workspace or sets `pack_complete`.
 
 ### Plan
 
-One case each for create, rename, and delete. One case that the rule stays out of onboard. One case for the other three names. One case that a Windows client root still receives the file under `rules\`, not under the project.
+Check that `artifacts-map.mdc` is absent. One case for the three rule names. One case that a Windows client root does not receive `artifacts-map.mdc`.
 
 ### Cases
 
@@ -815,43 +815,43 @@ One case each for create, rename, and delete. One case that the rule stays out o
 
 - **Layer:** L1.
 - **Pre-condition:** `{workspace}/artifacts-map.md` exists and does not list `specs/notes.md`. A project artifact is created at `specs/notes.md`.
-- **Test steps:** Apply `artifacts-map.mdc`.
-- **Expected results:** The map gains `specs/notes.md`. No other project file is edited. The ledger is unchanged.
+- **Test steps:** Withdrawn by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). Do not apply `artifacts-map.mdc`.
+- **Expected results:** The map stays as it was. The ledger is unchanged.
 
 #### CE-RULE-02 — Rename
 
 - **Layer:** L1.
 - **Pre-condition:** The map lists `specs/notes.md`. That artifact is renamed to `specs/decisions.md`.
-- **Test steps:** Apply the rule.
-- **Expected results:** The map uses `specs/decisions.md`. It no longer lists `specs/notes.md`.
+- **Test steps:** Withdrawn by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). Do not apply a rule.
+- **Expected results:** The map still lists `specs/notes.md`.
 
 #### CE-RULE-03 — Delete
 
 - **Layer:** L1.
 - **Pre-condition:** The map lists `specs/notes.md`. That artifact is deleted.
-- **Test steps:** Apply the rule.
-- **Expected results:** The map no longer lists it.
+- **Test steps:** Withdrawn by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). Do not apply a rule.
+- **Expected results:** The map still lists `specs/notes.md`.
 
 #### CE-RULE-04 — Not an audit
 
 - **Layer:** L1.
 - **Pre-condition:** Onboard is running, or a pack file is missing.
-- **Test steps:** Apply `artifacts-map.mdc` if a runner invokes it anyway.
-- **Expected results:** It does not return an audit verdict and does not set `pack_complete`.
+- **Test steps:** Withdrawn by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). Do not apply `artifacts-map.mdc`.
+- **Expected results:** Onboard does not load that rule. The ledger is unchanged.
 
 #### CE-RULE-05 — Names and install path
 
 - **Layer:** L1.
-- **Pre-condition:** The four rule names are `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `artifacts-map.mdc`.
+- **Pre-condition:** The three rule names are `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc`. `artifacts-map.mdc` is not a pack rule.
 - **Test steps:** Read the name and the install path.
-- **Expected results:** No name has an `sdd-` prefix. The install path is `{client_root}/rules/<name>.mdc`. No behavior is asserted for `dod.mdc`, `incremental-delivery.mdc`, or `realtime-status.mdc` beyond that path.
+- **Expected results:** No name has an `sdd-` prefix. The install path is `{client_root}/rules/<name>.mdc`. `artifacts-map.mdc` is absent. No behavior is asserted for `dod.mdc`, `incremental-delivery.mdc`, or `realtime-status.mdc` beyond that path.
 
 #### CE-RULE-06 — Windows rules directory
 
 - **Layer:** L2 on Windows Cursor, or L3 on one Windows client from the table.
 - **Pre-condition:** `client_root` is `%USERPROFILE%\.cursor` or that other client's Windows root.
 - **Test steps:** Look up `artifacts-map.mdc` after install.
-- **Expected results:** The file is `%USERPROFILE%\<client folder>\rules\artifacts-map.mdc`. It is not under the workspace.
+- **Expected results:** The file is absent. The three pack rules are under `%USERPROFILE%\<client folder>\rules\`.
 
 ## templates
 
