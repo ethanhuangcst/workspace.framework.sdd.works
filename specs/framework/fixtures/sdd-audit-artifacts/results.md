@@ -25,7 +25,7 @@ CodeBuddy CN. Workspace is one case folder. Input is `onboard`. Do not confirm t
 
 Before CE-AUDIT-06, on `CE-AUDIT-05-empty-locale`:
 
-- `artifacts-map.md` `24bc8b86b62ca0a21d661858a94034ea026a427ce13fd72eebd6414269b616e8`
+- `artifacts-map.json` `85b97addf029898c6795e4ab35f08c1951eadacc647d132b32515a66ee8db1e9`
 - `specs/status.md` `726589db13a35ce8edeba0ffc48d0f7de7f1cbe595e776b1a3bc31c91b251c70`
 - `specs/sprint-backlog.md` `7e4cba3cd7c9058aa369d3dbff225ff27aacbe4c720a2121c4f338aaeb1e8a40`
 - `~/.codebuddy/.sdd-installed.json` `3ca28a24c9ab54eec95da86e28b17f1c3cfd9b4917112751c954a753128bad99`, `pack_complete` true

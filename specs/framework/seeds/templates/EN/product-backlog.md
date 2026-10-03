@@ -3,7 +3,7 @@
 > **Purpose**: Record what the product must do, where the boundary is, and how to accept it.
 > **Example**: Pokymon Card Collection. After you copy this file, replace the product name and the items.
 > **Status**: v1.0 · as_of 2026-09-24
-> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint-backlog.md`](./sprint-backlog.md) · [`artifacts-map.md`](./artifacts-map.md) · [`status.md`](./status.md)
+> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint-backlog.md`](./sprint-backlog.md) · `artifacts-map.json` · [`status.md`](./status.md)
 > **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
 > **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
 > **Schedule**: The `Sprint` column is a projection of [`sprint-backlog.md`](./sprint-backlog.md). Schedule changes belong in that file.

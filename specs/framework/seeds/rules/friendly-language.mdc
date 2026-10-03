@@ -31,6 +31,9 @@ Applies to every chat reply and every Markdown file.
 16. A definition names what a term is. The verb, the work, and the result stay on an instruction.
 17. A ban names the result.
 18. A line the user reads uses words the user types.
+19. A heading names what the reader gets. A single verb fails.
+20. An example the user reads states what the user understands. An example that only states what the agent saw in the files fails.
+21. A line the user reads is written from the user's view: the status, the reason, and the change.
 
 ## Principles
 
@@ -72,6 +75,11 @@ Then:
 - A line the user reads uses words the user types.
   bad example: "whether the board matches"
   good example: "whether the plan matches the work"
+- An example the user reads states what the user understands. An example that only states what the agent saw in the files fails.
+  bad example: "the card-list file is already in the workspace"
+  good example: "the actual status is WIP because the card list page is already in the web app"
+- A line the user reads is written from the user's view: the status, the reason, and the change.
+  good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP."
 - Default language is English, unless the user asks for another language.
 - On a bilingual term, give the industry term and the plain English in the same sentence.
 
@@ -159,6 +167,9 @@ The remote server that answers web calls is down.
 - One list uses one order: alphabetical, numeric, or the order the reader does the work. A second order is a second list.
 - Use a table for a comparison.
 - Add a heading when the next block is a new topic.
+- A heading names what the reader gets. A single verb fails.
+  bad example: `Reply`
+  good example: `Summarize the findings`
 - Bold at most three words, so a whole sentence stays plain.
 
 **Bad example**

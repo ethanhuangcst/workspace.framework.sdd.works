@@ -8,6 +8,64 @@
 
 ## 2026-10-03
 
+### Three OGTs for skill files are closed
+
+**Why**: The user confirmed OGT 1 through OGT 3 as done.
+
+**What changed**: Current OGT in [`status.md`](./status.md) keeps Review ethan.md and Review the issues-log seed. Closed row 1 is Enhance sdd-review-status. Closed row 2 is the Reply. Sentence sections. Closed row 3 is Find common patterns for skills and update sdd-create-skill. [feature-24](./sprint-backlog.md) stays ToDo.
+
+**Verification**: Open Current OGT has two rows. Last 15 closed OGTs starts with those three tasks.
+
+### The module test spec is `{stem}-tests.md`
+
+**Why**: The engineering test file is a test spec. The name `{stem}-test.md` looked like a single test.
+
+**What changed**: The living name is `{stem}-tests.md`. [`app-tests.md`](./admin-portal/app-tests.md), [`mcp-tests.md`](./mcp/mcp-tests.md), and [`framework-tests.md`](./framework/framework-tests.md) open under those paths. Guides, design, practices, stories, the product backlog, the sprint backlog, and [`artifacts-map.json`](../artifacts-map.json) use the new name. The on-going task Change `{stem}-test.md` to `{stem}-tests.md` is closed.
+
+**Verification**: The three files open. Living specs no longer name `{stem}-test.md` as the current filename.
+
+**Boundary**: Past change-log sentences still name the old files. Historical knowledge notes still name `mcp-test.md`.
+
+### The project path file is artifacts-map.json
+
+**Why**: The map stores settings and paths. A Markdown list mixed settings lines with path lines.
+
+**What changed**: The project path file is [`artifacts-map.json`](../artifacts-map.json) at the workspace root. The practices Settings, Paths, and Example blocks are JSON. Living design, stories, tests, guides, portal catalogs, `sdd-audit-artifacts`, `sdd-update-project`, and `sdd-review-status` name that file. Audit fixtures use JSON. [ADR-082](./adr/ADR-082-artifacts-map-json.md). The on-going task Change artifacts-map.md to JSON is closed.
+
+**Verification**: `specs/artifacts-map.md` is absent. Fixture folders use `artifacts-map.json`. The practices example is a JSON fence.
+
+**Boundary**: OGT Change `{stem}-test.md` to `{stem}-tests.md` stays open. Historical ADR bodies still name `artifacts-map.md`.
+
+### The pack lookup is constants.json
+
+**Why**: The lookup is keys and paths. A Markdown table asked the reader to find the row.
+
+**What changed**: The authoring seed is [`constants.json`](./framework/seeds/templates/constants.json). Living specs, ethan, the design prompt, create skills, the guides, MCP ledger examples, and the install test name that file. The Cursor copy is `~/.cursor/templates/framework.sdd.works/constants.json`. [ADR-081](./adr/ADR-081-constants-json.md). The on-going task Change constants.md to JSON is closed.
+
+**Verification**: `specs/framework/seeds/templates/constants.md` is absent. The install unit test that copies the lookup file passes.
+
+**Boundary**: OGT Change artifacts-map.md to JSON stays open. Historical ADR-060 decision text still names `constants.md`.
+
+### constants and artifacts-map become JSON
+
+**Why**: Both files are settings and paths. `.sdd-installed.json` already stores that kind of record under keys.
+
+**What changed**: [ADR-081](./adr/ADR-081-constants-json.md) names the lookup `constants.json`. [ADR-082](./adr/ADR-082-artifacts-map-json.md) names the project path file `artifacts-map.json`. The files are not converted in this entry. Two on-going tasks in [`status.md`](./status.md) hold that work.
+
+**Verification**: ADR-081 and ADR-082 are Accepted. The on-going tasks are ToDo.
+
+**Boundary**: `constants.md` and the Markdown artifacts-map example stay until those tasks run.
+
+### No artifacts-map template seed
+
+**Why**: A filled Pokymon map in the template folder looked like a starter a new project should copy.
+
+**What changed**: [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md). The template file is removed. The Pokymon map is the example in the artifacts-map section of [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapmd). `sdd-update-project` writes `{workspace}/artifacts-map.md` from the templates in that section. [Spec-seeds-04](./product-backlog.md#pb-35) and Sprint 4 feature-03 are Retired. [i18n-02](./product-backlog.md#pb-68) does not translate an artifacts-map seed.
+
+**Verification**: `specs/framework/seeds/templates/EN/artifacts-map.md` is absent. The example is in the practices section.
+
+**Boundary**: Audit fixtures stay. This repo's `specs/artifacts-map.md` stays. Feature-03 is Retired, not Done.
+
 ### The pack does not ship an artifacts-map rule
 
 **Why**: `artifacts-map.mdc` does not see a delete, rename, or move the user makes in the file tree, so it does not keep the map current.
@@ -384,7 +442,7 @@
 
 **Why**: The prompt already named the once-per-chat step onboard. Living specs still used the previous name for that step.
 
-**What changed**: That previous name is now onboard in [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-test.md), [`sprint-backlog.md`](./sprint-backlog.md), [`status.md`](./status.md), [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md), [ADR-073](./adr/ADR-073-skill-get-status.md), the two skill descriptions, and the earlier entries in this file.
+**What changed**: That previous name is now onboard in [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-tests.md), [`sprint-backlog.md`](./sprint-backlog.md), [`status.md`](./status.md), [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md), [ADR-073](./adr/ADR-073-skill-get-status.md), the two skill descriptions, and the earlier entries in this file.
 
 **Verification**: A search of the specs finds no previous name for this step. Feature-28 stays ToDo.
 
@@ -392,7 +450,7 @@
 
 **Why**: The section title `Current OGT` did not say what the letters stand for.
 
-**What changed**: The heading is `Current OGT(On-going Tasks)` in the EN status seed, [`status.md`](./status.md), [Spec-seeds-07](./product-backlog.md#pb-38), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md) AC3, [`framework-test.md`](./framework/framework-test.md) CE-TPL-08, and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md).
+**What changed**: The heading is `Current OGT(On-going Tasks)` in the EN status seed, [`status.md`](./status.md), [Spec-seeds-07](./product-backlog.md#pb-38), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md) AC3, [`framework-test.md`](./framework/framework-tests.md) CE-TPL-08, and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md).
 
 **Verification**: A search of living specs finds `Current OGT` only in this file's earlier entry. The seed heading is `## Current OGT(On-going Tasks)`.
 
@@ -418,7 +476,7 @@
 
 **Why**: Several SBIs in one cell were one comma-separated line, so the list was hard to scan.
 
-**What changed**: Each Affected SBIs item is its own bullet in the cell. The bullet is the code and the SBI name. Updated [Spec-seeds-07](./product-backlog.md#pb-38), [`framework-design.md`](./framework/framework-design.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`sdd-tracking`](./framework/seeds/skills/sdd-tracking/SKILL.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-test.md), the EN status seed, and [`status.md`](./status.md).
+**What changed**: Each Affected SBIs item is its own bullet in the cell. The bullet is the code and the SBI name. Updated [Spec-seeds-07](./product-backlog.md#pb-38), [`framework-design.md`](./framework/framework-design.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`sdd-tracking`](./framework/seeds/skills/sdd-tracking/SKILL.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-tests.md), the EN status seed, and [`status.md`](./status.md).
 
 **Verification**: The open OGT row that names four SBIs shows four bullets. The EN seed sample cell is a bullet list.
 
@@ -426,7 +484,7 @@
 
 **Why**: The progress table repeated a sprint goal that already lives on the sprint backlog, and it listed every sprint on its own row.
 
-**What changed**: The progress table is `Sprint`, `Status`, `Note`. Consecutive Done sprints share one row. Consecutive ToDo sprints share one row. Where we are now adds one sentence after the sprint name. What is next follows the current sprint, the current SBI, and the sprint item order. Affected SBIs shows the code and the SBI name. The file ends with Last updated, a timestamp, and the agent name. Updated [Spec-seeds-07](./product-backlog.md#pb-38), [`framework-design.md`](./framework/framework-design.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-test.md), the EN status seed, and [`status.md`](./status.md).
+**What changed**: The progress table is `Sprint`, `Status`, `Note`. Consecutive Done sprints share one row. Consecutive ToDo sprints share one row. Where we are now adds one sentence after the sprint name. What is next follows the current sprint, the current SBI, and the sprint item order. Affected SBIs shows the code and the SBI name. The file ends with Last updated, a timestamp, and the agent name. Updated [Spec-seeds-07](./product-backlog.md#pb-38), [`framework-design.md`](./framework/framework-design.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-tests.md), the EN status seed, and [`status.md`](./status.md).
 
 **Verification**: The live progress table has three sprint rows: Sprint 1 - 3 Done, Sprint 4 WIP, Sprint 5 - 16 ToDo. The EN seed sprint header has no Sprint Goal column. The live file ends with Last updated.
 
@@ -434,7 +492,7 @@
 
 **Why**: Design §2.3, the templates section, ADR-070, and `sdd-get-status` described different slices of `status.md`. Feature-27 had no story or test for the starter.
 
-**What changed**: [`framework-design.md`](./framework/framework-design.md) §2.3 and the `status.md` template section name Project progress, where we are now, what could be the next, Current OGT, and the latest 15 closed OGTs. [`framework-stories.md`](./framework/framework-stories.md) AC3–AC8 and [`framework-test.md`](./framework/framework-test.md) CE-TPL-08 and CE-TPL-09 cover that shape. The EN seed keeps its comments and samples. [`status.md`](./status.md) is reshaped for review. Feature-27 stays WIP.
+**What changed**: [`framework-design.md`](./framework/framework-design.md) §2.3 and the `status.md` template section name Project progress, where we are now, what could be the next, Current OGT, and the latest 15 closed OGTs. [`framework-stories.md`](./framework/framework-stories.md) AC3–AC8 and [`framework-test.md`](./framework/framework-tests.md) CE-TPL-08 and CE-TPL-09 cover that shape. The EN seed keeps its comments and samples. [`status.md`](./status.md) is reshaped for review. Feature-27 stays WIP.
 
 **Verification**: The EN seed title is `The latest status of [product name]`. Its header has no `status:` line and no `as_of` line. The live status file uses the same five sections.
 
@@ -442,7 +500,7 @@
 
 **Why**: Every sprint row repeated a DoD cell, and later sprints had put that row’s acceptance in the same cell.
 
-**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) and the EN sprint-backlog seed drop the DoD column. One Definition of Done checklist sits above the first sprint. Sprints 3, 4, and 5 state a replacement checklist. A row that had its own check keeps it as an item-acceptance line under that sprint. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), and [`framework-test.md`](./framework/framework-test.md) match.
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) and the EN sprint-backlog seed drop the DoD column. One Definition of Done checklist sits above the first sprint. Sprints 3, 4, and 5 state a replacement checklist. A row that had its own check keeps it as an item-acceptance line under that sprint. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), and [`framework-test.md`](./framework/framework-tests.md) match.
 
 **Verification**: Sprint item headers are `#`, Code, SBI, Parent PBI, Module/Type, Related specs, Status. The EN seed header matches. No sprint item header still contains DoD.
 
@@ -466,7 +524,7 @@
 
 **Why**: Onboard follows the audit verdict, and the test plan still described the retired install-and-copy recovery.
 
-**What changed**: [Skill-10](./product-backlog.md#pb-30) states the read-only verdict. [`framework-design.md`](./framework/framework-design.md#sdd-audit-artifacts) states how the skill reaches it. [`framework-stories.md`](./framework/framework-stories.md#sdd-audit-artifacts) and [`framework-test.md`](./framework/framework-test.md) cover the three verdicts, an empty locale, and the read-only stop. Sprint 4 feature-23 stays ToDo. `SKILL.md` is not added.
+**What changed**: [Skill-10](./product-backlog.md#pb-30) states the read-only verdict. [`framework-design.md`](./framework/framework-design.md#sdd-audit-artifacts) states how the skill reaches it. [`framework-stories.md`](./framework/framework-stories.md#sdd-audit-artifacts) and [`framework-test.md`](./framework/framework-tests.md) cover the three verdicts, an empty locale, and the read-only stop. Sprint 4 feature-23 stays ToDo. `SKILL.md` is not added.
 
 **Verification**: The design verdict table is unchanged. Feature-23 related specs point at the design section and the stories. Feature-27 stays WIP. Feature-28 stays the ethan guide-and-practices read.
 
@@ -490,7 +548,7 @@
 
 **Why**: The coach design and the artifact design were two files. One design covers every framework category.
 
-**What changed**: [`framework-design.md`](./framework/framework-design.md) is the overall design, with sections for framework-artifacts, agents, rules, skills, and templates. [`framework-stories.md`](./framework/framework-stories.md) and [`framework-test.md`](./framework/framework-test.md) hold the former agent stories and tests under agents, and add sections for skills, rules, core-artifacts, process-artifacts, and engineering-artifacts. `specs/agent-ethan/` and `specs/framework.seeds/framework-design.md` are removed.
+**What changed**: [`framework-design.md`](./framework/framework-design.md) is the overall design, with sections for framework-artifacts, agents, rules, skills, and templates. [`framework-stories.md`](./framework/framework-stories.md) and [`framework-test.md`](./framework/framework-tests.md) hold the former agent stories and tests under agents, and add sections for skills, rules, core-artifacts, process-artifacts, and engineering-artifacts. `specs/agent-ethan/` and `specs/framework.seeds/framework-design.md` are removed.
 
 **Verification**: Product backlog, sprint backlog, artifacts map, practices, and architecture links resolve to `specs/framework/`.
 
@@ -554,7 +612,7 @@
 
 **Why**: The column was renamed to DoD, and the cells still held the old acceptance text.
 
-**What changed**: Every row in [`product-backlog.md`](./product-backlog.md) uses the four default checks: the DoD rule, user confirmation, linked acceptance criteria, and the quality bar in [`agent-test.md`](./framework/framework-test.md), [`mcp-test.md`](./mcp/mcp-test.md), and [`app-test.md`](./admin-portal/app-test.md).
+**What changed**: Every row in [`product-backlog.md`](./product-backlog.md) uses the four default checks: the DoD rule, user confirmation, linked acceptance criteria, and the quality bar in [`agent-test.md`](./framework/framework-tests.md), [`mcp-test.md`](./mcp/mcp-tests.md), and [`app-test.md`](./admin-portal/app-tests.md).
 
 **Verification**: The Product Backlog table has one DoD cell shape on every row.
 
@@ -896,7 +954,7 @@
 
 **Why**: Feature-04 is the Features-tab form chrome for [Web-portal-08](./product-backlog.md#pb-74). The sprint row named 繁體 without writing the strings. Stories, design, and tests needed enough coverage before implementation.
 
-**What changed**: [`app-stories.md`](./admin-portal/app-stories.md) AC7 covers placement, three locale strings, Setup-tab absence, and inert submit. [`app-design.md`](./admin-portal/app-design.md) `/instructions` specifies the form layout, keys, CSS sizes, and reserves result nodes for feature-06. [`app-test.md`](./admin-portal/app-test.md) adds unit and E2E cases. Sprint 3 feature-04 and [Web-portal-08](./product-backlog.md#pb-74) name the 繁體 hint and button.
+**What changed**: [`app-stories.md`](./admin-portal/app-stories.md) AC7 covers placement, three locale strings, Setup-tab absence, and inert submit. [`app-design.md`](./admin-portal/app-design.md) `/instructions` specifies the form layout, keys, CSS sizes, and reserves result nodes for feature-06. [`app-test.md`](./admin-portal/app-tests.md) adds unit and E2E cases. Sprint 3 feature-04 and [Web-portal-08](./product-backlog.md#pb-74) name the 繁體 hint and button.
 
 **Verification**: Specs only. Catalog already in `messages/{en,zh-Hans,zh-Hant}.json` and mock [`13-instructions.html`](./admin-portal/ui-mockup/13-instructions.html).
 

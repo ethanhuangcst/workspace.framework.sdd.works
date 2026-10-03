@@ -691,7 +691,7 @@ Quick index mapped to [`.env.example`](../../.env.example):
 | release-bot `knowledge/05-nginx-proxy-manager.md` | NPM + SSL + Custom Locations |
 | release-bot `knowledge/08-cloudflare.md` | DNS |
 | [`specs/phase1-process-specs/r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) | Architecture, ports, env codes |
-| [`specs/mcp/mcp-test.md`](../mcp/mcp-test.md) | MCP verification scenarios |
+| [`specs/mcp/mcp-tests.md`](../mcp/mcp-tests.md) | MCP verification scenarios |
 
 ---
 

@@ -79,15 +79,15 @@ Apply the Skill file checks when the spec is a `SKILL.md`.
 
 ## Paths
 
-Apply the Paths checks when the spec names `artifacts-map.md` or `artifacts_root`.
+Apply the Paths checks when the spec names `artifacts-map.json` or `artifacts_root`.
 
-- The file name is `artifacts-map.md`.
-- The workspace path is `{workspace}/artifacts-map.md`.
-- The skill does not read `artifacts-map.md` under a template folder.
-- When `{workspace}/artifacts-map.md` is missing, the search folder is `{workspace}/specs/`.
-- `artifacts_root` is unread when `{workspace}/artifacts-map.md` is missing.
+- The file name is `artifacts-map.json`.
+- The workspace path is `{workspace}/artifacts-map.json`.
+- The skill does not read `artifacts-map.json` under a template folder.
+- When `{workspace}/artifacts-map.json` is missing, the search folder is `{workspace}/specs/`.
+- `artifacts_root` is unread when `{workspace}/artifacts-map.json` is missing.
 - The default folder name is `specs`.
-- When `{workspace}/artifacts-map.md` is present, the skill opens `{workspace}/<path>`.
+- When `{workspace}/artifacts-map.json` is present, the skill opens `{workspace}/<path>`.
 - The stored path already includes the folder.
 - The skill does not prefix `artifacts_root`.
 - The skill does not strip an absolute machine path down to a relative one.
@@ -100,12 +100,12 @@ Apply the Verdict and locale checks when the spec is `sdd-audit-artifacts`.
 
 - The verdict token is `Uninitialized`, `Index broken`, or `Usable`.
 - The skill does not translate the verdict token.
-- A permission error means `{workspace}/artifacts-map.md` cannot be read.
+- A permission error means `{workspace}/artifacts-map.json` cannot be read.
 - The unreadable-file verdict is `Index broken`.
-- The unreadable-file report block fails `artifacts-map.md`.
+- The unreadable-file report block fails `artifacts-map.json`.
 - The unreadable-file report block has no `locale` line.
-- The skill does not open the process files when `{workspace}/artifacts-map.md` cannot be read.
-- The skill reports `locale` only after `{workspace}/artifacts-map.md` opened.
+- The skill does not open the process files when `{workspace}/artifacts-map.json` cannot be read.
+- The skill reports `locale` only after `{workspace}/artifacts-map.json` opened.
 - A missing `locale` field is `empty`.
 - An empty `locale` does not change the verdict.
 - An unknown `locale` does not change the verdict.

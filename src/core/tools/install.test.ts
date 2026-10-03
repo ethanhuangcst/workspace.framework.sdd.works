@@ -712,7 +712,7 @@ describe("install", () => {
     const pkg = makePkg("v1.0.0");
     mkdirSync(join(pkg, "templates/framework.sdd.works"), { recursive: true });
     writeFileSync(
-      join(pkg, "templates/framework.sdd.works/constants.md"),
+      join(pkg, "templates/framework.sdd.works/constants.json"),
       "# pc\n",
     );
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
@@ -722,7 +722,7 @@ describe("install", () => {
     );
     expect(
       existsSync(
-        join(home, ".cursor/templates/framework.sdd.works/constants.md"),
+        join(home, ".cursor/templates/framework.sdd.works/constants.json"),
       ),
     ).toBe(true);
     expect(existsSync(join(home, ".cursor/sdd"))).toBe(false);

@@ -39,6 +39,14 @@ These checks apply to every section. The same list is in [`sdd-scrum-practices.m
 - In a table cell, each bullet is its own line, separated by `<br>`.
 - Use one name for one thing in the whole file. Put the plain meaning beside a specialist term on first use.
 - Write a name from the end user's view. Name the result.
+- A heading names what the reader gets. A single verb fails. The check is check 19 in [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc).
+  bad example: `Reply`
+  good example: `Summarize the findings`
+- An example the user reads states what the user understands. An example that only states what the agent saw in the files fails. The check is check 20 in [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc).
+  bad example: "the card-list file is already in the workspace"
+  good example: "the actual status is WIP because the card list page is already in the web app"
+- A line the user reads is written from the user's view: the status, the reason, and the change. The check is check 21 in [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc).
+  good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP."
 
 **Structure**
 
@@ -60,6 +68,7 @@ These checks apply to every section. The same list is in [`sdd-scrum-practices.m
 
 - Add a good example and a bad example when the shape is easy to miss.
 - The good example shows the required shape. The bad example shows one failure.
+- The good example is a line the user understands. The bad example is a line that only states what the agent saw.
 
 ## Terminology
 

@@ -348,10 +348,10 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - **knowledge**：專案中沉澱的知識，預設路徑：**{workspace-folder}/specs/knowledge**
 
 ### Artifacts
-- **SDD 核心工件**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.md**
+- **SDD 核心工件**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **框架工件**：**product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **工程工件**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-test.md; deployment.md; .secrets; issues-log.md**
-- **這三組之外的套件檔案**：**constants.md**（用戶端根目錄上的套件查找表）；**.sdd-installed.json**（用戶端根目錄上的安裝帳本）
+- **工程工件**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; deployment.md; .secrets; issues-log.md**
+- **這三組之外的套件檔案**：**constants.json**（用戶端根目錄上的套件查找表）；**.sdd-installed.json**（用戶端根目錄上的安裝帳本）
 
 ## 在 Scrum in SDD 中需要修改的 Scrum 概念
 
@@ -517,7 +517,7 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 這是 SDD 的核心工件。它們不是 KEEP 下的 Scrum 核心工件（Product Backlog、Sprint Backlog、Increment）。
 - **scrum-in-sdd.md**：名稱與含義。留在用戶端根目錄。
 - **sdd-scrum-practices.md**：做什麼、怎麼做、何時做。留在用戶端根目錄。
-- **artifacts-map.md**：本專案工件所在位置。位於工作區根目錄。
+- **artifacts-map.json**：本專案工件所在位置。位於工作區根目錄。
 
 ### 框架工件
 - **product-backlog.md**：Product Backlog。
@@ -529,14 +529,14 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - **architecture.md**：架構 spec。
 - **{stem}-stories.md**：使用者故事和驗收標準。
 - **{stem}-design.md**：設計 spec。
-- **{stem}-test.md**：測試 spec。
+- **{stem}-tests.md**：測試 spec。
 - **deployment.md**：部署 spec。
 - **.secrets**：機密名稱及其值的存放位置。不含機密值。
 - **issues-log.md**：缺陷記錄。它也是稽核開啟的五個過程檔案之一。
 
 ### 套件檔案
 這些不是專案工件。它們不屬於上面任何一組。
-- **constants.md**：用戶端根目錄上的套件查找表，存放路徑名、技能鍵和規則鍵。
+- **constants.json**：用戶端根目錄上的套件查找表，存放路徑名、技能鍵和規則鍵。
 - **.sdd-installed.json**：用戶端根目錄上的安裝帳本。由安裝程式寫入。`pack_complete: true` 表示套件複製已完成。
 
 ### Knowledge

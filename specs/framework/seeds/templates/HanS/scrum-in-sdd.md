@@ -352,7 +352,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **Sprint Backlog**：**sprint-backlog.md**
 - **实时状态**：**status.md**
 - **变更管理**：**changes-log.md**
-- **工件路径定义与项目映射**：**artifacts-map.md**
+- **工件路径定义与项目映射**：**artifacts-map.json**
 - **Spec 模板**：**architecture.md; design.md; test.md; deployment.md**
 
 ## 在 Scrum in SDD 中需要修改的 Scrum 概念
@@ -520,15 +520,15 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 ### 框架工件
 - **status.md**：实时状态。
 - **changes-log.md**：变更历史。
-- **artifacts-map.md**：工件映射。
+- **artifacts-map.json**：工件映射。
 - **product-backlog.md**: Product Backlog
 - **sprint-backlog.md**: Sprint Backlog
 
 ### 工程工件
 - **architecture.md**：架构 spec。
-- **{model_name}-stories**：用户故事和验收标准
-- **{model_name}-design.md**：设计 spec。
-- **{model_name}-test.md**：测试 spec。
+- **{stem}-stories.md**：用户故事和验收标准
+- **{stem}-design.md**：设计 spec。
+- **{stem}-tests.md**：测试 spec。
 - **deployment.md**：部署 spec。
 - **.secrets**：用于存放机密信息的文件。
 

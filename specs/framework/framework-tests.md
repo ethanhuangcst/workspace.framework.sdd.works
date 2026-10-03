@@ -29,7 +29,7 @@ Each case has three parts:
 
 **Pack-gate stop** means all of the following: ethan sends the instructions URL, stops, shows no job list, does not read project files, does not call `sdd_install_framework` or `sdd_update_framework`, and does not copy files.
 
-**Instructions URL** is `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise it is `https://framework.sdd.works/instructions`. A missing `constants.md` on a pack-gate stop does not change `pack_complete`.
+**Instructions URL** is `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.json` when that file can be read. Otherwise it is `https://framework.sdd.works/instructions`. A missing `constants.json` on a pack-gate stop does not change `pack_complete`.
 
 ## Environments
 
@@ -160,14 +160,14 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 #### CE-GATE-05 — Instructions URL from constants
 
 - **Layer:** L1.
-- **Pre-condition:** The ledger is missing. `{client_root}/templates/framework.sdd.works/constants.md` can be read and its `instructions_url` is `https://framework.sdd.works/instructions`.
+- **Pre-condition:** The ledger is missing. `{client_root}/templates/framework.sdd.works/constants.json` can be read and its `instructions_url` is `https://framework.sdd.works/instructions`.
 - **Test steps:** Start ethan.
 - **Expected results:** The reply contains that URL. `pack_complete` is not written.
 
 #### CE-GATE-06 — Fallback URL
 
 - **Layer:** L1.
-- **Pre-condition:** The ledger is missing. `constants.md` cannot be read.
+- **Pre-condition:** The ledger is missing. `constants.json` cannot be read.
 - **Test steps:** Start ethan.
 - **Expected results:** The reply contains `https://framework.sdd.works/instructions`. The ledger is not created. `pack_complete` is not set.
 
@@ -418,7 +418,7 @@ Cases are numbered in one sequence. They are not one scenario repeated. Read thi
 
 | Ids | Proves | Do not confuse with |
 | --- | --- | --- |
-| 01, 02, 14 | Verdict when `{workspace}/artifacts-map.md` is absent | A file under `docs/` or under `templates/` is not a root map |
+| 01, 02, 14 | Verdict when `{workspace}/artifacts-map.json` is absent | A file under `docs/` or under `templates/` is not a root map |
 | 03, 04, 07, 08, 12, 13, 17 | Verdict when a root map is present, including a map that cannot be read | 12 is "map only in a template folder", which is the absent-map verdict |
 | 05, 09, 10, 11, 15 | The `locale` line after the map opened. 09 repeats 04's files to lock the token `EN` | An empty or unknown locale does not change `Usable` |
 | 16 | Label order `verdict`, `locale`, `opened`, `failed`. Same files as 04 | A correct verdict with the labels in another order fails this id |
@@ -430,7 +430,7 @@ Cases are numbered in one sequence. They are not one scenario repeated. Read thi
 - The client root is `~/.codebuddy`. On Windows it is `%USERPROFILE%\.codebuddy`. The agent file is `~/.codebuddy/agents/ethan.md`. Skills are `~/.codebuddy/skills/<name>/SKILL.md` ([Pack folders](#pack-folders)). Copy the files in [Minimum framework installation](#minimum-framework-installation) into that live home, run the catalog, then delete those paths. Do not copy the skill to `~/.codebuddy/skills-marketplace/` or to `~/.claude/skills/`.
 - One workspace per case, under `specs/framework/fixtures/sdd-audit-artifacts/`. The folder name is the case id plus the case name, for example `CE-AUDIT-01-no-map-and-no-process-files`. Open that folder as the CodeBuddy CN workspace. Do not open this product repo as the workspace.
 - The ledger has `pack_complete` true before the audit runs. A pack-gate stop is not an audit result.
-- A map uses `local:` lines, as in [`seeds/templates/EN/artifacts-map.md`](./seeds/templates/EN/artifacts-map.md). A process file that onboard does not read may be a one-line stub. Each `Usable` workspace names `Sprint 1` and `feature-01` in `specs/status.md` and `specs/sprint-backlog.md`, so `sdd-review-status` has a line to return.
+- A map stores `artifacts_root`, `locale`, and workspace-relative paths in `files` and module `files`, as in the Pokymon example in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). Audit fixtures use JSON `files` lists. A process file that onboard does not read may be a one-line stub. Each `Usable` workspace names `Sprint 1` and `feature-01` in `specs/status.md` and `specs/sprint-backlog.md`, so `sdd-review-status` has a line to return.
 - CE-AUDIT-17 clears the read bit on the checked-in map for the run, then restores it. The file in git stays readable.
 
 ### Minimum framework installation
@@ -443,7 +443,7 @@ Copy only these files. Paths are the CodeBuddy CN row of [Pack folders](#pack-fo
 | Agent | `~/.codebuddy/agents/ethan.md` | [`seeds/agents/ethan.md`](./seeds/agents/ethan.md) |
 | Skill | `~/.codebuddy/skills/sdd-audit-artifacts/SKILL.md` | [`seeds/skills/sdd-audit-artifacts/SKILL.md`](./seeds/skills/sdd-audit-artifacts/SKILL.md) |
 | Status read | `~/.codebuddy/skills/sdd-review-status/SKILL.md` | [`seeds/skills/sdd-review-status/SKILL.md`](./seeds/skills/sdd-review-status/SKILL.md). Onboard reads this only after a `Usable` block. Without it, that reply sets `pack_complete` to false |
-| Constants | `~/.codebuddy/templates/framework.sdd.works/constants.md` | [`seeds/templates/constants.md`](./seeds/templates/constants.md) |
+| Constants | `~/.codebuddy/templates/framework.sdd.works/constants.json` | [`seeds/templates/constants.json`](./seeds/templates/constants.json) |
 
 Quit CodeBuddy CN and open it again after the agent file is copied, so the agent list reloads.
 
@@ -476,7 +476,7 @@ The block is the skill. The sentence is onboard. Ethan does not greet and does n
 - **Proves:** absent map, nothing under `specs/` → `Uninitialized`, no `locale` line.
 - **Layer:** CodeBuddy CN fixture.
 - **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-01-no-map-and-no-process-files/`.
-- **Pre-condition:** No `artifacts-map.md`. No process file under `specs/`.
+- **Pre-condition:** No `artifacts-map.json`. No process file under `specs/`.
 - **Test steps:** Follow [How to run a case](#how-to-run-a-case).
 - **Expected results:**
 
@@ -495,7 +495,7 @@ No `locale` line. No project write. Ledger unchanged.
 - **Proves:** absent map, one process file under `specs/` → `Index broken`. The missing four names are not opened.
 - **Layer:** CodeBuddy CN fixture.
 - **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-02-file-exists-map-missing/`.
-- **Pre-condition:** No `artifacts-map.md`. `specs/status.md` exists. The other four process files do not.
+- **Pre-condition:** No `artifacts-map.json`. `specs/status.md` exists. The other four process files do not.
 - **Test steps:** Follow [How to run a case](#how-to-run-a-case).
 - **Expected results:**
 
@@ -514,7 +514,7 @@ No `locale` line. The missing four names are not opened and are not listed as fa
 - **Proves:** the stored path is opened as written. A copy under `docs/` is not a substitute.
 - **Layer:** CodeBuddy CN fixture.
 - **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-03-stored-path-does-not-open/`.
-- **Pre-condition:** The root map lists `local: specs/status.md`. That path does not exist. `docs/status.md` exists.
+- **Pre-condition:** The root map lists `files` containing `specs/status.md`. That path does not exist. `docs/status.md` exists.
 - **Test steps:** Follow [How to run a case](#how-to-run-a-case).
 - **Expected results:**
 
@@ -598,10 +598,10 @@ The stored path is not prefixed with `artifacts_root`.
 
 #### CE-AUDIT-08 — Map opens nothing
 
-- **Proves:** a root map with no process-file `local:` line → `Uninitialized`, and `locale` is still reported.
+- **Proves:** a root map with no process-file path in `files` → `Uninitialized`, and `locale` is still reported.
 - **Layer:** CodeBuddy CN fixture.
 - **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-08-map-opens-nothing/`.
-- **Pre-condition:** `artifacts-map.md` is at the workspace root. It has `locale: EN` and no `local:` line for a process file.
+- **Pre-condition:** `artifacts-map.json` is at the workspace root. It has `locale` `EN` and no process-file path in `files` for a process file.
 - **Test steps:** Follow [How to run a case](#how-to-run-a-case).
 - **Expected results:**
 
@@ -682,7 +682,7 @@ The report does not say `HanS`. The verdict token is not translated.
 - **Proves:** a map under `templates/` is not the root map. The verdict is the absent-map verdict.
 - **Layer:** CodeBuddy CN fixture.
 - **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-12-map-only-in-a-template-folder/`.
-- **Pre-condition:** No root `artifacts-map.md`. `templates/framework.sdd.works/EN/artifacts-map.md` exists and lists process files. No process file exists under `specs/`.
+- **Pre-condition:** No root `artifacts-map.json`. `templates/framework.sdd.works/EN/artifacts-map.json` exists and lists process files. No process file exists under `specs/`.
 - **Test steps:** Follow [How to run a case](#how-to-run-a-case).
 - **Expected results:**
 
@@ -700,7 +700,7 @@ No `locale` line. The template map is not read.
 
 - **Proves:** an absolute stored path is not stripped to `specs/status.md`. Two workspaces, one rule.
 - **Layer:** CodeBuddy CN fixture. Two workspaces of this id.
-- **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-13-absolute-path-stored-in-the-map-windows/` stores `local: C:\Users\fixture\status.md`. `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-13-absolute-path-stored-in-the-map-posix/` stores `local: /Users/fixture/status.md`. Each workspace also has `specs/status.md`.
+- **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-13-absolute-path-stored-in-the-map-windows/` stores `C:\Users\fixture\status.md` in `files`. `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-13-absolute-path-stored-in-the-map-posix/` stores `/Users/fixture/status.md` in `files`. Each workspace also has `specs/status.md`.
 - **Pre-condition:** The map `locale` is `EN`. The relative `specs/status.md` exists.
 - **Test steps:** Follow [How to run a case](#how-to-run-a-case) once in each workspace.
 - **Expected results:** `specs/status.md` is not opened. The POSIX workspace returns:
@@ -780,8 +780,8 @@ failed:
 - **Proves:** a root map that exists and cannot be read → `Index broken`. `specs/` is not opened. No `locale` line.
 - **Layer:** CodeBuddy CN fixture.
 - **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-17-root-map-cannot-be-read/`.
-- **Pre-condition:** `artifacts-map.md` is at the workspace root and is readable in git. `specs/status.md` exists. `locale` in the map is `EN`.
-- **Test steps:** Clear the read bit on `artifacts-map.md`. Follow [How to run a case](#how-to-run-a-case). Restore the read bit before leaving the workspace.
+- **Pre-condition:** `artifacts-map.json` is at the workspace root and is readable in git. `specs/status.md` exists. `locale` in the map is `EN`.
+- **Test steps:** Clear the read bit on `artifacts-map.json`. Follow [How to run a case](#how-to-run-a-case). Restore the read bit before leaving the workspace.
 - **Expected results:**
 
 ```text
@@ -789,7 +789,7 @@ verdict: Index broken
 opened:
 - none
 failed:
-- artifacts-map.md
+- artifacts-map.json
 ```
 
 No `locale` line. `specs/status.md` is not opened. No project write. Ledger unchanged.
@@ -814,7 +814,7 @@ Check that `artifacts-map.mdc` is absent. One case for the three rule names. One
 #### CE-RULE-01 — Create
 
 - **Layer:** L1.
-- **Pre-condition:** `{workspace}/artifacts-map.md` exists and does not list `specs/notes.md`. A project artifact is created at `specs/notes.md`.
+- **Pre-condition:** `{workspace}/artifacts-map.json` exists and does not list `specs/notes.md`. A project artifact is created at `specs/notes.md`.
 - **Test steps:** Withdrawn by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). Do not apply `artifacts-map.mdc`.
 - **Expected results:** The map stays as it was. The ledger is unchanged.
 
@@ -861,7 +861,7 @@ A template case reads the seed text and, where the design forbids a copy, checks
 
 Locale seeds are part of the template contract. `EN`, `HanS`, and `HanT` each have a home for `scrum-in-sdd.md` and `sdd-scrum-practices.md` when those bodies exist. A missing HanT body is a seed gap to report, not a reason to copy the EN file into the project under a HanT name.
 
-`constants.md` has no locale and is never a project file. Path checks use `{workspace}/<stored path>` on every OS.
+`constants.json` has no locale and is never a project file. Path checks use `{workspace}/<stored path>` on every OS.
 
 ### Plan
 
@@ -888,7 +888,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** Kickoff copies missing project seeds. Locale is `EN`, then repeat with `HanS` if that kickoff fixture exists.
 - **Test steps:** Finish the copy.
-- **Expected results:** `constants.md`, `scrum-in-sdd.md`, and `sdd-scrum-practices.md` are not written into the project. They remain under `{client_root}/templates/framework.sdd.works/`.
+- **Expected results:** `constants.json`, `scrum-in-sdd.md`, and `sdd-scrum-practices.md` are not written into the project. They remain under `{client_root}/templates/framework.sdd.works/`.
 
 #### CE-TPL-04 — Sprint item columns
 
@@ -902,21 +902,21 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** The authoring tree `specs/framework/seeds/templates/`.
 - **Test steps:** Look up `scrum-in-sdd.md` and `sdd-scrum-practices.md` for `EN`, `HanS`, and `HanT`.
-- **Expected results:** Each locale that has a body uses that locale folder. A locale with no body is reported as missing. The EN body is not copied into the project to fill the gap. `constants.md` stays beside the locale folders, not inside one.
+- **Expected results:** Each locale that has a body uses that locale folder. A locale with no body is reported as missing. The EN body is not copied into the project to fill the gap. `constants.json` stays beside the locale folders, not inside one.
 
 #### CE-TPL-06 — Windows path join
 
 - **Layer:** L1.
 - **Pre-condition:** `{workspace}` is `C:\work\demo`. The map stores `specs/product-backlog.md`. `artifacts_root` is `specs`.
 - **Test steps:** Open the stored path.
-- **Expected results:** The file opened is `C:\work\demo\specs\product-backlog.md`. The root is not prefixed again. The map file itself stays `C:\work\demo\artifacts-map.md`.
+- **Expected results:** The file opened is `C:\work\demo\specs\product-backlog.md`. The root is not prefixed again. The map file itself stays `C:\work\demo\artifacts-map.json`.
 
-#### CE-TPL-07 — constants.md is not a map row
+#### CE-TPL-07 — constants.json is not a map row
 
 - **Layer:** L1.
-- **Pre-condition:** A kickoff fixture has finished. The client root has `templates/framework.sdd.works/constants.md`.
-- **Test steps:** Read `{workspace}/artifacts-map.md`.
-- **Expected results:** `constants.md` has no row. It was not copied into `{workspace}` or into `{workspace}/specs`.
+- **Pre-condition:** A kickoff fixture has finished. The client root has `templates/framework.sdd.works/constants.json`.
+- **Test steps:** Read `{workspace}/artifacts-map.json`.
+- **Expected results:** `constants.json` has no row. It was not copied into `{workspace}` or into `{workspace}/specs`.
 
 #### CE-TPL-08 — EN status seed shape
 

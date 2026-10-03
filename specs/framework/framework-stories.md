@@ -1,6 +1,6 @@
 # Framework — stories
 
-Stories and acceptance criteria for framework artifacts. Design: `[framework-design.md](./framework-design.md)`. Tests: `[framework-test.md](./framework-test.md)`.
+Stories and acceptance criteria for framework artifacts. Design: `[framework-design.md](./framework-design.md)`. Tests: `[framework-tests.md](./framework-tests.md)`.
 
 **Roles:** User (project owner). Ethan (local coach). The reference client for a manual check is Cursor. The same coach behavior applies on every first-class client in `[mcp-design.md](../mcp/mcp-design.md)` §4.1 once that client's user root holds the pack.
 
@@ -67,7 +67,7 @@ Scenario: A workspace copy of the ledger is not the gate
   And ethan does not read the workspace ledger
 ```
 
-Tests: `[framework-test.md](./framework-test.md#agents)` CE-ENV-01 through CE-ENV-04, CE-ENV-06, CE-GATE-04.
+Tests: `[framework-tests.md](./framework-tests.md#agents)` CE-ENV-01 through CE-ENV-04, CE-ENV-06, CE-GATE-04.
 
 ### `sdd-client-callup` — Call-up is the client's gesture
 
@@ -181,7 +181,7 @@ Tests: CE-LOCALE-01 through CE-LOCALE-04, CE-SKILL-08, CE-AUDIT-05, CE-AUDIT-09 
 
 Stories for the local ethan agent. Design: `[framework-design.md](./framework-design.md)` §2. Product backlog: `[product-backlog.md](../product-backlog.md)`.
 
-**Sprint 2 feature-03 (Agent-07):** start gate on `{client_root}/.sdd-installed.json`. Story: `[sdd-ethan-pack-complete-gate](#sdd-ethan-pack-complete-gate)`. Design §2.4. Tests: `[framework-test.md](./framework-test.md#agents)` CE-GATE.
+**Sprint 2 feature-03 (Agent-07):** start gate on `{client_root}/.sdd-installed.json`. Story: `[sdd-ethan-pack-complete-gate](#sdd-ethan-pack-complete-gate)`. Design §2.4. Tests: `[framework-tests.md](./framework-tests.md#agents)` CE-GATE.
 
 ### `sdd-ethan-pack-complete-gate` — Install ledger start gate (Agent-07)
 
@@ -198,9 +198,9 @@ On every start, before any greeting or job list, ethan reads only `{client_root}
 ```gherkin
 Scenario: Missing ledger stops with the instructions URL
   Given {client_root}/.sdd-installed.json does not exist
-  And constants.md on that client root can be read
+  And constants.json on that client root can be read
   When the user starts ethan
-  Then ethan sends instructions_url from that constants.md
+  Then ethan sends instructions_url from that constants.json
   And ethan stops with no job list
   And ethan does not read project files
   And ethan does not call sdd_install_framework or sdd_update_framework
@@ -215,7 +215,7 @@ Scenario: Missing ledger stops with the instructions URL
 ```gherkin
 Scenario: Missing constants uses the fallback URL
   Given the client-root ledger does not exist
-  And constants.md cannot be read
+  And constants.json cannot be read
   When the user starts ethan
   Then ethan sends https://framework.sdd.works/instructions
   And ethan does not create the ledger
@@ -266,7 +266,7 @@ Scenario: pack_complete true continues onboard
   When the user starts ethan
   Then ethan follows sdd-audit-artifacts
   And ethan does not scan the five framework trees to decide completeness
-  And a missing artifacts-map.md is a verdict, not a pack-gate stop
+  And a missing artifacts-map.json is a verdict, not a pack-gate stop
 ```
 
 
@@ -425,7 +425,7 @@ Tests: CE-PROMPT-01.
 
 ## skills
 
-Stories for skills whose behavior the design already decides. Tests: `[framework-test.md](./framework-test.md#skills)`.
+Stories for skills whose behavior the design already decides. Tests: `[framework-tests.md](./framework-tests.md#skills)`.
 
 The five process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, and `issues-log.md`.
 
@@ -445,7 +445,7 @@ Read-only workspace verdict for Skill-10. Design: `[framework-design.md](./frame
 
 ```gherkin
 Scenario: No map and no process files
-  Given the workspace has no artifacts-map.md
+  Given the workspace has no artifacts-map.json
   And none of the five process files exist under specs/
   When sdd-audit-artifacts runs
   Then the verdict is Uninitialized
@@ -458,7 +458,7 @@ Scenario: No map and no process files
 
 ```gherkin
 Scenario: Map lists no process-file path
-  Given artifacts-map.md is at the workspace root
+  Given artifacts-map.json is at the workspace root
   And it lists no process-file path
   When sdd-audit-artifacts runs
   Then the verdict is Uninitialized
@@ -470,7 +470,7 @@ Scenario: Map lists no process-file path
 
 ```gherkin
 Scenario: A map inside a template folder is ignored
-  Given the workspace root has no artifacts-map.md
+  Given the workspace root has no artifacts-map.json
   And a map file exists only under a template folder
   And no process file exists under specs/
   When sdd-audit-artifacts runs
@@ -484,7 +484,7 @@ Scenario: A map inside a template folder is ignored
 
 ```gherkin
 Scenario: A process file outside specs is ignored when the map is missing
-  Given the workspace has no artifacts-map.md
+  Given the workspace has no artifacts-map.json
   And status.md exists under docs/ and not under specs/
   When sdd-audit-artifacts runs
   Then that file is not opened
@@ -503,7 +503,7 @@ Scenario: A process file outside specs is ignored when the map is missing
 
 ```gherkin
 Scenario: A process file exists and the map is missing
-  Given the workspace has no artifacts-map.md
+  Given the workspace has no artifacts-map.json
   And specs/status.md exists
   When sdd-audit-artifacts runs
   Then the verdict is Index broken
@@ -668,12 +668,12 @@ Scenario: The reply uses the four labels
 
 ```gherkin
 Scenario: The root map cannot be read
-  Given artifacts-map.md is at the workspace root
+  Given artifacts-map.json is at the workspace root
   And that file cannot be read
   And specs/status.md exists
   When sdd-audit-artifacts runs
   Then the verdict is Index broken
-  And the report lists artifacts-map.md as failed
+  And the report lists artifacts-map.json as failed
   And specs/status.md is not opened
   And the reply has no locale line
 ```
@@ -818,7 +818,7 @@ Tests: CE-SKILL-06. The on-disk folder `specs/framework/seeds/skills/sdd-trackin
 
 ## rules
 
-Design: `[framework-design.md](./framework-design.md#rules)`. Tests: `[framework-test.md](./framework-test.md#rules)`.
+Design: `[framework-design.md](./framework-design.md#rules)`. Tests: `[framework-tests.md](./framework-tests.md#rules)`.
 
 The three files install at `{client_root}/rules/<name>.mdc`. Names have no `sdd-` prefix. On Windows the directory is `rules\` under that client root. `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc` have no behavior story until their bodies are designed. Their path still has to match AC1. The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
@@ -855,7 +855,7 @@ Tests: CE-RULE-05 and CE-RULE-06. CE-RULE-01 through CE-RULE-04 are withdrawn.
 
 ## templates
 
-Design: `[framework-design.md](./framework-design.md#templates)`. Tests: `[framework-test.md](./framework-test.md#templates)`.
+Design: `[framework-design.md](./framework-design.md#templates)`. Tests: `[framework-tests.md](./framework-tests.md#templates)`.
 
 ### Files that stay on the client root
 
@@ -870,11 +870,11 @@ Scenario Outline: Kickoff does not copy client-root prose into the project
   Given kickoff copies missing project seeds
   And the project locale is "<locale>"
   When the copy finishes
-  Then constants.md is not in the project
+  Then constants.json is not in the project
   And scrum-in-sdd.md is not in the project
   And sdd-scrum-practices.md is not in the project
   And those files remain under {client_root}/templates/framework.sdd.works/
-  And constants.md is not a row in artifacts-map.md
+  And constants.json is not a row in artifacts-map.json
 
   Examples:
     | locale |
@@ -936,8 +936,8 @@ Scenario Outline: The stored path is joined to the workspace once
 
   Examples:
     | workspace | opened | map |
-    | /work/demo | /work/demo/specs/product-backlog.md | /work/demo/artifacts-map.md |
-    | C:\work\demo | C:\work\demo\specs\product-backlog.md | C:\work\demo\artifacts-map.md |
+    | /work/demo | /work/demo/specs/product-backlog.md | /work/demo/artifacts-map.json |
+    | C:\work\demo | C:\work\demo\specs\product-backlog.md | C:\work\demo\artifacts-map.json |
 ```
 
 Tests: CE-TPL-02, CE-TPL-06.
@@ -975,11 +975,11 @@ Tests: CE-TPL-04. AC2 applies when that locale seed exists. A missing translatio
 
 ## core-artifacts
 
-Core artifacts are `scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `artifacts-map.md`.
+Core artifacts are `scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `artifacts-map.json`.
 
 `scrum-in-sdd.md` and `sdd-scrum-practices.md` are the client-root files in [templates](#templates). They are not project files.
 
-`artifacts-map.md` is the project file in [Map paths](#map-paths). Its locale field is `EN`, `HanS`, or `HanT`. An empty locale is [sdd-artifact-locale](#sdd-artifact-locale--reply-language-follows-the-map). The audit verdicts are [sdd-audit-artifacts](#sdd-audit-artifacts).
+`artifacts-map.json` is the project file in [Map paths](#map-paths). Its locale field is `EN`, `HanS`, or `HanT`. An empty locale is [sdd-artifact-locale](#sdd-artifact-locale--reply-language-follows-the-map). The audit verdicts are [sdd-audit-artifacts](#sdd-audit-artifacts).
 
 No further core-artifact story is added here. Column and header rules for the map stay in the design. A new core story must name the OS path join and the three locales before it is accepted.
 
@@ -1143,7 +1143,7 @@ Tests: CE-TPL-10. A missing HanS or HanT issues-log seed stays on i18n-02. The E
 
 ## engineering-artifacts
 
-Engineering artifacts are `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-test.md`, `deployment.md`, `.secrets`, and `issues-log.md`.
+Engineering artifacts are `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `deployment.md`, `.secrets`, and `issues-log.md`.
 
 `architecture.md`, `deployment.md`, and `.secrets` have no seed story until the Sprint 14 seeds exist. Do not add them to a project map before the file exists.
 
@@ -1155,7 +1155,7 @@ Scenario: A module stem is the file prefix
   When the stories file for that module is opened
   Then the path is {workspace}/specs/web-app/app-stories.md
   And the design file is {workspace}/specs/web-app/app-design.md
-  And the test file is {workspace}/specs/web-app/app-test.md
+  And the test file is {workspace}/specs/web-app/app-tests.md
 ```
 
 

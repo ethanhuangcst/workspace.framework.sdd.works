@@ -1,7 +1,7 @@
 # SDD Scrum practices
 
 > Type: Core artifact of framework.sdd.works
-> as_of: 2026-10-01
+> as_of: 2026-10-03
 > [Definition](#definition-of-sdd-scrum-practicesmd)
 
 ---
@@ -14,11 +14,16 @@
   - [Definition of status.md](#definition-of-statusmd)
   - [Definition of issues-log.md](#definition-of-issues-logmd)
   - [Definition of changes-log.md](#definition-of-changes-logmd)
-  - [Definition of artifacts-map.md](#definition-of-artifacts-mapmd)
+  - [Definition of artifacts-map.json](#definition-of-artifacts-mapjson)
 - [Artifacts writing guideline](#artifacts-writing-guideline)
   - [General writing principles](#general-writing-principles)
-  - [Core artifacts](#core-artifacts)
-    - [artifacts-map.md](#artifacts-mapmd)
+  - [artifacts-map.json](#artifacts-mapjson)
+    - [Role](#role)
+    - [Keys](#keys)
+    - [Shape](#shape)
+    - [Rules](#rules)
+    - [Confirm](#confirm)
+    - [Example](#example)
   - [Framework (process) artifacts](#framework-process-artifacts)
     - [product-backlog.md](#product-backlogmd)
     - [sprint-backlog.md](#sprint-backlogmd)
@@ -29,7 +34,7 @@
     - [architecture.md](#architecturemd)
     - [{module-name}-design.md](#module-name-designmd)
     - [{module-name}-stories.md](#module-name-storiesmd)
-    - [{module-name}-test.md](#module-name-testmd)
+    - [{module-name}-tests.md](#module-name-testsmd)
     - [deployment.md](#deploymentmd)
     - [.secrets](#secrets)
 - [Jobs](#jobs-what-how-when)
@@ -61,7 +66,7 @@ Names and meanings stay in [Terminology](./scrum-in-sdd.md#terminology) in `scru
 **Projection**: The `Sprint` column in `product-backlog.md` copies the schedule from `sprint-backlog.md`.
 
 **Related**:
-- `artifacts-map.md`
+- `artifacts-map.json`
 - `scrum-in-sdd.md`
 - `status.md`
 - `product-backlog.md`
@@ -81,7 +86,7 @@ Names and meanings stay in [Terminology](./scrum-in-sdd.md#terminology) in `scru
 - The schedule and the item status stay in `sprint-backlog.md`.
 - Product items stay in `product-backlog.md`.
 - A concluded change stays in `changes-log.md`.
-- Paths stay in `artifacts-map.md`.
+- Paths stay in `artifacts-map.json`.
 
 ### Definition of issues-log.md
 
@@ -99,13 +104,12 @@ Names and meanings stay in [Terminology](./scrum-in-sdd.md#terminology) in `scru
 - Step-by-step detail stays in git and in the spec that owns the change.
 - Do not put secrets here.
 
-### Definition of artifacts-map.md
+### Definition of artifacts-map.json
 
-- `artifacts-map.md` is the index of where this project's artifacts live.
-- A stored path is workspace-relative. Open `{workspace}/<path>`.
-- `artifacts_root` is one folder name. When the field is absent, use `specs`.
-- A module stores its folder, its stem, and the three file paths.
-- The default stem is the folder name. A shorter stem is stored once.
+- `artifacts-map.json` is the path configuration for this project. It is not an artifact and not a seed.
+- It stores `artifacts_root`, `locale`, a `files` list, and a `modules` list.
+- `artifacts_root` is one folder name. When the key is absent, use `specs`.
+- A module has `folder`, `files`, and `stem` only when the stem differs from the folder.
 
 [Back to top](#index)
 
@@ -114,11 +118,11 @@ Names and meanings stay in [Terminology](./scrum-in-sdd.md#terminology) in `scru
 
 Read this before editing an artifact.
 
-**When**: copy or refresh locale seeds during on-board (job 1) if working copies are missing; on Update project settings (job 3) when the map is missing, or when relocating or filling a gap. Do not overwrite filled working copies unless the user confirms. Do not copy `constants.md` into the artifacts root.
+**When**: copy or refresh locale seeds during on-board (job 1) if working copies are missing; on Update project settings (job 3) when the map is missing, or when relocating or filling a gap. Do not overwrite filled working copies unless the user confirms. Do not copy `constants.json` into the artifacts root.
 
-**From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy each listed locale seed to the workspace-relative `local` path named in `artifacts-map.md`. Do not place every file under `artifacts_root`. The map file itself stays `{workspace}/artifacts-map.md`. Read `constants.md` from `{client_root}/templates/framework.sdd.works/constants.md` after install; do not copy it into the artifacts root.
+**From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy each listed locale seed to the workspace-relative path named in `artifacts-map.json`. Do not place every file under `artifacts_root`. The map file itself stays `{workspace}/artifacts-map.json`. Read `constants.json` from `{client_root}/templates/framework.sdd.works/constants.json` after install; do not copy it into the artifacts root.
 
-**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (seeds vs working copies). `constants.md` is pack lookup on the client root, not a working copy under the artifacts root.
+**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (seeds vs working copies). `constants.json` is pack lookup on the client root, not a working copy under the artifacts root.
 
 
 ### General writing principles
@@ -132,6 +136,14 @@ Read this before editing an artifact.
 - In a table cell, each bullet is its own line, separated by `<br>`.
 - Use one name for one thing in the whole file. Put the plain meaning beside a specialist term on first use.
 - Write a name from the end user's view. Name the result.
+- A heading names what the reader gets. A single verb fails. The check is check 19 in [`friendly-language.mdc`](../../rules/friendly-language.mdc).
+  bad example: `Reply`
+  good example: `Summarize the findings`
+- An example the user reads states what the user understands. An example that only states what the agent saw in the files fails. The check is check 20 in [`friendly-language.mdc`](../../rules/friendly-language.mdc).
+  bad example: "the card-list file is already in the workspace"
+  good example: "the actual status is WIP because the card list page is already in the web app"
+- A line the user reads is written from the user's view: the status, the reason, and the change. The check is check 21 in [`friendly-language.mdc`](../../rules/friendly-language.mdc).
+  good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP."
 
 **Structure**
 
@@ -153,100 +165,150 @@ Read this before editing an artifact.
 
 - Add a good example and a bad example when the shape is easy to miss.
 - The good example shows the required shape. The bad example shows one failure.
+- The good example is a line the user understands. The bad example is a line that only states what the agent saw.
 
 [Back to top](#index)
 
-### Core artifacts
+### artifacts-map.json
 
-#### artifacts-map.md
+`{workspace}/artifacts-map.json` is the path configuration for this project.
 
-[`artifacts-map.md`](./artifacts-map.md) is the index of where this project's artifacts live. Sections, in order: Header, one block per file, one block per module.
+#### Role
 
+- It is not an artifact.
+- It is not a seed.
+- A new project does not copy a file from this section.
+- `sdd-update-project` writes the file after the user confirms the chat summary.
+- The chat summary stays in the chat.
 
-##### Header
+#### Keys
 
+- `artifacts_root` is one folder name. When the key is absent, use `specs`.
+- `locale` is `EN`, `HanS`, or `HanT`.
+- `files` lists workspace-relative paths that sit outside a module folder.
+- `modules` lists one object per module folder.
+  `folder` is the directory name.
+  `files` lists the paths in that folder.
+  `stem` is present only when the filename stem differs from `folder`.
 
-###### Template
+#### Shape
 
-```markdown
-# Artifacts map ({product name})
-
-> Type: Core artifact of {product name}
-> as_of: {date}
-> [Definition]({practices}#definition-of-artifacts-mapmd)
-
----
-
-- product name: {product name}
-- artifacts_root: {artifacts root}
-- locale: {locale}
+```json
+{
+  "artifacts_root": "{artifacts root}",
+  "locale": "{locale}",
+  "files": [
+    "{path}"
+  ],
+  "modules": [
+    {
+      "folder": "{folder}",
+      "stem": "{stem}",
+      "files": [
+        "{path}"
+      ]
+    }
+  ]
+}
 ```
 
+#### Rules
 
-###### How to write
+- Write one folder name in `artifacts_root`, so the key stores that name.
+- Write `EN`, `HanS`, or `HanT` in `locale`, so future specs use that language.
+- Write one workspace-relative path in `{path}`, so the file opens as `{workspace}/{path}`.
+- Write one path for each project file, so a missing file has no path.
+- Leave `artifacts-map.json` off `files` and off every module `files` list, so the file does not record its own path.
+- Omit `stem` when it matches `folder`, so a matching stem has no `stem` key.
+- Write the `artifacts_root` value into each path, so the path matches the setting.
+  good example: `"artifacts_root": "specs"` and `"specs/product-backlog.md"`
+  bad example: `"artifacts_root": "spec"` while the path starts with `specs/`
+  good example: `"folder": "web-app"`, `"stem": "app"`, path `specs/web-app/app-design.md`
+  bad example: `name` and `purpose` keys beside the path
+- Leave the product name, `Type`, `as_of`, and a Definition link out of the file, so the file stays keys and paths.
 
-- Follow [General writing principles](#general-writing-principles).
-- `{product name}` is the product name. The EN seed uses Pokymon Card Collection.
-- `{date}` is the date of the last edit. The EN seed uses a sample date.
-- `{practices}` is the path to `sdd-scrum-practices.md`.
-- `{artifacts root}` is one folder name relative to the workspace. When the field is absent, use `specs`. `docs` is an example. Any other single folder name is valid.
-- `{locale}` is `EN`, `HanS`, or `HanT`.
-- The EN seed writes concrete paths with the root `specs`. Do not write `{artifacts_root}` inside a path.
-- Good: `artifacts_root: specs` and `local: specs/product-backlog.md`.
-- Bad: `artifacts_root: spec` while the path starts with `specs/`.
+#### Confirm
 
+`sdd-update-project` shows this summary in the chat before it writes the file.
 
-##### File
-
-
-###### Template
-
-```markdown
-## {name}
-
-- name: {name}
-- local: {path}
-- purpose: {purpose}
+```text
+workspace name: {product name}
+workspace folder: {workspace}
+locale: {locale}
+artifacts_root: {artifacts root}
+stems:
+- folder {folder}, stem {stem}: {what the module is}
+files:
+- {artifacts root}/product-backlog.md
+- {artifacts root}/sprint-backlog.md
+- {artifacts root}/status.md
+- {artifacts root}/issues-log.md
+- {artifacts root}/changes-log.md
+- {artifacts root}/architecture.md
+- {artifacts root}/deployment.md
+- {artifacts root}/test-strategy.md
+- {artifacts root}/.secrets
+- {artifacts root}/{folder}/{stem}-design.md
+- {artifacts root}/{folder}/{stem}-stories.md
+- {artifacts root}/{folder}/{stem}-tests.md
 ```
 
+- Write the product name in `{product name}`, so the summary names the product.
+- Write the workspace folder in `{workspace}`, so the summary shows where the project lives.
+- Write the chosen locale in `{locale}`, so the summary shows the language of future specs.
+- Write the chosen folder name in `{artifacts root}`, so the summary shows the specs folder.
+- Write one stem line for each picked module, so `{what the module is}` states what that module is.
+- Omit a file line the project does not have, so the summary lists only the files the map will record.
+- Leave this summary out of `artifacts-map.json`, so the file keeps the keys and the path lists.
 
-###### How to write
+#### Example
 
-- One block per file that exists. Omit a file the project does not have.
-- `{name}` is the artifact name.
-- `{path}` is workspace-relative. Open `{workspace}/{path}`. Do not prefix `artifacts_root` again.
-- A file under the artifacts root includes that folder in `{path}`.
-- The map file is the exception. Its `{path}` is `artifacts-map.md` when the file sits at the workspace root.
-- `{purpose}` is one sentence, and only when that sentence stops a wrong copy. Omit the line when the name is enough.
-- Good: `local: specs/product-backlog.md`.
-- Bad: an ASCII tree in place of `local`.
+Pokymon Card Collection. The block shows a filled file. A new project does not copy it.
 
-
-##### Module
-
-
-###### Template
-
-```markdown
-## {folder}
-
-- folder: {folder}
-- stem: {stem}
-- design: {artifacts root}/{folder}/{stem}-design.md
-- stories: {artifacts root}/{folder}/{stem}-stories.md
-- test: {artifacts root}/{folder}/{stem}-test.md
+```json
+{
+  "artifacts_root": "specs",
+  "locale": "EN",
+  "files": [
+    "specs/product-backlog.md",
+    "specs/sprint-backlog.md",
+    "specs/status.md",
+    "specs/issues-log.md",
+    "specs/changes-log.md",
+    "specs/architecture.md",
+    "specs/deployment.md",
+    "specs/test-strategy.md",
+    "specs/.secrets"
+  ],
+  "modules": [
+    {
+      "folder": "web-app",
+      "stem": "app",
+      "files": [
+        "specs/web-app/app-design.md",
+        "specs/web-app/app-stories.md",
+        "specs/web-app/app-tests.md"
+      ]
+    },
+    {
+      "folder": "mcp",
+      "files": [
+        "specs/mcp/mcp-design.md",
+        "specs/mcp/mcp-stories.md",
+        "specs/mcp/mcp-tests.md"
+      ]
+    },
+    {
+      "folder": "rag",
+      "files": [
+        "specs/rag/rag-design.md",
+        "specs/rag/rag-stories.md",
+        "specs/rag/rag-tests.md"
+      ]
+    }
+  ]
+}
 ```
-
-
-###### How to write
-
-- One block per module folder that exists.
-- `{folder}` is the folder name under `artifacts_root`.
-- `{stem}` is the name in the three filenames. The default is `{folder}`. A shorter stem is stored once on this block.
-- Two modules do not use the same stem.
-- The three paths are workspace-relative and include `{artifacts root}`.
-- Good: folder `web-app`, stem `app`, design `specs/web-app/app-design.md`.
-- Bad: `stem_1: web-app` in the header while the file is `app-design.md`.
 
 [Back to top](#index)
 
@@ -852,7 +914,7 @@ The header ends at the first `---`.
 
 #### {module-name}-design.md
 
-`{module-name}` is the stem stored in `artifacts-map.md`. The default stem is the module folder name. A shorter stem is set once.
+`{module-name}` is the stem stored in `artifacts-map.json`. The default stem is the module folder name. A shorter stem is set once.
 
 `{module-name}-design.md` is the design spec.
 
@@ -866,9 +928,9 @@ Section rules for a module file are written when that seed is in review. They fo
 
 [Back to top](#index)
 
-#### {module-name}-test.md
+#### {module-name}-tests.md
 
-`{module-name}-test.md` is the test spec.
+`{module-name}-tests.md` is the test spec.
 
 [Back to top](#index)
 
@@ -886,7 +948,7 @@ Section rules for a module file are written when that seed is in review. They fo
 
 #### framework-design.md
 
-[`framework-design.md`](../../../framework-design.md) is the overall design for framework artifacts. The sprint-item shape (columns, Type, status, and the retrospective block) is in its templates section. It also places `artifacts-map.md` at the workspace root and names `artifacts_root` there. This practices file states how to apply that shape.
+[`framework-design.md`](../../../framework-design.md) is the overall design for framework artifacts. The sprint-item shape (columns, Type, status, and the retrospective block) is in its templates section. It also places `artifacts-map.json` at the workspace root and names `artifacts_root` there. This practices file states how to apply that shape.
 
 [Back to top](#index)
 
@@ -911,8 +973,8 @@ The map is missing:
 - Decide language of project artifacts (EN, HanS, HanT).
 - Decide workspace folder structure from sub-systems, architecture, and components.
 - Specify the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
-- Record that structure in `{workspace}/artifacts-map.md` (required core artifact; this project’s index). Name `artifacts_root` there. It is one folder name relative to the workspace. When the field is absent, use `specs`. `docs` is an example. Any other single folder name is valid.
-- Copy artifact templates to the locations named in `artifacts-map.md`, for the chosen language.
+- Record that structure in `{workspace}/artifacts-map.json` (path configuration; this project’s index). Name `artifacts_root` there. It is one folder name relative to the workspace. When the field is absent, use `specs`. `docs` is an example. Any other single folder name is valid.
+- Copy artifact templates to the locations named in `artifacts-map.json`, for the chosen language.
 - Ensure agent ethan can operate those files.
 - Record current status in `status.md` and tell the user the project is initialized, with suggestions for what to do next.
 
@@ -921,8 +983,8 @@ The map is already in use:
 - Update language of project artifacts (EN, HanS, HanT).
 - Update workspace folder structure from sub-systems, architecture, and components.
 - Update the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
-- Update `artifacts-map.md` so it remains this project’s index.
-- Relocate artifact files to match language and `artifacts-map.md`.
+- Update `artifacts-map.json` so it remains this project’s index.
+- Relocate artifact files to match language and `artifacts-map.json`.
 - Ensure agent ethan can operate those files.
 - Record current status in `status.md` and tell the user the project is updated, with suggestions for what to do next.
 

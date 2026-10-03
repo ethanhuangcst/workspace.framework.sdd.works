@@ -174,18 +174,18 @@ Workflows: none until a workflow is planned. No workflow PBI.
 
 Pack source: [ethanhuangcst/framework.sdd.works](https://github.com/ethanhuangcst/framework.sdd.works). That repo must contain `agents/` and `templates/` before install has those trees to copy.
 
-The seed tree is [`specs/framework/seeds/`](./framework/seeds/). Locale files live under `templates/EN/` and `templates/HanS/`. `constants.md` sits beside those locale folders, at `templates/constants.md`.
+The seed tree is [`specs/framework/seeds/`](./framework/seeds/). Locale files live under `templates/EN/` and `templates/HanS/`. `constants.json` sits beside those locale folders, at `templates/constants.json`.
 
 Every Spec-seeds row has the same acceptance criteria: the user has reviewed and confirmed the seed, it is stored in that tree, associated specs are updated, and a cross-review of the whole seed tree shows it is consistent. HanS and HanT bodies are [i18n](#i18n). Copying the seed folder to the pack repo, pushing it, and syncing the admin portal are [Go-live](./framework/framework-design.md#go-live). They are not a Spec-seeds task and they are not Spec-seeds acceptance criteria.
 
-- [Spec-seeds-01](#pb-32) `constants.md` (beside locale folders; not copied into workspace `specs/`)
-  Lookup file for path names, skill keys, and rule keys. Not inside a locale folder. Lives on `{client_root}/templates/framework.sdd.works/constants.md` after install.
+- [Spec-seeds-01](#pb-32) `constants.json` (beside locale folders; not copied into workspace `specs/`)
+  Lookup file for path names, skill keys, and rule keys. Not inside a locale folder. Lives on `{client_root}/templates/framework.sdd.works/constants.json` after install. [ADR-081](./adr/ADR-081-constants-json.md).
 - [Spec-seeds-02](#pb-33) `scrum-in-sdd.md`
   Framework guide for every project: names and meaning. It does not take what, how, and when from practices.
 - [Spec-seeds-03](#pb-34) `sdd-scrum-practices.md`
   Framework practices for every project: what, how, and when. It does not redefine guide terms. Jobs 4–8 are filled under [Agent-10](#pb-44)–[Agent-14](#pb-48).
 - [Spec-seeds-04](#pb-35) `artifacts-map.md`
-  Generic artifacts-map starter for a new project.
+  Retired by [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md). There is no template seed. The example is in the artifacts-map section of `sdd-scrum-practices.md`.
 - [Spec-seeds-05](#pb-36) `product-backlog.md`
   Example product backlog a new project copies. Not this repo's product backlog.
 - [Spec-seeds-06](#pb-37) `sprint-backlog.md`
@@ -204,6 +204,8 @@ Every Spec-seeds row has the same acceptance criteria: the user has reviewed and
   Review and finalize the three Features catalog seeds under `content/features/` in the pack repo: `features.en.md`, `features.zh-Hans.md`, and `features.zh-Hant.md`.
 - [Spec-seeds-13](#pb-84) `issues-log.md`
   Generic issues-log starter for a new project. A defect record. Two tables, in order: Open issues, then Closed issues. Open columns: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Status`, `Added time`. Status in that table is `Open`, `Fixed`, or `Deferred`. `Fixed` means a fix exists and the close check is not confirmed. `Deferred` means accepted and not scheduled. Closed columns: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Closed Sprint`, `Closed time`. A row moves there only when it is `Closed`. Priority is `Fatal`, `High`, `Medium`, or `Low`. `Id` does not change when a row is sorted or moves. `Description` is under 3 lines. `Close Check` is shorter. Bullets when a sentence is not enough. `Related` is a spec id, a link, and the name. Both tables sort by component A to Z, then by time, oldest first. Dates look like `30/Sep/2026`. An open defect is not an OGT row. A concluded fix still gets a change-log entry. [ADR-075](./adr/ADR-075-issues-log-tables.md).
+- [Spec-seeds-14](#pb-90) `test-strategy.md`
+  Generic test-strategy starter for a new project. Not this repo's test strategy.
 
 [Back to top](#index)
 
@@ -277,10 +279,10 @@ HanS and HanT bodies for the locale template folders. One PBI per artifact group
 
 - [i18n-01](#pb-67) Framework definition: `scrum-in-sdd.md`, `sdd-scrum-practices.md`, and the other framework-definition prose in the locale folders
   HanS and HanT bodies of the framework-definition seeds match the EN meaning. Files: `scrum-in-sdd.md`, `sdd-scrum-practices.md`, and any other framework-definition prose placed in the locale template folders.
-- [i18n-02](#pb-68) Process artifacts: `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, `artifacts-map.md`
-  HanS and HanT starters for the five process artifacts match the EN starter meaning. Files: `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, `artifacts-map.md`.
-- [i18n-03](#pb-69) Engineering artifacts: `architecture.md`, `{model}-stories`, `{model}-design.md`, `{model}-test.md`, `deployment.md`, `.secrets`
-  HanS and HanT starters for the engineering artifacts match the EN starter meaning. Files: `architecture.md`, `{model}-stories`, `{model}-design.md`, `{model}-test.md`, `deployment.md`, `.secrets`.
+- [i18n-02](#pb-68) Process artifacts: `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`
+  HanS and HanT starters for the four process artifacts match the EN starter meaning. Files: `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`. There is no `artifacts-map.md` template seed.
+- [i18n-03](#pb-69) Engineering artifacts: `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `deployment.md`, `.secrets`, `test-strategy.md`
+  HanS and HanT starters for the engineering artifacts match the EN starter meaning. Files: `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `deployment.md`, `.secrets`, `test-strategy.md`.
 
 [Back to top](#index)
 
@@ -293,7 +295,7 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 - Follow rule DoD
 - Feature confirmed usable by user
 - Acceptance criteria (story mapping spec names with links) passed
-- Quality meets [agent test](./framework/framework-test.md) · [MCP test](./mcp/mcp-test.md) · [portal test](./admin-portal/app-test.md)
+- Quality meets [agent test](./framework/framework-tests.md) · [MCP test](./mcp/mcp-tests.md) · [portal test](./admin-portal/app-tests.md)
 
 [Back to top](#index)
 
@@ -339,10 +341,10 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | Skill | Skill-15 | Skill: sdd-review-status | Compare the board with the current sprint's named work and write only after the second yes (`skill_get_status`). | [ADR-076](./adr/ADR-076-review-status-one-skill.md) · [ADR-073](./adr/ADR-073-skill-get-status.md) · [Skill-10](#pb-30) | Sprint 4 | ToDo |
 | Skill | Skill-16 | Skill: sdd-create-skill | Create or revise a skill (`skill_create_skill`). | [ADR-074](./adr/ADR-074-sdd-create-skill.md) | — | ToDo |
 | Skill | Skill-17 | Skill: prompt-optimizer | The pack skill `prompt-optimizer` optimizes a prompt. It does not match ECC components. | [prompt-optimizer](./framework/seeds/skills/prompt-optimizer/SKILL.md) | Sprint 5 | ToDo |
-| Spec-seeds | Spec-seeds-01 | Seed: constants.md | Lookup file for path names, skill keys, and rule keys. | [MCP-01](#pb-16) · [ADR-060](./adr/ADR-060-constants-on-client-root.md) | Sprint 2 | Done |
+| Spec-seeds | Spec-seeds-01 | Seed: constants.json | Lookup file for path names, skill keys, and rule keys. | [MCP-01](#pb-16) · [ADR-081](./adr/ADR-081-constants-json.md) · [ADR-060](./adr/ADR-060-constants-on-client-root.md) | Sprint 2 | Done |
 | Spec-seeds | Spec-seeds-02 | Seed: scrum-in-sdd.md | Framework guide for every project: names and meaning. | [MCP-01](#pb-16) · [i18n-01](#pb-67) | Sprint 1 | Done |
 | Spec-seeds | Spec-seeds-03 | Seed: sdd-scrum-practices.md | Framework practices for every project: what, how, and when. | [MCP-01](#pb-16) · [i18n-01](#pb-67) | Sprint 1 | Done |
-| Spec-seeds | Spec-seeds-04 | Seed: artifacts-map.md | Generic artifacts-map starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 4 | WIP |
+| Spec-seeds | Spec-seeds-04 | Seed: artifacts-map.md | Retired by [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md). No template seed. | [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md) | — | Retired |
 | Spec-seeds | Spec-seeds-05 | Seed: product-backlog.md | Example product backlog a new project copies. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 6 | ToDo |
 | Spec-seeds | Spec-seeds-06 | Seed: sprint-backlog.md | Generic sprint-backlog starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 4 | Done |
 | Spec-seeds | Spec-seeds-07 | Seed: status.md | Generic status starter for a new project. | [MCP-01](#pb-16) · [i18n-02](#pb-68) | Sprint 4 | Done |
@@ -352,6 +354,7 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | Spec-seeds | Spec-seeds-11 | Seed: .secrets | Secrets file named in the guide. | [MCP-01](#pb-16) · [Spec-seeds-10](#pb-41) · [i18n-03](#pb-69) | Sprint 15 | ToDo |
 | Spec-seeds | Spec-seeds-12 | Seeds: features.md under content/features | Finalize the three Features catalog seeds. | [Web-portal-07](#pb-73) · [MCP-01](#pb-16) | Sprint 16 | ToDo |
 | Spec-seeds | Spec-seeds-13 | Seed: issues-log.md | Generic issues-log starter. Open and Closed tables. | [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) · [ADR-075](./adr/ADR-075-issues-log-tables.md) · [Spec-seeds-08](#pb-39) | Sprint 4 | WIP |
+| Spec-seeds | Spec-seeds-14 | Seed: test-strategy.md | Generic test-strategy starter for a new project. | [Spec-seeds-03](#pb-34) · [i18n-03](#pb-69) | Sprint 15 | ToDo |
 | MCP | MCP-01 | Installer: pack allow-list + ledger | `sdd_install_framework` and `sdd_update_framework` copy the pack allow-list onto `{client_root}`. | [`mcp/mcp-design.md`](./mcp/mcp-design.md) · [`framework/framework-design.md`](./framework/framework-design.md) §2.4 · [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) · [MCP-02](#pb-75) | Sprint 16 | ToDo |
 | MCP | MCP-02 | Local binary: ~/.sdd/sdd-mcp | One local stdio program at `~/.sdd/sdd-mcp` for macOS, Windows, and Linux. | [ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md) · [ADR-053](./adr/ADR-053-server-side-sync-thin-stdio.md) · [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) · [`mcp/mcp-design.md`](./mcp/mcp-design.md) §2.1 and §4.1 · [MCP-01](#pb-16) | Sprint 2 | Done |
 | MCP | MCP-03 | MCP tools without sdd_list_versions | Unregister `sdd_list_versions` from stdio and HTTP MCP. | [ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md) · [`mcp/mcp-design.md`](./mcp/mcp-design.md) §3 · [`mcp/mcp-stories.md`](./mcp/mcp-stories.md) `sdd-mcp-tool-surface` · [MCP-02](#pb-75) · [Web-portal-07](#pb-73) | Sprint 3 | Done |
@@ -370,8 +373,8 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | Web-portal | Web-portal-13 | Get secret moves to Setup | The secret form leaves the bottom of Features and sits at the bottom of Setup, after the tools table. | [ADR-067](./adr/ADR-067-get-secret-on-setup.md) · [Web-portal-08](#pb-74) · [`admin-portal/ui-mockup/13-instructions.html`](./admin-portal/ui-mockup/13-instructions.html) | Sprint 3 | Done |
 | Web-portal | Web-portal-14 | Enriched README.md for IDE invoke differences | The repo README explains how each IDE starts an agent, and which clients are not verified. | [Web-portal-01](#pb-15) · [`framework-design.md`](./framework/framework-design.md) · [`ide-agent-invoke.md`](./knowledge/agent/ide-agent-invoke.md) | — | ToDo |
 | i18n | i18n-01 | Framework definition locales | HanS and HanT bodies of the framework-definition seeds match the EN meaning. | [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) · [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) | Sprint 16 | ToDo |
-| i18n | i18n-02 | Process artifact locales | HanS and HanT starters for the five process artifacts match the EN starter meaning. | [Spec-seeds-04](#pb-35) · [Spec-seeds-05](#pb-36) · [Spec-seeds-06](#pb-37) · [Spec-seeds-07](#pb-38) · [Spec-seeds-08](#pb-39) | Sprint 16 | ToDo |
-| i18n | i18n-03 | Engineering artifact locales | HanS and HanT starters for the engineering artifacts match the EN starter meaning. | [Spec-seeds-09](#pb-40) · [Spec-seeds-10](#pb-41) · [Spec-seeds-11](#pb-66) | Sprint 16 | ToDo |
+| i18n | i18n-02 | Process artifact locales | HanS and HanT starters for the four process artifacts match the EN starter meaning. | [Spec-seeds-05](#pb-36) · [Spec-seeds-06](#pb-37) · [Spec-seeds-07](#pb-38) · [Spec-seeds-08](#pb-39) | Sprint 16 | ToDo |
+| i18n | i18n-03 | Engineering artifact locales | HanS and HanT starters for the engineering artifacts match the EN starter meaning. | [Spec-seeds-09](#pb-40) · [Spec-seeds-10](#pb-41) · [Spec-seeds-11](#pb-66) · [Spec-seeds-14](#pb-90) | Sprint 16 | ToDo |
 
 [Back to top](#index)
 
@@ -459,5 +462,9 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | 2026-10-01 | Sprint 4 feature-03 is renamed Seed: artifacts-map.md. It builds the EN authoring seed for [Spec-seeds-04](#pb-35). |
 | 2026-10-01 | [Spec-seeds-04](#pb-35) reopened. Sprint 4 feature-03 is WIP: the `artifacts-map.md` seed is under review with the seed artifacts building guide. |
 | 2026-10-02 | Added [Skill-17](#pb-89) `prompt-optimizer`. Sprint 5 feature-31 removes ECC from that skill. |
+| 2026-10-03 | Added [Spec-seeds-14](#pb-90) `test-strategy.md` on Sprint 15, with the other engineering starters. |
+| 2026-10-03 | [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md): no `artifacts-map.md` template seed. The Pokymon example stays in the practices artifacts-map section. [Spec-seeds-04](#pb-35) and Sprint 4 feature-03 are Retired. |
+| 2026-10-03 | [ADR-081](./adr/ADR-081-constants-json.md): Spec-seeds-01 is `constants.json`. Living readers use that file. |
+| 2026-10-03 | [ADR-082](./adr/ADR-082-artifacts-map-json.md): the project path file is `artifacts-map.json`. Living readers and audit fixtures use that file. |
 
 [Back to top](#index)

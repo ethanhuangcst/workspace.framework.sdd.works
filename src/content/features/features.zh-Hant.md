@@ -40,7 +40,7 @@ v.0.1.0
 
 - scrum-in-sdd.md — SDD-Scrum 框架的單一事實來源。
 - sdd-scrum-practices.md — 開發者與 AI 智能體協作時，Harness Engineering 與 SDD 實務的單一事實來源。
-- artifacts-map.md — 產物路徑定義與專案對應。
+- artifacts-map.json — 產物路徑定義與專案對應。
 
 ### sdd-scrum 流程
 

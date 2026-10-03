@@ -1,0 +1,40 @@
+{
+  "artifacts_root": "specs",
+  "locale": "EN",
+  "files": [
+    "specs/product-backlog.md",
+    "specs/sprint-backlog.md",
+    "specs/status.md",
+    "specs/issues-log.md",
+    "specs/changes-log.md",
+    "specs/architecture.md",
+    "specs/deployment.md"
+  ],
+  "modules": [
+    {
+      "folder": "admin-portal",
+      "stem": "app",
+      "files": [
+        "specs/admin-portal/app-design.md",
+        "specs/admin-portal/app-stories.md",
+        "specs/admin-portal/app-tests.md"
+      ]
+    },
+    {
+      "folder": "mcp",
+      "files": [
+        "specs/mcp/mcp-design.md",
+        "specs/mcp/mcp-stories.md",
+        "specs/mcp/mcp-tests.md"
+      ]
+    },
+    {
+      "folder": "framework",
+      "files": [
+        "specs/framework/framework-design.md",
+        "specs/framework/framework-stories.md",
+        "specs/framework/framework-tests.md"
+      ]
+    }
+  ]
+}

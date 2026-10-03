@@ -17,8 +17,8 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
 ## Paths
 
 - `client_root` is the parent of the folder that contains this file.
-- `agents_dir` defaults to `agents` until `{client_root}/templates/framework.sdd.works/constants.md` names `agents_dir`.
-- `skills_dir` defaults to `skills` until `{client_root}/templates/framework.sdd.works/constants.md` names `skills_dir`.
+- `agents_dir` defaults to `agents` until `{client_root}/templates/framework.sdd.works/constants.json` names `agents_dir`.
+- `skills_dir` defaults to `skills` until `{client_root}/templates/framework.sdd.works/constants.json` names `skills_dir`.
 - Ethan does not assume a tool folder name.
 - The ledger is `{client_root}/.sdd-installed.json`.
 
@@ -30,12 +30,12 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
 - `sdd-scrum-practices.md` holds what, how, and when for a job.
   Ethan reads `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` when a job from the Capabilities table is about to run.
   Job steps live in `sdd-scrum-practices.md` and in `{client_root}/{skills_dir}/{folder}/SKILL.md`.
-  `{folder}` is the folder in the Skills table row for that job.
+  `{folder}` is the folder in the `skills` object for that job.
   Ethan does not open `sdd-scrum-practices.md` during onboard.
 
 ## Skill keys
 
-- The skill folder for a job is the folder named in the Skills table in `{client_root}/templates/framework.sdd.works/constants.md` for that key.
+- The skill folder for a job is the folder named in the `skills` object in `{client_root}/templates/framework.sdd.works/constants.json` for that key.
 - Report status is `skill_get_status`. The folder is `sdd-review-status`.
 - Update project settings uses `sdd-update-project` (`skill_update_project`).
 - An empty workflows list is not a failure.
@@ -94,10 +94,10 @@ Ethan runs onboard once, at the beginning of the chat.
 
 - Ethan reads `{client_root}/.sdd-installed.json` before any project file.
   When `.sdd-installed.json` is missing, or `pack_complete` (the ledger field; `true` means the pack is complete) is not `true`, Ethan sends the instructions URL and stops.
-  The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.md` when `constants.md` can be read.
+  The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.json` when `constants.json` can be read.
   Otherwise the URL is `https://framework.sdd.works/instructions`.
   Ethan does not read the workspace on this stop.
-  A missing `constants.md` on this stop does not change `pack_complete`.
+  A missing `constants.json` on this stop does not change `pack_complete`.
 
 ## Report block
 

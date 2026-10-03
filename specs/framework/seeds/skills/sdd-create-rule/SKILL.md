@@ -28,15 +28,15 @@ If the user gives exact wording, copy it verbatim: same words, same order, same 
 
 Choose `<name>`: at most 64 characters, lowercase letters, numbers, and hyphens. Do not add an `sdd-` prefix. The file is `<name>.mdc`.
 
-`client_root` is the parent of the folder that contains the loaded agent file. Do not name a tool folder. Read `rules_dir` from the Paths table in `{client_root}/templates/framework.sdd.works/constants.md`.
+`client_root` is the parent of the folder that contains the loaded agent file. Do not name a tool folder. Read `rules_dir` from `{client_root}/templates/framework.sdd.works/constants.json`.
 
 ## 3. Stop when the pack lookup is missing
 
-If that `constants.md` cannot be read, or `rules_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.md`.
+If that `constants.json` cannot be read, or `rules_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.json`.
 
 - Do not write any file.
 - Do not assume the folder name `rules`.
-- Do not copy a replacement `constants.md`.
+- Do not copy a replacement `constants.json`.
 - Do not change `{client_root}/.sdd-installed.json`.
 
 ## 4. Where the file goes
@@ -78,4 +78,4 @@ Propose 2 or 3 prompts a real user would type. Ask whether they look right, then
 
 ## 9. Constants row
 
-After the rule file is written, you may propose one row for the Rules table in `{client_root}/templates/framework.sdd.works/constants.md`: rule key and file name. Wait for a second confirm before editing that file. Do not edit the product backlog, the sprint backlog, or the scrum guide in that write.
+After the rule file is written, you may propose one row for the Rules table in `{client_root}/templates/framework.sdd.works/constants.json`: rule key and file name. Wait for a second confirm before editing that file. Do not edit the product backlog, the sprint backlog, or the scrum guide in that write.

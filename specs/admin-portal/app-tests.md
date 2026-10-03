@@ -4,7 +4,7 @@
 **Stories:** [`app-stories.md`](./app-stories.md) · **Design:** [`app-design.md`](./app-design.md)
 **Quality bar:** common-test-strategy — critical path 100%, overall ≥80% where measurable.
 
-**Note:** MCPI-05 (client path detection) has **no portal UI**. Portal tests cover existing admin features only. MCP path detection is covered in [`../mcp/mcp-test.md`](../mcp/mcp-test.md).
+**Note:** MCPI-05 (client path detection) has **no portal UI**. Portal tests cover existing admin features only. MCP path detection is covered in [`../mcp/mcp-tests.md`](../mcp/mcp-tests.md).
 
 ---
 
@@ -114,5 +114,5 @@ Run this after task-04 and task-05, before feature-07 is marked Done. Use `/` an
 
 ## 8. Out of scope
 
-- MCP tool contracts and path detection E2E → [`../mcp/mcp-test.md`](../mcp/mcp-test.md)
+- MCP tool contracts and path detection E2E → [`../mcp/mcp-tests.md`](../mcp/mcp-tests.md)
 - Live Resend / live GitHub in default CI

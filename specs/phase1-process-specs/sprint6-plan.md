@@ -67,14 +67,14 @@ A Cursor user can install the SDD framework locally and update it to a chosen ve
 
 ## Design
 
-- [mcp-design.md](../mcp/mcp-design.md) · [mcp-stories.md](../mcp/mcp-stories.md) · [mcp-test.md](../mcp/mcp-test.md)
+- [mcp-design.md](../mcp/mcp-design.md) · [mcp-stories.md](../mcp/mcp-stories.md) · [mcp-tests.md](../mcp/mcp-tests.md)
 
 ## Deferred to Sprint 7
 
 Verification and scope items not required to close MVP-6 — see [`sprint7-plan.md`](./sprint7-plan.md) § Carried from Sprint 6:
 
-- Mac live stdio path E2E ([`mcp-test.md`](../mcp/mcp-test.md) §5 Tests 1–5; field `clientInfo.name` observation)
-- Manual operator scenarios M1–M2 ([`mcp-test.md`](../mcp/mcp-test.md) §7.4)
+- Mac live stdio path E2E ([`mcp-tests.md`](../mcp/mcp-tests.md) §5 Tests 1–5; field `clientInfo.name` observation)
+- Manual operator scenarios M1–M2 ([`mcp-tests.md`](../mcp/mcp-tests.md) §7.4)
 - Sync E2E S2–S5 (rename/delete/GitHub-down scenarios beyond LE1–LE5)
 - MCPI-05 env matrix: Copilot (`COPILOT_*`), OpenCode (`XDG_DATA_HOME`), `CLINE_DATA_DIR`
 - Cross-client install beyond Cursor-first ([`MCPI-02`](../mcp/mcp-stories.md#sdd-mcp-cross-client))

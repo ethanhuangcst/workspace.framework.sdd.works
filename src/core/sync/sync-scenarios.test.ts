@@ -1,5 +1,5 @@
 /**
- * Fixture equivalents of mcp-test.md §6 S2–S5 and §7.4 M1 (VERIF-02).
+ * Fixture equivalents of mcp-tests.md §6 S2–S5 and §7.4 M1 (VERIF-02).
  */
 import { afterEach, describe, expect, it } from "vitest";
 import {

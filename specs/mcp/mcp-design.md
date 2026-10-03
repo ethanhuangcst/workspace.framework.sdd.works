@@ -2,7 +2,7 @@
 
 MCP server for install, update, list, and get-key. Stories: [`mcp-stories.md`](./mcp-stories.md). Portal: [`app-design.md`](../admin-portal/app-design.md). Stack: [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) (Phase 1 archive).
 
-**Status:** implemented (Sprint 6 + ADR-054 HTTP + ADR-055 sync freshness). **Sprint 2 Feature-01 (MCP-01) is designed, not fully implemented:** pack allow-list + `templates/` + install ledger with `pack_complete` (ADR-057) + end-user stdio primary path (ADR-058). Stories: [`mcp-stories.md`](./mcp-stories.md). Tests: [`mcp-test.md`](./mcp-test.md). ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md) (HTTP fallback), [055](../adr/ADR-055-layered-sync-freshness.md), [056](../adr/ADR-056-single-user-root-framework-pack.md), [057](../adr/ADR-057-install-ledger-pack-complete.md), [058](../adr/ADR-058-stdio-end-user-http-fallback.md), [061](../adr/ADR-061-setup-prompt-public-path.md).
+**Status:** implemented (Sprint 6 + ADR-054 HTTP + ADR-055 sync freshness). **Sprint 2 Feature-01 (MCP-01) is designed, not fully implemented:** pack allow-list + `templates/` + install ledger with `pack_complete` (ADR-057) + end-user stdio primary path (ADR-058). Stories: [`mcp-stories.md`](./mcp-stories.md). Tests: [`mcp-tests.md`](./mcp-tests.md). ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md) (HTTP fallback), [055](../adr/ADR-055-layered-sync-freshness.md), [056](../adr/ADR-056-single-user-root-framework-pack.md), [057](../adr/ADR-057-install-ledger-pack-complete.md), [058](../adr/ADR-058-stdio-end-user-http-fallback.md), [061](../adr/ADR-061-setup-prompt-public-path.md).
 
 ## 1. Goals and non-goals
 
@@ -460,7 +460,7 @@ Canonical client-root names (path map): `agents`, `skills`, `rules`, `workflows`
 | `workflows/` | `{client_root}/workflows/` |
 | `templates/` | `{client_root}/templates/` (not `paths.other` / `sdd/`) |
 
-Missing pack folders are skipped; they do not fail install. `ethan.md` and `constants.md` are later Sprint 2 features; Feature-01 copies them when present.
+Missing pack folders are skipped; they do not fail install. `ethan.md` and `constants.json` are later Sprint 2 features; Feature-01 copies them when present.
 
 **Never copy** other GitHub top-level names (`.gitignore`, `*.code-workspace`, `src`, `prisma`, `package.json`, `specs`, `.github`, …). Sync **inventory** for install must use the same allow-list (including the aliases above); do not treat leftover tree nodes as install targets via `inventory.other`.
 
@@ -484,7 +484,7 @@ Ledger shape:
     "rules": ["rules/common-test-strategy.mdc", "rules/dod.mdc"],
     "agents": ["agents/ethan.md"],
     "workflows": [],
-    "templates": ["templates/framework.sdd.works/constants.md"]
+    "templates": ["templates/framework.sdd.works/constants.json"]
   }
 }
 ```
@@ -515,7 +515,7 @@ Manifest shape (`~/.<client>/.sdd-installed.json`):
     "rules": ["rules/common-test-strategy.mdc", "rules/dod.mdc"],
     "agents": ["agents/code-reviewer.md"],
     "workflows": ["workflows/new-feature.md"],
-    "templates": ["templates/framework.sdd.works/constants.md"]
+    "templates": ["templates/framework.sdd.works/constants.json"]
   }
 }
 ```
@@ -1097,7 +1097,7 @@ Tool **descriptions** shown in clients: English source + overlay for `zh-Hans` /
 
 ## 9. Tests
 
-Test plan: [`mcp-test.md`](./mcp-test.md). Follow **common-test-strategy** + [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) quality bar. Unit: **PATH-01 table validation + resolver + path-policy + path-detect** (100% of those paths), idempotent update, key lookup, **LLM JSON schema + allow-list rejection of escaped paths**. Integration: tool contracts on stdio fixture + HTTP. Default CI: fixture GitHub payloads and **fixture Qwen responses** (live Qwen opt-in). E2E path-detection scenarios on a real Mac: see [`mcp-test.md`](./mcp-test.md) § Client path determination E2E.
+Test plan: [`mcp-tests.md`](./mcp-tests.md). Follow **common-test-strategy** + [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) quality bar. Unit: **PATH-01 table validation + resolver + path-policy + path-detect** (100% of those paths), idempotent update, key lookup, **LLM JSON schema + allow-list rejection of escaped paths**. Integration: tool contracts on stdio fixture + HTTP. Default CI: fixture GitHub payloads and **fixture Qwen responses** (live Qwen opt-in). E2E path-detection scenarios on a real Mac: see [`mcp-tests.md`](./mcp-tests.md) § Client path determination E2E.
 
 ## 10. Anti-patterns
 

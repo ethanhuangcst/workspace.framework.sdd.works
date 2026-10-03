@@ -3,12 +3,12 @@
 > **Purpose**: Overall design for every framework artifact: where the file lives, the shape it keeps, and how the coach runs. What, how, and when stay in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). Names and meaning stay in [`scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md).
 > **Practices**: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md).
 > **Framework**: [`scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md).
-> **Stories**: [`framework-stories.md`](./framework-stories.md). **Tests**: [`framework-test.md`](./framework-test.md).
+> **Stories**: [`framework-stories.md`](./framework-stories.md). **Tests**: [`framework-tests.md`](./framework-tests.md).
 > **Seed prompt**: [`./seeds/agents/ethan.md`](./seeds/agents/ethan.md).
 
 ## framework-artifacts
 
-An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header has three lines: `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.md` while `sdd-update-project` is still copying files.
+An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header has three lines: `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.json` while `sdd-update-project` is still copying files.
 
 ### Two repositories
 
@@ -71,7 +71,7 @@ Coach ethan: presence, onboard, jobs, and the installable prompt. The prompt in 
 > **Backlog**: [Agent-07 agent ethan — pack receipt start gate](../product-backlog.md#pb-17) · [Agent-15 Pack file: agents/ethan.md](../product-backlog.md#pb-63) · [MCP-01 Installer: pack allow-list + ledger](../product-backlog.md#pb-16) · [Agent-01 agent ethan — POC](../product-backlog.md#pb-6)
 > **Framework**: [`scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md) · **Practices**: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
-> **Stories**: [`framework-stories.md`](./framework-stories.md#agents) · **Tests**: [`framework-test.md`](./framework-test.md#agents)
+> **Stories**: [`framework-stories.md`](./framework-stories.md#agents) · **Tests**: [`framework-tests.md`](./framework-tests.md#agents)
 > **Seed prompt**: [`./seeds/agents/ethan.md`](./seeds/agents/ethan.md)
 
 This file is the design for the coach. The installable prompt is §14 and the seed file. It does not fill the Scrum guide or build skills.
@@ -136,7 +136,7 @@ The framework pack lives only in the user client root. [ADR-056](../adr/ADR-056-
 | Installed agents, skills, rules, workflows, templates | `{client_root}/`. Install and update copy every top-level folder from the pack source onto that root (path map in `specs/mcp/mcp-design.md`). |
 | Install ledger | `{client_root}/.sdd-installed.json`. Merge list and start gate. `pack_complete` is set true only when install or update finishes the copy. [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). |
 | `/ethan` | `{client_root}/{agents_dir}/ethan.md`. `client_root` is the parent of the folder that contains the loaded file. The prompt does not name a tool folder. |
-| `constants.md` | `{client_root}/templates/framework.sdd.works/constants.md` when the package includes templates |
+| `constants.json` | `{client_root}/templates/framework.sdd.works/constants.json` when the package includes templates |
 
 Ethan does not copy those trees into `<workspace>/.cursor/`. He does not download the pack again. He does not call install or update.
 
@@ -154,7 +154,7 @@ This repository has no `.cursor/` directory. It was removed on 2026-09-23. There
 
 §14 and the seed file `agents/ethan.md` are the same prompt. Keep them identical. The prompt names this step onboard. It runs once per chat. The job table is the capability list. Shared facts sit under Knowledge. Limits are the stops. The steps below are the same behavior, written for this design.
 
-1. Read only `{client_root}/.sdd-installed.json`. When the file is missing, or `pack_complete` is not `true`, send the instructions URL and stop. The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.md` when that file can be read. Otherwise it is `https://framework.sdd.works/instructions`. Do not read the workspace. Do not call the MCP tools `sdd_install_framework` or `sdd_update_framework`.
+1. Read only `{client_root}/.sdd-installed.json`. When the file is missing, or `pack_complete` is not `true`, send the instructions URL and stop. The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.json` when that file can be read. Otherwise it is `https://framework.sdd.works/instructions`. Do not read the workspace. Do not call the MCP tools `sdd_install_framework` or `sdd_update_framework`.
 2. Follow the skill `sdd-audit-artifacts`. It returns one verdict — `Uninitialized`, `Index broken`, or `Usable` — the paths it opened, the paths that failed, and whether `locale` is empty. It reports `locale` empty only when it opened the map and the field is missing. An empty `locale` does not change the verdict. It does not create or edit a project file. Read the labels `verdict`, `locale`, `opened`, and `failed` in that reply. Do not reshape them. `locale` is present only after the map opened. Do not decide the verdict or the locale yourself.
 3. Act on the verdict.
    - **Uninitialized.** Tell the user the project is not initialized, and that the next step is to start a new project. When the user confirms, follow the skill `sdd-update-project`.
@@ -210,7 +210,7 @@ The pack source is [ethanhuangcst/framework.sdd.works](https://github.com/ethanh
     "rules": ["rules/dod.mdc"],
     "agents": ["agents/ethan.md"],
     "workflows": [],
-    "templates": ["templates/framework.sdd.works/constants.md"]
+    "templates": ["templates/framework.sdd.works/constants.json"]
   }
 }
 ```
@@ -238,7 +238,7 @@ Update project settings uses `sdd-update-project` (`skill_update_project`). [ADR
 
 **What / how / when** for each job lives only in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) **Jobs**. Ethan does not embed those steps in the agent prompt.
 
-The prompt keeps a one-line **job index**: job name → skill key in `constants.md`. The user may ask in `artifact_locale`. When the user asks for a job, ethan matches the key, opens `{client_root}/{skills_dir}/{folder}` from that table, and follows the skill. Onboard names `sdd-audit-artifacts`, `sdd-update-project`, and `sdd-review-status` directly. For a job in the table below, use the folder the Skills table names for that key. Skills perform the work.
+The prompt keeps a one-line **job index**: job name → skill key in `constants.json`. The user may ask in `artifact_locale`. When the user asks for a job, ethan matches the key, opens `{client_root}/{skills_dir}/{folder}` from that table, and follows the skill. Onboard names `sdd-audit-artifacts`, `sdd-update-project`, and `sdd-review-status` directly. For a job in the table below, use the folder the `skills` object names for that key. Skills perform the work.
 
 | Job (practices) | Skill key |
 | --- | --- |
@@ -288,9 +288,9 @@ The MCP tools `sdd_install_framework` and `sdd_update_framework` copy the pack. 
 
 #### 5.2 Project constants
 
-`constants.md` is read from `{client_root}/templates/framework.sdd.works/constants.md` ([ADR-060](../adr/ADR-060-constants-on-client-root.md), [ADR-056](../adr/ADR-056-single-user-root-framework-pack.md)). On Cursor, `client_root` is `~/.cursor`. It is not copied into the workspace or into `specs/`.
+`constants.json` is read from `{client_root}/templates/framework.sdd.works/constants.json` ([ADR-060](../adr/ADR-060-constants-on-client-root.md), [ADR-056](../adr/ADR-056-single-user-root-framework-pack.md)). On Cursor, `client_root` is `~/.cursor`. It is not copied into the workspace or into `specs/`.
 
-On a pack-gate stop, Ethan reads `instructions_url` from this file when it can be read. When it cannot, he sends `https://framework.sdd.works/instructions`. A missing `constants.md` on that stop does not change `pack_complete`.
+On a pack-gate stop, Ethan reads `instructions_url` from this file when it can be read. When it cannot, he sends `https://framework.sdd.works/instructions`. A missing `constants.json` on that stop does not change `pack_complete`.
 
 ### 6. Missing files
 
@@ -301,7 +301,7 @@ Two different misses. Do not treat them as one recovery path.
 | A skill, a rule, or a seed template the current step needs | §2.4. Set `pack_complete` to false, send the instructions URL, and stop. |
 | Process files in the workspace | The audit verdict. `Uninitialized` and `Index broken` both propose `sdd-update-project`. Ethan waits for confirm before that skill writes. |
 
-The earlier Toggle A / Toggle B case table is retired. It told Ethan to call install. [`framework-test.md`](./framework-test.md#agents) `CE-LOAD-01` … `CE-LOAD-16` record that retired table. New cases follow §2.2 and §2.4.
+The earlier Toggle A / Toggle B case table is retired. It told Ethan to call install. [`framework-tests.md`](./framework-tests.md#agents) `CE-LOAD-01` … `CE-LOAD-16` record that retired table. New cases follow §2.2 and §2.4.
 
 ### 7. Knowledge (after onboard)
 
@@ -416,12 +416,12 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 | Doc | Role |
 | --- | --- |
 | [`framework-stories.md`](./framework-stories.md#agents) | Agent-07 start-gate stories and ACs |
-| [`framework-test.md`](./framework-test.md#agents) | Load/recovery and CE-GATE cases |
+| [`framework-tests.md`](./framework-tests.md#agents) | Load/recovery and CE-GATE cases |
 | [`./seeds/agents/ethan.md`](./seeds/agents/ethan.md) | Seed prompt. Same text as §14. |
 | [`../product-backlog.md`](../product-backlog.md) | Parent and MVP acceptance |
 | [`../sprint-backlog.md`](../sprint-backlog.md) | Schedule and D1 |
 | [`../architecture.md`](../architecture.md) | Stack pointer; presence decision |
-| [`../artifacts-map.md`](../artifacts-map.md) | Project index (framework / process / tracking / knowledge / optional / this product) |
+| [`../artifacts-map.json`](../artifacts-map.json) | Project index (framework / process / tracking / knowledge / optional / this product) |
 | [`./seeds/templates/EN/scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md) | Names and meaning |
 | [`./seeds/templates/EN/sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
 | [`../mcp/mcp-design.md`](../mcp/mcp-design.md) | Installer MCP (`sdd_install_framework` / `sdd_update_framework`) |
@@ -454,8 +454,8 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
 ## Paths
 
 - `client_root` is the parent of the folder that contains this file.
-- `agents_dir` defaults to `agents` until `{client_root}/templates/framework.sdd.works/constants.md` names `agents_dir`.
-- `skills_dir` defaults to `skills` until `{client_root}/templates/framework.sdd.works/constants.md` names `skills_dir`.
+- `agents_dir` defaults to `agents` until `{client_root}/templates/framework.sdd.works/constants.json` names `agents_dir`.
+- `skills_dir` defaults to `skills` until `{client_root}/templates/framework.sdd.works/constants.json` names `skills_dir`.
 - Ethan does not assume a tool folder name.
 - The ledger is `{client_root}/.sdd-installed.json`.
 
@@ -467,12 +467,12 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
 - `sdd-scrum-practices.md` holds what, how, and when for a job.
   Ethan reads `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` when a job from the Capabilities table is about to run.
   Job steps live in `sdd-scrum-practices.md` and in `{client_root}/{skills_dir}/{folder}/SKILL.md`.
-  `{folder}` is the folder in the Skills table row for that job.
+  `{folder}` is the folder in the `skills` object for that job.
   Ethan does not open `sdd-scrum-practices.md` during onboard.
 
 ## Skill keys
 
-- The skill folder for a job is the folder named in the Skills table in `{client_root}/templates/framework.sdd.works/constants.md` for that key.
+- The skill folder for a job is the folder named in the `skills` object in `{client_root}/templates/framework.sdd.works/constants.json` for that key.
 - Report status is `skill_get_status`. The folder is `sdd-review-status`.
 - Update project settings uses `sdd-update-project` (`skill_update_project`).
 - An empty workflows list is not a failure.
@@ -531,10 +531,10 @@ Ethan runs onboard once, at the beginning of the chat.
 
 - Ethan reads `{client_root}/.sdd-installed.json` before any project file.
   When `.sdd-installed.json` is missing, or `pack_complete` (the ledger field; `true` means the pack is complete) is not `true`, Ethan sends the instructions URL and stops.
-  The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.md` when `constants.md` can be read.
+  The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.json` when `constants.json` can be read.
   Otherwise the URL is `https://framework.sdd.works/instructions`.
   Ethan does not read the workspace on this stop.
-  A missing `constants.md` on this stop does not change `pack_complete`.
+  A missing `constants.json` on this stop does not change `pack_complete`.
 
 ## Report block
 
@@ -589,23 +589,24 @@ Ethan runs onboard once, at the beginning of the chat.
 
 ## rules
 
-Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names three rules: `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc`. Their bodies stay on their product-backlog rows until those files are written. The pack does not ship `artifacts-map.mdc`.
+Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names three rules: `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc`. `friendly-language.mdc` is the writing rule. Their bodies stay on their product-backlog rows until those files are written. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `specs/framework/seeds/templates/constants.json`.
 
 | Rule | Authoring seed | After install |
 | --- | --- | --- |
 | `dod.mdc` | `specs/framework/seeds/rules/dod.mdc` | `{client_root}/rules/dod.mdc` |
 | `incremental-delivery.mdc` | `specs/framework/seeds/rules/incremental-delivery.mdc` | `{client_root}/rules/incremental-delivery.mdc` |
 | `realtime-status.mdc` | `specs/framework/seeds/rules/realtime-status.mdc` | `{client_root}/rules/realtime-status.mdc` |
+| `friendly-language.mdc` | `specs/framework/seeds/rules/friendly-language.mdc` | `{client_root}/rules/friendly-language.mdc` |
 
 The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### artifacts-map.mdc
 
-`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `{workspace}/artifacts-map.md` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. A turn updates a stored path when the user asks for that update. Rule-01 through Rule-03 stay open until each rule is confirmed. Rule-04 is retired.
+`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `{workspace}/artifacts-map.json` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. A turn updates a stored path when the user asks for that update. Rule-01 through Rule-03 stay open until each rule is confirmed. Rule-04 is retired.
 
 ### friendly-language.mdc
 
-`friendly-language.mdc` replaces `writing-style.mdc`. It keeps every job that file already does, and it adds the checks that file never made the agent perform. It is not in the install table above. The personal file `writing-style.mdc` is removed. `friendly-language.mdc` is the loaded rule.
+`friendly-language.mdc` replaces `writing-style.mdc`. It keeps every job that file already does, and it adds the checks that file never made the agent perform. The constants key is `friendly-language`. The personal file `writing-style.mdc` is removed. `friendly-language.mdc` is the loaded rule.
 
 #### Why writing-style.mdc does not change the reply
 
@@ -629,7 +630,7 @@ The file uses lists, because a paragraph that stacks several duties is hard to a
 - Stock AI phrasing is a class: warmth, eagerness, or a clever contrast that adds no fact. The named phrases are samples. A new phrase in that class fails the same check.
 - Markdown patterns are general. A list is required for two or more points. Raw HTML is banned. Tight lists are required. The Cursor preview stop is one pattern in that section.
 
-The text below is the full file. It is written at `~/.cursor/rules/friendly-language.mdc` and in the personal rules catalog. `writing-style.mdc` is removed from both places. It is not in the install table above.
+The text below is the full file. It is written at `~/.cursor/rules/friendly-language.mdc` and in the personal rules catalog. `writing-style.mdc` is removed from both places.
 
 ````markdown
 ---
@@ -868,17 +869,17 @@ A skill's steps live in its `SKILL.md`. Onboard uses the three skills below. The
 
 ### sdd-audit-artifacts
 
-Read-only skill. [Skill-10](../product-backlog.md#pb-30). Stories: [`framework-stories.md`](./framework-stories.md#sdd-audit-artifacts). Tests: [`framework-test.md`](./framework-test.md) `CE-AUDIT-01` through `CE-AUDIT-17`. Sprint 4 feature-23 is Done. The authoring seed is the skill. Ethan confirmed the skill usable on 2026-09-30. CE-AUDIT-13 Windows stays Not observed in [`results.md`](./fixtures/sdd-audit-artifacts/results.md).
+Read-only skill. [Skill-10](../product-backlog.md#pb-30). Stories: [`framework-stories.md`](./framework-stories.md#sdd-audit-artifacts). Tests: [`framework-tests.md`](./framework-tests.md) `CE-AUDIT-01` through `CE-AUDIT-17`. Sprint 4 feature-23 is Done. The authoring seed is the skill. Ethan confirmed the skill usable on 2026-09-30. CE-AUDIT-13 Windows stays Not observed in [`results.md`](./fixtures/sdd-audit-artifacts/results.md).
 
 | Role | Path |
 | --- | --- |
 | Authoring seed | `specs/framework/seeds/skills/sdd-audit-artifacts/SKILL.md` |
 | After install | `{client_root}/skills/sdd-audit-artifacts/SKILL.md` |
 
-Onboard follows this skill after `pack_complete` is true. The verdict table in [artifacts-map.md](#artifacts-mapmd) stays the contract. The skill reaches it as follows.
+Onboard follows this skill after `pack_complete` is true. The verdict table in [artifacts-map.json](#artifacts-mapjson) stays the contract. The skill reaches it as follows.
 
-1. Read `{workspace}/artifacts-map.md` only at the workspace root. A map that exists only under a template folder is not read. Do not open another case folder. Do not read `results.md`. If the root file is missing, the verdict uses the no-map row. If the root file exists and cannot be read, the verdict is `Index broken`. A permission error means the file cannot be read. Do not look under `specs/` for a substitute.
-2. Open each stored path as `{workspace}/<path>`. Do not prefix `artifacts_root` again. Do not strip an absolute machine path down to a relative one. Join the stored text to the workspace and open that. If the open fails, report that stored path as failed and do not use another copy of the file.
+1. Read `{workspace}/artifacts-map.json` only at the workspace root. A map that exists only under a template folder is not read. Do not open another case folder. Do not read `results.md`. If the root file is missing, the verdict uses the no-map row. If the root file exists and cannot be read, the verdict is `Index broken`. A permission error means the file cannot be read. Do not look under `specs/` for a substitute.
+2. Open each stored path as `{workspace}/<path>`. A settings line is `artifacts_root` or `locale`. Do not open a settings line. Do not prefix `artifacts_root` again. Do not strip an absolute machine path down to a relative one. Join the stored text to the workspace and open that. If the open fails, report that stored path as failed and do not use another copy of the file.
 3. The process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, and `issues-log.md`.
 4. When the map is missing, look for those five names only under `{workspace}/specs/`. A copy under `docs/` or any other folder is not opened.
 
@@ -938,17 +939,17 @@ verdict: Index broken
 opened:
 - none
 failed:
-- artifacts-map.md
+- artifacts-map.json
 ```
 
-Do not create or edit a project file. Do not change `.sdd-installed.json`. Do not call install or update. Do not write a rule that updates `artifacts-map.md`.
+Do not create or edit a project file. Do not change `.sdd-installed.json`. Do not call install or update. Do not write a rule that updates `artifacts-map.json`.
 
 The later `SKILL.md` copies these lines:
 
 - Frontmatter name is `sdd-audit-artifacts`.
-- Read `{workspace}/artifacts-map.md` at the workspace root only. Do not open another case folder. Do not read `results.md`. Then open each stored path as `{workspace}/<path>`.
+- Read `{workspace}/artifacts-map.json` at the workspace root only. Do not open another case folder. Do not read `results.md`. Then open each stored path as `{workspace}/<path>`.
 - A stored path that fails is `Index broken` even when `opened` is `none`.
-- Quote an unknown locale, such as `"FR"`. A permission error on the root map returns `Index broken`, failed `artifacts-map.md`, and no `locale` line.
+- Quote an unknown locale, such as `"FR"`. A permission error on the root map returns `Index broken`, failed `artifacts-map.json`, and no `locale` line.
 - When the map is missing, look for the five process files only under `{workspace}/specs/`.
 - When the root map exists and cannot be read, return `Index broken` and do not open those five files.
 - Return one of `Uninitialized`, `Index broken`, or `Usable`, untranslated.
@@ -1037,7 +1038,7 @@ Authoring skill. [Skill-16](../product-backlog.md#pb-87). [ADR-074](../adr/ADR-0
 | Authoring seed | `specs/framework/seeds/skills/sdd-create-skill/SKILL.md` |
 | After install | `{client_root}/skills/sdd-create-skill/SKILL.md` |
 
-The skill writes another skill only in `{client_root}/{skills_dir}/<name>/`. `skills_dir` comes from `constants.md`. One confirm covers every file in that folder. When `constants.md` or `skills_dir` cannot be read, it stops without writing. A new row in the `constants.md` Skills table is a second confirm. It does not write production code. It does not ship `skill-creator` or `create-skill`.
+The skill writes another skill only in `{client_root}/{skills_dir}/<name>/`. `skills_dir` comes from `constants.json`. One confirm covers every file in that folder. When `constants.json` or `skills_dir` cannot be read, it stops without writing. A new key in the `constants.json` `skills` object is a second confirm. It does not write production code. It does not ship `skill-creator` or `create-skill`.
 
 ### sdd-build-agent
 
@@ -1048,7 +1049,7 @@ Authoring skill for an agent file. Not a practices job. It follows [TRUE AGENT](
 | Authoring seed | `specs/framework/seeds/skills/sdd-build-agent/SKILL.md` |
 | After install | `{client_root}/skills/sdd-build-agent/SKILL.md` |
 
-The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agents_dir` comes from `constants.md`. One confirm covers that file. When `constants.md` or `agents_dir` cannot be read, it stops without writing. It does not create a workspace agent file, name a tool folder, or start a second runtime. The agent file states capabilities and limits. It does not link to this design, and it does not get a Skills-table row. A constants row for `sdd-build-agent` itself is a separate confirm.
+The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agents_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `agents_dir` cannot be read, it stops without writing. It does not create a workspace agent file, name a tool folder, or start a second runtime. The agent file states capabilities and limits. It does not link to this design, and it does not get a Skills-table row. A constants row for `sdd-build-agent` itself is a separate confirm.
 
 ### Other skills
 
@@ -1057,22 +1058,23 @@ The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agen
 | `sdd-design` | `specs/framework/seeds/skills/sdd-design/SKILL.md` |
 | `sdd-implement` | `specs/framework/seeds/skills/sdd-implement/SKILL.md` |
 | `sdd-tracking` | `specs/framework/seeds/skills/sdd-tracking/SKILL.md` (not the status skill; [ADR-076](../adr/ADR-076-review-status-one-skill.md)) |
-| `sdd-atdd`, `sdd-tdd`, `sdd-update-project`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
+| `sdd-update-project` | `specs/framework/seeds/skills/sdd-update-project/SKILL.md` |
+| `sdd-atdd`, `sdd-tdd`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
 
 ## templates
 
 Template seeds are the files a new project may copy, plus the guide and practices that stay on the client root. A seed is not this repo's live process file.
 
-### constants.md
+### constants.json
 
-Lookup file for pack path names, the instructions URL, skill keys, and rule keys. [ADR-060](../adr/ADR-060-constants-on-client-root.md).
+Lookup file for pack path names, the instructions URL, skill keys, and rule keys. [ADR-081](../adr/ADR-081-constants-json.md). [ADR-060](../adr/ADR-060-constants-on-client-root.md) still places it on the client root.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/templates/constants.md` (beside the locale folders, not inside one) |
-| After install | `{client_root}/templates/framework.sdd.works/constants.md` |
+| Authoring seed | `specs/framework/seeds/templates/constants.json` (beside the locale folders, not inside one) |
+| After install | `{client_root}/templates/framework.sdd.works/constants.json` |
 
-Do not copy `constants.md` into the workspace, into `{workspace}/specs`, or into the artifacts root. It has no row in `artifacts-map.md`.
+Do not copy `constants.json` into the workspace, into `{workspace}/specs`, or into the artifacts root. It has no row in `artifacts-map.json`.
 
 ### scrum-in-sdd.md
 
@@ -1096,18 +1098,18 @@ What, how, and when. It does not redefine guide terms.
 
 It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads it from the client-root locale folder.
 
-### artifacts-map.md
+### artifacts-map.json
 
-Project config for where artifacts live. It records only what this project has. The header, the file block, and the module block are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapmd).
+Path configuration for this project. It is not an artifact and not a seed. The JSON shape is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md).
 
 | Role | Path |
 | --- | --- |
-| On a project | `{workspace}/artifacts-map.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/artifacts-map.md` |
+| On a project | `{workspace}/artifacts-map.json` |
+| Templates and example | [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson) |
 
-Sprint 4 feature-03 builds this authoring seed. [Spec-seeds-04](../product-backlog.md#pb-35). `sdd-update-project` copies the seed onto a new project. HanS and HanT copies are [i18n-02](../product-backlog.md#pb-68).
+There is no template seed. [ADR-080](../adr/ADR-080-no-artifacts-map-seed.md). `sdd-update-project` writes the project file from the configuration in that section. It does not copy the Pokymon example. [Spec-seeds-04](../product-backlog.md#pb-35) and Sprint 4 feature-03 are retired.
 
-Keep the name `artifacts-map.md`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`. This repo's live file is still `specs/artifacts-map.md`.
+Keep the name `artifacts-map.json`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`. This repo's live file is `{workspace}/artifacts-map.json`.
 
 On start, after the install ledger passes, Ethan follows the skill `sdd-audit-artifacts`. That skill returns one verdict. Ethan does not decide the verdict from a missing root file.
 
@@ -1266,7 +1268,7 @@ The EN seed is Sprint 14. Do not add a row for it in a project map until the fil
 
 User stories and acceptance criteria for one module.
 
-The filename is `{stem}-stories.md`. The stem is the module folder name unless `artifacts-map.md` stores a shorter stem. The file sits in that module folder. `specs/web-app/app-stories.md` is `{workspace}/specs/web-app/app-stories.md` when the stem is `app`.
+The filename is `{stem}-stories.md`. The stem is the module folder name unless `artifacts-map.json` stores a shorter stem. The file sits in that module folder. `specs/web-app/app-stories.md` is `{workspace}/specs/web-app/app-stories.md` when the stem is `app`.
 
 ### {stem}-design.md
 
@@ -1274,11 +1276,11 @@ Design spec for one module.
 
 The filename is `{stem}-design.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-design.md` is `{workspace}/specs/web-app/app-design.md` when the stem is `app`.
 
-### {stem}-test.md
+### {stem}-tests.md
 
 Test spec for one module.
 
-The filename is `{stem}-test.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-test.md` is `{workspace}/specs/web-app/app-test.md` when the stem is `app`.
+The filename is `{stem}-tests.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-tests.md` is `{workspace}/specs/web-app/app-tests.md` when the stem is `app`.
 
 ### deployment.md
 
@@ -1304,9 +1306,9 @@ A draft EN seed exists. It lists `NAME | where the value lives | who uses it` as
 
 ### adr/
 
-Durable decisions. A project may have this tree under `artifacts_root`. Ethan does not read it on start. Create a file when a retrospective finds a decision worth keeping. Do not leave an empty row in `artifacts-map.md` before the tree exists.
+Durable decisions. A project may have this tree under `artifacts_root`. Ethan does not read it on start. Create a file when a retrospective finds a decision worth keeping. Do not leave an empty row in `artifacts-map.json` before the tree exists.
 
 ### knowledge/
 
-Reusable research and ops notes. A project may have this tree under `artifacts_root`. Ethan does not read it on start. Create a file when a retrospective finds a lesson worth keeping. Do not leave an empty row in `artifacts-map.md` before the tree exists.
+Reusable research and ops notes. A project may have this tree under `artifacts_root`. Ethan does not read it on start. Create a file when a retrospective finds a lesson worth keeping. Do not leave an empty row in `artifacts-map.json` before the tree exists.
 

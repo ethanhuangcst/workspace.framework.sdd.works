@@ -1,7 +1,7 @@
 # ADR-060: constants.md on the client root
 
 ## Status
-Accepted
+Accepted. Decision 1's filename `constants.md` is superseded by [ADR-081](./ADR-081-constants-json.md) on 2026-10-03. The client-root home and the no-copy rule stay.
 
 ## Context
 The pack needs one lookup file for path names, the instructions URL, skill keys, and rule keys. Ethan reads it after `{client_root}/.sdd-installed.json` has `pack_complete: true`, and on a failed start he reads `instructions_url` from it when the file can be read.

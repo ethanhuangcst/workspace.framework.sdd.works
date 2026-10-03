@@ -348,10 +348,10 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **knowledge**：项目中沉淀的知识，默认路径：**{workspace-folder}/specs/knowledge**
 
 ### Artifacts
-- **SDD 核心工件**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.md**
+- **SDD 核心工件**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **框架工件**：**product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **工程工件**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-test.md; deployment.md; .secrets; issues-log.md**
-- **这三组之外的包文件**：**constants.md**（客户端根目录上的包查找表）；**.sdd-installed.json**（客户端根目录上的安装账本）
+- **工程工件**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; deployment.md; .secrets; issues-log.md**
+- **这三组之外的包文件**：**constants.json**（客户端根目录上的包查找表）；**.sdd-installed.json**（客户端根目录上的安装账本）
 
 ## 在 Scrum in SDD 中需要修改的 Scrum 概念
 
@@ -517,7 +517,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 这是 SDD 的核心工件。它们不是 KEEP 下的 Scrum 核心工件（Product Backlog、Sprint Backlog、Increment）。
 - **scrum-in-sdd.md**：名称与含义。留在客户端根目录。
 - **sdd-scrum-practices.md**：做什么、怎么做、何时做。留在客户端根目录。
-- **artifacts-map.md**：本项目工件所在位置。位于工作区根目录。
+- **artifacts-map.json**：本项目工件所在位置。位于工作区根目录。
 
 ### 框架工件
 - **product-backlog.md**：Product Backlog。
@@ -529,14 +529,14 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **architecture.md**：架构 spec。
 - **{stem}-stories.md**：用户故事和验收标准。
 - **{stem}-design.md**：设计 spec。
-- **{stem}-test.md**：测试 spec。
+- **{stem}-tests.md**：测试 spec。
 - **deployment.md**：部署 spec。
 - **.secrets**：机密名称及其值的存放位置。不含机密值。
 - **issues-log.md**：缺陷记录。它也是审计打开的五个过程文件之一。
 
 ### 包文件
 这些不是项目工件。它们不属于上面任何一组。
-- **constants.md**：客户端根目录上的包查找表，存放路径名、技能键和规则键。
+- **constants.json**：客户端根目录上的包查找表，存放路径名、技能键和规则键。
 - **.sdd-installed.json**：客户端根目录上的安装账本。由安装程序写入。`pack_complete: true` 表示包复制已完成。
 
 ### Knowledge

@@ -10,7 +10,7 @@ tags:
 related_spec: specs/framework/framework-design.md
 related:
   - specs/mcp/client.paths.md
-  - specs/framework/framework-test.md
+  - specs/framework/framework-tests.md
 ---
 
 # Cursor slash-invoke is agents/, not templates

@@ -349,10 +349,10 @@ As there is no current need for **workflows** at this stage, this folder remains
 - **knowledge**: knowledge learned from the project, default path: **{workspace-folder}/specs/knowledge**
 
 ### Artifacts
-- **Core artifacts**: **scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.md**
+- **Core artifacts**: **scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **Framework artifacts**: **product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **Engineering artifacts**: **architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-test.md; deployment.md; .secrets; issues-log.md**
-- **Pack files beside these groups**: **constants.md** (pack lookup on the client root); **.sdd-installed.json** (install ledger on the client root)
+- **Engineering artifacts**: **architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; deployment.md; .secrets; issues-log.md**
+- **Pack files beside these groups**: **constants.json** (pack lookup on the client root); **.sdd-installed.json** (install ledger on the client root)
 
 ## Scrum concepts that need to be modified in Scrum in SDD
 
@@ -517,7 +517,7 @@ This guide is for both humans and AI agents.
 These are the SDD core artifacts. They are not the Scrum core artifacts under KEEP (Product Backlog, Sprint Backlog, and Increment).
 - **scrum-in-sdd.md**: names and meaning. Stays on the client root.
 - **sdd-scrum-practices.md**: what, how, and when. Stays on the client root.
-- **artifacts-map.md**: where this project's artifacts live. Sits at the workspace root.
+- **artifacts-map.json**: where this project's artifacts live. Sits at the workspace root.
 
 ### Framework Artifacts
 - **product-backlog.md**: Product Backlog.
@@ -529,14 +529,14 @@ These are the SDD core artifacts. They are not the Scrum core artifacts under KE
 - **architecture.md**: architecture spec.
 - **{stem}-stories.md**: user stories and acceptance criteria.
 - **{stem}-design.md**: design spec.
-- **{stem}-test.md**: test spec.
+- **{stem}-tests.md**: test spec.
 - **deployment.md**: deployment spec.
 - **.secrets**: secret names and where the values live. No secret values.
 - **issues-log.md**: defect record. It is also one of the five process files the audit opens.
 
 ### Pack files
 These are not project artifacts. They are not in any group above.
-- **constants.md**: pack lookup for path names, skill keys, and rule keys, on the client root.
+- **constants.json**: pack lookup for path names, skill keys, and rule keys, on the client root.
 - **.sdd-installed.json**: install ledger on the client root. The installer writes it. `pack_complete: true` means the pack copy finished.
 
 ### Knowledge

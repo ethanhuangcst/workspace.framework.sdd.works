@@ -30,15 +30,15 @@ If the user gives exact wording for the skill, copy it verbatim: same words, sam
 
 Choose `<name>`: at most 64 characters, lowercase letters, numbers, and hyphens.
 
-`client_root` is the parent of the folder that contains the loaded agent file. Name that parent, so the path starts at the agent file's folder. Read `skills_dir` from the Paths table in `{client_root}/templates/framework.sdd.works/constants.md`.
+`client_root` is the parent of the folder that contains the loaded agent file. Name that parent, so the path starts at the agent file's folder. Read `skills_dir` from `{client_root}/templates/framework.sdd.works/constants.json`.
 
 ## 3. Stop when the pack lookup is missing
 
-If that `constants.md` cannot be read, or `skills_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.md`.
+If that `constants.json` cannot be read, or `skills_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.json`.
 
 - Stop before writing a file, so the pack stays unchanged.
-- Stop before assuming the folder name `skills`, so the path comes from `constants.md`.
-- Stop before copying a replacement `constants.md`, so the user's file stays as it is.
+- Stop before assuming the folder name `skills`, so the path comes from `constants.json`.
+- Stop before copying a replacement `constants.json`, so the user's file stays as it is.
 - Leave `{client_root}/.sdd-installed.json` unchanged.
 
 ## 4. Where the folder goes
@@ -75,6 +75,8 @@ Frontmatter is `name` and `description` only. Add a tool-specific invocation fla
 
 ### Instructions
 
+#### State the facts the agent lacks
+
 - Put in the body the facts the agent lacks, so the skill stays short.
 - Explain why an instruction matters.
 - Give each instruction three parts: the verb, the work, and the result.
@@ -82,18 +84,34 @@ Frontmatter is `name` and `description` only. Add a tool-specific invocation fla
   verb: Read
   work: the work related to the SBI
   result: the actual status of that SBI
+
+#### Run when called alone
+
 - Write the skill so it runs when called alone, so a caller can invoke it with no earlier skill reply.
   bad example: "Chat in the locale the audit reported."
   good example: "Chat in the language of the user's request."
 - Name a missing required file and stop, so this skill stays on its own job.
-  Name `{workspace}/artifacts-map.md` and stop.
-- Give a fixed result a reply template, so the reply has one shape.
-  One shape:
+  Name `{workspace}/artifacts-map.json` and stop.
+
+#### Write the message the user reads
+
+- A heading names what the reader gets. A single verb fails.
+  bad example: `Reply`
+  good example: `Summarize the findings`
+- An example states what the user understands.
+  bad example: "the card-list file is already in the workspace"
+  good example: "the actual status is WIP because the card list page is already in the web app"
+- A line the user reads is written from the user's view: the status, the reason, and the change.
+  good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP."
+- Give a fixed result one message shape.
   `sprint: {current sprint}`
   `open SBI:`
   `- {SBI code} {SBI name}: {actual status or not checked}`
   `mismatches:`
-  `- {what the process files say}; {what the work shows}`
+  `- sprint-backlog.md says feature-03 Card list view is ToDo; the actual status is WIP because the card list page is already in the web app`
+
+#### Keep the file short and linked
+
 - Link the file that owns a definition, so the definition stays in that file.
   Link the OGT definition in `../../templates/EN/sdd-scrum-practices.md`.
   Leave the definition text in that file.
@@ -156,7 +174,8 @@ Before you finish:
 - Each instruction has a verb, the work, and the result
 - The skill runs when called alone
 - A missing required file is named, and the skill stops
-- A fixed result has a reply template
+- A message the user reads has a heading that names what the user gets, and one shape
+- The shape uses the user's view: the status, the reason, and the change
 - A definition is a link to the file that owns it
 - `<name>` follows the name rule
 - Verbatim user wording is unchanged
@@ -174,4 +193,4 @@ Stop after those prompts, so no eval harness, grader, description optimizer, or 
 
 ## 9. Constants row
 
-After the skill folder is written, you may propose one row for the Skills table in `{client_root}/templates/framework.sdd.works/constants.md`: skill key and folder. Wait for a second confirm before editing that file. Leave the product backlog and the sprint backlog unchanged.
+After the skill folder is written, you may propose one key for the `skills` object in `{client_root}/templates/framework.sdd.works/constants.json`: skill key and folder. Wait for a second confirm before editing that file. Leave the product backlog and the sprint backlog unchanged.

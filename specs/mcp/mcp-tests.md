@@ -325,6 +325,6 @@ Run after pushing to **test.sdd** when validating a release:
 
 ## 8. Out of scope for MCP tests
 
-- Admin portal UI (see [`../admin-portal/app-test.md`](../admin-portal/app-test.md))
+- Admin portal UI (see [`../admin-portal/app-tests.md`](../admin-portal/app-tests.md))
 - Live Bailian Qwen spend in default CI
 - Writing Server 2 disk from HTTP install (must assert packageUrl response, no local writes on server)

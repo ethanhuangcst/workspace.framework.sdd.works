@@ -29,15 +29,15 @@ If the user gives exact names or limits, keep those words. If they hand over a s
 
 Choose `<name>`: at most 64 characters, lowercase letters, numbers, and hyphens.
 
-`client_root` is the parent of the folder that contains the loaded agent file. Do not name a tool folder. Read `agents_dir` from the Paths table in `{client_root}/templates/framework.sdd.works/constants.md`.
+`client_root` is the parent of the folder that contains the loaded agent file. Do not name a tool folder. Read `agents_dir` from `{client_root}/templates/framework.sdd.works/constants.json`.
 
 ## 3. Stop when the pack lookup is missing
 
-If that `constants.md` cannot be read, or `agents_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.md`.
+If that `constants.json` cannot be read, or `agents_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.json`.
 
 - Do not write any file.
 - Do not assume the folder name `agents`.
-- Do not copy a replacement `constants.md`.
+- Do not copy a replacement `constants.json`.
 - Do not change `{client_root}/.sdd-installed.json`.
 
 ## 4. Where the file goes
@@ -98,7 +98,7 @@ Before you finish:
 - There is no tool-specific invocation flag unless the user named the tool
 - There is no dated instruction and no backslash path
 - The only write is the confirmed file `{client_root}/{agents_dir}/<name>.md`
-- No row was proposed for the Skills table
+- No key was proposed for the `skills` object
 
 ## 8. Test prompts
 

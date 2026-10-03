@@ -1,5 +1,5 @@
 /**
- * Automated equivalent of mcp-test.md §5 (VERIF-01).
+ * Automated equivalent of mcp-tests.md §5 (VERIF-01).
  * Uses temp HOME + installFramework — no operator Mac session required.
  */
 import { afterEach, describe, expect, it } from "vitest";
