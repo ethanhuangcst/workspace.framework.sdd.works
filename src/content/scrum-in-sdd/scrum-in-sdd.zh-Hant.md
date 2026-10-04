@@ -430,6 +430,7 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - **dod.mdc**：Definition of Done
 - **incremental-delivery.mdc**：增量交付
 - **realtime-status.mdc**：實時跟蹤狀態，並在每項任務完成時更新 **status.md**
+- **friendly-language.mdc**：讓用戶和後續 agent 可讀的 chat 與 Markdown 文案
 
 ### Skills
 - **sdd-atdd**
@@ -617,6 +618,7 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - **dod.mdc**：Definition of Done。
 - **incremental-delivery.mdc**：增量交付策略。
 - **realtime-status.mdc**：實時狀態更新策略。
+- **friendly-language.mdc**：可讀 chat 與 Markdown（用戶與後續 agent）。
 
 ### Skills
 - **sdd-atdd**

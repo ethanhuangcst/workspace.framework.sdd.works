@@ -794,13 +794,13 @@ No `locale` line. `specs/status.md` is not opened. No project write. Ledger unch
 
 A rule case is a fixture workspace and the `.mdc` text. Assert the map edit or the install path. Do not render a page and do not score the rule as application code.
 
-`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) withdraws CE-RULE-01 through CE-RULE-04. CE-RULE-05 and CE-RULE-06 check that the file is absent. `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc` have a name and a client-root path. Their bodies are not designed yet, so L1 does not invent steps for them.
+`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) withdraws CE-RULE-01 through CE-RULE-04. CE-RULE-05 and CE-RULE-06 check that the file is absent. `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `friendly-language.mdc` have a name and a client-root path. Rule-01 through Rule-03 bodies are not designed yet, so L1 does not invent steps for them beyond path. `friendly-language.mdc` ships in the seed tree.
 
 The install path is `{client_root}/rules/<name>.mdc` on every OS. L1 uses that logical path. L2 checks the expanded Cursor path once per OS when a machine is available. The pack does not ship a rule that classifies the workspace or sets `pack_complete`.
 
 ### Plan
 
-Check that `artifacts-map.mdc` is absent. One case for the three rule names. One case that a Windows client root does not receive `artifacts-map.mdc`.
+Check that `artifacts-map.mdc` is absent. One case for the four rule names. One case that a Windows client root does not receive `artifacts-map.mdc`.
 
 ### Cases
 
@@ -835,9 +835,9 @@ Check that `artifacts-map.mdc` is absent. One case for the three rule names. One
 #### CE-RULE-05 — Names and install path
 
 - **Layer:** L1.
-- **Pre-condition:** The three rule names are `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc`. `artifacts-map.mdc` is not a pack rule.
+- **Pre-condition:** The four rule names are `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `friendly-language.mdc`. `artifacts-map.mdc` is not a pack rule.
 - **Test steps:** Read the name and the install path.
-- **Expected results:** No name has an `sdd-` prefix. The install path is `{client_root}/rules/<name>.mdc`. `artifacts-map.mdc` is absent. No behavior is asserted for `dod.mdc`, `incremental-delivery.mdc`, or `realtime-status.mdc` beyond that path.
+- **Expected results:** No name has an `sdd-` prefix. The install path is `{client_root}/rules/<name>.mdc`. `artifacts-map.mdc` is absent. No behavior is asserted for `dod.mdc`, `incremental-delivery.mdc`, or `realtime-status.mdc` beyond that path. `friendly-language.mdc` is present at that path from the seed tree.
 
 #### CE-RULE-06 — Windows rules directory
 

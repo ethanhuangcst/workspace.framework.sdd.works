@@ -430,6 +430,7 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 - **dod.mdc**: Definition of Done
 - **incremental-delivery.mdc**: Incremental Delivery
 - **realtime-status.mdc**: track status in real time and update **status.md** when each task is done
+- **friendly-language.mdc**: keep chat and Markdown readable for the user and for later agents
 
 ### Skills
 - **sdd-atdd**
@@ -612,6 +613,7 @@ This guide is for both humans and AI agents.
 - **dod.mdc**: Definition of Done.
 - **incremental-delivery.mdc**: incremental delivery policy.
 - **realtime-status.mdc**: real-time status update policy.
+- **friendly-language.mdc**: readable chat and Markdown for the user and for later agents.
 
 ### Skills
 - **sdd-atdd**

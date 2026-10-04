@@ -47,23 +47,23 @@ Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 
 # Requirements
 
-Each item has a PBI code, one noun for the deliverable, and bullets the user can act on. The table uses the same code and the same noun. Back-references use the PBI code.
+Each item has a PBI code, one noun for the deliverable, and bullets the user can act on. The table uses the same code and the same noun. Requirements link the PBI code to the table row (`#pb-N`). The table links the PBI code to Requirements (`#req-pb-N`). Other files link to `#pb-N` only.
 
 ---------
 
 ## Collect
 
-- [Collect-01](#pb-1) Catalog a card
+- <a id="req-pb-1"></a>[Collect-01](#pb-1) Catalog a card
   - The collector records name, set, card number, rarity, and quantity.
   - Set plus card number is unique.
   - Quantity can increase.
-- [Collect-02](#pb-2) Search by set and rarity
+- <a id="req-pb-2"></a>[Collect-02](#pb-2) Search by set and rarity
   - Search only the current collector’s cards.
   - Filter by set or rarity.
-- [Collect-03](#pb-3) Binder
+- <a id="req-pb-3"></a>[Collect-03](#pb-3) Binder
   - The collector creates a binder and places a card in it.
   - The card still appears in the full catalog.
-- [Collect-04](#pb-4) Record a trade
+- <a id="req-pb-4"></a>[Collect-04](#pb-4) Record a trade
   - Record the card given, the card received, and the date.
   - Quantities change with the record.
 
@@ -73,7 +73,7 @@ Each item has a PBI code, one noun for the deliverable, and bullets the user can
 
 ## Scope
 
-- [Scope-01](#pb-5) Scope gate
+- <a id="req-pb-5"></a>[Scope-01](#pb-5) Scope gate
   - No payments, no public marketplace, and no licensed brand content.
 
 [Back to top](#index)
@@ -82,7 +82,7 @@ Each item has a PBI code, one noun for the deliverable, and bullets the user can
 
 ## Local
 
-- [Local-01](#pb-6) Local startup
+- <a id="req-pb-6"></a>[Local-01](#pb-6) Local startup
   - The default configuration starts the app on this machine.
 
 [Back to top](#index)
@@ -104,14 +104,14 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 
 # Product Backlog
 
-| # | Component | PBI Code | Description | Related | Sprint | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | Collect | <a id="pb-1"></a>Collect-01 | Catalog a card | - [Sprint 1 feature-01](./sprint-backlog.md#sprint-1)<br>- [`architecture.md`](./architecture.md) §2 | Sprint 1 | Done |
-| 2 | Collect | <a id="pb-2"></a>Collect-02 | Search by set and rarity | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-01](./sprint-backlog.md#sprint-2) | Sprint 2 | WIP |
-| 3 | Collect | <a id="pb-3"></a>Collect-03 | Binder | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-02](./sprint-backlog.md#sprint-2)<br>- [`architecture.md`](./architecture.md) §2 | Sprint 2 | ToDo |
-| 4 | Collect | <a id="pb-4"></a>Collect-04 | Record a trade | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-03](./sprint-backlog.md#sprint-2) | Sprint 2 | ToDo |
-| 5 | Scope | <a id="pb-5"></a>Scope-01 | Scope gate | [`architecture.md`](./architecture.md) §1 | Sprint 1 | Done |
-| 6 | Local | <a id="pb-6"></a>Local-01 | Local startup | - [Sprint 1 task-01](./sprint-backlog.md#sprint-1)<br>- [`deployment.md`](./deployment.md) §1 | Sprint 1 | Done |
+| # | Component | PBI Code | Description | Size | Related | Sprint | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Collect | <a id="pb-1"></a>[Collect-01](#req-pb-1) | Catalog a card | Implementable | - [Sprint 1 feature-01](./sprint-backlog.md#sprint-1)<br>- [`architecture.md`](./architecture.md) §2 | Sprint 1 | Done |
+| 2 | Collect | <a id="pb-2"></a>[Collect-02](#req-pb-2) | Search by set and rarity | Implementable | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-01](./sprint-backlog.md#sprint-2) | Sprint 2 | WIP |
+| 3 | Collect | <a id="pb-3"></a>[Collect-03](#req-pb-3) | Binder | Implementable | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-02](./sprint-backlog.md#sprint-2)<br>- [`architecture.md`](./architecture.md) §2 | Sprint 2 | ToDo |
+| 4 | Collect | <a id="pb-4"></a>[Collect-04](#req-pb-4) | Record a trade | Implementable | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-03](./sprint-backlog.md#sprint-2) | Sprint 2 | ToDo |
+| 5 | Scope | <a id="pb-5"></a>[Scope-01](#req-pb-5) | Scope gate | Implementable | [`architecture.md`](./architecture.md) §1 | Sprint 1 | Done |
+| 6 | Local | <a id="pb-6"></a>[Local-01](#req-pb-6) | Local startup | Implementable | - [Sprint 1 task-01](./sprint-backlog.md#sprint-1)<br>- [`deployment.md`](./deployment.md) §1 | Sprint 1 | Done |
 
 [Back to top](#index)
 
@@ -128,5 +128,6 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | 2026-09-30 | Requirements use tight lists: each requirement sits on the line after its feature name, with no blank line. See Writing markdown in `sdd-scrum-practices.md`. |
 | 2026-10-03 | Each Requirements item is the PBI code, one noun, and bullets. The table columns are `#`, Component, PBI Code, Description, Related, Sprint, Status. `#pb-1` stays Collect-01. |
 | 2026-10-04 | The header is three lines: Type, as_of, and Definition. |
+| 2026-10-04 | Requirements link to `#pb-N` on the table. The table PBI Code links to `#req-pb-N` on Requirements. |
 
 [Back to top](#index)

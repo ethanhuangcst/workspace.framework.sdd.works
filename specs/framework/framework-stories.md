@@ -820,7 +820,7 @@ Tests: CE-SKILL-06. The on-disk folder `specs/framework/seeds/skills/sdd-trackin
 
 Design: `[framework-design.md](./framework-design.md#rules)`. Tests: `[framework-tests.md](./framework-tests.md#rules)`.
 
-The three files install at `{client_root}/rules/<name>.mdc`. Names have no `sdd-` prefix. On Windows the directory is `rules\` under that client root. `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc` have no behavior story until their bodies are designed. Their path still has to match AC1. The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
+The four pack rule files install at `{client_root}/rules/<name>.mdc`. Names have no `sdd-` prefix. On Windows the directory is `rules\` under that client root. `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc` have no behavior story until their bodies are designed. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](../product-backlog.md#pb-95) Done). The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### `artifacts-map.mdc`
 
@@ -832,7 +832,7 @@ Retired by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). AC2 through AC5 b
 Scenario Outline: The rule files live on the client root
   Given the client root is "<client root>"
   When the installed rules are listed
-  Then dod.mdc, incremental-delivery.mdc, and realtime-status.mdc are at "<client root>/rules/"
+  Then dod.mdc, incremental-delivery.mdc, realtime-status.mdc, and friendly-language.mdc are at "<client root>/rules/"
   And artifacts-map.mdc is not installed
   And none of the three names starts with sdd-
   And none of the three files is required under the workspace for the rule to be installed
@@ -999,6 +999,8 @@ Scenario: Product backlog columns on the EN seed
   And Status values are only ToDo, WIP, and Done
   And a Definition of Done section sits above the Product Backlog table
   And each Requirements item has a PBI code, one noun, and bullets
+  And the Requirements PBI code links to #pb-N on the Product Backlog table
+  And the table PBI Code links to #req-pb-N on the Requirements line
   And Description is that noun
 ```
 

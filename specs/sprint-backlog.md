@@ -52,7 +52,7 @@
 
 | #   | Severity | Title                                     | Description                                                                                           | Impact                                                                     | Solution                                                                | Related                                                                     | Closed Sprint |
 | --- | -------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------- |
-| D-1 | Blocking | coach-ethan ships as a local Cursor agent | - coach-ethan is a local Cursor agent in the client `agents/` tree. - Remote MCP stays the installer. | Agent-01 is delivered. One presence model covers the product and the MVPs. | Record the local Cursor agent in the framework design. No separate ADR. | [framework-design.md](./framework/framework-design.md) Design for framework | Sprint 1      |
+| <a id="rid-d1"></a>D-1 | Blocking | coach-ethan ships as a local Cursor agent | - coach-ethan is a local Cursor agent in the client `agents/` tree. - Remote MCP stays the installer. | Agent-01 is delivered. One presence model covers the product and the MVPs. | Record the local Cursor agent in the framework design. No separate ADR. | [framework-design.md](./framework/framework-design.md) Design for framework | Sprint 1      |
 
 
 ---
@@ -219,13 +219,13 @@ Depends on Sprint 1 only for the seed files already in this repo. It does not wa
 
 #### 4. [Sep 26, 2026], Sprint-end
 
-- [MCP-01](./product-backlog.md#pb-16) is **ToDo** on Sprint 15. Sprint 2 installer stories stay **Done**.
+- [MCP-01](./product-backlog.md#pb-16) is **Done** for the Sprint 2 installer slice. [MCP-04](./product-backlog.md#pb-92) owns go-live.
 
 **Future actions**
 
 #### 4. [Sep 26, 2026], Sprint-end
 
-- Go-live is [MCP-01](./product-backlog.md#pb-16) in Unplanned PBIs: GitHub Releases for the five `sdd-mcp` binaries, pack copy, and admin-portal sync.
+- Go-live is [MCP-04](./product-backlog.md#pb-92) in Unplanned PBIs: GitHub Releases for the five `sdd-mcp` binaries, pack copy, and admin-portal sync.
 
 ---
 
@@ -398,37 +398,37 @@ Additional Done Criteria, on top of the Definition of Done:
 > Product backlog items with no sprint assignment. The table matches the Product Backlog table in `product-backlog.md` without the `Sprint` column. The `#pb-N` anchor stays on the Product Backlog row only.
 
 
-| # | Component | PBI Code | Description | Related | Status |
-| --- | --- | --- | --- | --- | --- |
-| 1 | framework | [Agent-02](./product-backlog.md#pb-8) | Skill call for a named job | - `[framework/framework-design.md](./framework/framework-design.md)`<br>- [Skill-03](./product-backlog.md#pb-24)<br>- [Skill-04](./product-backlog.md#pb-25)<br>- [Skill-05](./product-backlog.md#pb-26)<br>- [Skill-12](./product-backlog.md#pb-86)<br>- [Skill-06](./product-backlog.md#pb-28)<br>- [Skill-07](./product-backlog.md#pb-29) | ToDo |
-| 2 | framework | [Agent-03](./product-backlog.md#pb-10) | Guiding proposals from framework knowledge | - `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)`<br>- `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)`<br>- `[artifacts-map.json](./artifacts-map.json)` | ToDo |
-| 3 | framework | [Rule-01](./product-backlog.md#pb-18) | Pack rule dod.mdc | [Spec-seeds-03](./product-backlog.md#pb-32) | ToDo |
-| 4 | framework | [Rule-02](./product-backlog.md#pb-19) | Pack rule incremental-delivery.mdc | [Spec-seeds-03](./product-backlog.md#pb-32) | ToDo |
-| 5 | framework | [Rule-03](./product-backlog.md#pb-20) | Pack rule realtime-status.mdc | [Spec-seeds-03](./product-backlog.md#pb-32) | ToDo |
-| 6 | framework | [Skill-01](./product-backlog.md#pb-21) | Pack skill sdd-atdd | — | ToDo |
-| 7 | framework | [Skill-02](./product-backlog.md#pb-22) | Pack skill sdd-tdd | [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) | Retired |
-| 8 | framework | [Skill-03](./product-backlog.md#pb-24) | Pack skill sdd-update-project | - [Agent-02](./product-backlog.md#pb-8)<br>- [ADR-079](./adr/ADR-079-one-job-update-project.md) | ToDo |
-| 9 | framework | [Skill-04](./product-backlog.md#pb-25) | Pack skill sdd-refine-backlog | [Agent-02](./product-backlog.md#pb-8) | ToDo |
-| 10 | framework | [Skill-05](./product-backlog.md#pb-26) | Pack skill sdd-plan-sprint | [Agent-02](./product-backlog.md#pb-8) | ToDo |
-| 11 | framework | [Skill-06](./product-backlog.md#pb-28) | Pack skill sdd-retrospective | [Agent-02](./product-backlog.md#pb-8) | ToDo |
-| 12 | framework | [Skill-07](./product-backlog.md#pb-29) | Pack skill sdd-close-sprint | [Agent-02](./product-backlog.md#pb-8) | ToDo |
-| 13 | framework | [Skill-09](./product-backlog.md#pb-64) | Pack skill sdd-update-specs | [Skill-11](./product-backlog.md#pb-80) | ToDo |
-| 14 | framework | [Skill-10](./product-backlog.md#pb-65) | Pack skill sdd-implement | [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) | Retired |
-| 15 | framework | [Skill-11](./product-backlog.md#pb-80) | Pack skill sdd-spec-to-build | - [Skill-09](./product-backlog.md#pb-64)<br>- [Skill-01](./product-backlog.md#pb-21)<br>- [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) | ToDo |
-| 16 | framework | [Skill-13](./product-backlog.md#pb-87) | Pack skill sdd-create-skill | [ADR-074](./adr/ADR-074-sdd-create-skill.md) | ToDo |
-| 17 | framework | [Skill-14](./product-backlog.md#pb-89) | Pack skill prompt-optimizer | [prompt-optimizer](./framework/seeds/skills/prompt-optimizer/SKILL.md) | ToDo |
-| 18 | framework | [Spec-seeds-05](./product-backlog.md#pb-36) | Seed product-backlog.md | - [MCP-01](./product-backlog.md#pb-16)<br>- [i18n-02](./product-backlog.md#pb-68) | ToDo |
-| 19 | framework | [Spec-seeds-10](./product-backlog.md#pb-40) | Seed architecture.md | - [MCP-01](./product-backlog.md#pb-16)<br>- [i18n-03](./product-backlog.md#pb-69) | ToDo |
-| 20 | framework | [Spec-seeds-11](./product-backlog.md#pb-41) | Seed deployment.md | - [MCP-01](./product-backlog.md#pb-16)<br>- [i18n-03](./product-backlog.md#pb-69) | ToDo |
-| 21 | framework | [Spec-seeds-12](./product-backlog.md#pb-66) | Seed .secrets | - [MCP-01](./product-backlog.md#pb-16)<br>- [Spec-seeds-11](./product-backlog.md#pb-41)<br>- [i18n-03](./product-backlog.md#pb-69) | ToDo |
-| 22 | framework | [Spec-seeds-13](./product-backlog.md#pb-90) | Seed test-strategy.md | - [Spec-seeds-02](./product-backlog.md#pb-34)<br>- [i18n-03](./product-backlog.md#pb-69) | ToDo |
-| 23 | framework | [i18n-01](./product-backlog.md#pb-67) | HanS and HanT core artifacts | - `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)`<br>- `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` | ToDo |
-| 24 | framework | [i18n-02](./product-backlog.md#pb-68) | HanS and HanT process artifacts | - [Spec-seeds-05](./product-backlog.md#pb-36)<br>- [Spec-seeds-06](./product-backlog.md#pb-37)<br>- [Spec-seeds-07](./product-backlog.md#pb-38)<br>- [Spec-seeds-08](./product-backlog.md#pb-39) | ToDo |
-| 25 | framework | [i18n-03](./product-backlog.md#pb-69) | HanS and HanT engineering artifacts | - [Spec-seeds-10](./product-backlog.md#pb-40)<br>- [Spec-seeds-11](./product-backlog.md#pb-41)<br>- [Spec-seeds-12](./product-backlog.md#pb-66)<br>- [Spec-seeds-13](./product-backlog.md#pb-90) | ToDo |
-| 26 | mcp | [MCP-01](./product-backlog.md#pb-16) | Pack copy onto the client root | - `[mcp/mcp-design.md](./mcp/mcp-design.md)` - `[framework/framework-design.md](./framework/framework-design.md)` §2.4<br>- [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md)<br>- [MCP-02](./product-backlog.md#pb-75) | ToDo |
-| 27 | webapp | [Spec-seeds-14](./product-backlog.md#pb-82) | Seed features.md under content/features | - [Web-portal-07](./product-backlog.md#pb-73)<br>- [MCP-01](./product-backlog.md#pb-16) | ToDo |
-| 28 | webapp | [Web-portal-01](./product-backlog.md#pb-15) | Per-client call-up on the instructions page | - `[framework/framework-design.md](./framework/framework-design.md)`<br>- `[mcp/client.paths.md](./mcp/client.paths.md)` | ToDo |
-| 29 | webapp | [Web-portal-02](./product-backlog.md#pb-49) | Install and update on the instructions page | - [Web-portal-01](./product-backlog.md#pb-15)<br>- [MCP-01](./product-backlog.md#pb-16)<br>- [Agent-04](./product-backlog.md#pb-17) | ToDo |
-| 30 | webapp | [Web-portal-03](./product-backlog.md#pb-50) | Public site for the instructions page | - [Web-portal-01](./product-backlog.md#pb-15)<br>- [Web-portal-02](./product-backlog.md#pb-49) | ToDo |
-| 31 | webapp | [Web-portal-14](./product-backlog.md#pb-88) | README for IDE invoke differences | - [Web-portal-01](./product-backlog.md#pb-15)<br>- `[framework-design.md](./framework/framework-design.md)`<br>- `[ide-agent-invoke.md](./knowledge/agent/ide-agent-invoke.md)` | ToDo |
-| 32 | webapp | [Web-portal-15](./product-backlog.md#pb-91) | Integrated sites sdd.works and framework.sdd.works | — | ToDo |
+| # | Component | PBI Code | Description | Size | Related | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | framework | [Agent-02](./product-backlog.md#pb-8) | Skill call for a named job | Epic | - `[framework/framework-design.md](./framework/framework-design.md)`<br>- [Skill-03](./product-backlog.md#pb-24)<br>- [Skill-04](./product-backlog.md#pb-25)<br>- [Skill-05](./product-backlog.md#pb-26)<br>- [Skill-12](./product-backlog.md#pb-86)<br>- [Skill-06](./product-backlog.md#pb-28)<br>- [Skill-07](./product-backlog.md#pb-29) | ToDo |
+| 2 | framework | [Agent-03](./product-backlog.md#pb-10) | Guiding proposals from framework knowledge | Implementable | - `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)`<br>- `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)`<br>- `[artifacts-map.json](./artifacts-map.json)` | ToDo |
+| 3 | framework | [Rule-01](./product-backlog.md#pb-18) | Pack rule dod.mdc | Implementable | [Spec-seeds-03](./product-backlog.md#pb-32) | ToDo |
+| 4 | framework | [Rule-02](./product-backlog.md#pb-19) | Pack rule incremental-delivery.mdc | Implementable | [Spec-seeds-03](./product-backlog.md#pb-32) | ToDo |
+| 5 | framework | [Rule-03](./product-backlog.md#pb-20) | Pack rule realtime-status.mdc | Implementable | [Spec-seeds-03](./product-backlog.md#pb-32) | ToDo |
+| 6 | framework | [Rule-04](./product-backlog.md#pb-95) | Pack rule friendly-language.mdc | Implementable | - [Spec-seeds-03](./product-backlog.md#pb-32)<br>- [framework-design § friendly-language.mdc](./framework/framework-design.md#friendly-languagemdc) | Done |
+| 7 | framework | [Skill-01](./product-backlog.md#pb-21) | Pack skill sdd-atdd | Implementable | — | ToDo |
+| 8 | framework | [Skill-03](./product-backlog.md#pb-24) | Pack skill sdd-update-project | Implementable | - [Agent-02](./product-backlog.md#pb-8)<br>- [ADR-079](./adr/ADR-079-one-job-update-project.md) | ToDo |
+| 9 | framework | [Skill-04](./product-backlog.md#pb-25) | Pack skill sdd-refine-backlog | Implementable | [Agent-02](./product-backlog.md#pb-8) | ToDo |
+| 10 | framework | [Skill-05](./product-backlog.md#pb-26) | Pack skill sdd-plan-sprint | Implementable | - [Agent-02](./product-backlog.md#pb-8)<br>- [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) | ToDo |
+| 11 | framework | [Skill-06](./product-backlog.md#pb-28) | Pack skill sdd-retrospective | Implementable | [Agent-02](./product-backlog.md#pb-8) | ToDo |
+| 12 | framework | [Skill-07](./product-backlog.md#pb-29) | Pack skill sdd-close-sprint | Implementable | [Agent-02](./product-backlog.md#pb-8) | ToDo |
+| 13 | framework | [Skill-09](./product-backlog.md#pb-64) | Pack skill sdd-update-specs | Implementable | [Skill-11](./product-backlog.md#pb-80) | ToDo |
+| 14 | framework | [Skill-11](./product-backlog.md#pb-80) | Pack skill sdd-spec-to-build | Implementable | - [Skill-09](./product-backlog.md#pb-64)<br>- [Skill-01](./product-backlog.md#pb-21)<br>- [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) | ToDo |
+| 15 | framework | [Skill-13](./product-backlog.md#pb-87) | Pack skill sdd-create-skill | Implementable | [ADR-074](./adr/ADR-074-sdd-create-skill.md) | ToDo |
+| 16 | framework | [Skill-14](./product-backlog.md#pb-89) | Pack skill prompt-optimizer | Implementable | [prompt-optimizer](./framework/seeds/skills/prompt-optimizer/SKILL.md) | ToDo |
+| 17 | framework | [Skill-15](./product-backlog.md#pb-93) | Pack skill sdd-build-agent | Implementable | [framework-design § sdd-build-agent](./framework/framework-design.md#sdd-build-agent) | ToDo |
+| 18 | framework | [Skill-16](./product-backlog.md#pb-94) | Pack skill sdd-create-rule | Implementable | [sdd-create-rule](./framework/seeds/skills/sdd-create-rule/SKILL.md) | ToDo |
+| 19 | framework | [Spec-seeds-05](./product-backlog.md#pb-36) | Seed product-backlog.md | Implementable | - [MCP-01](./product-backlog.md#pb-16)<br>- [i18n-02](./product-backlog.md#pb-68) | ToDo |
+| 20 | framework | [Spec-seeds-10](./product-backlog.md#pb-40) | Seed architecture.md | Implementable | - [MCP-01](./product-backlog.md#pb-16)<br>- [i18n-03](./product-backlog.md#pb-69) | ToDo |
+| 21 | framework | [Spec-seeds-11](./product-backlog.md#pb-41) | Seed deployment.md | Implementable | - [MCP-01](./product-backlog.md#pb-16)<br>- [i18n-03](./product-backlog.md#pb-69) | ToDo |
+| 22 | framework | [Spec-seeds-12](./product-backlog.md#pb-66) | Seed .secrets | Implementable | - [MCP-01](./product-backlog.md#pb-16)<br>- [Spec-seeds-11](./product-backlog.md#pb-41)<br>- [i18n-03](./product-backlog.md#pb-69) | ToDo |
+| 23 | framework | [Spec-seeds-13](./product-backlog.md#pb-90) | Seed test-strategy.md | Implementable | - [Spec-seeds-02](./product-backlog.md#pb-34)<br>- [i18n-03](./product-backlog.md#pb-69) | ToDo |
+| 24 | framework | [i18n-01](./product-backlog.md#pb-67) | HanS and HanT core artifacts | Theme | - `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)`<br>- `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` | ToDo |
+| 25 | framework | [i18n-02](./product-backlog.md#pb-68) | HanS and HanT process artifacts | Implementable | - [Spec-seeds-05](./product-backlog.md#pb-36)<br>- [Spec-seeds-06](./product-backlog.md#pb-37)<br>- [Spec-seeds-07](./product-backlog.md#pb-38)<br>- [Spec-seeds-08](./product-backlog.md#pb-39) | ToDo |
+| 26 | framework | [i18n-03](./product-backlog.md#pb-69) | HanS and HanT engineering artifacts | Implementable | - [Spec-seeds-10](./product-backlog.md#pb-40)<br>- [Spec-seeds-11](./product-backlog.md#pb-41)<br>- [Spec-seeds-12](./product-backlog.md#pb-66)<br>- [Spec-seeds-13](./product-backlog.md#pb-90) | ToDo |
+| 27 | mcp | [MCP-04](./product-backlog.md#pb-92) | Pack go-live on the client root | Theme | - [MCP-01](./product-backlog.md#pb-16)<br>- [MCP-02](./product-backlog.md#pb-75)<br>- [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) | ToDo |
+| 28 | webapp | [Spec-seeds-14](./product-backlog.md#pb-82) | Seed features.md under content/features | Implementable | - [Web-portal-07](./product-backlog.md#pb-73)<br>- [MCP-04](./product-backlog.md#pb-92) | ToDo |
+| 29 | webapp | [Web-portal-01](./product-backlog.md#pb-15) | Per-client call-up on the instructions page | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)`<br>- `[mcp/client.paths.md](./mcp/client.paths.md)` | ToDo |
+| 30 | webapp | [Web-portal-02](./product-backlog.md#pb-49) | Install and update on the instructions page | Implementable | - [Web-portal-01](./product-backlog.md#pb-15)<br>- [MCP-01](./product-backlog.md#pb-16)<br>- [MCP-04](./product-backlog.md#pb-92)<br>- [Agent-04](./product-backlog.md#pb-17) | ToDo |
+| 31 | webapp | [Web-portal-14](./product-backlog.md#pb-88) | README for IDE invoke differences | Implementable | - [Web-portal-01](./product-backlog.md#pb-15)<br>- `[framework-design.md](./framework/framework-design.md)`<br>- `[ide-agent-invoke.md](./knowledge/agent/ide-agent-invoke.md)` | ToDo |
+| 32 | webapp | [Web-portal-15](./product-backlog.md#pb-91) | Unified public site | Epic | - [Web-portal-07](./product-backlog.md#pb-73)<br>- [Web-portal-09](./product-backlog.md#pb-76)<br>- [MCP-04](./product-backlog.md#pb-92) | ToDo |

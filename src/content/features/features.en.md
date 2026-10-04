@@ -31,6 +31,7 @@ v.0.1.0
 - dod.mdc — Global Definition of Done for the product.
 - incremental-delivery.mdc — Finish one SBI before starting the next.
 - realtime-status.mdc — Track status in real time and update status.md when each SBI is done.
+- friendly-language.mdc — Keep chat and Markdown readable for the user and for later agents.
 
 ## Artifacts
 

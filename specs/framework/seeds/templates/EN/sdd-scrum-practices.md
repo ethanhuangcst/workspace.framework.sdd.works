@@ -36,6 +36,7 @@
   - [2. Slice product to MVPs](#2-slice-product-to-mvps)
     - [Example](#example)
   - [3. Evaluate Product Backlog Readiness](#3-evaluate-product-backlog-readiness)
+  - [4. Size product backlog](#4-size-product-backlog)
 
 ## Terminology in practice
 
@@ -49,9 +50,12 @@ Harness names, artifact names, and Scrum guide terms stay in [Terminology](./scr
 | 3   | <a id="term-feature"></a>Feature | Usable product capability. Record a Feature as a PBI first. Record it as an SBI when a sprint includes it. |
 | 4   | <a id="term-task"></a>Task | Work that is not a Feature.<br>- A Task that creates value as part of product delivery is a PBI.<br>- A Task that is only the effort to build one PBI or one SBI stays internal. Do not record it as a PBI or an SBI.<br>- A shared Task required to deliver one sprint may be an SBI. It is not a PBI. |
 | 5   | <a id="term-ogt"></a>OGT | On-going task. Temporary or side work in `status.md`. An OGT is not a PBI and not an SBI. |
-| 6   | <a id="term-mvp"></a>MVP | Minimum viable product. The smallest release in which the user finishes one job in one sprint. |
-| 7   | <a id="term-issue"></a>Issue | A defect or other issue. Record an Issue only in `issues-log.md`. |
-| 8   | <a id="term-rid"></a>RID | A risk, an impediment, or a dependency. Record a RID only in the RID Log in `sprint-backlog.md`. |
+| 6   | <a id="term-mvp"></a>MVP | Minimum viable product. The smallest feature set in which the user finishes one job in one sprint. |
+| 7   | <a id="term-pbi-size-epic"></a>Epic (PBI Size) | One outcome too broad to ship as one PBI. Split into more PBI rows before sprint planning. |
+| 8   | <a id="term-pbi-size-theme"></a>Theme (PBI Size) | One area whose requirement bullets still hide more than one path. Tighten to Implementable before sprint planning. |
+| 9   | <a id="term-pbi-size-implementable"></a>Implementable (PBI Size) | One user-visible outcome. The PBI may get a sprint and SBIs. |
+| 10  | <a id="term-issue"></a>Issue | A defect or other issue. Record an Issue only in `issues-log.md`. |
+| 11  | <a id="term-rid"></a>RID | A risk, an impediment, or a dependency. Record a RID only in the RID Log in `sprint-backlog.md`. |
 
 
 [Back to top](#index)
@@ -302,11 +306,12 @@ Follow [General writing principles](#general-writing-principles). Use [Header (p
 Follow [General writing principles](#general-writing-principles).
 
 ```markdown
-- [{pbi code}](#{pb-n}) {noun}
+- <a id="req-{pb-n}"></a>[{pbi code}](#{pb-n}) {noun}
   - {bullet}
 ```
 
-- `{pbi code}` is the existing PBI code, linked to `#{pb-n}`, so sprint links keep working.
+- Put `req-{pb-n}` on the Requirements line. Link `{pbi code}` to `#{pb-n}` on the Product Backlog table row.
+- Sprint-backlog and other files link `{pbi code}` to `#{pb-n}` only. They do not use `req-{pb-n}`.
 - `{noun}` is one noun for the deliverable, the same words as the table `Description`.
 - `{bullet}` is one line the person who uses the product can act on.
 - Keep one item per i18n code, so HanS and HanT are not a second copy of the same item.
@@ -316,17 +321,19 @@ Follow [General writing principles](#general-writing-principles).
 ###### Template
 
 ```markdown
-| # | Component | PBI Code | Description | Related | Sprint | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| {seq} | {component} | <a id="{pb-n}"></a>{pbi code} | {noun} | {related} | {sprint} | {status} |
+| # | Component | PBI Code | Description | Size | Related | Sprint | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| {seq} | {component} | <a id="{pb-n}"></a>[{pbi code}](#req-{pb-n}) | {noun} | {size} | {related} | {sprint} | {status} |
 ```
 
 ###### How to write
 
 - Write `{seq}` from 1 through the last item, in the same order as Requirements.
 - Write `{component}` as the product component for that row.
-- Put the `{pb-n}` anchor on the PBI Code cell, so `{pbi code}` stays the link target.
+- Put `{pb-n}` on the PBI Code cell. Link `{pbi code}` to `#req-{pb-n}` on the matching Requirements line.
+- `{related}` and other back-references link a PBI code to `#pb-n` on the table row, not to `#req-{pb-n}`.
 - Write `{noun}` as the same noun as Requirements. `Description` is that noun, not a summary of a paragraph.
+- Write `{size}` as `Epic`, `Theme`, or `Implementable`. See [4. Size product backlog](#4-size-product-backlog).
 - Write `{related}` as one link, or as a `<br>` bullet for each link when the cell has more than one.
 - Copy `{sprint}` from `sprint-backlog.md`, so that cell is not a second schedule. Write `—` when the PBI row is only in [Unplanned PBIs](#unplanned-pbis).
 - Write `{status}` as `ToDo`, `WIP`, or `Done`.
@@ -471,9 +478,9 @@ The section sits after the last sprint section. It ends at the file end or at th
 
 > Product backlog items with no sprint assignment. The table matches the Product Backlog table in `product-backlog.md` without the `Sprint` column. The `#pb-N` anchor stays on the Product Backlog row only.
 
-| # | Component | PBI Code | Description | Related | Status |
-| --- | --- | --- | --- | --- | --- |
-| {seq} | {component} | [{pbi code}]({product-backlog}#{pb-n}) | {noun} | {related} | {status} |
+| # | Component | PBI Code | Description | Size | Related | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| {seq} | {component} | [{pbi code}]({product-backlog}#{pb-n}) | {noun} | {size} | {related} | {status} |
 ```
 
 ###### How to write
@@ -486,7 +493,7 @@ The section sits after the last sprint section. It ends at the file end or at th
 - Write `{seq}` from 1 through the last unplanned row. Group by component, then order by PBI code inside the component. The component order is the same order as the Product Backlog table.
 - Link `{pbi code}` to `{product-backlog}#{pb-n}`. Do not add a second `#pb-N` anchor in this file.
 - `{noun}` is the Description noun from the Product Backlog row. Do not copy the Requirements bullets into `{noun}`.
-- Copy `{related}` and `{status}` from the Product Backlog row. Rewrite a `Related` link that uses `#pb-n` so it resolves from `sprint-backlog.md`, such as `./product-backlog.md#pb-8`.
+- Copy `{size}`, `{related}`, and `{status}` from the Product Backlog row. Rewrite a `Related` link that uses `#pb-n` so it resolves from `sprint-backlog.md`, such as `./product-backlog.md#pb-8`.
 - When no PBI is unscheduled, keep the heading, the back link, the blockquote, and the header row. Leave the body empty. The EN seed uses that empty table after the last sample sprint.
 - When a PBI gets a sprint, remove its row here, add the sprint SBIs, and update the Product Backlog `Sprint` cell in the same change.
 bad example: a row whose PBI Code is `feature-25`, so the table mixes an SBI with PBIs
@@ -515,6 +522,7 @@ Sprint Goal: {sprint goal}
 - `{n}` is the sprint number. The heading is `## Sprint` plus that number, so the preview id stays `sprint-1` and the same pattern for each later sprint.
 - The next line is `[Back to the top](#{h1})`. `{h1}` is the preview id of the file title.
 - Current project progress copies `{sprint goal}` word for word.
+- `{sprint goal}` follows [Sprint goal line](#sprint-goal-line).
 - `{depends}` names an earlier sprint this sprint waits on.
 - `{status}` is bold: `**ToDo**`, `**WIP**`, or `**Done**`.
 - `{status note}` is the reason, in parentheses. Sprint 1 in the EN seed uses `**Status: Done** (every item is complete)`.
@@ -899,13 +907,42 @@ Each sprint delivers one MVP (minimum viable product). A product backlog item (P
 - Pick the items in `product-backlog.md` that the user needs for one job, so those items are the MVP.
 - Shape the MVP around the result the user gets: the PBIs that job needs, and no PBI that job does not need.
 - Put that set in one sprint, so the sprint goal is the job the user finishes.
+- Use Done sprint sections in this project's `sprint-backlog.md` as the reference grain for the next MVP: one thematic sprint goal, the parent PBIs that job needs, and SBIs that split under those PBIs.
+  bad example: one planning option per skill row when those skills are one job for the user.
+  good example: Sprint 3 themes R2 portal and MCP; Sprint 4 themes ethan onboard, with many SBIs under fewer parent PBIs.
+- When one message offers more than one option, the number of new Implementable SBIs in each option differs by at most one. Count only Feature SBIs the option would add. An on-going task and a Task SBI do not count. Drop an option that is a different size. Do not add unrelated PBIs to make a thin option match. When the job truly needs one Implementable PBI, send that option alone. Do not split one job into one option per PBI.
+- When a PBI still needs sprint rows that are not named, that PBI is not ready to close in this sprint. Name it under further refinement. Do not mark refinement as none in the same proposal. Split or refine with [3. Evaluate Product Backlog Readiness](#3-evaluate-product-backlog-readiness) and `sdd-refine-backlog`.
+- An [Epic (PBI Size)](#term-pbi-size-epic) or [Theme (PBI Size)](#term-pbi-size-theme) may be named in the MVP plan when that sprint's job needs that outcome. Naming it does not put it on the sprint. It gets no `Sprint` cell and no SBIs until `sdd-refine-backlog` makes it [Implementable (PBI Size)](#term-pbi-size-implementable), or splits or tightens it into Implementable PBIs. The plan records an [OGT](#term-ogt) so that refine happens before the sprint is treated as delivering that outcome.
+
+#### Sprint goal line
+
+###### Template
+
+```markdown
+Sprint Goal: {actor} {verb} {result}[ so that {value}].
+```
+
+###### How to write
+
+- Write what is true when the sprint is Done, and why that matters when the reason is not already in `{result}`.
+- `{actor}` is the plain role that can truthfully claim `{result}` when every PBI in the sprint is Done. Derive `{actor}` from the MVP job and the PBIs in the sprint. Use the name the team would use in conversation. Do not use a fixed placeholder. Do not name tools, files, or ADRs in `{actor}`.
+- When two roles each need a full outcome, the MVP is probably too big. Pick the role that closes the loop for this sprint, or split the work across sprints.
+- `{verb}` and `{result}` are one job: one verb and one outcome. PBIs and SBIs in the table carry scope. The goal line does not list them.
+- `{value}` is one short clause. Omit it when `{result}` already states the benefit.
+- Read the line as the user reads `status.md`. That file copies the WIP sprint goal word for word.
+  bad example: `Sprint Goal: Install or update writes the pack and a ledger (ADR-059), end users connect via a local program (ADR-058) with HTTP as fallback, and Ethan starts only when pack_complete is true.`
+  good example: `Sprint Goal: A developer starts coach ethan from the local agent registry with the latest guide and practices seeds so that the R2 agent spike is callable before install work.`
+  good example: `Sprint Goal: An adopter installs or updates the pack, connects MCP, and starts ethan only after a complete install receipt.`
+  bad example: `Sprint Goal: Update the web portal and MCP to support framework.sdd.works R2.`
+  good example: `Sprint Goal: An adopter sets up R2 from the instructions site without an admin-only path.`
+  good example: `Sprint Goal: A developer completes ethan onboard so that the project has an audit verdict and a clear next step from the five process files.`
 
 ### 2. Slice product to MVPs
 
-An MVP is the smallest release in which the user finishes one job.
+An MVP is the smallest feature set in which the user finishes one job.
 
 - Start with the job the user wants done. That job is the MVP.
-- Include every part of the product that job needs, so the user can start the job and get the result in this release.
+- Include every part of the product that job needs, so the user can start the job and get the result in this release. The same rule covers Epic and Theme rows. When the job needs that outcome, name the row in the plan. When the job does not need it, leave it off. The row stays unscheduled until it is Implementable.
 - Keep the set small. A few features that close the loop are enough. A long list of screens leaves the job unfinished.
 - The user can use this release before the next one starts.
 - When the job is still too big, ship only the next result the user can get.
@@ -992,9 +1029,36 @@ Evaluate `product-backlog.md` against this list before a sprint takes an item, a
 - [ ] 5. A PBI whose `Sprint` cell names a sprint has at least one SBI in that sprint. A PBI whose `Sprint` cell is `—` is listed in [Unplanned PBIs](#unplanned-pbis) and has no SBI.
 - [ ] 6. Every SBI names one Parent PBI.
 - [ ] 7. Place each [Feature](#term-feature), [Task](#term-task), [OGT](#term-ogt), [Issue](#term-issue), and [RID](#term-rid) only where [Terminology in practice](#terminology-in-practice) says.
-- [ ] 8. A PBI is small enough to ship by itself, and it adds value for the user.
-  Vague: the user can log in to mypoke.trade with multiple methods.
-  Proper: the user can log in to mypoke.trade with a user name and a password.
-  Too small: the password field on the login screen shows `***`.
+- [ ] 8. The requirement is [Implementable (PBI Size)](#term-pbi-size-implementable), and the PBI adds value for the user.
+  Epic: The user can manage her account.
+  Theme: the user can log in to mypoke.trade with multiple methods.
+  Implementable: the user can log in to mypoke.trade with a user name and a password.
+  Too small (Acceptance Criteria level): the password field on the login screen shows `***`.
+- [ ] 9. The `Size` cell is `Epic`, `Theme`, or `Implementable`. Only [Implementable (PBI Size)](#term-pbi-size-implementable) may name a sprint and have SBIs. A sprint plan may name an Epic or Theme when the job needs that outcome. The `Sprint` cell and SBIs still wait until Size is Implementable. [Epic (PBI Size)](#term-pbi-size-epic) and [Theme (PBI Size)](#term-pbi-size-theme) have no SBIs until split or tightened. Too small text is merged into another related PBI or removed from PBI requirement bullets.
+- [ ] 10. Every Markdown link in `product-backlog.md` resolves from that file. Open the Requirements list and the Product Backlog `Related` column. Each link target file exists in the project. Each `#` anchor exists in that target file. A PBI back-reference in `Related` or in another process file points at `#pb-n` on the Product Backlog table row, not at `#req-{pb-n}`. On [Unplanned PBIs](#unplanned-pbis) in `sprint-backlog.md`, each `Related` link uses a path that resolves from `sprint-backlog.md`, such as `./product-backlog.md#pb-8`.
+
+[Back to top](#index)
+
+### 4. Size product backlog
+
+Size is how coarse one PBI row is. It lives in the `Size` column on `product-backlog.md` and on [Unplanned PBIs](#unplanned-pbis).
+
+- [Epic (PBI Size)](#term-pbi-size-epic): split into more PBI rows, or shrink the outcome, before sprint planning.
+- [Theme (PBI Size)](#term-pbi-size-theme): tighten requirement bullets to one path before sprint planning.
+- [Implementable (PBI Size)](#term-pbi-size-implementable): one outcome; the row may get a sprint and SBIs.
+- Too small is not a `Size` value. It is acceptance-criterion detail. Merge it into another related PBI, or remove it from PBI requirement bullets. User stories and acceptance criteria stay with `sdd-atdd` or `sdd-spec-to-build`.
+
+The ladder on mypoke.trade login wording:
+
+- Epic: The user can manage her account.
+- Theme: the user can log in to mypoke.trade with multiple methods.
+- Implementable: the user can log in to mypoke.trade with a user name and a password.
+- Too small (Acceptance Criteria level): the password field on the login screen shows `***`.
+
+The same four lines appear under [3. Evaluate Product Backlog Readiness](#3-evaluate-product-backlog-readiness) item 8.
+
+- `sdd-refine-backlog` sets `Size`, requirement bullets, and related process files after the user picks each fail.
+- `sdd-plan-sprint` schedules only Implementable PBIs. It may name an Epic or Theme in the MVP plan when the job needs that outcome, and it records an OGT to refine that row. It does not set `Sprint` or add SBIs on Epic or Theme.
+- User stories and acceptance criteria stay with `sdd-atdd` or `sdd-spec-to-build`.
 
 [Back to top](#index)

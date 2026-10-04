@@ -589,7 +589,7 @@ Ethan runs onboard once, at the beginning of the chat.
 
 ## rules
 
-Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names three rules: `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc`. `friendly-language.mdc` is the writing rule. Their bodies stay on their product-backlog rows until those files are written. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `specs/framework/seeds/templates/constants.json`.
+Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names four harness rules: `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `friendly-language.mdc`. Rule-01 through Rule-03 bodies stay on their product-backlog rows until those files are written. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `specs/framework/seeds/templates/constants.json`.
 
 | Rule | Authoring seed | After install |
 | --- | --- | --- |
@@ -1149,7 +1149,7 @@ Product requirements and acceptance for the project. The seed is an example a ne
 
 Columns, in this order: `#`, Component, PBI Code, Description, Related, Sprint, Status.
 
-The column name stays Component. There is no DoD column. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. The `#pb-N` anchor sits on the PBI Code cell. A Definition of Done section above the Product Backlog table lists the generic checks. Every PBI uses that list. Those checks are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
+The column name stays Component. There is no DoD column. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. Requirements link `{pbi code}` to `#pb-N` on the table row. The table links `{pbi code}` to `#req-pb-N` on the Requirements line. `#pb-N` stays on the PBI Code cell for sprint-backlog and `Related` links. A Definition of Done section above the Product Backlog table lists the generic checks. Every PBI uses that list. Those checks are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
 
 ### sprint-backlog.md
 

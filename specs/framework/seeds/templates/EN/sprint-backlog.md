@@ -126,5 +126,5 @@ No future action is recorded yet.
 
 > Product backlog items with no sprint assignment. The table matches the Product Backlog table in `product-backlog.md` without the `Sprint` column. The `#pb-N` anchor stays on the Product Backlog row only.
 
-| # | Component | PBI Code | Description | Related | Status |
-| --- | --- | --- | --- | --- | --- |
+| # | Component | PBI Code | Description | Size | Related | Status |
+| --- | --- | --- | --- | --- | --- | --- |

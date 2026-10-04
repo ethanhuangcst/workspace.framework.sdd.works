@@ -8,6 +8,158 @@
 
 ## 2026-10-04
 
+### Product backlog refine (accept all)
+
+**Why**: `sdd-refine-backlog` found Unplanned PBIs drift, a missing Done row, stale Web-portal-05 text, and i18n-01 scope that implied HanS or HanT `sdd-scrum-practices.md` copies.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) sets [Skill-05](./product-backlog.md#pb-26) to ToDo, tightens [i18n-01](./product-backlog.md#pb-67) requirements, and fixes [Web-portal-05](./product-backlog.md#pb-71) call-up wording. [`sprint-backlog.md`](./sprint-backlog.md) Unplanned PBIs adds [Rule-04](./product-backlog.md#pb-95), copies Related from the Product Backlog table for Spec-seeds-05 through Spec-seeds-12, and matches Skill-05 status.
+
+**Verification**: Every Product Backlog row with Sprint `—` has a matching Unplanned PBIs row. Spec-seeds Related cells match between the two tables. i18n-01 requirements name EN-only practices and HanS or HanT `scrum-in-sdd.md`.
+
+### friendly-language naming and four pack rules
+
+**Why**: Public catalogs still listed three harness rules. The seed already shipped `friendly-language.mdc` under the canonical name (no `sdd-` prefix).
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) adds [Rule-04](./product-backlog.md#pb-95) Done. EN/HanS `scrum-in-sdd`, `src/content/scrum-in-sdd/*`, and `src/content/features/*` list `friendly-language.mdc`. [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), and [`framework-tests.md`](./framework/framework-tests.md) expect four rule files. [`app-stories.md`](./admin-portal/app-stories.md) and UI mocks note the rule.
+
+**Verification**: `rg -i 'sdd-friendly' specs/` is empty. `constants.json` maps `friendly-language` → `friendly-language.mdc`. Seed file at `specs/framework/seeds/rules/friendly-language.mdc`. Skills still link `../../rules/friendly-language.mdc`.
+
+### Sprint options stay a similar size
+
+**Why**: One plan message offered options of one Implementable sprint item and options of three, as if they were the same sprint.
+
+**What changed**: [EN practices](./framework/seeds/templates/EN/sdd-scrum-practices.md) §1 says options in one message differ by at most one new Implementable Feature SBI. [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) applies that sentence before it sends the list.
+
+**Verification**: §1 names the count and says not to pad a thin option. Step 4 in the skill points at that sentence.
+
+### Sprint plan one instruction for the on-going task
+
+**Why**: Step 4 still named the on-going task from the sprint job, and the example offered choices for a different sprint than the list above it.
+
+**What changed**: [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) points step 4 at the chat template. The example is one sprint. The Now line for an Epic or Theme is why the job needs that outcome.
+
+**Verification**: The skill has one on-going task name pattern. **Your choice** in the example is for Sprint 2 only.
+
+### Sprint plan on-going task name
+
+**Why**: 'Refine Agent-02 for Sprint 5 (named job workflow)' is not a readable task name.
+
+**What changed**: [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) names the on-going task `Refine {Epic or Theme} PBI {code} {short name}`.
+
+**Verification**: The favorite-a-card example uses 'Refine Epic PBI ACC-01 Account management'.
+
+### Sprint plan: no question card
+
+**Why**: A later plan run still opened a question card ("Which option for Sprint 5? The options are in chat.") and hid the list.
+
+**What changed**: [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) opens with a ban on that card and on those sentences. The pick is the reply under **Your choice**.
+
+**Verification**: The skill body does not tell the agent to call a question tool. The first section says send the list, then stop.
+
+### Sprint plan pick in chat
+
+**Why**: AskQuestion shows a question card before the chat text, so the proposal list appeared after the question.
+
+**What changed**: [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) sends the numbered list, then the choices, in one message. The reply in chat is the pick. [ADR-088](./adr/ADR-088-mvp-plan-names-coarse-pbi.md) records that AskQuestion stays uncalled.
+
+**Verification**: The skill has no AskQuestion step for the sprint pick. The example ends with **Your choice** under the list. Copy lives at `~/.cursor/skills/sdd-plan-sprint/SKILL.md`.
+
+### Sprint plan candidates as a numbered list
+
+**Why**: A three-column table was hard to read. The accept line did not name the sprint backlog item or the file.
+
+**What changed**: [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) sends each candidate as **code — short name**, then Now, then If you accept. If you accept names the SBI in quotes and names `sprint-backlog.md`. [ADR-088](./adr/ADR-088-mvp-plan-names-coarse-pbi.md) notes that the option body is a list.
+
+**Verification**: The skill examples for Card list view and Favorite a card use that list. No option template uses a PBI table. Copy lives at `~/.cursor/skills/sdd-plan-sprint/SKILL.md`.
+
+### Sprint plan may name an Epic or Theme
+
+**Why**: A sprint job can need an outcome that is still Epic or Theme. Keeping those rows off the plan hid the work. A fixed case list would hard-code product stories into the skill.
+
+**What changed**: [ADR-088](./adr/ADR-088-mvp-plan-names-coarse-pbi.md). [EN practices](./framework/seeds/templates/EN/sdd-scrum-practices.md) §1, §2, readiness item 9, and §4. [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) names those PBIs in plain language, writes an on-going task on accept, and schedules only Implementable PBIs.
+
+**Verification**: The skill chat template has “In this MVP, refine before the sprint delivers it” and an on-going task line. The write rules leave `Sprint` unchanged for a PBI that appears only in that block. Copy lives at `~/.cursor/skills/sdd-plan-sprint/SKILL.md`.
+
+### Product backlog refine (chat picks 1, 3–6; Web-portal-15 Epic)
+
+**Why**: Refine found a missing Features row, a duplicate portal PBI, stale Status and links, and Web-portal-15 Size out of sync with Requirements.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) adds [Web-portal-07](./product-backlog.md#pb-73) row #47 (Sprint 3, Done), removes Web-portal-03, sets [Web-portal-12](./product-backlog.md#pb-81) Done, [Web-portal-15](./product-backlog.md#pb-91) Description **Unified public site** and Size **Epic**, and fixes Agent-03 `artifacts-map.json` link. [`sprint-backlog.md`](./sprint-backlog.md) adds `#rid-d1` on closed D-1 and sets Unplanned Web-portal-15 Size Epic.
+
+**Verification**: `#pb-73` resolves on the table. No Web-portal-03 in Requirements or table. D1 links open the closed RID row. `../artifacts-map.json` opens from the backlog page.
+
+### sdd-refine-backlog findings in plain English
+
+**Why**: Findings used code-only titles and `{part} is {verdict}` plus path chains. That read like agent output, not a desk review.
+
+**What changed**: [ADR-087](./adr/ADR-087-refine-one-confirm.md) and [sdd-refine-backlog/SKILL.md](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) require headline `{PBI code} — {noun}` and one or two plain Issue sentences. Proposed fix stays one sentence.
+
+**Verification**: Send the findings list in the skill names the em-dash headline and bans template openers and comma chains of paths. Copy lives at `~/.cursor/skills/sdd-refine-backlog/SKILL.md`.
+
+### sdd-refine-backlog findings list
+
+**Why**: A wide findings table was hard to copy. Issue and Reason split the mismatch from the board fact.
+
+**What changed**: [ADR-087](./adr/ADR-087-refine-one-confirm.md) and [sdd-refine-backlog/SKILL.md](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) use a numbered list. Each item has Issue and Proposed fix.
+
+**Verification**: The skill section Send the findings list shows the numbered shape. The skill file is copied to `~/.cursor/skills/sdd-refine-backlog/SKILL.md`.
+
+### Product backlog bidirectional PBI links
+
+**Why**: Requirements and the Product Backlog table should cross-link by PBI code. External files keep `#pb-N` on the table row.
+
+**What changed**: [EN sdd-scrum-practices](./framework/seeds/templates/EN/sdd-scrum-practices.md) product-backlog Requirements and table templates use `#pb-N` and `#req-pb-N`. Live [`product-backlog.md`](./product-backlog.md) and EN seed [`product-backlog.md`](./framework/seeds/templates/EN/product-backlog.md) match. [`framework-design.md`](./framework/framework-design.md) and [`framework-stories.md`](./framework/framework-stories.md) AC1 note the link rule.
+
+**Verification**: A Requirements line has `req-pb-N` and `[code](#pb-N)`. A table PBI Code cell has `pb-N` and `[code](#req-pb-N)`.
+
+### One confirm for sdd-refine-backlog
+
+**Why**: One AskQuestion per fail made refine slow. Fail text used readiness item numbers and Retire, which are not words on the board.
+
+**What changed**: [ADR-087](./adr/ADR-087-refine-one-confirm.md) records one chat table and one AskQuestion with four choices: Accept all and update specs, I will enter instructions in chat, Create an OGT to record these findings and I will refine later, Leave it to me. Accept all is only for edits to an existing PBI. User-facing text uses the PBI code, noun, and status. Remove or delete replaces Retire. The skill file is not updated in this entry.
+
+**Verification**: ADR-087 decision items 1 through 6 match this entry. `sdd-refine-backlog/SKILL.md` still asks one fail at a time until the table layout is chosen.
+
+### sdd-refine-backlog findings before AskQuestion
+
+**Why**: AskQuestion in the same turn as the findings table hid the table behind the question card until the user pressed Esc.
+
+**What changed**: [ADR-087](./adr/ADR-087-refine-one-confirm.md) decision 1 splits findings chat and confirm into two turns. [sdd-refine-backlog/SKILL.md](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) sends Design A table first, then AskQuestion on the next turn with a short prompt.
+
+**Verification**: Limits ban AskQuestion in the findings turn. Confirm on the next turn does not point at chat above.
+
+### Product backlog refine (Web-portal-15, Theme rows)
+
+**Why**: Integration and site redesign sat on an Implementable row. Several rows were Theme or Epic scope but sized as Implementable.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) sets [Web-portal-15](./product-backlog.md#pb-91) to Theme **Unified public site** with integration and redesign requirement bullets. [Web-portal-03](./product-backlog.md#pb-50) is Done (public instructions on `/` from [Web-portal-09](./product-backlog.md#pb-76)). [Agent-02](./product-backlog.md#pb-8), [MCP-04](./product-backlog.md#pb-92), and [i18n-01](./product-backlog.md#pb-67) are Theme. [`sprint-backlog.md`](./sprint-backlog.md) Unplanned PBIs match; Done Web-portal-03 leaves Unplanned.
+
+**Verification**: Web-portal-15 Description is Unified public site and Size is Theme. Web-portal-03 Status is Done on both tables. Unplanned PBIs count is 31.
+
+### PBI Size column and Implementable-only sprint planning
+
+**Why**: Sprint planning had no way to exclude Epic or Theme rows. The readiness ladder on requirement bullets did not appear on the board.
+
+**What changed**: [EN sdd-scrum-practices](./framework/seeds/templates/EN/sdd-scrum-practices.md) adds Epic, Theme, and Implementable terminology, §4 Size product backlog, readiness item 9, MVP feature-set wording, and `Size` on Product Backlog and Unplanned PBIs templates. [product-backlog.md](./product-backlog.md) and [sprint-backlog.md](./sprint-backlog.md) Unplanned PBIs add `Size`; every existing row is Implementable. [sdd-refine-backlog](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) and [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) set Size on refine and schedule only Implementable PBIs. [ADR-086](./adr/ADR-086-pbi-size.md) records the decision.
+
+**Verification**: Product Backlog header is `#`, Component, PBI Code, Description, Size, Related, Sprint, Status. Readiness item 9 and §4 exist in practices. Plan-sprint step 3 limits candidates to Implementable.
+
+### sdd-plan-sprint MVP candidates in chat
+
+**Why**: AskQuestion repeated the PBI table and sprint goal. The user could not read the full MVP in chat before picking.
+
+**What changed**: [`sdd-plan-sprint/SKILL.md`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) step 4 sends at least one MVP candidate per target sprint in chat (PBI table, Reason line, SBIs, extra tasks). AskQuestion carries sprint-level options only. Limits ban the PBI table inside AskQuestion.
+
+**Verification**: Step 4 ends with MVP candidates in chat before Propose actions. Propose actions says the AskQuestion prompt is short and does not repeat the table.
+
+### Product backlog refine after sdd-refine-backlog
+
+**Why**: MCP-01 had Sprint — while Sprint 2 SBIs still parented it. Pack skills sdd-build-agent and sdd-create-rule had seeds but no PBI rows. Retired Skill-02 and Skill-10 stayed in the table without Requirements entries.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) splits [MCP-01](./product-backlog.md#pb-16) (installer Done, Sprint 2) from [MCP-04](./product-backlog.md#pb-92) (go-live ToDo). Adds [Skill-15](./product-backlog.md#pb-93) and [Skill-16](./product-backlog.md#pb-94). Removes retired Skill-02 and Skill-10 rows. [Skill-05](./product-backlog.md#pb-26) is WIP. [`sprint-backlog.md`](./sprint-backlog.md) Unplanned PBIs match. [`constants.json`](./framework/seeds/templates/constants.json) drops `skill_tracking` and adds `skill_build_agent`. [`status.md`](./status.md) points at MCP-04 go-live.
+
+**Verification**: MCP-01 Sprint 2 Done has Sprint 2 installer SBIs. MCP-04 is — with no SBIs. Unplanned count stays 32.
+
 ### sdd-plan-sprint step order and backlog paths
 
 **Why**: Step 3 pointed at Response before Extra tasks. The Product Backlog table was read from the wrong file.
