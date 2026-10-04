@@ -26,7 +26,7 @@ Ethan still needs a bit he can set false when a later job cannot read a skill, r
 One file cannot drift from a second copy of the same version and file list. The version and commit stay the installer’s identity. The flag is the only field Ethan may change, so a stop does not destroy merge or idempotency.
 
 ## Consequences
-- Implementation is not done in this ADR. The next change updates the installer, Ethan’s start rule, and the specs that still name `framework.sdd.works.json`: [`mcp-design.md`](../mcp/mcp-design.md), [`mcp-stories.md`](../mcp/mcp-stories.md), [`mcp-tests.md`](../mcp/mcp-tests.md), [`product-backlog.md`](../product-backlog.md) MCP-01 and Agent-07, [`sprint-backlog.md`](../sprint-backlog.md) Sprint 2 feature-01 and feature-03, and R1.
+- Implementation is not done in this ADR. The next change updates the installer, Ethan’s start rule, and the specs that still name `framework.sdd.works.json`: [`mcp-design.md`](../mcp/mcp-design.md), [`mcp-stories.md`](../mcp/mcp-stories.md), [`mcp-tests.md`](../mcp/mcp-tests.md), [`product-backlog.md`](../product-backlog.md) MCP-01 and Agent-04, [`sprint-backlog.md`](../sprint-backlog.md) Sprint 2 feature-01 and feature-03, and R1.
 - Stdio writes the flag in `writeManifest`. HTTP returns the same object for the model to write last.
 - A ledger from before this ADR has no `pack_complete`. Treat that as not true, so Ethan stops until the next successful install or update writes the flag.
 - Agent design §2.4 and framework design “Install ledger” match this decision.

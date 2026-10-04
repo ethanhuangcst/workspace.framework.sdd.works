@@ -15,9 +15,8 @@ v.0.1.0
 ### 技能
 
 - sdd-atdd — 验收测试驱动开发：用用户故事和验收标准建立用户故事地图。
-- sdd-tdd — 测试驱动开发，极限编程中的工程实践。
 - sdd-update-project — 在智能体工具中按 SDD-Scrum 启动项目并更新项目设置，包括规格文件夹路径。修复缺失或错误的产物索引。不覆盖已有内容的过程文件。
-- sdd-refine-pb — 梳理产品待办：细化初始需求，创建 PBI，并补充用户故事和验收标准。
+- sdd-refine-backlog — 梳理产品待办：细化初始需求，创建 PBI，并补充用户故事和验收标准。
 - sdd-plan-sprint — 规划冲刺：把 PBI 分配到各冲刺，检查覆盖与可追溯性，并把 PBI 拆成细粒度 SBI。
 - sdd-tracking — 跟踪并更新实时状态，包括临时 OGT（进行中任务）。
 - sdd-retrospective — 在开发者与智能体之间，或智能体之间进行回顾。
@@ -25,8 +24,7 @@ v.0.1.0
 - sdd-audit-artifacts — 读取工作区索引和过程文件。返回项目未初始化、索引已损坏，或索引可用。不编辑文件。
 - sdd-review-status — 读取五份过程文件，并给出这些文件支持的下一步选项。不编辑文件。
 - sdd-update-specs — 使规格与实现保持一致。
-- sdd-design — 在实现 SBI 之前完成设计与规划：与开发者澄清未知项，完成设计，并做好实现准备。
-- sdd-implement — 加载实现该 SBI 所需的技能，对照 DoD 及其验收标准。
+- sdd-spec-to-build — 先规格后实现一个 SBI：汇总需求、完成设计，并按 DoD 与验收标准实现该 SBI。
 
 ### 规则
 

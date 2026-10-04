@@ -812,7 +812,7 @@ Scenario: Features tab lists fixed catalog rows
   Given the visitor opens instructions
   When the visitor selects the Features tab
   Then Agents lists ethan
-  And Skills lists sdd-atdd, sdd-tdd, sdd-update-project, sdd-refine-pb, sdd-plan-sprint, sdd-tracking, sdd-retrospective, sdd-close-sprint, sdd-audit-artifacts, sdd-update-specs, sdd-design, and sdd-implement
+  And Skills lists sdd-atdd, sdd-update-project, sdd-refine-backlog, sdd-plan-sprint, sdd-tracking, sdd-retrospective, sdd-close-sprint, sdd-audit-artifacts, sdd-update-specs, and sdd-spec-to-build
   And Rules lists dod.mdc, incremental-delivery.mdc, and realtime-status.mdc
   And Templates lists product-backlog.md, sprint-backlog.md, status.md, changes-log.md, artifacts-map.md, architecture.md, design.md, test.md, and deployment.md
   And each row shows a one-sentence summary from an i18n key

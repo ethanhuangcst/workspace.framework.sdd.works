@@ -22,7 +22,7 @@ The skill drafts a change to `status.md`, waits for confirm, and writes that pic
 - Living specs, Features markdown, `constants.md`, and `specs/framework/seeds/skills/sdd-tracking/` still use the 2026-09-26 id. This record does not rename those files.
 - Sprint 4 feature-30 installs the skill as `sdd-update-status`. It sits after feature-04.
 - A later install must not list `skills/sdd-tracking/SKILL.md`.
-- [Skill-07](../product-backlog.md#pb-27) and [Agent-12](../product-backlog.md#pb-46) keep their PBI codes. Their skill id becomes `sdd-update-status` when those rows are updated.
+- Skill-07 and Agent-12 keep their PBI codes. Their skill id becomes `sdd-update-status` when those rows are updated.
 
 ## Date
 2026-09-26, revised 2026-09-28

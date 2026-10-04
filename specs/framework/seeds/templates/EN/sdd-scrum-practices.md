@@ -1,32 +1,25 @@
 # SDD Scrum practices
 
 > Type: Core artifact of framework.sdd.works
-> as_of: 2026-10-03
-> [Definition](#definition-of-sdd-scrum-practicesmd)
+> as_of: 2026-10-04
+> [Definition](#terminology-in-practice)
 
 ---
 
 ## Index
 
 - [Terminology in practice](#terminology-in-practice)
-  - [Definition of sdd-scrum-practices.md](#definition-of-sdd-scrum-practicesmd)
-  - [Definition of sprint-backlog.md](#definition-of-sprint-backlogmd)
-  - [Definition of status.md](#definition-of-statusmd)
-  - [Definition of issues-log.md](#definition-of-issues-logmd)
-  - [Definition of changes-log.md](#definition-of-changes-logmd)
-  - [Definition of artifacts-map.json](#definition-of-artifacts-mapjson)
 - [Artifacts writing guideline](#artifacts-writing-guideline)
   - [General writing principles](#general-writing-principles)
   - [artifacts-map.json](#artifacts-mapjson)
-    - [Role](#role)
-    - [Keys](#keys)
-    - [Shape](#shape)
-    - [Rules](#rules)
-    - [Confirm](#confirm)
-    - [Example](#example)
+  - [Header (process artifacts)](#header)
   - [Framework (process) artifacts](#framework-process-artifacts)
     - [product-backlog.md](#product-backlogmd)
+      - [Requirements](#requirements)
+      - [Product Backlog table](#product-backlog-table)
     - [sprint-backlog.md](#sprint-backlogmd)
+      - [Current project progress and Index](#current-project-progress-and-index)
+      - [Unplanned PBIs](#unplanned-pbis)
     - [status.md](#statusmd)
     - [issues-log.md](#issues-logmd)
     - [changes-log.md](#changes-logmd)
@@ -37,93 +30,43 @@
     - [{module-name}-tests.md](#module-name-testsmd)
     - [deployment.md](#deploymentmd)
     - [.secrets](#secrets)
-- [Jobs](#jobs-what-how-when)
-  - [1. On-board agent](#1-on-board-agent)
-  - [3. Update project settings](#3-update-project-settings)
-  - [4. Refine product backlog](#4-refine-product-backlog)
-  - [5. Sprint planning](#5-sprint-planning)
-  - [6. Report status](#6-report-status)
-  - [7. Retrospective](#7-retrospective)
-  - [8. Start a new sprint](#8-start-a-new-sprint)
+    - [framework-design.md](#framework-designmd)
+- [Scrum in SDD practices](#scrum-in-sdd-practices)
+  - [1. Plan sprints by MVP](#1-plan-sprints-by-mvp)
+  - [2. Slice product to MVPs](#2-slice-product-to-mvps)
+    - [Example](#example)
+  - [3. Evaluate Product Backlog Readiness](#3-evaluate-product-backlog-readiness)
 
 ## Terminology in practice
 
-Names and meanings stay in [Terminology](./scrum-in-sdd.md#terminology) in `scrum-in-sdd.md`. That heading is `## Terminology`.
+Harness names, artifact names, and Scrum guide terms stay in [Terminology](./scrum-in-sdd.md#terminology) in `scrum-in-sdd.md`. This table is the store for backlog and sprint work names used in process artifacts.
 
-### Definition of sdd-scrum-practices.md
 
-- `sdd-scrum-practices.md` is the guideline for writing artifacts so they stay aligned with Scrum in SDD.
-- Use it before editing an artifact, and when a job is about to run.
-- It is for AI agents, and for the person who writes or reviews an artifact.
-- It states what, how, and when. It does not redefine guide terms.
+| #   | Terminology | Definition                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| --- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | <a id="term-pbi"></a>PBI | Product backlog item. One row on `product-backlog.md`, scheduled or unscheduled. |
+| 2   | <a id="term-sbi"></a>SBI | Sprint backlog item. One row in a sprint table on `sprint-backlog.md`. |
+| 3   | <a id="term-feature"></a>Feature | Usable product capability. Record a Feature as a PBI first. Record it as an SBI when a sprint includes it. |
+| 4   | <a id="term-task"></a>Task | Work that is not a Feature.<br>- A Task that creates value as part of product delivery is a PBI.<br>- A Task that is only the effort to build one PBI or one SBI stays internal. Do not record it as a PBI or an SBI.<br>- A shared Task required to deliver one sprint may be an SBI. It is not a PBI. |
+| 5   | <a id="term-ogt"></a>OGT | On-going task. Temporary or side work in `status.md`. An OGT is not a PBI and not an SBI. |
+| 6   | <a id="term-mvp"></a>MVP | Minimum viable product. The smallest release in which the user finishes one job in one sprint. |
+| 7   | <a id="term-issue"></a>Issue | A defect or other issue. Record an Issue only in `issues-log.md`. |
+| 8   | <a id="term-rid"></a>RID | A risk, an impediment, or a dependency. Record a RID only in the RID Log in `sprint-backlog.md`. |
 
-### Definition of sprint-backlog.md
-
-**Purpose**: `sprint-backlog.md` is the Sprint Backlog artifact in [`scrum-in-sdd.md`](./scrum-in-sdd.md). Unlike the Sprint Backlog in classic Scrum, `sprint-backlog.md` lists every sprint.
-
-**Single source of truth**: `sprint-backlog.md` owns the schedule and the item status. It is the latest project progress.
-
-**Projection**: The `Sprint` column in `product-backlog.md` copies the schedule from `sprint-backlog.md`.
-
-**Related**:
-- `artifacts-map.json`
-- `scrum-in-sdd.md`
-- `status.md`
-- `product-backlog.md`
-- `sdd-scrum-practices.md`
-
-**Sprint planning principles**:
-- Each sprint states one [Sprint Goal](./scrum-in-sdd.md#commitment-sprint-goal).
-- The planned [Increment](./scrum-in-sdd.md#increment) is what reaches that goal.
-- Each sprint delivers a minimum viable product (MVP) with the fewest dependencies, and ships without waiting on an Increment from a later sprint.
-- A sprint backlog item (SBI) is an item required to build those Increments, such as a Feature or a Task.
-- A side task or a temporary task found during the sprint, and not needed to deliver those Increments, is an on-going task (OGT) in `status.md`.
-
-### Definition of status.md
-
-- `status.md` is the tracking projection.
-- It is not a second sprint backlog. It is not the defect list.
-- The schedule and the item status stay in `sprint-backlog.md`.
-- Product items stay in `product-backlog.md`.
-- A concluded change stays in `changes-log.md`.
-- Paths stay in `artifacts-map.json`.
-
-### Definition of issues-log.md
-
-- `issues-log.md` records issues. A defect is one kind of issue.
-- A row is opened when an issue is found and stays after it is closed.
-- When a fix is concluded, `changes-log.md` gets its own entry.
-- An open issue is not an on-going task (OGT) row in `status.md`.
-
-### Definition of changes-log.md
-
-- `changes-log.md` is the conclusion record. Write an entry when a change is done.
-- An entry states what changed, why, and how the change was verified.
-- An open defect stays in `issues-log.md`.
-- A concluded fix still gets an entry here.
-- Step-by-step detail stays in git and in the spec that owns the change.
-- Do not put secrets here.
-
-### Definition of artifacts-map.json
-
-- `artifacts-map.json` is the path configuration for this project. It is not an artifact and not a seed.
-- It stores `artifacts_root`, `locale`, a `files` list, and a `modules` list.
-- `artifacts_root` is one folder name. When the key is absent, use `specs`.
-- A module has `folder`, `files`, and `stem` only when the stem differs from the folder.
 
 [Back to top](#index)
-
 
 ## Artifacts writing guideline
 
 Read this before editing an artifact.
 
-**When**: copy or refresh locale seeds during on-board (job 1) if working copies are missing; on Update project settings (job 3) when the map is missing, or when relocating or filling a gap. Do not overwrite filled working copies unless the user confirms. Do not copy `constants.json` into the artifacts root.
+**When**: copy or refresh locale seeds during onboard if working copies are missing; on `sdd-update-project` when the map is missing, or when relocating or filling a gap. Do not overwrite filled working copies unless the user confirms. Do not copy `constants.json` into the artifacts root.
 
 **From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy each listed locale seed to the workspace-relative path named in `artifacts-map.json`. Do not place every file under `artifacts_root`. The map file itself stays `{workspace}/artifacts-map.json`. Read `constants.json` from `{client_root}/templates/framework.sdd.works/constants.json` after install; do not copy it into the artifacts root.
 
-**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (seeds vs working copies). `constants.json` is pack lookup on the client root, not a working copy under the artifacts root.
+**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: `[scrum-in-sdd.md](./scrum-in-sdd.md)` (seeds vs working copies). `constants.json` is pack lookup on the client root, not a working copy under the artifacts root.
 
+**Section reads**: A job opens one heading in this file. The read starts at that heading and stops at the next heading of the same level. The skill or agent names the heading.
 
 ### General writing principles
 
@@ -136,18 +79,18 @@ Read this before editing an artifact.
 - In a table cell, each bullet is its own line, separated by `<br>`.
 - Use one name for one thing in the whole file. Put the plain meaning beside a specialist term on first use.
 - Write a name from the end user's view. Name the result.
-- A heading names what the reader gets. A single verb fails. The check is check 19 in [`friendly-language.mdc`](../../rules/friendly-language.mdc).
-  bad example: `Reply`
-  good example: `Summarize the findings`
-- An example the user reads states what the user understands. An example that only states what the agent saw in the files fails. The check is check 20 in [`friendly-language.mdc`](../../rules/friendly-language.mdc).
-  bad example: "the card-list file is already in the workspace"
-  good example: "the actual status is WIP because the card list page is already in the web app"
-- A line the user reads is written from the user's view: the status, the reason, and the change. The check is check 21 in [`friendly-language.mdc`](../../rules/friendly-language.mdc).
-  good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP."
+- A heading names what the reader gets. A single verb fails. The check is check 19 in `[friendly-language.mdc](../../rules/friendly-language.mdc)`.
+bad example: `Reply`
+good example: `Summarize the findings`
+- An example the user reads states what the user understands. An example that only states what the agent saw in the files fails. The check is check 20 in `[friendly-language.mdc](../../rules/friendly-language.mdc)`.
+bad example: "the card-list file is already in the workspace"
+good example: "the actual status is WIP because the card list page is already in the web app"
+- A line the user reads is written from the user's view: the status, the reason, and the change. The check is check 21 in `[friendly-language.mdc](../../rules/friendly-language.mdc)`.
+good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP."
 
 **Structure**
 
-- The file header is a blockquote of three lines. `Type` names the artifact group and the product. `as_of` is the date of the last edit. `Definition` links that file's section under [Terminology in practice](#terminology-in-practice). One sentence per line. One link per line. The blockquote ends at the first `---`.
+- Process artifact file headers use [Header (process artifacts)](#header). One sentence per blockquote line. One link per line. The blockquote ends at the first `---`.
 - A heading level matches the role: file title, section, entry or table, numbered point.
 - Sections stay in the order named for that file.
 - Indent a continuation two spaces under its bullet. Leave no blank line between the bullet and that line.
@@ -173,7 +116,7 @@ Read this before editing an artifact.
 
 `{workspace}/artifacts-map.json` is the path configuration for this project.
 
-#### Role
+**Role**
 
 - It is not an artifact.
 - It is not a seed.
@@ -181,17 +124,17 @@ Read this before editing an artifact.
 - `sdd-update-project` writes the file after the user confirms the chat summary.
 - The chat summary stays in the chat.
 
-#### Keys
+**Keys**
 
 - `artifacts_root` is one folder name. When the key is absent, use `specs`.
 - `locale` is `EN`, `HanS`, or `HanT`.
 - `files` lists workspace-relative paths that sit outside a module folder.
 - `modules` lists one object per module folder.
-  `folder` is the directory name.
-  `files` lists the paths in that folder.
-  `stem` is present only when the filename stem differs from `folder`.
+`folder` is the directory name.
+`files` lists the paths in that folder.
+`stem` is present only when the filename stem differs from `folder`.
 
-#### Shape
+**Shape**
 
 ```json
 {
@@ -212,7 +155,7 @@ Read this before editing an artifact.
 }
 ```
 
-#### Rules
+**Rules**
 
 - Write one folder name in `artifacts_root`, so the key stores that name.
 - Write `EN`, `HanS`, or `HanT` in `locale`, so future specs use that language.
@@ -221,13 +164,13 @@ Read this before editing an artifact.
 - Leave `artifacts-map.json` off `files` and off every module `files` list, so the file does not record its own path.
 - Omit `stem` when it matches `folder`, so a matching stem has no `stem` key.
 - Write the `artifacts_root` value into each path, so the path matches the setting.
-  good example: `"artifacts_root": "specs"` and `"specs/product-backlog.md"`
-  bad example: `"artifacts_root": "spec"` while the path starts with `specs/`
-  good example: `"folder": "web-app"`, `"stem": "app"`, path `specs/web-app/app-design.md`
-  bad example: `name` and `purpose` keys beside the path
+good example: `"artifacts_root": "specs"` and `"specs/product-backlog.md"`
+bad example: `"artifacts_root": "spec"` while the path starts with `specs/`
+good example: `"folder": "web-app"`, `"stem": "app"`, path `specs/web-app/app-design.md`
+bad example: `name` and `purpose` keys beside the path
 - Leave the product name, `Type`, `as_of`, and a Definition link out of the file, so the file stays keys and paths.
 
-#### Confirm
+**Confirm**
 
 `sdd-update-project` shows this summary in the chat before it writes the file.
 
@@ -261,7 +204,7 @@ files:
 - Omit a file line the project does not have, so the summary lists only the files the map will record.
 - Leave this summary out of `artifacts-map.json`, so the file keeps the keys and the path lists.
 
-#### Example
+**Example**
 
 Pokymon Card Collection. The block shows a filled file. A new project does not copy it.
 
@@ -314,23 +257,85 @@ Pokymon Card Collection. The block shows a filled file. A new project does not c
 
 ### Framework (process) artifacts
 
+##### Header
+
+<a id="header"></a>
+
+Every Framework (process) artifact starts with a title line, then this blockquote, then `---`.
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+```markdown
+> Type: Framework (process) artifact of {product name}
+> as_of: {date}
+> [Definition]({practices}#{artifact-section-id})
+
+---
+```
+
+- `{product name}` is the product name. The EN seed uses a sample name. After copying, replace the product name.
+- `{date}` is the date of the last edit. The EN seed uses a sample date. After copying, replace the date.
+- `{practices}` is the path from the artifact file to `sdd-scrum-practices.md`.
+- `{artifact-section-id}` is the preview id of that artifact's `####` heading in this file, such as `product-backlogmd` or `sprint-backlogmd`.
+- `Type` is always `Framework (process) artifact of {product name}`.
+
 #### product-backlog.md
 
-[`product-backlog.md`](./product-backlog.md) records product items. The requirement text is a paragraph under each feature name in the Requirements section. The table `Description` is a short summary of that paragraph. Relations, the schedule projection, and product-level status stay in the table.
+`[product-backlog.md](./product-backlog.md)` records product items. Each Requirements item has a PBI code, one noun for the deliverable, and bullets the user can act on. The table uses the same code and the same noun. Relations, the schedule projection, and product-level status stay in the table.
 
+##### Header
 
-##### Columns and maintenance boundary
+###### Template
 
-Columns are fixed: `Category`, `PBI Code`, `PBI`, `Description`, `Related`, `Sprint`, `Status`. There is no DoD column. `Category` is one word. `PBI Code` is that word plus a two-digit number, such as `Collect-01`. Each feature in Requirements is one tight list item: the PBI code and name, then the requirement on the next indented line. Rows with the same category stay together. Do not insert a row by pb number when that would split the category. Inside a category, order by PBI code. The category list belongs to the product. A file or skill that already has its own row is not also a parent row. Skill folders start with `sdd-`.
+Follow [General writing principles](#general-writing-principles). Use [Header (process artifacts)](#header). `{practices}` is the path from `product-backlog.md` to `sdd-scrum-practices.md`. `{artifact-section-id}` is `product-backlogmd`.
 
-A Definition of Done section sits above the Product Backlog table. It lists the generic checks. Every PBI uses that list. The checks must be executable and observable, and they carry the verification method for a RID solution. A sprint item uses the Definition of Done section above the first sprint table. A sprint may state a replacement checklist above its own tables.
+```markdown
+# Product overview — {product name}
+```
 
-- The requirement paragraph, related links, and status are owned by the Product Backlog.
-- `Description` stays a short summary. Do not put the requirement in that cell.
-- `Sprint` is a projection of the schedule in `sprint-backlog.md`. It must not become a second schedule.
+##### Requirements
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+```markdown
+- [{pbi code}](#{pb-n}) {noun}
+  - {bullet}
+```
+
+- `{pbi code}` is the existing PBI code, linked to `#{pb-n}`, so sprint links keep working.
+- `{noun}` is one noun for the deliverable, the same words as the table `Description`.
+- `{bullet}` is one line the person who uses the product can act on.
+- Keep one item per i18n code, so HanS and HanT are not a second copy of the same item.
+
+##### Product Backlog table
+
+###### Template
+
+```markdown
+| # | Component | PBI Code | Description | Related | Sprint | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| {seq} | {component} | <a id="{pb-n}"></a>{pbi code} | {noun} | {related} | {sprint} | {status} |
+```
+
+###### How to write
+
+- Write `{seq}` from 1 through the last item, in the same order as Requirements.
+- Write `{component}` as the product component for that row.
+- Put the `{pb-n}` anchor on the PBI Code cell, so `{pbi code}` stays the link target.
+- Write `{noun}` as the same noun as Requirements. `Description` is that noun, not a summary of a paragraph.
+- Write `{related}` as one link, or as a `<br>` bullet for each link when the cell has more than one.
+- Copy `{sprint}` from `sprint-backlog.md`, so that cell is not a second schedule. Write `—` when the PBI row is only in [Unplanned PBIs](#unplanned-pbis).
+- Write `{status}` as `ToDo`, `WIP`, or `Done`.
+- The template groups rows by component, then by PBI code inside the component. The product may use another grouping. Requirements and the table use the same order.
+- A file or skill that already has its own row is not also a parent row. Skill folders start with `sdd-`.
+- There is no DoD column. A Definition of Done section sits above the Product Backlog table. It lists the generic checks. Every PBI uses that list. The checks must be executable and observable, and they carry the verification method for a RID solution. A sprint item uses the Definition of Done section above the first sprint table. A sprint may state a replacement checklist above its own tables.
+- The requirement bullets, related links, and status are owned by the Product Backlog.
 - A Product Backlog item cited by a RID must have a stable item anchor. The `Related` column must link the Sprint Backlog item and the design or test source, so the path from product solution to implementation and verification is navigable.
-- Back-references prefer the PBI code and the item name. Feature lines and table cells stay plain Markdown (see Writing markdown).
-
+- Back-references use the PBI code.
 
 ##### Status
 
@@ -344,23 +349,27 @@ The status cell contains only the word. Put the completion date and the evidence
 
 #### sprint-backlog.md
 
-[`sprint-backlog.md`](./sprint-backlog.md) is the schedule and the execution list. It contains the RID Log and one section per sprint. The ToDo table of each sprint is the single source of truth for that sprint’s items and status.
-
+`[sprint-backlog.md](./sprint-backlog.md)` is the schedule and the execution list. It contains the RID Log, one section per sprint, and [Unplanned PBIs](#unplanned-pbis) after the last sprint. The ToDo table of each sprint is the single source of truth for that sprint’s items and status.
 
 ##### Header
 
-The header ends at the first `---`.
-
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles). Use [Header (process artifacts)](#header). `{practices}` is the path from `sprint-backlog.md` to `sdd-scrum-practices.md`. `{artifact-section-id}` is `sprint-backlogmd`.
 
 ```markdown
 # sprint-backlog, {product name}
+```
 
-> Type: Framework (process) artifact of {product name}
-> as_of: {date}
-> [Definition]({practices}#definition-of-sprint-backlogmd)
+##### Current project progress and Index
 
+<a id="current-project-progress-and-index"></a>
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+```markdown
 ## Current project progress
 
 - Total sprints: {count}
@@ -372,25 +381,16 @@ The header ends at the first `---`.
 - [RID Log](#rid-log-risksimpediments-dependencies)
 - [Sprint 1](#sprint-1)
 - {one link for each later sprint}
+- [Unplanned PBIs](#unplanned-pbis)
 
 ---
 ```
 
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
-- `{product name}` is the product name.
-- `Type` is `Framework (process) artifact of {product name}`.
-- `{practices}` is the path from `sprint-backlog.md` to `sdd-scrum-practices.md`. `Definition` links [Definition of sprint-backlog.md](#definition-of-sprint-backlogmd).
-- `as_of` is the date of the last edit. The EN seed uses a sample date. After copying, replace the product name and the date.
 - `{count}` is the number of sprint sections.
 - `{Sprint N}` is the sprint whose status line is WIP. Copy `{sprint goal}` from that sprint word for word. When no sprint is WIP, write `none` for Current WIP sprint and for Sprint goal.
-- The Index link text is the name only. RID Log is first. Then one link per sprint, in sprint order.
-
+- The Index link text is the name only. RID Log is first. Then one link per sprint, in sprint order. Unplanned PBIs is last.
 
 ##### RID Log
-
 
 ###### Template
 
@@ -414,7 +414,6 @@ The header ends at the first `---`.
 | {type}-{number} | {severity} | {title} | {description} | {impact} | {solution} | {related} | {sprint} |
 ```
 
-
 ###### How to write
 
 - Follow [General writing principles](#general-writing-principles).
@@ -429,11 +428,9 @@ The header ends at the first `---`.
 - Sort each table by created time, newer first. Then sort by severity: Fetal, Broken, Blocking, High, Medium, Low.
 - An open row stays in Open RIDs. A closed row moves to Closed RIDs.
 
-
 ##### Definition of Done
 
 The section sits above the first sprint. It ends at the next `---`.
-
 
 ###### Template
 
@@ -451,7 +448,6 @@ The section sits above the first sprint. It ends at the next `---`.
 {item acceptance}
 ```
 
-
 ###### How to write
 
 - Follow [General writing principles](#general-writing-principles).
@@ -462,11 +458,45 @@ The section sits above the first sprint. It ends at the next `---`.
 - `{item acceptance}` is Additional Done Criteria for one row under that sprint. It does not add a table column.
 - The term is [Commitment: Definition of Done](./scrum-in-sdd.md#commitment-definition-of-done).
 
+##### Unplanned PBIs
+
+The section sits after the last sprint section. It ends at the file end or at the next `---` when more sections follow.
+
+###### Template
+
+```markdown
+## Unplanned PBIs
+
+[Back to the top](#{h1})
+
+> Product backlog items with no sprint assignment. The table matches the Product Backlog table in `product-backlog.md` without the `Sprint` column. The `#pb-N` anchor stays on the Product Backlog row only.
+
+| # | Component | PBI Code | Description | Related | Status |
+| --- | --- | --- | --- | --- | --- |
+| {seq} | {component} | [{pbi code}]({product-backlog}#{pb-n}) | {noun} | {related} | {status} |
+```
+
+###### How to write
+
+- Follow [General writing principles](#general-writing-principles).
+- The section lists product backlog items (PBIs) only. Do not put an SBI (sprint backlog item) code in this table. An unscheduled PBI has no SBI until sprint planning adds one.
+- List every PBI whose `Sprint` cell in `product-backlog.md` is `—`.
+- Use the same columns as the [Product Backlog table](#product-backlog-table) except omit `Sprint`.
+- The blockquote stays the two sentences in the Template. Do not add a third sentence that repeats the column rules.
+- Write `{seq}` from 1 through the last unplanned row. Group by component, then order by PBI code inside the component. The component order is the same order as the Product Backlog table.
+- Link `{pbi code}` to `{product-backlog}#{pb-n}`. Do not add a second `#pb-N` anchor in this file.
+- `{noun}` is the Description noun from the Product Backlog row. Do not copy the Requirements bullets into `{noun}`.
+- Copy `{related}` and `{status}` from the Product Backlog row. Rewrite a `Related` link that uses `#pb-n` so it resolves from `sprint-backlog.md`, such as `./product-backlog.md#pb-8`.
+- When no PBI is unscheduled, keep the heading, the back link, the blockquote, and the header row. Leave the body empty. The EN seed uses that empty table after the last sample sprint.
+- When a PBI gets a sprint, remove its row here, add the sprint SBIs, and update the Product Backlog `Sprint` cell in the same change.
+bad example: a row whose PBI Code is `feature-25`, so the table mixes an SBI with PBIs
+good example: one row for `Skill-03` with the same noun, related links, and status as the Product Backlog row, and `Sprint` `—` on that PBI
 
 ##### Sprint body
 
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles).
 
 ```markdown
 ## Sprint {n}
@@ -482,22 +512,16 @@ Sprint Goal: {sprint goal}
 {progress note}
 ```
 
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
 - `{n}` is the sprint number. The heading is `## Sprint` plus that number, so the preview id stays `sprint-1` and the same pattern for each later sprint.
 - The next line is `[Back to the top](#{h1})`. `{h1}` is the preview id of the file title.
 - Current project progress copies `{sprint goal}` word for word.
 - `{depends}` names an earlier sprint this sprint waits on.
 - `{status}` is bold: `**ToDo**`, `**WIP**`, or `**Done**`.
 - `{status note}` is the reason, in parentheses. Sprint 1 in the EN seed uses `**Status: Done** (every item is complete)`.
-- `{progress note}` sits before the item table. Sprint 4 uses `No row is WIP. The first ToDo row is feature-30.`
+- `{progress note}` sits before the item table when needed.
 - The item table and the Retrospective are the next sections.
 
-
 ##### Sprint item table
-
 
 ###### Template
 
@@ -513,7 +537,6 @@ Additional Done Criteria, on top of the Definition of Done:
 | {n} | {code} | {sbi} | {parent} | {module}/{type} | {related} | **{status}** |
 ```
 
-
 ###### How to write
 
 - Follow [General writing principles](#general-writing-principles).
@@ -523,11 +546,11 @@ Additional Done Criteria, on top of the Definition of Done:
 - `{n}` is the place in this table, from 1. It is not the SBI. When a row moves, renumber `#`. The Code stays.
 - `{code}` is the Type in lowercase, a hyphen, and a two-digit number inside that sprint, such as `feature-01` or `task-01`. Numbering restarts at `01` for each Type in each sprint. The cell is plain text. A link to the row uses the sprint heading, such as `#sprint-1`.
 - `{sbi}` names the Increment as a tangible deliverable.
-  Good: `Updated agent ethan.md with onboard capability`.
-  Bad: `Update ethan.md onboard`.
+Good: `Updated agent ethan.md with onboard capability`.
+Bad: `Update ethan.md onboard`.
 - `{parent}` is the PBI code and the PBI name, and it links the product-backlog anchor.
 - `{module}/{type}` is one cell.
-  `{type}` is one of these:
+`{type}` is one of these:
   - `Feature` delivers something the product ships for use.
   - `Task` is supporting work that is not a feature, research, a bug fix, or documentation.
   - `Bug-fix` corrects a defect in something already delivered.
@@ -539,13 +562,11 @@ Additional Done Criteria, on top of the Definition of Done:
   - `**WIP**` means started, and an acceptance criterion is still open or the Definition of Done has not been applied.
   - `**Done**` means every acceptance criterion is met, and the Definition of Done has been applied.
 - Sort the rows in this order.
-  Status is first: `**Done**`, then `**WIP**`, then `**ToDo**`.
-  Type is second: `Feature`, then `Task`, then `Bug-fix`, then `Documentation`, then `Research`.
-  Created time is third: a newer row comes before an older row.
-
+Status is first: `**Done**`, then `**WIP**`, then `**ToDo**`.
+Type is second: `Feature`, then `Task`, then `Bug-fix`, then `Documentation`, then `Research`.
+Created time is third: a newer row comes before an older row.
 
 ##### Retrospective
-
 
 ###### Template
 
@@ -568,25 +589,24 @@ Additional Done Criteria, on top of the Definition of Done:
 - {action}
 ```
 
-
 ###### How to write
 
 - Follow [General writing principles](#general-writing-principles).
 - One sprint has one Retrospective.
-  A later run adds the next number under these three labels.
-  Do not add a second Retrospective heading.
-  Do not add a second Learnings, Opportunities, or Future actions label.
+A later run adds the next number under these three labels.
+Do not add a second Retrospective heading.
+Do not add a second Learnings, Opportunities, or Future actions label.
 - `{number}` starts at 1 for the first retrospective in that sprint.
-  The next retrospective uses the next number.
-  One retrospective uses the same number under each label that has a point.
+The next retrospective uses the next number.
+One retrospective uses the same number under each label that has a point.
 - `{when}` is the date in brackets, such as `[Sep 24, 2026]`.
 - `{trigger}` is `Sprint-end`, `On demand`, or the incident that fired the rule, such as `feature-01 done`.
 - `{learning}`, `{opportunity}`, and `{action}` are the key points.
-  The bullet links the ADR or the knowledge note when one was written.
+The bullet links the ADR or the knowledge note when one was written.
 - A label with no record uses one sentence.
-  Learnings uses `No learning is recorded yet.`
-  Opportunities uses `No opportunity is recorded yet.`
-  Future actions uses `No future action is recorded yet.`
+Learnings uses `No learning is recorded yet.`
+Opportunities uses `No opportunity is recorded yet.`
+Future actions uses `No future action is recorded yet.`
 - Good: the bullet stays on the next line, with no blank line above it.
   ```markdown
   **Learnings**
@@ -601,38 +621,23 @@ Additional Done Criteria, on top of the Definition of Done:
 
 #### status.md
 
-[`status.md`](./status.md) is the tracking projection. It is not a second sprint backlog. It is not the defect list. Sections, in order: Header, Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs, Last updated. Column rules are in [`framework-design.md`](../../../framework-design.md).
-
+`[status.md](./status.md)` is the tracking projection. It is not a second sprint backlog. It is not the defect list. Sections, in order: Header, Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs, Last updated. Column rules are in `[framework-design.md](../../../framework-design.md)`.
 
 ##### Header
 
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles). Use [Header (process artifacts)](#header). `{practices}` is the path from `status.md` to `sdd-scrum-practices.md`. `{artifact-section-id}` is `statusmd`.
 
 ```markdown
 # The latest status of {product name}
-
-> Type: Framework (process) artifact of {product name}
-> as_of: {date}
-> [Definition]({practices}#definition-of-statusmd)
-
----
 ```
-
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
-- `{product name}` is the product name. The EN seed uses Pokymon Card Collection.
-- `Type` is `Framework (process) artifact of {product name}`.
-- `{practices}` is the path from `status.md` to `sdd-scrum-practices.md`. `Definition` links [Definition of status.md](#definition-of-statusmd).
-- `as_of` is the date of the last edit. The EN seed uses a sample date. After copying, replace the product name and the date.
-
 
 ##### Project progress
 
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles).
 
 ```markdown
 ## Project progress
@@ -647,10 +652,6 @@ Additional Done Criteria, on top of the Definition of Done:
 | {sprint range or name} | {sprint status} | {note} |
 ```
 
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
 - The milestone table has two rows: Project kickoff and Initial product backlog refined.
 - `{milestone status}` is `ToDo`, `WIP`, or `Done`.
 - The sprint table columns are `Sprint`, `Status`, and `Note`. There is no Sprint Goal column.
@@ -659,11 +660,11 @@ Additional Done Criteria, on top of the Definition of Done:
 - An empty Note cell is allowed.
 - This section does not list SBIs.
 
-
 ##### where we are now
 
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles).
 
 ```markdown
 ## where we are now
@@ -672,21 +673,17 @@ Additional Done Criteria, on top of the Definition of Done:
 - What SBI are we working on now: {SBI code} {SBI name}
 ```
 
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
 - The heading has no colon.
 - `{sprint name}` and `{sprint status}` match the WIP sprint row in Project progress.
 - `{one sentence}` states the current work.
 - `{SBI code}` and `{SBI name}` name one current SBI.
 - When more than one SBI is WIP, name the SBI this file is advancing now.
 
-
 ##### what could be the next
 
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles).
 
 ```markdown
 ## what could be the next
@@ -695,16 +692,10 @@ Additional Done Criteria, on top of the Definition of Done:
 - {SBI code} {SBI name}
 ```
 
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
 - The heading has no colon.
 - Each bullet is one SBI after the current SBI, in sprint item order.
 
-
 ##### Current OGT(On-going Tasks)
-
 
 ###### Template
 
@@ -715,7 +706,6 @@ Additional Done Criteria, on top of the Definition of Done:
 | --- | --- | --- | --- | --- |
 | {n} | {task name} | {affected} | {sprint name} | {status} |
 ```
-
 
 ###### How to write
 
@@ -729,9 +719,7 @@ Additional Done Criteria, on top of the Definition of Done:
 - An open defect is not a row. It belongs in `issues-log.md`.
 - Do not write an `OGT for Sprint…` lead-in.
 
-
 ##### Last 15 closed OGTs
-
 
 ###### Template
 
@@ -743,7 +731,6 @@ Additional Done Criteria, on top of the Definition of Done:
 | {n} | {task name} | {affected} | {created sprint} | {closed sprint} |
 ```
 
-
 ###### How to write
 
 - Follow [General writing principles](#general-writing-principles).
@@ -754,20 +741,16 @@ Additional Done Criteria, on top of the Definition of Done:
 - Cap the table at 15 rows. A 16th row drops the oldest.
 - The number a task had while open ends when the row moves here.
 
-
 ##### Last updated
 
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles).
 
 ```markdown
 Last updated: {timestamp} {agent name}
 ```
 
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
 - `{timestamp}` is the date and time of the last edit.
 - `{agent name}` is the agent that wrote the line.
 - This line sits after Last 15 closed OGTs. There is no heading.
@@ -776,81 +759,37 @@ Last updated: {timestamp} {agent name}
 
 #### issues-log.md
 
-[`issues-log.md`](./issues-log.md) records issues. A defect is one kind of issue. A row is opened when an issue is found and stays after it is closed. When a fix is concluded, `changes-log.md` gets its own entry. An open issue is not an OGT row in `status.md`.
-
+`[issues-log.md](./issues-log.md)` is the issue record. Sections, in order: Header, Open issues, Closed issues.
 
 ##### Header
 
-The header ends at the first `---`.
-
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles). Use [Header (process artifacts)](#header). `{practices}` is the path from `issues-log.md` to `sdd-scrum-practices.md`. `{artifact-section-id}` is `issues-logmd`.
 
 ```markdown
 # Issues log ({product name})
-
-> Type: Framework (process) artifact of {product name}
-> as_of: {date}
-> [Definition]({practices}#definition-of-issues-logmd)
-
----
 ```
-
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
-- `{product name}` is the product name.
-- `Type` is `Framework (process) artifact of {product name}`.
-- `{practices}` is the path from `issues-log.md` to `sdd-scrum-practices.md`. `Definition` links [Definition of issues-log.md](#definition-of-issues-logmd).
-- `as_of` is the date of the last edit. The EN seed uses a sample date. After copying, replace the product name and the date.
-- Two tables, in order: Open issues, then Closed issues.
-- Open columns: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Status`, `Added time`.
-- Status is `Open`, `Fixed`, or `Deferred`. `Fixed` means a fix exists and the close check is not confirmed. `Deferred` means the issue is accepted and not scheduled. A row moves to Closed issues only when it is `Closed`.
-- Closed columns: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Closed Sprint`, `Closed time`.
-- `Component` is the part that owns the issue, such as Web-app, MCP, or Agent.
-- `Priority` is `Fatal`, `High`, `Medium`, or `Low`.
-- `Id` stays the same when a row is sorted or moves.
-- `Description` is under 3 lines. `Close Check` is shorter.
-- Sort each table by component A to Z, then by time, oldest first. Open uses `Added time`. Closed uses `Closed time`.
-- Write the date as `30/Sep/2026`.
 
 [Back to top](#index)
 
 #### changes-log.md
 
-[`changes-log.md`](./changes-log.md) is the conclusion record. Write an entry when a Change is done.
-
+`[changes-log.md](./changes-log.md)` is the conclusion record. Write an entry when a Change is done.
 
 ##### Header
 
-The header ends at the first `---`.
-
-
 ###### Template
+
+Follow [General writing principles](#general-writing-principles). Use [Header (process artifacts)](#header). `{practices}` is the path from `changes-log.md` to `sdd-scrum-practices.md`. `{artifact-section-id}` is `changes-logmd`.
 
 ```markdown
 # Changes log ({product name})
-
-> Type: Framework (process) artifact of {product name}
-> as_of: {date}
-> [Definition]({practices}#definition-of-changes-logmd)
-
----
 ```
 
-
-###### How to write
-
-- Follow [General writing principles](#general-writing-principles).
-- `{product name}` is the product name.
-- `Type` is `Framework (process) artifact of {product name}`.
-- `{practices}` is the path from `changes-log.md` to `sdd-scrum-practices.md`. `Definition` links [Definition of changes-log.md](#definition-of-changes-logmd).
-- `as_of` is the date of the last edit. The EN seed uses a sample date. After copying, replace the product name, the date, and the sample entries.
-
+- After copying, replace the product name, the date, and remove sample entries when the project no longer needs them.
 
 ##### Entry
-
 
 ###### Template
 
@@ -868,28 +807,27 @@ The header ends at the first `---`.
 **Boundary**: {boundary}
 ```
 
-
 ###### How to write
 
 - Follow [General writing principles](#general-writing-principles).
 - `{YYYY-MM-DD}` is the day of the entry.
-  Days are headings `## YYYY-MM-DD`.
-  The newest day is first.
-  Under a day, the newest entry is first.
+Days are headings `## YYYY-MM-DD`.
+The newest day is first.
+Under a day, the newest entry is first.
 - `{title}` names the concluded change.
 - `{why}` states why the change was made.
 - `{what}` names the files and the backlog or sprint item when one exists.
-  It links that item by its existing heading.
+It links that item by its existing heading.
 - `{verification}` names the check that passed.
 - `{boundary}` says what the entry leaves out.
-  Omit the Boundary label and paragraph when the entry does not need them.
+Omit the Boundary label and paragraph when the entry does not need them.
 - The EN seed may keep sample entries. After a project copies the file, those samples are removed.
 - Good: Why, What changed, and Verification are each one short paragraph. What changed names the file and the sprint item. Boundary is present only to say what the entry leaves out.
   ```markdown
   ## 2026-10-01
   ### Confirmed the status.md seed
   **Why**: The status seed had no section rules, so a copied project could drift from the practices.
-  **What changed**: Sprint 4 feature-27 updated [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) and the EN [`status.md`](./status.md) seed.
+  **What changed**: Sprint 4 feature-27 updated `[sdd-scrum-practices.md](./sdd-scrum-practices.md)` and the EN `[status.md](./status.md)` seed.
   **Verification**: Ethan confirmed the live example and the EN seed.
   **Boundary**: HanS and HanT copies stay on i18n-02.
   ```
@@ -908,7 +846,7 @@ The header ends at the first `---`.
 
 #### architecture.md
 
-[`architecture.md`](./architecture.md) records the stack and a small number of decisions. Product behavior stays in `product-backlog.md`. This file is optional and written when a decision needs a home.
+`[architecture.md](./architecture.md)` records the stack and a small number of decisions. Product behavior stays in `product-backlog.md`. This file is optional and written when a decision needs a home.
 
 [Back to top](#index)
 
@@ -918,7 +856,7 @@ The header ends at the first `---`.
 
 `{module-name}-design.md` is the design spec.
 
-Section rules for a module file are written when that seed is in review. They follow [Template and How to write](../../../../seed-artifacts-building-guide.md).
+Section rules for a module file are written when that seed is in review. They follow [seed-artifacts-building-guide.md](../../../../seed-artifacts-building-guide.md).
 
 [Back to top](#index)
 
@@ -936,7 +874,7 @@ Section rules for a module file are written when that seed is in review. They fo
 
 #### deployment.md
 
-[`deployment.md`](./deployment.md) records how to start locally and the order of steps at go-live. Do not put host names, secrets, or customer environment names here. This file is optional and written when those steps exist.
+`[deployment.md](./deployment.md)` records how to start locally and the order of steps at go-live. Do not put host names, secrets, or customer environment names here. This file is optional and written when those steps exist.
 
 [Back to top](#index)
 
@@ -948,79 +886,115 @@ Section rules for a module file are written when that seed is in review. They fo
 
 #### framework-design.md
 
-[`framework-design.md`](../../../framework-design.md) is the overall design for framework artifacts. The sprint-item shape (columns, Type, status, and the retrospective block) is in its templates section. It also places `artifacts-map.json` at the workspace root and names `artifacts_root` there. This practices file states how to apply that shape.
+`[framework-design.md](../../../framework-design.md)` is the overall design for framework artifacts. The sprint-item shape (columns, Type, status, and the retrospective block) is in its templates section. It also places `artifacts-map.json` at the workspace root and names `artifacts_root` there. This practices file states how to apply that shape.
 
 [Back to top](#index)
 
-## Jobs (what, how, when)
+## Scrum in SDD practices
 
+### 1. Plan sprints by MVP
 
-### 1. On-board agent
+Each sprint delivers one MVP (minimum viable product). A product backlog item (PBI) is one feature on the product backlog.
 
-- On-board agent ethan.
-- Load artifact templates from the framework.sdd.works folder, or via `sdd_install_framework` / `sdd_update_framework`, when artifacts are missing.
-- Run an on-board check and tell the user that agent ethan is ready.
-- Record current status in `status.md` and suggest what to do next.
+- Pick the items in `product-backlog.md` that the user needs for one job, so those items are the MVP.
+- Shape the MVP around the result the user gets: the PBIs that job needs, and no PBI that job does not need.
+- Put that set in one sprint, so the sprint goal is the job the user finishes.
+
+### 2. Slice product to MVPs
+
+An MVP is the smallest release in which the user finishes one job.
+
+- Start with the job the user wants done. That job is the MVP.
+- Include every part of the product that job needs, so the user can start the job and get the result in this release.
+- Keep the set small. A few features that close the loop are enough. A long list of screens leaves the job unfinished.
+- The user can use this release before the next one starts.
+- When the job is still too big, ship only the next result the user can get.
+That result can be one step, one rule, one kind of information, or the usual path before anything goes wrong.
+- When a question is still open, write it as an on-going task (OGT). An open question is not an MVP.
+
+#### Example
+
+**mypoke.trade product backlog**
+
+mypoke.trade is the sample product. The user is a Pokémon card collector. This list keeps the items for three MVPs. The product has three parts, and items for the same part stay together. The web app comes first, then the agent, then the RAG.
+
+- The web app is the site the user opens.
+- The agent is the helper the user can talk to. It also does the work the page cannot do on its own.
+- RAG (retrieval-augmented generation) is the notes the agent looks up before it answers.
+
+**Web app**
+
+1. APP-SRCH-002: Search cards by photo
+2. APP-OWN-001: Save a card as owned, with a condition
+3. APP-OWN-003: See a value while saving an owned card
+4. APP-OWN-004: Get a suggested condition from a photo
+5. APP-PRICE-001: See an AI price when no shop price is listed
+
+- …
+
+**Agent**
+
+1. AGT-VAL-001: Price a card from the condition the user picked
+2. AGT-VAL-002: Price a card from a photo and the user's condition
+3. AGT-LIST-001: Estimate a market price when no shop price is listed
+
+- …
+
+**RAG**
+
+1. RAG-CORP-001: Store a small set of pricing notes
+2. RAG-RET-001: Return the notes that match the question
+3. RAG-RET-002: Continue when no note is found
+
+- …
+
+**Sample MVP**
+
+Each MVP uses the web app, the agent, and the RAG, so the user can finish that job in one release.
+
+**Bad example.** Two web app features, and no agent or RAG feature.
+
+1. APP-OWN-001: Web app: Save a card as owned, with a condition
+2. APP-OWN-003: Web app: See a value while saving an owned card
+
+The site can ask the user to save a card. The user still cannot learn what the card is worth, because the price comes from the agent and the notes.
+
+**MVP 1.** The user learns what one card is worth.
+
+1. APP-OWN-001: Web app: Save a card as owned, with a condition
+2. APP-OWN-003: Web app: See a value while saving an owned card
+3. AGT-VAL-001: Agent: Price a card from the condition the user picked
+4. RAG-RET-001: RAG: Return the notes that match the question
+
+**MVP 2.** The user learns what the card in a photo is worth.
+
+1. APP-SRCH-002: Web app: Search cards by photo
+2. APP-OWN-004: Web app: Get a suggested condition from a photo
+3. AGT-VAL-002: Agent: Price a card from a photo and the user's condition
+4. RAG-RET-002: RAG: Continue when no note is found
+
+**MVP 3.** The user sees a price when the shop lists none.
+
+1. APP-PRICE-001: Web app: See an AI price when no shop price is listed
+2. AGT-LIST-001: Agent: Estimate a market price when no shop price is listed
+3. RAG-CORP-001: RAG: Store a small set of pricing notes
 
 [Back to top](#index)
 
-### 3. Update project settings
+### 3. Evaluate Product Backlog Readiness
 
-Follow `sdd-update-project` (`skill_update_project`). [ADR-079](../../../../adr/ADR-079-one-job-update-project.md).
+Evaluate `product-backlog.md` against this list before a sprint takes an item, and when `sdd-refine-backlog` runs. A line passes or it fails.
 
-The map is missing:
-
-- Decide language of project artifacts (EN, HanS, HanT).
-- Decide workspace folder structure from sub-systems, architecture, and components.
-- Specify the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
-- Record that structure in `{workspace}/artifacts-map.json` (path configuration; this project’s index). Name `artifacts_root` there. It is one folder name relative to the workspace. When the field is absent, use `specs`. `docs` is an example. Any other single folder name is valid.
-- Copy artifact templates to the locations named in `artifacts-map.json`, for the chosen language.
-- Ensure agent ethan can operate those files.
-- Record current status in `status.md` and tell the user the project is initialized, with suggestions for what to do next.
-
-The map is already in use:
-
-- Update language of project artifacts (EN, HanS, HanT).
-- Update workspace folder structure from sub-systems, architecture, and components.
-- Update the sdd-scrum artifacts root (default: `{workspace_folder}/specs`) and sub-folders if needed.
-- Update `artifacts-map.json` so it remains this project’s index.
-- Relocate artifact files to match language and `artifacts-map.json`.
-- Ensure agent ethan can operate those files.
-- Record current status in `status.md` and tell the user the project is updated, with suggestions for what to do next.
+- [ ] 1. One product outcome is one PBI. A second row for that same outcome fails.
+- [ ] 2. Each Requirements item is the PBI code, one noun, and bullets the user can act on.
+- [ ] 3. The table `Description` is that same noun.
+- [ ] 4. The `Sprint` cell copies `sprint-backlog.md`. An unscheduled PBI uses `—`.
+- [ ] 5. A PBI whose `Sprint` cell names a sprint has at least one SBI in that sprint. A PBI whose `Sprint` cell is `—` is listed in [Unplanned PBIs](#unplanned-pbis) and has no SBI.
+- [ ] 6. Every SBI names one Parent PBI.
+- [ ] 7. Place each [Feature](#term-feature), [Task](#term-task), [OGT](#term-ogt), [Issue](#term-issue), and [RID](#term-rid) only where [Terminology in practice](#terminology-in-practice) says.
+- [ ] 8. A PBI is small enough to ship by itself, and it adds value for the user.
+  Vague: the user can log in to mypoke.trade with multiple methods.
+  Proper: the user can log in to mypoke.trade with a user name and a password.
+  Too small: the password field on the login screen shows `***`.
 
 [Back to top](#index)
-
-### 4. Refine product backlog
-
-*(to fill)*
-
-[Back to top](#index)
-
-### 5. Sprint planning
-
-*(to fill)*
-
-[Back to top](#index)
-
-### 6. Report status
-
-- Follow `sdd-review-status` (`skill_get_status`). [ADR-076](../../../../adr/ADR-076-review-status-one-skill.md).
-- The skill compares the board with the open items in the current sprint.
-- The skill lists each mismatch.
-- The skill writes the text the user accepts after the second yes.
-- How to write each process file stays in this file under that file's Definition and How to write.
-
-[Back to top](#index)
-
-### 7. Retrospective
-
-*(to fill)*
-
-[Back to top](#index)
-
-### 8. Start a new sprint
-
-*(to fill)*
-
-[Back to top](#index)
-

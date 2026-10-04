@@ -2,7 +2,7 @@
 
 > Type: Framework (process) artifact of Pokymon Card Collection
 > as_of: 2026-10-01
-> [Definition](./sdd-scrum-practices.md#definition-of-sprint-backlogmd)
+> [Definition](./sdd-scrum-practices.md#sprint-backlogmd)
 
 ## Current project progress
 
@@ -15,6 +15,7 @@
 - [RID Log](#rid-log-risksimpediments-dependencies)
 - [Sprint 1](#sprint-1)
 - [Sprint 2](#sprint-2)
+- [Unplanned PBIs](#unplanned-pbis)
 
 ---
 
@@ -116,3 +117,14 @@ No opportunity is recorded yet.
 **Future actions**
 
 No future action is recorded yet.
+
+---
+
+## Unplanned PBIs
+
+[Back to the top](#sprint-backlog-pokymon-card-collection)
+
+> Product backlog items with no sprint assignment. The table matches the Product Backlog table in `product-backlog.md` without the `Sprint` column. The `#pb-N` anchor stays on the Product Backlog row only.
+
+| # | Component | PBI Code | Description | Related | Status |
+| --- | --- | --- | --- | --- | --- |

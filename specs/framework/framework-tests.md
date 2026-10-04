@@ -371,19 +371,12 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Test steps:** Ask to create a skill named `sample-skill`.
 - **Expected results:** It waits for confirm. The only write is `{client_root}/skills/sample-skill/SKILL.md`, which is that client's skills folder in [Pack folders](#pack-folders). On TRAE CN that is `~/.trae-cn/skills/sample-skill/SKILL.md`, not `~/.trae/skills/`. It does not write production code. It does not write `skill-creator` or `create-skill`. It does not write under the workspace.
 
-#### CE-SKILL-04 — sdd-design
+#### CE-SKILL-04 — sdd-spec-to-build
 
 - **Layer:** L1.
-- **Pre-condition:** Seed `specs/framework/seeds/skills/sdd-design/SKILL.md` is the file under test.
-- **Test steps:** Ask it to design one sprint backlog item.
-- **Expected results:** It does not write production code.
-
-#### CE-SKILL-05 — sdd-implement
-
-- **Layer:** L1.
-- **Pre-condition:** One sprint backlog item is the current item. A later item exists. Seed: `specs/framework/seeds/skills/sdd-implement/SKILL.md`.
-- **Test steps:** Ask it to implement the current item.
-- **Expected results:** It implements that item only. It does not start the next item.
+- **Pre-condition:** One sprint backlog item is the current item. A later item exists. Seed: `specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md`.
+- **Test steps:** Ask it to design the current item, then ask it to implement the current item.
+- **Expected results:** In the design phase it does not write production code. In the build phase it implements that item only. It does not start the next item.
 
 #### CE-SKILL-06 — Do not ship both status folders
 
@@ -395,7 +388,7 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 #### CE-SKILL-07 — Backlog-only skills
 
 - **Layer:** L1.
-- **Pre-condition:** The names `sdd-atdd`, `sdd-tdd`, `sdd-update-project`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, and `sdd-update-specs` have no seed in the tree yet.
+- **Pre-condition:** The names `sdd-atdd`, `sdd-refine-backlog`, `sdd-retrospective`, `sdd-close-sprint`, and `sdd-update-specs` have no seed in the tree yet.
 - **Test steps:** Read the design section for those names.
 - **Expected results:** This file adds no steps for them. Acceptance stays on the product-backlog row. A future case must still use `{client_root}`, must wait for confirm before a project write, and must not assume locale `EN`.
 

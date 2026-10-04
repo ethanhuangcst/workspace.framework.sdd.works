@@ -2,7 +2,7 @@
 
 > Type: Framework (process) artifact of Pokymon Card Collection
 > as_of: 2026-10-01
-> [Definition](./sdd-scrum-practices.md#definition-of-statusmd)
+> [Definition](./sdd-scrum-practices.md#statusmd)
 
 ---
 

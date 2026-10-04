@@ -21,7 +21,7 @@ Ethan’s prompt previously said there is no `kickoff-project` skill, meaning do
 The skill is not built, so renaming the id now does not move an installed folder or a ledger entry. `kickoff-project` names the start of an SDD project without changing the practices job title or the key ethan matches.
 
 ## Consequences
-- [Skill-03](../product-backlog.md#pb-23) and [Agent-08](../product-backlog.md#pb-42) use the new id. Sprint 3 feature-01 ships `sdd-kickoff-project`.
+- Skill-03 and Agent-08 use the new id. Sprint 3 feature-01 ships `sdd-kickoff-project`.
 - Sprint 3 feature-20 is the spec rename. It does not write `SKILL.md`.
 - A later install must not list `skills/sdd-new-project/SKILL.md`.
 

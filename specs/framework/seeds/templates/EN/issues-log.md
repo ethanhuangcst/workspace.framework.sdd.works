@@ -2,15 +2,9 @@
 
 > Type: Framework (process) artifact of Pokymon Card Collection
 > as_of: 2026-10-01
-> [Definition](./sdd-scrum-practices.md#definition-of-issues-logmd)
+> [Definition](./sdd-scrum-practices.md#issues-logmd)
 
 ---
-
-`Id` stays the same when a row is sorted or moves. `Description` is under 3 lines. `Close Check` is shorter. Use bullets when a sentence is not enough. `Related` is a spec id, a link, and the name. `Component` is the part that owns the defect. Use one term for that part in the whole file. `Priority` is `Fatal`, `High`, `Medium`, or `Low`.
-
-The Open table status is `Open`, `Fixed`, or `Deferred`. `Fixed` means a fix exists and the close check is not confirmed. `Deferred` means the defect is accepted and not scheduled. A row moves to Closed issues only when it is `Closed`.
-
-Sort each table by component A to Z, then by time, oldest first. Open uses `Added time`. Closed uses `Closed time`. Write the date as `30/Sep/2026`.
 
 ## Open issues
 

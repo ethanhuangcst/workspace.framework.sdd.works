@@ -181,9 +181,9 @@ Tests: CE-LOCALE-01 through CE-LOCALE-04, CE-SKILL-08, CE-AUDIT-05, CE-AUDIT-09 
 
 Stories for the local ethan agent. Design: `[framework-design.md](./framework-design.md)` §2. Product backlog: `[product-backlog.md](../product-backlog.md)`.
 
-**Sprint 2 feature-03 (Agent-07):** start gate on `{client_root}/.sdd-installed.json`. Story: `[sdd-ethan-pack-complete-gate](#sdd-ethan-pack-complete-gate)`. Design §2.4. Tests: `[framework-tests.md](./framework-tests.md#agents)` CE-GATE.
+**Sprint 2 feature-03 (Agent-04):** start gate on `{client_root}/.sdd-installed.json`. Story: `[sdd-ethan-pack-complete-gate](#sdd-ethan-pack-complete-gate)`. Design §2.4. Tests: `[framework-tests.md](./framework-tests.md#agents)` CE-GATE.
 
-### `sdd-ethan-pack-complete-gate` — Install ledger start gate (Agent-07)
+### `sdd-ethan-pack-complete-gate` — Install ledger start gate (Agent-04)
 
 On every start, before any greeting or job list, ethan reads only `{client_root}/.sdd-installed.json`. He does not scan skills, rules, workflows, or templates to decide completeness. A ledger with no `pack_complete` field is not true. This gate is the same on macOS, Windows, and Linux, and on every client root in `[sdd-client-root](#sdd-client-root--the-pack-root-follows-the-loaded-file)`.
 
@@ -433,7 +433,7 @@ A skill that is only a product-backlog row has no scenario here. When its story 
 
 ### sdd-audit-artifacts
 
-Read-only workspace verdict for Skill-10. Design: `[framework-design.md](./framework-design.md#sdd-audit-artifacts)`. The verdict token is the same word on every OS and in every locale.
+Read-only workspace verdict for Skill-08. Design: `[framework-design.md](./framework-design.md#sdd-audit-artifacts)`. The verdict token is the same word on every OS and in every locale.
 
 #### User story 1 — Uninitialized when no process file opens
 
@@ -772,15 +772,15 @@ Scenario: Confirm writes one client-root skill file
 
 Tests: CE-SKILL-03. The same path shape applies on Windows with backslashes.
 
-### sdd-design and sdd-implement
+### sdd-spec-to-build
 
 
 
 #### AC1
 
 ```gherkin
-Scenario: Design does not write production code
-  Given the seed specs/framework/seeds/skills/sdd-design/SKILL.md is the skill
+Scenario: Spec phase does not write production code
+  Given the seed specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md is the skill
   When the user asks it to design one sprint backlog item
   Then it does not write production code
 ```
@@ -790,15 +790,15 @@ Scenario: Design does not write production code
 #### AC2
 
 ```gherkin
-Scenario: Implement stays on one item
+Scenario: Build stays on one item
   Given one sprint backlog item is current
   And a later item exists
-  When the user asks sdd-implement to implement the current item
+  When the user asks sdd-spec-to-build to implement the current item
   Then it implements that item only
   And it does not start the later item
 ```
 
-Tests: CE-SKILL-04, CE-SKILL-05.
+Tests: CE-SKILL-04.
 
 ### Folder rename
 
@@ -995,11 +995,11 @@ The sprint item columns are [Sprint item table](#sprint-item-table). The audit t
 Scenario: Product backlog columns on the EN seed
   Given the EN product-backlog seed
   When the header row is read
-  Then the columns are Category, PBI Code, PBI, Description, Related, Sprint, Status
+  Then the columns are #, Component, PBI Code, Description, Related, Sprint, Status
   And Status values are only ToDo, WIP, and Done
   And a Definition of Done section sits above the Product Backlog table
-  And the requirement text is a paragraph under the feature name
-  And Description is a short summary of that requirement
+  And each Requirements item has a PBI code, one noun, and bullets
+  And Description is that noun
 ```
 
 
@@ -1170,4 +1170,4 @@ Scenario: Secrets seed holds no secret values
   And it contains no secret value
 ```
 
-A draft EN `.secrets` seed exists, so AC2 can be read. It is not marked passed until the user confirms Spec-seeds-11.
+A draft EN `.secrets` seed exists, so AC2 can be read. It is not marked passed until the user confirms Spec-seeds-12.

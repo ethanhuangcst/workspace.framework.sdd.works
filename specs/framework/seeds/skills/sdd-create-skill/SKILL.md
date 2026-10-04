@@ -4,8 +4,8 @@ description: >
   Create or revise an agent skill as SKILL.md under {client_root}/{skills_dir}/.
   Use when the user wants a new skill, wants to change an existing skill, asks
   how a skill file should be structured, or says to turn a workflow into a skill.
-  Writes only after the user confirms the skill folder path. Not for feature
-  implementation (sdd-implement) or SBI design (sdd-design).
+  Writes only after the user confirms the skill folder path. Not for SBI
+  spec-to-build (sdd-spec-to-build).
 ---
 
 # Create a skill
@@ -113,7 +113,7 @@ Frontmatter is `name` and `description` only. Add a tool-specific invocation fla
 #### Keep the file short and linked
 
 - Link the file that owns a definition, so the definition stays in that file.
-  Link the OGT definition in `../../templates/EN/sdd-scrum-practices.md`.
+  Link [OGT](../../templates/EN/sdd-scrum-practices.md#term-ogt) in Terminology in practice.
   Leave the definition text in that file.
 - Keep `SKILL.md` under 500 lines.
 - Put a long reference in one sibling file and link it once from `SKILL.md`.

@@ -1,6 +1,6 @@
 # Seed artifacts building guide
 
-This guide is the method for writing an artifact seed. An artifact seed is the starter a new project copies. Section rules live only in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). The live artifact is the example. The live artifact follows the rules and does not restate the rules.
+This guide is the method for writing an artifact seed. An artifact seed is the starter a new project copies. Section rules live only in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). The live artifact is the example. The live artifact follows the rules and does not restate the rules. `product-backlog.md` item shape and table columns live in that file under [product-backlog.md](./framework/seeds/templates/EN/sdd-scrum-practices.md#product-backlogmd).
 
 ## Tracking
 
@@ -8,23 +8,26 @@ One OGT (on-going task) tracks one section type. A section that repeats, such as
 
 ## Rules for one section
 
-Agree the four groups with the user before the edit. Record them only as Template and How to write under that artifact in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md).
+Agree the four groups with the user before the edit. Record them under that artifact in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md).
 
 1. Content: what the section documents, and what the section leaves to another section.
 2. Format: the headings, the lines, the tables, and the links.
 3. Writing: [General writing principles](#general-writing-principles).
-4. Terms: each name the section uses. Link the heading for that name in [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice). Do not copy the meaning.
+4. Terms: each name the section uses. Link the term in [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice). Do not copy the meaning.
 
 ## Section rule shape
 
-A section rule in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) has two parts.
+A section rule in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) uses `###### Template`.
 
-1. Template: the section shape, with a placeholder for each fact that changes.
-2. How to write: one note for each placeholder. The note names the verb, the placeholder, and the result.
-   bad example: "Fill in the status."
-   good example: "Write the SBI (sprint backlog item) status in `{status}`, so the row shows ToDo, WIP, or Done."
+- The template is the section shape, with a placeholder for each fact that changes.
+- A placeholder note sits in the template block, as a bullet after the fenced markdown, when the note names only that placeholder.
+  bad example: "Fill in the status."
+  good example: "`{status}` is ToDo, WIP, or Done."
+- Keep a separate `###### How to write` only when a bullet states a rule that is not a placeholder note, such as a sort order or a cross-file sync rule.
 
-Do not restate those notes as a narrative list.
+Process artifact file headers use [Header (process artifacts)](./framework/seeds/templates/EN/sdd-scrum-practices.md#header). Each artifact section adds only its title line in its own Header template.
+
+Agents and skills open one heading in the practices file per job step. They do not read the whole file.
 
 ## General writing principles
 
@@ -50,7 +53,7 @@ These checks apply to every section. The same list is in [`sdd-scrum-practices.m
 
 **Structure**
 
-- The file header is a blockquote of three lines. `Type` names the artifact group and the product. `as_of` is the date of the last edit. `Definition` links that file's section under [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice). One sentence per line. One link per line. The blockquote ends at the first `---`.
+- Process artifact headers use [Header (process artifacts)](./framework/seeds/templates/EN/sdd-scrum-practices.md#header). One sentence per blockquote line. One link per line. The blockquote ends at the first `---`.
 - A heading level matches the role: file title, section, entry or table, numbered point.
 - Sections stay in the order named for that file.
 - Indent a continuation two spaces under its bullet. Leave no blank line between the bullet and that line.
@@ -77,10 +80,10 @@ The terminology store is [Terminology in practice](./framework/seeds/templates/E
 - A section uses the Terminology name for that thing, so the file keeps one name.
   bad example: call the same row an item after `SBI` is the Terminology name
   good example: use `SBI` for that row
-- A name used in an artifact links the heading for that name.
+- A work name used in an artifact links [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice).
 - The artifact does not copy the meaning.
-- Add a missing name to Terminology in practice before the artifact links that name.
-- The artifact header has three lines: `Type`, `as_of`, and a Definition link to that file's section in Terminology in practice. `as_of` is the date of the last edit. The EN seed uses a sample date. After copying, replace the product name and the date.
+- Add a missing work name to Terminology in practice before the artifact links that name.
+- The artifact header uses [Header (process artifacts)](./framework/seeds/templates/EN/sdd-scrum-practices.md#header). After copying, replace the product name and the date in `as_of`.
 
 ## Review and update
 
@@ -88,10 +91,8 @@ Work one section at a time.
 
 1. Agree the four groups with the user. The groups are Content, Format, Writing, and Terms.
 2. Update that section in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md).
-   - Write or replace `Template` and `How to write`.
-   - `Template` is the section shape.
-   - `How to write` is one note for each placeholder.
-   - Both parts match the agreed groups. Do not add a second copy of the groups as a narrative list.
+   - Write or replace `Template`. Add placeholder notes after the fence, or add `How to write` when a rule is not a placeholder note.
+   - The section matches the agreed groups. Do not add a second copy of the groups as a narrative list.
 3. Follow [General writing principles](#general-writing-principles), update the same section in the live artifact in this workspace. That file is the example. Leave later sections unchanged.
 4. Read the live example against [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc). Edit, then review again, until every line passes.
 5. Update the same section in the EN seed under [`specs/framework/seeds/templates/EN/`](./framework/seeds/templates/EN/). The seed uses the Pokymon Card Collection example. Read the seed against [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc). Edit, then review again, until every line passes.
@@ -101,8 +102,8 @@ Work one section at a time.
 
 A section passes when all four checks are true.
 
-- The practices file holds `Template` and `How to write` for that section, and those two parts match the agreed groups.
-  General writing principles are the shared writing checks. A section's Content, Format, and Terms stay in that section's Template and How to write.
+- The practices file holds `Template` for that section, and optional `How to write` when the section needs non-placeholder rules.
+  General writing principles are the shared writing checks. A section's Content, Format, and Terms stay in that section's template block.
 - The live example and the EN seed both follow the groups.
 - The live example and the EN seed both pass [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc).
 - The user has confirmed the live example and the EN seed.

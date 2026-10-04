@@ -8,7 +8,7 @@
 
 ## framework-artifacts
 
-An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header has three lines: `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.json` while `sdd-update-project` is still copying files.
+An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header): a title line, then a blockquote with `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.json` while `sdd-update-project` is still copying files.
 
 ### Two repositories
 
@@ -68,7 +68,7 @@ Coach ethan: presence, onboard, jobs, and the installable prompt. The prompt in 
 
 > **Purpose**: Define how coach-ethan is present, what it does, what it reads, how start-up resolves files, and how capabilities grow across MVPs.
 > **Status**: design · as_of 2026-09-29 · onboard is the audit verdict, then `sdd-review-status` when the verdict is Usable
-> **Backlog**: [Agent-07 agent ethan — pack receipt start gate](../product-backlog.md#pb-17) · [Agent-15 Pack file: agents/ethan.md](../product-backlog.md#pb-63) · [MCP-01 Installer: pack allow-list + ledger](../product-backlog.md#pb-16) · [Agent-01 agent ethan — POC](../product-backlog.md#pb-6)
+> **Backlog**: [Agent-04 Agent ethan onboard with pack receipt start gate](../product-backlog.md#pb-17) · [Agent-01 Local Cursor agent](../product-backlog.md#pb-6) · [MCP-01 Pack copy onto the client root](../product-backlog.md#pb-16)
 > **Framework**: [`scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md) · **Practices**: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
 > **Stories**: [`framework-stories.md`](./framework-stories.md#agents) · **Tests**: [`framework-tests.md`](./framework-tests.md#agents)
@@ -206,7 +206,7 @@ The pack source is [ethanhuangcst/framework.sdd.works](https://github.com/ethanh
   "installed_at": "…",
   "pack_complete": true,
   "files": {
-    "skills": ["skills/sdd-tdd/SKILL.md"],
+    "skills": ["skills/sdd-spec-to-build/SKILL.md"],
     "rules": ["rules/dod.mdc"],
     "agents": ["agents/ethan.md"],
     "workflows": [],
@@ -251,12 +251,12 @@ The prompt keeps a one-line **job index**: job name → skill key in `constants.
 
 Report status is `sdd-review-status`. Onboard follows that same skill when the audit verdict is Usable. [ADR-076](../adr/ADR-076-review-status-one-skill.md).
 
-Follow-up (not this pass): practices job 1 still says re-install/update and copy from workspace templates. Align that section with §2.4, ADR-056, and ADR-057: start gate is `pack_complete` on `.sdd-installed.json`; instructions page on failure; no ethan copy of the pack. Jobs 4, 5, 7, and 8 stay unfilled.
+The EN practices file no longer lists numbered jobs. Onboard and update settings follow §2.4 and the skills. Start gate is `pack_complete` on `.sdd-installed.json`; instructions page on failure; no ethan copy of the pack.
 
 Coach capabilities over time (still true):
 
 1. **Onboard.** §2.2. The audit skill classifies the workspace. `sdd-review-status` answers where the project is when the verdict is Usable.
-2. **Guide and practices.** Read `scrum-in-sdd.md` when the user asks what a name means. Read `sdd-scrum-practices.md` when a job from the table is about to run. Onboard does not open either file.
+2. **Guide and practices.** Read `scrum-in-sdd.md` when the user asks what a name means. Open one heading in `sdd-scrum-practices.md` before editing an artifact, and when a skill or agent step is about to run. Start at that heading. Stop at the next heading of the same level. Onboard does not open either file.
 3. **Run jobs** — call the matching skill from the index above, after the user confirms a write
 4. **Ask** — AskQuestion when the host provides it; otherwise ask in chat before a write
 
@@ -309,7 +309,7 @@ The earlier Toggle A / Toggle B case table is retired. It told Ethan to call ins
 | --- | --- |
 | The five process files named in `sdd-review-status` | When the audit verdict is Usable, and when the user asks where the project is |
 | `scrum-in-sdd.md` | When the user asks what a Scrum in SDD name means. Onboard does not open it |
-| `sdd-scrum-practices.md` | When a job from the table is about to run. Onboard does not open it |
+| `sdd-scrum-practices.md` | One heading only when a job from the table is about to run. Onboard does not open it |
 | Chat history | Ongoing context for the thread |
 
 ### 8. MVP capabilities
@@ -322,7 +322,7 @@ The table below is the Sprint 2–4 sketch. Live onboard is §2.2. Live missing-
 | 2 | Sprint 3 | Run event `plan` via a minimal `plan` skill. Update `sprint-backlog.md` using practices columns. | Execute `track` or `retrospective`. Full skill pack. |
 | 3 | Sprint 4 | Reply from chat plus those files. One backlog refinement. One change-log entry, within guide maintenance rules. | Full event set. Second-client presence. |
 
-Acceptance criteria stay on the backlog rows ([MVP 1](../product-backlog.md#pb-8), [MVP 2](../product-backlog.md#pb-9), [MVP 3](../product-backlog.md#pb-10)). Extend MVP 1 AC when implementing: onboard + recovery behaviors in this design.
+Acceptance criteria stay on the backlog rows ([MVP 1](../product-backlog.md#pb-8), [MVP 2](../product-backlog.md#pb-8), [MVP 3](../product-backlog.md#pb-10)). Extend MVP 1 AC when implementing: onboard + recovery behaviors in this design.
 
 ### 9. Events and skills
 
@@ -415,7 +415,7 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 
 | Doc | Role |
 | --- | --- |
-| [`framework-stories.md`](./framework-stories.md#agents) | Agent-07 start-gate stories and ACs |
+| [`framework-stories.md`](./framework-stories.md#agents) | Agent-04 start-gate stories and ACs |
 | [`framework-tests.md`](./framework-tests.md#agents) | Load/recovery and CE-GATE cases |
 | [`./seeds/agents/ethan.md`](./seeds/agents/ethan.md) | Seed prompt. Same text as §14. |
 | [`../product-backlog.md`](../product-backlog.md) | Parent and MVP acceptance |
@@ -465,8 +465,8 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
   Ethan reads `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md` when the user asks what a Scrum in SDD (Spec-Driven Development) name means.
   Ethan does not open `scrum-in-sdd.md` during onboard.
 - `sdd-scrum-practices.md` holds what, how, and when for a job.
-  Ethan reads `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` when a job from the Capabilities table is about to run.
-  Job steps live in `sdd-scrum-practices.md` and in `{client_root}/{skills_dir}/{folder}/SKILL.md`.
+  When a job from the Capabilities table is about to run, Ethan opens one heading in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. The skill names the heading.
+  Job steps live in `{client_root}/{skills_dir}/{folder}/SKILL.md` and in that one practices section.
   `{folder}` is the folder in the `skills` object for that job.
   Ethan does not open `sdd-scrum-practices.md` during onboard.
 
@@ -869,7 +869,7 @@ A skill's steps live in its `SKILL.md`. Onboard uses the three skills below. The
 
 ### sdd-audit-artifacts
 
-Read-only skill. [Skill-10](../product-backlog.md#pb-30). Stories: [`framework-stories.md`](./framework-stories.md#sdd-audit-artifacts). Tests: [`framework-tests.md`](./framework-tests.md) `CE-AUDIT-01` through `CE-AUDIT-17`. Sprint 4 feature-23 is Done. The authoring seed is the skill. Ethan confirmed the skill usable on 2026-09-30. CE-AUDIT-13 Windows stays Not observed in [`results.md`](./fixtures/sdd-audit-artifacts/results.md).
+Read-only skill. [Skill-08](../product-backlog.md#pb-30). Stories: [`framework-stories.md`](./framework-stories.md#sdd-audit-artifacts). Tests: [`framework-tests.md`](./framework-tests.md) `CE-AUDIT-01` through `CE-AUDIT-17`. Sprint 4 feature-23 is Done. The authoring seed is the skill. Ethan confirmed the skill usable on 2026-09-30. CE-AUDIT-13 Windows stays Not observed in [`results.md`](./fixtures/sdd-audit-artifacts/results.md).
 
 | Role | Path |
 | --- | --- |
@@ -959,11 +959,9 @@ The later `SKILL.md` copies these lines:
 
 ### sdd-review-status
 
-The status skill is [Skill-15](../product-backlog.md#pb-86).
+The status skill is [Skill-12](../product-backlog.md#pb-86).
 
 [ADR-076](../adr/ADR-076-review-status-one-skill.md) is the decision.
-
-Practices job 6, Report status, points here.
 
 | Role | Path |
 | --- | --- |
@@ -1029,9 +1027,20 @@ The board is changes-log, issues-log, status, sprint-backlog, and product-backlo
 - The on-disk folder `skills/sdd-tracking/` stays until a later removal.
   The pack does not copy that folder as the status skill.
 
+### sdd-plan-sprint
+
+Sprint-planning skill. [Skill-05](../product-backlog.md#pb-26). Constants key `skill_plan_sprint`.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/sdd-plan-sprint/SKILL.md` |
+| After install | `{client_root}/skills/sdd-plan-sprint/SKILL.md` |
+
+The skill proposes existing PBIs for the next ToDo sprint (or the sprints the user names) so each sprint is one MVP. [2. Slice product to MVPs](./seeds/templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) stays in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). The skill writes the five process files only after the user picks. It does not create a PBI, mark Done, or edit the install ledger.
+
 ### sdd-create-skill
 
-Authoring skill. [Skill-16](../product-backlog.md#pb-87). [ADR-074](../adr/ADR-074-sdd-create-skill.md). Not a practices job.
+Authoring skill. [Skill-13](../product-backlog.md#pb-87). [ADR-074](../adr/ADR-074-sdd-create-skill.md). Not a practices job.
 
 | Role | Path |
 | --- | --- |
@@ -1055,11 +1064,11 @@ The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agen
 
 | Skill | Seed |
 | --- | --- |
-| `sdd-design` | `specs/framework/seeds/skills/sdd-design/SKILL.md` |
-| `sdd-implement` | `specs/framework/seeds/skills/sdd-implement/SKILL.md` |
+| `sdd-spec-to-build` | `specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md` |
+| `sdd-plan-sprint` | `specs/framework/seeds/skills/sdd-plan-sprint/SKILL.md` |
 | `sdd-tracking` | `specs/framework/seeds/skills/sdd-tracking/SKILL.md` (not the status skill; [ADR-076](../adr/ADR-076-review-status-one-skill.md)) |
 | `sdd-update-project` | `specs/framework/seeds/skills/sdd-update-project/SKILL.md` |
-| `sdd-atdd`, `sdd-tdd`, `sdd-refine-pb`, `sdd-plan-sprint`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
+| `sdd-atdd`, `sdd-refine-backlog`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
 
 ## templates
 
@@ -1138,13 +1147,13 @@ Product requirements and acceptance for the project. The seed is an example a ne
 | On a project | `{workspace}/{artifacts_root}/product-backlog.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/product-backlog.md` |
 
-Columns, in this order: Category, PBI Code, PBI, Description, Related, Sprint, Status.
+Columns, in this order: `#`, Component, PBI Code, Description, Related, Sprint, Status.
 
-The column name stays Category. Do not rename it to Type. There is no DoD column. The requirement text is a paragraph under the feature name in the Requirements section. `Description` is a short summary of that paragraph. The row anchor sits on that feature name. Table cells stay plain Markdown. A Definition of Done section above the Product Backlog table lists the generic checks. Every PBI uses that list. Those checks are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
+The column name stays Component. There is no DoD column. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. The `#pb-N` anchor sits on the PBI Code cell. A Definition of Done section above the Product Backlog table lists the generic checks. Every PBI uses that list. Those checks are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
 
 ### sprint-backlog.md
 
-Sprint schedule and the SBI list. The seed is a starter for a new project. It is not this repo's sprint backlog. The header has three lines: `Type`, `as_of`, and a Definition link to [Definition of sprint-backlog.md](./seeds/templates/EN/sdd-scrum-practices.md#definition-of-sprint-backlogmd).
+Sprint schedule and the SBI list. The seed is a starter for a new project. It is not this repo's sprint backlog. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [sprint-backlog.md](./seeds/templates/EN/sdd-scrum-practices.md#sprint-backlogmd). After the last sprint section, [Unplanned PBIs](./seeds/templates/EN/sdd-scrum-practices.md#unplanned-pbis) lists PBIs with no sprint using the Product Backlog columns minus `Sprint`.
 
 | Role | Path |
 | --- | --- |
@@ -1167,13 +1176,11 @@ There is no DoD column. The Definition of Done section above the first sprint ta
 
 **Module/Type** is one cell: the module name, a slash, and the Type. Example: `Framework/Feature`.
 
-**Type** is one word.
+**Type** is one word. **Feature** and **Task** are defined in [Terminology in practice](./seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice).
 
-- **Feature**: the item delivers something the product ships for use. That includes an agent capability, an MCP behavior, a web page, a seed, and a product behavior such as recording a card.
 - **Research**: the item finds and records evidence before a feature is specified. It does not ship the feature.
 - **Bug-fix**: the item corrects a defect in something already delivered. It does not add a new capability.
 - **Documentation**: the item writes or retargets an explanation. It does not ship the capability the explanation describes.
-- **Task**: supporting work that is not a feature, research, a bug fix, or documentation.
 
 **Parent PBI** shows the PBI code and the PBI name, and links the product-backlog anchor.
 
@@ -1221,7 +1228,7 @@ Current sprint projection. It is not a second sprint backlog. It is not the defe
 | On a project | `{workspace}/{artifacts_root}/status.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/status.md` |
 
-The title is `The latest status of [product name]`. The header has three lines: `Type`, `as_of`, and a Definition link to [Definition of status.md](./seeds/templates/EN/sdd-scrum-practices.md#definition-of-statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings and a Pokymon sample. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+The title is `The latest status of [product name]`. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [status.md](./seeds/templates/EN/sdd-scrum-practices.md#statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings and a Pokymon sample. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
 
 ### changes-log.md
 
@@ -1232,7 +1239,7 @@ Conclusion record. An entry is written when a change is done. It states what cha
 | On a project | `{workspace}/{artifacts_root}/changes-log.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/changes-log.md` |
 
-Section rules for the header and the entry are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#changes-logmd). The header has three lines: `Type`, `as_of`, and a Definition link to [Definition of changes-log.md](./seeds/templates/EN/sdd-scrum-practices.md#definition-of-changes-logmd). The EN seed may keep the Pokymon sample entries. It does not copy this repo's live change log. After a project copies the seed, those samples are removed.
+Section rules for the header and the entry are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#changes-logmd). The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). The EN seed may keep the Pokymon sample entries. It does not copy this repo's live change log. After a project copies the seed, those samples are removed.
 
 ### issues-log.md
 
@@ -1251,7 +1258,7 @@ Closed issues: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`,
 
 Priority is `Fatal`, `High`, `Medium`, or `Low`. `Id` does not change when a row is sorted or moves. `Description` is under 3 lines. `Close Check` is shorter. Use bullets when a sentence is not enough. `Related` is a spec id, a link, and the name. Both tables sort by component A to Z, then by time, oldest first. Open uses `Added time`. Closed uses `Closed time`. The date shape is `30/Sep/2026`.
 
-It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The header has three lines: `Type`, `as_of`, and a Definition link to [Definition of issues-log.md](./seeds/templates/EN/sdd-scrum-practices.md#definition-of-issues-logmd). It does not copy this repo's live issues.
+It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [issues-log.md](./seeds/templates/EN/sdd-scrum-practices.md#issues-logmd). It does not copy this repo's live issues.
 
 ### architecture.md
 
@@ -1302,7 +1309,7 @@ Secret names and where the values live. It holds no secret values.
 | On a project | `{workspace}/{artifacts_root}/.secrets` |
 | Authoring seed | `specs/framework/seeds/templates/EN/.secrets` |
 
-A draft EN seed exists. It lists `NAME | where the value lives | who uses it` as comments and holds no value. Spec-seeds-11 stays open until the user confirms it. Do not add a row for it in a project map until the project file exists.
+A draft EN seed exists. It lists `NAME | where the value lives | who uses it` as comments and holds no value. Spec-seeds-12 stays open until the user confirms it. Do not add a row for it in a project map until the project file exists.
 
 ### adr/
 

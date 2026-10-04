@@ -46,16 +46,19 @@ Check `{workspace}/artifacts-map.json`, so the later tasks have a path configura
 
 Read the workspace the user named, to list folders that can hold specs.
 
-- Ask one question when the workspace has more than one candidate folder or module, so the next task uses the user's answer.
-- Use AskQuestion when the host provides it, so the user picks from the candidates.
-- Name each candidate `artifacts_root` folder and each candidate module, so the user can see the choices.
+- Ask one question when the workspace has more than one folder that can hold specs, so the next task uses the user's answer.
+  The user reads: "Which of these folders are the spec root for a sub-system or a module? A spec root is the folder that holds that part's specs. A folder you skip stays in the project. Nothing is deleted."
+- Name each part in words the user uses, such as the operator app, so the question does not say stem, map, or keep.
+- Use AskQuestion when the host provides it, so the user picks from those parts.
 - Leave the pack seed tree unread as this project's specs, so a seed copy is not treated as the project.
 
 ### 3. Set the locale
 
 List the languages already used in the project's spec files, to show the user what exists.
 
-- Ask which locale future specs use. The allowed values are `EN` (English), `HanS` (Simplified Chinese), and `HanT` (Traditional Chinese).
+- Ask which language future specs use.
+  The user reads: "Which language should future specs use? English, Simplified Chinese, or Traditional Chinese."
+- Store English as `EN`, Simplified Chinese as `HanS`, and Traditional Chinese as `HanT`, so the file key stays `locale`.
 - Keep the chosen value for task 6, so the map receives one `locale`.
 - Leave the language of an existing spec file unchanged, so a current file stays in its current language.
 
@@ -75,14 +78,16 @@ List the candidate module folders, so the user can pick the modules.
 - Ask for `folder` on each pick, so the module has a directory name.
 - Ask for `stem` only when the filename stem differs from `folder`, so a matching stem has no `stem` key.
 - Create a module folder only after the user asks for that folder, so an unasked folder stays uncreated.
-- Read the Confirm summary in `sdd-scrum-practices.md`, so the test file name is `{stem}-tests.md`.
+- Read the Confirm summary in [artifacts-map.json](../../templates/EN/sdd-scrum-practices.md#artifacts-mapjson), so the test file name is `{stem}-tests.md`.
 - Keep each module for task 6.
 
 ### 6. Confirm, then write
 
-Read the `artifacts-map.json` section in `{client_root}/templates/framework.sdd.works/EN/sdd-scrum-practices.md` until `locale` is set. After `locale` is set, read that locale's `sdd-scrum-practices.md`.
+Read only [artifacts-map.json](../../templates/EN/sdd-scrum-practices.md#artifacts-mapjson) in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. When `locale` is missing, use `EN`. Start at that heading. Stop at the next heading of the same level. Do not read the rest of that file.
 
 - Show the Confirm summary from that section, filled with the user's answers, so the user sees the settings before a write.
+- In that summary, write Language and the language name, so the user does not read `locale`. The file still stores `locale`.
+- In that summary, name each spec root. A folder you skip stays in the project. Nothing is deleted.
 - The Pokymon Card Collection block in that section is an example. Leave that product name out of this project, so the map uses the name the user gave.
 - Wait for a yes before replacing `{workspace}/artifacts-map.json` with the confirmed tree.
 - Write the JSON from the Shape and Rules in that section, so the map matches the configuration.

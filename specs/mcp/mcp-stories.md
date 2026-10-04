@@ -357,7 +357,7 @@ Scenario: Same ref label but repo content changed
 
 ## `sdd-mcp-install-ledger` — Install ledger (`.sdd-installed.json`, ADR-057)
 
-After a successful install or update, write `{client_root}/.sdd-installed.json` once with `pack_complete: true`, version, commit, and `files`. Ethan’s start gate ([Agent-07](../product-backlog.md#pb-17)) reads only this file. Do not write `framework.sdd.works.json`. ([MCP-01](../product-backlog.md#pb-16), Sprint 2 Feature-01)
+After a successful install or update, write `{client_root}/.sdd-installed.json` once with `pack_complete: true`, version, commit, and `files`. Ethan’s start gate ([Agent-04](../product-backlog.md#pb-17)) reads only this file. Do not write `framework.sdd.works.json`. ([MCP-01](../product-backlog.md#pb-16), Sprint 2 Feature-01)
 
 ### User story 1 — Ledger after a successful copy
 

@@ -3,7 +3,7 @@ name: sdd-review-status
 description: >
   Compare the five process files with the work related to the current sprint's
   sprint backlog items (SBIs). List each mismatch. Change a process file only
-  after the user says yes to the sentences for that mismatch. Use when the
+  after every mismatch has a pick. Write those picks in one pass. Use when the
   user asks where we are, where the project is, what is next, what to do next,
   report status, review status, update status, or whether the plan matches
   the work. sdd-audit-artifacts checks whether artifacts-map.json matches the
@@ -17,10 +17,6 @@ The five process files are changes-log, issues-log, status, sprint-backlog, and 
 The skill compares the five process files with the work related to the current sprint's sprint backlog items (SBIs).
 
 The user picks the handling for each mismatch.
-
-## When
-
-- Run the same steps when the user asks where we are, where the project is, what is next, what to do next, report status, review status, update status, or whether the plan matches the work.
 
 ## Steps
 
@@ -66,17 +62,17 @@ After the mismatch list, follow [Response to user](#response-to-user).
 
 ## Response to user
 
+Every sentence the user reads is written from the user's view. It names the item, the status the user already sees, and what will happen to that item. A sentence that only tells what the agent found in a file fails.
+
 ### Summarize the findings
 
-Send the sprint, the open sprint backlog items, and the mismatches before you propose an action.
+Send the sprint, the open sprint backlog items, and the mismatches as a list the user can read. Leave the findings out of a code block, so the lines wrap on the screen.
 
-```text
-sprint: {current sprint}
-open SBI:
-- {SBI code} {SBI name}: {actual status or not checked}
-mismatches:
-- {process file} says {SBI} is {recorded status}; the actual status is {actual status} because {what the work shows}
-```
+- Sprint: {current sprint}
+- Open sprint backlog items
+  - {SBI code} {SBI name}: {actual status or not checked}
+- Mismatches
+  - {process file} says {SBI} is {recorded status}; the actual status is {actual status} because {what the work shows}
 
 - Name the sprint and each open item from `sprint-backlog.md`.
 - An empty mismatch list is the word `none`.
@@ -85,36 +81,48 @@ mismatches:
 
 This is the message the user reads. No file has changed yet.
 
-```text
-sprint: Sprint 2
-open SBI:
-- feature-03 Card list view: WIP
-mismatches:
-- sprint-backlog.md says feature-03 Card list view is ToDo; the actual status is WIP because the card list page is already in the web app
-```
+- Sprint: Sprint 2
+- Open sprint backlog items
+  - feature-03 Card list view: WIP
+- Mismatches
+  - sprint-backlog.md says feature-03 Card list view is ToDo; the actual status is WIP because the card list page is already in the web app
 
 ### Propose actions
 
-For each mismatch, propose a handling. The user picks one, or types their own.
+Ask one mismatch at a time. Use AskQuestion for that mismatch. Wait for the answer before you ask the next mismatch.
 
-- Update process artifacts now
-- Record an on-going task (OGT) and update later
-- Leave to me, I will manually update later
+The question follows the rule above: it is written from the user's view. It names the code and the name. It names the file that records one status and the file that records the other. It asks what we should do with this item.
+
+The user reads: "In sprint-backlog.md, feature-03 Seed artifacts-map is WIP, but status.md already says this item is Retired. What should we do with this item?"
+
+Each choice names what happens to the item. A choice that only says "Update process artifacts now" fails. The later choice says "Create an OGT (On-going Task) in status.md". A choice that says "write a task" fails.
+
+The user reads:
+
+- Set feature-03 Seed artifacts-map to Retired. It stays in the sprint. It is not removed, and it is not Done.
+- Create an OGT (On-going Task) in status.md to set feature-03 Seed artifacts-map to Retired later.
+- Leave feature-03 Seed artifacts-map as it is. I will change it myself.
+
+The user may type their own handling.
+
+After the user picks, record that choice. Leave the five process files unchanged. Ask the next mismatch.
+
+After the last mismatch has a choice, write every recorded change in one pass. Do not ask for a second yes.
 
 ### Confirm the action
 
-Show the lines for the handling the user picked. Write those lines only after the user says yes. Write the change in words the user can read.
+The pick is the confirmation. Record the change that choice names. Write every recorded change after the last mismatch, in one pass.
 
 #### Update process artifacts now
 
-- Show the new lines for the process files the mismatch changes.
-- Write the new lines after the user says yes, in this order: changes-log, issues-log, status, sprint-backlog, product-backlog.
+- Record the new lines for the process files the mismatch changes.
+- After the last mismatch has a choice, write the recorded lines in this order: changes-log, issues-log, status, sprint-backlog, product-backlog.
 - When the mismatch changes no line in a process file, leave that process file unchanged, so the file keeps its current text.
-- Load the Definition and How to write for the process file from [sdd-scrum-practices.md](../../templates/EN/sdd-scrum-practices.md) when the process file is about to change.
+- When a process file is about to change, read only that file's `####` section in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. When `locale` is missing, use `EN`. Examples: `#product-backlogmd`, `#sprint-backlogmd`, `#statusmd`, `#issues-logmd`, `#changes-logmd`. Start at that heading. Stop at the next `####` heading.
 
 ##### Example
 
-The user reads this sentence. A yes writes it. A no leaves the files unchanged.
+The user reads this sentence. The recorded picks write it after the last mismatch.
 
 ```text
 In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP.
@@ -122,15 +130,15 @@ In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP.
 
 #### Record an OGT and update later
 
-- Propose one on-going task (OGT) row for `status.md`. Write the task as a sentence the user can read.
-- Add the OGT row to `status.md` after the user says yes.
-- The OGT definition is in [sdd-scrum-practices.md](../../templates/EN/sdd-scrum-practices.md).
+- Record one on-going task (OGT) row for `status.md`. Write the task as a sentence the user can read.
+- Add the recorded OGT row to `status.md` in the same pass as the other recorded changes, after the last mismatch has a choice.
+- The OGT definition is [OGT](../../templates/EN/sdd-scrum-practices.md#term-ogt) in Terminology in practice.
 - When the mismatch is an untracked defect, the OGT row says "track defect xyz in issues-log".
-- Leave the issues-log row for a later write, so the yes adds only the OGT row.
+- Leave the issues-log row for a later write, so the pick adds only the OGT row.
 
 ##### Example
 
-The user reads this row. A yes adds it to `status.md`. The implementation stays as it is.
+The user reads this row. The recorded pick adds it to `status.md` after the last mismatch. The implementation stays as it is.
 
 ```text
 | 1 | Set feature-03 Card list view to WIP in sprint-backlog.md | - feature-03 Card list view | Sprint 2 | ToDo |

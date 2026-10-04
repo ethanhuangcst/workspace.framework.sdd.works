@@ -17,7 +17,7 @@ That gap is the job the rule was asked to cover. The rule does not cover it.
 2. There is no constants key `artifacts-map`.
 3. `{workspace}/artifacts-map.md` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open. The audit does not repair the map.
 4. A turn updates a stored path when the user asks for that update.
-5. [Rule-04](../product-backlog.md#pb-85) and Sprint 4 feature-22 are retired. They are not Done.
+5. Rule-04 and Sprint 4 feature-22 are retired. They are not Done.
 
 ## Rationale
 

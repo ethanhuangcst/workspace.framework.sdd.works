@@ -1,7 +1,7 @@
 # ADR-076: Status review and the confirmed write are one skill
 
 ## Status
-Accepted
+Accepted. Decisions 6 and 7 superseded by [ADR-083](./ADR-083-review-status-pick-then-one-write.md). Decision 10 superseded by [ADR-084](./ADR-084-practices-no-numbered-jobs.md).
 
 ## Context
 
@@ -73,10 +73,11 @@ Accepted
 
 - This record replaces [ADR-073](./ADR-073-skill-get-status.md) decision 4 and decision 6.
 - This record replaces the second folder in [ADR-065](./ADR-065-skill-update-status.md).
-- [Skill-15](../product-backlog.md#pb-86) is the status skill.
-- [Skill-07](../product-backlog.md#pb-27) is retired.
+- [Skill-12](../product-backlog.md#pb-86) is the status skill.
+- Skill-07 is retired.
 - Sprint 4 feature-24 holds the skill seed.
 - Sprint 4 feature-30 holds practices job 6.
+- Sprint 4 feature-30 and practices job 6 are Retired. Report status is `sdd-review-status`.
 - The constants key for report status is `skill_get_status`.
 - The `skill_tracking` row stays until the `sdd-tracking` seed folder is removed.
 - HanS and HanT guide copies stay on i18n-02.

@@ -21,7 +21,7 @@ The EN seed `templates/EN/artifacts-map.md` is a starter. It is not the list a l
 The rule is loaded on ordinary agent turns. The skill is not. Naming the rule `artifacts-map` matches the other rule filenames and names the index the agent must keep current.
 
 ## Consequences
-- [Rule-04](../product-backlog.md#pb-85) is Sprint 3. Sprint 11 still owns the first three rule files.
+- Rule-04 is Sprint 3. Sprint 11 still owns the first three rule files.
 - The seed path is `specs/framework/seeds/rules/artifacts-map.mdc`.
 - Constants, the HanS and HanT guides, and the Features catalogs are updated in that sprint item, not in this decision.
 

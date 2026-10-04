@@ -1,14 +1,13 @@
 # Product overview — [product name]
 
-> **Purpose**: Record what the product must do, where the boundary is, and how to accept it.
-> **Example**: Pokymon Card Collection. After you copy this file, replace the product name and the items.
-> **Status**: v1.0 · as_of 2026-09-24
-> **Related**: [`architecture.md`](./architecture.md) · [`deployment.md`](./deployment.md) · [`sprint-backlog.md`](./sprint-backlog.md) · `artifacts-map.json` · [`status.md`](./status.md)
-> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when: jobs, templates, table conventions).
-> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
-> **Schedule**: The `Sprint` column is a projection of [`sprint-backlog.md`](./sprint-backlog.md). Schedule changes belong in that file.
+> Type: Framework (process) artifact of Pokymon Card Collection
+> as_of: 2026-10-04
+> [Definition](./sdd-scrum-practices.md#product-backlogmd)
 
-Pokymon Card Collection lets a collector catalog a card, place it in a binder, search by set or rarity, and record one trade. The cards are fictional Pokymon. The sample does not use a licensed brand.
+---
+
+- Pokymon Card Collection lets a collector catalog a card, place it in a binder, search by set or rarity, and record one trade.
+- The cards are fictional Pokymon.
 
 ## Index
 
@@ -48,21 +47,25 @@ Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 
 # Requirements
 
-> The requirement for each feature is the paragraph under that feature name. The Product Backlog table carries a short description, relations, the sprint projection, and status. Back-references use the PBI code and the item name. Feature lines are plain Markdown.
-> `Category` is one word. `PBI Code` is that word plus a two-digit number. A file that already has its own row is not also a parent row.
+Each item has a PBI code, one noun for the deliverable, and bullets the user can act on. The table uses the same code and the same noun. Back-references use the PBI code.
 
 ---------
 
 ## Collect
 
 - [Collect-01](#pb-1) Catalog a card
-  The collector records name, set, card number, rarity, and quantity. Set plus card number is unique. Quantity can increase.
+  - The collector records name, set, card number, rarity, and quantity.
+  - Set plus card number is unique.
+  - Quantity can increase.
 - [Collect-02](#pb-2) Search by set and rarity
-  Search only the current collector’s cards. Filter by set or rarity.
+  - Search only the current collector’s cards.
+  - Filter by set or rarity.
 - [Collect-03](#pb-3) Binder
-  The collector creates a binder and places a card in it. The card still appears in the full catalog.
+  - The collector creates a binder and places a card in it.
+  - The card still appears in the full catalog.
 - [Collect-04](#pb-4) Record a trade
-  Record the card given, the card received, and the date. Quantities change with the record.
+  - Record the card given, the card received, and the date.
+  - Quantities change with the record.
 
 [Back to top](#index)
 
@@ -71,7 +74,7 @@ Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 ## Scope
 
 - [Scope-01](#pb-5) Scope gate
-  No payments, no public marketplace, and no licensed brand content.
+  - No payments, no public marketplace, and no licensed brand content.
 
 [Back to top](#index)
 
@@ -80,7 +83,7 @@ Acceptance: those limits stay in later reviews. → [Scope-01 Scope gate](#pb-5)
 ## Local
 
 - [Local-01](#pb-6) Local startup
-  The default configuration starts the app on this machine.
+  - The default configuration starts the app on this machine.
 
 [Back to top](#index)
 
@@ -101,14 +104,14 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 
 # Product Backlog
 
-| Category | PBI Code | PBI | Description | Related | Sprint | Status |
+| # | Component | PBI Code | Description | Related | Sprint | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| Collect | Collect-01 | Catalog a card | Record one card by set and number. | [Sprint 1 feature-01](./sprint-backlog.md#sprint-1) · [`architecture.md`](./architecture.md) §2 | Sprint 1 | Done |
-| Collect | Collect-02 | Search by set and rarity | Search the current collector’s cards. | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-01](./sprint-backlog.md#sprint-2) | Sprint 2 | WIP |
-| Collect | Collect-03 | Binder | Place a card in a named binder. | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-02](./sprint-backlog.md#sprint-2) · [`architecture.md`](./architecture.md) §2 | Sprint 2 | ToDo |
-| Collect | Collect-04 | Record a trade | Record one given card and one received card. | [Collect-01 Catalog a card](#pb-1) · [Sprint 2 feature-03](./sprint-backlog.md#sprint-2) | Sprint 2 | ToDo |
-| Scope | Scope-01 | Scope gate | No payments, marketplace, or licensed brand. | [`architecture.md`](./architecture.md) §1 | Sprint 1 | Done |
-| Local | Local-01 | Local startup | Start with the default configuration. | [Sprint 1 task-01](./sprint-backlog.md#sprint-1) · [`deployment.md`](./deployment.md) §1 | Sprint 1 | Done |
+| 1 | Collect | <a id="pb-1"></a>Collect-01 | Catalog a card | - [Sprint 1 feature-01](./sprint-backlog.md#sprint-1)<br>- [`architecture.md`](./architecture.md) §2 | Sprint 1 | Done |
+| 2 | Collect | <a id="pb-2"></a>Collect-02 | Search by set and rarity | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-01](./sprint-backlog.md#sprint-2) | Sprint 2 | WIP |
+| 3 | Collect | <a id="pb-3"></a>Collect-03 | Binder | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-02](./sprint-backlog.md#sprint-2)<br>- [`architecture.md`](./architecture.md) §2 | Sprint 2 | ToDo |
+| 4 | Collect | <a id="pb-4"></a>Collect-04 | Record a trade | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-03](./sprint-backlog.md#sprint-2) | Sprint 2 | ToDo |
+| 5 | Scope | <a id="pb-5"></a>Scope-01 | Scope gate | [`architecture.md`](./architecture.md) §1 | Sprint 1 | Done |
+| 6 | Local | <a id="pb-6"></a>Local-01 | Local startup | - [Sprint 1 task-01](./sprint-backlog.md#sprint-1)<br>- [`deployment.md`](./deployment.md) §1 | Sprint 1 | Done |
 
 [Back to top](#index)
 
@@ -123,6 +126,7 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | 2026-09-29 | Row anchors sit on the feature name. Table cells are plain Markdown. |
 | 2026-09-30 | Feature lines are plain Markdown. HTML anchors are not used. |
 | 2026-09-30 | Requirements use tight lists: each requirement sits on the line after its feature name, with no blank line. See Writing markdown in `sdd-scrum-practices.md`. |
-| 2026-09-30 | Sprint links use the sprint heading. The sprint backlog Code cell is plain Markdown. |
+| 2026-10-03 | Each Requirements item is the PBI code, one noun, and bullets. The table columns are `#`, Component, PBI Code, Description, Related, Sprint, Status. `#pb-1` stays Collect-01. |
+| 2026-10-04 | The header is three lines: Type, as_of, and Definition. |
 
 [Back to top](#index)

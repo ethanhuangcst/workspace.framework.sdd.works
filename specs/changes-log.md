@@ -1,12 +1,156 @@
 # Changes log (framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-03
-> [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#definition-of-changes-logmd)
+> as_of: 2026-10-04
+> [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#changes-logmd)
 
 ---
 
+## 2026-10-04
+
+### sdd-plan-sprint step order and backlog paths
+
+**Why**: Step 3 pointed at Response before Extra tasks. The Product Backlog table was read from the wrong file.
+
+**What changed**: [`sdd-plan-sprint/SKILL.md`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) reads product-backlog and sprint-backlog separately. Response to user follows step 4. `{client_root}` is defined. OGT wording and parked OGT writes match status.md.
+
+**Verification**: Step 4 ends with Then follow Response to user. Step 3 has no Response pointer.
+
+### sdd-plan-sprint friendly-language pass
+
+**Why**: The skill mixed EN practice links with `{locale}`, repeated Task rules, and user-facing labels for extra sprint work.
+
+**What changed**: [`sdd-plan-sprint/SKILL.md`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) title is Sprint proposal. SBI and OGT expand once. Step 4 and the proposal use Extra tasks. Practices reads use `{locale}` headings only. Change PBIs re-runs step 4. Status and Limits use positive wording for OGT and status cells.
+
+**Verification**: No `../../templates/EN/` links in the skill body. The proposal list includes Extra tasks before AskQuestion.
+
+### Plan sprint lists shared tasks
+
+**Why**: A PBI SBI can still leave a shared task out of the sprint. Effort that only builds that one SBI is not a second SBI.
+
+**What changed**: `sdd-plan-sprint` step 4 lists extra Task SBIs after the PBI SBI is named. The same question includes them. The write adds only the extra tasks in the accepted choice. The Task and OGT rows in practices stay the rule.
+
+**Verification**: The skill question names `Extra tasks` or `none`. A task that only builds that one SBI stays off the sprint table.
+
+### When sections leave three skills
+
+**Why**: Each `When` section repeated the trigger phrases already in the skill description. The description is the load trigger.
+
+**What changed**: `## When` is removed from `sdd-plan-sprint`, `sdd-review-status`, and `sdd-refine-backlog`. The trigger phrases stay in each description.
+
+**Verification**: Those three skill files have no `## When` heading. `prompt-optimizer` still has `## When to Use`.
+
+### Sprint slice has a pass and a fail
+
+**Why**: "Keep the set small" and "include every part" can both be true, so a planner has no pass or fail for one MVP.
+
+**What changed**: [1. Plan sprints by MVP](./framework/seeds/templates/EN/sdd-scrum-practices.md#1-plan-sprints-by-mvp) names the PBIs that job needs. [2. Slice product to MVPs](./framework/seeds/templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) states when the sprint passes and when it fails. `sdd-plan-sprint` reads those two sections from the locale practices file.
+
+**Verification**: The slice section has no "Keep the set small" line. A sprint fails when a PBI can be removed and the job still finishes, and when the job is still unfinished after the release.
+
+### Terminology in practice is a six-row table
+
+**Why**: The Terminology in practice section repeated artifact definitions that already live in artifact section rules and in the guide.
+
+**What changed**: [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice) is a table with PBI, SBI, Feature, Task, OGT, and MVP. Harness and artifact names stay in [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md#terminology). Process artifact headers link `#product-backlogmd`, `#sprint-backlogmd`, `#statusmd`, `#issues-logmd`, and `#changes-logmd` under Artifacts writing guideline. [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) and [`framework-design.md`](./framework/framework-design.md) match.
+
+**Verification**: The old `definition-of-*` anchors are gone from living headers. The guide Terminology line points at the practices table for the six work names.
+
+### Spec-to-build replaces design, implement, and TDD pack skills
+
+**Why**: One SBI needed one skill path. Separate `sdd-design`, `sdd-implement`, and `sdd-tdd` forced handoffs and kept a TDD folder with no seed.
+
+**What changed**: [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) supersedes [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md). The seed is [`sdd-spec-to-build/SKILL.md`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md). The `sdd-implement` seed is deleted. [`constants.json`](./framework/seeds/templates/constants.json) drops `sdd-tdd`, `sdd-design`, and `sdd-implement`, and adds `sdd-spec-to-build`. [Skill-11](./product-backlog.md#pb-80) owns the merged skill. [Skill-02](./product-backlog.md#pb-22) and [Skill-10](./product-backlog.md#pb-65) are Retired. Sprint 13 feature-13 is `sdd-spec-to-build`. feature-15 and feature-03 are Retired. feature-01 is `sdd-atdd` only. Living guides, Features catalogs, locale strings, stories, tests, and cross-skill seeds use the new name.
+
+**Verification**: A search of living specs, Features markdown, and messages finds no `sdd-tdd`, `sdd-implement`, or living `sdd-design` except ADR-066 and dated history. The constants value is `sdd-spec-to-build`.
+
+**Boundary**: Past change-log rows and ADR-066 body stay as written.
+
+### Seed skill sdd-plan-sprint
+
+**Why**: Sprint 7 needs a pack skill that assigns existing PBIs so each sprint is one MVP. The MVP rules already live in practices. The skill owns the propose-then-write loop.
+
+**What changed**: Added [`specs/framework/seeds/skills/sdd-plan-sprint/SKILL.md`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md). [`framework-design.md`](./framework/framework-design.md) points at that seed. [`framework-tests.md`](./framework/framework-tests.md) CE-SKILL-07 no longer lists `sdd-plan-sprint` as seedless. Constants key `skill_plan_sprint` was already `sdd-plan-sprint`. Skill-05 and Sprint 7 feature-01 stay ToDo until the skill is confirmed usable.
+
+**Verification**: The seed folder opens. The Other skills table lists `sdd-plan-sprint`. The missing-seed row and CE-SKILL-07 no longer name `sdd-plan-sprint`.
+
+### Unplanned PBIs section on sprint-backlog.md
+
+**Why**: PBIs with no sprint assignment had no row in the schedule artifact, so unscheduled work was only visible in the Product Backlog `Sprint` cell.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) adds **Unplanned PBIs** after the last sprint table. The table uses Product Backlog columns minus `Sprint`. The EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) template, the EN sprint-backlog seed, [`framework-design.md`](./framework/framework-design.md), and [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) match.
+
+**Verification**: The sprint-backlog Index links Unplanned PBIs last. The section header row is `#`, Component, PBI Code, Description, Related, Status. Product Backlog rows with `Sprint` `—` appear in that table.
+
+### Sprint 5–16 tables removed; work moved to Unplanned PBIs
+
+**Why**: Forward sprint tables were placeholders. Planning should run through `sdd-plan-sprint` instead of a fixed sixteen-sprint map.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) keeps Sprints 1–4 only. Sprint 5–16 sections and their SBIs are removed. Every PBI that was on Sprint 5–16 is in **Unplanned PBIs** (32 rows). [`product-backlog.md`](./product-backlog.md) sets `Sprint` to `—` for those PBIs. [`status.md`](./status.md) drops the Sprint 5–16 row and points at Unplanned PBIs.
+
+**Verification**: No `## Sprint 5` heading in `sprint-backlog.md`. Unplanned PBIs follows Sprint 4. Product Backlog has no `Sprint 5` through `Sprint 16` in the table `Sprint` column.
+
+### Refine skill folder is sdd-refine-backlog
+
+**Why**: The living skill name should say backlog, matching the job, while the constants key stays stable for readers that already resolve `skill_refine_pb`.
+
+**What changed**: [`constants.json`](./framework/seeds/templates/constants.json) sets `skill_refine_pb` to `sdd-refine-backlog`. Living guide lists, Features catalogs, [Skill-05](./product-backlog.md#pb-25), Sprint 6 feature-01, [`framework-design.md`](./framework/framework-design.md), [`framework-tests.md`](./framework/framework-tests.md), and [`app-stories.md`](./admin-portal/app-stories.md) use the new name. Job rows keep the key `skill_refine_pb`. Message keys `admin.guide.feat_sdd_refine_pb` stay. No `SKILL.md` in this change.
+
+**Verification**: A search of living specs and Features markdown finds no `sdd-refine-pb`. The constants value is `sdd-refine-backlog`.
+
+**Boundary**: Past change-log rows and dated history that named `sdd-refine-pb` stay as written.
+
 ## 2026-10-03
+
+### Sprint 4 is Done
+
+**Why**: The user confirmed Sprint 4 usable. Every sprint row is Done or Retired.
+
+**What changed**: Sprint 4 in [`sprint-backlog.md`](./sprint-backlog.md) is Done. Current WIP sprint is none. [`status.md`](./status.md) records Sprint 1 - 4 as Done. Sprint 4 closed 2026-10-03. The next items stay Sprint 5 [feature-26](./sprint-backlog.md#sprint-5), [feature-25](./sprint-backlog.md#sprint-5), and [feature-02](./sprint-backlog.md#sprint-5).
+
+**Verification**: The Sprint 4 status line is Done. The sprint table heading is Done. Current WIP sprint is none.
+
+**Boundary**: The four Current OGT rows stay ToDo. Sprint 5 stays ToDo.
+
+### Practices job sections are removed from the EN seed
+
+**Why**: Numbered job sections in `sdd-scrum-practices.md` repeated skills and agent PBIs, or were empty. Workflow steps live in skills and agent PBIs.
+
+**What changed**: The EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) index links [Scrum in SDD practices](./framework/seeds/templates/EN/sdd-scrum-practices.md#scrum-in-sdd-practices). Subsections 1 and 3–8 are gone. [feature-30](./sprint-backlog.md#sprint-4) Related specs no longer use `#6-report-status`. Agent-09–14 and Spec-seeds-03 in [`product-backlog.md`](./product-backlog.md) name the skills. Future-sprint feature-01 rows name the skill, not a practices job number. [`framework-design.md`](./framework/framework-design.md) says the EN practices file no longer lists numbered jobs.
+
+**Verification**: The EN practices index has `Scrum in SDD practices`. Feature-30 does not link `#6-report-status`.
+
+**Boundary**: Historical change-log rows and ADR decision text that name job numbers stay as written. HanS and HanT practices copies stay on i18n-02.
+
+### Sprint 4 feature-03 is Done
+
+**Why**: The path file, the missing template seed, and the practices example match the feature-03 done line.
+
+**What changed**: Sprint 4 [feature-03](./sprint-backlog.md#sprint-4) Project path file artifacts-map.json is Done. [Spec-seeds-04](./product-backlog.md#pb-35) is Done. [`artifacts-map.json`](../artifacts-map.json) is the project path file. There is no template seed. The example is in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson).
+
+**Verification**: The Sprint 4 table shows feature-03 as Done. `specs/artifacts-map.md` and `specs/framework/seeds/templates/EN/artifacts-map.md` are absent.
+
+**Boundary**: Sprint 4 stays WIP. Sprint 5 stays ToDo.
+
+### Sprint 4 feature-30 is Retired
+
+**Why**: Practices job 6 repeated `sdd-review-status`. That section is not needed.
+
+**What changed**: Sprint 4 [feature-30](./sprint-backlog.md#sprint-4) Practices job 6 for report status is Retired. The row stays. It is not removed, and it is not Done. [### 6. Report status](./framework/seeds/templates/EN/sdd-scrum-practices.md#6-report-status) is Retired. Report status is `sdd-review-status` (`skill_get_status`). [Skill-15](./product-backlog.md#pb-86) is Done. [feature-24](./sprint-backlog.md#sprint-4) stays Done. Agent-12 stays ToDo on Sprint 8. Current SBI in [`status.md`](./status.md) is feature-03 Project path file artifacts-map.json.
+
+**Verification**: The Sprint 4 table shows feature-30 as Retired and feature-03 as WIP. Practices job 6 is the Retired line.
+
+**Boundary**: Decision 10 in [ADR-076](./adr/ADR-076-review-status-one-skill.md) stays as written. HanS and HanT practices copies stay on i18n-02.
+
+### Sprint 4 feature-21 and feature-24 are Done
+
+**Why**: The user confirmed those items as usable.
+
+**What changed**: Sprint 4 [feature-21](./sprint-backlog.md#sprint-4) Change-log and issues-log seeds is Done. [feature-24](./sprint-backlog.md#sprint-4) Skill sdd-review-status is Done. [Spec-seeds-08](./product-backlog.md#pb-39) and [Spec-seeds-13](./product-backlog.md#pb-84) are Done. [Skill-15](./product-backlog.md#pb-86) stays WIP. [feature-30](./sprint-backlog.md#sprint-4) Practices job 6 for report status stays WIP. [feature-03](./sprint-backlog.md#sprint-4) is Project path file artifacts-map.json, WIP, not Retired. [Spec-seeds-04](./product-backlog.md#pb-35) is `artifacts-map.json`, WIP, with no template seed. The on-going task Review the issues-log seed is closed.
+
+**Verification**: The Sprint 4 table shows feature-21 and feature-24 as Done, feature-30 and feature-03 as WIP. Current OGT no longer has Review the issues-log seed.
+
+**Boundary**: Practices job 6 still says the skill writes after the second yes. That stays on feature-30.
 
 ### Three OGTs for skill files are closed
 
@@ -70,7 +214,7 @@
 
 **Why**: `artifacts-map.mdc` does not see a delete, rename, or move the user makes in the file tree, so it does not keep the map current.
 
-**What changed**: [ADR-077](./adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](./adr/ADR-072-rule-artifacts-map.md). The constants row, the EN guide, the HanS guide, and the portal catalogs drop `artifacts-map.mdc`. The seed file is removed. [Rule-04](./product-backlog.md#pb-85) and Sprint 4 feature-22 are Retired. `{workspace}/artifacts-map.md` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map.
+**What changed**: [ADR-077](./adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](./adr/ADR-072-rule-artifacts-map.md). The constants row, the EN guide, the HanS guide, and the portal catalogs drop `artifacts-map.mdc`. The seed file is removed. Rule-04 and Sprint 4 feature-22 are Retired. `{workspace}/artifacts-map.md` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map.
 
 **Verification**: Living EN specs no longer list `artifacts-map` as a rule key. Feature-22 is Retired, not Done.
 
@@ -80,7 +224,7 @@
 
 **Why**: `sdd-kickoff-project` and `sdd-update-project` are the same write with two entry points.
 
-**What changed**: [ADR-078](./adr/ADR-078-update-project-one-skill.md) supersedes [ADR-069](./adr/ADR-069-skill-kickoff-project.md). The constants key is `skill_update_project`. The folder is `sdd-update-project`. Practices job 2 and job 3 both use that skill. `Uninitialized` and `Index broken` both follow that skill after confirm. [Skill-03](./product-backlog.md#pb-23) and Sprint 5 feature-01 and feature-20 are Retired. The EN guide, the HanS guide, and the portal catalogs drop `sdd-kickoff-project`.
+**What changed**: [ADR-078](./adr/ADR-078-update-project-one-skill.md) supersedes [ADR-069](./adr/ADR-069-skill-kickoff-project.md). The constants key is `skill_update_project`. The folder is `sdd-update-project`. Practices job 2 and job 3 both use that skill. `Uninitialized` and `Index broken` both follow that skill after confirm. Skill-03 and Sprint 5 feature-01 and feature-20 are Retired. The EN guide, the HanS guide, and the portal catalogs drop `sdd-kickoff-project`.
 
 **Verification**: Living specs name `sdd-update-project` for both jobs. Feature-01 and feature-20 are Retired, not Done.
 
@@ -90,7 +234,7 @@
 
 **Why**: Two Capabilities rows used the same skill key, so the model had no second skill to choose.
 
-**What changed**: [ADR-079](./adr/ADR-079-one-job-update-project.md) supersedes [ADR-078](./adr/ADR-078-update-project-one-skill.md) decision 2. The job name is Update project settings. Practices job 2 is removed. Its steps sit under job 3 as the case where the map is missing. Onboard still says two next steps. [Agent-08](./product-backlog.md#pb-42) is Retired. [Agent-09](./product-backlog.md#pb-43) is the job.
+**What changed**: [ADR-079](./adr/ADR-079-one-job-update-project.md) supersedes [ADR-078](./adr/ADR-078-update-project-one-skill.md) decision 2. The job name is Update project settings. Practices job 2 is removed. Its steps sit under job 3 as the case where the map is missing. Onboard still says two next steps. Agent-08 is Retired. Agent-09 is the job.
 
 **Verification**: The Capabilities table has one row for `skill_update_project`. `ethan.md` matches the design prompt.
 
@@ -102,7 +246,7 @@
 
 **Why**: A file-only status read can lag the implementation. The compare and the proposal are one job.
 
-**What changed**: [ADR-076](./adr/ADR-076-review-status-one-skill.md) makes `sdd-review-status` the status skill. [ADR-073](./adr/ADR-073-skill-get-status.md) decision 4 and decision 6 are superseded. [ADR-065](./adr/ADR-065-skill-update-status.md) no longer ships a second folder. The seed [`sdd-review-status/SKILL.md`](./framework/seeds/skills/sdd-review-status/SKILL.md) drafts the four steps and the second yes. Practices job 6 points at `skill_get_status`. [Skill-07](./product-backlog.md#pb-27) is retired. Sprint 4 feature-24 and feature-30 stay ToDo.
+**What changed**: [ADR-076](./adr/ADR-076-review-status-one-skill.md) makes `sdd-review-status` the status skill. [ADR-073](./adr/ADR-073-skill-get-status.md) decision 4 and decision 6 are superseded. [ADR-065](./adr/ADR-065-skill-update-status.md) no longer ships a second folder. The seed [`sdd-review-status/SKILL.md`](./framework/seeds/skills/sdd-review-status/SKILL.md) drafts the four steps and the second yes. Practices job 6 points at `skill_get_status`. Skill-07 is retired. Sprint 4 feature-24 and feature-30 stay ToDo.
 
 **Verification**: Living specs name `sdd-review-status` for report status. `skill_update_status` is not a constants key.
 
@@ -366,7 +510,7 @@
 
 **Why**: [ADR-065](./adr/ADR-065-skill-update-status.md) names the write skill `sdd-update-status`. The ship item was still Sprint 8 under the retired name `sdd-tracking`.
 
-**What changed**: Sprint 4 feature-30 is ToDo, immediately after feature-04. [Skill-07](./product-backlog.md#pb-27) projects Sprint 4. Sprint 8 keeps feature-02, Ethan updates status. [`status.md`](./status.md) lists feature-30 after feature-04.
+**What changed**: Sprint 4 feature-30 is ToDo, immediately after feature-04. Skill-07 projects Sprint 4. Sprint 8 keeps feature-02, Ethan updates status. [`status.md`](./status.md) lists feature-30 after feature-04.
 
 **Verification**: Sprint 4 order is feature-04, feature-30, feature-24, feature-22. Skill-07 names `sdd-update-status` and `skill_update_status`.
 
@@ -646,7 +790,7 @@
 
 **What changed**: [`agents/ethan.md`](./framework/seeds/agents/ethan.md) reads `locale` from `{workspace}/artifacts-map.md` when a job needs it. Allowed values include `EN`, `HanS`, and `HanT`. Onboard names four skills by folder. Jobs in the table use the folder from `constants.md`. [`agent-design.md`](./framework/framework-design.md) §14 is that same prompt. Sprint 3 feature-11 is Done.
 
-**Verification**: §14 and the seed file match. Feature-11 acceptance criteria are met. Parent [Agent-02](./product-backlog.md#pb-7) stays ToDo.
+**Verification**: §14 and the seed file match. Feature-11 acceptance criteria are met. Parent Agent-02 stays ToDo.
 
 ### Audit reports an empty locale
 
@@ -692,7 +836,7 @@
 
 **Why**: `sdd-audit-artifacts` runs only when asked. An ordinary turn can add a project file and leave the project map unchanged.
 
-**What changed**: [ADR-072](./adr/ADR-072-rule-artifacts-map.md). The rule file is `artifacts-map.mdc`, with no `sdd-` prefix. The EN guide lists it. [Rule-04](./product-backlog.md#pb-85) is Sprint 3 feature-22, which still has to write `specs/framework/seeds/rules/artifacts-map.mdc` and update the remaining spec lists.
+**What changed**: [ADR-072](./adr/ADR-072-rule-artifacts-map.md). The rule file is `artifacts-map.mdc`, with no `sdd-` prefix. The EN guide lists it. Rule-04 is Sprint 3 feature-22, which still has to write `specs/framework/seeds/rules/artifacts-map.mdc` and update the remaining spec lists.
 
 **Verification**: Both Rules lists in `templates/EN/scrum-in-sdd.md` name `artifacts-map.mdc`. Sprint 3 feature-22 is ToDo.
 
@@ -740,7 +884,7 @@
 
 **Why**: The designed folder `sdd-new-project` did not match how the job kicks off an SDD project, and Ethan’s “no kickoff-project skill” line would conflict once that folder name is used.
 
-**What changed**: [Skill-03](./product-backlog.md#pb-23) is `sdd-kickoff-project`. Constants key stays `skill_start_project`. Practices job 2 stays Start a new project. [ADR-069](./adr/ADR-069-skill-kickoff-project.md). Living guide lists, Features catalog, mocks, and locale keys updated. Ethan and agent-design say job 2 uses only that folder. No `SKILL.md` in this row; feature-01 still writes it.
+**What changed**: Skill-03 is `sdd-kickoff-project`. Constants key stays `skill_start_project`. Practices job 2 stays Start a new project. [ADR-069](./adr/ADR-069-skill-kickoff-project.md). Living guide lists, Features catalog, mocks, and locale keys updated. Ethan and agent-design say job 2 uses only that folder. No `SKILL.md` in this row; feature-01 still writes it.
 
 **Verification**: A search of living specs and Features markdown finds no `sdd-new-project`. `samectx-notes/` left as history.
 

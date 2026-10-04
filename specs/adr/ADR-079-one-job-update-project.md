@@ -1,7 +1,7 @@
 # ADR-079: Start and update are one job
 
 ## Status
-Accepted
+Accepted. Decision 2 (job numbers 3 through 8 stay) superseded by [ADR-084](./ADR-084-practices-no-numbered-jobs.md).
 
 ## Context
 
@@ -14,7 +14,7 @@ The model has one skill to open. Two rows do not give it a second choice.
 1. The job name is Update project settings. The Capabilities table has one row for it. The skill key is `skill_update_project`.
 2. Practices job 2 is removed. Its steps sit under practices job 3 as the case where the map is missing. Job numbers 3 through 8 stay.
 3. Onboard still says two next steps. `Uninitialized` says the next step is to start a new project. `Index broken` says the next step is to update the project. After the user confirms, both follow `sdd-update-project`.
-4. [Agent-08](../product-backlog.md#pb-42) is retired. It is not Done. [Agent-09](../product-backlog.md#pb-43) is the job.
+4. Agent-08 is retired. It is not Done. Agent-09 is the job.
 
 ## Rationale
 

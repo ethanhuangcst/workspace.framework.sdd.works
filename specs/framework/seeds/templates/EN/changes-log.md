@@ -2,7 +2,7 @@
 
 > Type: Framework (process) artifact of Pokymon Card Collection
 > as_of: 2026-10-01
-> [Definition](./sdd-scrum-practices.md#definition-of-changes-logmd)
+> [Definition](./sdd-scrum-practices.md#changes-logmd)
 
 ---
 

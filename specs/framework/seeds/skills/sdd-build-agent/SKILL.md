@@ -4,16 +4,23 @@ description: >
   Create or revise an agent file at {client_root}/{agents_dir}/<name>.md.
   Use when the user wants a new agent, a coach, or an assistant file, or asks
   how an agent prompt should be structured. Writes only after the user confirms
-  the file path. A skill file is sdd-create-skill. Product code is sdd-implement.
+  the file path. A skill file is sdd-create-skill. Product code for an SBI is
+  sdd-spec-to-build.
 ---
 
 # Build an agent
 
-An agent file is a prompt the host already runs. This skill adds the pack path, the file shape, and the confirm-before-write rule. Read the TRUE AGENT section in the framework design before you write. That section stays there. Do not copy it into this skill or into the agent file.
+The user gets one agent file after they confirm the path.
 
-## 1. Discover
+This skill adds the pack path, the file shape, and that confirm.
 
-Infer purpose from the conversation. Ask only what is still unknown:
+Read the TRUE AGENT section in `framework-design.md` before you write, so the agent file follows that section. Leave that section in `framework-design.md`, so this skill and the agent file have no copy of it.
+
+## State what the agent is for
+
+Read the conversation, to state the agent's purpose, the host actions, the file it reads, and what waits for a yes.
+
+Ask only what is still unknown:
 
 - What the agent is for
 - Which host actions it needs
@@ -21,54 +28,79 @@ Infer purpose from the conversation. Ask only what is still unknown:
 - What it is allowed to do, and what needs a confirm
 - What the reply must contain
 
-A capability is a host action the tool already offers. Start with the smallest set that can do the job. Add one only when the agent cannot do the job without it. Do not invent a tool, a server, or a loop. Do not collect a workflow.
+A capability is a host action the tool already offers.
 
-If the user gives exact names or limits, keep those words. If they hand over a step sequence, rewrite it as capabilities and limits, show that rewrite, and wait for confirm before it becomes the file. Chat in the locale the audit reported.
+- Name the host actions the job needs, so a missing action is the only reason to add one.
+- Leave a new tool, server, and loop out, so the host actions stay the ones the tool already offers.
+- Rewrite a step sequence as capabilities and limits, so the agent file has no numbered procedure.
 
-## 2. Name and path
+Keep the names and limits the user gave, so those words stay in the file.
 
-Choose `<name>`: at most 64 characters, lowercase letters, numbers, and hyphens.
+Show the rewrite, and wait for a yes, so the file uses the rewrite the user confirmed.
 
-`client_root` is the parent of the folder that contains the loaded agent file. Do not name a tool folder. Read `agents_dir` from `{client_root}/templates/framework.sdd.works/constants.json`.
+Chat in the language of the user's request.
 
-## 3. Stop when the pack lookup is missing
+## Choose the file path
+
+Choose `<name>` from lowercase letters, numbers, and hyphens, at most 64 characters, so the file name matches the pack rule.
+
+Name `client_root` as the parent of the loaded agent file, so the path starts at that file.
+
+Read `agents_dir` from `{client_root}/templates/framework.sdd.works/constants.json`, so the folder name comes from that file.
+
+## Stop when the pack lookup is missing
 
 If that `constants.json` cannot be read, or `agents_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.json`.
 
-- Do not write any file.
-- Do not assume the folder name `agents`.
-- Do not copy a replacement `constants.json`.
-- Do not change `{client_root}/.sdd-installed.json`.
+- Stop before writing a file, so the pack stays unchanged.
+- Stop before assuming the folder name `agents`, so the path comes from `constants.json`.
+- Stop before copying a replacement `constants.json`, so the user's file stays as it is.
+- Leave `{client_root}/.sdd-installed.json` unchanged.
 
-## 4. Where the file goes
+## Place the agent file
 
-Write `{client_root}/{agents_dir}/<name>.md`.
+Write `{client_root}/{agents_dir}/<name>.md`, so the agent file sits in the pack.
 
-When that file already exists, revise it in place and keep `name`. Do not create a second file.
+Revise the existing file in place and keep the name, so one agent keeps one file.
 
-Do not create a workspace agent file. Do not copy the agent into the workspace. Do not call `sdd_install_framework` or `sdd_update_framework`. Do not start a Python loop, an API server, or any other runtime. The host already runs the loop.
+- Leave the agent file off the workspace, so the pack stays on the client root.
+- Leave `sdd_install_framework` and `sdd_update_framework` uncalled, so install stays outside this skill.
+- Leave a second runtime unstarted, so the host keeps the loop.
 
-A request for a skill file belongs to `sdd-create-skill`. A request to implement product code belongs to `sdd-implement`.
+A request for a skill file belongs to `sdd-create-skill`. A request to design or implement a sprint backlog item belongs to `sdd-spec-to-build`.
 
-## 5. Confirm the path
+## Confirm the file path
 
-State the file path and the rewrite, when there is one. Wait for the user to confirm.
+State the file path and the rewrite, when there is one, so the user can confirm that path. Wait for the user to confirm.
 
-A request to build an agent is not this confirm. One yes covers that file. The file is written only after the user agrees to that path, because the installed pack is shared by every project that uses this client root.
+- A request to build an agent still needs that yes.
+- One yes covers that file.
+- Write the file only after the user agrees to that path, because the installed pack is shared by every project that uses this client root.
 
-## 6. Write the agent file
+## Write the confirmed agent file
 
-Frontmatter is `name` and `description` only. Do not add a tool-specific invocation flag unless the user names a tool that requires it.
+### Write the description the host shows
 
-The description is third person. State what the agent does and when to use it, including the phrases that should trigger it. When another agent or skill owns a nearby job, name it. Keep it under 1024 characters. Do not write it as "I can" or "you can".
+- Frontmatter is `name` and `description` only, so the host reads those two fields.
+- Add a tool-specific invocation flag only when the user names a tool that requires it.
+- Write the description in the third person, so the file states what the agent does.
+- Include the phrases a user types, so those phrases trigger the agent.
+- Name the other agent or skill when it owns a nearby job, so the user opens the file that owns that job.
+- Keep the description under 1024 characters, so the host can load it.
 
-The body states capabilities and limits. Explain why a limit matters. A numbered procedure that the model must follow is a workflow. Leave the sequence to the model. The agent file does not link to the framework design.
+### State capabilities and limits
 
-When the knowledge is long, name the file the agent reads when the step needs it. Do not paste that material into the prompt.
+- State capabilities and limits in the body, so the model chooses the next step.
+- Explain why a limit matters, so the agent file states the reason for the wait.
+- Leave a numbered procedure out of the agent file, so the sequence stays with the model.
+- Name the file the agent reads, so the prompt stays free of that text.
+- Use one term for one concept, so the same row keeps one name.
+- Use a forward-slash path, so the path opens on the host.
+- Leave the date off an instruction, so the instruction stays usable later.
 
-Use one term for one concept. Use forward-slash paths. Do not date an instruction.
+### Show the draft the user confirms
 
-Example:
+The user reads the notes since the last tag, grouped by what the user sees. A yes writes that draft to the file the user confirmed.
 
 ```markdown
 ---
@@ -80,28 +112,31 @@ description: >
 
 # Release notes
 
-Capabilities: read merged changes since the last tag, group them by user-visible effect, show a draft.
+Capabilities: read the merged changes since the last tag, and group them by what the user sees.
 
-Limits: wait for confirm before writing a file.
+Limits: a yes writes that draft to the confirmed file.
 ```
 
-## 7. Check
+## Check the file
 
 Before you finish:
 
-- The description states what and when, in third person, with trigger phrases, and names a nearby skill or agent when one owns the adjacent job
+- The description states what and when, in the third person, with the phrases a user types, and names a nearby skill or agent when one owns the adjacent job
 - `<name>` follows the name rule
 - Names and limits the user gave are unchanged
-- A step sequence from the user was rewritten into capabilities and limits, and the user confirmed that rewrite
-- The body states capabilities and limits, and does not prescribe a workflow
-- Long knowledge is a file name, not a paste into the prompt
-- There is no tool-specific invocation flag unless the user named the tool
-- There is no dated instruction and no backslash path
+- A step sequence from the user is capabilities and limits, and the user confirmed that rewrite
+- The body states capabilities and limits, so the model chooses the next step
+- Long knowledge is a file name, so the prompt stays free of that text
+- A tool-specific invocation flag is present only when the user named the tool
+- No instruction carries a date, so the instruction stays usable later
+- Every path uses a forward slash, so the path opens on the host
 - The only write is the confirmed file `{client_root}/{agents_dir}/<name>.md`
-- No key was proposed for the `skills` object
+- The user sees no new skill key. The `skills` object stays as it is.
 
-## 8. Test prompts
+## Propose the prompts
 
-Propose 2 or 3 prompts a real user would type. Ask whether they look right, then stop. Do not run them. Do not say the agent is usable; the user decides that. Do not run an eval harness, a grader, or a package step.
+Propose 2 or 3 prompts a real user would type. Ask whether the prompts look right, so the user can accept or change them.
 
-Do not propose a Skills-table row for the agent file. A row for this skill is a separate edit, and only after its own confirm.
+Stop after the prompts, so no test run starts, the user decides whether the agent is usable, and no eval harness, grader, or package step runs.
+
+Leave the `skills` object unchanged, so an agent file adds no skill key. A row for this skill is a separate edit, and only after its own confirm.

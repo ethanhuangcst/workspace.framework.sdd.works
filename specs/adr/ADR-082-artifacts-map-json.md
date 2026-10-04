@@ -24,6 +24,7 @@ The remaining record is settings and paths. JSON keeps a settings line from bein
 
 - The project path file is `{workspace}/artifacts-map.json`.
 - The practices example, `sdd-audit-artifacts`, `sdd-update-project`, and the audit fixtures use that file.
+- Sprint 4 feature-03 is this JSON file. It is not Retired. There is still no template seed.
 
 ## Date
 2026-10-03

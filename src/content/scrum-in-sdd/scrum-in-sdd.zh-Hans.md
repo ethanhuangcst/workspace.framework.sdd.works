@@ -2,6 +2,91 @@ v0.0.1
 
 # Scrum in SDD
 
+> 类型: framework.sdd.works 的核心工件
+> as_of: 2026-10-04
+> [Definition](#术语)
+
+**作者：** Ethan Huang
+
+© 2026 Ethan Huang
+
+---
+
+## Index
+
+- [第一部分 2020 版《Scrum 指南》摘要](#第一部分-2020-版scrum-指南摘要)
+  - [《Scrum 指南》的目的](#scrum-指南的目的)
+  - [Scrum 的定义](#scrum-的定义)
+  - [Scrum 理论](#scrum-理论)
+    - [透明](#透明)
+    - [检测](#检测)
+    - [调整](#调整)
+  - [Scrum 价值观](#scrum-价值观)
+  - [Scrum Team](#scrum-team)
+    - [Developers](#developers)
+    - [Product Owner](#product-owner)
+    - [Scrum Master](#scrum-master)
+  - [Scrum 事件](#scrum-事件)
+    - [Sprint](#sprint)
+    - [Sprint Planning](#sprint-planning)
+    - [Daily Scrum](#daily-scrum)
+    - [Sprint Review](#sprint-review)
+    - [Sprint Retrospective](#sprint-retrospective)
+  - [Scrum 工件](#scrum-工件)
+    - [Product Backlog](#product-backlog)
+    - [Sprint Backlog](#sprint-backlog)
+    - [Increment](#increment)
+  - [结语](#结语)
+    - [致谢](#致谢)
+    - [《Scrum 指南》历史](#scrum-指南历史)
+- [第二部分 Agentic Programming、Harness Engineering 与 Spec-Driven Development（SDD）](#第二部分-agentic-programmingharness-engineering-与-spec-driven-developmentsdd)
+  - [Agentic Programming](#agentic-programming)
+  - [Harness Engineering](#harness-engineering)
+  - [Spec-Driven Development（SDD）](#spec-driven-developmentsdd)
+  - [Harness Engineering 原则下的 SDD](#harness-engineering-原则下的-sdd)
+    - [用 SDD 落实 Harness Engineering 原则](#用-sdd-落实-harness-engineering-原则)
+    - [将极限编程实践与 SDD 集成](#将极限编程实践与-sdd-集成)
+    - [将 Scrum 与 SDD 集成](#将-scrum-与-sdd-集成)
+    - [在这种方法中，人如何与 AI agents 协作](#在这种方法中人如何与-ai-agents-协作)
+- [第三部分 用 SDD 实施 Agentic Programming 时，经典 Scrum 的缺口](#第三部分-用-sdd-实施-agentic-programming-时经典-scrum-的缺口)
+  - [需要加入 Scrum 实施中的 SDD 概念](#需要加入-scrum-实施中的-sdd-概念)
+    - [Rules](#rules)
+    - [Skills](#skills)
+    - [Agents](#agents)
+    - [Workflows](#workflows)
+    - [Knowledge](#knowledge)
+    - [Artifacts](#artifacts)
+  - [在 Scrum in SDD 中需要修改的 Scrum 概念](#在-scrum-in-sdd-中需要修改的-scrum-概念)
+    - [Scrum 团队与 Scrum 职责](#scrum-团队与-scrum-职责)
+    - [Scrum 事件](#scrum-事件)
+    - [Sprint Planning](#sprint-planning)
+    - [Scrum 工件](#scrum-工件)
+- [第四部分 Scrum in SDD 指南](#第四部分-scrum-in-sdd-指南)
+  - [目的](#目的)
+  - [适用对象](#适用对象)
+  - [如何阅读本指南](#如何阅读本指南)
+  - [术语](#术语)
+  - [KEEP: 保持不变的内容](#keep-保持不变的内容)
+    - [Scrum 理论](#scrum-理论)
+    - [Scrum 价值观](#scrum-价值观)
+    - [核心职责](#核心职责)
+    - [核心工件](#核心工件)
+  - [ADD: 新增的内容](#add-新增的内容)
+    - [Harness 各层](#harness-各层)
+    - [Rules](#rules)
+    - [Skills](#skills)
+    - [SDD 核心工件](#sdd-核心工件)
+    - [框架工件](#框架工件)
+    - [工程工件](#工程工件)
+    - [包文件](#包文件)
+    - [Knowledge](#knowledge)
+  - [MODIFY：发生变化的内容](#modify发生变化的内容)
+    - [Scrum 团队与 Scrum 职责](#scrum-团队与-scrum-职责)
+    - [Scrum 事件](#scrum-事件)
+    - [Scrum 工件](#scrum-工件)
+  - [Scrum in SDD 的最小配置](#scrum-in-sdd-的最小配置)
+  - [运行原则](#运行原则)
+
 本文定义 Scrum in SDD: 结合 Scrum 和规格驱动开发（Spec-Driven Development, SDD），在 Harness Engineering 原则下使用 Agentic Programming。
 
 《Scrum 指南》定义 Scrum。本文不取代它。
@@ -10,7 +95,6 @@ v0.0.1
 - **第二部分** 说明 Agentic Programming、Harness Engineering 和规格驱动开发。
 - **第三部分** 说明经典 Scrum 在这一设定下没有覆盖的内容。
 - **第四部分** 是定义：哪些保持不变，哪些新增，哪些改变。
-
 
 # **第一部分** 2020 版《Scrum 指南》摘要
 
@@ -33,6 +117,8 @@ Scrum 适用于软件之外的复杂工作。“Developers”指的是从事这�
 
 人们可以在 Scrum 中使用各种模式、流程和实践经验，但本指南不涉及这些内容，因为它们不属于 Scrum 的定义范围。
 
+[返回顶部](#index)
+
 ## Scrum 的定义
 
 Scrum 是一种轻量级框架，帮助个人、团队和组织通过适应性解决方案，为复杂问题创造价值。
@@ -45,6 +131,8 @@ Scrum 是一种轻量级框架，帮助个人、团队和组织通过适应性�
 4. 重复以上过程。
 
 Scrum 是一个简单且有意保持不完整的框架，建立在使用者的集体智慧之上。它不是一种方法论，而是允许使用者在不违背其原则的前提下加入最佳实践。
+
+[返回顶部](#index)
 
 ## Scrum 理论
 
@@ -70,11 +158,15 @@ Scrum 通过 Sprint 这一承载性事件，结合四个正式事件来实现检
 
 调整需要团队具备授权和自我管理能力。Scrum Team 应在学到新信息后尽快做出调整。
 
+[返回顶部](#index)
+
 ## Scrum 价值观
 
 承诺、专注、开放、尊重和勇气
 
 这些价值观指导 Scrum Team 的工作、行为和决策。当这些价值观真正被践行时，就会建立信任，并让透明、检测和调整真正发挥作用。
+
+[返回顶部](#index)
 
 ## Scrum Team
 
@@ -119,6 +211,8 @@ Scrum Team 中每个 Sprint 负责创建可用 Increment 的人。
 - 确保 Scrum 各项事件有效开展
 - 支持 Product Goal 的定义和 Product Backlog 的管理
 - 推动 Scrum 在组织中的采用
+
+[返回顶部](#index)
 
 ## Scrum 事件
 
@@ -171,6 +265,8 @@ Scrum Team 回顾刚结束的 Sprint，并找出改进点。
 
 对于一个为期一个月的 Sprint，时间盒最长为三小时。
 
+[返回顶部](#index)
+
 ## Scrum 工件
 
 Scrum 工件代表工作或价值。它们提供透明性，并为调整提供共同基础。
@@ -220,6 +316,8 @@ Definition of Done 定义了 Increment 所需达到的质量标准。
 
 它让团队对“完成”的工作形成共同理解。
 
+[返回顶部](#index)
+
 ## 结语
 
 Scrum 是免费的，并由本指南定义。它是不可变的：只使用 Scrum 的一部分，就不算 Scrum。Scrum 可以作为其他技术、方法和实践的容器发挥作用。
@@ -232,6 +330,8 @@ Scrum 是免费的，并由本指南定义。它是不可变的：只使用 Scru
 
 Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum 指南》记录了他们在 30 多年中不断发展和完善的 Scrum。
 
+[返回顶部](#index)
+
 # **第二部分** Agentic Programming、Harness Engineering 与 Spec-Driven Development（SDD）
 
 在 **Agentic Programming** 和 **Spec-Driven Development** 的基础上，并遵循 **Harness Engineering** 原则，软件交付方式被从根本上重塑。
@@ -242,6 +342,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 
 **Agentic Programming** 是一种软件开发方式。在这种方式中，**AI agents** 不再只是被动的代码助手，而是工程流程中的**主动协作者**：它们会参与 **规划、编码、测试、调试、审查**，有时还会参与软件运行；其自主性受到**由人定义的目标、约束和监督**所限定。
 
+[返回顶部](#index)
+
 ## Harness Engineering
 
 **Harness Engineering** 是一门设计**运行时框架**的实践学科，用来让 AI agents 能够在真实环境中**可靠、安全、高效**地运行。它包括**工具集成、执行编排、上下文与记忆管理、权限与护栏、可观测性以及人工监督**。
@@ -251,6 +353,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **上下文与记忆**：控制 agent 知道什么、保留什么
 - **权限与护栏**：约束行为并降低风险
 - **可观测性与监督**：支持监控、评估和人工介入
+
+[返回顶部](#index)
 
 ## Spec-Driven Development（SDD）
 
@@ -264,6 +368,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **澄清多 agent 协作**：让 planner、coder、reviewer 和 tester 共享同一个 source of truth。
 - **减少漂移和歧义**：把约束明确写出来。
 - **提升自动化**：更容易生成代码、测试、文档和校验。
+
+[返回顶部](#index)
 
 ## Harness Engineering 原则下的 SDD
 
@@ -312,6 +418,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **Humans 负责验证与监督**：审查输出、消除歧义、批准敏感操作，并更新 source of truth。
 - **AI 提供反馈**：将结果与 spec 对照，并暴露差距或失败点。
 
+[返回顶部](#index)
+
 # **第三部分** 用 SDD 实施 Agentic Programming 时，经典 Scrum 的缺口
 
 当在 **Harness Engineering** 原则下实施 **SDD** 时，会出现一些缺口，从而改变 **Scrum definition**。
@@ -325,17 +433,15 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 
 ### Skills
 - **sdd-atdd**
-- **sdd-tdd**
 - **sdd-update-project**
-- **sdd-refine-pb**
+- **sdd-refine-backlog**
 - **sdd-plan-sprint**
 - **sdd-tracking**
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
 - **sdd-update-specs**
-- **sdd-design**
-- **sdd-implement**
+- **sdd-spec-to-build**
 
 ### Agents
 - **scrum-master**，在本服务中为：**ethan**
@@ -353,9 +459,11 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **工程工件**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; deployment.md; .secrets; issues-log.md**
 - **这三组之外的包文件**：**constants.json**（客户端根目录上的包查找表）；**.sdd-installed.json**（客户端根目录上的安装账本）
 
+[返回顶部](#index)
+
 ## 在 Scrum in SDD 中需要修改的 Scrum 概念
 
-### Scrum Team
+### Scrum 团队与 Scrum 职责
 - **团队**可以小得多：通常是一名 **Product Owner** 加上几名 **full-stack engineers**，其中一人还兼任 **Scrum Master**。
 - **Scrum 角色**可以同时包括 **人和 AI agents**。
 - 传统的 **Scrum Master** 很大一部分职责部分委托给 **AI agents**。
@@ -425,11 +533,16 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 
 
 **第四部分** Scrum in SDD 指南
+
+[返回顶部](#index)
+
 # **第四部分** Scrum in SDD 指南
 
 ## 目的
 
 本指南通过说明哪些内容保留、哪些新增、哪些变化，来定义 Scrum in SDD。
+
+[返回顶部](#index)
 
 ## 适用对象
 
@@ -439,11 +552,15 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **AI agents** 在既定约束内执行。
 - 双方使用同一套规则、工件和术语。
 
+[返回顶部](#index)
+
 ## 如何阅读本指南
 
 - **Keep**：仍然有效的经典 Scrum 概念。
 - **Add**：在 Harness Engineering 原则下实施 SDD 所需的新概念。
 - **Modify**：在 Scrum in SDD 中发生变化的经典 Scrum 概念。
+
+[返回顶部](#index)
 
 ## 术语
 
@@ -456,10 +573,10 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **Workflow**：定义好的动作与交接序列。
 - **Knowledge**：执行中使用并保留的项目上下文。
 - **Artifact**：用于规划、执行或检测工作的持久化项目文档。
-- **PBI**：Product Backlog Item。
-- **SBI**：Sprint Backlog Item。
+- **PBI**、**SBI**、**Feature**、**Task**、**OGT**、**MVP**：[Terminology in practice](./sdd-scrum-practices.md#terminology-in-practice)（英文 practices 中的工作名称表）。
 - **Increment**：符合 Definition of Done 的可用产出。
-- **OGT**：进行中的任务：不同于 sprint-backlog.md 中的 Sprint Backlog Items（SBIs）。它们是在 AI agents 执行 SBI 时进一步拆分出的更小任务。很多这类任务由 agents 在 PLAN 模式下创建，并依赖 agents 自行管理；也可能由人临时创建。
+
+[返回顶部](#index)
 
 ## **KEEP**: 保持不变的内容
 
@@ -485,6 +602,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **Sprint Backlog** 仍然是当前 Sprint 工作的来源。
 - **Increment** 仍然是已交付价值的单位。
 
+[返回顶部](#index)
+
 ## **ADD**: 新增的内容
 
 ### Harness 各层
@@ -501,17 +620,15 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 
 ### Skills
 - **sdd-atdd**
-- **sdd-tdd**
 - **sdd-update-project**
-- **sdd-refine-pb**
+- **sdd-refine-backlog**
 - **sdd-plan-sprint**
 - **sdd-tracking**
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
 - **sdd-update-specs**
-- **sdd-design**
-- **sdd-implement**
+- **sdd-spec-to-build**
 
 ### SDD 核心工件
 这是 SDD 的核心工件。它们不是 KEEP 下的 Scrum 核心工件（Product Backlog、Sprint Backlog、Increment）。
@@ -543,9 +660,11 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **ADR**：Architecture Decision Record。
 - **knowledge/**：执行过程中沉淀的项目知识。
 
+[返回顶部](#index)
+
 ## **MODIFY**：发生变化的内容
 
-### Scrum Team
+### Scrum 团队与 Scrum 职责
 - 团队可以更小。
 - Scrum 角色可以包括人和 AI agents。
 - Scrum Master 还需贯彻 Harness Engineering 原则。
@@ -595,6 +714,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 
 #### Sprint Backlog
 - Sprint Backlog 可以维护为一个 Markdown 工件。
+- **Unplanned PBIs（未规划 PBI）** 列出尚未分配 Sprint 的 Product Backlog 条目。该节位于 `sprint-backlog.md` 中最后一个 Sprint 表格之后。详见 `sdd-scrum-practices.md`。
 - 它可以由人和 AI agents 持续更新。
 
 #### Increment
@@ -604,6 +724,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 #### 承诺：Definition of Done
 - Definition of Done 作为一条 rule 来实现。
 - 它既可以适用于任务，也可以适用于 Increment。
+
+[返回顶部](#index)
 
 ## Scrum in SDD 的最小配置
 
@@ -616,6 +738,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - 已定义的人类审批边界
 - 已定义的 agent 执行边界
 
+[返回顶部](#index)
+
 ## 运行原则
 
 - 先有 spec，再做实现。
@@ -626,3 +750,5 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - 检测持续发生。
 - 回顾推动改进。
 - 规则要写得让人和 AI agents 都能遵循。
+
+[返回顶部](#index)
