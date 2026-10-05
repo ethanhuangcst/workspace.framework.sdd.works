@@ -28,29 +28,33 @@ v.0.1.0
 
 ### Rules
 
-- dod.mdc — Definition of Done and process writes; updates status.md on close or when the user asks.
-- incremental-delivery.mdc — Finish one SBI before starting the next.
+- sdd-dod.mdc — Definition of Done; process writes on close.
+- sdd-incremental-delivery.mdc — Finish one SBI before starting the next.
+- sdd-realtime-status.mdc — WIP checkpoints; keeps process files aligned while work is not Done.
 - friendly-language.mdc — Keep chat and Markdown readable for the user and for later agents.
 
 ## Artifacts
 
-### sdd-scrum framework
+### Core artifacts
 
 - scrum-in-sdd.md — Single source of truth for the SDD-Scrum framework.
 - sdd-scrum-practices.md — Single source of truth for Harness Engineering and SDD practices when developers work with AI agents.
-- artifacts-map.json — Artifact paths and project mapping.
+- artifacts-map.json — Where this project's artifacts live. Sits at the workspace root.
 
-### sdd-scrum process
+### Framework (process) artifacts
 
 - product-backlog.md — Product Backlog.
 - sprint-backlog.md — Sprint Backlog.
-- status.md — Real-time status.
-- changes-log.md — Change management.
+- status.md — Project snapshot; updated on DoD close or when the user asks.
+- changes-log.md — Change history.
 
 ### Engineering artifacts
 
 - architecture.md — Engineering artifact template.
-- design.md — Engineering artifact template.
-- test.md — Engineering artifact template.
-- deployment.md — Engineering artifact template.
-- issues-log.md — Issue recording and tracking template.
+- {stem}-stories.md — User stories and acceptance criteria.
+- {stem}-design.md — Design spec.
+- {stem}-tests.md — Test spec.
+- release.md — Local startup and go-live order.
+- test-strategy.md — Product-level test strategy.
+- .secrets — Secret names and where values live. No secret values.
+- issues-log.md — Defect record. One of the five process files the audit opens.

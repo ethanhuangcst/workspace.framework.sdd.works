@@ -22,7 +22,7 @@ describe("framework-tree-utils", () => {
   });
 
   it("should_format_child_labels_without_trailing_slash", () => {
-    expect(formatChildEntryLabel("dod.mdc")).toBe("dod.mdc");
+    expect(formatChildEntryLabel("sdd-dod.mdc")).toBe("sdd-dod.mdc");
     expect(formatChildEntryLabel("tdd/")).toBe("tdd");
   });
 });

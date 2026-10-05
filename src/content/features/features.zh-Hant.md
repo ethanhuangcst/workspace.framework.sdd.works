@@ -28,29 +28,33 @@ v.0.1.0
 
 ### 規則
 
-- dod.mdc — 整個產品的完成定義。
-- incremental-delivery.mdc — 完成一個 SBI 後再開始下一個。
+- sdd-dod.mdc — 完成定義；關閉時寫入流程文件。
+- sdd-incremental-delivery.mdc — 完成一個 SBI 後再開始下一個。
+- sdd-realtime-status.mdc — WIP 檢查點；工作未 Done 時同步流程文件。
 - friendly-language.mdc — 讓用戶和後續 agent 可讀的 chat 與 Markdown 文案。
 
 ## 產物
 
-### sdd-scrum 框架
+### 核心工件
 
 - scrum-in-sdd.md — SDD-Scrum 框架的單一事實來源。
 - sdd-scrum-practices.md — 開發者與 AI 智能體協作時，Harness Engineering 與 SDD 實務的單一事實來源。
-- artifacts-map.json — 產物路徑定義與專案對應。
+- artifacts-map.json — 本專案工件所在位置。位於工作區根目錄。
 
-### sdd-scrum 流程
+### 框架（流程）工件
 
 - product-backlog.md — 產品待辦。
 - sprint-backlog.md — 衝刺待辦。
-- status.md — 即時狀態。
-- changes-log.md — 變更管理。
+- status.md — 專案快照；DoD 關閉或使用者要求時更新。
+- changes-log.md — 變更歷史。
 
 ### 工程產物
 
 - architecture.md — 工程產物範本。
-- design.md — 工程產物範本。
-- test.md — 工程產物範本。
-- deployment.md — 工程產物範本。
-- issues-log.md — 問題紀錄與追蹤範本。
+- {stem}-stories.md — 使用者故事與驗收標準。
+- {stem}-design.md — 設計 spec。
+- {stem}-tests.md — 測試 spec。
+- release.md — 本地啟動與上線步驟。
+- test-strategy.md — 產品級測試策略。
+- .secrets — 密鑰名稱與存放位置。不含密鑰值。
+- issues-log.md — 缺陷紀錄。審計打開的五份流程檔案之一。

@@ -1,7 +1,7 @@
 # SDD Scrum practices
 
 > Type: Core artifact of framework.sdd.works
-> as_of: 2026-10-04
+> as_of: 2026-10-05
 > [Definition](#terminology-in-practice)
 
 ---
@@ -12,6 +12,8 @@
 - [Artifacts writing guideline](#artifacts-writing-guideline)
   - [General writing principles](#general-writing-principles)
   - [artifacts-map.json](#artifacts-mapjson)
+  - [ADR instance shape](#adr-instance-shape)
+  - [Knowledge instance shape](#knowledge-instance-shape)
   - [Header (process artifacts)](#header)
   - [Framework (process) artifacts](#framework-process-artifacts)
     - [product-backlog.md](#product-backlogmd)
@@ -28,7 +30,8 @@
     - [{module-name}-design.md](#module-name-designmd)
     - [{module-name}-stories.md](#module-name-storiesmd)
     - [{module-name}-tests.md](#module-name-testsmd)
-    - [deployment.md](#deploymentmd)
+    - [release.md](#releasemd)
+    - [test-strategy.md](#test-strategymd)
     - [.secrets](#secrets)
     - [framework-design.md](#framework-designmd)
 - [Scrum in SDD practices](#scrum-in-sdd-practices)
@@ -123,8 +126,8 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 
 **Role**
 
-- It is not an artifact.
-- It is not a seed.
+- It is an SDD Core artifact with `scrum-in-sdd.md` and `sdd-scrum-practices.md` ([Core Artifacts](./scrum-in-sdd.md#core-artifacts) in `scrum-in-sdd.md`). It is not a Framework process Markdown file with a Type and as_of header.
+- It is not a copied template seed.
 - A new project does not copy a file from this section.
 - `sdd-update-project` writes the file after the user confirms the chat summary.
 - The chat summary stays in the chat.
@@ -202,7 +205,7 @@ files:
 - {artifacts root}/issues-log.md
 - {artifacts root}/changes-log.md
 - {artifacts root}/architecture.md
-- {artifacts root}/deployment.md
+- {artifacts root}/release.md
 - {artifacts root}/test-strategy.md
 - {artifacts root}/.secrets
 - {artifacts root}/{folder}/{stem}-design.md
@@ -237,7 +240,7 @@ Pokymon Card Collection. The block shows a filled file. A new project does not c
     "specs/issues-log.md",
     "specs/changes-log.md",
     "specs/architecture.md",
-    "specs/deployment.md",
+    "specs/release.md",
     "specs/test-strategy.md",
     "specs/.secrets"
   ],
@@ -270,6 +273,96 @@ Pokymon Card Collection. The block shows a filled file. A new project does not c
   ]
 }
 ```
+
+### ADR instance shape
+
+<a id="adr-instance-shape"></a>
+
+Instance files live under `{workspace}/{adr}` when `artifacts-map.json` names an `adr` root. The shape stays in this practices file on `{client_root}`. It is not copied into `{workspace}`. `sdd-retrospective` reads this section before creating an ADR file.
+
+###### Template
+
+```markdown
+# ADR-{NNN}: {Title}
+
+## Status
+
+Accepted | Deprecated | Superseded (by ADR-XXX)
+
+## Context
+
+{What situation or problem led to this decision?}
+
+## Decision
+
+{What was decided? Be specific.}
+
+## Rationale
+
+{Why this over alternatives? What alternatives were considered?}
+
+## Consequences
+
+{Results, trade-offs, risks, follow-up actions.}
+
+## Date
+
+{YYYY-MM-DD}
+```
+
+###### How to write
+
+- Follow [General writing principles](#general-writing-principles).
+- List `{workspace}/{adr}/`. Next file is `ADR-{NNN}-{short-title}.md` where `{NNN}` is one greater than the highest existing three-digit number, or `001` when the tree is empty.
+- Match the language of the project specs in the same change.
+- Do not edit an accepted ADR to reverse a decision. Supersede with a new ADR.
+
+### Knowledge instance shape
+
+<a id="knowledge-instance-shape"></a>
+
+Instance files live under `{workspace}/{knowledge}` when `artifacts-map.json` names a `knowledge` root. The shape stays in this practices file on `{client_root}`. It is not copied into `{workspace}`. `sdd-retrospective` reads this section before creating a knowledge note.
+
+###### Template
+
+```markdown
+---
+title: {Short title}
+type: research-note | ops-lesson | domain-note | design-direction
+status: active | draft | superseded
+as_of: {YYYY-MM-DD}
+tags:
+  - {tag}
+related_spec: {workspace-relative spec path}
+related:
+  - {path to adr or knowledge doc}
+---
+
+# {Title}
+
+## Summary
+
+{One short paragraph: what was learned and why it matters.}
+
+## Evidence
+
+- {Sourced facts, what was tried, or user-provided context}
+
+## Lesson / guidance
+
+{Reusable takeaway for future work.}
+
+## Links
+
+- {Related ADRs, specs, or knowledge docs}
+```
+
+###### How to write
+
+- Follow [General writing principles](#general-writing-principles).
+- Place each note at `{workspace}/{knowledge}/{topic-area}/{doc-slug}.md`. Reuse an existing topic folder when the subject already belongs there.
+- When `{workspace}/{knowledge}/README.md` exists, add or update a row in its index table.
+- Match the language of the project specs in the same change.
 
 [Back to top](#index)
 
@@ -622,7 +715,7 @@ Do not add a second Learnings, Opportunities, or Future actions label.
 The next retrospective uses the next number.
 One retrospective uses the same number under each label that has a point.
 - `{when}` is the date in brackets, such as `[Sep 24, 2026]`.
-- `{trigger}` is `Sprint-end`, `On demand`, or the incident that fired the rule, such as `feature-01 done`.
+- `{trigger}` names the incident that fired this retrospective. Prefer `{SBI code} {SBI name} done` or `{PBI code} {Description noun} done` when DoD or a status-review pick closed one row ([Sprint Retrospective](./scrum-in-sdd.md#sprint-retrospective) **By rule**). Use `Sprint-end` when the whole sprint closes. Use `On demand` only when a human invoked retrospective and no SBI or PBI became **Done** in the same run ([Sprint Retrospective](./scrum-in-sdd.md#sprint-retrospective) **On demand**). Short form `feature-01 done` is allowed when the SBI name adds no disambiguation.
 - `{learning}`, `{opportunity}`, and `{action}` are the key points.
 The bullet links the ADR or the knowledge note when one was written.
 - A label with no record uses one sentence.
@@ -645,7 +738,7 @@ Future actions uses `No future action is recorded yet.`
 
 `[status.md](./status.md)` is the tracking projection. It is not a second sprint backlog. It is not the defect list. Sections, in order: Header, Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs, Last updated. Column rules are in `[framework-design.md](../../../framework-design.md)`.
 
-Agents update this file on DoD close or when the user asks. See pack rule `dod.mdc`.
+WIP updates use pack rule `sdd-realtime-status.mdc`. Close updates use `sdd-dod.mdc`.
 
 ##### Header
 
@@ -896,9 +989,15 @@ Section rules for a module file are written when that seed is in review. They fo
 
 [Back to top](#index)
 
-#### deployment.md
+#### release.md
 
-`[deployment.md](./deployment.md)` records how to start locally and the order of steps at go-live. Do not put host names, secrets, or customer environment names here. This file is optional and written when those steps exist.
+`[release.md](./release.md)` records how to start locally and the order of steps at go-live. Do not put host names, secrets, or customer environment names here. This file is optional and written when those steps exist.
+
+[Back to top](#index)
+
+#### test-strategy.md
+
+`[test-strategy.md](./test-strategy.md)` is the product-level test strategy at `{artifacts_root}/test-strategy.md`. It extends the **common-test-strategy** baseline and must not weaken it. Module test specs are `{stem}-tests.md`. This file is optional and written when the project defines a product-wide quality bar beyond module specs.
 
 [Back to top](#index)
 

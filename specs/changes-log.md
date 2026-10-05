@@ -8,13 +8,133 @@
 
 ## 2026-10-05
 
+### sdd-retrospective trigger line on sprint-backlog
+
+**Why**: Sprint 6 Retrospective used `On demand` for by-rule and catch-up runs; `scrum-in-sdd.md` requires the incident (for example `feature-42 done`) for **By rule**.
+
+**What changed**: [`sdd-retrospective/SKILL.md`](./framework/seeds/skills/sdd-retrospective/SKILL.md) **Write rules** name `{SBI code} {SBI name} done`. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) Retrospective **How to write** clarifies when `On demand` is allowed.
+
+**Verification**: Skill text bans `On demand` on the same run as an SBI or PBI **Done** write.
+
+### Sprint 6 Retrospective trigger repair (live backlog)
+
+**Why**: Live [Sprint 6 Retrospective](./sprint-backlog.md#sprint-6) still used `On demand` for catch-up **Done** SBIs after the skill and practices update.
+
+**What changed**: Composite by-rule triggers for feature-38, 39, 41, and 43 on Learnings, Opportunities, and Future actions **#1**; feature-42 learnings under Learnings **#2** with `feature-42 Seed product-backlog.md done`.
+
+**Verification**: No `On demand` under Sprint 6 Retrospective in [`sprint-backlog.md`](./sprint-backlog.md).
+
+### Remove skill_close_sprint (Skill-07 retired)
+
+**Why**: [Skill-07](./product-backlog.md#pb-29) and `sdd-close-sprint` do not ship ([ADR-076](./adr/ADR-076-review-status-one-skill.md)). Sprint 8 task-01 Related still pointed at Skill-07.
+
+**What changed**: Removed `skill_close_sprint` from [`constants.json`](./framework/seeds/templates/constants.json). [`framework-design.md`](./framework/framework-design.md) job index matches ethan Capabilities. Sprint 8 [task-01](./sprint-backlog.md#sprint-8) Related lists shipped skills and marks Skill-07 **Retired**.
+
+**Verification**: `rg skill_close_sprint specs/framework/seeds/templates/constants.json` is empty.
+
+### Sprint 6 feature-42 Done (Spec-seeds-05)
+
+**Why**: User confirmed the EN product-backlog seed usable; DoD met after **sdd-retrospective**.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) moves [feature-42](./sprint-backlog.md#sprint-6) to **Done**. [Spec-seeds-05](./product-backlog.md#pb-36) **Done** on [`product-backlog.md`](./product-backlog.md). Sprint 6 **Retrospective** learnings #2. [`status.md`](./status.md) Sprint 6 note updated.
+
+**Verification**: Seed path [`framework/seeds/templates/EN/product-backlog.md`](./framework/seeds/templates/EN/product-backlog.md). Open Sprint 6 ToDo: task-01 only.
+
+### Status review picks (Sprint 6–7 alignment)
+
+**Why**: User picked fixes after status review: unique SBI codes, Sprint 7 stays ToDo, ethan without close-sprint job, feature-37 back to WIP.
+
+**What changed**: Sprint 7 **Skill sdd-atdd** is [feature-52](./sprint-backlog.md#sprint-7) (was duplicate feature-43). Sprint 7 WIP rows removed; feature-48 and feature-50 **ToDo**. Sprint 6 [feature-37](./sprint-backlog.md#sprint-6) **WIP**; [Rule-01](./product-backlog.md#pb-18) **WIP**. [`ethan.md`](./framework/seeds/agents/ethan.md) drops `skill_close_sprint` from Capabilities. [`status.md`](./status.md) notes updated.
+
+**Verification**: One row per SBI code across sprints. Sprint 7 section has **ToDo** table only. ethan Capabilities has six jobs.
+
+### Done writes run sdd-retrospective (ADR-097)
+
+**Why**: Status-review **Done** picks skipped the **sdd-dod** retrospective gate; some sprints had no **Retrospective** section.
+
+**What changed**: [ADR-097](./adr/ADR-097-done-runs-retrospective.md). [`sdd-retrospective`](./framework/seeds/skills/sdd-retrospective/SKILL.md) **Ensure Retrospective section** (create-if-missing). [`sdd-review-status`](./framework/seeds/skills/sdd-review-status/SKILL.md) runs retrospective before **Done** picks. [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc) states **Done** row timing. **CE-SKILL-10**, **CE-SKILL-11**, framework stories AC.
+
+**Verification**: Seed `sdd-review-status` **Write the picks** names **sdd-retrospective** before **Done**. `rg 'Ensure Retrospective' specs/framework/seeds/skills/sdd-retrospective/SKILL.md` matches.
+
+### sdd-retrospective auto-run (no second confirm)
+
+**Why**: Retrospective was skipped when agents treated status-review writes as full DoD; a second confirm blocked the by-rule gate.
+
+**What changed**: [`sdd-retrospective/SKILL.md`](./framework/seeds/skills/sdd-retrospective/SKILL.md) writes ADR, knowledge, changes-log, and sprint **Retrospective** in one pass, then sends **Retrospective Summary**. Removed **Your choice** confirm. **CE-SKILL-10** and framework stories AC updated. Catch-up: Sprint 6 **Retrospective** block; [`dod-retrospective-before-sbi-done.md`](./knowledge/agent/dod-retrospective-before-sbi-done.md).
+
+**Verification**: Seed skill has **Steps** and no “Write only after that reply”. `rg 'Your choice' specs/framework/seeds/skills/sdd-retrospective` is empty.
+
+### Sprint 6 status picks (feature-40–43, Skill-07)
+
+**Why**: User confirmed [feature-43](./sprint-backlog.md#sprint-6) usable; [Skill-07](./product-backlog.md#pb-29) stays retired per [ADR-076](./adr/ADR-076-review-status-one-skill.md); [feature-40](./sprint-backlog.md#sprint-6) is active work.
+
+**What changed**: [Rule-03](./product-backlog.md#pb-20) and Sprint 6 feature-43 **Done**. feature-41 **Done** (retire `sdd-close-sprint`; PBI **Retired**). [Skill-06](./product-backlog.md#pb-28) and feature-40 **WIP**. `sprint-backlog.md` header lists Sprint 6 as current WIP sprint. [`status.md`](./status.md) notes updated.
+
+**Verification**: Sprint 6 Done table includes feature-43 and feature-41. Open ToDo/WIP table: feature-40 **WIP**, feature-42 and task-01 **ToDo**.
+
+### Rename sdd-keep-update to sdd-realtime-status (ADR-096)
+
+**Why**: Rule-03 WIP sync should use the historical realtime-status name with `sdd-` prefix; `keep-update` key and filename diverged.
+
+**What changed**: [ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md). Seed [sdd-realtime-status.mdc](./framework/seeds/rules/sdd-realtime-status.mdc); [constants.json](./framework/seeds/templates/constants.json) key `realtime-status` (removed `keep-update`). [ADR-093](./adr/ADR-093-keep-update-wip-rule.md) superseded for name/key only. Living guides, design, stories, tests, portal AC, and Features i18n updated. Unprefixed `realtime-status.mdc` stays retired ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)).
+
+**Verification**: `ls specs/framework/seeds/rules/sdd-realtime-status.mdc`. `rg 'sdd-keep-update|"keep-update"' specs/framework/seeds specs/sprint-backlog.md specs/framework/framework-design.md specs/framework/framework-stories.md specs/framework/framework-tests.md src/content` is empty. Remove stale `sdd-keep-update.mdc` from `{client_root}/rules/` after pack update.
+
+### ADR and knowledge instance shapes in practices (ADR-095)
+
+**Why**: Separate pack `adr.md` and `knowledge.md` duplicated shapes already documented in practices and added install surface ([ADR-095](./adr/ADR-095-adr-knowledge-shape-in-practices.md)).
+
+**What changed**: Removed pack locale seeds `adr.md` and `knowledge.md`. Added **ADR instance shape** and **Knowledge instance shape** to EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). Updated [`sdd-retrospective`](./framework/seeds/skills/sdd-retrospective/SKILL.md), [`framework-design.md`](./framework/framework-design.md), CE-SKILL-10, and framework stories.
+
+**Verification**: `test ! -f specs/framework/seeds/templates/EN/adr.md`. `rg 'locale}/adr\\.md|locale}/knowledge\\.md' specs/framework/seeds/skills/sdd-retrospective` is empty.
+
+### sdd- prefix for framework-bound pack rules (ADR-094)
+
+**Why**: Rules that read or write SDD process artifacts should be distinguishable from portable rules such as `friendly-language.mdc`.
+
+**What changed**: [ADR-094](./adr/ADR-094-sdd-prefix-framework-rules.md). Renamed seeds to `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-keep-update.mdc`. [constants.json](./framework/seeds/templates/constants.json) values updated; keys unchanged. [sdd-create-rule](./framework/seeds/skills/sdd-create-rule/SKILL.md) naming split. CE-RULE-05 expects three `sdd-` rules plus `friendly-language.mdc`.
+
+**Verification**: `ls specs/framework/seeds/rules/sdd-*.mdc`. No `dod.mdc`, `incremental-delivery.mdc`, or `keep-update.mdc` under `specs/framework/seeds/rules/`.
+
+### Pack rule sdd-keep-update.mdc (WIP process sync)
+
+**Why**: After [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md), open work had no always-on rule to keep process files aligned before Done.
+
+**What changed**: [ADR-093](./adr/ADR-093-keep-update-wip-rule.md). Seed [sdd-keep-update.mdc](./framework/seeds/rules/sdd-keep-update.mdc) and `keep-update` in [constants.json](./framework/seeds/templates/constants.json). [sdd-dod.mdc](./framework/seeds/rules/sdd-dod.mdc) points WIP checkpoints at `sdd-keep-update.mdc`. [Rule-03](./product-backlog.md#pb-20) reopened as keep-update. Sprint 6 [feature-43](./sprint-backlog.md#sprint-6) **WIP**. Four harness rules in design, stories, tests, guides, and portal AC.
+
+**Verification**: `specs/framework/seeds/rules/sdd-keep-update.mdc` exists. `rg 'realtime-status' specs/framework/seeds` is empty. CE-RULE-05 lists four pack rules including `sdd-keep-update.mdc`.
+
+### Pack skill sdd-retrospective and adr/knowledge pack seeds
+
+**Why**: DoD and sprint practices need a pack skill that persists ADR and knowledge under map roots without embedding long templates in SKILL.md; file shape lives on the client template tree only.
+
+**What changed**: New seed skill [`sdd-retrospective`](./framework/seeds/skills/sdd-retrospective/SKILL.md). Pack-only locale templates [`adr.md`](./framework/seeds/templates/EN/adr.md) and [`knowledge.md`](./framework/seeds/templates/EN/knowledge.md). [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) and [`framework-design.md`](./framework/framework-design.md) document pack-only install paths. EN [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) and portal copy name **sdd-retrospective**. [`framework-stories.md`](./framework/framework-stories.md) AC block and **CE-SKILL-10** in [`framework-tests.md`](./framework/framework-tests.md). OGT “Add pack seed templates adr.md and knowledge.md” closed in [`status.md`](./status.md).
+
+**Verification**: `ls specs/framework/seeds/templates/EN/adr.md specs/framework/seeds/templates/EN/knowledge.md specs/framework/seeds/skills/sdd-retrospective/SKILL.md`. `rg 'retrospective skill' specs/framework/seeds/templates/EN/scrum-in-sdd.md src/content/scrum-in-sdd` is empty. Current OGT table has no open row for adr/knowledge seeds.
+
+### Status review picks (RIDs + Sprint 7 WIP)
+
+**Why**: `sdd-review-status` found stale open RIDs and board drift on Sprint 7 seed SBIs.
+
+**What changed**: Closed **D-2**, **D-3**, and **R-1** on [sprint-backlog.md](./sprint-backlog.md) (MCP-01 and Agent-04 Done). [feature-48](./sprint-backlog.md#sprint-7) and [feature-50](./sprint-backlog.md#sprint-7) set **WIP**; [Spec-seeds-11](./product-backlog.md#pb-41) and [Spec-seeds-13](./product-backlog.md#pb-90) **WIP**. Sprint 7 **WIP** subsection added. [`status.md`](./status.md) Sprint 7 note updated.
+
+**Verification**: Open RIDs table is empty. Sprint 7 lists WIP then ToDo without Done rows for feature-48 or feature-50.
+
+### OGT 4–6: release.md, test-strategy.md, Core artifacts-map
+
+**Why**: Close Sprint 5 OGTs: rename deployment starter, add product-level test strategy seed, classify `artifacts-map.json` as an SDD Core artifact.
+
+**What changed**: `deployment.md` → [`release.md`](./framework/seeds/templates/EN/release.md) (seed and [`specs/release.md`](./release.md)). New [`test-strategy.md`](./framework/seeds/templates/EN/test-strategy.md) seed and [`specs/test-strategy.md`](./test-strategy.md). [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), EN/HanS [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), `src/content/*`, [`artifacts-map.json`](../artifacts-map.json), Features i18n, and admin AC. [Spec-seeds-11](./product-backlog.md#pb-41) and [Spec-seeds-13](./product-backlog.md#pb-90) **Done**; Sprint 7 [feature-48](./sprint-backlog.md#sprint-7) and [feature-50](./sprint-backlog.md#sprint-7) **Done**. OGT 4–6 closed in [`status.md`](./status.md). [ADR-082](./adr/ADR-082-artifacts-map-json.md) context clarifies Core artifact vs process Markdown.
+
+**Verification**: `ls specs/framework/seeds/templates/EN/` includes `release.md` and `test-strategy.md` with no `deployment.md`. `rg 'deployment\.md' specs/framework/seeds specs/product-backlog.md specs/sprint-backlog.md specs/framework/framework-design.md specs/framework/framework-stories.md src/content artifacts-map.json` is empty. Root map lists `specs/release.md` and `specs/test-strategy.md`.
+
 ### Sprint 6 feature-37 and feature-38 Done
 
-**Why**: Pack harness rules `dod.mdc` and `incremental-delivery.mdc` ship in seeds and constants; user confirmed usable.
+**Why**: Pack harness rules `sdd-dod.mdc` and `sdd-incremental-delivery.mdc` ship in seeds and constants; user confirmed usable.
 
 **What changed**: [Rule-01](./product-backlog.md#pb-18) and [Rule-02](./product-backlog.md#pb-19) **Done**. [feature-37](./sprint-backlog.md#sprint-6)–[feature-39](./sprint-backlog.md#sprint-6) in Sprint 6 Done. Sprint 6 **WIP**. [Rule-03](./product-backlog.md#pb-20) stays **Retired**; feature-39 Done means Option C retirement verified ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md) decision item 4 updated).
 
-**Verification**: `specs/framework/seeds/rules/dod.mdc` and `incremental-delivery.mdc` exist. `constants.json` `rules` keys `dod` and `incremental-delivery`. CE-RULE-05 lists three pack rules, not `realtime-status.mdc`.
+**Verification**: `specs/framework/seeds/rules/sdd-dod.mdc` and `sdd-incremental-delivery.mdc` exist. `constants.json` `rules` keys `dod` and `incremental-delivery`. CE-RULE-05 lists three pack rules, not `realtime-status.mdc`.
 
 ### Pack authoring skill names revert to sdd- prefix (ADR-092)
 
@@ -26,9 +146,9 @@
 
 ### Retire realtime-status.mdc (Option C)
 
-**Why**: `dod.mdc` and `realtime-status.mdc` duplicated confirm-then-write for `status.md`. One owner for close avoids two Done paths.
+**Why**: `sdd-dod.mdc` and `realtime-status.mdc` duplicated confirm-then-write for `status.md`. One owner for close avoids two Done paths.
 
-**What changed**: [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md). Removed [realtime-status.mdc](./framework/seeds/rules/realtime-status.mdc) and the `realtime-status` key in [constants.json](./framework/seeds/templates/constants.json). [dod.mdc](./framework/seeds/rules/dod.mdc) adds when to update `status.md` and points at practices `#statusmd`. [Rule-03](./product-backlog.md#pb-20) and Sprint 6 feature-39 are **Retired**. Guides, `src/content`, framework design/stories/tests, and admin portal AC list three harness rules.
+**What changed**: [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md). Removed [realtime-status.mdc](./framework/seeds/rules/realtime-status.mdc) and the `realtime-status` key in [constants.json](./framework/seeds/templates/constants.json). [sdd-dod.mdc](./framework/seeds/rules/sdd-dod.mdc) adds when to update `status.md` and points at practices `#statusmd`. [Rule-03](./product-backlog.md#pb-20) and Sprint 6 feature-39 are **Retired**. Guides, `src/content`, framework design/stories/tests, and admin portal AC list three harness rules.
 
 **Verification**: `rg 'realtime-status' specs/framework/seeds` is empty. `constants.json` `rules` has three keys. CE-RULE-05 names three rule files.
 
@@ -52,7 +172,7 @@
 
 **Why**: One gate rule should name PBI, SBI, OGT, and sprint defaults, retrospective, and which process files to update after Done is confirmed.
 
-**What changed**: [`dod.mdc`](./framework/seeds/rules/dod.mdc) lists default checks per type, artifact extra or replacement DoD, `retrospective` skill on PBI and SBI, and write order (changes-log, issues-log, status after confirm, sprint-backlog, product-backlog) per type.
+**What changed**: [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc) lists default checks per type, artifact extra or replacement DoD, `retrospective` skill on PBI and SBI, and write order (changes-log, issues-log, status after confirm, sprint-backlog, product-backlog) per type.
 
 **Verification**: The rule has sections PBI, SBI, RID, OGT, and Sprint. PBI and SBI defaults include a quality gate. RID defaults cover solution verify and close on the RID Log.
 
@@ -886,7 +1006,7 @@
 
 **Why**: The English guide put `artifacts-map.md` under Framework artifacts, had no Core group, omitted `issues-log.md`, and used `{model_name}`. The design named authoring seeds that were not in the seed tree.
 
-**What changed**: [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) lists Core artifacts (`scrum-in-sdd.md`, `sdd-scrum-practices.md`, `artifacts-map.md`), Framework artifacts (`product-backlog.md`, `sprint-backlog.md`, `status.md`, `change-log.md`), and Engineering artifacts (`architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-test.md`, `deployment.md`, `.secrets`, `issues-log.md`). `constants.md` and `.sdd-installed.json` are pack files beside those groups. The ADD Core group is not Scrum's KEEP core artifacts. New draft seeds: `seeds/.sdd-installed.json` (field example, `pack_complete: false`, outside the install allow-list), `templates/EN/issues-log.md`, `templates/EN/.secrets`, `rules/dod.mdc`, `rules/incremental-delivery.mdc`, `rules/realtime-status.mdc`, `rules/artifacts-map.mdc`, `skills/sdd-audit-artifacts/SKILL.md`, and `skills/sdd-get-status/SKILL.md`. [`framework-design.md`](./framework/framework-design.md) records the ledger example and the draft seeds. `skills/sdd-update-status/` was not added; `sdd-tracking` stays the status-write folder.
+**What changed**: [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) lists Core artifacts (`scrum-in-sdd.md`, `sdd-scrum-practices.md`, `artifacts-map.md`), Framework artifacts (`product-backlog.md`, `sprint-backlog.md`, `status.md`, `change-log.md`), and Engineering artifacts (`architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-test.md`, `deployment.md`, `.secrets`, `issues-log.md`). `constants.md` and `.sdd-installed.json` are pack files beside those groups. The ADD Core group is not Scrum's KEEP core artifacts. New draft seeds: `seeds/.sdd-installed.json` (field example, `pack_complete: false`, outside the install allow-list), `templates/EN/issues-log.md`, `templates/EN/.secrets`, `rules/sdd-dod.mdc`, `rules/sdd-incremental-delivery.mdc`, `rules/realtime-status.mdc`, `rules/artifacts-map.mdc`, `skills/sdd-audit-artifacts/SKILL.md`, and `skills/sdd-get-status/SKILL.md`. [`framework-design.md`](./framework/framework-design.md) records the ledger example and the draft seeds. `skills/sdd-update-status/` was not added; `sdd-tracking` stays the status-write folder.
 
 **Verification**: The seed tree has every authoring seed path the design names except the skills still listed as not in the tree and the HanS/HanT bodies. The `.secrets` seed has no value. The ledger example has `pack_complete: false`. OGT 2, feature-23, feature-24, Rule-01 through Rule-04, Spec-seeds-11, and Spec-seeds-13 stay open until the user confirms them.
 
@@ -1096,7 +1216,7 @@
 
 **Why**: The guide names rule files without an `sdd-` prefix and includes `artifacts-map.mdc`. `constants.md` still used the old prefixed names, omitted that rule, and keyed the audit skill by folder name while Skill-10 names `skill_audit_artifacts`.
 
-**What changed**: [`constants.md`](./framework/seeds/templates/constants.md) rules are `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `artifacts-map.mdc`. The audit skill key is `skill_audit_artifacts`. Rule-01–03, Sprint 11 rows, the agent-design ledger example, ADR-065, and instruction mocks use the no-prefix names. Guide Rules lists and Features catalogs name `artifacts-map.mdc`. Feature-22 stays ToDo and does not write the `.mdc` file.
+**What changed**: [`constants.md`](./framework/seeds/templates/constants.md) rules are `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `realtime-status.mdc`, and `artifacts-map.mdc`. The audit skill key is `skill_audit_artifacts`. Rule-01–03, Sprint 11 rows, the agent-design ledger example, ADR-065, and instruction mocks use the no-prefix names. Guide Rules lists and Features catalogs name `artifacts-map.mdc`. Feature-22 stays ToDo and does not write the `.mdc` file.
 
 **Verification**: A search of living specs finds no `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, or `sdd-realtime-status.mdc`. `constants.md` lists four rules and `skill_audit_artifacts`.
 

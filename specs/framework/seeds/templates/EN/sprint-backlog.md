@@ -66,7 +66,7 @@ Sprint Goal: A collector can catalog a card on this machine, and the same card d
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | feature-01 | Cataloged card | [Collect-01 Catalog a card](./product-backlog.md#pb-1) | Collection/Feature | [`architecture.md`](./architecture.md) §2 | **Done** |
 | 2 | task-02 | Scope gate | [Scope-01 Scope gate](./product-backlog.md#pb-5) | Product/Task | [`architecture.md`](./architecture.md) §1 | **Done** |
-| 3 | task-01 | Local startup | [Local-01 Local startup](./product-backlog.md#pb-6) | Runtime/Task | [`deployment.md`](./deployment.md) §1 | **Done** |
+| 3 | task-01 | Local startup | [Local-01 Local startup](./product-backlog.md#pb-6) | Runtime/Task | [`release.md`](./release.md) §1 | **Done** |
 
 ### Retrospective
 

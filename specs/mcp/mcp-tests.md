@@ -185,7 +185,7 @@ GITHUB_TOKEN=... \
 npx vitest run src/core/sync/sync-e2e.test.ts
 ```
 
-Fixture layout in [test.sdd](https://github.com/ethanhuangcst/test.sdd): `skills/{tdd,a-tdd}/SKILL.md`, `rules/dod.mdc`, `agents/code-reviewer.md`, `workflows/new-feature.md`.
+Fixture layout in [test.sdd](https://github.com/ethanhuangcst/test.sdd): `skills/{tdd,a-tdd}/SKILL.md`, `rules/sdd-dod.mdc`, `agents/code-reviewer.md`, `workflows/new-feature.md`.
 
 ---
 

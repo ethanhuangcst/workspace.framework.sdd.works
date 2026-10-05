@@ -54,8 +54,8 @@ const FIXTURE_TREE: TreeNode[] = [
     name: "rules/",
     type: "dir",
     children: [
-      { name: "dod.mdc", type: "file" },
-      { name: "incremental-delivery.mdc", type: "file" },
+      { name: "sdd-dod.mdc", type: "file" },
+      { name: "sdd-incremental-delivery.mdc", type: "file" },
       { name: "common-test-strategy.mdc", type: "file" },
     ],
   },
@@ -100,7 +100,7 @@ export function createFixtureGitHubPort(options?: {
       const files: Record<string, string> = {
         "skills/tdd/SKILL.md": `# tdd ${ref}\n`,
         "skills/atdd/SKILL.md": `# atdd ${ref}\n`,
-        "rules/dod.mdc": "# dod\n",
+        "rules/sdd-dod.mdc": "# dod\n",
         "agents/code-reviewer.md": "# reviewer\n",
         "workflows/new-feature.md": "# workflow\n",
       };

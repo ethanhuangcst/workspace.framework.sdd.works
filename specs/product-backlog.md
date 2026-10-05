@@ -115,8 +115,8 @@ Workflows: none until a workflow is planned. No workflow PBI.
 - <a id="req-pb-28"></a>[Skill-06](#pb-28) Pack skill sdd-retrospective
   - The pack includes the retrospective skill (`skill_retrospective`).
   - The record uses three headings: Learnings, Opportunities, and Future actions.
-- <a id="req-pb-29"></a>[Skill-07](#pb-29) Pack skill sdd-close-sprint
-  - The pack includes the close / start sprint skill (`skill_close_sprint`).
+- <a id="req-pb-29"></a>[Skill-07](#pb-29) Pack skill sdd-close-sprint **Retired**
+  - No pack seed. Sprint open and close stay in practices and planning skills ([ADR-076](./adr/ADR-076-review-status-one-skill.md)). Sprint 6 [feature-41](./sprint-backlog.md#sprint-6) records retirement **Done**.
 - <a id="req-pb-30"></a>[Skill-08](#pb-30) Pack skill sdd-audit-artifacts
   - After the pack gate the skill reads `{workspace}/artifacts-map.json` and opens each stored path as `{workspace}/<path>`.
   - It returns one verdict: `Uninitialized`, `Index broken`, or `Usable`.
@@ -151,12 +151,12 @@ Workflows: none until a workflow is planned. No workflow PBI.
 
 ### rules
 
-- <a id="req-pb-18"></a>[Rule-01](#pb-18) Pack rule dod.mdc
+- <a id="req-pb-18"></a>[Rule-01](#pb-18) Pack rule sdd-dod.mdc
   - The pack includes the Definition of Done rule file.
-- <a id="req-pb-19"></a>[Rule-02](#pb-19) Pack rule incremental-delivery.mdc
+- <a id="req-pb-19"></a>[Rule-02](#pb-19) Pack rule sdd-incremental-delivery.mdc
   - The pack includes the incremental delivery rule file.
-- <a id="req-pb-20"></a>[Rule-03](#pb-20) Pack rule realtime-status.mdc
-  - **Retired.** [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md). `status.md` updates on DoD close live in `dod.mdc`.
+- <a id="req-pb-20"></a>[Rule-03](#pb-20) Pack rule sdd-realtime-status.mdc
+  - WIP checkpoints for the five process files: draft, confirm, write. Done stays on `sdd-dod.mdc`. [ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md) ([ADR-093](./adr/ADR-093-keep-update-wip-rule.md) charter). Unprefixed `realtime-status.mdc` stays retired ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)).
 - <a id="req-pb-95"></a>[Rule-04](#pb-95) Pack rule friendly-language.mdc
   - The pack includes `rules/friendly-language.mdc`.
   - The constants key is `friendly-language`.
@@ -216,8 +216,8 @@ Workflows: none until a workflow is planned. No workflow PBI.
 
 - <a id="req-pb-40"></a>[Spec-seeds-10](#pb-40) Seed architecture.md
   - The seed is the generic architecture starter for a new project.
-- <a id="req-pb-41"></a>[Spec-seeds-11](#pb-41) Seed deployment.md
-  - The seed is the generic deployment starter for a new project.
+- <a id="req-pb-41"></a>[Spec-seeds-11](#pb-41) Seed release.md
+  - The seed is the generic release starter for a new project (local startup and go-live order).
 - <a id="req-pb-66"></a>[Spec-seeds-12](#pb-66) Seed .secrets
   - The seed is the secrets file named in the guide.
   - It holds names and where values live. It holds no secret values.
@@ -238,7 +238,7 @@ HanS and HanT bodies for the locale template folders. Spec-seeds rows own the EN
   - HanS and HanT starters for `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, and `issues-log.md` match the EN starter meaning.
   - There is no `artifacts-map.md` template seed.
 - <a id="req-pb-69"></a>[i18n-03](#pb-69) HanS and HanT engineering artifacts
-  - HanS and HanT starters for `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `deployment.md`, `.secrets`, and `test-strategy.md` match the EN starter meaning.
+  - HanS and HanT starters for `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `release.md`, `.secrets`, and `test-strategy.md` match the EN starter meaning.
 
 [Back to top](#index)
 
@@ -402,15 +402,15 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | # | Component | PBI Code | Description | Size | Related | Sprint | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | framework | <a id="pb-6"></a>[Agent-01](#req-pb-6) | Local Cursor agent | Implementable | - [`framework/framework-design.md`](./framework/framework-design.md)<br>- [D1](./sprint-backlog.md#rid-d1)<br>- [MCP-01](#pb-16) | Sprint 1 | Done |
-| 2 | framework | <a id="pb-8"></a>[Agent-02](#req-pb-8) | Skill call for a named job | Epic | - `[framework/framework-design.md](./framework/framework-design.md)`<br>- [Skill-03](#pb-24)<br>- [Skill-04](#pb-25)<br>- [Skill-05](#pb-26)<br>- [Skill-12](#pb-86)<br>- [Skill-06](#pb-28)<br>- [Skill-07](#pb-29) | — | ToDo |
+| 2 | framework | <a id="pb-8"></a>[Agent-02](#req-pb-8) | Skill call for a named job | Epic | - `[framework/framework-design.md](./framework/framework-design.md)`<br>- [Skill-03](#pb-24)<br>- [Skill-04](#pb-25)<br>- [Skill-05](#pb-26)<br>- [Skill-12](#pb-86)<br>- [Skill-06](#pb-28)<br>- [Skill-07](#pb-29) **Retired** | — | ToDo |
 | 3 | framework | <a id="pb-10"></a>[Agent-03](#req-pb-10) | Guiding proposals from framework knowledge | Implementable | - `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)`<br>- `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)`<br>- `[artifacts-map.json](../artifacts-map.json)` | Sprint 8 | ToDo |
 | 4 | framework | <a id="pb-17"></a>[Agent-04](#req-pb-17) | Agent ethan onboard with pack receipt start gate | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)` §2.4 - `[framework/framework-stories.md](./framework/framework-stories.md)`<br>- [MCP-01](#pb-16) | Sprint 2 | Done |
 | 5 | framework | <a id="pb-21"></a>[Skill-01](#req-pb-21) | Pack skill sdd-atdd | Implementable | — | Sprint 7 | ToDo |
 | 6 | framework | <a id="pb-24"></a>[Skill-03](#req-pb-24) | Pack skill sdd-update-project | Implementable | - [Agent-02](#pb-8)<br>- [ADR-079](./adr/ADR-079-one-job-update-project.md) | Sprint 5 | Done |
 | 7 | framework | <a id="pb-25"></a>[Skill-04](#req-pb-25) | Pack skill sdd-refine-backlog | Implementable | [Agent-02](#pb-8) | Sprint 5 | Done |
 | 8 | framework | <a id="pb-26"></a>[Skill-05](#req-pb-26) | Pack skill sdd-plan-sprint | Implementable | - [Agent-02](#pb-8)<br>- [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) | Sprint 5 | Done |
-| 9 | framework | <a id="pb-28"></a>[Skill-06](#req-pb-28) | Pack skill sdd-retrospective | Implementable | [Agent-02](#pb-8) | Sprint 6 | ToDo |
-| 10 | framework | <a id="pb-29"></a>[Skill-07](#req-pb-29) | Pack skill sdd-close-sprint | Implementable | [Agent-02](#pb-8) | Sprint 6 | ToDo |
+| 9 | framework | <a id="pb-28"></a>[Skill-06](#req-pb-28) | Pack skill sdd-retrospective | Implementable | [Agent-02](#pb-8) | Sprint 6 | WIP |
+| 10 | framework | <a id="pb-29"></a>[Skill-07](#req-pb-29) | Pack skill sdd-close-sprint | Implementable | [Agent-02](#pb-8) | Sprint 6 | Retired |
 | 11 | framework | <a id="pb-30"></a>[Skill-08](#req-pb-30) | Pack skill sdd-audit-artifacts | Implementable | - [`framework-design.md`](./framework/framework-design.md#sdd-audit-artifacts)<br>- [`framework-stories.md`](./framework/framework-stories.md#sdd-audit-artifacts)<br>- [ADR-073](./adr/ADR-073-skill-get-status.md) | Sprint 4 | Done |
 | 12 | framework | <a id="pb-64"></a>[Skill-09](#req-pb-64) | Pack skill sdd-update-specs | Implementable | [Skill-11](#pb-80) | Sprint 7 | ToDo |
 | 13 | framework | <a id="pb-80"></a>[Skill-11](#req-pb-80) | Pack skill sdd-spec-to-build | Implementable | - [Skill-09](#pb-64)<br>- [Skill-01](#pb-21)<br>- [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) | Sprint 7 | ToDo |
@@ -419,21 +419,21 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | 16 | framework | <a id="pb-89"></a>[Skill-14](#req-pb-89) | Pack skill prompt-optimizer | Implementable | [prompt-optimizer](./framework/seeds/skills/prompt-optimizer/SKILL.md) | Sprint 7 | ToDo |
 | 17 | framework | <a id="pb-93"></a>[Skill-15](#req-pb-93) | Pack skill sdd-build-agent | Implementable | - [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md)<br>- [framework-design § sdd-build-agent](./framework/framework-design.md#sdd-build-agent)<br>- [sdd-build-agent](./framework/seeds/skills/sdd-build-agent/SKILL.md) | Sprint 5 | Done |
 | 18 | framework | <a id="pb-94"></a>[Skill-16](#req-pb-94) | Pack skill sdd-create-rule | Implementable | - [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md)<br>- [sdd-create-rule](./framework/seeds/skills/sdd-create-rule/SKILL.md)<br>- [framework-design § sdd-create-rule](./framework/framework-design.md#sdd-create-rule) | Sprint 5 | Done |
-| 19 | framework | <a id="pb-18"></a>[Rule-01](#req-pb-18) | Pack rule dod.mdc | Implementable | [Spec-seeds-03](#pb-32) | Sprint 6 | Done |
-| 20 | framework | <a id="pb-19"></a>[Rule-02](#req-pb-19) | Pack rule incremental-delivery.mdc | Implementable | [Spec-seeds-03](#pb-32) | Sprint 6 | Done |
-| 21 | framework | <a id="pb-20"></a>[Rule-03](#req-pb-20) | Pack rule realtime-status.mdc | Implementable | [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md) | Sprint 6 | Retired |
+| 19 | framework | <a id="pb-18"></a>[Rule-01](#req-pb-18) | Pack rule sdd-dod.mdc | Implementable | [Spec-seeds-03](#pb-32) | Sprint 6 | WIP |
+| 20 | framework | <a id="pb-19"></a>[Rule-02](#req-pb-19) | Pack rule sdd-incremental-delivery.mdc | Implementable | [Spec-seeds-03](#pb-32) | Sprint 6 | Done |
+| 21 | framework | <a id="pb-20"></a>[Rule-03](#req-pb-20) | Pack rule sdd-realtime-status.mdc | Implementable | [ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md) | Sprint 6 | Done |
 | 22 | framework | <a id="pb-95"></a>[Rule-04](#req-pb-95) | Pack rule friendly-language.mdc | Implementable | - [Spec-seeds-03](#pb-32)<br>- [framework-design § friendly-language.mdc](./framework/framework-design.md#friendly-languagemdc) | — | Done |
 | 23 | framework | <a id="pb-33"></a>[Spec-seeds-01](#req-pb-33) | Seed scrum-in-sdd.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-01](#pb-67) | Sprint 1 | Done |
 | 24 | framework | <a id="pb-34"></a>[Spec-seeds-02](#req-pb-34) | Seed sdd-scrum-practices.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-01](#pb-67) | Sprint 1 | Done |
 | 25 | framework | <a id="pb-32"></a>[Spec-seeds-03](#req-pb-32) | Seed constants.json | Implementable | - [MCP-01](#pb-16)<br>- [ADR-081](./adr/ADR-081-constants-json.md)<br>- [ADR-060](./adr/ADR-060-constants-on-client-root.md) | Sprint 2 | Done |
 | 26 | framework | <a id="pb-35"></a>[Spec-seeds-04](#req-pb-35) | Project file artifacts-map.json | Implementable | - [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md)<br>- [ADR-082](./adr/ADR-082-artifacts-map-json.md) | Sprint 4 | Done |
-| 27 | framework | <a id="pb-36"></a>[Spec-seeds-05](#req-pb-36) | Seed product-backlog.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-02](#pb-68) | Sprint 6 | ToDo |
+| 27 | framework | <a id="pb-36"></a>[Spec-seeds-05](#req-pb-36) | Seed product-backlog.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-02](#pb-68) | Sprint 6 | Done |
 | 28 | framework | <a id="pb-37"></a>[Spec-seeds-06](#req-pb-37) | Seed sprint-backlog.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-02](#pb-68) | Sprint 4 | Done |
 | 29 | framework | <a id="pb-38"></a>[Spec-seeds-07](#req-pb-38) | Seed status.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-02](#pb-68) | Sprint 4 | Done |
 | 30 | framework | <a id="pb-39"></a>[Spec-seeds-08](#req-pb-39) | Seed changes-log.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-02](#pb-68)<br>- [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) | Sprint 4 | Done |
 | 31 | framework | <a id="pb-84"></a>[Spec-seeds-09](#req-pb-84) | Seed issues-log.md | Implementable | - [ADR-070](./adr/ADR-070-change-log-and-issues-log.md)<br>- [ADR-075](./adr/ADR-075-issues-log-tables.md)<br>- [Spec-seeds-08](#pb-39) | Sprint 4 | Done |
 | 32 | framework | <a id="pb-40"></a>[Spec-seeds-10](#req-pb-40) | Seed architecture.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-03](#pb-69) | Sprint 7 | ToDo |
-| 33 | framework | <a id="pb-41"></a>[Spec-seeds-11](#req-pb-41) | Seed deployment.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-03](#pb-69) | Sprint 7 | ToDo |
+| 33 | framework | <a id="pb-41"></a>[Spec-seeds-11](#req-pb-41) | Seed release.md | Implementable | - [MCP-01](#pb-16)<br>- [i18n-03](#pb-69) | Sprint 7 | ToDo |
 | 34 | framework | <a id="pb-66"></a>[Spec-seeds-12](#req-pb-66) | Seed .secrets | Implementable | - [MCP-01](#pb-16)<br>- [Spec-seeds-11](#pb-41)<br>- [i18n-03](#pb-69) | Sprint 7 | ToDo |
 | 35 | framework | <a id="pb-90"></a>[Spec-seeds-13](#req-pb-90) | Seed test-strategy.md | Implementable | - [Spec-seeds-02](#pb-34)<br>- [i18n-03](#pb-69) | Sprint 7 | ToDo |
 | 36 | framework | <a id="pb-67"></a>[i18n-01](#req-pb-67) | HanS and HanT core artifacts | Theme | - `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)`<br>- `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` | — | ToDo |
@@ -580,13 +580,21 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | 2026-10-05 | [Skill-13](./product-backlog.md#pb-87), [Skill-15](./product-backlog.md#pb-93), [Skill-16](./product-backlog.md#pb-94): pack folders `create-skill`, `build-agent`, `create-rule` ([ADR-089](./adr/ADR-089-pack-authoring-skill-names.md)). Constants keys unchanged. Superseded same day by [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) revert to `sdd-*` folders. |
 | 2026-10-05 | [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md): pack authoring folders `sdd-create-skill`, `sdd-build-agent`, `sdd-create-rule`. Seeds, constants, specs, and operator `~/.cursor/skills/` synced. Unprefixed pack copies removed on update. |
 | 2026-10-05 | [Spec-seeds-04](./product-backlog.md#pb-35): optional `adr` and `knowledge` map keys name directory roots ([ADR-090](./adr/ADR-090-adr-knowledge-map-roots.md)). |
-| 2026-10-05 | [Rule-03](./product-backlog.md#pb-20) **Retired**: `realtime-status.mdc` removed; `status.md` on close in `dod.mdc` ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)). |
+| 2026-10-05 | [Rule-03](./product-backlog.md#pb-20) **Retired**: `realtime-status.mdc` removed; `status.md` on close in `sdd-dod.mdc` ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)). |
+| 2026-10-05 | [Rule-03](./product-backlog.md#pb-20) reopened as **sdd-keep-update.mdc** WIP sync ([ADR-093](./adr/ADR-093-keep-update-wip-rule.md)); Sprint 6 feature-43 **WIP**. |
+| 2026-10-05 | Framework-bound pack rules use `sdd-` filenames ([ADR-094](./adr/ADR-094-sdd-prefix-framework-rules.md)): `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-keep-update.mdc`; `friendly-language.mdc` unchanged. Rule-01–03 titles and constants values updated. |
 | 2026-10-05 | `sdd-refine-backlog` accept all: [i18n-02](./product-backlog.md#pb-68) Size **Theme**. Skill-13, Skill-15, Skill-16 Related and ADR-089 install-folder bullets. Unplanned PBIs synced. [Web-portal-15](./product-backlog.md#pb-91) Size **Epic** on the table (not Theme). |
 | 2026-10-05 | `sdd-plan-sprint` Option A: [Skill-03](./product-backlog.md#pb-24), [Skill-04](./product-backlog.md#pb-25), [Skill-05](./product-backlog.md#pb-26), [Skill-13](./product-backlog.md#pb-87), [Skill-15](./product-backlog.md#pb-93), [Skill-16](./product-backlog.md#pb-94) scheduled **Sprint 5**. [Rule-04](./product-backlog.md#pb-95) stays Done, unscheduled. |
 | 2026-10-05 | Sprint 5 Done. User confirmed usable. [Skill-03](./product-backlog.md#pb-24) through [Skill-16](./product-backlog.md#pb-94) (planning loop and pack authoring seeds) marked **Done**. |
 | 2026-10-05 | `sdd-plan-sprint` Option A for Sprints 6–8: process rules and skills + Spec-seeds-05 (S6); engineering skills and seeds (S7); [Agent-03](./product-backlog.md#pb-10) plus Agent-02 and CE-SKILL tasks (S8). OGT refine [i18n-03](./product-backlog.md#pb-69). |
 | 2026-10-05 | EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) §5 Feature break down. [`sdd-refine-backlog`](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) and [`sdd-plan-sprint`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) Knowledge rows point at that section. |
 | 2026-10-05 | [Rule-01](./product-backlog.md#pb-18) and [Rule-02](./product-backlog.md#pb-19) **Done**. User confirmed usable. Sprint 6 [feature-37](./sprint-backlog.md#sprint-6)–[feature-39](./sprint-backlog.md#sprint-6) **Done**. [Rule-03](./product-backlog.md#pb-20) stays **Retired** (no rule shipped). |
+| 2026-10-05 | OGT 4–6 closed: `release.md` seed ([Spec-seeds-11](./product-backlog.md#pb-41)), `test-strategy.md` seed ([Spec-seeds-13](./product-backlog.md#pb-90)), `artifacts-map.json` as SDD Core artifact in practices and guides. |
+| 2026-10-05 | Status review: RIDs D-2, D-3, R-1 closed. [Spec-seeds-11](./product-backlog.md#pb-41) and [Spec-seeds-13](./product-backlog.md#pb-90) **WIP**; [feature-48](./sprint-backlog.md#sprint-7) and [feature-50](./sprint-backlog.md#sprint-7) **WIP**. |
+| 2026-10-05 | [Rule-03](./product-backlog.md#pb-20) renamed to **sdd-realtime-status.mdc**; constants key `realtime-status` ([ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md)). feature-43 **WIP**. |
+| 2026-10-05 | User confirmed feature-43 usable: [Rule-03](./product-backlog.md#pb-20) **Done**. [Skill-07](./product-backlog.md#pb-29) **Retired**; Sprint 6 feature-41 **Done**. [Skill-06](./product-backlog.md#pb-28) and feature-40 **WIP**. |
+| 2026-10-05 | Status review: [feature-37](./sprint-backlog.md#sprint-6) and [Rule-01](./product-backlog.md#pb-18) **WIP**. Sprint 7 atdd SBI **feature-52**; Sprint 7 all **ToDo**. ethan.md: no close-sprint job. |
+| 2026-10-05 | User confirmed usable: [Spec-seeds-05](./product-backlog.md#pb-36) and Sprint 6 [feature-42](./sprint-backlog.md#sprint-6) **Done** after **sdd-retrospective**. |
 
 
 

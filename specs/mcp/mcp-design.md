@@ -481,7 +481,7 @@ Ledger shape:
   "pack_complete": true,
     "files": {
     "skills": ["skills/tdd/SKILL.md", "skills/dod/SKILL.md"],
-    "rules": ["rules/common-test-strategy.mdc", "rules/dod.mdc"],
+    "rules": ["rules/common-test-strategy.mdc", "rules/sdd-dod.mdc"],
     "agents": ["agents/ethan.md"],
     "workflows": [],
     "templates": ["templates/framework.sdd.works/constants.json"]
@@ -512,7 +512,7 @@ Manifest shape (`~/.<client>/.sdd-installed.json`):
   "pack_complete": true,
   "files": {
     "skills": ["skills/tdd/SKILL.md", "skills/dod/SKILL.md"],
-    "rules": ["rules/common-test-strategy.mdc", "rules/dod.mdc"],
+    "rules": ["rules/common-test-strategy.mdc", "rules/sdd-dod.mdc"],
     "agents": ["agents/code-reviewer.md"],
     "workflows": ["workflows/new-feature.md"],
     "templates": ["templates/framework.sdd.works/constants.json"]

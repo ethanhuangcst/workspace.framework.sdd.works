@@ -423,8 +423,9 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 ## 需要加入 Scrum 实施中的 SDD 概念
 
 ### Rules
-- **dod.mdc**：Definition of Done；关闭项或用户要求时更新 **status.md**
-- **incremental-delivery.mdc**：增量交付
+- **sdd-dod.mdc**：Definition of Done；关闭时更新流程文件
+- **sdd-incremental-delivery.mdc**：增量交付
+- **sdd-realtime-status.mdc**：WIP 检查点；工作未 Done 时同步流程文件
 - **friendly-language.mdc**：让用户和后续 agent 可读的 chat 与 Markdown 文案
 
 ### Skills
@@ -452,12 +453,10 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **knowledge**：项目中沉淀的知识，默认路径：**{workspace-folder}/specs/knowledge**
 
 ### Artifacts
-- **Product Backlog**：**product-backlog.md**
-- **Sprint Backlog**：**sprint-backlog.md**
-- **实时状态**：**status.md**
-- **变更管理**：**changes-log.md**
-- **工件路径定义与项目映射**：**artifacts-map.json**
-- **Spec 模板**：**architecture.md; design.md; test.md; deployment.md**
+- **Core artifacts**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
+- **Framework artifacts**：**product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
+- **Engineering artifacts**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; release.md; test-strategy.md; .secrets; issues-log.md**
+- **Pack files beside these groups**：**constants.json**；**.sdd-installed.json**
 
 [返回顶部](#index)
 
@@ -497,7 +496,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 #### Daily Scrum
 - 经典的人和人之间的 Daily Scrum 依然有需要。
 - 但是可以在**实时**过程中持续进行人和 Agent 之间的**检测和调整**。
-- 通过 **dod.mdc**，关闭任务或 SBI 时走 retrospective 门禁，并在适用时更新 **status.md**。
+- 通过 **sdd-dod.mdc**，关闭任务或 SBI 时走 retrospective 门禁，并在适用时更新 **status.md**。
 
 #### Sprint Review
 
@@ -527,7 +526,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - 它由 **Developers** 创建，也服务于 **Developers**，其中既包括**人**也包括**agents**。
 
 #### 承诺：Definition of Done
-- **Definition of Done** 是一条 **rule**：**dod.mdc**。
+- **Definition of Done** 是一条 **rule**：**sdd-dod.mdc**。
 - 它不仅适用于 **Increments**，也适用于**所有任务**。
 
 
@@ -614,8 +613,9 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **Knowledge**：用上下文为执行提供依据。
 
 ### Rules
-- **dod.mdc**：Definition of Done；关闭时的流程写入（含 **status.md**）。
-- **incremental-delivery.mdc**：增量交付策略。
+- **sdd-dod.mdc**：Definition of Done；关闭时的流程写入。
+- **sdd-incremental-delivery.mdc**：增量交付策略。
+- **sdd-realtime-status.mdc**：WIP 流程同步；未 Done 时 draft、确认、写入。
 - **friendly-language.mdc**：可读 chat 与 Markdown（用户与后续 agent）。
 
 ### Skills
@@ -633,7 +633,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **sdd-create-skill**
 
 ### 框架工件
-- **status.md**：项目快照；DoD 关闭或用户要求时更新。
+- **status.md**：项目快照；DoD 关闭与 WIP 检查点（`sdd-realtime-status.mdc`）时更新。
 - **changes-log.md**：变更历史。
 - **artifacts-map.json**：工件映射。
 - **product-backlog.md**: Product Backlog
@@ -644,7 +644,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **{stem}-stories.md**：用户故事和验收标准
 - **{stem}-design.md**：设计 spec。
 - **{stem}-tests.md**：测试 spec。
-- **deployment.md**：部署 spec。
+- **release.md**：本地启动与上线步骤。
+- **test-strategy.md**：产品级测试策略。
 - **.secrets**：用于存放机密信息的文件。
 
 ### Knowledge

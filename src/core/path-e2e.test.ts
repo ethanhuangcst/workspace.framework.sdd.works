@@ -32,7 +32,7 @@ function seedCache(sha: string): string {
   mkdirSync(join(unpacked, "skills/tdd"), { recursive: true });
   mkdirSync(join(unpacked, "rules"), { recursive: true });
   writeFileSync(join(unpacked, "skills/tdd/SKILL.md"), "# tdd\n");
-  writeFileSync(join(unpacked, "rules/dod.mdc"), "# dod\n");
+  writeFileSync(join(unpacked, "rules/sdd-dod.mdc"), "# dod\n");
   writeFileSync(packageTarPath(sha), "tar");
   writeFileSync(
     join(dir, MANIFEST_FILENAME),

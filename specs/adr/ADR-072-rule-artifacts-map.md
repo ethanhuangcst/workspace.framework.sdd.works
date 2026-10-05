@@ -1,10 +1,10 @@
 # ADR-072: Rule `artifacts-map`
 
 ## Status
-Superseded by [ADR-077](./ADR-077-no-artifacts-map-rule.md) on 2026-10-03. Do not ship `artifacts-map.mdc`. The decision text below remains the 2026-09-27 record.
+Superseded by [ADR-077](./ADR-077-no-artifacts-map-rule.md) on 2026-10-03. Do not ship `artifacts-map.mdc`. Rule filename prefix policy is superseded by [ADR-094](./ADR-094-sdd-prefix-framework-rules.md). The decision text below remains the 2026-09-27 record.
 
 ## Context
-Harness rules in the guide have no `sdd-` prefix: `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`.
+Harness rules in the guide had no `sdd-` prefix in 2026-09-27: `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`.
 
 `sdd-audit-artifacts` is a skill. It runs when someone asks for an audit, lists gaps, and waits for an instruction. Between audits, an agent can add or move a project file and leave `{workspace}/artifacts-map.md` unchanged.
 

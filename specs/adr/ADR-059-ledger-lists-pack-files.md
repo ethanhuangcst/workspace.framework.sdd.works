@@ -9,7 +9,7 @@ ADR-057 kept `files` grouped by skills, rules, agents, workflows, and templates,
 Scenario 5 in [`mcp-design.md`](../mcp/mcp-design.md) requires the opposite: replace `skills/tdd/SKILL.md`, delete a pack file the new pack no longer ships (`old-step.md`), and leave `my-notes.md` because it was never recorded.
 
 ## Decision
-1. Each entry in `files.skills`, `files.rules`, `files.agents`, `files.workflows`, and `files.templates` is a **file path relative to `{client_root}`**, for example `skills/tdd/SKILL.md` or `rules/dod.mdc`. Groups stay. Do not record a directory name (`tdd`, `tdd/`).
+1. Each entry in `files.skills`, `files.rules`, `files.agents`, `files.workflows`, and `files.templates` is a **file path relative to `{client_root}`**, for example `skills/tdd/SKILL.md` or `rules/sdd-dod.mdc`. Groups stay. Do not record a directory name (`tdd`, `tdd/`).
 2. Update deletes only those recorded files that the new pack does not ship. It does not delete the parent directory. Files in that directory that are not in the ledger stay.
 3. After a successful copy, the new ledger lists only the files this install wrote.
 4. An older ledger that lists a directory name is not a delete of that directory. Copy the new pack files into place, leave other files in the directory, and rewrite the ledger with file paths.

@@ -1,0 +1,33 @@
+---
+description: Realtime status on WIP checkpoints. Draft, confirm, then write process files. Done and SBI close stay on sdd-dod.mdc.
+alwaysApply: true
+---
+
+# Rule - Realtime status (WIP)
+
+Open the five process files through `{workspace}/artifacts-map.json`.
+
+## When
+
+Run a checkpoint while the current item is not Done: the user pauses, a meaningful step inside a WIP item finishes, a new on-going task (OGT), open defect, or open RID appears, or the user asks to sync process files.
+
+Do not run this rule instead of [`sdd-dod.mdc`](./sdd-dod.mdc) on close.
+
+## Write
+
+Draft tier-1 and tier-2 updates only. Show the draft. Write after the user confirms.
+
+Tier 1: `status.md` per `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` `#statusmd`. When `locale` is missing, use `EN`.
+
+Tier 2: `issues-log.md` for open defects; `sprint-backlog.md` for WIP rows and Open RIDs only; `product-backlog.md` for PBI WIP only after the user confirmed that PBI is in progress.
+
+Leave `changes-log.md` to DoD or an explicit user request to record a change.
+
+bad example: mark the SBI Done on sprint-backlog during a checkpoint because the code looks finished.
+good example: set the SBI row to WIP and refresh where we are now on status.md; leave Done to sdd-dod.mdc after confirm.
+
+## Do not
+
+Mark PBI, SBI, or sprint Done. Set sprint Status Done. Close an RID. Invent sprint, SBI, or OGT rows. Write without confirm.
+
+Wording checks: [`friendly-language.mdc`](./friendly-language.mdc).

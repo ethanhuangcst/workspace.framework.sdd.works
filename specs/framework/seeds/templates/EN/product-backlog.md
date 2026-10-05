@@ -111,7 +111,7 @@ Every Product Backlog item uses this checklist. Mark the row `Done` only when ev
 | 3 | Collect | <a id="pb-3"></a>[Collect-03](#req-pb-3) | Binder | Implementable | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-02](./sprint-backlog.md#sprint-2)<br>- [`architecture.md`](./architecture.md) §2 | Sprint 2 | ToDo |
 | 4 | Collect | <a id="pb-4"></a>[Collect-04](#req-pb-4) | Record a trade | Implementable | - [Collect-01](#pb-1)<br>- [Sprint 2 feature-03](./sprint-backlog.md#sprint-2) | Sprint 2 | ToDo |
 | 5 | Scope | <a id="pb-5"></a>[Scope-01](#req-pb-5) | Scope gate | Implementable | [`architecture.md`](./architecture.md) §1 | Sprint 1 | Done |
-| 6 | Local | <a id="pb-6"></a>[Local-01](#req-pb-6) | Local startup | Implementable | - [Sprint 1 task-01](./sprint-backlog.md#sprint-1)<br>- [`deployment.md`](./deployment.md) §1 | Sprint 1 | Done |
+| 6 | Local | <a id="pb-6"></a>[Local-01](#req-pb-6) | Local startup | Implementable | - [Sprint 1 task-01](./sprint-backlog.md#sprint-1)<br>- [`release.md`](./release.md) §1 | Sprint 1 | Done |
 
 [Back to top](#index)
 

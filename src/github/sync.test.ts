@@ -13,7 +13,7 @@ describe("flatPathsToTree", () => {
     const tree = flatPathsToTree([
       { path: "skills", type: "tree" },
       { path: "skills/tdd/SKILL.md", type: "blob" },
-      { path: "rules/dod.mdc", type: "blob" },
+      { path: "rules/sdd-dod.mdc", type: "blob" },
     ]);
     expect(tree[0].name).toBe("rules/");
     expect(tree[1].name).toBe("skills/");

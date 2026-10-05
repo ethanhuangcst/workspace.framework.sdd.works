@@ -17,6 +17,7 @@ Product requirements live under `specs/`. Architecture decisions live under `spe
 | [`agent/cursor-markdown-preview-loose-list.md`](./agent/cursor-markdown-preview-loose-list.md) | Cursor preview stops at a loose list after a linked header blockquote | 2026-09-30 |
 | [`agent/markdown-table-cell-bullets.md`](./agent/markdown-table-cell-bullets.md) | Bullets in a table cell use `<br>`, and heading preview ids drop punctuation | 2026-10-01 |
 | [`agent/askquestion-user-view.md`](./agent/askquestion-user-view.md) | AskQuestion names the item and the result; findings stay out of a code block | 2026-10-03 |
+| [`agent/dod-retrospective-before-sbi-done.md`](./agent/dod-retrospective-before-sbi-done.md) | sdd-retrospective before SBI Done; not status-review alone | 2026-10-05 |
 | [`ops/destructive-command-home-deletion-incident.md`](./ops/destructive-command-home-deletion-incident.md) | `rm -rf "$HOME"` incident, recovery runbook, prevention rules | 2026-09-26 |
 | [`ops/trae-cn-user-mcp-path.md`](./ops/trae-cn-user-mcp-path.md) | TRAE CN Manage-page MCP file vs `~/.trae-cn/` | 2026-09-26 |
 | [`ops/mcp-stdio-source-vs-binary.md`](./ops/mcp-stdio-source-vs-binary.md) | Cursor `tsx` stdio vs placed `~/.sdd/sdd-mcp` | 2026-09-26 |

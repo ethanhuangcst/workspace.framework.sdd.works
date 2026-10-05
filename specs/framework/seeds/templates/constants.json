@@ -11,7 +11,6 @@
     "skill_plan_sprint": "sdd-plan-sprint",
     "skill_retrospective": "sdd-retrospective",
     "skill_build_agent": "sdd-build-agent",
-    "skill_close_sprint": "sdd-close-sprint",
     "sdd-atdd": "sdd-atdd",
     "skill_audit_artifacts": "sdd-audit-artifacts",
     "skill_get_status": "sdd-review-status",
@@ -21,8 +20,9 @@
     "skill_create_rule": "sdd-create-rule"
   },
   "rules": {
-    "dod": "dod.mdc",
-    "incremental-delivery": "incremental-delivery.mdc",
+    "dod": "sdd-dod.mdc",
+    "incremental-delivery": "sdd-incremental-delivery.mdc",
+    "realtime-status": "sdd-realtime-status.mdc",
     "friendly-language": "friendly-language.mdc"
   }
 }

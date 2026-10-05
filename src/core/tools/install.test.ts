@@ -57,7 +57,7 @@ function seedHttpCache(sha: string, version: string): string {
   mkdirSync(join(unpacked, "skills/tdd"), { recursive: true });
   mkdirSync(join(unpacked, "rules"), { recursive: true });
   writeFileSync(join(unpacked, "skills/tdd/SKILL.md"), "# tdd\n");
-  writeFileSync(join(unpacked, "rules/dod.mdc"), "# dod\n");
+  writeFileSync(join(unpacked, "rules/sdd-dod.mdc"), "# dod\n");
   writeFileSync(packageTarPath(sha), "fake-tarball");
   writeFileSync(
     join(dir, MANIFEST_FILENAME),
@@ -87,7 +87,7 @@ function makePkg(version: string): string {
   mkdirSync(join(dir, "agents"), { recursive: true });
   mkdirSync(join(dir, "workflows"), { recursive: true });
   writeFileSync(join(dir, "skills/tdd/SKILL.md"), `# tdd ${version}\n`);
-  writeFileSync(join(dir, "rules/dod.mdc"), "# dod\n");
+  writeFileSync(join(dir, "rules/sdd-dod.mdc"), "# dod\n");
   writeFileSync(join(dir, "agents/code-reviewer.md"), "# agent\n");
   writeFileSync(join(dir, "workflows/new-feature.md"), "# wf\n");
   return dir;
@@ -144,7 +144,7 @@ describe("install", () => {
     expect(body.resolution_source).toBe("seed");
     expect(body.asset_counts.skills).toBeGreaterThan(0);
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
-    expect(existsSync(join(home, ".cursor/rules/dod.mdc"))).toBe(true);
+    expect(existsSync(join(home, ".cursor/rules/sdd-dod.mdc"))).toBe(true);
     expect(existsSync(join(home, ".cursor/agents/code-reviewer.md"))).toBe(true);
     expect(existsSync(join(home, ".cursor/workflows/new-feature.md"))).toBe(true);
     expect(existsSync(join(home, ".cursor/.sdd-installed.json"))).toBe(true);
@@ -207,13 +207,13 @@ describe("install", () => {
     };
     await install({ client: "cursor", os: "darwin" }, ctx);
     rmSync(join(home, ".cursor/skills/tdd"), { recursive: true, force: true });
-    rmSync(join(home, ".cursor/rules/dod.mdc"), { force: true });
+    rmSync(join(home, ".cursor/rules/sdd-dod.mdc"), { force: true });
 
     const second = await install({ client: "cursor", os: "darwin" }, ctx);
     const body = parseToolJson<{ version: string }>(second);
     expect(body.version).toBe("v1.0.0");
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
-    expect(existsSync(join(home, ".cursor/rules/dod.mdc"))).toBe(true);
+    expect(existsSync(join(home, ".cursor/rules/sdd-dod.mdc"))).toBe(true);
   });
 
   it("should_reinstall_when_force_true_even_if_intact", async () => {
@@ -263,7 +263,7 @@ describe("install", () => {
       join(pkgV2, "skills/test-driven-dev/SKILL.md"),
       "# test-driven-dev main\n",
     );
-    writeFileSync(join(pkgV2, "rules/dod.mdc"), "# dod\n");
+    writeFileSync(join(pkgV2, "rules/sdd-dod.mdc"), "# dod\n");
     setPackageFetchForTests(async () => resolved("main", pkgV2, "sha-main-2"));
 
     const second = await install(
@@ -847,7 +847,7 @@ describe("install", () => {
     mkdirSync(join(pkg, "Rules"), { recursive: true });
     mkdirSync(join(pkg, "agents"), { recursive: true });
     writeFileSync(join(pkg, "skill/tdd/SKILL.md"), "# tdd\n");
-    writeFileSync(join(pkg, "Rules/dod.mdc"), "# dod\n");
+    writeFileSync(join(pkg, "Rules/sdd-dod.mdc"), "# dod\n");
     writeFileSync(join(pkg, "agents/code-reviewer.md"), "# agent\n");
     setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
     await install(
@@ -855,7 +855,7 @@ describe("install", () => {
       { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
-    expect(existsSync(join(home, ".cursor/rules/dod.mdc"))).toBe(true);
+    expect(existsSync(join(home, ".cursor/rules/sdd-dod.mdc"))).toBe(true);
   });
 
   it("C5_should_delete_recorded_pack_file_and_keep_unlisted_note", async () => {

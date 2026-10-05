@@ -126,7 +126,7 @@ describe("InstructionsPage", () => {
           <h3>Skills</h3>
           <ul><li><span class="feature-name">sdd-atdd</span><span class="feature-desc">Acceptance Test Driven Development.</span></li></ul>
           <h3>Rules</h3>
-          <ul><li><span class="feature-name">dod.mdc</span><span class="feature-desc">Definition of Done.</span></li></ul>
+          <ul><li><span class="feature-name">sdd-dod.mdc</span><span class="feature-desc">Definition of Done.</span></li></ul>
           <h2>Artifacts</h2>
           <ul><li><span class="feature-name">product-backlog.md</span><span class="feature-desc">Product Backlog.</span></li></ul>
         `}
@@ -159,7 +159,7 @@ describe("InstructionsPage", () => {
       screen.getByText("The scrum-master agent for this service."),
     ).toBeInTheDocument();
     expect(screen.getByText("sdd-atdd")).toBeInTheDocument();
-    expect(screen.getByText("dod.mdc")).toBeInTheDocument();
+    expect(screen.getByText("sdd-dod.mdc")).toBeInTheDocument();
     expect(screen.getByText("product-backlog.md")).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("guide-tab-setup"));

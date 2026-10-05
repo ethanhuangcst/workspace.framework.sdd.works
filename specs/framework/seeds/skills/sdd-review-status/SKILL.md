@@ -40,7 +40,8 @@ The user picks handling in chat. One reply can cover every mismatch.
 | --- | --- |
 | `{workspace}/artifacts-map.json` | Start of the run |
 | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, RID Log section and `#term-rid` under Terminology in practice | Open RIDs or a RID write |
-| `{client_root}/rules/dod.mdc` | Before closing an RID |
+| `{client_root}/rules/sdd-dod.mdc` | Before closing an RID; before an SBI or PBI Done write |
+| `{client_root}/skills/sdd-retrospective/SKILL.md` or pack seed `sdd-retrospective` | Before any pick that sets SBI or PBI to Done |
 | Artifact `####` headings in the same practices file | Before a process file write |
 
 ## Steps
@@ -139,10 +140,13 @@ When the pick is an untracked defect, the OGT row says track defect xyz in issue
 
 ## Write the picks
 
-- Write the recorded lines in this order: changes-log, issues-log, status, sprint-backlog, product-backlog.
+- When a pick sets an SBI or PBI to **Done**, run **sdd-retrospective** for that scope in the same turn before any **Done** row write. Read `{client_root}/skills/sdd-retrospective/SKILL.md` or the pack seed at `{client_root}/{skills_dir}/sdd-retrospective/SKILL.md`. Follow its Steps and Write rules.
+- Several **Done** picks in one sprint may share one retrospective run. Set `{trigger}` to list each SBI or PBI code, comma-separated.
+- Write order: retrospective outputs first (ADR, knowledge, `changes-log.md` from that skill, `sprint-backlog.md` Retrospective), then the recorded pick lines in this order: changes-log (remaining picks only), issues-log, status, sprint-backlog, product-backlog.
 - When a pick changes no line in a process file, leave that file unchanged.
 - Before a process file write, read only that artifact's `####` heading in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. Start at that heading. Stop at the next `####` heading.
-- Before closing an RID, apply `{client_root}/rules/dod.mdc` for a RID (Common quality gate and defaults).
+- Before closing an RID, apply `{client_root}/rules/sdd-dod.mdc` for a RID (Common quality gate and defaults).
+- Before an SBI or PBI **Done** write, apply `{client_root}/rules/sdd-dod.mdc` for that type (defaults include **sdd-retrospective** completed).
 
 ##### Example SBI write
 
@@ -167,7 +171,8 @@ In sprint-backlog.md, move D-2 from Open RIDs to Closed RIDs with Closed Sprint 
 - Read `locale` from `{workspace}/artifacts-map.json`. Allowed values are `EN`, `HanS`, and `HanT`. When `locale` is missing, reply in the language of the user's request.
 - Leave each process file in its current language.
 - Keep a write inside the five process files.
-- Set an SBI to Done only when the user says Done and that SBI's definition of done is met.
+- Set an SBI to Done only when the user says Done, that SBI's definition of done is met, and **sdd-retrospective** has finished in the same turn for that SBI.
+- Set a PBI to Done only when the user pick names Done, DoD passes, and **sdd-retrospective** has finished in the same turn for that PBI.
 - Close an RID only when the user pick names that close and pack dod passes for the RID.
 - Do not read an adr folder. Those files belong to the workspace that wrote them.
 - Leave secrets out of the changes log.

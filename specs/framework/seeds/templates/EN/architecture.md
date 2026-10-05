@@ -26,4 +26,4 @@ No payments, no public marketplace, and no licensed brand content. See [Scope ga
 - A binder does not copy the card. A card is placed in one binder through a relation. Removing it from the binder does not delete the card row.
 - Do not keep a separate copy of the card list inside each binder. A copy would require two quantity updates on a trade.
 
-Local startup is in [`deployment.md`](./deployment.md) §1.
+Local startup is in [`release.md`](./release.md) §1.

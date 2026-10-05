@@ -771,7 +771,58 @@ Scenario: Open RIDs are compared with related work
   And no project file changes before the user picks
 ```
 
-Tests: CE-SKILL-01, CE-SKILL-02, CE-SKILL-08, CE-SKILL-09.
+#### AC6
+
+```gherkin
+Scenario: Done pick runs retrospective before board write
+  Given the user picked in chat to set an SBI or PBI to Done
+  When the skill writes the pick
+  Then sdd-retrospective runs in the same turn before the Done row on sprint-backlog or product-backlog
+  And retrospective outputs are written before the Done status line
+```
+
+Tests: CE-SKILL-01, CE-SKILL-02, CE-SKILL-08, CE-SKILL-09, CE-SKILL-11.
+
+### sdd-retrospective
+
+**As the** agent closing work under **sdd-dod.mdc**
+**I want** a retrospective that persists ADR and knowledge under map roots and appends the sprint record
+**So that** durable lessons are not lost in chat
+
+#### AC1
+
+```gherkin
+Scenario: Summary after automatic write
+  Given artifacts-map.json has adr and knowledge keys
+  And sdd-scrum-practices on the client root includes adr-instance-shape and knowledge-instance-shape
+  When the user runs the retrospective gate or /sdd-retrospective
+  Then the skill writes ADR, knowledge, or sprint-backlog Retrospective records in the same turn when classification finds durable lessons
+  And the reply includes a Retrospective Summary that lists what was written or states an empty retrospective
+  And the skill does not ask for a second confirm to apply those writes
+```
+
+#### AC2
+
+```gherkin
+Scenario: Missing map roots
+  Given artifacts-map.json lacks adr or knowledge
+  When the user runs sdd-retrospective
+  Then the skill stops and names sdd-update-project
+  And it does not write under guessed paths
+```
+
+#### AC3
+
+```gherkin
+Scenario: Create Retrospective section when missing
+  Given a sprint has at least one Done SBI row
+  And that sprint has no ### Retrospective section
+  When sdd-retrospective runs for a by-rule or on-demand close on that sprint
+  Then the skill inserts ### Retrospective after the item tables and before the next sprint divider
+  And it appends the numbered Learnings, Opportunities, or Future actions block in the same turn
+```
+
+Tests: CE-SKILL-10.
 
 ### sdd-update-status
 
@@ -858,7 +909,7 @@ Tests: CE-SKILL-06. The on-disk folder `specs/framework/seeds/skills/sdd-trackin
 
 Design: `[framework-design.md](./framework-design.md#rules)`. Tests: `[framework-tests.md](./framework-tests.md#rules)`.
 
-The three pack rule files install at `{client_root}/rules/<name>.mdc`. Names have no `sdd-` prefix. On Windows the directory is `rules\` under that client root. `dod.mdc` and `incremental-delivery.mdc` have behavior stories in the seed tree. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](../product-backlog.md#pb-95) Done). [Rule-03](../product-backlog.md#pb-20) is Retired ([ADR-091](../adr/ADR-091-retire-realtime-status-rule.md)). The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
+The four pack rule files install at `{client_root}/rules/<name>.mdc`. Framework-bound names use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). On Windows the directory is `rules\` under that client root. `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, and `sdd-realtime-status.mdc` have behavior stories in the seed tree. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](../product-backlog.md#pb-95) Done). [Rule-03](../product-backlog.md#pb-20) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). The pack does not ship `artifacts-map.mdc` or `realtime-status.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### `artifacts-map.mdc`
 
@@ -870,11 +921,11 @@ Retired by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). AC2 through AC5 b
 Scenario Outline: The rule files live on the client root
   Given the client root is "<client root>"
   When the installed rules are listed
-  Then dod.mdc, incremental-delivery.mdc, and friendly-language.mdc are at "<client root>/rules/"
+  Then sdd-dod.mdc, sdd-incremental-delivery.mdc, sdd-realtime-status.mdc, and friendly-language.mdc are at "<client root>/rules/"
   And realtime-status.mdc is not installed
   And artifacts-map.mdc is not installed
-  And none of the three names starts with sdd-
-  And none of the three files is required under the workspace for the rule to be installed
+  And only friendly-language.mdc has no sdd- prefix
+  And none of the four files is required under the workspace for the rule to be installed
 
   Examples:
     | client root |
@@ -1184,9 +1235,9 @@ Tests: CE-TPL-10. A missing HanS or HanT issues-log seed stays on i18n-02. The E
 
 ## engineering-artifacts
 
-Engineering artifacts are `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `deployment.md`, `.secrets`, and `issues-log.md`.
+Engineering artifacts are `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `release.md`, `test-strategy.md`, `.secrets`, and `issues-log.md`.
 
-`architecture.md`, `deployment.md`, and `.secrets` have no seed story until the Sprint 14 seeds exist. Do not add them to a project map before the file exists.
+`architecture.md`, `release.md`, `test-strategy.md`, and `.secrets` have EN seeds under `specs/framework/seeds/templates/EN/`. Do not add them to a project map before the file exists.
 
 #### AC1
 

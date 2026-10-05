@@ -237,7 +237,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 #### CE-PACK-05 — Missing rule the step needs
 
 - **Layer:** L1.
-- **Pre-condition:** Ledger `pack_complete` is true. The current step needs `dod.mdc` and that file cannot be read. Version and commit are set.
+- **Pre-condition:** Ledger `pack_complete` is true. The current step needs `sdd-dod.mdc` and that file cannot be read. Version and commit are set.
 - **Test steps:** He is about to apply that rule.
 - **Expected results:** He sets only `pack_complete` to false, sends the instructions URL, and stops. He does not copy the rule into the workspace.
 
@@ -370,6 +370,20 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Pre-condition:** Audit verdict is `Usable`. The five process files open. `sprint-backlog.md` has at least one Open RID whose Impact names a PBI that is Done on `product-backlog.md` while the solution is verifiable (this repo: D-2, D-3, or R-1 with MCP-01 Done). Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
 - **Test steps:** Ask where the project is or to review status.
 - **Expected results:** The reply lists Open RIDs or RID status-change suggestions. At least one open RID with Done impact work appears under RID status-change suggestions or Mismatches with a proposed close. The message includes **Your choice** in the same reply. The skill does not create or edit a project file before the user picks. It does not use a question card. It does not mark a product item Done.
+
+#### CE-SKILL-10 — sdd-retrospective
+
+- **Layer:** L1.
+- **Pre-condition:** Audit verdict is `Usable`. `artifacts-map.json` has `adr` and `knowledge` keys. `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` includes `#adr-instance-shape` and `#knowledge-instance-shape`. Seed: `specs/framework/seeds/skills/sdd-retrospective/SKILL.md`.
+- **Test steps:** Mark a small task done per **sdd-dod.mdc**, or run `/sdd-retrospective` for the current sprint.
+- **Expected results:** The reply includes a **Retrospective Summary** (ADRs created, knowledge added or updated, or an explicit empty retrospective). The skill writes ADR, knowledge, and sprint-backlog **Retrospective** records in the same turn when needed, without a second user confirm. When the sprint has no `### Retrospective` section, the skill creates it per the seed **Ensure Retrospective section** rules, then appends the numbered block. When `adr` or `knowledge` is missing from the map, it stops and names **sdd-update-project** instead of inventing paths.
+
+#### CE-SKILL-11 — sdd-review-status Done pick runs retrospective
+
+- **Layer:** L1.
+- **Pre-condition:** Audit verdict is `Usable`. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md` and `specs/framework/seeds/skills/sdd-retrospective/SKILL.md`.
+- **Test steps:** After a status review, pick in chat to set one SBI to **Done** (user already confirmed usable).
+- **Expected results:** **sdd-retrospective** runs in the same turn before the **Done** row write. Sprint **Retrospective** (create-if-missing plus append) and any ADR or knowledge from that run land before `sprint-backlog.md` or `product-backlog.md` shows **Done** for that item.
 
 #### CE-SKILL-03 — sdd-create-skill
 
@@ -842,13 +856,13 @@ failed:
 
 A rule case is a fixture workspace and the `.mdc` text. Assert the map edit or the install path. Do not render a page and do not score the rule as application code.
 
-`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) withdraws CE-RULE-01 through CE-RULE-04. CE-RULE-05 and CE-RULE-06 check that the file is absent. `dod.mdc`, `incremental-delivery.mdc`, and `friendly-language.mdc` have a name and a client-root path. `realtime-status.mdc` is not a pack rule ([ADR-091](../adr/ADR-091-retire-realtime-status-rule.md)). L1 does not invent behavior steps beyond path for rules without a behavior story. `friendly-language.mdc` ships in the seed tree.
+`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) withdraws CE-RULE-01 through CE-RULE-04. CE-RULE-05 and CE-RULE-06 check that the file is absent. `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-realtime-status.mdc`, and `friendly-language.mdc` have a name and a client-root path. `realtime-status.mdc` is not a pack rule ([ADR-091](../adr/ADR-091-retire-realtime-status-rule.md)). L1 does not invent behavior steps beyond path for rules without a behavior story. `friendly-language.mdc` ships in the seed tree.
 
 The install path is `{client_root}/rules/<name>.mdc` on every OS. L1 uses that logical path. L2 checks the expanded Cursor path once per OS when a machine is available. The pack does not ship a rule that classifies the workspace or sets `pack_complete`.
 
 ### Plan
 
-Check that `artifacts-map.mdc` is absent. One case for the three rule names. One case that a Windows client root does not receive `artifacts-map.mdc`.
+Check that `artifacts-map.mdc` is absent. One case for the four rule names. One case that a Windows client root does not receive `artifacts-map.mdc`.
 
 ### Cases
 
@@ -883,16 +897,16 @@ Check that `artifacts-map.mdc` is absent. One case for the three rule names. One
 #### CE-RULE-05 — Names and install path
 
 - **Layer:** L1.
-- **Pre-condition:** The three rule names are `dod.mdc`, `incremental-delivery.mdc`, and `friendly-language.mdc`. `realtime-status.mdc` and `artifacts-map.mdc` are not pack rules.
+- **Pre-condition:** The four rule names are `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-realtime-status.mdc`, and `friendly-language.mdc`. Unprefixed `realtime-status.mdc` and `artifacts-map.mdc` are not pack rules.
 - **Test steps:** Read the name and the install path.
-- **Expected results:** No name has an `sdd-` prefix. The install path is `{client_root}/rules/<name>.mdc`. `realtime-status.mdc` and `artifacts-map.mdc` are absent. `friendly-language.mdc` is present at that path from the seed tree.
+- **Expected results:** Framework-bound rules use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). Only `friendly-language.mdc` has no `sdd-` prefix. The install path is `{client_root}/rules/<name>.mdc`. `realtime-status.mdc` and `artifacts-map.mdc` are absent. `friendly-language.mdc` is present at that path from the seed tree.
 
 #### CE-RULE-06 — Windows rules directory
 
 - **Layer:** L2 on Windows Cursor, or L3 on one Windows client from the table.
 - **Pre-condition:** `client_root` is `%USERPROFILE%\.cursor` or that other client's Windows root.
 - **Test steps:** Look up `artifacts-map.mdc` after install.
-- **Expected results:** The file is absent. The three pack rules are under `%USERPROFILE%\<client folder>\rules\`.
+- **Expected results:** The file is absent. The four pack rules are under `%USERPROFILE%\<client folder>\rules\`.
 
 ## templates
 

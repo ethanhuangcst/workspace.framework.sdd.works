@@ -34,9 +34,9 @@ Chat in the language of the user's request.
 
 Choose `<name>` from lowercase letters, numbers, and hyphens, at most 64 characters, so the file name matches the pack rule.
 
-The file name has no `sdd-` prefix, so the name stays the name the user gave.
+When the rule reads or writes framework process artifacts (`artifacts-map.json`, the five process files, or pack practices for SDD writes), name the file `sdd-<name>.mdc` ([ADR-094](../../../adr/ADR-094-sdd-prefix-framework-rules.md)). Portable rules (for example copy-only rules like `friendly-language.mdc`) use `<name>.mdc` with no `sdd-` prefix.
 
-Name the file `<name>.mdc`, so the host loads that rule.
+Name the file on disk as chosen above, so the host loads that rule.
 
 Name `client_root` as the parent of the loaded agent file, so the path starts at that file.
 
@@ -120,7 +120,7 @@ Before you finish:
 
 - The description states what and when, in the third person, with the phrases a user types, and names a nearby skill when one owns the adjacent job
 - `SBI` is expanded on first use in the description
-- `<name>` follows the name rule and has no `sdd-` prefix
+- `<name>` follows the ADR-094 prefix rule for framework-bound vs portable rules
 - Verbatim user wording is unchanged
 - The skill chats in the language of the user's request
 - The confirm states the path and whether the rule loads every session or only for the named files

@@ -427,8 +427,9 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 ## 需要加入 Scrum 實施中的 SDD 概念
 
 ### Rules
-- **dod.mdc**：Definition of Done；關閉項或用戶要求時更新 **status.md**
-- **incremental-delivery.mdc**：增量交付
+- **sdd-dod.mdc**：Definition of Done；關閉時更新流程文件
+- **sdd-incremental-delivery.mdc**：增量交付
+- **sdd-realtime-status.mdc**：WIP 檢查點；工作未 Done 時同步流程文件
 - **friendly-language.mdc**：讓用戶和後續 agent 可讀的 chat 與 Markdown 文案
 
 ### Skills
@@ -456,7 +457,7 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 ### Artifacts
 - **SDD 核心工件**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **框架工件**：**product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **工程工件**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; deployment.md; .secrets; issues-log.md**
+- **工程工件**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; release.md; test-strategy.md; .secrets; issues-log.md**
 - **這三組之外的套件檔案**：**constants.json**（用戶端根目錄上的套件查找表）；**.sdd-installed.json**（用戶端根目錄上的安裝帳本）
 
 [返回頂部](#index)
@@ -497,7 +498,7 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 #### Daily Scrum
 - 經典的人和人之間的 Daily Scrum 依然有需要。
 - 但是可以在**實時**過程中持續進行人和 Agent 之間的**檢測和調整**。
-- 透過 **dod.mdc**，關閉任務或 SBI 時走 retrospective 門禁，並在適用時更新 **status.md**。
+- 透過 **sdd-dod.mdc**，關閉任務或 SBI 時走 retrospective 門禁，並在適用時更新 **status.md**。
 
 #### Sprint Review
 
@@ -527,7 +528,7 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - 它由 **Developers** 建立，也服務於 **Developers**，其中既包括**人**也包括**agents**。
 
 #### 承諾：Definition of Done
-- **Definition of Done** 是一條 **rule**：**dod.mdc**。
+- **Definition of Done** 是一條 **rule**：**sdd-dod.mdc**。
 - 它不僅適用於 **Increments**，也適用於**所有任務**。
 
 
@@ -614,8 +615,9 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - **Knowledge**：用上下文為執行提供依據。
 
 ### Rules
-- **dod.mdc**：Definition of Done。
-- **incremental-delivery.mdc**：增量交付策略。
+- **sdd-dod.mdc**：Definition of Done；關閉時的流程寫入。
+- **sdd-incremental-delivery.mdc**：增量交付策略。
+- **sdd-realtime-status.mdc**：WIP 流程同步。
 - **friendly-language.mdc**：可讀 chat 與 Markdown（用戶與後續 agent）。
 
 ### Skills
@@ -647,7 +649,8 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 - **{stem}-stories.md**：使用者故事和驗收標準。
 - **{stem}-design.md**：設計 spec。
 - **{stem}-tests.md**：測試 spec。
-- **deployment.md**：部署 spec。
+- **release.md**：本地啟動與上線步驟。
+- **test-strategy.md**：產品級測試策略。
 - **.secrets**：機密名稱及其值的存放位置。不含機密值。
 - **issues-log.md**：缺陷記錄。它也是稽核開啟的五個過程檔案之一。
 

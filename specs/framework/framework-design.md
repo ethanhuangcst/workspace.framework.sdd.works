@@ -207,7 +207,7 @@ The pack source is [ethanhuangcst/framework.sdd.works](https://github.com/ethanh
   "pack_complete": true,
   "files": {
     "skills": ["skills/sdd-spec-to-build/SKILL.md"],
-    "rules": ["rules/dod.mdc"],
+    "rules": ["rules/sdd-dod.mdc"],
     "agents": ["agents/ethan.md"],
     "workflows": [],
     "templates": ["templates/framework.sdd.works/constants.json"]
@@ -247,7 +247,8 @@ The prompt keeps a one-line **job index**: job name → skill key in `constants.
 | Sprint planning | `skill_plan_sprint` |
 | Report status | `skill_get_status` |
 | Retrospective | `skill_retrospective` |
-| Start a new sprint / close sprint | `skill_close_sprint` (and related keys when filled) |
+
+Sprint open and close stay in `sdd-scrum-practices.md` and `sdd-plan-sprint`. There is no `skill_close_sprint` key ([ADR-076](../adr/ADR-076-review-status-one-skill.md); [Skill-07](../product-backlog.md#pb-29) **Retired**).
 
 Report status is `sdd-review-status`. Onboard follows that same skill when the audit verdict is Usable. [ADR-076](../adr/ADR-076-review-status-one-skill.md).
 
@@ -517,7 +518,6 @@ Ethan runs onboard once, at the beginning of the chat.
 | Sprint planning | `skill_plan_sprint` |
 | Report status | `skill_get_status` |
 | Retrospective | `skill_retrospective` |
-| Start a new sprint / close sprint | `skill_close_sprint` |
 
 # Limits
 
@@ -591,19 +591,20 @@ Ethan runs onboard once, at the beginning of the chat.
 
 ## rules
 
-Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names three harness rules: `dod.mdc`, `incremental-delivery.mdc`, and `friendly-language.mdc`. [Rule-03](../product-backlog.md#pb-20) `realtime-status.mdc` is Retired by [ADR-091](../adr/ADR-091-retire-realtime-status-rule.md). `status.md` writes on close live in `dod.mdc`. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `specs/framework/seeds/templates/constants.json`.
+Harness rules install under `{client_root}/rules/`. Framework-bound rules use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). The guide names four harness rules: `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-realtime-status.mdc`, and `friendly-language.mdc`. [Rule-03](../product-backlog.md#pb-20) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). Close writes live in `sdd-dod.mdc`; WIP checkpoints live in `sdd-realtime-status.mdc`. [ADR-091](../adr/ADR-091-retire-realtime-status-rule.md) retired `realtime-status.mdc` only. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `specs/framework/seeds/templates/constants.json`.
 
 | Rule | Authoring seed | After install |
 | --- | --- | --- |
-| `dod.mdc` | `specs/framework/seeds/rules/dod.mdc` | `{client_root}/rules/dod.mdc` |
-| `incremental-delivery.mdc` | `specs/framework/seeds/rules/incremental-delivery.mdc` | `{client_root}/rules/incremental-delivery.mdc` |
+| `sdd-dod.mdc` | `specs/framework/seeds/rules/sdd-dod.mdc` | `{client_root}/rules/sdd-dod.mdc` |
+| `sdd-incremental-delivery.mdc` | `specs/framework/seeds/rules/sdd-incremental-delivery.mdc` | `{client_root}/rules/sdd-incremental-delivery.mdc` |
+| `sdd-realtime-status.mdc` | `specs/framework/seeds/rules/sdd-realtime-status.mdc` | `{client_root}/rules/sdd-realtime-status.mdc` |
 | `friendly-language.mdc` | `specs/framework/seeds/rules/friendly-language.mdc` | `{client_root}/rules/friendly-language.mdc` |
 
 The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### artifacts-map.mdc
 
-`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `{workspace}/artifacts-map.json` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. A turn updates a stored path when the user asks for that update. Rule-01 and Rule-02 stay open until each rule is confirmed. Rule-03 is Retired. Rule-04 friendly-language is Done.
+`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `{workspace}/artifacts-map.json` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. A turn updates a stored path when the user asks for that update. Rule-01 and Rule-02 are Done. Rule-03 realtime-status is WIP. Rule-04 friendly-language is Done.
 
 ### friendly-language.mdc
 
@@ -1070,7 +1071,7 @@ Authoring skill for a pack rule file. [Skill-16](../product-backlog.md#pb-94). [
 | Authoring seed | `specs/framework/seeds/skills/sdd-create-rule/SKILL.md` |
 | After install | `{client_root}/skills/sdd-create-rule/SKILL.md` |
 
-The skill writes one rule file at `{client_root}/{rules_dir}/<name>.mdc`. `rules_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `rules_dir` cannot be read, it stops without writing. A new key in the `constants.json` `rules` object is a second confirm. Rule file names have no `sdd-` prefix.
+The skill writes one rule file at `{client_root}/{rules_dir}/<name>.mdc`. `rules_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `rules_dir` cannot be read, it stops without writing. A new key in the `constants.json` `rules` object is a second confirm. Framework-bound rule file names use an `sdd-` prefix per [ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md).
 
 ### Other skills
 
@@ -1122,7 +1123,7 @@ It is not a project file under `artifacts_root`. Do not copy it into the project
 
 ### artifacts-map.json
 
-Path configuration for this project. It is not an artifact and not a seed. The JSON shape is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md).
+Path configuration for this project. It is an SDD Core artifact with `scrum-in-sdd.md` and `sdd-scrum-practices.md`. It is not a Framework process Markdown artifact and not a copied template seed. The JSON shape is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md).
 
 | Role | Path |
 | --- | --- |
@@ -1302,16 +1303,27 @@ Test spec for one module.
 
 The filename is `{stem}-tests.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-tests.md` is `{workspace}/specs/web-app/app-tests.md` when the stem is `app`.
 
-### deployment.md
+### release.md
 
-Deployment starter for a new project. It is not this repo's deployment spec.
+Release starter for a new project: local startup and go-live order. It is not this repo's release spec.
 
 | Role | Path |
 | --- | --- |
-| On a project | `{workspace}/{artifacts_root}/deployment.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/deployment.md` |
+| On a project | `{workspace}/{artifacts_root}/release.md` |
+| Authoring seed | `specs/framework/seeds/templates/EN/release.md` |
 
-The EN seed is Sprint 14. Do not add a row for it in a project map until the file exists.
+Do not add a row for it in a project map until the file exists.
+
+### test-strategy.md
+
+Product-level test strategy starter for a new project. It extends **common-test-strategy** and must not weaken it. It is not this repo's [`framework-tests.md`](./framework-tests.md).
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{artifacts_root}/test-strategy.md` |
+| Authoring seed | `specs/framework/seeds/templates/EN/test-strategy.md` |
+
+Do not add a row for it in a project map until the file exists.
 
 ### .secrets
 
@@ -1328,7 +1340,17 @@ A draft EN seed exists. It lists `NAME | where the value lives | who uses it` as
 
 Durable decisions. A project may have this tree under `artifacts_root`. After `sdd-update-project` confirms it, the map holds the root in the `adr` key. Ethan does not read the tree on start. Create a file when a retrospective finds a decision worth keeping. Omit the key until the user confirms the root.
 
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{adr root from map}/ADR-{NNN}-{short-title}.md` |
+| Instance shape (not workspace copy) | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` `#adr-instance-shape` ([ADR-095](../adr/ADR-095-adr-knowledge-shape-in-practices.md)) |
+
 ### knowledge/
 
 Reusable research and ops notes. A project may have this tree under `artifacts_root`. After `sdd-update-project` confirms it, the map holds the root in the `knowledge` key. Ethan does not read the tree on start. Create a file when a retrospective finds a lesson worth keeping. Omit the key until the user confirms the root.
+
+| Role | Path |
+| --- | --- |
+| On a project | `{workspace}/{knowledge root from map}/…` |
+| Instance shape (not workspace copy) | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` `#knowledge-instance-shape` ([ADR-095](../adr/ADR-095-adr-knowledge-shape-in-practices.md)) |
 

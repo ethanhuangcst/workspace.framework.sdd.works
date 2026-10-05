@@ -460,7 +460,7 @@ describe("freshness regression — stdio self-heal (F10)", () => {
     mkdirSync(join(pkg, "agents"), { recursive: true });
     mkdirSync(join(pkg, "workflows"), { recursive: true });
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "# tdd\n");
-    writeFileSync(join(pkg, "rules/dod.mdc"), "# dod\n");
+    writeFileSync(join(pkg, "rules/sdd-dod.mdc"), "# dod\n");
 
     const { setPackageFetchForTests } = await import("@/core/tools/package-fetch");
     setPackageFetchForTests(async () => ({

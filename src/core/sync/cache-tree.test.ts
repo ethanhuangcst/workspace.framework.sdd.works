@@ -10,7 +10,7 @@ describe("buildTreeFromUnpacked", () => {
     mkdirSync(join(root, "skills/tdd"), { recursive: true });
     mkdirSync(join(root, "rules"), { recursive: true });
     writeFileSync(join(root, "skills/tdd/SKILL.md"), "# tdd\n");
-    writeFileSync(join(root, "rules/dod.mdc"), "# dod\n");
+    writeFileSync(join(root, "rules/sdd-dod.mdc"), "# dod\n");
 
     const tree = buildTreeFromUnpacked(root);
     expect(tree).toEqual(

@@ -13,7 +13,7 @@ describe("inventoryFromTree", () => {
       {
         name: "Rules",
         type: "dir",
-        children: [{ name: "dod.mdc", type: "file" }],
+        children: [{ name: "sdd-dod.mdc", type: "file" }],
       },
       {
         name: "templates",
@@ -31,7 +31,7 @@ describe("inventoryFromTree", () => {
 
     const inv = inventoryFromTree(tree);
     expect(inv.skills).toEqual(["tdd"]);
-    expect(inv.rules).toEqual(["dod.mdc"]);
+    expect(inv.rules).toEqual(["sdd-dod.mdc"]);
     expect(inv.templates).toEqual(["framework.sdd.works"]);
     expect(inv.agents).toEqual(["ethan.md"]);
     expect(inv.other).toContain("src");

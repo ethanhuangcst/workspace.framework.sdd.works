@@ -1,4 +1,4 @@
-# Deployment — [product name]
+# Release — [product name]
 
 > **Purpose**: How to start locally, and the order of steps at go-live. Do not write real host names, secrets, or customer environment names here. Optional / JIT (not a required process artifact).
 > **Example**: Pokymon Card Collection.

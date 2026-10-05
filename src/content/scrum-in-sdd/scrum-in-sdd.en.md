@@ -427,8 +427,9 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 ## SDD concepts that need to be added into scrum implementation
 
 ### Rules
-- **dod.mdc**: Definition of Done; updates **status.md** on close or when the user asks
-- **incremental-delivery.mdc**: Incremental Delivery
+- **sdd-dod.mdc**: Definition of Done; process writes on close
+- **sdd-incremental-delivery.mdc**: Incremental Delivery
+- **sdd-realtime-status.mdc**: WIP checkpoints; keeps process files aligned while work is not Done
 - **friendly-language.mdc**: keep chat and Markdown readable for the user and for later agents
 
 ### Skills
@@ -456,7 +457,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 ### Artifacts
 - **Core artifacts**: **scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **Framework artifacts**: **product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **Engineering artifacts**: **architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; deployment.md; .secrets; issues-log.md**
+- **Engineering artifacts**: **architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; release.md; test-strategy.md; .secrets; issues-log.md**
 - **Pack files beside these groups**: **constants.json** (pack lookup on the client root); **.sdd-installed.json** (install ledger on the client root)
 
 [Back to top](#index)
@@ -497,12 +498,12 @@ As there is no current need for **workflows** at this stage, this folder remains
 #### Daily Scrum
 - The classic **Daily Scrum** might still be needed.
 - But more frequent **Inspection and adaptation** between human and agents can happen continuously in **real time**.
-- With **dod.mdc**, closing a task or SBI runs the retrospective gate and updates **status.md** when the close applies.
+- With **sdd-dod.mdc**, closing a task or SBI runs the retrospective gate and updates **status.md** when the close applies.
 
 #### Sprint Review
 
 #### Sprint Retrospective
-- **Retrospective** has three forms; the latter two are captured as ADR or Knowledge by the retrospective skill.
+- **Retrospective** has three forms; the latter two are captured as ADR or Knowledge by the **sdd-retrospective** skill.
 1. **Sprint-end**: the classic human-human retrospective.
 2. **On demand**: a human-agent retrospective initiated by a human.
 3. **By rule**: an agent-agent retrospective triggered before work is marked done. The record names the incident that fired the rule, such as `feature-01 done`.
@@ -526,7 +527,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 - It is created by and for **Developers**, both **humans and agents**.
 
 #### Commitment: Definition of Done
-- The **Definition of Done** is a **rule**: **dod.mdc**.
+- The **Definition of Done** is a **rule**: **sdd-dod.mdc**.
 - It applies not only to **Increments**, but also to **all tasks**.
 
 [Back to top](#index)
@@ -609,8 +610,9 @@ This guide is for both humans and AI agents.
 - **Knowledge**: ground execution in context.
 
 ### Rules
-- **dod.mdc**: Definition of Done; process writes including **status.md** on close.
-- **incremental-delivery.mdc**: incremental delivery policy.
+- **sdd-dod.mdc**: Definition of Done; process writes on close.
+- **sdd-incremental-delivery.mdc**: incremental delivery policy.
+- **sdd-realtime-status.mdc**: WIP process sync; draft, confirm, write while work is not Done.
 - **friendly-language.mdc**: readable chat and Markdown for the user and for later agents.
 
 ### Skills
@@ -642,7 +644,8 @@ These are the SDD core artifacts. They are not the Scrum core artifacts under KE
 - **{stem}-stories.md**: user stories and acceptance criteria.
 - **{stem}-design.md**: design spec.
 - **{stem}-tests.md**: test spec.
-- **deployment.md**: deployment spec.
+- **release.md**: local startup and go-live order.
+- **test-strategy.md**: product-level test strategy.
 - **.secrets**: secret names and where the values live. No secret values.
 - **issues-log.md**: defect record. It is also one of the five process files the audit opens.
 

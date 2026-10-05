@@ -10,7 +10,8 @@
     "specs/issues-log.md",
     "specs/changes-log.md",
     "specs/architecture.md",
-    "specs/deployment.md"
+    "specs/release.md",
+    "specs/test-strategy.md"
   ],
   "modules": [
     {

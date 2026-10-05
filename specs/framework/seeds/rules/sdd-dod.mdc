@@ -15,7 +15,7 @@ Write order when more than one process file changes: `changes-log.md`, `issues-l
 
 ## When to update status.md
 
-Update `status.md` when closing a PBI, SBI, OGT, or sprint under the sections below, or when the user explicitly asks for a status refresh. Do not update `status.md` after every internal task while an SBI stays WIP.
+Update `status.md` when closing a PBI, SBI, OGT, or sprint under the sections below, or when the user explicitly asks for a status refresh. Do not update `status.md` after every internal task while an SBI stays WIP. WIP checkpoints while an item is not Done follow [`sdd-realtime-status.mdc`](./sdd-realtime-status.mdc).
 
 When writing `status.md`, follow the section and OGT rules in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` `#statusmd`.
 
@@ -42,6 +42,8 @@ Defaults: acceptance criteria passed; Common quality gate passed; user confirmed
 
 Extra: DoD section above the Product Backlog table in `product-backlog.md`.
 
+Write the `product-backlog.md` row `Done` only after `sdd-retrospective` finishes in the same session.
+
 After confirm: `changes-log.md` when a change concludes; `issues-log.md` when a linked defect closes; `status.md`; `sprint-backlog.md` when Unplanned PBIs or parent text must match; `product-backlog.md` row `Done`.
 
 ## SBI
@@ -51,6 +53,8 @@ Defaults: acceptance criteria passed; Common quality gate passed; user confirmed
 Extra: DoD above the first sprint table in `sprint-backlog.md`; sprint replacement above its tables; Additional Done Criteria on the row.
 
 An SBI may be `Done` while its parent PBI stays `ToDo` or `WIP`.
+
+Write the `sprint-backlog.md` row `Done` only after `sdd-retrospective` finishes in the same session.
 
 After confirm: `changes-log.md` when a change concludes; `issues-log.md` when a linked defect closes; `status.md`; `sprint-backlog.md` row `Done`; `product-backlog.md` when the PBI checklist is fully satisfied.
 

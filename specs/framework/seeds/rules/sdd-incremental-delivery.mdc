@@ -13,7 +13,7 @@ Feature versus task breakdown is in `{client_root}/templates/framework.sdd.works
 
 The current item is the one named in `status.md`. Open `status.md` through `{workspace}/artifacts-map.json`.
 
-The item is finished when [`dod.mdc`](./dod.mdc) passes for it. The item may be a product backlog item (PBI) or a sprint backlog item (SBI).
+The item is finished when [`sdd-dod.mdc`](./sdd-dod.mdc) passes for it. The item may be a product backlog item (PBI) or a sprint backlog item (SBI).
 
 ## Behavior
 

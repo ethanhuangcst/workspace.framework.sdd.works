@@ -1,4 +1,4 @@
-# Deployment — framework.sdd.works
+# Release — framework.sdd.works
 
 > **Purpose**: Point operators at the release docs. Do not copy host names, secrets, or step lists into this file. Optional / JIT (not a required process artifact).
 > **Practices**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) (what, how, when).
