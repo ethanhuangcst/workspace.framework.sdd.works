@@ -1,29 +1,19 @@
-# Changes log (Pokymon Card Collection)
+# Changes log ([product name])
 
-> Type: Framework (process) artifact of Pokymon Card Collection
-> as_of: 2026-10-01
+> Type: Framework (process) artifact of [product name]
+> as_of: [YYYY-MM-DD]
 > [Definition](./sdd-scrum-practices.md#changes-logmd)
 
 ---
 
-## 2026-09-21
+## [YYYY-MM-DD]
 
-### Search does set first; rarity stays in this sprint
+### [Concluded change title]
 
-**Why**: Doing both filters at once would mix the empty state and the combined condition into one acceptance check.
+**Why**: [Why the change was made.]
 
-**What changed**: Sprint 2 [Search](./sprint-backlog.md#sprint-2) stays WIP. The set filter can be demonstrated. The rarity filter is the unfinished part of the same item. It is not a new item.
+**What changed**: [Files, sprint item, or backlog row affected.]
 
-**Verification**: After a set is chosen, the list contains only that set. Rarity is not asserted yet.
+**Verification**: [Check that passed.]
 
-**Boundary**: This does not change the uniqueness rule in [Catalog a card](./product-backlog.md#pb-1).
-
-### Catalog a card is unique on set + card number
-
-**Why**: If the same card can exist as two records, search counts and trades will both be wrong.
-
-**What changed**: The card table is unique on (collector, set, card number). A second catalog increases quantity by 1. The decision is in [`architecture.md`](./architecture.md) §2. Product Backlog [Catalog a card](./product-backlog.md#pb-1) and Sprint 1 [Catalog a card](./sprint-backlog.md#sprint-1) are Done.
-
-**Verification**: The duplicate-catalog test passed. After the second submit there is still one row, and the quantity is 2.
-
-**Boundary**: This does not merge duplicate rows already stored. That is a data task before go-live, and it is not part of this entry.
+**Boundary**: [Optional: what this entry leaves out. Omit this line when not needed.]

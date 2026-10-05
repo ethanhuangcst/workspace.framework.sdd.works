@@ -8,6 +8,206 @@
 
 ## 2026-10-05
 
+### Status review: sync status.md with Sprint 7 board
+
+**Why**: User picked apply updates after `sdd-review-status`.
+
+**What changed**: [`status.md`](./status.md) Sprint 7 note (nine **Done**, three open **ToDo**), Unplanned count **12**, and **what could be the next** lines for [feature-61](./sprint-backlog.md#sprint-7) and [feature-62](./sprint-backlog.md#sprint-7).
+
+**Verification**: [`status.md`](./status.md) matches [`sprint-backlog.md`](./sprint-backlog.md#sprint-7) **ToDo** rows feature-45, feature-61, feature-62.
+
+### Sprint 7: Skill-17, Skill-18, Rule-04
+
+**Why**: User assigned the two new skill PBIs and [Rule-04](./product-backlog.md#pb-95) to Sprint 7.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) Sprint column **Sprint 7** for [Skill-17](./product-backlog.md#pb-113), [Skill-18](./product-backlog.md#pb-114), [Rule-04](./product-backlog.md#pb-95). [`sprint-backlog.md`](./sprint-backlog.md#sprint-7) **ToDo** [feature-61](./sprint-backlog.md#sprint-7), [feature-62](./sprint-backlog.md#sprint-7); **Done** [feature-63](./sprint-backlog.md#sprint-7) for Rule-04. Unplanned PBIs drops those three rows.
+
+**Verification**: Sprint 7 **ToDo** lists feature-45, feature-61, feature-62.
+
+### Product backlog: Skill-17 and Skill-18
+
+**Why**: User asked for pack skills `sdd-frontend-design` and `sdd-tester`.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) Requirements § skills and Product Backlog table rows [Skill-17](./product-backlog.md#pb-113), [Skill-18](./product-backlog.md#pb-114); [`sprint-backlog.md`](./sprint-backlog.md) Unplanned PBIs rows 14–15.
+
+**Verification**: Both PBIs are **ToDo**, sprint `—`, no `seeds/skills/` folder yet.
+
+### feature-49: EN .secrets seed (Spec-seeds-12)
+
+**Why**: User confirmed the dotenv-shaped `.secrets` starter usable for new projects.
+
+**What changed**: [`specs/framework/seeds/templates/EN/.secrets`](./framework/seeds/templates/EN/.secrets) (empty `KEY=` lines, `#` comments only); [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) `#secrets`; [`framework-design.md`](./framework/framework-design.md) § `.secrets`. [feature-49](./sprint-backlog.md#sprint-7) and [Spec-seeds-12](./product-backlog.md#pb-66) **Done**.
+
+**Verification**: `rg '=' specs/framework/seeds/templates/EN/.secrets` shows only empty values after `=`; no token-like strings in the seed file.
+
+### Sprint 7: six SBIs closed on user confirm
+
+**Why**: User confirmed [feature-52](./sprint-backlog.md#sprint-7), [feature-44](./sprint-backlog.md#sprint-7), [feature-46](./sprint-backlog.md#sprint-7), [feature-47](./sprint-backlog.md#sprint-7), [feature-48](./sprint-backlog.md#sprint-7), and [feature-50](./sprint-backlog.md#sprint-7) usable.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) **Done** rows; [`product-backlog.md`](./product-backlog.md) [Skill-01](./product-backlog.md#pb-21), [Skill-09](./product-backlog.md#pb-64), [Skill-14](./product-backlog.md#pb-89), [Spec-seeds-10](./product-backlog.md#pb-40), [Spec-seeds-11](./product-backlog.md#pb-41), [Spec-seeds-13](./product-backlog.md#pb-90) **Done**; [`status.md`](./status.md); Sprint 7 **Retrospective**; [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-tests.md`](./framework/framework-tests.md) catalog sync.
+
+**Verification**: At entry time, [feature-49](./sprint-backlog.md#sprint-7) was still **ToDo**. Same-day closes added [feature-49](./sprint-backlog.md#sprint-7) and [feature-63](./sprint-backlog.md#sprint-7). Open **ToDo** now: [feature-45](./sprint-backlog.md#sprint-7), [feature-61](./sprint-backlog.md#sprint-7), [feature-62](./sprint-backlog.md#sprint-7).
+
+### Sprint 8: Web-portal-23 split and tab config SBIs
+
+**Why**: User asked to refine Web-portal-23 to Implementable PBIs and schedule them on Sprint 8.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) retires Theme [Web-portal-23](./product-backlog.md#pb-109); adds [Spec-seeds-16](./product-backlog.md#pb-110), [Web-portal-24](./product-backlog.md#pb-111), [Web-portal-25](./product-backlog.md#pb-112) on Sprint 8. [`sprint-backlog.md`](./sprint-backlog.md) adds feature-58–60.
+
+**Verification**: Open `sprint-backlog.md#sprint-8` for parent links to `#pb-110`–`#pb-112`.
+
+### Theme Web-portal-23 configurable instructions tabs
+
+**Why**: Instructions tabs are hard-coded; operators need pack-driven tab lists without redeploying the app for each new panel.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) adds Theme [Web-portal-23](./product-backlog.md#pb-109). [`sprint-backlog.md`](./sprint-backlog.md) Unplanned PBIs lists the row.
+
+**Verification**: Open `#req-pb-109` and table row `#pb-109` on `product-backlog.md`.
+
+### Epic and Theme PBIs split to Implementable
+
+**Why**: `sdd-refine-backlog` request to break down all Epic and Theme rows.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) retires [i18n-01](./product-backlog.md#pb-67), [i18n-02](./product-backlog.md#pb-68), [MCP-04](./product-backlog.md#pb-92), [Web-portal-15](./product-backlog.md#pb-91), [Web-portal-16](./product-backlog.md#pb-96). Adds [i18n-04](./product-backlog.md#pb-102), [i18n-05](./product-backlog.md#pb-103), [MCP-06](./product-backlog.md#pb-104), [MCP-07](./product-backlog.md#pb-105), [Web-portal-20](./product-backlog.md#pb-106)–[Web-portal-22](./product-backlog.md#pb-108). [Agent-02](./product-backlog.md#pb-8) is **Implementable** on Sprint 8. [`sprint-backlog.md`](./sprint-backlog.md) task-03 parents [Web-portal-21](./product-backlog.md#pb-107). Unplanned PBIs table synced.
+
+**Verification**: `rg 'Epic|Theme' specs/product-backlog.md` shows Epic/Theme only on **Retired** parent rows.
+
+### Sprint 8 schedule: Web-portal 15–19 slice
+
+**Why**: User assigned Web-portal-15 through Web-portal-19 to Sprint 8.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) Sprint 8 goal and SBIs feature-53–57, task-03. [`product-backlog.md`](./product-backlog.md) `Sprint` cells for [Spec-seeds-15](./product-backlog.md#pb-97), [MCP-05](./product-backlog.md#pb-101), [Web-portal-17](./product-backlog.md#pb-98)–[Web-portal-19](./product-backlog.md#pb-100). Epics [Web-portal-15](./product-backlog.md#pb-91) and [Web-portal-16](./product-backlog.md#pb-96) have no `Sprint` cell. [`status.md`](./status.md) Sprint 8 note updated.
+
+**Verification**: Open `sprint-backlog.md#sprint-8` and confirm parent links for Web-portal-17–19.
+
+### Split Web-portal-16 into Implementable PBIs
+
+**Why**: Epic [Web-portal-16](./product-backlog.md#pb-96) needed Implementable rows before sprint planning (`sdd-refine-backlog`).
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) adds [Spec-seeds-15](./product-backlog.md#pb-97), [MCP-05](./product-backlog.md#pb-101), [Web-portal-17](./product-backlog.md#pb-98), [Web-portal-18](./product-backlog.md#pb-99), [Web-portal-19](./product-backlog.md#pb-100). Epic requirements point at those children. [`sprint-backlog.md`](./sprint-backlog.md) Unplanned PBIs lists the new unscheduled rows.
+
+**Verification**: Open `product-backlog.md` Requirements web-portal and table rows `#pb-97` through `#pb-100` and `#pb-101`.
+
+### Close confirm gate on sdd-dod and pack skills (no sdd-close-backlog-item)
+
+**Why**: Agents marked SBIs **Done** after delivery without user **close confirm** (Sprint 7 task-01).
+
+**What changed**: [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc) **Close confirm** section and **Do not** bullets. [`sdd-incremental-delivery.mdc`](./framework/seeds/rules/sdd-incremental-delivery.mdc), [`sdd-retrospective`](./framework/seeds/skills/sdd-retrospective/SKILL.md), [`sdd-review-status`](./framework/seeds/skills/sdd-review-status/SKILL.md), [`sdd-spec-to-build`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md), [`sdd-atdd`](./framework/seeds/skills/sdd-atdd/SKILL.md). Standalone vs SDD scope on [`sdd-create-skill`](./framework/seeds/skills/sdd-create-skill/SKILL.md), [`sdd-create-rule`](./framework/seeds/skills/sdd-create-rule/SKILL.md), [`sdd-build-agent`](./framework/seeds/skills/sdd-build-agent/SKILL.md). EN practices **Done** row, knowledge [`dod-retrospective-before-sbi-done.md`](./knowledge/agent/dod-retrospective-before-sbi-done.md), **CE-RULE-01**.
+
+**Verification**: `rg 'Close confirm' specs/framework/seeds/rules/sdd-dod.mdc`.
+
+### Optional module folder and path-first map (ADR-100)
+
+**Why**: Some projects keep design, stories, and tests under `{artifacts_root}` without a module subfolder; skills and update-project assumed `{folder}/{stem}-*`.
+
+**What changed**: [ADR-100](./adr/ADR-100-optional-module-folder.md). EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) `#artifacts-mapjson` (optional `folder`, flat example, confirm summary). [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md), HanS engineering line, [`framework-design.md`](./framework/framework-design.md). [`sdd-update-project`](./framework/seeds/skills/sdd-update-project/SKILL.md), [`sdd-atdd`](./framework/seeds/skills/sdd-atdd/SKILL.md), [`sdd-update-specs`](./framework/seeds/skills/sdd-update-specs/SKILL.md), [`sdd-audit-artifacts`](./framework/seeds/skills/sdd-audit-artifacts/SKILL.md). **CE-TPL-12** and engineering stories AC2. Live [`artifacts-map.json`](../artifacts-map.json) unchanged.
+
+**Verification**: `test -f specs/adr/ADR-100-optional-module-folder.md`.
+
+### Pack skill sdd-update-specs (feature-44)
+
+**Why**: [Skill-09](./product-backlog.md#pb-64) needs a seed that compares current work with engineering specs and updates them after confirm.
+
+**What changed**: Seed [`sdd-update-specs`](./framework/seeds/skills/sdd-update-specs/SKILL.md) (TRUE AGENT: capabilities, knowledge, limits, gap report). [`framework-design.md`](./framework/framework-design.md) § sdd-update-specs. **CE-SKILL-14**. Cross-link in [`sdd-spec-to-build`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md). **CE-SKILL-07** drops `sdd-update-specs` from the no-seed list. Sprint 7 [feature-44](./sprint-backlog.md#sprint-7) stays **ToDo** until you confirm the skill usable.
+
+**Verification**: `test -f specs/framework/seeds/skills/sdd-update-specs/SKILL.md`. `rg 'five process files' specs/framework/seeds/skills/sdd-update-specs/SKILL.md`. `rg 'CE-SKILL-14' specs/framework/framework-tests.md`.
+
+### Pack skill improve-prompt (ADR-099)
+
+**Why**: [Skill-14](./product-backlog.md#pb-89) needs a generic prompt-improvement skill without ECC catalogs or fixed slash-command tables.
+
+**What changed**: [ADR-099](./adr/ADR-099-improve-prompt-skill-name.md). Seed folder `improve-prompt` replaces `prompt-optimizer`. TRUE AGENT body (capabilities, knowledge, limits, anti-patterns) and [examples.md](./framework/seeds/skills/improve-prompt/examples.md). **CE-SKILL-13**. No `constants.json` row.
+
+**Verification**: `test -d specs/framework/seeds/skills/improve-prompt`. `rg 'prompt-optimizer' specs/framework/seeds` empty. `rg 'ECC|configure-ecc|/plan' specs/framework/seeds/skills/improve-prompt` empty.
+
+### improve-prompt living specs sync
+
+**Why**: Skill-14 seeds and design docs should match the shipped `improve-prompt` folder and CE-SKILL-13.
+
+**What changed**: [framework-design.md](./framework/framework-design.md#improve-prompt) § improve-prompt. [product-backlog.md](./product-backlog.md#pb-89) requirement bullets and Related column. **CE-SKILL-13** and [framework-stories.md](./framework/framework-stories.md#improve-prompt) AC1. [sprint-backlog.md](./sprint-backlog.md#sprint-7) feature-46 Related specs. Seed description and [examples.md](./framework/seeds/skills/improve-prompt/examples.md) use English-only trigger and example copy; replies still follow the user's language.
+
+**Verification**: `rg 'improve-prompt' specs/framework/framework-design.md`. `rg 'req-pb-89' specs/product-backlog.md`.
+
+### Sprint 7 kickoff: US/AC practices and pack skill sdd-atdd
+
+**Why**: Sprint 7 [Skill-01](./product-backlog.md#pb-21) needs story-mapping guidance before the ATDD skill ships.
+
+**What changed**: Sprint 7 **WIP**. [task-01](./sprint-backlog.md#sprint-7) adds ATDD and User Story Mapping terminology, expands [`{module-name}-stories.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-storiesmd) Template and How to write, and adds [§6 User Story Mapping](./framework/seeds/templates/EN/sdd-scrum-practices.md#6-user-story-mapping). New seed [`sdd-atdd`](./framework/seeds/skills/sdd-atdd/SKILL.md), **CE-SKILL-12**, framework design and stories. [feature-52](./sprint-backlog.md#sprint-7) stays **ToDo** until you confirm the skill usable.
+
+**Verification**: `test -f specs/framework/seeds/skills/sdd-atdd/SKILL.md`. Practices index links `#6-user-story-mapping` and `#term-atdd`.
+
+### Sprint 6 closed
+
+**Why**: User confirmed every Sprint 6 SBI usable and the sprint goal on 2026-10-05.
+
+**What changed**: [Sprint 6](./sprint-backlog.md#sprint-6) **Status: Done** on [`sprint-backlog.md`](./sprint-backlog.md). Current WIP sprint is none. Retrospective Learnings **#6** (`Sprint-end`). [`status.md`](./status.md) Sprint 6 row **Done**.
+
+**Verification**: Sprint 6 **Done** table has eight rows and no open ToDo or WIP tables. [`product-backlog.md`](./product-backlog.md) Sprint 6 PBIs are **Done** or **Retired** ([Skill-07](./product-backlog.md#pb-29)).
+
+### Sprint 6 task-01 cross-review (five process files)
+
+**Why**: Sprint 6 [task-01](./sprint-backlog.md#sprint-6) validates EN process seeds, live `specs/` process files, and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) after ADR-098 and placeholder templating.
+
+**What changed**: [req-pb-36](./product-backlog.md#req-pb-36) names a placeholder template seed. Live [`sprint-backlog.md`](./sprint-backlog.md) fixes stale `artifacts-map.md` and `/instructions` links. [`issues-log.md`](./issues-log.md) `as_of` aligned. Practices [`#artifacts-mapjson`](./framework/seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson) example text separates map JSON sample from five templated process seeds.
+
+**Verification**: CE-TPL-01, CE-TPL-04, CE-TPL-08 through CE-TPL-11 and framework-stories process-artifact AC1 and AC3 through AC13 read against EN seeds and live files. Link audit on live `product-backlog.md`, `sprint-backlog.md`, `status.md`, and `issues-log.md` passes. EN process seed relative links pass. [`artifacts-map.json`](../artifacts-map.json) lists the five process paths.
+
+### Sprint 6 feature-42 Done (Spec-seeds-05, re-close)
+
+**Why**: User confirmed [feature-42](./sprint-backlog.md#sprint-6) usable after the EN [product-backlog.md](./framework/seeds/templates/EN/product-backlog.md) seed and [ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md) work.
+
+**What changed**: [feature-42](./sprint-backlog.md#sprint-6) **Done** on [`sprint-backlog.md`](./sprint-backlog.md). [Spec-seeds-05](./product-backlog.md#pb-36) **Done** on [`product-backlog.md`](./product-backlog.md). Sprint 6 Retrospective Learnings **#4**. [`status.md`](./status.md) Sprint 6 note updated.
+
+**Verification**: Open Sprint 6 **Done** table row 7. No **WIP** rows. [i18n-02](./product-backlog.md#pb-68) remains **ToDo**.
+
+### Sprint-backlog DoD links product-backlog (ADR-098)
+
+**Why**: Generic DoD bullets were duplicated in `sprint-backlog.md` and `product-backlog.md` and drifted.
+
+**What changed**: [ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md). [`product-backlog.md`](./product-backlog.md#definition-of-done) is the canonical additional checklist for PBIs and SBIs. [`sprint-backlog.md`](./sprint-backlog.md) DoD section links there; sprint replacement lists stay on the sprint file. EN seeds, [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc), design, stories, **CE-TPL-04**.
+
+**Verification**: Sprint seed contains `product-backlog.md#definition-of-done`. No `Follow rule DoD` line in EN sprint-backlog seed.
+
+### EN changes-log and issues-log seeds as placeholder templates
+
+**Why**: Pokymon sample rows read like a real project after copy.
+
+**What changed**: [`templates/EN/changes-log.md`](./framework/seeds/templates/EN/changes-log.md) and [`templates/EN/issues-log.md`](./framework/seeds/templates/EN/issues-log.md) use `[product name]` and bracket placeholders. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) documents all five templated process seeds. [CE-TPL-11](./framework/framework-tests.md) covers the changes-log seed.
+
+**Verification**: [CE-TPL-10](./framework/framework-tests.md) and CE-TPL-11 expected titles and shapes.
+
+### EN status.md seed as placeholder template
+
+**Why**: The Pokymon-filled status seed read like a real project after copy.
+
+**What changed**: [`templates/EN/status.md`](./framework/seeds/templates/EN/status.md) uses `[product name]` and bracket placeholders; [`framework-design.md`](./framework/framework-design.md) § status projection matches.
+
+**Verification**: [CE-TPL-08](./framework/framework-tests.md) expected title and section shape unchanged.
+
+### Product-backlog section order and additional DoD
+
+**Why**: DoD duplicated `sdd-dod.mdc` defaults and sat between Requirements and the table.
+
+**What changed**: Live [`product-backlog.md`](./product-backlog.md) and EN seed use Product overview → Definition of Done (additional only) → Requirements → Product Backlog → Change record. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc) PBI Extra, [`framework-design.md`](./framework/framework-design.md), and [`framework-stories.md`](./framework/framework-stories.md) AC1 match.
+
+**Verification**: Readiness item 11 in practices; `rg "above the Product Backlog table" specs/` excludes historical change-log lines only.
+
+### Simplify product-backlog live file and EN seed
+
+**Why**: Scope boundary duplicated requirements. The Pokymon-filled seed was easy to copy as if it were the user's product.
+
+**What changed**: Removed **Scope boundary** from [`product-backlog.md`](./product-backlog.md). Rewrote [`templates/EN/product-backlog.md`](./framework/seeds/templates/EN/product-backlog.md) as a placeholder template with no Pokymon content.
+
+**Verification**: Index and Requirements open without `#scope-boundary`. Seed header uses `[product name]` and one sample PBI row.
+
+### Sprint 6 feature-37 and feature-40 Done; feature-42 WIP
+
+**Why**: User confirmed [Rule-01](./product-backlog.md#pb-18) and [Skill-06](./product-backlog.md#pb-28) usable. [Spec-seeds-05](./product-backlog.md#pb-36) returns to **WIP**.
+
+**What changed**: Sprint 6 [feature-37](./sprint-backlog.md#sprint-6) and [feature-40](./sprint-backlog.md#sprint-6) **Done**; [feature-42](./sprint-backlog.md#sprint-6) **WIP**. [`status.md`](./status.md) and Sprint 6 Retrospective Learnings **#3** / Future actions **#2** after **sdd-retrospective**.
+
+**Verification**: Pack seeds [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc) and [`sdd-retrospective/SKILL.md`](./framework/seeds/skills/sdd-retrospective/SKILL.md); `constants.json` keys `dod` and `skill_retrospective`.
+
 ### sdd-retrospective trigger line on sprint-backlog
 
 **Why**: Sprint 6 Retrospective used `On demand` for by-rule and catch-up runs; `scrum-in-sdd.md` requires the incident (for example `feature-42 done`) for **By rule**.

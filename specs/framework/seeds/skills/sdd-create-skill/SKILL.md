@@ -52,8 +52,10 @@ Do not load `framework-design.md` from the workspace. TRUE AGENT is not on the c
 - Do not call `sdd_install_framework` or `sdd_update_framework`.
 - Do not write under the workspace. New skills live on the client root only.
 - Do not ship `skill-creator` or a second folder at `{client_root}/skills/create-skill/` (Cursor built-in name).
-- One yes covers every file in `{client_root}/{skills_dir}/<name>/`.
+- One yes covers every file in `{client_root}/{skills_dir}/<name>/`. That **path confirm** is the confirm for this skill when it runs alone.
 - A second yes covers one new key in the `skills` object in constants. Leave the product backlog and sprint backlog unchanged.
+- When `{workspace}/artifacts-map.json` opens and an SBI or PBI in scope is being closed for pack skill work, follow `{client_root}/rules/sdd-dod.mdc` **close confirm** before any **Done** row write. Path confirm is not **close confirm**.
+- When no SBI or PBI is in scope (standalone pack authoring), do not write or invent rows on process files. The user decides usability in chat; this skill does not mark backlog items **Done**.
 - Stop after test prompts. No eval harness, grader, description optimizer, or package step.
 - Leave out a skill whose purpose is unauthorized access or data exfiltration.
 

@@ -3,8 +3,10 @@ name: sdd-retrospective
 description: >
   Run a retrospective after DoD, at sprint-end, or on demand. Classify lessons as ADR
   or knowledge, write instance files under map roots, append the sprint Retrospective
-  block, and report a Retrospective Summary in the same turn. No second user confirm.
-  Use when the user asks for retrospective, lessons learned, 回顾, 总结经验, or
+  block, and report a Retrospective Summary in the same turn. No second confirm to
+  persist ADR, knowledge, or the sprint Retrospective block. Close confirm for
+  backlog **Done** stays on sdd-dod.mdc before **Done** row writes, not after
+  Retrospective Summary. Use when the user asks for retrospective, lessons learned, 回顾, 总结经验, or
   /sdd-retrospective, or when sdd-dod.mdc requires the gate before Done. sdd-review-status
   does not replace this skill on SBI or PBI close.
 ---
@@ -82,7 +84,7 @@ Send one message:
 - **Skipped:** {anything considered but not saved, or `none`}
 - **Sprint-backlog Retrospective:** {sprint name and `{number}. {when}, {trigger}` written, or `none`}
 
-Do not ask for a second confirm to apply writes. Do not use a question card. The user may correct in a follow-up message.
+Do not ask for a second confirm to apply retrospective writes (ADR, knowledge, Retrospective append). Do not use a question card for those writes. The user may correct in a follow-up message. When this run is by-rule before **Done**, do not write **Done** rows; the host applies **close confirm** from `sdd-dod.mdc` after Retrospective Summary unless the user already gave **close confirm** for that scope.
 
 ## Write rules
 

@@ -783,6 +783,94 @@ Scenario: Done pick runs retrospective before board write
 
 Tests: CE-SKILL-01, CE-SKILL-02, CE-SKILL-08, CE-SKILL-09, CE-SKILL-11.
 
+### sdd-atdd
+
+**As the** developer specifying a Feature before build
+**I want** user stories and Gherkin acceptance criteria in `{stem}-stories.md`
+**So that** implementation and tests trace to the spec
+
+#### AC1
+
+```gherkin
+Scenario: Summary before write
+  Given artifacts-map.json lists a module stories file
+  When the user asks for ATDD or /sdd-atdd for one feature
+  Then the reply includes an ATDD Summary with the target path
+  And the stories file is unchanged before the user picks
+```
+
+#### AC2
+
+```gherkin
+Scenario: Scope limits
+  Given the user confirmed apply writes
+  When sdd-atdd finishes
+  Then only the module stories file is updated
+  And product-backlog.md is not edited
+```
+
+Tests: CE-SKILL-12. User confirmed usable 2026-10-05 ([feature-52](../sprint-backlog.md#sprint-7)).
+
+### sdd-update-specs
+
+**As the** developer aligning engineering specs with shipped work
+**I want** a gap report and confirmed writes on module and product-level specs
+**So that** the spec stays the source of truth without editing process files
+
+#### AC1
+
+```gherkin
+Scenario: Gap report before write
+  Given an SBI names related engineering specs
+  When the user asks to update specs or runs sdd-update-specs
+  Then the reply lists aligned and gap rows
+  And no engineering file changes before the user confirms
+```
+
+#### AC2
+
+```gherkin
+Scenario: Process files stay out of scope
+  Given the user confirmed spec updates
+  When sdd-update-specs writes
+  Then sprint-backlog.md and product-backlog.md are not edited
+```
+
+Tests: CE-SKILL-14. User confirmed usable 2026-10-05 ([feature-44](../sprint-backlog.md#sprint-7)).
+
+### improve-prompt
+
+**As the** user refining a task instruction
+**I want** a diagnosis and a copy-paste prompt without the agent running the task
+**So that** I can start execution in a normal turn with clearer wording
+
+#### AC1
+
+```gherkin
+Scenario: Seed folder and advisory shape
+  Given the authoring seed tree
+  When the improve-prompt skill file is read
+  Then the folder is improve-prompt under specs/framework/seeds/skills/
+  And prompt-optimizer is not a seed folder
+  And the description states advisory-only use
+  And the body includes Capabilities, Knowledge, Limits, and Anti-patterns
+  And the body does not include an ECC component catalog or fixed slash-command table
+  And examples.md is linked from Knowledge
+  And the seed description lists English trigger phrases only
+```
+
+#### AC2
+
+```gherkin
+Scenario: Vague prompt yields diagnosis and fenced prompt
+  Given the user pastes a vague task prompt and asks to improve it
+  When the improve-prompt skill runs
+  Then the reply includes prompt diagnosis and a fenced optimized prompt
+  And no project file is written for implementation
+```
+
+Tests: CE-SKILL-13. User confirmed usable 2026-10-05 ([feature-46](../sprint-backlog.md#sprint-7)).
+
 ### sdd-retrospective
 
 **As the** agent closing work under **sdd-dod.mdc**
@@ -1046,7 +1134,7 @@ Scenario: EN sprint seed header
   When the sprint item header row is read
   Then the columns are #, Code, SBI, Parent PBI, Module/Type, Related specs, Status
   And a Definition of Done section sits above the first sprint table
-  And that section lists the generic checks for every sprint item
+  And that section links to product-backlog.md#definition-of-done and names sdd-dod.mdc
 ```
 
 
@@ -1085,9 +1173,10 @@ The sprint item columns are [Sprint item table](#sprint-item-table). The audit t
 Scenario: Product backlog columns on the EN seed
   Given the EN product-backlog seed
   When the header row is read
-  Then the columns are #, Component, PBI Code, Description, Related, Sprint, Status
+  Then the columns are #, Component, PBI Code, Description, Size, Related, Sprint, Status
   And Status values are only ToDo, WIP, and Done
-  And a Definition of Done section sits above the Product Backlog table
+  And body sections appear in order Product overview, Definition of Done, Requirements, Product Backlog, Change record
+  And the Definition of Done section lists additional PBI checks on top of sdd-dod.mdc
   And each Requirements item has a PBI code, one noun, and bullets
   And the Requirements PBI code links to #pb-N on the Product Backlog table
   And the table PBI Code links to #req-pb-N on the Requirements line
@@ -1231,7 +1320,27 @@ Scenario: EN issues-log seed has two tables
   And the header has Type, as_of, and a Definition link
 ```
 
-Tests: CE-TPL-10. A missing HanS or HanT issues-log seed stays on i18n-02. The EN change-log seed already records a conclusion and is not changed by this story.
+Tests: CE-TPL-10, CE-TPL-11. A missing HanS or HanT issues-log seed stays on i18n-02.
+
+### changes-log.md starter
+
+**As a** person starting a project
+**I want** a blank `changes-log.md` starter
+**So that** conclusions are recorded without copying another product's entries
+
+#### AC13
+
+```gherkin
+Scenario: EN changes-log seed has one placeholder entry
+  Given the EN changes-log seed
+  When the body is read
+  Then the title is Changes log ([product name])
+  And one entry block has Why, What changed, and Verification labels
+  And entry text uses bracket placeholders not a sample product name
+  And the header has Type, as_of, and a Definition link
+```
+
+Tests: CE-TPL-11.
 
 ## engineering-artifacts
 
@@ -1250,16 +1359,32 @@ Scenario: A module stem is the file prefix
   And the test file is {workspace}/specs/web-app/app-tests.md
 ```
 
-
-
 #### AC2
+
+```gherkin
+Scenario: Flat module paths without folder
+  Given artifacts-map stores stem app with no folder key
+  And files lists specs/app-stories.md specs/app-design.md and specs/app-tests.md
+  When the stories file for that module is opened
+  Then the path is {workspace}/specs/app-stories.md
+  And the design file is {workspace}/specs/app-design.md
+  And the test file is {workspace}/specs/app-tests.md
+```
+
+#### AC3
 
 ```gherkin
 Scenario: Secrets seed holds no secret values
   Given the EN .secrets seed exists
   When the file is read
-  Then it names where values live
+  Then the first line is a # comment with {product name} and secret names only
+  And each secret line is NAME= with an empty value
+  And end-of-line # comments name where values live without a pipe suffix
   And it contains no secret value
 ```
 
-A draft EN `.secrets` seed exists, so AC2 can be read. It is not marked passed until the user confirms Spec-seeds-12.
+User confirmed EN `.secrets` seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#pb-66), [feature-49](../sprint-backlog.md#sprint-7)); AC3 passes. Post-close edits add grouped example keys; practices and CE-TPL-13 track the shape.
+
+Tests: CE-TPL-12 for flat module paths (AC2). CE-TPL-13 for `.secrets` seed shape (AC3).
+
+User confirmed EN seeds usable 2026-10-05 for [Spec-seeds-10](../product-backlog.md#pb-40) (`architecture.md`), [Spec-seeds-11](../product-backlog.md#pb-41) (`release.md`), [Spec-seeds-12](../product-backlog.md#pb-66) (`.secrets`), and [Spec-seeds-13](../product-backlog.md#pb-90) (`test-strategy.md`) via Sprint 7 [feature-47](../sprint-backlog.md#sprint-7), [feature-48](../sprint-backlog.md#sprint-7), [feature-49](../sprint-backlog.md#sprint-7), and [feature-50](../sprint-backlog.md#sprint-7). This repo's live [`architecture.md`](../architecture.md) and [`release.md`](../release.md) stay JIT pointers; the pack starters live under `specs/framework/seeds/templates/EN/`.

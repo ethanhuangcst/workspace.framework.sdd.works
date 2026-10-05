@@ -132,7 +132,7 @@ Always list:
 3. Create an OGT on status.md for items I will handle later.
 4. Leave it to me.
 
-The user's reply that names items or choices is the confirmation. Record every pick, then follow [Write the picks](#write-the-picks) in one pass. Do not ask for a second yes.
+The user's reply that names items or choices is the confirmation for the picks. Record every pick, then follow [Write the picks](#write-the-picks) in one pass. Do not ask for a second yes to apply non-Done picks. When a pick sets **Done**, that reply must name **Done** for that SBI or PBI and count as **close confirm** only if the thread already shows the user accepted the deliverable, or the pick explicitly closes that row after review. Otherwise list the pick as suggested and ask the **close confirm** question from `sdd-dod.mdc` before writing **Done**.
 
 Each pick names what happens. bad example: Update process artifacts now. good example: In sprint-backlog.md, move D-2 from Open RIDs to Closed RIDs with Closed Sprint 2.
 
@@ -171,7 +171,7 @@ In sprint-backlog.md, move D-2 from Open RIDs to Closed RIDs with Closed Sprint 
 - Read `locale` from `{workspace}/artifacts-map.json`. Allowed values are `EN`, `HanS`, and `HanT`. When `locale` is missing, reply in the language of the user's request.
 - Leave each process file in its current language.
 - Keep a write inside the five process files.
-- Set an SBI to Done only when the user says Done, that SBI's definition of done is met, and **sdd-retrospective** has finished in the same turn for that SBI.
+- Set an SBI to **Done** only when the user pick names **Done** for that code, **close confirm** for that SBI is in the thread, **sdd-retrospective** finished in the same turn when required, and DoD checks pass.
 - Set a PBI to Done only when the user pick names Done, DoD passes, and **sdd-retrospective** has finished in the same turn for that PBI.
 - Close an RID only when the user pick names that close and pack dod passes for the RID.
 - Do not read an adr folder. Those files belong to the workspace that wrote them.

@@ -95,7 +95,7 @@ Work one section at a time.
    - The section matches the agreed groups. Do not add a second copy of the groups as a narrative list.
 3. Follow [General writing principles](#general-writing-principles), update the same section in the live artifact in this workspace. That file is the example. Leave later sections unchanged.
 4. Read the live example against [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc). Edit, then review again, until every line passes.
-5. Update the same section in the EN seed under [`specs/framework/seeds/templates/EN/`](./framework/seeds/templates/EN/). The seed uses the Pokymon Card Collection example. Read the seed against [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc). Edit, then review again, until every line passes.
+5. Update the same section in the EN seed under [`specs/framework/seeds/templates/EN/`](./framework/seeds/templates/EN/). The process seeds `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, and `issues-log.md` stay placeholder templates (`[product name]`, bracket placeholders). Product-backlog has five body sections: Product overview, Definition of Done (additional checks on top of `sdd-dod.mdc`), Requirements, Product Backlog, Change record. Sprint-backlog DoD links to `product-backlog.md#definition-of-done` ([ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md)). Other process or engineering seeds may keep a sample product until those seeds are templated. Read the seed against [`friendly-language.mdc`](./framework/seeds/rules/friendly-language.mdc). Edit, then review again, until every line passes.
 6. Stop. The next section starts only after the user confirms the live example and the EN seed.
 
 ## Pass

@@ -646,7 +646,7 @@ These are the SDD core artifacts. They are not the Scrum core artifacts under KE
 - **{stem}-tests.md**: test spec.
 - **release.md**: local startup and go-live order.
 - **test-strategy.md**: product-level test strategy.
-- **.secrets**: secret names and where the values live. No secret values.
+- **.secrets**: dotenv-shaped registry (`NAME=` empty); `#` comments for where values live. No secret values in git.
 - **issues-log.md**: defect record. It is also one of the five process files the audit opens.
 
 ### Pack files

@@ -17,8 +17,11 @@
   - [Header (process artifacts)](#header)
   - [Framework (process) artifacts](#framework-process-artifacts)
     - [product-backlog.md](#product-backlogmd)
+      - [Product overview](#product-overview)
+      - [Definition of Done](#definition-of-done)
       - [Requirements](#requirements)
       - [Product Backlog table](#product-backlog-table)
+      - [Change record](#change-record)
     - [sprint-backlog.md](#sprint-backlogmd)
       - [Current project progress and Index](#current-project-progress-and-index)
       - [Unplanned PBIs](#unplanned-pbis)
@@ -41,6 +44,8 @@
   - [3. Evaluate Product Backlog Readiness](#3-evaluate-product-backlog-readiness)
   - [4. Size product backlog](#4-size-product-backlog)
   - [5. Feature break down](#5-feature-break-down)
+  - [6. User Story Mapping](#6-user-story-mapping)
+    - [Acceptance criteria practices](#acceptance-criteria-practices)
 
 ## Terminology in practice
 
@@ -60,6 +65,8 @@ Harness names, artifact names, and Scrum guide terms stay in [Terminology](./scr
 | 9   | <a id="term-pbi-size-implementable"></a>Implementable (PBI Size) | One user-visible outcome. The PBI may get a sprint and SBIs. |
 | 10  | <a id="term-issue"></a>Issue | A defect or other issue. Record an Issue only in `issues-log.md`. |
 | 11  | <a id="term-rid"></a>RID | A risk, an impediment, or a dependency. Record a RID only in the RID Log in `sprint-backlog.md`. |
+| 12  | <a id="term-atdd"></a>ATDD | Acceptance Test-Driven Development. Define acceptance criteria, usually as Gherkin scenarios, from the spec before implementation. Tests and code trace to those scenarios. Unit-level TDD runs after acceptance criteria exist. |
+| 13  | <a id="term-user-story-mapping"></a>User Story Mapping | Order user activities on a backbone, slice vertical stories for an MVP, then write user stories and acceptance criteria into `{stem}-stories.md`. Aligns with [2. Slice product to MVPs](#2-slice-product-to-mvps) and [5. Feature break down](#5-feature-break-down). |
 
 
 [Back to top](#index)
@@ -138,11 +145,11 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 - `locale` is `EN`, `HanS`, or `HanT`.
 - `adr` is an optional workspace-relative directory root for Architecture Decision Records. Omit the key when the project does not use that tree.
 - `knowledge` is an optional workspace-relative directory root for project knowledge notes. Omit the key when the project does not use that tree.
-- `files` lists workspace-relative paths that sit outside a module folder.
-- `modules` lists one object per module folder.
-`folder` is the directory name.
-`files` lists the paths in that folder.
-`stem` is present only when the filename stem differs from `folder`.
+- `files` lists workspace-relative paths that sit outside a module engineering triad (process files, product-level engineering files).
+- `modules` lists one object per engineering module.
+- Each module object has a `files` list (required). Paths in that list are the contract skills open ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
+- `folder` is optional. When present, it is the subdirectory under `{artifacts_root}` for that module. When omitted, module files live directly under `{artifacts_root}`.
+- `stem` is optional. When present, it labels the module and prefixes filenames (`{stem}-stories.md`). When omitted, match paths in `files` by suffix or by exact name (`stories.md`, `design.md`, `tests.md` for a single-module map only).
 
 **Shape**
 
@@ -157,8 +164,8 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
   ],
   "modules": [
     {
-      "folder": "{folder}",
-      "stem": "{stem}",
+      "folder": "{folder optional}",
+      "stem": "{stem optional}",
       "files": [
         "{path}"
       ]
@@ -178,11 +185,15 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 - Do not list every file under `adr` or `knowledge` in `files`, so the map keeps one root per tree.
 - Leave `artifacts-map.json` off `files` and off every module `files` list, so the file does not record its own path.
 - Omit `stem` when it matches `folder`, so a matching stem has no `stem` key.
+- Omit `folder` when module files sit under `{artifacts_root}` without a subfolder, so flat paths such as `specs/app-stories.md` are valid.
+- Use unqualified `design.md`, `stories.md`, and `tests.md` under `{artifacts_root}` only when `modules` has exactly one entry ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
 - Write the `artifacts_root` value into each path, so the path matches the setting.
 good example: `"artifacts_root": "specs"` and `"specs/product-backlog.md"`
 bad example: `"artifacts_root": "spec"` while the path starts with `specs/`
 good example: `"folder": "web-app"`, `"stem": "app"`, path `specs/web-app/app-design.md`
+good example: no `folder`, paths `specs/app-design.md`, `specs/app-stories.md`, `specs/app-tests.md`
 bad example: `name` and `purpose` keys beside the path
+bad example: two module entries both listing `specs/stories.md`
 - Leave the product name, `Type`, `as_of`, and a Definition link out of the file, so the file stays keys and paths.
 
 **Confirm**
@@ -196,8 +207,11 @@ locale: {locale}
 artifacts_root: {artifacts root}
 adr: {adr root}
 knowledge: {knowledge root}
-stems:
-- folder {folder}, stem {stem}: {what the module is}
+modules:
+- {layout and label}: {what the module is}
+  - {artifacts root}/{path to design}
+  - {artifacts root}/{path to stories}
+  - {artifacts root}/{path to tests}
 files:
 - {artifacts root}/product-backlog.md
 - {artifacts root}/sprint-backlog.md
@@ -208,24 +222,22 @@ files:
 - {artifacts root}/release.md
 - {artifacts root}/test-strategy.md
 - {artifacts root}/.secrets
-- {artifacts root}/{folder}/{stem}-design.md
-- {artifacts root}/{folder}/{stem}-stories.md
-- {artifacts root}/{folder}/{stem}-tests.md
 ```
 
+- List each module's three engineering paths under `modules:` using the paths task 7 chose (foldered, flat + stem, or singleton). Do not repeat those three lines under `files:`.
 - Write the product name in `{product name}`, so the summary names the product.
 - Write the workspace folder in `{workspace}`, so the summary shows where the project lives.
 - Write the chosen locale in `{locale}`, so the summary shows the language of future specs.
 - Write the chosen folder name in `{artifacts root}`, so the summary shows the specs folder.
 - Write the chosen ADR root in `{adr root}` when the user included it. Omit the `adr:` line when the user excluded it.
 - Write the chosen Knowledge root in `{knowledge root}` when the user included it. Omit the `knowledge:` line when the user excluded it.
-- Write one stem line for each picked module, so `{what the module is}` states what that module is.
+- Write one module block for each picked module, so `{what the module is}` states what that module is and `{layout and label}` names foldered, flat + stem, or singleton.
 - Omit a file line the project does not have, so the summary lists only the files the map will record.
 - Leave this summary out of `artifacts-map.json`, so the file keeps the keys and the path lists.
 
 **Example**
 
-Pokymon Card Collection. The block shows a filled file. A new project does not copy it.
+Pokymon Card Collection names a sample product in this JSON block only. A new project does not copy this file. The five process artifact EN seeds (`product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, `issues-log.md`) use `[product name]` and bracket placeholders, not a sample product body.
 
 ```json
 {
@@ -268,6 +280,32 @@ Pokymon Card Collection. The block shows a filled file. A new project does not c
         "specs/rag/rag-design.md",
         "specs/rag/rag-stories.md",
         "specs/rag/rag-tests.md"
+      ]
+    }
+  ]
+}
+```
+
+**Example (flat + stem, not a copy seed).** One module with no subfolder:
+
+```json
+{
+  "artifacts_root": "specs",
+  "locale": "EN",
+  "files": [
+    "specs/product-backlog.md",
+    "specs/sprint-backlog.md",
+    "specs/status.md",
+    "specs/issues-log.md",
+    "specs/changes-log.md"
+  ],
+  "modules": [
+    {
+      "stem": "app",
+      "files": [
+        "specs/app-design.md",
+        "specs/app-stories.md",
+        "specs/app-tests.md"
       ]
     }
   ]
@@ -394,7 +432,7 @@ Follow [General writing principles](#general-writing-principles).
 
 #### product-backlog.md
 
-`[product-backlog.md](./product-backlog.md)` records product items. Each Requirements item has a PBI code, one noun for the deliverable, and bullets the user can act on. The table uses the same code and the same noun. Relations, the schedule projection, and product-level status stay in the table.
+`[product-backlog.md](./product-backlog.md)` records product items. The EN authoring seed is a placeholder template (`[product name]`, bracket placeholders). After the [Header (process artifacts)](#header) and Index, the body sections appear in this order: Product overview, Definition of Done, Requirements, Product Backlog, Change record. The Definition of Done section lists **additional** PBI checks for this product on top of the standard Definition of Done in `sdd-dod.mdc`. Each Requirements item has a PBI code, one noun for the deliverable, and bullets the user can act on. The table uses the same code and the same noun. Relations, the schedule projection, and product-level status stay in the table.
 
 ##### Header
 
@@ -405,6 +443,44 @@ Follow [General writing principles](#general-writing-principles). Use [Header (p
 ```markdown
 # Product overview — {product name}
 ```
+
+##### Product overview
+
+The section sits after Index. It ends at the next `---`.
+
+###### Template
+
+```markdown
+# Product overview
+
+- {fact}
+```
+
+###### How to write
+
+- Follow [General writing principles](#general-writing-principles).
+- `{fact}` is one line about what the product does, a phase, or a constraint. Use one to three bullets.
+
+##### Definition of Done
+
+The section sits after Product overview. It ends at the next `---`. Standard close checks live in `sdd-dod.mdc`. This section lists additional PBI checks only.
+
+###### Template
+
+```markdown
+# Definition of Done
+
+{intro}
+
+- {additional check}
+```
+
+###### How to write
+
+- Follow [General writing principles](#general-writing-principles).
+- `{intro}` states that this section is additional criteria on top of the standard Definition of Done in `sdd-dod.mdc`, and that a PBI is `Done` only when both pass. Link [Commitment: Definition of Done](./scrum-in-sdd.md#commitment-definition-of-done) when the reader needs the Scrum term.
+- `{additional check}` is project-specific. Do not repeat the default checks from `sdd-dod.mdc` (acceptance criteria, common quality gate, user confirmed usable, retrospective).
+- Additional checks must be executable and observable. They may name test specs or other verification for this product.
 
 ##### Requirements
 
@@ -446,7 +522,7 @@ Follow [General writing principles](#general-writing-principles).
 - Write `{status}` as `ToDo`, `WIP`, or `Done`.
 - The template groups rows by component, then by PBI code inside the component. The product may use another grouping. Requirements and the table use the same order.
 - A file or skill that already has its own row is not also a parent row. Skill folders start with `sdd-`.
-- There is no DoD column. A Definition of Done section sits above the Product Backlog table. It lists the generic checks. Every PBI uses that list. The checks must be executable and observable, and they carry the verification method for a RID solution. A sprint item uses the Definition of Done section above the first sprint table. A sprint may state a replacement checklist above its own tables.
+- There is no DoD column. [Definition of Done](#definition-of-done) is the first checklist section after Product overview. It lists additional product checks on top of `sdd-dod.mdc`. SBIs use the same section via the link in the Definition of Done block above the first sprint table in `sprint-backlog.md`. A sprint may state a replacement checklist above its own tables.
 - The requirement bullets, related links, and status are owned by the Product Backlog.
 - A Product Backlog item cited by a RID must have a stable item anchor. The `Related` column must link the Sprint Backlog item and the design or test source, so the path from product solution to implementation and verification is navigable.
 - Back-references use the PBI code.
@@ -455,15 +531,35 @@ Follow [General writing principles](#general-writing-principles).
 
 A PBI uses the same three statuses as an SBI: `ToDo`, `WIP`, and `Done`. See Status under `sprint-backlog.md` for the meanings and the examples.
 
-**Apply the Definition of Done checklist before marking a PBI `Done`.** Do not mark the PBI `Done` while any check in that section is open. A related SBI can be `Done` while the PBI stays `ToDo` or `WIP` when the PBI checklist is wider than that SBI.
+**Apply `sdd-dod.mdc` and the additional checks in the product-backlog Definition of Done section before marking a PBI `Done`.** Do not mark the PBI `Done` while any standard or additional check is open. A related SBI can be `Done` while the PBI stays `ToDo` or `WIP` when the PBI checklist is wider than that SBI.
 
 The status cell contains only the word. Put the completion date and the evidence in the sprint note or in `changes-log.md`.
+
+##### Change record
+
+The section sits after the Product Backlog table. It ends at the file end or at `[Back to top](#index)`.
+
+###### Template
+
+```markdown
+# Change record
+
+| Date | Change |
+| --- | --- |
+| {date} | {change} |
+```
+
+###### How to write
+
+- Follow [General writing principles](#general-writing-principles).
+- `{change}` records a product-backlog edit (scope, PBI row, or Requirements). It is not `changes-log.md`, which records shipped work verification.
+- Sort newest first when the table grows.
 
 [Back to top](#index)
 
 #### sprint-backlog.md
 
-`[sprint-backlog.md](./sprint-backlog.md)` is the schedule and the execution list. It contains the RID Log, one section per sprint, and [Unplanned PBIs](#unplanned-pbis) after the last sprint. The ToDo table of each sprint is the single source of truth for that sprint’s items and status.
+`[sprint-backlog.md](./sprint-backlog.md)` is the schedule and the execution list. The EN authoring seed is a placeholder template (`[product name]`, bracket placeholders, one sample sprint). It contains the RID Log, one section per sprint, and [Unplanned PBIs](#unplanned-pbis) after the last sprint. The ToDo table of each sprint is the single source of truth for that sprint’s items and status.
 
 ##### Header
 
@@ -553,8 +649,6 @@ The section sits above the first sprint. It ends at the next `---`.
 
 {intro}
 
-- {check}
-
 {replacement}
 
 - {replacement check}
@@ -565,9 +659,7 @@ The section sits above the first sprint. It ends at the next `---`.
 ###### How to write
 
 - Follow [General writing principles](#general-writing-principles).
-- `{intro}` is two sentences. Every sprint item uses this checklist. Mark the row `Done` only when every check passes.
-- `{check}` is the default list for every sprint that has no replacement.
-- The quality check names the test specs and links them. The live file links the agent test, the MCP test, and the portal test. The EN seed links [Definition of Done](./scrum-in-sdd.md#commitment-definition-of-done).
+- `{intro}` is two sentences. Every sprint item uses `sdd-dod.mdc` and the checklist in [product-backlog.md](./product-backlog.md#definition-of-done). Mark the row `Done` only when every check passes. Do not duplicate the product-backlog bullet list here.
 - `{replacement}` names the sprints that use a different checklist, then says those sprints use this checklist instead.
 - `{item acceptance}` is Additional Done Criteria for one row under that sprint. It does not add a table column.
 - The term is [Commitment: Definition of Done](./scrum-in-sdd.md#commitment-definition-of-done).
@@ -675,7 +767,7 @@ Bad: `Update ethan.md onboard`.
 - `{status}` is one bold word in the cell: `**ToDo**`, `**WIP**`, or `**Done**`.
   - `**ToDo**` means not started.
   - `**WIP**` means started, and an acceptance criterion is still open or the Definition of Done has not been applied.
-  - `**Done**` means every acceptance criterion is met, and the Definition of Done has been applied.
+  - `**Done**` means every acceptance criterion is met, Definition of Done has been applied, and **close confirm** from `sdd-dod.mdc` is recorded in chat before the row shows **Done**. A file on disk alone is not **Done** on the board.
 - Sort the rows in this order.
 Status is first: `**Done**`, then `**WIP**`, then `**ToDo**`.
 Type is second: `Feature`, then `Task`, then `Bug-fix`, then `Documentation`, then `Research`.
@@ -736,7 +828,7 @@ Future actions uses `No future action is recorded yet.`
 
 #### status.md
 
-`[status.md](./status.md)` is the tracking projection. It is not a second sprint backlog. It is not the defect list. Sections, in order: Header, Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs, Last updated. Column rules are in `[framework-design.md](../../../framework-design.md)`.
+`[status.md](./status.md)` is the tracking projection. The EN authoring seed is a placeholder template (`[product name]`, bracket placeholders). It is not a second sprint backlog. It is not the defect list. Sections, in order: Header, Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs, Last updated. Column rules are in `[framework-design.md](../../../framework-design.md)`.
 
 WIP updates use pack rule `sdd-realtime-status.mdc`. Close updates use `sdd-dod.mdc`.
 
@@ -876,7 +968,7 @@ Last updated: {timestamp} {agent name}
 
 #### issues-log.md
 
-`[issues-log.md](./issues-log.md)` is the issue record. Sections, in order: Header, Open issues, Closed issues.
+`[issues-log.md](./issues-log.md)` is the issue record. The EN authoring seed is a placeholder template: empty tables, optional sample row only inside an HTML comment. Sections, in order: Header, Open issues, Closed issues.
 
 ##### Header
 
@@ -885,14 +977,45 @@ Last updated: {timestamp} {agent name}
 Follow [General writing principles](#general-writing-principles). Use [Header (process artifacts)](#header). `{practices}` is the path from `issues-log.md` to `sdd-scrum-practices.md`. `{artifact-section-id}` is `issues-logmd`.
 
 ```markdown
-# Issues log ({product name})
+# Issues log ([product name])
 ```
+
+##### Open issues
+
+###### Template
+
+```markdown
+## Open issues
+
+| Id | Title | Component | Priority | Description | Related | Close Check | Status | Added time |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+```
+
+###### How to write
+
+- `{Status}` is `Open`, `Fixed`, or `Deferred`. `{Priority}` is `Fatal`, `High`, `Medium`, or `Low`.
+- The EN seed may include one sample row inside an HTML comment only. Delete that comment after the first real defect.
+
+##### Closed issues
+
+###### Template
+
+```markdown
+## Closed issues
+
+| Id | Title | Component | Priority | Description | Related | Close Check | Closed Sprint | Closed time |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+```
+
+###### How to write
+
+- A row moves here only when the issue is closed. `{Closed time}` uses `DD/Mon/YYYY`.
 
 [Back to top](#index)
 
 #### changes-log.md
 
-`[changes-log.md](./changes-log.md)` is the conclusion record. Write an entry when a Change is done.
+`[changes-log.md](./changes-log.md)` is the conclusion record. Write an entry when a Change is done. The EN authoring seed is a placeholder template with one sample entry block using bracket placeholders.
 
 ##### Header
 
@@ -901,10 +1024,8 @@ Follow [General writing principles](#general-writing-principles). Use [Header (p
 Follow [General writing principles](#general-writing-principles). Use [Header (process artifacts)](#header). `{practices}` is the path from `changes-log.md` to `sdd-scrum-practices.md`. `{artifact-section-id}` is `changes-logmd`.
 
 ```markdown
-# Changes log ({product name})
+# Changes log ([product name])
 ```
-
-- After copying, replace the product name, the date, and remove sample entries when the project no longer needs them.
 
 ##### Entry
 
@@ -938,7 +1059,7 @@ It links that item by its existing heading.
 - `{verification}` names the check that passed.
 - `{boundary}` says what the entry leaves out.
 Omit the Boundary label and paragraph when the entry does not need them.
-- The EN seed may keep sample entries. After a project copies the file, those samples are removed.
+- The EN seed keeps one placeholder entry block. Replace bracket text or delete that block after the first real conclusion.
 - Good: Why, What changed, and Verification are each one short paragraph. What changed names the file and the sprint item. Boundary is present only to say what the entry leaves out.
   ```markdown
   ## 2026-10-01
@@ -963,15 +1084,172 @@ Omit the Boundary label and paragraph when the entry does not need them.
 
 #### architecture.md
 
-`[architecture.md](./architecture.md)` records the stack and a small number of decisions. Product behavior stays in `product-backlog.md`. This file is optional and written when a decision needs a home.
+`[architecture.md](./architecture.md)` records goals, boundaries, stack, principles, and a small number of decisions. Product behavior stays in `product-backlog.md`. This file is optional and written when a decision needs a home. The EN authoring seed is a placeholder template with bracket examples and named diagram blocks (`[product name]`, not a sample product body).
+
+##### Header and spec index
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+```markdown
+# Architecture — {product name}
+
+> **Purpose**: Record the stack, boundaries, and a small number of decisions. Product behavior belongs in [`product-backlog.md`](./product-backlog.md). Optional / JIT (not a required process artifact).
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
+
+{link to tech-spec or sibling lock doc when present}
+
+| Spec | Role |
+| --- | --- |
+| [`product-backlog.md`](./product-backlog.md) | PBIs, scope, and acceptance |
+| [`{module}/{stem}-design.md`](./{module}/{stem}-design.md) | Module design |
+| [`release.md`](./release.md) | Local startup and go-live |
+```
+
+###### How to write
+
+- Do not add `Type`, `as_of`, or a Definition link. Those belong to [Header (process artifacts)](#header) only.
+- Do not add a fictional product domain in the header or body. Use bracket placeholders and Example rows.
+- The spec index lists paths that resolve from this file. Do not duplicate module design prose here.
+
+##### Architecture goals
+
+###### Template
+
+```markdown
+## 1. Architecture goals
+
+| Goal | Meaning |
+| --- | --- |
+| {goal name} | {one sentence} |
+
+{optional scope link to product-backlog}
+```
+
+###### How to write
+
+- `{goal name}` states an outcome the architecture must preserve, such as degradation, latency, or tenant isolation.
+- Prefer three to six rows. Product acceptance stays on `product-backlog.md`.
+
+##### Product shape
+
+###### Template
+
+```markdown
+## 2. Product shape
+
+| Surface | Role | Who uses it |
+| --- | --- | --- |
+| {surface} | {role} | {actor} |
+```
+
+###### How to write
+
+- `{surface}` names a deployable or user-visible boundary, such as web app, BFF, agent service, MCP server, or batch job.
+
+##### Recommended diagrams
+
+###### Template
+
+Use these **fixed diagram names** as `### Diagram: …` headings. Delete optional blocks when they do not apply.
+
+1. **Diagram: System context** — Mermaid: user, app/BFF, external API or MCP.
+2. **Diagram: Logical view (services)** — Mermaid: client, one or more services, data stores; follow with numbered **principles** (browser does not call DB, and similar).
+3. **Diagram: Auth and tenancy (optional)** — Mermaid flowchart TB: login or API key to scoped `user_id`.
+4. **Diagram: ML inference path (optional)** — Mermaid: client, BFF or agent, model provider, optional vector store; small MVP vs later table for serving and versioning.
+5. **Diagram: Deployment and runtime** — Table: process name, responsibility, deploy shape (`make dev`, container, PaaS).
+
+###### How to write
+
+- Use Mermaid `flowchart` for every diagram block except **Diagram: Deployment and runtime**, which is a table.
+- Do not use ASCII or plain-text arrow diagrams for auth or data flow.
+- Do not put secrets, real hosts, or customer environment names in diagrams.
+- One MVP with one model does not need a full MLOps diagram. Record prompt and model versioning and rollback in a decision or ADR when inference is production-critical.
+- Module internals belong in `{stem}-design.md`, not in these product-wide diagrams.
+
+##### Stack
+
+###### Template
+
+```markdown
+## 4. Stack
+
+| Category | Choice | Note |
+| --- | --- | --- |
+| App / UI | {choice} | {note} |
+| API / services | {choice} | {note} |
+| Data | {choice} | {note} |
+| Auth | {choice} | {note} |
+| Hosting / runtime | {choice} | {note} |
+| CI / tests | {choice} | {note} |
+| ML / inference | {choice or —} | {note} |
+```
+
+###### How to write
+
+- Keep one row per category. Use `—` when the category does not apply yet.
+- Module-level detail stays in `{stem}-design.md`.
+
+##### Design principles and non-goals
+
+###### Template
+
+```markdown
+## 5. Design principles
+
+1. **{name}** — {one sentence}
+
+## 6. Non-goals
+
+- {non-goal bullet}
+```
+
+###### How to write
+
+- Principles are technical boundaries (BFF, citations, confirm-before-write). Non-goals reject scope creep (payments, silent ingest, platform overkill).
+
+##### Decisions
+
+###### Template
+
+```markdown
+## 7. Decisions
+
+**Decision: {short title}**
+
+- {fact}
+- ADR: [{ADR-NNN}](./adr/ADR-NNN-{slug}.md) when ADR-worthy
+```
+
+###### How to write
+
+- List a small number of decisions. Move long rationale into `specs/adr/` or `{stem}-design.md`.
+
+##### Module specs and release
+
+###### Template
+
+```markdown
+## 8. Module specs
+
+Per-module design, stories, and tests live under `{artifacts_root}/` as named in `artifacts-map.json`.
+
+Local startup and go-live order are in [`release.md`](./release.md).
+```
+
+###### How to write
+
+- Replace `{artifacts_root}` with the folder name the project uses, such as `specs`.
 
 [Back to top](#index)
 
 #### {module-name}-design.md
 
-`{module-name}` is the stem stored in `artifacts-map.json`. The default stem is the module folder name. A shorter stem is set once.
+The design spec path is the `*-design.md` or `design.md` entry in that module's `files` list ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)). `{stem}` or `{module-name}` in headings is the filename prefix when the map uses `{stem}-design.md`.
 
-`{module-name}-design.md` is the design spec.
+`{module-name}-design.md` is the usual foldered name. Flat layouts use `{artifacts_root}/{stem}-design.md` or singleton `design.md`.
 
 Section rules for a module file are written when that seed is in review. They follow [seed-artifacts-building-guide.md](../../../../seed-artifacts-building-guide.md).
 
@@ -979,31 +1257,205 @@ Section rules for a module file are written when that seed is in review. They fo
 
 #### {module-name}-stories.md
 
-`{module-name}-stories.md` holds user stories and acceptance criteria.
+<a id="module-name-storiesmd"></a>
+
+The stories path is the `*-stories.md` or `stories.md` entry in that module's `files` list. Do not assume `{artifacts_root}/{folder}/{stem}-stories.md` when the map lists another path.
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+````markdown
+# {Product or module} — user stories
+
+{One paragraph: scope, related design file, default roles.}
+
+**Locales:** {locale list when UI exists}. User-facing copy is i18n keys. Tests assert keys, roles, or `data-testid`, not one language's sentences.
+
+**Roles:** {role list}
+
+**Default Given:** unless stated, {shared precondition}.
+
+---
+
+## `{feature-id}` — {Feature title}
+
+### User story 1 — {short title}
+
+**As a** {role}
+**I want** {capability}
+**So that** {value}
+
+#### AC1
+
+```gherkin
+Scenario: {observable outcome name}
+  Given {precondition}
+  When {action}
+  Then {visible or API outcome}
+```
+````
+
+###### How to write
+
+- Follow [General writing principles](#general-writing-principles).
+- Write stories when a [Feature](#term-feature) or Implementable PBI is ready for design. Use [6. User Story Mapping](#6-user-story-mapping) to order slices before you fill this file.
+- Trace each story to a parent PBI or SBI in the intro or in an optional AC tag line, such as `#### AC1 — PBI-42 / WA-01`.
+- One user story is one outcome. Split when roles or outcomes differ.
+- One Gherkin scenario is one behavior. Name the scenario for the outcome the user sees.
+- When the product has UI, scenarios use stable selectors: `role`, accessible name, or `data-testid`. They do not lock English copy as the contract.
+- PBI requirement bullets stay on `product-backlog.md`. `sdd-refine-backlog` does not author Gherkin here.
+- Author and revise this file with `sdd-atdd` or as part of `sdd-spec-to-build` when the SBI needs acceptance criteria before build.
+- Gherkin rules and coverage expectations are in [Acceptance criteria practices](#acceptance-criteria-practices).
+  good example: vertical story: sign in and reach the signed-in landing
+  bad example: four stories for login page, POST route, session storage, and API wiring for one Feature
 
 [Back to top](#index)
 
 #### {module-name}-tests.md
 
-`{module-name}-tests.md` is the test spec.
+The test spec path is the `*-tests.md` or `tests.md` entry in that module's `files` list ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
 
 [Back to top](#index)
 
 #### release.md
 
-`[release.md](./release.md)` records how to start locally and the order of steps at go-live. Do not put host names, secrets, or customer environment names here. This file is optional and written when those steps exist.
+`[release.md](./release.md)` records local startup, production release order, smoke checks, and upgrade or rollback. Product runtime shape stays in [`architecture.md`](./architecture.md). Host-specific values belong in a separate **`deployment-plan.md`** or the operator secret store, not in this seed. The EN authoring seed is a placeholder template with bracket examples. Do not put real host names, secrets, or customer environment names in `release.md`.
+
+##### Header and spec index
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+```markdown
+# Release — {product name}
+
+> **Purpose**: How to start locally, the order of production release steps, and upgrade or rollback. Do not write real host names, secrets, or customer environment names here. Optional / JIT (not a required process artifact).
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
+
+| Spec | Role |
+| --- | --- |
+| [`architecture.md`](./architecture.md) | Stack and runtime diagram |
+| [`release.md`](./release.md) | Local, release order, smoke, rollback |
+| [`deployment-plan.md`](./deployment-plan.md) | Optional operator detail for a target node |
+```
+
+###### How to write
+
+- Do not add `Type`, `as_of`, or a Definition link. Those belong to [Header (process artifacts)](#header) only.
+- Do not add a sample product name in the header beyond `{product name}` in the title.
+
+##### Local development
+
+###### Template
+
+Numbered steps: install deps, local data, `make up` or `make dev`, smoke, `make down`. Link a local-startup PBI when the backlog defines one.
+
+##### Pre-flight, release order, smoke
+
+###### Template
+
+Sections: **Pre-flight** artifact table; optional **Diagram: Production runtime** (Mermaid `flowchart TB`, same style as [architecture.md](#architecturemd)); **Production release order** table (isolation → CI → env → DB → deploy → DNS → TLS → smoke); **Production placeholders** table; **Environment variable names** (no values); **Smoke checklist**; **Upgrade**; **Rollback** with `changes-log.md` on failure.
+
+###### How to write
+
+- Use Mermaid for production runtime diagrams. Do not use ASCII arrow diagrams.
+- Release order matches a semi-automated deploy: database reachable before public DNS; container healthy before TLS cutover.
+- `deployment-plan.md` holds stack name, ports, domains, and image coordinates filled for operators; `release.md` stays product-generic.
+- Require **`make up`** / **`make down`** when the project has a root Makefile with `dev`, `up`, and `down` targets.
 
 [Back to top](#index)
 
 #### test-strategy.md
 
-`[test-strategy.md](./test-strategy.md)` is the product-level test strategy at `{artifacts_root}/test-strategy.md`. It extends the **common-test-strategy** baseline and must not weaken it. Module test specs are `{stem}-tests.md`. This file is optional and written when the project defines a product-wide quality bar beyond module specs.
+`[test-strategy.md](./test-strategy.md)` is the **product-level** test strategy at `{artifacts_root}/test-strategy.md`. It extends **common-test-strategy** and must not weaken it. **Detailed test plans and test cases** belong in module **`{stem}-tests.md`** only; do not copy case lists into `test-strategy.md`. The EN authoring seed is a placeholder template with bracket examples. This file is optional and written when the project defines a product-wide quality bar beyond module specs.
+
+##### Header and scope
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+```markdown
+# Test strategy — {product name}
+
+> **Purpose**: Product-wide quality bar: baseline extension, pyramid, tools, environments, CI policy, and named critical journeys. Optional / JIT (not a required process artifact).
+> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
+
+This file is the **product-level test strategy** only. Detailed test plans, scenario lists, and case-level mapping live in `{stem}-tests.md`.
+```
+
+###### How to write
+
+- Do not add `Type`, `as_of`, or a Definition link. Those belong to [Header (process artifacts)](#header) only.
+- Do not add a sample product name in the header beyond `{product name}` in the title.
+- Do not restate Gherkin AC or per-story automation tables here; link `{stem}-tests.md`.
+
+##### Baseline through module specs
+
+###### Template
+
+Sections: **Baseline** table; **Product-specific deltas**; **Test goals** (product outcomes); **CI default vs acceptance closure**; **Pyramid and tools** (optional multi-service columns); **Environments and data**; **External dependencies (CI vs closure)**; **Stricter rules**; **Module test specs** table linking `{stem}-tests.md`; **Secrets and honesty**.
+
+###### How to write
+
+- **CI default vs acceptance closure**: green PR CI does not alone satisfy MVP or go-live acceptance when live deps are in scope for the slice (pattern from mature multi-service products).
+- E2E: real browser; wait for rendered state; stable selectors; dynamic apps use `make dev` / `make up` or Playwright `webServer`, not bare DOM inspection before load.
+- Opt-in LLM, vision, or vendor **eval** is named at product level; datasets and thresholds live in `{stem}-tests.md` or linked knowledge.
+- A second product-level file (for example `mcp-test-strategy.md`) is rare; prefer one `test-strategy.md` plus module `{stem}-tests.md` files unless UI and MCP policies truly diverge at product scope.
 
 [Back to top](#index)
 
 #### .secrets
 
-`.secrets` stores secret names and where the values live. It does not store secret values. This file is optional and written when the project has secrets. Do not commit real values.
+`[.secrets](./.secrets)` at `{artifacts_root}/.secrets` looks like a **`.env` file**: `NAME=` with an empty value, `#` line comments for rules and groups, and optional end-of-line `#` on each key for where the value lives. It holds no secret values. Filled values stay in gitignored `.env.local` or the host env UI. This file is optional and written when the project has secrets. The EN authoring seed is a placeholder template with bracket examples and sample key names.
+
+##### Header and keys
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles). Use a `dotenv` fenced block, not Markdown headings inside the live file.
+
+```dotenv
+# {product name} — secret names only. Leave every value empty. Do not commit real keys, tokens, or passwords.
+# Where the value lives: end-of-line # comment (example: .env.local, Portainer, CI secret).
+# Filled values belong in gitignored files only (.env.local, operator env on the host).
+# Optional artifact. See sdd-scrum-practices.md#secrets and release.md.
+
+# Database
+DATABASE_URL=  # .env.local or Portainer
+
+# Auth and encryption
+SESSION_SECRET=  # .env.local or Portainer
+KEYS_ENCRYPTION_KEY=  # Portainer
+
+# Third-party APIs
+OPENAI_API_KEY=  # .env.local
+RESEND_API_KEY=  # Portainer
+
+# Deploy, CI, and service-to-service
+GITHUB_TOKEN=  # GitHub Actions secret
+CRON_SECRET=  # Portainer
+MCP_AUTH_TOKEN=  # Portainer on web and MCP stacks
+
+# One-time bootstrap (remove or rotate after first admin login when the product requires)
+ADMIN_SEED_PASSWORD=  # Portainer at first deploy
+
+# {SECRET_NAME}=  # {where the value lives}
+```
+
+###### How to write
+
+- Do not add `Type`, `as_of`, or a Definition link. Those belong to [Header (process artifacts)](#header) only.
+- Use `KEY=` lines only; never paste a value after `=`.
+- Group keys with `#` comment lines (example `# Database`). Those are dotenv comments, not Markdown headings.
+- End-of-line `#` names **where the value lives** only. Do not add a second clause after `|`.
+- Delete example keys the product does not use; add rows for secrets the product actually has.
+- App runtime copy-paste lists may also use `.env.example` in the app repo; do not duplicate every key when `.env.example` already owns the full list.
+- Link [`release.md`](./release.md) for deploy env names when both files exist; keep `.secrets` limited to true secrets.
 
 [Back to top](#index)
 
@@ -1151,6 +1603,7 @@ Evaluate `product-backlog.md` against this list before a sprint takes an item, a
   Too small (Acceptance Criteria level): the password field on the login screen shows `***`.
 - [ ] 9. The `Size` cell is `Epic`, `Theme`, or `Implementable`. Only [Implementable (PBI Size)](#term-pbi-size-implementable) may name a sprint and have SBIs. A sprint plan may name an Epic or Theme when the job needs that outcome. The `Sprint` cell and SBIs still wait until Size is Implementable. [Epic (PBI Size)](#term-pbi-size-epic) and [Theme (PBI Size)](#term-pbi-size-theme) have no SBIs until split or tightened. Too small text is merged into another related PBI or removed from PBI requirement bullets.
 - [ ] 10. Every Markdown link in `product-backlog.md` resolves from that file. Open the Requirements list and the Product Backlog `Related` column. Each link target file exists in the project. Each `#` anchor exists in that target file. A PBI back-reference in `Related` or in another process file points at `#pb-n` on the Product Backlog table row, not at `#req-{pb-n}`. On [Unplanned PBIs](#unplanned-pbis) in `sprint-backlog.md`, each `Related` link uses a path that resolves from `sprint-backlog.md`, such as `./product-backlog.md#pb-8`.
+- [ ] 11. Body sections appear in order: Product overview, Definition of Done, Requirements, Product Backlog, Change record. The Definition of Done intro states additional criteria on top of `sdd-dod.mdc`.
 
 [Back to top](#index)
 
@@ -1215,5 +1668,75 @@ The ladder is the same login wording as [4. Size product backlog](#4-size-produc
 **Good example (sprint plan).** PBI "Log in with a user name and a password" is one Feature SBI: "User can sign in with a user name and a password and see the home page." A shared Task SBI "Add the login route to the public instructions page" is listed only because every Feature in that sprint needs that route.
 
 **Bad example (sprint plan).** The same PBI becomes four SBIs: "Build the login page frontend", "Implement POST /auth/login", "Add session storage", and "Connect the frontend to the auth API." Those are technical layers for one Feature. They belong in implementation planning, not as four sprint rows.
+
+[Back to top](#index)
+
+### 6. User Story Mapping
+
+<a id="6-user-story-mapping"></a>
+
+User Story Mapping orders what the user does, slices vertical stories for an MVP, then records stories and acceptance criteria in `{stem}-stories.md`. See [User Story Mapping (terminology)](#term-user-story-mapping) and [ATDD (terminology)](#term-atdd).
+
+#### When to map
+
+- The PBI is [Implementable (PBI Size)](#term-pbi-size-implementable) and the sprint has a [Feature](#term-feature) SBI for one user-visible outcome.
+- Design is about to start and `{stem}-stories.md` has no stories for that outcome yet.
+
+#### Steps
+
+1. **Backbone:** List user activities left to right in the order the user does them.
+2. **Slices:** Under each activity, list user tasks. Draw horizontal slices for MVP 1, MVP 2, and later increments. Match [2. Slice product to MVPs](#2-slice-product-to-mvps).
+3. **Pick the next slice:** Choose the top slice that delivers one job. Do not split that slice by frontend, API, or database layers on the sprint board ([5. Feature break down](#5-feature-break-down)).
+4. **Write stories:** For each task in the slice, write one user story (`As a` / `I want` / `So that`) and acceptance criteria in the module stories path from the map. Follow [Acceptance criteria practices](#acceptance-criteria-practices) and the file shape in [{module-name}-stories.md](#module-name-storiesmd). Run `sdd-atdd` when the agent should draft or revise that file.
+
+#### Acceptance criteria practices
+
+<a id="acceptance-criteria-practices"></a>
+
+Acceptance criteria state testable behavior before implementation ([ATDD](#term-atdd)). They live under each user story as `#### ACn` headings with one or more Gherkin scenarios.
+
+###### Shape
+
+- Use `Scenario:` with `Given`, `When`, and `Then`. Add `And` only to extend the same step kind.
+- Name each scenario for the outcome the user or operator can observe, not the class or file under test.
+- Optional trace tag on the heading, such as `#### AC1 — Web-portal-09 / WA-01`, when the scenario maps to a PBI, SBI, or external id.
+
+###### Coverage
+
+- Each critical user story has at least one happy-path scenario.
+- Each critical user story has at least one failure, empty, or denial scenario when the product must handle it (validation error, unauthorized, missing data).
+- One scenario is one behavior. Split when `When` or `Then` would describe two unrelated outcomes.
+
+###### Assertions and i18n
+
+- `Then` steps assert visible or API outcomes the user cares about, not internal flags or private fields.
+- When the product has UI, prefer `role`, accessible name, or `data-testid` in steps. Use i18n keys in the spec narrative; do not lock one locale's sentence as the only contract in Gherkin.
+  good example: `Then the guide with test id instructions-guide is shown`
+  bad example: `Then the page title is "Welcome"`
+  good example: `Then the seed exits with failure`
+  bad example: `Then process.exitCode equals 1`
+
+###### Shared preconditions
+
+- State role, session, and fixture assumptions in `Given`, or once in the file **Default Given** line when every scenario shares them.
+- Do not repeat the same five-line `Given` block in every scenario when the default already covers it.
+
+###### Order and tools
+
+- Write or revise acceptance criteria before production code for that story ([ATDD](#term-atdd)). Unit and integration tests follow the scenarios and the project test spec.
+- `sdd-atdd` drafts or revises `{stem}-stories.md`. Automated tests implement the scenarios; they do not replace the spec file.
+
+#### Good and bad mapping
+
+- good example: MVP 1 is save a card, see a value while saving, agent prices the card, RAG returns matching notes. Each row is a vertical story the user can finish.
+- bad example: MVP 1 is only UI stories while agent and RAG stories sit in a later MVP when the user cannot finish the job without them.
+- good example: one Feature SBI for sign-in with user name and password; stories in `{stem}-stories.md` cover happy path and one failure path.
+- bad example: four sprint SBIs for login page, POST route, session, and API wiring for the same Feature.
+
+#### Relations
+
+- `product-backlog.md` holds PBI outcomes and requirement bullets, not Gherkin.
+- `sdd-refine-backlog` sets Size and PBI shape. It does not write user stories or acceptance criteria.
+- `sdd-spec-to-build` may load `sdd-atdd` when an SBI needs acceptance criteria before the build phase.
 
 [Back to top](#index)

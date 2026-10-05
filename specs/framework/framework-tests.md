@@ -378,12 +378,26 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Test steps:** Mark a small task done per **sdd-dod.mdc**, or run `/sdd-retrospective` for the current sprint.
 - **Expected results:** The reply includes a **Retrospective Summary** (ADRs created, knowledge added or updated, or an explicit empty retrospective). The skill writes ADR, knowledge, and sprint-backlog **Retrospective** records in the same turn when needed, without a second user confirm. When the sprint has no `### Retrospective` section, the skill creates it per the seed **Ensure Retrospective section** rules, then appends the numbered block. When `adr` or `knowledge` is missing from the map, it stops and names **sdd-update-project** instead of inventing paths.
 
+#### CE-SKILL-12 — sdd-atdd
+
+- **Layer:** L1.
+- **Pre-condition:** Audit verdict is `Usable`. `artifacts-map.json` lists at least one module with `{stem}-stories.md`. Client practices include `#module-name-storiesmd` and `#6-user-story-mapping`. Seed: `specs/framework/seeds/skills/sdd-atdd/SKILL.md`.
+- **Test steps:** Ask to write acceptance criteria for one Feature SBI into the module stories file, or run `/sdd-atdd`.
+- **Expected results:** The reply includes an **ATDD Summary** with target path and proposed scenarios. The skill does not edit `{stem}-stories.md` before the user picks. It does not write `product-backlog.md` or production code.
+
 #### CE-SKILL-11 — sdd-review-status Done pick runs retrospective
 
 - **Layer:** L1.
 - **Pre-condition:** Audit verdict is `Usable`. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md` and `specs/framework/seeds/skills/sdd-retrospective/SKILL.md`.
-- **Test steps:** After a status review, pick in chat to set one SBI to **Done** (user already confirmed usable).
+- **Test steps:** After a status review, pick in chat to set one SBI to **Done** (user already gave **close confirm** for that SBI).
 - **Expected results:** **sdd-retrospective** runs in the same turn before the **Done** row write. Sprint **Retrospective** (create-if-missing plus append) and any ADR or knowledge from that run land before `sprint-backlog.md` or `product-backlog.md` shows **Done** for that item.
+
+#### CE-RULE-01 — no Done without close confirm
+
+- **Layer:** L1.
+- **Pre-condition:** SBI deliverable files exist; row is **WIP** or **ToDo**. Seed: `specs/framework/seeds/rules/sdd-dod.mdc`.
+- **Test steps:** Agent completes the last deliverable edit in one turn without a prior user **close confirm**.
+- **Expected results:** `sprint-backlog.md` row stays **WIP** or **ToDo**; agent asks the **close confirm** question from `sdd-dod.mdc`; `status.md` does not show that SBI as **Done**.
 
 #### CE-SKILL-03 — sdd-create-skill
 
@@ -406,12 +420,26 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Test steps:** List skill folders that would be copied to the pack.
 - **Expected results:** `sdd-review-status` is the status skill. `sdd-tracking` and `sdd-update-status` are not shippable status folders. The on-disk folder `specs/framework/seeds/skills/sdd-tracking/` is not copied as the status skill.
 
+#### CE-SKILL-13 — improve-prompt
+
+- **Layer:** L1.
+- **Pre-condition:** Seed: `specs/framework/seeds/skills/improve-prompt/SKILL.md` and `examples.md`. Folder `prompt-optimizer` is absent from the seed tree.
+- **Test steps:** Paste a vague task prompt and ask to improve it. Read the seed for advisory-only limits and absence of ECC catalogs.
+- **Expected results:** The reply includes diagnosis and a fenced optimized prompt. No implementation files are written. The seed description states advisory-only use. The seed body has Capabilities, Knowledge, Limits, and Anti-patterns. The seed does not name ECC, `configure-ecc`, or fixed slash-command orchestration tables. Frontmatter has only `name` and `description`. `examples.md` holds worked examples; intent labels in that file use English signal words only. Design: [framework-design § improve-prompt](../framework/framework-design.md#improve-prompt).
+
 #### CE-SKILL-07 — Backlog-only skills
 
 - **Layer:** L1.
-- **Pre-condition:** The names `sdd-atdd`, `sdd-refine-backlog`, `sdd-retrospective`, `sdd-close-sprint`, and `sdd-update-specs` have no seed in the tree yet.
-- **Test steps:** Read the design section for those names.
-- **Expected results:** This file adds no steps for them. Acceptance stays on the product-backlog row. A future case must still use `{client_root}`, must wait for confirm before a project write, and must not assume locale `EN`.
+- **Pre-condition:** A skill name appears on a product-backlog row but has no authoring seed under `specs/framework/seeds/skills/`, or the skill is retired (for example `sdd-close-sprint`).
+- **Test steps:** Read [`framework-design.md`](../framework/framework-design.md) **Other skills** and the product-backlog row for that name.
+- **Expected results:** Shipped skills (`sdd-atdd`, `sdd-update-specs`, `sdd-retrospective`, `sdd-refine-backlog`, and others with seeds) have a matching **CE-SKILL-** case or an explicit L1 note on the design section. This file adds no steps for a name that still has no seed. A future case must use `{client_root}`, wait for confirm before a project write, and must not assume locale `EN`.
+
+#### CE-SKILL-14 — sdd-update-specs
+
+- **Layer:** L1.
+- **Pre-condition:** Seed: `specs/framework/seeds/skills/sdd-update-specs/SKILL.md`.
+- **Test steps:** Read the description and Limits section.
+- **Expected results:** The description states engineering specs and names adjacent skills. Limits ban writes to the five process files. The skill waits for chat confirm before a project write.
 
 #### CE-SKILL-08 — get-status in HanS
 
@@ -950,7 +978,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** The sprint item table in the design and the EN sprint-backlog seed.
 - **Test steps:** Read the header row.
-- **Expected results:** Columns are `#`, Code, SBI, Parent PBI, Module/Type, Related specs, Status. A Definition of Done section sits above the first sprint table.
+- **Expected results:** Columns are `#`, Code, SBI, Parent PBI, Module/Type, Related specs, Status. A Definition of Done section sits above the first sprint table and links to `product-backlog.md#definition-of-done` without duplicating that checklist ([ADR-098](../adr/ADR-098-sprint-backlog-dod-link-product-backlog.md)).
 
 #### CE-TPL-05 — Locale folders for the guide and practices
 
@@ -965,6 +993,13 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Pre-condition:** `{workspace}` is `C:\work\demo`. The map stores `specs/product-backlog.md`. `artifacts_root` is `specs`.
 - **Test steps:** Open the stored path.
 - **Expected results:** The file opened is `C:\work\demo\specs\product-backlog.md`. The root is not prefixed again. The map file itself stays `C:\work\demo\artifacts-map.json`.
+
+#### CE-TPL-12 — flat module paths in the map
+
+- **Layer:** L1.
+- **Pre-condition:** `{workspace}/artifacts-map.json` lists process files and one module with `files` only (no `folder`): `specs/app-design.md`, `specs/app-stories.md`, `specs/app-tests.md`. Those files exist on disk.
+- **Test steps:** Run `sdd-audit-artifacts` or open each stored module path as `{workspace}/<path>`.
+- **Expected results:** Verdict is `Usable` when the five process files also open from the map. Each flat module path opens without prefixing `artifacts_root` twice.
 
 #### CE-TPL-07 — constants.json is not a map row
 
@@ -992,4 +1027,18 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** `specs/framework/seeds/templates/EN/issues-log.md`.
 - **Test steps:** Read the two tables and the header comment.
-- **Expected results:** The sections are Open issues, then Closed issues. Open columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Status`, and `Added time`. Open status values are `Open`, `Fixed`, and `Deferred`. Closed columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Closed Sprint`, and `Closed time`. Priority values are `Fatal`, `High`, `Medium`, and `Low`. A sample row sits only in a comment. The header has three lines: `Type`, `as_of`, and a Definition link. Pass is a person reading the seed and confirming those lines. No fixture workspace. Playwright does not apply.
+- **Expected results:** The title is `Issues log ([product name])`. The sections are Open issues, then Closed issues. Open columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Status`, and `Added time`. Open status values are `Open`, `Fixed`, and `Deferred`. Closed columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Closed Sprint`, and `Closed time`. Priority values are `Fatal`, `High`, `Medium`, and `Low`. A sample row sits only in a comment with bracket placeholders. The header has three lines: `Type`, `as_of`, and a Definition link. Pass is a person reading the seed and confirming those lines. No fixture workspace. Playwright does not apply.
+
+#### CE-TPL-11 — EN changes-log seed shape
+
+- **Layer:** L1.
+- **Pre-condition:** `specs/framework/seeds/templates/EN/changes-log.md`.
+- **Test steps:** Read the title, header, and first entry block.
+- **Expected results:** The title is `Changes log ([product name])`. The header has three lines: `Type`, `as_of`, and a Definition link. One `##` date heading and one `###` entry title use bracket placeholders. The entry has **Why**, **What changed**, and **Verification** paragraphs with bracket placeholders. No Pokymon or other sample product name appears in the body.
+
+#### CE-TPL-13 — EN .secrets seed shape
+
+- **Layer:** L1.
+- **Pre-condition:** `specs/framework/seeds/templates/EN/.secrets`.
+- **Test steps:** Read the file line by line.
+- **Expected results:** The file is dotenv-shaped: `#` comment lines for rules and groups; secret lines are `NAME=` with nothing after `=` before an optional end-of-line `#` that names where the value lives. No `Type`, `as_of`, or Markdown table. No line contains a token-like secret value. A placeholder line `{SECRET_NAME}=` appears at the end. Pass is a person reading the seed and confirming those lines. No fixture workspace.

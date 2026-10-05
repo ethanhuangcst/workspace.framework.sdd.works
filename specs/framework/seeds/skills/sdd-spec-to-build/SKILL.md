@@ -25,9 +25,15 @@ Implementation goes wrong when the requirement is still split across the sprint 
 ## Phase 2 — Build
 
 1. Read the SBI, its acceptance criteria, and the design from Phase 1. If the design is missing or an unknown is still open, return to Phase 1.
-2. Load only the skills that this SBI needs. Specs that the change touches go through `sdd-update-specs`. Acceptance-driven behavior changes go through `sdd-atdd` when the SBI needs them. Do not invent a third implementation path. Do not load `sdd-tdd`, `sdd-design`, or `sdd-implement`.
+2. Load only the skills that this SBI needs. Specs that the change touches go through `sdd-update-specs` (`{client_root}/skills/sdd-update-specs/SKILL.md` or pack seed `specs/framework/seeds/skills/sdd-update-specs/SKILL.md`). Acceptance-driven behavior changes go through `sdd-atdd` when the SBI needs them. Do not invent a third implementation path. Do not load `sdd-tdd`, `sdd-design`, or `sdd-implement`.
 3. Implement that SBI. Confirm before writing project files.
-4. Stop when the acceptance criteria are met and the Definition of Done for this SBI is satisfied. Do not open the next SBI.
+4. Stop when acceptance criteria are met and checks in `{client_root}/rules/sdd-dod.mdc` are satisfied except **close confirm** and any **Done** row write. Do not open the next SBI.
+
+## Limits
+
+- Do not set PBI, SBI, or sprint status to **Done** or **WIP** on process files.
+- When the SBI is ready to close, state that in chat and apply **close confirm** from `sdd-dod.mdc`. Load **sdd-retrospective** when that rule requires it before **Done** writes.
+- Artifact confirm for specs and code is separate from **close confirm**.
 
 ## Why one SBI
 

@@ -1,7 +1,7 @@
-# Issues log (Pokymon Card Collection)
+# Issues log ([product name])
 
-> Type: Framework (process) artifact of Pokymon Card Collection
-> as_of: 2026-10-01
+> Type: Framework (process) artifact of [product name]
+> as_of: [YYYY-MM-DD]
 > [Definition](./sdd-scrum-practices.md#issues-logmd)
 
 ---
@@ -13,9 +13,9 @@
 | | | | | | | | | |
 
 <!--
-Sample row. Delete this comment after the first real defect. Do not copy another product's rows.
+Sample row. Delete this comment after the first real defect.
 
-| WA-01 | Home is still the logo card | Web-app | High | `/` still shows the logo card. The guide should be the home page. | [Web-portal-09](./product-backlog.md#pb-76) Public landing, footer, reset link, password gate | `e2e/auth.spec.ts` shows the instructions guide on `/` | Open | 30/Sep/2026 |
+| [Id] | [Title] | [Component] | [Priority] | [Description under three lines.] | [Related spec id, link, and name] | [Close check] | Open | [DD/Mon/YYYY] |
 -->
 
 ## Closed issues

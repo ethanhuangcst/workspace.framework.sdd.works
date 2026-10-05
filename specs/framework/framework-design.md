@@ -1040,6 +1040,28 @@ Sprint-planning skill. [Skill-05](../product-backlog.md#pb-26). Constants key `s
 
 The skill proposes existing PBIs for the next ToDo sprint (or the sprints the user names) so each sprint is one MVP. [2. Slice product to MVPs](./seeds/templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) stays in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). The skill writes the five process files only after the user picks. It does not create a PBI, mark Done, or edit the install ledger.
 
+### sdd-atdd
+
+Acceptance Test-Driven Development skill. [Skill-01](../product-backlog.md#pb-21). Constants key `sdd-atdd`. [ADR-085](../adr/ADR-085-sdd-spec-to-build.md) loads it from `sdd-spec-to-build` when an SBI needs acceptance criteria before build.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/sdd-atdd/SKILL.md` |
+| After install | `{client_root}/skills/sdd-atdd/SKILL.md` |
+
+The skill drafts or revises user stories and Gherkin acceptance criteria in `{stem}-stories.md`. Shape and mapping rules live in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) (`#module-name-storiesmd`, `#6-user-story-mapping`). It confirms before write. It does not write `product-backlog.md` or production code. User confirmed usable 2026-10-05 ([feature-52](../sprint-backlog.md#sprint-7)). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-12**.
+
+### sdd-update-specs
+
+Engineering spec alignment skill. [Skill-09](../product-backlog.md#pb-64). Constants key `sdd-update-specs`. [ADR-085](../adr/ADR-085-sdd-spec-to-build.md) loads it from `sdd-spec-to-build` when an SBI needs specs to move with the build.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/sdd-update-specs/SKILL.md` |
+| After install | `{client_root}/skills/sdd-update-specs/SKILL.md` |
+
+The skill compares current work with related engineering specs from the sprint row and `{workspace}/artifacts-map.json`, sends a gap report, and writes only after the user confirms. Scope is `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `architecture.md`, `release.md`, `test-strategy.md`, and module files from the map. It does not write the five process files. It does not mark backlog rows Done. User confirmed usable 2026-10-05 ([feature-44](../sprint-backlog.md#sprint-7)). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-14**.
+
 ### sdd-create-skill
 
 Authoring skill. [Skill-13](../product-backlog.md#pb-87). [ADR-074](../adr/ADR-074-sdd-create-skill.md), [ADR-092](../adr/ADR-092-pack-authoring-skill-sdd-prefix.md). Not a practices job.
@@ -1073,6 +1095,18 @@ Authoring skill for a pack rule file. [Skill-16](../product-backlog.md#pb-94). [
 
 The skill writes one rule file at `{client_root}/{rules_dir}/<name>.mdc`. `rules_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `rules_dir` cannot be read, it stops without writing. A new key in the `constants.json` `rules` object is a second confirm. Framework-bound rule file names use an `sdd-` prefix per [ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md).
 
+### improve-prompt
+
+Utility skill for prompt quality. [Skill-14](../product-backlog.md#pb-89). [ADR-099](../adr/ADR-099-improve-prompt-skill-name.md). Not a practices job. No `constants.json` key.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/improve-prompt/SKILL.md` |
+| Sibling reference | `specs/framework/seeds/skills/improve-prompt/examples.md` |
+| After install | `{client_root}/{skills_dir}/improve-prompt/SKILL.md` |
+
+The skill diagnoses a draft prompt and outputs a ready-to-paste improved version. It follows [TRUE AGENT](#true-agent). It does not write project files, run commands, or implement the user's task. It does not recommend a fixed catalog of slash commands, ECC components, or vendor models. Optional harness hints name only skill folders that exist under `{client_root}/{skills_dir}/`. Wording checks use `friendly-language.mdc` on the client root. After pack update, remove stale `{client_root}/{skills_dir}/prompt-optimizer/` when present. User confirmed usable 2026-10-05 ([feature-46](../sprint-backlog.md#sprint-7)). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-13**.
+
 ### Other skills
 
 | Skill | Seed |
@@ -1082,7 +1116,11 @@ The skill writes one rule file at `{client_root}/{rules_dir}/<name>.mdc`. `rules
 | `sdd-tracking` | `specs/framework/seeds/skills/sdd-tracking/SKILL.md` (not the status skill; [ADR-076](../adr/ADR-076-review-status-one-skill.md)) |
 | `sdd-update-project` | `specs/framework/seeds/skills/sdd-update-project/SKILL.md` |
 | `sdd-refine-backlog` | `specs/framework/seeds/skills/sdd-refine-backlog/SKILL.md` |
-| `sdd-atdd`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
+| `sdd-update-specs` | `specs/framework/seeds/skills/sdd-update-specs/SKILL.md` |
+| `sdd-retrospective` | `specs/framework/seeds/skills/sdd-retrospective/SKILL.md` |
+| `sdd-close-sprint` | Retired ([ADR-076](../adr/ADR-076-review-status-one-skill.md)). |
+| `sdd-atdd` | `specs/framework/seeds/skills/sdd-atdd/SKILL.md` |
+| `improve-prompt` | `specs/framework/seeds/skills/improve-prompt/SKILL.md` ([ADR-099](../adr/ADR-099-improve-prompt-skill-name.md)) |
 
 ## templates
 
@@ -1123,7 +1161,7 @@ It is not a project file under `artifacts_root`. Do not copy it into the project
 
 ### artifacts-map.json
 
-Path configuration for this project. It is an SDD Core artifact with `scrum-in-sdd.md` and `sdd-scrum-practices.md`. It is not a Framework process Markdown artifact and not a copied template seed. The JSON shape is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md).
+Path configuration for this project. It is an SDD Core artifact with `scrum-in-sdd.md` and `sdd-scrum-practices.md`. It is not a Framework process Markdown artifact and not a copied template seed. The JSON shape is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md). Module `files` lists are authoritative; `folder` is optional ([ADR-100](../adr/ADR-100-optional-module-folder.md)).
 
 | Role | Path |
 | --- | --- |
@@ -1154,20 +1192,20 @@ No standing rule updates this file. A turn updates a stored path when the user a
 
 ### product-backlog.md
 
-Product requirements and acceptance for the project. The seed is an example a new project copies. It is not this repo's product backlog.
+Product requirements and acceptance for the project. The seed is a placeholder template a new project copies when the file is missing. It is not this repo's product backlog.
 
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/product-backlog.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/product-backlog.md` |
 
-Columns, in this order: `#`, Component, PBI Code, Description, Related, Sprint, Status.
+Columns, in this order: `#`, Component, PBI Code, Description, Size, Related, Sprint, Status.
 
-The column name stays Component. There is no DoD column. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. Requirements link `{pbi code}` to `#pb-N` on the table row. The table links `{pbi code}` to `#req-pb-N` on the Requirements line. `#pb-N` stays on the PBI Code cell for sprint-backlog and `Related` links. A Definition of Done section above the Product Backlog table lists the generic checks. Every PBI uses that list. Those checks are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
+The column name stays Component. There is no DoD column. Body section order is Product overview, Definition of Done, Requirements, Product Backlog, Change record. The Definition of Done section lists additional PBI checks on top of `sdd-dod.mdc`; standard close checks stay in the rule. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. Requirements link `{pbi code}` to `#pb-N` on the table row. The table links `{pbi code}` to `#req-pb-N` on the Requirements line. `#pb-N` stays on the PBI Code cell for sprint-backlog and `Related` links. Section rules are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
 
 ### sprint-backlog.md
 
-Sprint schedule and the SBI list. The seed is a starter for a new project. It is not this repo's sprint backlog. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [sprint-backlog.md](./seeds/templates/EN/sdd-scrum-practices.md#sprint-backlogmd). After the last sprint section, [Unplanned PBIs](./seeds/templates/EN/sdd-scrum-practices.md#unplanned-pbis) lists PBIs with no sprint using the Product Backlog columns minus `Sprint`.
+Sprint schedule and the SBI list. The seed is a placeholder template for a new project. It is not this repo's sprint backlog. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [sprint-backlog.md](./seeds/templates/EN/sdd-scrum-practices.md#sprint-backlogmd). After the last sprint section, [Unplanned PBIs](./seeds/templates/EN/sdd-scrum-practices.md#unplanned-pbis) lists PBIs with no sprint using the Product Backlog columns minus `Sprint`.
 
 | Role | Path |
 | --- | --- |
@@ -1182,7 +1220,7 @@ Columns, in this order: `#`, Code, SBI, Parent PBI, Module/Type, Related specs, 
 
 `Code` is the second column, between `#` and SBI.
 
-There is no DoD column. The Definition of Done section above the first sprint table lists the checks. Every SBI uses that list. A sprint may state a replacement checklist above its own tables. Additional Done Criteria, on top of the Definition of Done, is the check for one row. That check is a line above the sprint table beside the code. It does not add a column. Story-specific checks stay in the linked specs. Do not copy those specs into the table.
+There is no DoD column. The Definition of Done section above the first sprint table links to `product-backlog.md#definition-of-done` and `sdd-dod.mdc`. Every SBI uses that checklist. A sprint may state a replacement checklist in the sprint-backlog DoD section or above its own tables. Additional Done Criteria, on top of the Definition of Done, is the check for one row. That check is a line above the sprint table beside the code. It does not add a column. Story-specific checks stay in the linked specs. Do not copy those specs into the table. [ADR-098](../adr/ADR-098-sprint-backlog-dod-link-product-backlog.md).
 
 `#` is the row’s place in that table, from 1 to n. It is not part of the SBI. When a row moves, renumber `#`. The Code stays.
 
@@ -1242,7 +1280,7 @@ Current sprint projection. It is not a second sprint backlog. It is not the defe
 | On a project | `{workspace}/{artifacts_root}/status.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/status.md` |
 
-The title is `The latest status of [product name]`. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [status.md](./seeds/templates/EN/sdd-scrum-practices.md#statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings and a Pokymon sample. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+The title is `The latest status of [product name]`. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [status.md](./seeds/templates/EN/sdd-scrum-practices.md#statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings as a placeholder template. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
 
 ### changes-log.md
 
@@ -1253,7 +1291,7 @@ Conclusion record. An entry is written when a change is done. It states what cha
 | On a project | `{workspace}/{artifacts_root}/changes-log.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/changes-log.md` |
 
-Section rules for the header and the entry are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#changes-logmd). The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). The EN seed may keep the Pokymon sample entries. It does not copy this repo's live change log. After a project copies the seed, those samples are removed.
+Section rules for the header and the entry are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#changes-logmd). The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). The EN seed is a placeholder template with one sample entry block. It does not copy this repo's live change log.
 
 ### issues-log.md
 
@@ -1272,7 +1310,7 @@ Closed issues: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`,
 
 Priority is `Fatal`, `High`, `Medium`, or `Low`. `Id` does not change when a row is sorted or moves. `Description` is under 3 lines. `Close Check` is shorter. Use bullets when a sentence is not enough. `Related` is a spec id, a link, and the name. Both tables sort by component A to Z, then by time, oldest first. Open uses `Added time`. Closed uses `Closed time`. The date shape is `30/Sep/2026`.
 
-It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [issues-log.md](./seeds/templates/EN/sdd-scrum-practices.md#issues-logmd). It does not copy this repo's live issues.
+It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [issues-log.md](./seeds/templates/EN/sdd-scrum-practices.md#issues-logmd). The EN seed is a placeholder template with empty tables and an optional sample row in an HTML comment only. It does not copy this repo's live issues.
 
 ### architecture.md
 
@@ -1283,7 +1321,7 @@ Architecture starter for a new project. It is not this repo's architecture spec.
 | On a project | `{workspace}/{artifacts_root}/architecture.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/architecture.md` |
 
-The EN seed is Sprint 14. Do not add a row for it in a project map until the file exists.
+Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) `#architecturemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-10](../product-backlog.md#pb-40), [feature-47](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#pb-69). Do not add a map row until the project file exists.
 
 ### {stem}-stories.md
 
@@ -1312,7 +1350,7 @@ Release starter for a new project: local startup and go-live order. It is not th
 | On a project | `{workspace}/{artifacts_root}/release.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/release.md` |
 
-Do not add a row for it in a project map until the file exists.
+Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) `#releasemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-11](../product-backlog.md#pb-41), [feature-48](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#pb-69). Do not add a map row until the project file exists.
 
 ### test-strategy.md
 
@@ -1323,18 +1361,18 @@ Product-level test strategy starter for a new project. It extends **common-test-
 | On a project | `{workspace}/{artifacts_root}/test-strategy.md` |
 | Authoring seed | `specs/framework/seeds/templates/EN/test-strategy.md` |
 
-Do not add a row for it in a project map until the file exists.
+Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) test-strategy section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-13](../product-backlog.md#pb-90), [feature-50](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#pb-69). Do not add a map row until the project file exists.
 
 ### .secrets
 
-Secret names and where the values live. It holds no secret values.
+Dotenv-shaped registry: secret **names**, empty values, `#` comments for rules and groups, end-of-line `#` for where each value lives. No secret values in git.
 
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/.secrets` |
 | Authoring seed | `specs/framework/seeds/templates/EN/.secrets` |
 
-A draft EN seed exists. It lists `NAME | where the value lives | who uses it` as comments and holds no value. Spec-seeds-12 stays open until the user confirms it. Do not add a row for it in a project map until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) `.secrets` section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#pb-66), [feature-49](../sprint-backlog.md#sprint-7)). The seed includes bracketed sample keys (database, auth, third-party, deploy, bootstrap) and a `{SECRET_NAME}=` placeholder line. HanS and HanT bodies stay on [i18n-03](../product-backlog.md#pb-69). Do not add a map row until the project file exists.
 
 ### adr/
 

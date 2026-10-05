@@ -19,7 +19,7 @@ related:
 
 ## Summary
 
-An SBI row can show **Done** while **sdd-dod.mdc** is incomplete if the agent only runs **sdd-review-status** writes. The retrospective gate is **sdd-retrospective** in the same session, before or with the Done row, not a separate user confirm step after the summary.
+An SBI row can show **Done** while **sdd-dod.mdc** is incomplete if the agent only runs **sdd-review-status** writes or marks **Done** when delivery finishes. The retrospective gate is **sdd-retrospective** in the same session before the **Done** row. **Close confirm** for usability is separate: **sdd-dod.mdc** requires it before **Done** writes. Retrospective persistence has no second confirm; backlog close does.
 
 ## Evidence
 

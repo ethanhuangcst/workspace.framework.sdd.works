@@ -56,5 +56,5 @@ v.0.1.0
 - {stem}-tests.md — Test spec.
 - release.md — Local startup and go-live order.
 - test-strategy.md — Product-level test strategy.
-- .secrets — Secret names and where values live. No secret values.
+- .secrets — Dotenv-shaped secret registry (empty `NAME=`; `#` says where values live). No values in git.
 - issues-log.md — Defect record. One of the five process files the audit opens.

@@ -456,7 +456,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 ### Artifacts
 - **Core artifacts**: **scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **Framework artifacts**: **product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **Engineering artifacts**: **architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; release.md; test-strategy.md; .secrets; issues-log.md**
+- **Engineering artifacts**: **architecture.md; module design, stories, and tests paths from artifacts-map.json ({stem}-* or design.md / stories.md / tests.md under the artifacts root); release.md; test-strategy.md; .secrets; issues-log.md** ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md))
 - **Pack files beside these groups**: **constants.json** (pack lookup on the client root); **.sdd-installed.json** (install ledger on the client root)
 
 [Back to top](#index)
@@ -646,7 +646,7 @@ These are the SDD core artifacts. They are not the Scrum core artifacts under KE
 - **{stem}-tests.md**: test spec.
 - **release.md**: local startup and go-live order.
 - **test-strategy.md**: product-level test strategy.
-- **.secrets**: secret names and where the values live. No secret values.
+- **.secrets**: dotenv-shaped registry (`NAME=` empty); `#` comments for where values live. No secret values in git.
 - **issues-log.md**: defect record. It is also one of the five process files the audit opens.
 
 ### Pack files

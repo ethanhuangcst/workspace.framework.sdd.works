@@ -43,7 +43,7 @@ Return `Index broken`, so a map that cannot be read stops the audit.
 
 Open each stored path, so the verdict uses the paths the map names.
 
-- Read strings in `files` and in each module `files` list, so those strings are the stored paths.
+- Read strings in `files` and in each module `files` list, so those strings are the stored paths. A module object may omit `folder` when files sit under `{artifacts_root}` ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
 - Open each stored path as `{workspace}/<path>`, so the file is the one the map names.
 - Leave `artifacts_root`, `locale`, `adr`, and `knowledge` unopened as file paths, so those keys stay settings or directory roots.
 - Leave `artifacts_root` off the front of a path, so a stored path is not prefixed twice.

@@ -117,6 +117,12 @@ Capabilities: read the merged changes since the last tag, and group them by what
 Limits: a yes writes that draft to the confirmed file.
 ```
 
+## Limits
+
+- **Path confirm** for the agent file is the confirm for this skill when it runs alone.
+- When `{workspace}/artifacts-map.json` opens and an SBI or PBI in scope is being closed for pack agent work, follow `{client_root}/rules/sdd-dod.mdc` **close confirm** before any **Done** row write. Path confirm is not **close confirm**.
+- When no SBI or PBI is in scope (standalone pack authoring), do not write or invent rows on process files. The user decides usability in chat; this skill does not mark backlog items **Done**.
+
 ## Check the file
 
 Before you finish:

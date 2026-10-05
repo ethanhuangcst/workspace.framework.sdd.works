@@ -63,6 +63,12 @@ Revise the existing file in place and keep the name, so one rule keeps one file.
 - A request for a skill file belongs to `sdd-create-skill`.
 - A request to design or implement a sprint backlog item belongs to `sdd-spec-to-build`.
 
+## Limits
+
+- **Path confirm** for the rule file is the confirm for this skill when it runs alone.
+- When `{workspace}/artifacts-map.json` opens and an SBI or PBI in scope is being closed for pack rule work, follow `{client_root}/rules/sdd-dod.mdc` **close confirm** before any **Done** row write. Path confirm is not **close confirm**.
+- When no SBI or PBI is in scope (standalone pack authoring), do not write or invent rows on process files. The user decides usability in chat; this skill does not mark backlog items **Done**.
+
 ## Confirm the file path
 
 State the file path and whether the rule loads every session or only for the named files, so the user can confirm that path. Wait for the user to confirm.

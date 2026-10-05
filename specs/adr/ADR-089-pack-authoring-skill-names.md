@@ -10,7 +10,7 @@ Accepted
 [ADR-074](./ADR-074-sdd-create-skill.md) decision item 1 (pack folder name for skill authoring only). ADR-074 still applies to not shipping `skill-creator` and to path rules.
 
 ## Context
-Three pack skills that write other harness artifacts used an `sdd-` folder prefix while constants keys stayed `skill_*`. Rules and `prompt-optimizer` already use short folder names. One folder name per skill keeps install paths and guide lists aligned with `constants.json` values.
+Three pack skills that write other harness artifacts used an `sdd-` folder prefix while constants keys stayed `skill_*`. Rules and `improve-prompt` (formerly `prompt-optimizer`, [ADR-099](./ADR-099-improve-prompt-skill-name.md)) already use short folder names. One folder name per skill keeps install paths and guide lists aligned with `constants.json` values.
 
 ## Decision
 1. Pack skill folders: `create-skill` (Skill-13, key `skill_create_skill`), `build-agent` (Skill-15, key `skill_build_agent`), `create-rule` (Skill-16, key `skill_create_rule`).

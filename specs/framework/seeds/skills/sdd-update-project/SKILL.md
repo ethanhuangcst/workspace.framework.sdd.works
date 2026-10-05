@@ -16,7 +16,7 @@ The skill sets `locale`, `artifacts_root`, optional `adr` and `knowledge` roots,
 
 `artifacts_root` is one folder name relative to the workspace. `specs` is the default.
 
-A module has `folder`, `files`, and `stem` only when the stem differs from the folder. The Rules example in `sdd-scrum-practices.md` uses folder `web-app` and stem `app`.
+Each module has a `files` list (required). `folder` and `stem` are optional ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)). Rules and examples in `sdd-scrum-practices.md` cover foldered, flat + stem, and singleton layouts.
 
 Finish one task before the next task starts.
 
@@ -97,12 +97,13 @@ Tell the user what the Knowledge root is for, then ask whether to store it in th
 
 ### 7. Set the modules
 
-List the candidate module folders, so the user can pick the modules.
+List the candidate parts of the product, so the user can pick the modules.
 
-- Ask for `folder` on each pick, so the module has a directory name.
-- Ask for `stem` only when the filename stem differs from `folder`, so a matching stem has no `stem` key.
-- Create a module folder only after the user asks for that folder, so an unasked folder stays uncreated.
-- Read the Confirm summary in [artifacts-map.json](../../templates/EN/sdd-scrum-practices.md#artifacts-mapjson), so the test file name is `{stem}-tests.md`.
+- Ask whether each module's design, stories, and tests live in a subfolder under `{artifacts_root}` or directly under `{artifacts_root}` ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
+- **Subfolder:** set `folder`, optional `stem` when the filename prefix differs from `folder`, and `files` as `{artifacts_root}/{folder}/{stem}-design.md` (and stories, tests). Create the subfolder only after the user asks.
+- **Flat + stem:** omit `folder`, set `stem`, and `files` as `{artifacts_root}/{stem}-design.md` (and stories, tests).
+- **Singleton:** when the map will have exactly one module entry, the user may choose `design.md`, `stories.md`, and `tests.md` under `{artifacts_root}` with no `folder` and no `stem`.
+- Read the Confirm summary in [artifacts-map.json](../../templates/EN/sdd-scrum-practices.md#artifacts-mapjson), so module paths match the chosen layout.
 - Keep each module for task 8.
 
 ### 8. Confirm, then write

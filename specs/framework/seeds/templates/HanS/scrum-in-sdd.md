@@ -455,7 +455,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 ### Artifacts
 - **Core artifacts**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **Framework artifacts**：**product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **Engineering artifacts**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; release.md; test-strategy.md; .secrets; issues-log.md**
+- **Engineering artifacts**：**architecture.md；路径以 artifacts-map.json 的 modules.files 为准（可有子目录或平铺在 artifacts 根下）；release.md；test-strategy.md；.secrets；issues-log.md**
 - **Pack files beside these groups**：**constants.json**；**.sdd-installed.json**
 
 [返回顶部](#index)

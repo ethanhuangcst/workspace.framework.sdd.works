@@ -751,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. Feature-16 ([Web-portal-12](../product-backlog.md#pb-81)) adds the Scrum in SDD tab. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is Get secret on Setup. AC18 is the guide tab.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. Feature-16 ([Web-portal-12](../product-backlog.md#pb-81)) adds the Scrum in SDD tab. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is Get secret on Setup. AC18 is the guide tab before configurable tabs ([Web-portal-25](../product-backlog.md#pb-112), feature-60). Sprint 8 feature-55–57 cover install profile API, subset install prompt, and core install copy. Sprint 8 feature-58–60 cover pack `instructions-tabs.json`, the config API, and dynamic tab UI.
 
 ### User story 1 — Read instructions
 
@@ -781,7 +781,9 @@ Scenario: Signed-in instructions open from the header
   Then the guide with key admin.guide.title is shown
 ```
 
-#### AC3 — feature-11
+#### AC3 — feature-11, superseded by AC21 (feature-57)
+
+Shipped the one-line fetch for `GET /setup`. After feature-57, assert AC21 for the subset install URL.
 
 ```gherkin
 Scenario: Setup copy is the one-line fetch prompt
@@ -984,7 +986,9 @@ Scenario: Get secret sits at the bottom of Setup
   And the viewport stays on #setup-secret
 ```
 
-#### AC18 — feature-16 / Web-portal-12
+#### AC18 — feature-16 / Web-portal-12, superseded by AC24 (feature-60) for tab order and labels
+
+Fixed Setup, Features, Scrum in SDD shipped before pack-driven tabs. After feature-60, assert AC24 for tab order from the config API while Setup stays first.
 
 ```gherkin
 Scenario: Scrum in SDD tab reads the guide markdown
@@ -1016,6 +1020,139 @@ Scenario: Install omits the portal guide files
   When install runs
   Then those three files are not on {client_root}
   And they are not listed in .sdd-installed.json
+```
+
+### User story 2 — Install a skill and rule subset
+
+**As a** visitor
+**I want** profile-based subset install instructions from the public site
+**So that** I can copy core skills and rules without the full pack
+
+#### AC19 — feature-55 / Web-portal-17
+
+```gherkin
+Scenario: Known install profile returns tarball paths and partial manifest
+  Given the sync cache unpack includes profiles/core-planning-loop.json
+  And that profile lists skill folder names and rule file names for subset install
+  When GET /api/sdd/install-profile/core-planning-loop is called
+  Then the response status is success
+  And the body includes packageUrl and package_commit from the cache only
+  And the body includes tarball-relative paths for each listed skill and rule
+  And the body includes a manifest template with pack_complete false
+  And the manifest template files.skills and files.rules list only those profile paths
+  And the handler does not call GitHub at request time
+
+Scenario: Unknown install profile returns structured error
+  Given the sync cache unpack exists
+  When GET /api/sdd/install-profile/does-not-exist is called
+  Then the response is a structured error
+  And the response does not include packageUrl
+```
+
+#### AC20 — feature-56 / Web-portal-18
+
+```gherkin
+Scenario: Default subset install prompt is public without MCP tools
+  When GET /setup/install is called without query params
+  Then the response status is 200
+  And the body matches public/agent-setup/install-prompt.md
+  And the body authorizes download and selective extract only
+  And the body does not instruct calling sdd_install_framework
+  And the body instructs writing .sdd-installed.json last
+
+Scenario: Profile query selects install profile manifest
+  Given profiles/core-planning-loop.json exists in the sync cache
+  When GET /setup/install?profile=core-planning-loop is called
+  Then the response references profile id core-planning-loop
+  And the response includes extract paths limited to that profile
+  And the response manifest template has pack_complete false
+```
+
+#### AC21 — feature-57 / Web-portal-19
+
+```gherkin
+Scenario: Setup copy fetches subset install URL
+  Given the visitor opens / or /instructions
+  When the visitor uses the setup copy control
+  Then the copied text is Fetch and execute the setup instructions from https://framework.sdd.works/setup/install
+  And that protocol sentence is the same in locale en, zh-Hans, and zh-Hant
+  And the setup label uses an i18n key
+
+Scenario: Setup links at least one preset profile
+  Given the visitor opens the Setup tab
+  Then a control or link opens subset install for profile core-planning-loop
+  And the visitor can copy or follow that profile without leaving the guide shell
+```
+
+### User story 3 — Configurable content tabs after Setup
+
+**As a** visitor
+**I want** Features, Scrum in SDD, and future guide tabs from the synced pack
+**So that** new tabs ship without hard-coded React tab definitions
+
+#### AC22 — feature-58 / Spec-seeds-16
+
+Pack contract verified through the portal sync cache ([Spec-seeds-16](../product-backlog.md#pb-110)).
+
+```gherkin
+Scenario: Synced pack includes default instructions tabs config
+  Given operator sync completed from a pack that ships content/instructions-tabs.json
+  When the sync cache unpack is read
+  Then content/instructions-tabs.json exists
+  And the file lists at least features and scrum-in-sdd content tabs
+  And each entry includes id, labelKey, queryParam, panelTestId, and per-locale content paths under the pack tree
+  And the file does not list Setup
+```
+
+#### AC23 — feature-59 / Web-portal-24
+
+```gherkin
+Scenario: Instructions tabs API returns parsed tabs for locale en
+  Given content/instructions-tabs.json exists in the sync cache
+  When GET /api/sdd/instructions-tabs?locale=en is called
+  Then the response lists content tabs in file order
+  And each tab includes resolved content metadata for locale en
+  And Setup is not in the response list
+  And the handler reads the sync cache only
+
+Scenario: Missing instructions tabs config returns structured error
+  Given the sync cache unpack has no content/instructions-tabs.json
+  When GET /api/sdd/instructions-tabs is called
+  Then the response is a structured error
+
+Scenario: Bundled default applies when sync config is missing
+  Given GET /api/sdd/instructions-tabs returns a structured error for missing config
+  When the visitor opens / or /instructions
+  Then the app may render Features and Scrum in SDD from a bundled default until sync succeeds
+```
+
+#### AC24 — feature-60 / Web-portal-25
+
+```gherkin
+Scenario: Guide renders Setup first and default with dynamic content tabs
+  Given GET /api/sdd/instructions-tabs returns features and scrum-in-sdd tabs
+  When the visitor opens / or /instructions
+  Then guide-tab-setup is first in tab order
+  And guide-tab-setup has aria-selected true on load
+  And panel-setup is shown
+  And content tabs after Setup match the API order
+  And each content tab label resolves from its labelKey
+  And selecting a content tab sets the URL query param from config
+
+Scenario: Dynamic content tab loads markdown with locale fallback
+  Given the config tab id is features
+  And the sync cache contains content/features/features.en.md
+  When the visitor selects that tab in locale en
+  Then the panel identified by panelTestId shows rendered markdown for locale en
+  When the visitor switches to locale zh-Hant and the cache has no zh-Hant file for that tab
+  Then the panel shows the English file from the sync cache like AC13
+
+Scenario: Tab switching preserves Setup surface and secret placement
+  Given the visitor opens the guide
+  When the visitor selects a content tab then Setup
+  Then secret-lookup stays on Setup per AC17
+  And content panels hide when not selected
+  And manual setup and setup copy controls stay on Setup per AC4 and AC21
 ```
 
 ---

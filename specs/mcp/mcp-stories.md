@@ -2,7 +2,7 @@
 
 MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). **Sprint 2 feature-14 (MCP-02):** local program at `~/.sdd/sdd-mcp` ([`sdd-mcp-local-binary`](#sdd-mcp-local-binary)). **Sprint 3 (MCP-03):** model-facing tools omit `sdd_list_versions` ([`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface), [ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09, feature-14; Sprint 3 feature-08–09. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy), [`sdd-mcp-local-binary`](#sdd-mcp-local-binary), [`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-tests.md`](./mcp-tests.md) §7.6.
+**Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). **Sprint 2 feature-14 (MCP-02):** local program at `~/.sdd/sdd-mcp` ([`sdd-mcp-local-binary`](#sdd-mcp-local-binary)). **Sprint 3 (MCP-03):** model-facing tools omit `sdd_list_versions` ([`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface), [ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). **Sprint 8 feature-54 (MCP-05):** partial install ledger for prompt-driven subset copy ([`sdd-mcp-partial-install-ledger`](#sdd-mcp-partial-install-ledger)). Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09, feature-14; Sprint 3 feature-08–09; Sprint 8 feature-54. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-partial-install-ledger`](#sdd-mcp-partial-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy), [`sdd-mcp-local-binary`](#sdd-mcp-local-binary), [`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-tests.md`](./mcp-tests.md) §7.6.
 
 **Tools:** `sdd_install_framework`, `sdd_update_framework`, and on HTTP only `sdd_get_key`. Protocol ids are not localized. `sdd_list_versions` is not registered ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)).
 
@@ -426,6 +426,74 @@ Scenario: HTTP already_up_to_date is still not returned
   When sdd_install_framework runs over HTTP
   Then the result still includes packageUrl and extract_recommended true
   And the result still includes the manifest object for a successful extract
+```
+
+---
+
+## `sdd-mcp-partial-install-ledger` — Partial install ledger (MCP-05, feature-54)
+
+Prompt-driven subset install from [Web-portal-18](../product-backlog.md#pb-99) merges into `{client_root}/.sdd-installed.json`. Union `files.skills` and `files.rules`, record `install_profile`, and keep `pack_complete` false until a full allow-list copy ([MCP-01](../product-backlog.md#pb-16)). No new MCP tool name. Semantics and examples live in [`mcp-design.md`](./mcp-design.md) and [`mcp-tests.md`](./mcp-tests.md).
+
+### User story 1 — Merge subset paths without marking the pack complete
+
+**As a** developer who installed a skill and rule subset from the public prompt
+**I want** one ledger that accumulates subset paths
+**So that** Ethan and update flows know the pack copy is partial until full install
+
+#### AC1 — feature-54
+
+```gherkin
+Scenario: First subset write sets pack_complete false and install_profile
+  Given {client_root}/.sdd-installed.json does not exist
+  When the agent completes subset extract per GET /setup/install for profile core-planning-loop
+  And writes the manifest from the profile response last
+  Then .sdd-installed.json has pack_complete false
+  And install_profile is core-planning-loop
+  And files.skills and files.rules list only extracted paths
+  And installed_at, package_version, and package_commit are set from the profile response
+  And framework.sdd.works.json does not exist
+
+Scenario: Subset write does not call sdd_install_framework
+  Given the agent follows GET /setup/install?profile=core-planning-loop
+  When subset extract completes
+  Then sdd_install_framework was not invoked for that flow
+  And .sdd-installed.json was written after extract succeeded
+```
+
+#### AC2 — feature-54
+
+```gherkin
+Scenario: Second subset merges skill and rule unions
+  Given .sdd-installed.json has pack_complete false
+  And files.skills lists skills/sdd-atdd/SKILL.md only
+  When a second subset extract adds skills/sdd-dod/SKILL.md and rules/sdd-dod.mdc
+  And the agent merges into the existing ledger and writes last
+  Then pack_complete stays false
+  And files.skills includes skills/sdd-atdd/SKILL.md and skills/sdd-dod/SKILL.md without duplicates
+  And files.rules includes rules/sdd-dod.mdc
+  And install_profile reflects the latest profile id used when the field is single-valued
+```
+
+#### AC3 — feature-54
+
+```gherkin
+Scenario: Full stdio install after partial sets pack_complete true
+  Given .sdd-installed.json has pack_complete false and lists subset paths
+  When sdd_install_framework completes the full allow-list copy over stdio
+  Then .sdd-installed.json is rewritten with pack_complete true
+  And files lists the full pack-owned paths from the allow-list
+  And install_profile may remain for audit or clear per mcp-design
+```
+
+#### AC4 — feature-54
+
+```gherkin
+Scenario: Partial ledger does not change full HTTP install manifest
+  Given the client calls sdd_install_framework over Streamable HTTP for a full allow-list extract
+  When the tool returns success
+  Then the manifest object includes pack_complete true
+  And AC4 under sdd-mcp-install-ledger still applies
+  And partial merge semantics apply only to prompt-driven subset writes
 ```
 
 ---

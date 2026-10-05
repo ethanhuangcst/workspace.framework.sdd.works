@@ -36,11 +36,29 @@ The checks below are the common list. Extra quality checks named for this delive
 
 Skip a box that does not apply and state why in one sentence.
 
+## Close confirm
+
+**Artifact confirm** is the user reply that lets the agent write engineering or pack files. It is not **close confirm**.
+
+**Close confirm** is the user reply that accepts the backlog item for close. It must appear in chat before any `**Done**` row on `sprint-backlog.md` or `product-backlog.md`, before sprint **Status: Done**, before RID move to Closed RIDs, and before `status.md` shows that item as **Done**.
+
+Close confirm counts when the user explicitly accepts the deliverable (names the SBI or PBI code, says **Done** for that row, or answers yes to the close question). It does not count when the user only asked to implement a plan, finish todos, or ship files without accepting close.
+
+Before close confirm, run **sdd-retrospective** when the defaults require it. After close confirm, write process files in the order under **Write order** above.
+
+Ask once in chat, then wait for the next user message:
+
+Do you confirm {scope} is usable for your work?
+
+Replace `{scope}` with the SBI name, PBI noun, sprint goal, or RID id from the backlog row. For a document, seed, rule, or skill, **usable** means acceptable to rely on, not only runnable in a browser.
+
+When **persistent-proactive-developer** or plan completion would write **Done**, **sdd-dod.mdc** wins for backlog close writes.
+
 ## PBI
 
 Defaults: acceptance criteria passed; Common quality gate passed; user confirmed usable; `sdd-retrospective` skill completed or nothing durable to persist.
 
-Extra: DoD section above the Product Backlog table in `product-backlog.md`.
+Extra: Additional DoD criteria in the Definition of Done section of `product-backlog.md` (after Product overview; standard defaults remain in this rule).
 
 Write the `product-backlog.md` row `Done` only after `sdd-retrospective` finishes in the same session.
 
@@ -50,7 +68,7 @@ After confirm: `changes-log.md` when a change concludes; `issues-log.md` when a 
 
 Defaults: acceptance criteria passed; Common quality gate passed; user confirmed usable; `sdd-retrospective` skill completed or nothing durable to persist.
 
-Extra: DoD above the first sprint table in `sprint-backlog.md`; sprint replacement above its tables; Additional Done Criteria on the row.
+Extra: `sprint-backlog.md` DoD section links to Definition of Done in `product-backlog.md`; sprint replacement above its tables; Additional Done Criteria on the row.
 
 An SBI may be `Done` while its parent PBI stays `ToDo` or `WIP`.
 
@@ -83,6 +101,8 @@ After confirm: `changes-log.md` for sprint close; `issues-log.md` when sprint wo
 ## Do not
 
 - Close or mark `Done` without the user confirmations the defaults require.
+- Mark an SBI or PBI **Done** in the same turn as the last deliverable edit without **close confirm** in a prior or same-thread user message.
+- Treat artifact confirm, plan completion, or internal todo completion as **close confirm**.
 - Weaken or skip a check to reach `Done` or RID close.
 - Show `Done` on `status.md` for a PBI, SBI, or sprint that the backlog does not show as `Done`.
 - Invent a sprint, SBI, or OGT row on `status.md`.

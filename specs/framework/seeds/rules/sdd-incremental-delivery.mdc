@@ -13,11 +13,12 @@ Feature versus task breakdown is in `{client_root}/templates/framework.sdd.works
 
 The current item is the one named in `status.md`. Open `status.md` through `{workspace}/artifacts-map.json`.
 
-The item is finished when [`sdd-dod.mdc`](./sdd-dod.mdc) passes for it. The item may be a product backlog item (PBI) or a sprint backlog item (SBI).
+The item is finished on the board only when [`sdd-dod.mdc`](./sdd-dod.mdc) passes, including **close confirm**. Meeting acceptance criteria or shipping files does not set the row to **Done** by itself. The item may be a product backlog item (PBI) or a sprint backlog item (SBI).
 
 ## Behavior
 
 - Do not start another item while the current one is not Done.
+- After the last edit for the current SBI, stop and invoke **close confirm** from `sdd-dod.mdc`. Do not write **Done** on `sprint-backlog.md` in that turn unless **close confirm** already appears in the thread.
 - When this item depends on another item, do only the part that unblocks this item.
 - When a blocker stops this item, tell the user what blocks it and wait.
 - A new requirement becomes a new backlog item after the user confirms it. It is not added to the current item.
