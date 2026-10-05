@@ -23,7 +23,6 @@
   "rules": {
     "dod": "dod.mdc",
     "incremental-delivery": "incremental-delivery.mdc",
-    "realtime-status": "realtime-status.mdc",
     "friendly-language": "friendly-language.mdc"
   }
 }

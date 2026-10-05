@@ -21,6 +21,12 @@ A sprint backlog item (SBI) is one row in a sprint table on `sprint-backlog.md`.
 
 `{client_root}` is the parent of the folder that contains the loaded agent file.
 
+`{locale}` is the value in `{workspace}/artifacts-map.json`. When `locale` is missing, use `EN`.
+
+`{rules_dir}` is the value in `{client_root}/templates/framework.sdd.works/constants.json`.
+
+The practices file for this run is `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`.
+
 The skill reviews and consolidates `product-backlog.md`. User Stories and Acceptance Criteria are written when a feature is designed, with `sdd-atdd` or `sdd-spec-to-build`.
 
 The user picks what to do with the findings list.
@@ -32,7 +38,7 @@ The user picks what to do with the findings list.
 | Locate the five process files | The review uses the paths in `artifacts-map.json` |
 | Load readiness and Size | The review applies practices §3 and §4 |
 | Send findings in chat | One numbered list: Issue, then Proposed fix |
-| Collect one confirm | The same chat message lists the choices. The user's reply is the confirm. AskQuestion stays unused. |
+| Collect one confirm | The same chat message lists the choices. The user's reply is the confirm. |
 | Write the accepted pick | One pass updates the process files the pick names |
 
 ## Knowledge
@@ -40,10 +46,10 @@ The user picks what to do with the findings list.
 | Source | Load when |
 | --- | --- |
 | `{workspace}/artifacts-map.json` | Start of the run; read `locale` when present |
-| [3. Evaluate Product Backlog Readiness](../../templates/EN/sdd-scrum-practices.md#3-evaluate-product-backlog-readiness) and [4. Size product backlog](../../templates/EN/sdd-scrum-practices.md#4-size-product-backlog) in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | The review; when `locale` is missing, use `EN` |
-| `{workspace}/specs/adr/ADR-087-refine-one-confirm.md` when that file is present | The findings list and the confirm choices |
-| Term rows under [Terminology in practice](../../templates/EN/sdd-scrum-practices.md#terminology-in-practice) | A fail names that term: Feature, Task, on-going task (OGT), Issue, RID, or a PBI Size |
-| [friendly-language.mdc](../../rules/friendly-language.mdc) | Wording in the findings list and the confirm choices |
+| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, headings "3. Evaluate Product Backlog Readiness" and "4. Size product backlog" | The review |
+| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, heading "5. Feature break down", subsection "Refine a backlog item" | The user picks a split, tighten, or merge that changes PBIs or requirement bullets |
+| Term rows under the heading "Terminology in practice" in that practices file | A fail names that term: Feature, Task, on-going task (OGT), Issue, RID, or a PBI Size |
+| `{client_root}/{rules_dir}/friendly-language.mdc` | Wording in the findings list and the confirm choices |
 | The matching `####` heading in that practices file | A write pass is about to change that process file |
 
 ## Run the review
@@ -94,21 +100,19 @@ Send one numbered list for a person at the desk, not for another agent parsing t
 Each item uses this shape:
 
 1. **{PBI code} — {noun}**
-- Issue: {one or two plain sentences}
+- Issue: {part} is {verdict}. {the PBI code, the short name, and what the person sees}
 - Proposed fix: {one plain sentence}
 
 **Headline**
 
-- `{PBI code}` is the code on the board, such as `Web-portal-07`.
+- `{PBI code}` is the code on that row.
 - `{noun}` is the short Description on the Product Backlog table, or the noun line in Requirements when the table row is missing.
 - Use an em dash between code and noun. Do not send a code alone.
 
 **Issue**
 
-- Say what is wrong in everyday English. The reader should recognize the row or section without opening other files first.
-- You may name a verdict word (missing, broken, wrong, inaccurate, duplicate) only when it fits a normal sentence. Do not open with a template like `{part} is {verdict}.`
-- One or two sentences. No comma chains of paths, anchor ids, or cross-file inventories.
-- Name a file or sprint at most once per item, and say what that place shows (for example “Sprint 3 is Done here” or “this row still says ToDo”).
+- The first sentence is `{part} is {verdict}`. `{part}` is the place on the board, such as Size, Description, Status, or a link. `{verdict}` is a short word for the fail.
+- The next sentence names the PBI code, the short name, and what the person sees. No comma chains of paths or anchor ids.
 
 **Proposed fix**
 
@@ -118,7 +122,7 @@ Each item uses this shape:
 
 When every item is only an edit to an existing PBI (`Size`, requirement bullets, or both), say that **Accept all and update specs** is offered. When any item is a split, a merge, a new PBI, or removal of an SBI, say that **Accept all** is not offered and name why in one sentence.
 
-After the list, list the choices in the same message. Leave AskQuestion uncalled. The host shows a question card before the chat text, so a list sent with AskQuestion appears only after the question.
+After the list, list the choices in the same message. Do not open a question card.
 
 Offer **Accept all and update specs** only when every row is an edit to an existing PBI.
 
@@ -135,10 +139,10 @@ The user's reply that names one choice is the confirmation. Follow [Write the pi
 - Record the new lines for the process files the pick changes.
 - Write the recorded lines in this order: changes-log, issues-log, status, sprint-backlog, product-backlog.
 - When the pick changes no line in a process file, leave that process file unchanged, so the file keeps its current text.
-- When `product-backlog.md` is about to change, read only [product-backlog.md](../../templates/EN/sdd-scrum-practices.md#product-backlogmd) in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. When `locale` is missing, use `EN`. Start at that heading. Stop at the next `####` heading.
+- When `product-backlog.md` is about to change, read only the heading "product-backlog.md" in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. Start at that heading. Stop at the next `####` heading.
 - When another process file is about to change, read only that artifact's `####` heading in the same practices file, with the same start-and-stop rule.
 - When the user picks a split or a shrink for an Epic row, apply the Epic row in §3 and remove the sprint rows that section forbids, in the same write pass.
-- When the user picks a split or tighten, set `Size`, requirement bullets, and related rows.
+- When the user picks a split or tighten, set `Size`, requirement bullets, and related rows. Apply the Refine subsection in practices §5. Do not copy §5 examples into this skill.
 
 ### product-backlog.md
 
@@ -157,8 +161,8 @@ The user's reply that names one choice is the confirmation. Follow [Write the pi
 ### status.md
 
 - Update Project progress and "what could be the next" when a PBI status change affects them.
-- When the user picks **Create an OGT to record these findings and I will refine later**, add one OGT row that points at the findings list in chat or summarizes each item in one line.
-- Load [OGT](../../templates/EN/sdd-scrum-practices.md#term-ogt) when the pick parks work on `status.md`.
+- When the user picks **Create an OGT to record these findings and I will refine later**, add one OGT row. The task name is `Refine product backlog`. Under that name, one line per finding gives the PBI code and the short name. Leave the backlog unchanged.
+- Load the OGT term row in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` when the pick parks work on `status.md`.
 
 ### issues-log.md
 
@@ -182,4 +186,5 @@ The user's reply that names one choice is the confirmation. Follow [Write the pi
 - Leave User Stories and Acceptance Criteria unwritten, so those stay with `sdd-atdd` or `sdd-spec-to-build`.
 - Leave a new sprint unplanned, so that job stays on `sdd-plan-sprint`.
 - Leave the Size ladder in practices §4, so this skill links that section and does not copy the examples.
-- Leave AskQuestion uncalled for this confirm, so the findings list stays above the choices in the same chat message.
+- Split proposals follow practices §5 good and bad shape. Do not turn one PBI row into a task list.
+- Do not read an adr folder. Those files belong to the workspace that wrote them. This skill does not load them.

@@ -427,9 +427,8 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 ## 需要加入 Scrum 實施中的 SDD 概念
 
 ### Rules
-- **dod.mdc**：Definition of Done
+- **dod.mdc**：Definition of Done；關閉項或用戶要求時更新 **status.md**
 - **incremental-delivery.mdc**：增量交付
-- **realtime-status.mdc**：實時跟蹤狀態，並在每項任務完成時更新 **status.md**
 - **friendly-language.mdc**：讓用戶和後續 agent 可讀的 chat 與 Markdown 文案
 
 ### Skills
@@ -498,7 +497,7 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 #### Daily Scrum
 - 經典的人和人之間的 Daily Scrum 依然有需要。
 - 但是可以在**實時**過程中持續進行人和 Agent 之間的**檢測和調整**。
-- 透過 **realtime-status rule**，每項任務一完成，就會觸發一次**小型 retrospective**，並更新 **status.md**。
+- 透過 **dod.mdc**，關閉任務或 SBI 時走 retrospective 門禁，並在適用時更新 **status.md**。
 
 #### Sprint Review
 
@@ -617,7 +616,6 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 ### Rules
 - **dod.mdc**：Definition of Done。
 - **incremental-delivery.mdc**：增量交付策略。
-- **realtime-status.mdc**：實時狀態更新策略。
 - **friendly-language.mdc**：可讀 chat 與 Markdown（用戶與後續 agent）。
 
 ### Skills

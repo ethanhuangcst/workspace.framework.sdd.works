@@ -15,7 +15,7 @@ description: >
 
 # Sprint proposal
 
-Send the MVP list and **Your choice** in one chat message. Stop. Wait for the reply in that chat. Do not open a question card. Do not call a tool that shows lettered choices. A question card appears before the chat text, so the list stays hidden until the card is dismissed.
+Send the MVP list and **Your choice** in one chat message. Stop. Wait for the reply in that chat.
 
 Do not write "Which option for Sprint" or "The options are in chat." The choices are the numbered lines under **Your choice**.
 
@@ -50,12 +50,13 @@ This skill runs the steps below in order. Within a step, one clarifying question
 | Source | Load when |
 | --- | --- |
 | `{workspace}/artifacts-map.json` | Start of the run; read `locale` when present |
-| [1. Plan sprints by MVP](../../templates/EN/sdd-scrum-practices.md#1-plan-sprints-by-mvp), [2. Slice product to MVPs](../../templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps), and [4. Size product backlog](../../templates/EN/sdd-scrum-practices.md#4-size-product-backlog) in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | Building MVP options; when `locale` is missing, use `EN`. Load [ADR-088](../../../../adr/ADR-088-mvp-plan-names-coarse-pbi.md) under `{workspace}/specs/adr/` when present, for the same step |
-| Done `## Sprint` sections in `sprint-backlog.md` from step 1 | Match the Done sprint goal and the parent PBIs before you build options |
-| [Sprint goal line](../../templates/EN/sdd-scrum-practices.md#sprint-goal-line) in that practices file | Before each sprint goal line in chat |
-| [Task](../../templates/EN/sdd-scrum-practices.md#term-task) and [OGT](../../templates/EN/sdd-scrum-practices.md#term-ogt) under [Terminology in practice](../../templates/EN/sdd-scrum-practices.md#terminology-in-practice) | Listing Extra tasks; read those two rows only |
-| `product-backlog.md` and `sprint-backlog.md` sections in practices | Write pass when those files change |
-| [friendly-language.mdc](../../rules/friendly-language.mdc) | Wording in chat |
+| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, headings `1. Plan sprints by MVP`, `2. Slice product to MVPs`, and `4. Size product backlog` | Building MVP options. When `locale` is missing, use `EN` |
+| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, heading `5. Feature break down`, subsection `Plan a sprint` | Naming Feature SBIs and extra Task SBIs |
+| Done `## Sprint` sections in the `sprint-backlog.md` path from step 1 | Match the Done sprint goal and the parent PBIs before you build options |
+| Heading `Sprint goal line` in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | Before each sprint goal line in chat |
+| Headings `Task` and `OGT` in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | When you list an extra task or an on-going task. Read those two rows only |
+| Headings `product-backlog.md` and `sprint-backlog.md` in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | Write pass when those files change |
+| `{client_root}/rules/friendly-language.mdc` | Wording in chat |
 
 ## Run the plan
 
@@ -84,42 +85,36 @@ Default is one sprint: the earliest sprint whose status line in `sprint-backlog.
 
 `{locale}` is the value in `{workspace}/artifacts-map.json`. When `locale` is missing, use `EN`.
 
-Read [1. Plan sprints by MVP](../../templates/EN/sdd-scrum-practices.md#1-plan-sprints-by-mvp) and [2. Slice product to MVPs](../../templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. Start at each heading. Stop at the next heading of the same level after each section.
-
-Read [Sprint goal line](../../templates/EN/sdd-scrum-practices.md#sprint-goal-line) in that file before each sprint goal line in chat. Start at that heading. Stop at the next heading of the same level.
+Load each Knowledge row when its Load when column matches this step. For a practices heading, start at that heading in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` and stop at the next heading of the same level.
 
 Read the Product Backlog table in `product-backlog.md` from step 1. Read the Unplanned PBIs table in `sprint-backlog.md` from step 1.
 
 Read Done sprint sections per the Knowledge table, so each new option matches a Done sprint goal and its parent PBIs.
 
-Scheduled candidates are PBIs whose status is not `Done`, whose `Sprint` cell is `—`, this sprint, or a later sprint, and whose `Size` cell is [Implementable (PBI Size)](../../templates/EN/sdd-scrum-practices.md#term-pbi-size-implementable).
+Scheduled candidates are PBIs whose status is not `Done`, whose `Sprint` cell is `—`, this sprint, or a later sprint, and whose `Size` cell is Implementable.
 
 - Apply the Epic and Theme rule in the loaded §1 and §2. Do not copy a list of product cases into the proposal.
 - A PBI already named on an earlier unfinished sprint is a move. Show it as a move. Leave that PBI on its current sprint until you pick the move.
 
 ### 4. Propose MVP candidates in chat
 
-Apply [1. Plan sprints by MVP](../../templates/EN/sdd-scrum-practices.md#1-plan-sprints-by-mvp) and [2. Slice product to MVPs](../../templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) from step 3.
-
 - For each target sprint from step 2, build at least one candidate MVP. Label the first Option A, the second Option B, the third Option C. When only one set passes the slice rules, send Option A only.
 - Option letters name different MVP slices when several pass the slice rules. They can also name the same PBIs with an extra-task item versus the same PBIs with that item omitted.
-- Name one Feature SBI per PBI in the candidate set. SBI codes and names are for the write pass after you pick. They stay in the numbered list.
-- After the PBI set is named, list any extra tasks that sprint still needs. Read the [Task](../../templates/EN/sdd-scrum-practices.md#term-task) and [OGT](../../templates/EN/sdd-scrum-practices.md#term-ogt) rows from step 3 knowledge. Each extra task is one SBI with Type Task. The parent PBI is the PBI that sprint row delivers.
+- Name one Feature SBI per Implementable PBI in the candidate set, per practices §5 Plan a sprint. SBI codes and names are for the write pass after you pick. They stay in the numbered list.
+- After the PBI set is named, list any extra tasks that sprint still needs, per practices §5 Plan a sprint. Load the Task row and the OGT row in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` when you list an extra task or an on-going task. Each extra task is one SBI with Type Task. The parent PBI is the PBI that sprint row delivers.
 - Park side work as an OGT when you name it in the pick.
 - After the Implementable set for an option is chosen, name each Epic or Theme the job needs, using the loaded §1 and §2. Leave off any coarse PBI the job does not need. Those items are not in the numbered list of items this sprint will schedule, and they get no SBI. The Now line and the on-going task name are the ones in [MVP candidates in chat](#mvp-candidates-in-chat). `sdd-refine-backlog` still changes Size, bullets, and splits.
 - A new product outcome stays on `sdd-refine-backlog`.
 - When no extra task passes the Task row, omit the extra-task item.
 - When one option lists an Extra task and the same PBIs can ship without that Task SBI, add the next option letter with the same PBIs and omit the extra-task item. The choices under the list stay on option letters only.
-- Follow [1. Plan sprints by MVP](../../templates/EN/sdd-scrum-practices.md#1-plan-sprints-by-mvp). When a PBI still needs sprint rows that are not named, list it under Not ready for this sprint. That list names the PBI and the unnamed rows. That PBI is not an option letter.
+- Follow the loaded §1. When a PBI still needs sprint rows that are not named, list it under Not ready for this sprint. That list names the PBI and the unnamed rows. That PBI is not an option letter.
 - Before you send the message, apply the option-size sentence in the loaded §1. Count the new Implementable Feature SBIs in each option. When the largest count and the smallest count differ by more than one, drop the options that are a different size, or send the single honest option alone. Do not add PBIs the job does not need.
 
-Send [MVP candidates in chat](#mvp-candidates-in-chat) and **Your choice** in one message, then stop. Do not open a question card in that turn or the next turn.
+Send [MVP candidates in chat](#mvp-candidates-in-chat) and **Your choice** in one message, then stop.
 
 After the chat block, follow [User pick for each sprint](#user-pick-for-each-sprint).
 
 ## MVP candidates in chat
-
-Link [friendly-language.mdc](../../rules/friendly-language.mdc) for wording, so chat stays in your view.
 
 Every sentence you read names the sprint, the PBI or the SBI, and what will happen. A sentence that only states what was read in a file fails.
 
@@ -169,7 +164,7 @@ The on-going task name is the Size word, the PBI code, and the short Description
 
 Send this block only when at least one Epic or Theme belongs in the job. Omit it when none do. Do not add an SBI for a PBI that appears only in this block.
 
-After the option blocks for this sprint, send the choices in the same message. Follow [User pick for each sprint](#user-pick-for-each-sprint).
+After the option blocks for this sprint, send the choices in the same message. Leave a question card unopened. The reply in chat is the pick. Follow [User pick for each sprint](#user-pick-for-each-sprint).
 
 For several target sprints, repeat the header, the option blocks, and the choices once per sprint. Wait for the reply before the next sprint. Each later sprint starts from PBIs not used in an earlier candidate.
 
@@ -204,7 +199,7 @@ Reason: the collector opens the list and sees their cards before the next sprint
 
 ## User pick for each sprint
 
-Send the proposal and **Your choice** in one chat message. Do not open a question card. A host preference for a question card does not apply to this skill.
+Send the proposal and **Your choice** in one chat message.
 
 When the sprint row type or the sprint goal is still unclear, ask one question in that same chat style, wait for the reply, then send the proposal. Do not send the proposal before that reply.
 
@@ -280,8 +275,7 @@ You read this sentence. The recorded picks write it after the last sprint.
 
 ```text
 In product-backlog.md, set Card list view to Sprint 2.
-In sprint-backlog.md, add feature-03 Card list view under Sprint 2.
-In sprint-backlog.md, add task-01 Shared empty-state catalog under Sprint 2. Parent is Collect-02.
+In sprint-backlog.md, add Card list under Sprint 2. Parent is Collect-02.
 ```
 
 ## Limits
@@ -298,5 +292,6 @@ In sprint-backlog.md, add task-01 Shared empty-state catalog under Sprint 2. Par
 - A new PBI stays on `sdd-refine-backlog`. Size changes, splits, and tightens stay on `sdd-refine-backlog`.
 - Scope rules stay in practices §1 and §2. A PBI with unnamed sprint rows appears under Not ready for this sprint.
 - Leave the Size ladder in practices §4, so this skill links that section and does not copy the examples.
+- Leave Feature and Task breakdown examples in practices §5, so this skill links that section and does not copy the examples.
 - Leave an Epic or Theme off the sprint backlog and off the Product Backlog `Sprint` cell until it is Implementable.
 - Do not open a question card. The proposal list and **Your choice** are one chat message. The reply in chat is the pick.

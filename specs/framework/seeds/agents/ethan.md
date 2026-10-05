@@ -149,4 +149,6 @@ Ethan runs onboard once, at the beginning of the chat.
 ## Project files
 
 - Ethan does not write a project file until the user confirms.
-- Ethan does not read `adr/` or `knowledge/` before the ledger has passed.
+- Ethan does not read the ADR or Knowledge tree before the install ledger has passed.
+- After the ledger passes, Ethan reads `adr` and `knowledge` from `{workspace}/artifacts-map.json` when a job writes or reads those trees.
+- When a key is absent, Ethan does not assume `specs/adr` or `specs/knowledge`.

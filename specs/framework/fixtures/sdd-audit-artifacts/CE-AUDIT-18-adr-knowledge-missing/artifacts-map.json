@@ -1,0 +1,9 @@
+{
+  "locale": "EN",
+  "adr": "specs/adr",
+  "knowledge": "specs/knowledge",
+  "files": [
+    "specs/status.md",
+    "specs/sprint-backlog.md"
+  ]
+}

@@ -15,7 +15,7 @@ Skill cases other than the audit catalog use a temp workspace and a temp client 
 | **L3 — Other first-class clients, manual** | A person in that client, same pack files on that client's user root | The client loads the agent file by its own gesture, and the prompt still derives `client_root` from the loaded file | A full replay of every L1 case |
 | **L4 — Out of this file** | MCP and portal suites | Installer extract, path-table CI, portal pages | Coach behavior |
 
-L1 is the gate for every case except the audit catalog. `CE-AUDIT-01` through `CE-AUDIT-17` are the CodeBuddy CN fixture run, not an L1 temp tree and not the L3 smoke row. Every other case id is L1 unless the case says L2 or L3. L2 and L3 run the smoke set in [Environments](#environments), not the full catalog.
+L1 is the gate for every case except the audit catalog. `CE-AUDIT-01` through `CE-AUDIT-19` are the CodeBuddy CN fixture run, not an L1 temp tree and not the L3 smoke row. Every other case id is L1 unless the case says L2 or L3. L2 and L3 run the smoke set in [Environments](#environments), not the full catalog.
 
 Do not mock an MCP install payload. Do not assert that ethan extracts a tarball. Do not boot the portal.
 
@@ -106,7 +106,7 @@ Run these ids on the client and OS named in the case. Do not replay the rest by 
 | CE-ENV-05 | — | TRAE or TRAE CN |
 | CE-LOCALE-02 | Cursor, `HanS` | — |
 
-CE-ENV-05 stays a TRAE call-up check. The audit catalog is a separate CodeBuddy CN run: [Audit fixtures (CodeBuddy CN)](#audit-fixtures-codebuddy-cn) holds `CE-AUDIT-01` through `CE-AUDIT-17`. That catalog is not part of this smoke set.
+CE-ENV-05 stays a TRAE call-up check. The audit catalog is a separate CodeBuddy CN run: [Audit fixtures (CodeBuddy CN)](#audit-fixtures-codebuddy-cn) holds `CE-AUDIT-01` through `CE-AUDIT-19`. That catalog is not part of this smoke set.
 
 ## agents
 
@@ -355,21 +355,28 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Layer:** L1.
 - **Pre-condition:** Audit verdict is `Usable`. The five process files open. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
 - **Test steps:** Ask where the project is.
-- **Expected results:** The skill states `status_from_board` and `status_from_implementation`. It lists each mismatch. It does not create or edit a project file before the user says yes to the shown text. It does not mark a product item Done.
+- **Expected results:** The skill states `status_from_board` and `status_from_implementation`. It lists each mismatch. It does not create or edit a project file before the user picks in chat. It does not mark a product item Done.
 
 #### CE-SKILL-02 — Second yes on sdd-review-status
 
 - **Layer:** L1.
 - **Pre-condition:** Two mismatches are listed. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
-- **Test steps:** Pick "Update process artifacts now" for one mismatch and "Leave to me, I will manually update later" for the other. Say yes to the shown text for the first.
-- **Expected results:** Before the second yes, no project file changes. After the second yes, only the accepted text is written. The other mismatch writes nothing. An untracked defect uses the OGT text "track defect xyz in issues-log". The skill does not mark a product item Done.
+- **Test steps:** Pick apply updates for one mismatch and leave to me for the other, in one chat reply. The reply names the accepted write for the first mismatch only.
+- **Expected results:** Before the write pass, no project file changes. After the write pass, only the accepted text is written. The other mismatch writes nothing. An untracked defect uses the OGT text "track defect xyz in issues-log". The skill does not mark a product item Done.
+
+#### CE-SKILL-09 — sdd-review-status Open RIDs
+
+- **Layer:** L1.
+- **Pre-condition:** Audit verdict is `Usable`. The five process files open. `sprint-backlog.md` has at least one Open RID whose Impact names a PBI that is Done on `product-backlog.md` while the solution is verifiable (this repo: D-2, D-3, or R-1 with MCP-01 Done). Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
+- **Test steps:** Ask where the project is or to review status.
+- **Expected results:** The reply lists Open RIDs or RID status-change suggestions. At least one open RID with Done impact work appears under RID status-change suggestions or Mismatches with a proposed close. The message includes **Your choice** in the same reply. The skill does not create or edit a project file before the user picks. It does not use a question card. It does not mark a product item Done.
 
 #### CE-SKILL-03 — sdd-create-skill
 
 - **Layer:** L1.
 - **Pre-condition:** `skills_dir` in constants is `skills`. Seed: `specs/framework/seeds/skills/sdd-create-skill/SKILL.md`.
 - **Test steps:** Ask to create a skill named `sample-skill`.
-- **Expected results:** It waits for confirm. The only write is `{client_root}/skills/sample-skill/SKILL.md`, which is that client's skills folder in [Pack folders](#pack-folders). On TRAE CN that is `~/.trae-cn/skills/sample-skill/SKILL.md`, not `~/.trae/skills/`. It does not write production code. It does not write `skill-creator` or `create-skill`. It does not write under the workspace.
+- **Expected results:** It waits for confirm. The only write is `{client_root}/skills/sample-skill/SKILL.md`, which is that client's skills folder in [Pack folders](#pack-folders). On TRAE CN that is `~/.trae-cn/skills/sample-skill/SKILL.md`, not `~/.trae/skills/`. It does not write production code. It does not write `skill-creator` or a second authoring folder at `{client_root}/skills/create-skill/` (Cursor built-in name). It does not write under the workspace.
 
 #### CE-SKILL-04 — sdd-spec-to-build
 
@@ -787,6 +794,47 @@ failed:
 
 No `locale` line. `specs/status.md` is not opened. No project write. Ledger unchanged.
 
+#### CE-AUDIT-18 — adr and knowledge roots missing
+
+- **Proves:** configured roots that are not directories land on `failed` and do not change `Usable` when process files open. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md).
+- **Layer:** CodeBuddy CN fixture.
+- **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-18-adr-knowledge-missing/`.
+- **Pre-condition:** The map opens `specs/status.md` and `specs/sprint-backlog.md`. `adr` is `specs/adr` and `knowledge` is `specs/knowledge`. Neither directory exists.
+- **Test steps:** Follow [How to run a case](#how-to-run-a-case).
+- **Expected results:**
+
+```text
+verdict: Usable
+locale: EN
+opened:
+- specs/status.md
+- specs/sprint-backlog.md
+failed:
+- specs/adr
+- specs/knowledge
+```
+
+#### CE-AUDIT-19 — adr and knowledge roots open
+
+- **Proves:** existing configured roots are listed under `opened`.
+- **Layer:** CodeBuddy CN fixture.
+- **Workspace:** `specs/framework/fixtures/sdd-audit-artifacts/CE-AUDIT-19-adr-knowledge-opened/`.
+- **Pre-condition:** Same map shape as CE-AUDIT-18. `specs/adr` and `specs/knowledge` exist as directories.
+- **Test steps:** Follow [How to run a case](#how-to-run-a-case).
+- **Expected results:**
+
+```text
+verdict: Usable
+locale: EN
+opened:
+- specs/status.md
+- specs/sprint-backlog.md
+- specs/adr
+- specs/knowledge
+failed:
+- none
+```
+
 
 ## rules
 
@@ -794,13 +842,13 @@ No `locale` line. `specs/status.md` is not opened. No project write. Ledger unch
 
 A rule case is a fixture workspace and the `.mdc` text. Assert the map edit or the install path. Do not render a page and do not score the rule as application code.
 
-`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) withdraws CE-RULE-01 through CE-RULE-04. CE-RULE-05 and CE-RULE-06 check that the file is absent. `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `friendly-language.mdc` have a name and a client-root path. Rule-01 through Rule-03 bodies are not designed yet, so L1 does not invent steps for them beyond path. `friendly-language.mdc` ships in the seed tree.
+`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) withdraws CE-RULE-01 through CE-RULE-04. CE-RULE-05 and CE-RULE-06 check that the file is absent. `dod.mdc`, `incremental-delivery.mdc`, and `friendly-language.mdc` have a name and a client-root path. `realtime-status.mdc` is not a pack rule ([ADR-091](../adr/ADR-091-retire-realtime-status-rule.md)). L1 does not invent behavior steps beyond path for rules without a behavior story. `friendly-language.mdc` ships in the seed tree.
 
 The install path is `{client_root}/rules/<name>.mdc` on every OS. L1 uses that logical path. L2 checks the expanded Cursor path once per OS when a machine is available. The pack does not ship a rule that classifies the workspace or sets `pack_complete`.
 
 ### Plan
 
-Check that `artifacts-map.mdc` is absent. One case for the four rule names. One case that a Windows client root does not receive `artifacts-map.mdc`.
+Check that `artifacts-map.mdc` is absent. One case for the three rule names. One case that a Windows client root does not receive `artifacts-map.mdc`.
 
 ### Cases
 
@@ -835,9 +883,9 @@ Check that `artifacts-map.mdc` is absent. One case for the four rule names. One 
 #### CE-RULE-05 — Names and install path
 
 - **Layer:** L1.
-- **Pre-condition:** The four rule names are `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `friendly-language.mdc`. `artifacts-map.mdc` is not a pack rule.
+- **Pre-condition:** The three rule names are `dod.mdc`, `incremental-delivery.mdc`, and `friendly-language.mdc`. `realtime-status.mdc` and `artifacts-map.mdc` are not pack rules.
 - **Test steps:** Read the name and the install path.
-- **Expected results:** No name has an `sdd-` prefix. The install path is `{client_root}/rules/<name>.mdc`. `artifacts-map.mdc` is absent. No behavior is asserted for `dod.mdc`, `incremental-delivery.mdc`, or `realtime-status.mdc` beyond that path. `friendly-language.mdc` is present at that path from the seed tree.
+- **Expected results:** No name has an `sdd-` prefix. The install path is `{client_root}/rules/<name>.mdc`. `realtime-status.mdc` and `artifacts-map.mdc` are absent. `friendly-language.mdc` is present at that path from the seed tree.
 
 #### CE-RULE-06 — Windows rules directory
 

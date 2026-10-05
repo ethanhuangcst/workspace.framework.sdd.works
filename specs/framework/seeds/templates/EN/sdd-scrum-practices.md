@@ -37,6 +37,7 @@
     - [Example](#example)
   - [3. Evaluate Product Backlog Readiness](#3-evaluate-product-backlog-readiness)
   - [4. Size product backlog](#4-size-product-backlog)
+  - [5. Feature break down](#5-feature-break-down)
 
 ## Terminology in practice
 
@@ -132,6 +133,8 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 
 - `artifacts_root` is one folder name. When the key is absent, use `specs`.
 - `locale` is `EN`, `HanS`, or `HanT`.
+- `adr` is an optional workspace-relative directory root for Architecture Decision Records. Omit the key when the project does not use that tree.
+- `knowledge` is an optional workspace-relative directory root for project knowledge notes. Omit the key when the project does not use that tree.
 - `files` lists workspace-relative paths that sit outside a module folder.
 - `modules` lists one object per module folder.
 `folder` is the directory name.
@@ -144,6 +147,8 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 {
   "artifacts_root": "{artifacts root}",
   "locale": "{locale}",
+  "adr": "{adr root}",
+  "knowledge": "{knowledge root}",
   "files": [
     "{path}"
   ],
@@ -165,6 +170,9 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 - Write `EN`, `HanS`, or `HanT` in `locale`, so future specs use that language.
 - Write one workspace-relative path in `{path}`, so the file opens as `{workspace}/{path}`.
 - Write one path for each project file, so a missing file has no path.
+- Write one directory path in `adr`, so ADR files live under `{workspace}/{adr}`. Omit `adr` when the user excluded that tree.
+- Write one directory path in `knowledge`, so knowledge notes live under `{workspace}/{knowledge}`. Omit `knowledge` when the user excluded that tree.
+- Do not list every file under `adr` or `knowledge` in `files`, so the map keeps one root per tree.
 - Leave `artifacts-map.json` off `files` and off every module `files` list, so the file does not record its own path.
 - Omit `stem` when it matches `folder`, so a matching stem has no `stem` key.
 - Write the `artifacts_root` value into each path, so the path matches the setting.
@@ -183,6 +191,8 @@ workspace name: {product name}
 workspace folder: {workspace}
 locale: {locale}
 artifacts_root: {artifacts root}
+adr: {adr root}
+knowledge: {knowledge root}
 stems:
 - folder {folder}, stem {stem}: {what the module is}
 files:
@@ -204,6 +214,8 @@ files:
 - Write the workspace folder in `{workspace}`, so the summary shows where the project lives.
 - Write the chosen locale in `{locale}`, so the summary shows the language of future specs.
 - Write the chosen folder name in `{artifacts root}`, so the summary shows the specs folder.
+- Write the chosen ADR root in `{adr root}` when the user included it. Omit the `adr:` line when the user excluded it.
+- Write the chosen Knowledge root in `{knowledge root}` when the user included it. Omit the `knowledge:` line when the user excluded it.
 - Write one stem line for each picked module, so `{what the module is}` states what that module is.
 - Omit a file line the project does not have, so the summary lists only the files the map will record.
 - Leave this summary out of `artifacts-map.json`, so the file keeps the keys and the path lists.
@@ -216,6 +228,8 @@ Pokymon Card Collection. The block shows a filled file. A new project does not c
 {
   "artifacts_root": "specs",
   "locale": "EN",
+  "adr": "specs/adr",
+  "knowledge": "specs/knowledge",
   "files": [
     "specs/product-backlog.md",
     "specs/sprint-backlog.md",
@@ -630,6 +644,8 @@ Future actions uses `No future action is recorded yet.`
 #### status.md
 
 `[status.md](./status.md)` is the tracking projection. It is not a second sprint backlog. It is not the defect list. Sections, in order: Header, Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs, Last updated. Column rules are in `[framework-design.md](../../../framework-design.md)`.
+
+Agents update this file on DoD close or when the user asks. See pack rule `dod.mdc`.
 
 ##### Header
 
@@ -1060,5 +1076,45 @@ The same four lines appear under [3. Evaluate Product Backlog Readiness](#3-eval
 - `sdd-refine-backlog` sets `Size`, requirement bullets, and related process files after the user picks each fail.
 - `sdd-plan-sprint` schedules only Implementable PBIs. It may name an Epic or Theme in the MVP plan when the job needs that outcome, and it records an OGT to refine that row. It does not set `Sprint` or add SBIs on Epic or Theme.
 - User stories and acceptance criteria stay with `sdd-atdd` or `sdd-spec-to-build`.
+- Feature and Task breakdown rules and examples are in [5. Feature break down](#5-feature-break-down).
+
+[Back to top](#index)
+
+### 5. Feature break down
+
+This section is the breakdown for two jobs.
+
+- `sdd-refine-backlog` splits or tightens a PBI.
+- `sdd-plan-sprint` turns Implementable PBIs into sprint rows.
+
+A [Feature](#term-feature) is the usable outcome. A [Task](#term-task) is work that is not that outcome. A step that only builds one PBI or one SBI is not a new PBI and not a new SBI. A task the whole sprint needs, and that is not the effort to build one Feature, may be one Task SBI. It is not a PBI.
+
+#### Refine a backlog item
+
+- [Epic (PBI Size)](#term-pbi-size-epic): split into more PBI rows at the next Size down. Prefer [Theme (PBI Size)](#term-pbi-size-theme) rows when the Epic hides several user-facing areas. Do not jump from Epic to Implementable in one step unless only one area remains. Do not turn the Epic into a task list.
+- [Theme (PBI Size)](#term-pbi-size-theme): tighten the requirement bullets to one path, or split into Implementable PBIs. Do not leave two user paths on one row.
+- [Implementable (PBI Size)](#term-pbi-size-implementable): leave the row as one outcome. Acceptance-criterion detail stays on the row or moves to `sdd-atdd` or `sdd-spec-to-build`. It does not become a new PBI.
+- Too small is not a `Size`. Merge it into a related PBI, or drop it from the requirement bullets.
+
+#### Plan a sprint
+
+- One Implementable PBI becomes one Feature SBI. The SBI names a tangible deliverable.
+- Do not split one Feature into frontend, backend, API, or integration SBIs. Those layers are implementation work inside one Feature, not separate sprint rows.
+- After those Feature SBIs are named, list extra tasks the sprint still needs. Each extra task is one Task SBI. The parent is the PBI that sprint delivers. Omit the list when no extra task passes the [Task](#term-task) row.
+- An Epic or a Theme may be named in the MVP plan when the job needs that outcome. It gets no `Sprint` cell and no SBIs until it is Implementable. Record an [OGT](#term-ogt) so refine happens first.
+
+#### Examples
+
+The ladder is the same login wording as [4. Size product backlog](#4-size-product-backlog).
+
+**Good example (refine).** Epic "The user can manage her account" becomes three Theme PBIs: create an account, log in, and reset the password. Each Theme row is one user-facing area. Later, the Theme "log in" becomes an Implementable PBI such as log in with a user name and a password. Other Themes stay Theme until a later refine.
+
+**Bad example (refine).** The same Epic stays one PBI, and the requirement bullets become "create the login form", "hash the password", and "write the session cookie". Those lines are build steps. They are not PBIs.
+
+**Bad example (refine).** The same Epic becomes three Implementable PBIs in one step, with no Theme rows between Epic and Implementable, when the Epic still hides several areas such as create account, log in, and reset password.
+
+**Good example (sprint plan).** PBI "Log in with a user name and a password" is one Feature SBI: "User can sign in with a user name and a password and see the home page." A shared Task SBI "Add the login route to the public instructions page" is listed only because every Feature in that sprint needs that route.
+
+**Bad example (sprint plan).** The same PBI becomes four SBIs: "Build the login page frontend", "Implement POST /auth/login", "Add session storage", and "Connect the frontend to the auth API." Those are technical layers for one Feature. They belong in implementation planning, not as four sprint rows.
 
 [Back to top](#index)

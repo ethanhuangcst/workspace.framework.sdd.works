@@ -1,31 +1,85 @@
 ---
-description: Definition of Done. Apply the project checklist before any item is marked Done.
+description: Definition of Done for a PBI, SBI, OGT, RID, or sprint. Default checks live here; process files may add or replace checks.
 alwaysApply: true
 ---
 
 # Rule - Definition of Done
 
-Open the project files through `{workspace}/artifacts-map.md`. Join `{workspace}` and each stored path. Do not prefix `artifacts_root` again.
+Open process files through `{workspace}/artifacts-map.json`. Join `{workspace}` and each stored path. Do not prefix `artifacts_root` again.
 
-## Where the checklist lives
+A check names a result a person can confirm. A file on disk, a green local run, or a link alone is not that result.
 
-- A product backlog item (PBI) uses the Definition of Done section above the Product Backlog table in `product-backlog.md`.
-- A sprint backlog item (SBI) uses the Definition of Done section above the first sprint table in `sprint-backlog.md`. A sprint may state a replacement checklist above its own tables. That checklist applies to that sprint only.
-- An item acceptance line under a sprint adds to the checklist. It does not replace it.
+Apply defaults for the work type, then checks on the process artifact. A replacement checklist on an artifact replaces defaults for that scope only. An additional check adds to defaults.
 
-## Before marking an item Done
+Write order when more than one process file changes: `changes-log.md`, `issues-log.md`, `status.md` (draft, user confirm, then write), `sprint-backlog.md`, `product-backlog.md`. Skip a file when it does not apply.
 
-1. Check every item in the checklist that applies.
-2. Every acceptance criterion linked to the item has passed.
-3. The user has confirmed the item is usable.
-4. If any check is open, keep the status `WIP`.
+## When to update status.md
 
-A file on disk, a green local check, or met acceptance criteria alone is not Done.
+Update `status.md` when closing a PBI, SBI, OGT, or sprint under the sections below, or when the user explicitly asks for a status refresh. Do not update `status.md` after every internal task while an SBI stays WIP.
 
-An SBI can be `Done` while its parent PBI stays `ToDo` or `WIP` when the PBI checklist covers more than that SBI.
+When writing `status.md`, follow the section and OGT rules in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` `#statusmd`.
+
+## Common quality gate
+
+A deliverable is a software feature or another shipped result, such as a document, a rule, a skill, or a seed.
+
+This gate applies to a PBI, an SBI, and a RID. It does not apply to an OGT. A sprint does not add a second pass.
+
+The checks below are the common list. Extra quality checks named for this deliverable are part of this gate. Examples are `test-strategy.md` and `{stem}-tests.md`. Other named files count too. A named file may be on `{workspace}/artifacts-map.json` or a spec outside that map. Open the file at the path the artifact names.
+
+- [ ] The deliverable matches the stated outcome.
+- [ ] A person can confirm the result. A file on disk or a green local run alone does not pass.
+- [ ] The verification for this deliverable was used: an automated test, a review, or the method the artifact names.
+- [ ] A failure or empty case was checked when this deliverable has one.
+- [ ] Extra quality checks named for this deliverable passed. `test-strategy.md` and `{stem}-tests.md` are examples, not the full list.
+- [ ] The deliverable contains no secrets.
+
+Skip a box that does not apply and state why in one sentence.
+
+## PBI
+
+Defaults: acceptance criteria passed; Common quality gate passed; user confirmed usable; `sdd-retrospective` skill completed or nothing durable to persist.
+
+Extra: DoD section above the Product Backlog table in `product-backlog.md`.
+
+After confirm: `changes-log.md` when a change concludes; `issues-log.md` when a linked defect closes; `status.md`; `sprint-backlog.md` when Unplanned PBIs or parent text must match; `product-backlog.md` row `Done`.
+
+## SBI
+
+Defaults: acceptance criteria passed; Common quality gate passed; user confirmed usable; `sdd-retrospective` skill completed or nothing durable to persist.
+
+Extra: DoD above the first sprint table in `sprint-backlog.md`; sprint replacement above its tables; Additional Done Criteria on the row.
+
+An SBI may be `Done` while its parent PBI stays `ToDo` or `WIP`.
+
+After confirm: `changes-log.md` when a change concludes; `issues-log.md` when a linked defect closes; `status.md`; `sprint-backlog.md` row `Done`; `product-backlog.md` when the PBI checklist is fully satisfied.
+
+## RID
+
+A RID (risk, impediment, dependency) is recorded only in the RID Log on `sprint-backlog.md`. It is not a PBI, SBI, or OGT.
+
+Defaults: solution verified with a confirmable result; Common quality gate passed; user confirmed close; `sdd-retrospective` skill when a durable lesson exists, otherwise state that explicitly.
+
+After confirm: `changes-log.md` when closure concludes a change; `sprint-backlog.md` moves the row from Open RIDs to Closed RIDs with Closed Sprint.
+
+## OGT
+
+Defaults: outcome stated and user confirmed; `sdd-retrospective` skill when a durable lesson exists, otherwise state that explicitly.
+
+An OGT is not a PBI and not an SBI.
+
+After confirm: `changes-log.md` when a change concludes; `status.md` moves the row from open OGT to closed OGT.
+
+## Sprint
+
+Defaults: every SBI in the sprint is `Done`; sprint goal true and user confirmed the sprint; Retrospective under that sprint or `sdd-retrospective` skill at sprint-end.
+
+After confirm: `changes-log.md` for sprint close; `issues-log.md` when sprint work closes a defect; `status.md`; `sprint-backlog.md` sprint **Status: Done**; `product-backlog.md` for PBIs finished in the sprint.
 
 ## Do not
 
-- Mark an item Done without the user's confirmation.
-- Remove or weaken a check to reach Done.
-- Write Done into `status.md` for an item the backlog does not show as Done.
+- Close or mark `Done` without the user confirmations the defaults require.
+- Weaken or skip a check to reach `Done` or RID close.
+- Show `Done` on `status.md` for a PBI, SBI, or sprint that the backlog does not show as `Done`.
+- Invent a sprint, SBI, or OGT row on `status.md`.
+- Write `status.md` without the user's confirmation.

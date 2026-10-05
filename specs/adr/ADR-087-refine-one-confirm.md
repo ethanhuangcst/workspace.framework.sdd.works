@@ -18,10 +18,10 @@ Accepted
 3. Accept all is offered only when every proposed change edits an existing product backlog item (PBI): `Size`, requirement bullets, or both. A split, a merge, a new PBI, or removal of a sprint backlog item (SBI) is not in Accept all. Those rows use "I will enter instructions in chat".
 4. Accept all writes every item in the findings list, in one pass. "I will enter instructions in chat" writes nothing until the user names the items, then the skill sends the list again. The on-going task (OGT) choice writes one OGT row in `status.md` and leaves the backlog unchanged. "Leave it to me" writes nothing.
 5. Each finding is a numbered item: headline `{PBI code} — {noun}`, then Issue, then Proposed fix. The noun is the table Description or the Requirements noun when the row is missing.
-6. Issue is one or two sentences in plain English for a person reading chat, not a machine trace. Say what is wrong on the board; avoid comma chains of paths and `#` anchors. A verdict word (missing, broken, wrong, inaccurate, duplicate) is optional when it reads naturally. Proposed fix is one sentence: the action and the result. Readiness item numbers and Retire stay out. Remove or delete is the verb when a PBI is no longer needed.
+6. Issue starts with `{part} is {verdict}`. The next sentence names the PBI code, the short name, and what the person sees. It does not list paths or anchor ids. Proposed fix is one sentence: the action and the result. Readiness item numbers and Retire stay out. Remove or delete is the verb when a PBI is no longer needed.
 
 ## Rationale
-The findings list and the choices are one chat message. A numbered list is easier to copy than a wide table. Issue names the part and the verdict first, then the board fact, so a separate Reason line is unnecessary. Accept all is safe when the write cannot invent a new code or a merge target. The OGT choice parks the whole list without a per-fail loop.
+The findings list and the choices are one chat message. A numbered list is easier to copy than a wide table. Issue names the part and the verdict first, then the PBI code, the short name, and what the person sees. Accept all is safe when the write cannot invent a new code or a merge target. The OGT choice parks the whole list without a per-fail loop. The OGT names each finding by PBI code and short name.
 
 ## Consequences
 - `sdd-refine-backlog` drops the per-fail AskQuestion loop when this ADR is applied to the skill.

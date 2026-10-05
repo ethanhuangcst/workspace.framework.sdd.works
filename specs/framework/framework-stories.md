@@ -678,7 +678,33 @@ Scenario: The root map cannot be read
   And the reply has no locale line
 ```
 
-Tests: CE-AUDIT-01 through CE-AUDIT-17.
+#### User story 6 — adr and knowledge roots
+
+**As the** user who started ethan
+**I want** configured ADR and Knowledge roots reported without breaking a Usable tree
+**So that** I can fix missing folders while process files still open
+
+##### AC16
+
+```gherkin
+Scenario: Missing adr or knowledge roots stay failed and Usable
+  Given the map names adr and knowledge paths
+  And those paths are not directories
+  And the map opens specs/status.md and specs/sprint-backlog.md
+  When sdd-audit-artifacts runs
+  Then the verdict is Usable
+  And the report lists each missing root under failed
+
+Scenario: Existing adr and knowledge roots open
+  Given the map names adr and knowledge paths
+  And those paths are directories
+  And the map opens specs/status.md and specs/sprint-backlog.md
+  When sdd-audit-artifacts runs
+  Then the verdict is Usable
+  And the report lists each root under opened
+```
+
+Tests: CE-AUDIT-01 through CE-AUDIT-19.
 
 ### sdd-review-status
 
@@ -689,14 +715,14 @@ Tests: CE-AUDIT-01 through CE-AUDIT-17.
 #### AC1
 
 ```gherkin
-Scenario: Status read does not write before the second yes
+Scenario: Status read does not write before the user picks
   Given the audit verdict is Usable
   And the five process files open
   When the user asks where the project is
   Then sdd-review-status states status_from_board
   And it states status_from_implementation for the open items in the current sprint
   And it lists each mismatch
-  And it does not create or edit a project file before the user says yes to the shown text
+  And it does not create or edit a project file before the user picks in chat
   And it does not mark a product item Done
 ```
 
@@ -725,15 +751,27 @@ Scenario: Each mismatch has its own handling
 #### AC4
 
 ```gherkin
-Scenario: The second yes writes the accepted text
-  Given the user said yes to the shown text for one mismatch
+Scenario: The user's pick writes the accepted text
+  Given the user picked in chat the write for one mismatch
   When the skill writes
   Then it writes only that text
   And an untracked defect becomes the OGT text "track defect xyz in issues-log"
   And the skill does not mark a product item Done
 ```
 
-Tests: CE-SKILL-01, CE-SKILL-02, CE-SKILL-08.
+#### AC5
+
+```gherkin
+Scenario: Open RIDs are compared with related work
+  Given the audit verdict is Usable
+  And sprint-backlog.md has an Open RID whose Impact names a Done PBI
+  When the user asks to review status
+  Then the reply lists RID status-change suggestions or states the RID is still valid
+  And the reply includes choices in the same message
+  And no project file changes before the user picks
+```
+
+Tests: CE-SKILL-01, CE-SKILL-02, CE-SKILL-08, CE-SKILL-09.
 
 ### sdd-update-status
 
@@ -820,7 +858,7 @@ Tests: CE-SKILL-06. The on-disk folder `specs/framework/seeds/skills/sdd-trackin
 
 Design: `[framework-design.md](./framework-design.md#rules)`. Tests: `[framework-tests.md](./framework-tests.md#rules)`.
 
-The four pack rule files install at `{client_root}/rules/<name>.mdc`. Names have no `sdd-` prefix. On Windows the directory is `rules\` under that client root. `dod.mdc`, `incremental-delivery.mdc`, and `realtime-status.mdc` have no behavior story until their bodies are designed. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](../product-backlog.md#pb-95) Done). The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
+The three pack rule files install at `{client_root}/rules/<name>.mdc`. Names have no `sdd-` prefix. On Windows the directory is `rules\` under that client root. `dod.mdc` and `incremental-delivery.mdc` have behavior stories in the seed tree. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](../product-backlog.md#pb-95) Done). [Rule-03](../product-backlog.md#pb-20) is Retired ([ADR-091](../adr/ADR-091-retire-realtime-status-rule.md)). The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### `artifacts-map.mdc`
 
@@ -832,7 +870,8 @@ Retired by [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md). AC2 through AC5 b
 Scenario Outline: The rule files live on the client root
   Given the client root is "<client root>"
   When the installed rules are listed
-  Then dod.mdc, incremental-delivery.mdc, realtime-status.mdc, and friendly-language.mdc are at "<client root>/rules/"
+  Then dod.mdc, incremental-delivery.mdc, and friendly-language.mdc are at "<client root>/rules/"
+  And realtime-status.mdc is not installed
   And artifacts-map.mdc is not installed
   And none of the three names starts with sdd-
   And none of the three files is required under the workspace for the rule to be installed

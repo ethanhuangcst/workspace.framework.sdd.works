@@ -30,7 +30,6 @@ v.0.1.0
 
 - dod.mdc — 整個產品的完成定義。
 - incremental-delivery.mdc — 完成一個 SBI 後再開始下一個。
-- realtime-status.mdc — 即時追蹤狀態，並在每個 SBI 完成時更新 status.md。
 - friendly-language.mdc — 讓用戶和後續 agent 可讀的 chat 與 Markdown 文案。
 
 ## 產物

@@ -81,7 +81,7 @@ This file is the design for the coach. The installable prompt is §14 and the se
 | Goals | Non-goals |
 | --- | --- |
 | Coach SDD-refined Scrum in the user’s project | Host the coach on remote MCP |
-| At start, follow the skill `sdd-audit-artifacts`, then the skill `sdd-review-status` when the verdict is Usable | Load domain trees (`adr/`, `knowledge/`) at start |
+| At start, follow the skill `sdd-audit-artifacts`, then the skill `sdd-review-status` when the verdict is Usable | Load the full ADR or Knowledge tree at start without map keys |
 | Answer what to do now and what is next from the five process files that skill reads | Memory store, embeddings, or MCP resource for knowledge |
 | Run Scrum events by calling installed skills | Invent a second event catalog beside the guide |
 | Edit process artifacts using practices, after the user confirms | Overwrite a process file that already has content |
@@ -584,25 +584,26 @@ Ethan runs onboard once, at the beginning of the chat.
 ## Project files
 
 - Ethan does not write a project file until the user confirms.
-- Ethan does not read `adr/` or `knowledge/` before the ledger has passed.
+- Ethan does not read the ADR or Knowledge tree before the install ledger has passed.
+- After the ledger passes, Ethan reads `adr` and `knowledge` from `{workspace}/artifacts-map.json` when a job writes or reads those trees.
+- When a key is absent, Ethan does not assume `specs/adr` or `specs/knowledge`.
 ```
 
 ## rules
 
-Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names four harness rules: `dod.mdc`, `incremental-delivery.mdc`, `realtime-status.mdc`, and `friendly-language.mdc`. Rule-01 through Rule-03 bodies stay on their product-backlog rows until those files are written. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `specs/framework/seeds/templates/constants.json`.
+Harness rules install under `{client_root}/rules/`. The file name has no `sdd-` prefix. The guide names three harness rules: `dod.mdc`, `incremental-delivery.mdc`, and `friendly-language.mdc`. [Rule-03](../product-backlog.md#pb-20) `realtime-status.mdc` is Retired by [ADR-091](../adr/ADR-091-retire-realtime-status-rule.md). `status.md` writes on close live in `dod.mdc`. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `specs/framework/seeds/templates/constants.json`.
 
 | Rule | Authoring seed | After install |
 | --- | --- | --- |
 | `dod.mdc` | `specs/framework/seeds/rules/dod.mdc` | `{client_root}/rules/dod.mdc` |
 | `incremental-delivery.mdc` | `specs/framework/seeds/rules/incremental-delivery.mdc` | `{client_root}/rules/incremental-delivery.mdc` |
-| `realtime-status.mdc` | `specs/framework/seeds/rules/realtime-status.mdc` | `{client_root}/rules/realtime-status.mdc` |
 | `friendly-language.mdc` | `specs/framework/seeds/rules/friendly-language.mdc` | `{client_root}/rules/friendly-language.mdc` |
 
 The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### artifacts-map.mdc
 
-`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `{workspace}/artifacts-map.json` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. A turn updates a stored path when the user asks for that update. Rule-01 through Rule-03 stay open until each rule is confirmed. Rule-04 is retired.
+`artifacts-map.mdc` is not a pack rule. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md) supersedes [ADR-072](../adr/ADR-072-rule-artifacts-map.md). `{workspace}/artifacts-map.json` stays the index. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. A turn updates a stored path when the user asks for that update. Rule-01 and Rule-02 stay open until each rule is confirmed. Rule-03 is Retired. Rule-04 friendly-language is Done.
 
 ### friendly-language.mdc
 
@@ -869,7 +870,7 @@ A skill's steps live in its `SKILL.md`. Onboard uses the three skills below. The
 
 ### sdd-audit-artifacts
 
-Read-only skill. [Skill-08](../product-backlog.md#pb-30). Stories: [`framework-stories.md`](./framework-stories.md#sdd-audit-artifacts). Tests: [`framework-tests.md`](./framework-tests.md) `CE-AUDIT-01` through `CE-AUDIT-17`. Sprint 4 feature-23 is Done. The authoring seed is the skill. Ethan confirmed the skill usable on 2026-09-30. CE-AUDIT-13 Windows stays Not observed in [`results.md`](./fixtures/sdd-audit-artifacts/results.md).
+Read-only skill. [Skill-08](../product-backlog.md#pb-30). Stories: [`framework-stories.md`](./framework-stories.md#sdd-audit-artifacts). Tests: [`framework-tests.md`](./framework-tests.md) `CE-AUDIT-01` through `CE-AUDIT-19`. Sprint 4 feature-23 is Done. The authoring seed is the skill. Ethan confirmed the skill usable on 2026-09-30. CE-AUDIT-13 Windows stays Not observed in [`results.md`](./fixtures/sdd-audit-artifacts/results.md).
 
 | Role | Path |
 | --- | --- |
@@ -1040,18 +1041,18 @@ The skill proposes existing PBIs for the next ToDo sprint (or the sprints the us
 
 ### sdd-create-skill
 
-Authoring skill. [Skill-13](../product-backlog.md#pb-87). [ADR-074](../adr/ADR-074-sdd-create-skill.md). Not a practices job.
+Authoring skill. [Skill-13](../product-backlog.md#pb-87). [ADR-074](../adr/ADR-074-sdd-create-skill.md), [ADR-092](../adr/ADR-092-pack-authoring-skill-sdd-prefix.md). Not a practices job.
 
 | Role | Path |
 | --- | --- |
 | Authoring seed | `specs/framework/seeds/skills/sdd-create-skill/SKILL.md` |
 | After install | `{client_root}/skills/sdd-create-skill/SKILL.md` |
 
-The skill writes another skill only in `{client_root}/{skills_dir}/<name>/`. `skills_dir` comes from `constants.json`. One confirm covers every file in that folder. When `constants.json` or `skills_dir` cannot be read, it stops without writing. A new key in the `constants.json` `skills` object is a second confirm. It does not write production code. It does not ship `skill-creator` or `create-skill`.
+The skill writes another skill only in `{client_root}/{skills_dir}/<name>/`. `skills_dir` comes from `constants.json`. One confirm covers every file in that folder. When `constants.json` or `skills_dir` cannot be read, it stops without writing. A new key in the `constants.json` `skills` object is a second confirm. It does not write production code. It does not ship `skill-creator`. The written skill defaults to capabilities, knowledge, limits, and anti-patterns; a numbered procedure is only for a user-confirmed fragile job ([TRUE AGENT](#true-agent)).
 
 ### sdd-build-agent
 
-Authoring skill for an agent file. Not a practices job. It follows [TRUE AGENT](#true-agent).
+Authoring skill for an agent file. [Skill-15](../product-backlog.md#pb-93). Not a practices job. It follows [TRUE AGENT](#true-agent).
 
 | Role | Path |
 | --- | --- |
@@ -1059,6 +1060,17 @@ Authoring skill for an agent file. Not a practices job. It follows [TRUE AGENT](
 | After install | `{client_root}/skills/sdd-build-agent/SKILL.md` |
 
 The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agents_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `agents_dir` cannot be read, it stops without writing. It does not create a workspace agent file, name a tool folder, or start a second runtime. The agent file states capabilities and limits. It does not link to this design, and it does not get a Skills-table row. A constants row for `sdd-build-agent` itself is a separate confirm.
+
+### sdd-create-rule
+
+Authoring skill for a pack rule file. [Skill-16](../product-backlog.md#pb-94). [ADR-092](../adr/ADR-092-pack-authoring-skill-sdd-prefix.md). Not a practices job.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/sdd-create-rule/SKILL.md` |
+| After install | `{client_root}/skills/sdd-create-rule/SKILL.md` |
+
+The skill writes one rule file at `{client_root}/{rules_dir}/<name>.mdc`. `rules_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `rules_dir` cannot be read, it stops without writing. A new key in the `constants.json` `rules` object is a second confirm. Rule file names have no `sdd-` prefix.
 
 ### Other skills
 
@@ -1068,7 +1080,8 @@ The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agen
 | `sdd-plan-sprint` | `specs/framework/seeds/skills/sdd-plan-sprint/SKILL.md` |
 | `sdd-tracking` | `specs/framework/seeds/skills/sdd-tracking/SKILL.md` (not the status skill; [ADR-076](../adr/ADR-076-review-status-one-skill.md)) |
 | `sdd-update-project` | `specs/framework/seeds/skills/sdd-update-project/SKILL.md` |
-| `sdd-atdd`, `sdd-refine-backlog`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
+| `sdd-refine-backlog` | `specs/framework/seeds/skills/sdd-refine-backlog/SKILL.md` |
+| `sdd-atdd`, `sdd-retrospective`, `sdd-close-sprint`, `sdd-update-specs` | Not in the seed tree yet. Acceptance stays on the product-backlog row. |
 
 ## templates
 
@@ -1109,7 +1122,7 @@ It is not a project file under `artifacts_root`. Do not copy it into the project
 
 ### artifacts-map.json
 
-Path configuration for this project. It is not an artifact and not a seed. The JSON shape is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md).
+Path configuration for this project. It is not an artifact and not a seed. The JSON shape is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md).
 
 | Role | Path |
 | --- | --- |
@@ -1125,7 +1138,7 @@ On start, after the install ledger passes, Ethan follows the skill `sdd-audit-ar
 | Verdict | What it means | What Ethan does |
 | --- | --- | --- |
 | `Uninitialized` | The map is missing and no process file opened, or the map lists no process-file path | Tell the user the next step is to start a new project. When the user confirms, follow the skill `sdd-update-project`. |
-| `Index broken` | The root map exists and cannot be read, or a stored path fails to open, including when `opened` is `none` | Tell the user the next step is to update the project. When the user confirms, follow the skill `sdd-update-project`. |
+| `Index broken` | The root map exists and cannot be read, or a stored process-file path in `files` or in a module `files` list fails to open, including when `opened` is `none` | Tell the user the next step is to update the project. When the user confirms, follow the skill `sdd-update-project`. |
 | `Usable` | The map opens the process files, including `status.md` and `sprint-backlog.md` | Follow the skill `sdd-review-status`. |
 
 An empty `locale` does not change the verdict. `sdd-audit-artifacts` reports `locale` empty only when it opened the map and the field is missing. Ethan uses that report. He does not decide that the field is empty. On `Usable`, onboard still follows `sdd-review-status`. When a later job needs a locale and the audit reported it empty, the next step is `sdd-update-project` after the user confirms. Do not assume English.
@@ -1313,9 +1326,9 @@ A draft EN seed exists. It lists `NAME | where the value lives | who uses it` as
 
 ### adr/
 
-Durable decisions. A project may have this tree under `artifacts_root`. Ethan does not read it on start. Create a file when a retrospective finds a decision worth keeping. Do not leave an empty row in `artifacts-map.json` before the tree exists.
+Durable decisions. A project may have this tree under `artifacts_root`. After `sdd-update-project` confirms it, the map holds the root in the `adr` key. Ethan does not read the tree on start. Create a file when a retrospective finds a decision worth keeping. Omit the key until the user confirms the root.
 
 ### knowledge/
 
-Reusable research and ops notes. A project may have this tree under `artifacts_root`. Ethan does not read it on start. Create a file when a retrospective finds a lesson worth keeping. Do not leave an empty row in `artifacts-map.json` before the tree exists.
+Reusable research and ops notes. A project may have this tree under `artifacts_root`. After `sdd-update-project` confirms it, the map holds the root in the `knowledge` key. Ethan does not read the tree on start. Create a file when a retrospective finds a lesson worth keeping. Omit the key until the user confirms the root.
 

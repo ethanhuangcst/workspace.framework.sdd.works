@@ -1,10 +1,134 @@
 # Changes log (framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-04
+> as_of: 2026-10-05
 > [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#changes-logmd)
 
 ---
+
+## 2026-10-05
+
+### Sprint 6 feature-37 and feature-38 Done
+
+**Why**: Pack harness rules `dod.mdc` and `incremental-delivery.mdc` ship in seeds and constants; user confirmed usable.
+
+**What changed**: [Rule-01](./product-backlog.md#pb-18) and [Rule-02](./product-backlog.md#pb-19) **Done**. [feature-37](./sprint-backlog.md#sprint-6)–[feature-39](./sprint-backlog.md#sprint-6) in Sprint 6 Done. Sprint 6 **WIP**. [Rule-03](./product-backlog.md#pb-20) stays **Retired**; feature-39 Done means Option C retirement verified ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md) decision item 4 updated).
+
+**Verification**: `specs/framework/seeds/rules/dod.mdc` and `incremental-delivery.mdc` exist. `constants.json` `rules` keys `dod` and `incremental-delivery`. CE-RULE-05 lists three pack rules, not `realtime-status.mdc`.
+
+### Pack authoring skill names revert to sdd- prefix (ADR-092)
+
+**Why**: Cursor built-in `create-skill` and `create-rule` under `skills-cursor` collide with pack folders of the same name under `{client_root}/skills/`.
+
+**What changed**: [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) supersedes [ADR-089](./adr/ADR-089-pack-authoring-skill-names.md). Seed folders `sdd-create-skill`, `sdd-build-agent`, `sdd-create-rule`. [`constants.json`](./framework/seeds/templates/constants.json) values restored. Product backlog, sprint backlog, framework design/stories/tests, EN/HanS `scrum-in-sdd`, and [`status.md`](./status.md) use `sdd-*` names and paths. [ADR-074](./adr/ADR-074-sdd-create-skill.md) supersession note updated.
+
+**Verification**: `ls specs/framework/seeds/skills/` lists the three `sdd-*` folders only (no unprefixed trio). `rg '^name: (create-skill|create-rule|build-agent)$' specs/framework/seeds/skills/` is empty. `constants.json` maps `skill_build_agent`, `skill_create_skill`, and `skill_create_rule` to the `sdd-*` folder names. Remove stale `~/.cursor/skills/create-skill`, `create-rule`, and `build-agent` after copy from seeds.
+
+### Retire realtime-status.mdc (Option C)
+
+**Why**: `dod.mdc` and `realtime-status.mdc` duplicated confirm-then-write for `status.md`. One owner for close avoids two Done paths.
+
+**What changed**: [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md). Removed [realtime-status.mdc](./framework/seeds/rules/realtime-status.mdc) and the `realtime-status` key in [constants.json](./framework/seeds/templates/constants.json). [dod.mdc](./framework/seeds/rules/dod.mdc) adds when to update `status.md` and points at practices `#statusmd`. [Rule-03](./product-backlog.md#pb-20) and Sprint 6 feature-39 are **Retired**. Guides, `src/content`, framework design/stories/tests, and admin portal AC list three harness rules.
+
+**Verification**: `rg 'realtime-status' specs/framework/seeds` is empty. `constants.json` `rules` has three keys. CE-RULE-05 names three rule files.
+
+### sdd-review-status compares Open RIDs (OGT 8)
+
+**Why**: Open risks and dependencies on sprint-backlog were not compared with related work during a status review.
+
+**What changed**: [`sdd-review-status/SKILL.md`](./framework/seeds/skills/sdd-review-status/SKILL.md) adds Open RID compare, RID status-change suggestions, Capabilities/Knowledge/Limits, chat picks in one message, and no question card. **CE-SKILL-09** and **AC5** on sdd-review-status in [`framework-tests.md`](./framework/framework-tests.md) and [`framework-stories.md`](./framework/framework-stories.md). CE-SKILL-02 steps match one chat reply.
+
+**Verification**: `rg AskQuestion specs/framework/seeds/skills/sdd-review-status/` is empty. Copy at `~/.cursor/skills/sdd-review-status/SKILL.md` matches the seed checksum.
+
+### Feature break down in EN practices
+
+**Why**: Refine and sprint planning needed one place for PBI split rules, Feature versus Task SBI rules, and good or bad examples without duplicating the Size ladder.
+
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) adds [5. Feature break down](#5-feature-break-down). [`sdd-refine-backlog/SKILL.md`](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) and [`sdd-plan-sprint/SKILL.md`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) load that heading in Knowledge.
+
+**Verification**: Index link `#5-feature-break-down` resolves. `rg 'Feature break down' specs/framework/seeds/skills/sdd-refine-backlog specs/framework/seeds/skills/sdd-plan-sprint` shows Knowledge rows. Section 5 has no Plan mode text.
+
+### Pack rule dod: four work types and write order
+
+**Why**: One gate rule should name PBI, SBI, OGT, and sprint defaults, retrospective, and which process files to update after Done is confirmed.
+
+**What changed**: [`dod.mdc`](./framework/seeds/rules/dod.mdc) lists default checks per type, artifact extra or replacement DoD, `retrospective` skill on PBI and SBI, and write order (changes-log, issues-log, status after confirm, sprint-backlog, product-backlog) per type.
+
+**Verification**: The rule has sections PBI, SBI, RID, OGT, and Sprint. PBI and SBI defaults include a quality gate. RID defaults cover solution verify and close on the RID Log.
+
+**Update 2026-10-05**: RID type and quality gate on PBI and SBI defaults added in the same file. Common quality gate is now a checklist in the same file for a software feature or another deliverable. PBI, SBI, and RID point at that section.
+
+### Pack create-skill TRUE AGENT body shape
+
+**Why**: The seed taught a nine-step procedure and a numbered example. Pack skills should default to capabilities, knowledge, and limits. Pack paths should use `{client_root}/templates/framework.sdd.works/...`, not `../` links.
+
+**What changed**: [`sdd-create-skill/SKILL.md`](./framework/seeds/skills/sdd-create-skill/SKILL.md) rewrite. [`framework-design.md`](./framework/framework-design.md) sdd-create-skill paragraph notes the default body and fragile-job rule.
+
+**Verification**: The seed has Capabilities, Knowledge, and Limits sections. Defined terms use a practices heading path with `{locale}`. CE-SKILL-03 unchanged: confirm then one write under `{client_root}/skills/sample-skill/SKILL.md`.
+
+### Sprints 6–8 schedule (Option A each)
+
+**Why**: Process loop (rules, retrospective, close-sprint, process seeds), then engineering skills and seeds, then Ethan job routing and Agent-03.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) `Sprint` cells for Sprint 6 (Rule-01–03, Skill-06–07, Spec-seeds-05), Sprint 7 (Skill-01, 09, 11, 14 and Spec-seeds-10–13), Sprint 8 (Agent-03). [`sprint-backlog.md`](./sprint-backlog.md) adds Sprint 6–8 **ToDo** with Feature and Task SBIs. Unplanned PBIs drops 15 rows. [`status.md`](./status.md) adds OGT refine for [i18n-03](./product-backlog.md#pb-69).
+
+**Verification**: Sprint 6 has seven SBIs (feature-37–42, task-01). Sprint 8 has Agent-03 plus two Task SBIs. Unplanned PBIs has 11 rows.
+
+### Sprint 5 closed (DoD)
+
+**Why**: User confirmed all six Sprint 5 skill features usable after DoD review.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) Sprint 5 **Done**; feature-31 through feature-36 **Done**. [`product-backlog.md`](./product-backlog.md) Skill-03, Skill-04, Skill-05, Skill-13, Skill-15, Skill-16 **Done**. [`framework-design.md`](./framework/framework-design.md) lists `sdd-refine-backlog` seed path. Retrospective on Sprint 5.
+
+**Verification**: Six seeds under `specs/framework/seeds/skills/` with matching `constants.json` keys. User acceptance recorded on 2026-10-05.
+
+### Sprint 5 schedule (Option A)
+
+**Why**: The next MVP is the SDD planning loop on a new project: update-project, process files, refine backlog, plan sprint, plus pack authoring skills.
+
+**What changed**: [Skill-03](./product-backlog.md#pb-24), [Skill-04](./product-backlog.md#pb-25), [Skill-05](./product-backlog.md#pb-26), [Skill-13](./product-backlog.md#pb-87), [Skill-15](./product-backlog.md#pb-93), and [Skill-16](./product-backlog.md#pb-94) are **Sprint 5** in [`product-backlog.md`](./product-backlog.md). [`sprint-backlog.md`](./sprint-backlog.md) adds **Sprint 5** (ToDo) with six Feature SBIs and removes those PBIs from Unplanned PBIs. [`status.md`](./status.md) Project progress lists Sprint 5 ToDo.
+
+**Verification**: Each listed PBI has `Sprint` **Sprint 5**. Unplanned PBIs has 26 rows. Sprint 5 table has feature-31 through feature-36 with Parent links to pb-24, pb-25, pb-26, pb-87, pb-93, pb-94.
+
+### Product backlog refine (accept all)
+
+**Why**: Readiness review found Unplanned PBIs out of sync with product-backlog, broken Related links, and coarse Size on i18n-02.
+
+**What changed**: [i18n-02](./product-backlog.md#pb-68) Size **Theme**. [Skill-13](./product-backlog.md#pb-87), [Skill-15](./product-backlog.md#pb-93), and [Skill-16](./product-backlog.md#pb-94) gain ADR-089 install-folder bullets and seed Related links. Unplanned PBIs in [`sprint-backlog.md`](./sprint-backlog.md) match those rows. Agent-03 Related uses `../artifacts-map.json`. Change record states [Web-portal-15](./product-backlog.md#pb-91) Size **Epic**.
+
+**Verification**: Unplanned Description and Related for pb-87, pb-93, and pb-94 match the Product Backlog table. `#build-agent` and `#create-rule` open in framework-design. i18n-02 Size is Theme in both files.
+
+### adr and knowledge roots in artifacts-map.json
+
+**Why**: ADR and Knowledge paths were convention only. Audit, Ethan, and update-project had no shared map keys for those trees.
+
+**What changed**: [ADR-090](./adr/ADR-090-adr-knowledge-map-roots.md). Practices `#artifacts-mapjson`, `sdd-update-project`, `sdd-audit-artifacts`, and `ethan.md`. Live `{workspace}/artifacts-map.json` adds `"adr": "specs/adr"` and `"knowledge": "specs/knowledge"`. Audit fixtures CE-AUDIT-18 and CE-AUDIT-19. [Spec-seeds-04](./product-backlog.md#pb-35) requirement notes the optional keys.
+
+**Verification**: Run CE-AUDIT-18 and CE-AUDIT-19 against the checked-in fixtures. Confirm `sdd-update-project` confirm summary includes `adr:` and `knowledge:` when the user keeps those keys.
+
+### Pack skill folders build-agent, create-skill, create-rule
+
+**Why**: Authoring skills used an `sdd-` folder prefix while constants keys stayed `skill_*`. Short folder names match `prompt-optimizer` and rule files.
+
+**What changed**: [ADR-089](./adr/ADR-089-pack-authoring-skill-names.md). Seed folders renamed under `specs/framework/seeds/skills/`. [`constants.json`](./framework/seeds/templates/constants.json) values updated. Product backlog, sprint backlog, framework design/stories/tests, EN/HanS `scrum-in-sdd`, and [`status.md`](./status.md) use the new names. [ADR-074](./adr/ADR-074-sdd-create-skill.md) keeps historical context; folder name superseded by ADR-089.
+
+**Verification**: `rg 'sdd-build-agent|sdd-create-skill|sdd-create-rule' specs/framework/seeds/skills/` is empty. `constants.json` maps `skill_build_agent`, `skill_create_skill`, and `skill_create_rule` to the new folder names. Remove stale `~/.cursor/skills/sdd-*` copies after pack update.
+
+### Refine skill paths use the client root
+
+**Why**: Relative links such as `../../templates/EN/` resolve from the skill file. They miss the pack after install. ADR files belong to this workspace only.
+
+**What changed**: [sdd-refine-backlog](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) loads practices from `{client_root}/templates/framework.sdd.works/{locale}/` and friendly-language from `{client_root}/{rules_dir}/`. It does not read an adr folder.
+
+**Verification**: The skill file has no `../../` link and no `adr` path. Copy lives at `~/.cursor/skills/sdd-refine-backlog/SKILL.md`.
+
+### Refine findings open with part and verdict
+
+**Why**: `{part} is {verdict}` names the place that failed. The unreadable runs were the next sentence, which listed paths instead of the PBI.
+
+**What changed**: [sdd-refine-backlog](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) starts Issue with that sentence, then the PBI code, the short name, and what the person sees. The question-card ban is one sentence. The on-going task lists each finding as code and short name. [ADR-087](./adr/ADR-087-refine-one-confirm.md) matches.
+
+**Verification**: The Issue section requires `{part} is {verdict}` and does not forbid it. The skill names AskQuestion in zero places. Copy lives at `~/.cursor/skills/sdd-refine-backlog/SKILL.md`.
 
 ## 2026-10-04
 

@@ -427,9 +427,8 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 ## SDD concepts that need to be added into scrum implementation
 
 ### Rules
-- **dod.mdc**: Definition of Done
+- **dod.mdc**: Definition of Done; updates **status.md** on close or when the user asks
 - **incremental-delivery.mdc**: Incremental Delivery
-- **realtime-status.mdc**: track status in real time and update **status.md** when each task is done
 - **friendly-language.mdc**: keep chat and Markdown readable for the user and for later agents
 
 ### Skills
@@ -498,7 +497,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 #### Daily Scrum
 - The classic **Daily Scrum** might still be needed.
 - But more frequent **Inspection and adaptation** between human and agents can happen continuously in **real time**.
-- With the **realtime-status rule**, each completed task triggers a **small retrospective** and updates **status.md**.
+- With **dod.mdc**, closing a task or SBI runs the retrospective gate and updates **status.md** when the close applies.
 
 #### Sprint Review
 
@@ -610,9 +609,8 @@ This guide is for both humans and AI agents.
 - **Knowledge**: ground execution in context.
 
 ### Rules
-- **dod.mdc**: Definition of Done.
+- **dod.mdc**: Definition of Done; process writes including **status.md** on close.
 - **incremental-delivery.mdc**: incremental delivery policy.
-- **realtime-status.mdc**: real-time status update policy.
 - **friendly-language.mdc**: readable chat and Markdown for the user and for later agents.
 
 ### Skills

@@ -45,11 +45,19 @@ Open each stored path, so the verdict uses the paths the map names.
 
 - Read strings in `files` and in each module `files` list, so those strings are the stored paths.
 - Open each stored path as `{workspace}/<path>`, so the file is the one the map names.
-- Leave `artifacts_root` and `locale` unopened, so those keys stay settings.
+- Leave `artifacts_root`, `locale`, `adr`, and `knowledge` unopened as file paths, so those keys stay settings or directory roots.
 - Leave `artifacts_root` off the front of a path, so a stored path is not prefixed twice.
 - Leave an absolute path as stored, so a machine path stays the path that failed or opened.
 - Report a stored path that does not open as failed, so the report block names that path.
 - Leave a second copy of that file unread, so another folder does not change the verdict.
+
+#### Check adr and knowledge roots
+
+When the map names `adr` or `knowledge`, check each root as a directory under `{workspace}`.
+
+- When the path is a directory, list it under `opened`, so the report block names the root.
+- When the path is missing or not a directory, list it under `failed`, so the report block names the root.
+- A missing or broken adr or knowledge root does not alone change the verdict from `Usable` when the five process files still open from the map. [ADR-090](../../../../adr/ADR-090-adr-knowledge-map-roots.md).
 
 ### 3. Search specs when the map is missing
 
@@ -67,8 +75,8 @@ Choose one row, so the report block has one verdict.
 | `{workspace}/artifacts-map.json` is missing, and none of the process files open under `specs/` | `Uninitialized` |
 | `{workspace}/artifacts-map.json` is present, and the map lists no process-file path | `Uninitialized` |
 | `{workspace}/artifacts-map.json` exists and cannot be read | `Index broken` |
-| A stored path fails to open | `Index broken` |
-| At least one process file opens, and `{workspace}/artifacts-map.json` is missing or a stored path does not open the process file | `Index broken` |
+| A stored path in `files` or in a module `files` list fails to open | `Index broken` |
+| At least one process file opens, and `{workspace}/artifacts-map.json` is missing or a stored process-file path does not open | `Index broken` |
 | `{workspace}/artifacts-map.json` opens the process files the map lists, including `status.md` and `sprint-backlog.md` | `Usable` |
 
 #### Keep the verdict token

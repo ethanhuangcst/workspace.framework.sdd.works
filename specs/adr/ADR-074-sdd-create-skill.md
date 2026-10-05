@@ -1,5 +1,8 @@
 # ADR-074: Skill authoring skill is `sdd-create-skill`
 
+## Folder name
+[ADR-092](./ADR-092-pack-authoring-skill-sdd-prefix.md) restores pack folder `sdd-create-skill`. [ADR-089](./ADR-089-pack-authoring-skill-names.md) is superseded. Constants key `skill_create_skill` is unchanged.
+
 ## Status
 Accepted
 

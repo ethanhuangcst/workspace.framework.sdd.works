@@ -1,6 +1,8 @@
 {
   "artifacts_root": "specs",
   "locale": "EN",
+  "adr": "specs/adr",
+  "knowledge": "specs/knowledge",
   "files": [
     "specs/product-backlog.md",
     "specs/sprint-backlog.md",
