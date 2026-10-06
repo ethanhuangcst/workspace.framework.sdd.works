@@ -8,6 +8,14 @@
 
 ## 2026-10-06
 
+### OGT 2: module `{stem}-design.md` writing guide in practices
+
+**Why**: `sdd-spec-to-build` jobs 4–7 name UI and technical design sections; the EN practices file had no section templates.
+
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) § [`{module-name}-design.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-designmd) adds **What belongs where** (vs `architecture.md` and `release.md`), **UI design**, and **Technical design** templates. [`readiness.md`](./framework/seeds/skills/sdd-spec-to-build/readiness.md) links that anchor.
+
+**Verification**: `rg '## UI design' specs/framework/seeds/templates/EN/sdd-scrum-practices.md`. `rg 'module-name-designmd' specs/framework/seeds/skills/sdd-spec-to-build/readiness.md`.
+
 ### Sprint 7 closed; Sprint 8 WIP (install-first MVP)
 
 **Why**: User asked to mark Sprint 7 **Done** and plan Sprint 8.

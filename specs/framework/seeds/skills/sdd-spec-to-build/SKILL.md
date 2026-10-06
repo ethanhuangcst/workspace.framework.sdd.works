@@ -38,10 +38,10 @@ Checklist for one feature. Not every job applies to every SBI. See [readiness.md
 1. Update engineering artifacts and alignment. Load `sdd-update-specs` when specs drift. Propose a skill and a job when a mapped file is missing.
 2. Update the module stories file with `atdd-expert`. Pass requirement text, scope, and the resolved path in the thread. Target: `*-stories.md` or `stories.md` from the map.
 3. Update the module tests file with `testing-expert`. Target: `*-tests.md` or `tests.md`.
-4. Update the UI design section in the module design file. Use `frontend-designer` when the user asks. Target: `*-design.md` or `design.md`.
-5. Create or update a UI mockup when the feature has a user interface, using `frontend-designer` and `frontend-developer`.
-6. Sync UI assets so implementation and UI design match.
-7. Update the technical design section in the module design file with `fullstack-engineer`.
+4. Update the **UI design** section in the module design file. Use `frontend-designer` when the user asks. Target: `*-design.md` or `design.md`. Follow the practices **UI design** template before you draft.
+5. Create or update a UI mockup when the feature has a user interface, using `frontend-designer` and `frontend-developer`. Follow **Mockups and assets** in the same practices section.
+6. Sync UI assets so implementation and UI design match. Follow the mockup sync rule in practices.
+7. Update the **Technical design** section in the module design file with `fullstack-engineer`. Follow the practices **Technical design** template before you draft.
 
 `frontend-designer` is the installed skill. The user may say frontend-design. Load `frontend-designer`.
 
@@ -51,6 +51,7 @@ Checklist for one feature. Not every job applies to every SBI. See [readiness.md
 | --- | --- |
 | [readiness.md](./readiness.md) | Readiness mode, applicability, path resolution, readiness summary |
 | `{workspace}/artifacts-map.json` | Resolving module paths; optional when the user names every path |
+| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, `#module-name-designmd` | Before you draft or edit `*-design.md` or `design.md` for jobs 4–7. When `locale` is missing, use `EN` |
 | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, artifacts map **Rules** | Pack installed and map shape is ambiguous. When `locale` is missing, use `EN` |
 
 ## After one job

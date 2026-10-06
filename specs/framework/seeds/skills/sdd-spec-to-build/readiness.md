@@ -45,7 +45,7 @@ From the chosen module `files` list, pick **one** path per job. Do not assume `{
 | --- | --- |
 | 2 Stories | Basename ends with `-stories.md`, or basename is exactly `stories.md` |
 | 3 Tests | Basename ends with `-tests.md`, or basename is exactly `tests.md` |
-| 4, 5, 6, 7 Design (and UI work) | Basename ends with `-design.md`, or basename is exactly `design.md` |
+| 4, 5, 6, 7 Design (and UI work) | Basename ends with `-design.md`, or basename is exactly `design.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-design.md`](../../templates/EN/sdd-scrum-practices.md#module-name-designmd) (**UI design**, **Technical design**). |
 
 Flat layouts without a component subfolder are valid: for example `specs/stories.md`, `specs/tests.md`, `specs/design.md` when the map lists them on a module with no `folder`. Prefixed flat paths such as `specs/app-stories.md` under `{artifacts_root}` without a subfolder use the same suffix rules.
 

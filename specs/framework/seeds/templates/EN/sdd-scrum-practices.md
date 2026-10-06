@@ -1,7 +1,7 @@
 # SDD Scrum practices
 
 > Type: Core artifact of framework.sdd.works
-> as_of: 2026-10-05
+> as_of: 2026-10-06
 > [Definition](#terminology-in-practice)
 
 ---
@@ -1247,11 +1247,133 @@ Local startup and go-live order are in [`release.md`](./release.md).
 
 #### {module-name}-design.md
 
+<a id="module-name-designmd"></a>
+
 The design spec path is the `*-design.md` or `design.md` entry in that module's `files` list. `{stem}` or `{module-name}` in headings is the filename prefix when the map uses `{stem}-design.md`.
 
 `{module-name}-design.md` is the usual foldered name. Flat layouts use `{artifacts_root}/{stem}-design.md` or singleton `design.md`.
 
-Section rules for a module file are written when that seed is in review. They use the four groups Content, Format, Writing, and Terms under that artifact heading in this file.
+`sdd-spec-to-build` updates the **UI design** block (jobs 4–6) and the **Technical design** block (job 7) in this file when the SBI has UI or engineering design work. Skip a block when the job is N/A on the readiness checklist.
+
+##### What belongs where
+
+| Artifact | Put here | Do not put here |
+| --- | --- | --- |
+| [`architecture.md`](./architecture.md) | Product-wide goals, surfaces, system context and service diagrams, cross-module stack summary, design principles, non-goals, ADR index, links to module specs | Page-level UI tokens, one module's routes table, local `make` ports |
+| [`release.md`](./release.md) | Local startup steps, `make dev` / `make up` / `make down`, production release order, smoke checklist, environment variable **names** (no values), upgrade and rollback | Module data model, screen layout, component CSS |
+| `{stem}-design.md` | This module's UI design and technical design sections below | Product-wide architecture narrative duplicated from `architecture.md` |
+| [`test-strategy.md`](./test-strategy.md) | Product-wide pyramid, CI policy, critical journeys | Module test cases (use `{stem}-tests.md`) |
+
+##### Header
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+```markdown
+# {Product or module} — design
+
+Stories: [`{stem}-stories.md`](./{stem}-stories.md). Tests: [`{stem}-tests.md`](./{stem}-tests.md). Mockups: [`{mockup-folder}/`](./{mockup-folder}/) when UI exists.
+
+**Status:** draft — one feature or SBI at a time.
+```
+
+###### How to write
+
+- One intro paragraph links sibling specs. Use a mockup folder path only when the module ships UI.
+- Do not duplicate the `architecture.md` spec index table.
+
+##### UI design
+
+Use this block when the feature has a user interface. `frontend-designer` and `frontend-developer` load for jobs 4–6.
+
+###### Template
+
+```markdown
+## UI design
+
+### Scope
+
+| Goals | Non-goals |
+| --- | --- |
+| {user-visible outcome} | {out of scope for this module UI} |
+
+### Routes and frames
+
+| Path or frame | Story id | Mockup file | Auth |
+| --- | --- | --- | --- |
+| {path} | `{story-id}` | `{file.html}` | {Public or Session} |
+
+Optional ASCII frame sketch when it clarifies shell layout.
+
+### Visual style
+
+Palette, typography, motion, and brand rules the implementation must follow. Point to a tokens file or mockup `:root` when one exists.
+
+User-facing copy is i18n keys. Name supported locales. Tests assert keys, roles, or `data-testid`, not one language's sentences.
+
+### Mockups and assets
+
+| Artifact | Path | Rule |
+| --- | --- | --- |
+| HTML or Figma mockups | `{mockup-folder}/` | Source of truth for layout and class names |
+| Tokens / portal CSS | `{path}` | Stay in sync with mockups in the same change |
+
+When mockups change, update production CSS or components in the same change.
+```
+
+###### How to write
+
+- Job 4 fills **Scope**, **Routes and frames**, and **Visual style**.
+- Job 5 creates or updates files under **Mockups and assets**.
+- Job 6 syncs tokens, CSS, or components so implementation matches mockups and this section.
+- MCP-only, CLI-only, or API-only features omit the whole **UI design** block.
+
+##### Technical design
+
+Use this block for almost every feature. `fullstack-engineer` loads for job 7.
+
+###### Template
+
+```markdown
+## Technical design
+
+### Stack
+
+| Layer | Choice | Note |
+| --- | --- | --- |
+| {App, API, data, auth, …} | {version or library} | {constraint} |
+
+### Runtime
+
+How this module runs in dev and prod: routes prefix, BFF vs separate service, ports only when module-specific. Product-wide deploy shape stays in [`architecture.md`](./architecture.md) and [`release.md`](./release.md).
+
+### Data
+
+Entities, keys, and invariants for this module.
+
+### Auth and API
+
+Credentials per channel, main API routes, error shape. Authorization on the server; hiding UI is not the control.
+
+### Integrations
+
+Other modules, external APIs, or MCP surfaces this module calls.
+
+### Security
+
+Module-specific rules: secrets storage, what never appears in logs or client bundles.
+
+### Tests
+
+Point to [`{stem}-tests.md`](./{stem}-tests.md). Follow **common-test-strategy** and [`test-strategy.md`](./test-strategy.md) when present. Do not copy the full case list here.
+```
+
+###### How to write
+
+- Job 7 updates **Technical design** only. Do not write production code in the spec phase.
+- Local hostnames, release order, and smoke steps belong in [`release.md`](./release.md), not here.
+- Cross-product diagrams and multi-module boundaries belong in [`architecture.md`](./architecture.md).
 
 [Back to top](#index)
 
