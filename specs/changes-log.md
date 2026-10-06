@@ -6,6 +6,40 @@
 
 ---
 
+## 2026-10-06
+
+### Sprint 7: feature-45 Skill sdd-spec-to-build Done
+
+**Why**: User confirmed the pack seed usable after engineering-readiness rewrite and flat artifacts-map path rules.
+
+**What changed**: [`sdd-spec-to-build/SKILL.md`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md), [`readiness.md`](./framework/seeds/skills/sdd-spec-to-build/readiness.md). Sync to `~/.cursor/skills/` and personal store. [`product-backlog.md`](./product-backlog.md) [Skill-11](./product-backlog.md#pb-80) **Done**. [`sprint-backlog.md`](./sprint-backlog.md) [feature-45](./sprint-backlog.md#sprint-7) **Done**.
+
+**Verification**: Seed describes readiness mode, seven applicable jobs, map match for `*-stories.md` or `stories.md` (and tests/design). User close confirm in chat.
+
+### Skill-18 renamed to testing-expert (ADR-102)
+
+**Why**: User wants the testing skill minimally dependent on the SDD framework. The folder name `sdd-tester` implied a framework-only job.
+
+**What changed**: [ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md). [Skill-18](./product-backlog.md#pb-114) and Sprint 7 [feature-62](./sprint-backlog.md#sprint-7) use `testing-expert`. No seed file yet.
+
+**Verification**: `rg 'sdd-tester' specs/product-backlog.md specs/sprint-backlog.md specs/status.md` shows the name only in older change-record lines, if at all.
+
+### Sprint 7: feature-61 and feature-62 WIP; Skill-19 frontend-developer
+
+**Why**: User set feature-61 and feature-62 to WIP, added a frontend-developer PBI on Sprint 7, and widened feature-62 to generic testing.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) WIP rows feature-62 and feature-61; ToDo feature-64. [`product-backlog.md`](./product-backlog.md) [Skill-17](./product-backlog.md#pb-113) and [Skill-18](./product-backlog.md#pb-114) **WIP**; [Skill-19](./product-backlog.md#pb-115) **ToDo**. Skill-18 requirement text covers web, API, and unit tests plus a short report. [`status.md`](./status.md) current SBI is feature-62.
+
+**Verification**: Sprint 7 WIP lists feature-62 then feature-61. Sprint 7 ToDo lists feature-45 and feature-64.
+
+### frontend-design pack skill and engineering specs (ADR-101)
+
+**Why**: User renamed Skill-17 from `sdd-frontend-design` to `frontend-design` for minimal SDD coupling and synced the SkillsMP anthropics body.
+
+**What changed**: [ADR-101](./adr/ADR-101-frontend-design-pack-skill-name.md). Seed [`frontend-design/SKILL.md`](./framework/seeds/skills/frontend-design/SKILL.md) and `LICENSE.txt`. [`framework-design.md`](./framework/framework-design.md) § frontend-design. [`framework-tests.md`](./framework/framework-tests.md) **CE-SKILL-15**. [`framework-stories.md`](./framework/framework-stories.md) § frontend-design. [`sdd-spec-to-build`](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) loads `frontend-design` for UI SBIs. [Skill-17](./product-backlog.md#pb-113) requirement text and Sprint 7 [feature-61](./sprint-backlog.md#sprint-7) row names updated.
+
+**Verification**: `test -f specs/framework/seeds/skills/frontend-design/SKILL.md`. `rg 'sdd-frontend-design' specs/framework/seeds/skills` is empty. `rg 'frontend-design' specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md` shows Phase 2 routing.
+
 ## 2026-10-05
 
 ### Status review: sync status.md with Sprint 7 board

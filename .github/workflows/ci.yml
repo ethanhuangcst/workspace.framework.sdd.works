@@ -51,6 +51,7 @@ jobs:
       - run: npx prisma generate
       - run: npx prisma migrate deploy
       - run: npx prisma db seed
+      - run: npm run check:pack-seeds
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test

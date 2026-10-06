@@ -456,7 +456,7 @@ As there is no current need for **workflows** at this stage, this folder remains
 ### Artifacts
 - **Core artifacts**: **scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **Framework artifacts**: **product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **Engineering artifacts**: **architecture.md; module design, stories, and tests paths from artifacts-map.json ({stem}-* or design.md / stories.md / tests.md under the artifacts root); release.md; test-strategy.md; .secrets; issues-log.md** ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md))
+- **Engineering artifacts**: **architecture.md; module design, stories, and tests paths from artifacts-map.json ({stem}-* or design.md / stories.md / tests.md under the artifacts root); release.md; test-strategy.md; .secrets; issues-log.md**. Module paths come from `artifacts-map.json`. See `sdd-scrum-practices.md`.
 - **Pack files beside these groups**: **constants.json** (pack lookup on the client root); **.sdd-installed.json** (install ledger on the client root)
 
 [Back to top](#index)

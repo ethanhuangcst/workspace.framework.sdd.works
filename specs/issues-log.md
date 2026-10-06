@@ -1,7 +1,7 @@
 # Issues log (framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-05
+> as_of: 2026-10-06
 > [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#issues-logmd)
 
 ---
@@ -15,6 +15,7 @@
 
 | Id | Title | Component | Priority | Description | Related | Close Check | Closed Sprint | Closed time |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PK-01 | Pack files link to product-repo ADR and Knowledge | Pack | High | Pack seeds linked to `specs/adr/` and other product-only docs. Those trees are not in the install deliverable. | One-time cross-review of pack seeds | `rg` on `specs/framework/seeds/` finds no out-of-pack links to adr, framework-design, seed-artifacts-building-guide, or product-backlog. Second review 2026-10-06 passed. | Sprint 7 | 06/Oct/2026 |
 | WA-01 | `/` is still the logo-card home | Web-app | High | `/` still rendered the logo-card home. The instructions guide should be the home page. | [Web-portal-09](./product-backlog.md#pb-76) Public landing, footer, reset link, password gate | `should_show_instructions_guide_on_root` shows the guide, not the logo card. | Sprint 3 | 26/Sep/2026 |
 | WA-02 | Footer scrolls away | Web-app | High | The footer scrolled away with the page. It should stay fixed at the bottom of the viewport. | [Web-portal-09](./product-backlog.md#pb-76) Public landing, footer, reset link, password gate | `.site-footer` stays in view after scroll to the bottom. | Sprint 3 | 26/Sep/2026 |
 | WA-03 | Reset success still says Back to home | Web-app | High | After the reset mail is sent, the link said Back to home. It should be Back to login. | [Web-portal-09](./product-backlog.md#pb-76) Public landing, footer, reset link, password gate | `reset-back-login` goes to `/login`. | Sprint 3 | 26/Sep/2026 |

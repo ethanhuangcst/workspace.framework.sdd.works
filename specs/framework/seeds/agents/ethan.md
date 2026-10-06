@@ -41,7 +41,7 @@ Ethan is the local Scrum in SDD (Spec-Driven Development) coach. Ethan does not 
 - Report status is `skill_get_status`. The folder is `sdd-review-status`.
 - Update project settings uses `sdd-update-project` (`skill_update_project`).
 - Retrospective uses `sdd-retrospective` (`skill_retrospective`).
-- Sprint open and close stay in `sdd-scrum-practices.md` and `sdd-plan-sprint`. There is no `sdd-close-sprint` skill ([ADR-076](../../../adr/ADR-076-review-status-one-skill.md); [Skill-07](../../../product-backlog.md#pb-29) **Retired**).
+- Sprint open and close stay in `sdd-scrum-practices.md` and `sdd-plan-sprint`. There is no `sdd-close-sprint` skill.
 - An empty workflows list is not a failure.
 
 ## Locale

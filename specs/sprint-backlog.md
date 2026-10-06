@@ -533,21 +533,35 @@ Depends on Sprint 6 (process loop and process seeds).
 | 7   | feature-50 | Seed test-strategy.md   | [Spec-seeds-13 Seed test-strategy.md](./product-backlog.md#pb-90)     | Framework/Feature | - [Spec-seeds-02](./product-backlog.md#pb-34)<br>- [test-strategy.md seed](./framework/seeds/templates/EN/test-strategy.md)<br>- [i18n-03](./product-backlog.md#pb-69) | **Done** |
 | 8   | feature-49 | Seed .secrets           | [Spec-seeds-12 Seed .secrets](./product-backlog.md#pb-66)             | Framework/Feature | - [MCP-01](./product-backlog.md#pb-16)<br>- [.secrets seed](./framework/seeds/templates/EN/.secrets)<br>- [i18n-03](./product-backlog.md#pb-69) | **Done** |
 | 9   | feature-63 | Pack rule friendly-language.mdc | [Rule-04 Pack rule friendly-language.mdc](./product-backlog.md#pb-95) | Rule/Feature | - [Spec-seeds-03](./product-backlog.md#pb-32)<br>- [friendly-language.mdc](./framework/seeds/rules/friendly-language.mdc)<br>- [framework-design § friendly-language.mdc](./framework/framework-design.md#friendly-languagemdc) | **Done** |
+| 10  | feature-45 | Skill sdd-spec-to-build | [Skill-11 Pack skill sdd-spec-to-build](./product-backlog.md#pb-80) | Skill/Feature | - [sdd-spec-to-build/SKILL.md](./framework/seeds/skills/sdd-spec-to-build/SKILL.md)<br>- [readiness.md](./framework/seeds/skills/sdd-spec-to-build/readiness.md)<br>- [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) | **Done** |
+
+### **WIP**
+
+| #   | Code       | SBI                     | Parent PBI                                                            | Module/Type       | Related specs                                                                                                          | Status   |
+| --- | ---------- | ----------------------- | --------------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------- | -------- |
+| 1   | feature-65 | Skill fullstack-engineer | [Skill-20 Pack skill fullstack-engineer](./product-backlog.md#pb-116) | Skill/Feature | - [ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md)<br>- [Skill-17](./product-backlog.md#pb-113)<br>- [Skill-18](./product-backlog.md#pb-114)<br>- [Skill-19](./product-backlog.md#pb-115)<br>- [Skill-11](./product-backlog.md#pb-80) | **WIP** |
+| 2   | feature-66 | Skill ai-architect | [Skill-21 Pack skill ai-architect](./product-backlog.md#pb-117) | Skill/Feature | - [Skill-22](./product-backlog.md#pb-118)<br>- [Skill-23](./product-backlog.md#pb-119)<br>- [Skill-11](./product-backlog.md#pb-80) | **WIP** |
+| 3   | feature-67 | Skill mcp-expert | [Skill-22 Pack skill mcp-expert](./product-backlog.md#pb-118) | Skill/Feature | - [MCP-02](./product-backlog.md#pb-75)<br>- [Skill-18](./product-backlog.md#pb-114)<br>- [Skill-11](./product-backlog.md#pb-80) | **WIP** |
+| 4   | feature-68 | Skill rag-expert | [Skill-23 Pack skill rag-expert](./product-backlog.md#pb-119) | Skill/Feature | - [Spec-seeds-12](./product-backlog.md#pb-66)<br>- [Skill-18](./product-backlog.md#pb-114)<br>- [Skill-11](./product-backlog.md#pb-80) | **WIP** |
+| 5   | feature-62 | Skill testing-expert | [Skill-18 Pack skill testing-expert](./product-backlog.md#pb-114) | Skill/Feature | - [ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md)<br>- [Skill-11](./product-backlog.md#pb-80)<br>- [Spec-seeds-13](./product-backlog.md#pb-90)<br>- [Skill-17](./product-backlog.md#pb-113) | **WIP** |
+| 6   | feature-61 | Skill frontend-design | [Skill-17 Pack skill frontend-design](./product-backlog.md#pb-113) | Skill/Feature | - [Skill-11](./product-backlog.md#pb-80)<br>- [Skill-01](./product-backlog.md#pb-21)<br>- [Spec-seeds-13](./product-backlog.md#pb-90)<br>- [ADR-101](./adr/ADR-101-frontend-design-pack-skill-name.md) | **WIP** |
 
 ### **ToDo**
 
 
 | #   | Code       | SBI                     | Parent PBI                                                            | Module/Type       | Related specs                                                                                                          | Status   |
 | --- | ---------- | ----------------------- | --------------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | feature-45 | Skill sdd-spec-to-build | [Skill-11 Pack skill sdd-spec-to-build](./product-backlog.md#pb-80)   | Skill/Feature     | - [Skill-09](./product-backlog.md#pb-64)<br>- [Skill-01](./product-backlog.md#pb-21)<br>- [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) | **ToDo** |
-| 2   | feature-61 | Skill sdd-frontend-design | [Skill-17 Pack skill sdd-frontend-design](./product-backlog.md#pb-113) | Skill/Feature | - [Skill-11](./product-backlog.md#pb-80)<br>- [Skill-01](./product-backlog.md#pb-21)<br>- [Spec-seeds-13](./product-backlog.md#pb-90)<br>- [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) | **ToDo** |
-| 3   | feature-62 | Skill sdd-tester | [Skill-18 Pack skill sdd-tester](./product-backlog.md#pb-114) | Skill/Feature | - [Skill-11](./product-backlog.md#pb-80)<br>- [Spec-seeds-13](./product-backlog.md#pb-90)<br>- [Skill-17](./product-backlog.md#pb-113) | **ToDo** |
+| 1   | feature-64 | Skill frontend-developer | [Skill-19 Pack skill frontend-developer](./product-backlog.md#pb-115) | Skill/Feature | - [Skill-17](./product-backlog.md#pb-113)<br>- [Skill-18](./product-backlog.md#pb-114)<br>- [Skill-11](./product-backlog.md#pb-80) | **ToDo** |
 
 ### Retrospective
 
 **Learnings**
 
-#### 1. [Oct 5, 2026], feature-52, feature-44, feature-46, feature-47, feature-48, feature-50 done
+#### 1. [Oct 6, 2026], feature-45 Skill sdd-spec-to-build done
+- User **close confirm** for the pack seed after engineering-readiness rewrite: [SKILL.md](./framework/seeds/skills/sdd-spec-to-build/SKILL.md) and [readiness.md](./framework/seeds/skills/sdd-spec-to-build/readiness.md). Readiness mode, applicable jobs (not always seven), flat map paths (`stories.md`, `tests.md`, `design.md`), and triggers such as prepare for implementation.
+- Spec phase proposes `sdd-build` after readiness confirm. [CE-SKILL-04](./framework/framework-tests.md) and [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) still describe implement inside this skill until OGT 1 (`sdd-build`) and test copy catch up.
+
+#### 2. [Oct 5, 2026], feature-52, feature-44, feature-46, feature-47, feature-48, feature-50 done
 - User **close confirm** for six Sprint 7 SBIs in one message. **sdd-dod.mdc** **Close confirm** gate landed earlier the same day so agents stop writing **Done** without chat accept.
 - [Skill-01](./product-backlog.md#pb-21), [Skill-09](./product-backlog.md#pb-64), and [Skill-14](./product-backlog.md#pb-89) close with their Sprint 7 feature rows. [Skill-11](./product-backlog.md#pb-80) stays **ToDo** until [feature-45](./sprint-backlog.md#sprint-7).
 - EN product-level seeds [architecture.md](./framework/seeds/templates/EN/architecture.md), [release.md](./framework/seeds/templates/EN/release.md), and [test-strategy.md](./framework/seeds/templates/EN/test-strategy.md) match practices `#architecturemd`, `#releasemd`, and test-strategy section. HanS and HanT bodies stay on [i18n-03](./product-backlog.md#pb-69).

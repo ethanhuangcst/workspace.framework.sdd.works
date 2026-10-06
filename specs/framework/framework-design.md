@@ -1107,6 +1107,77 @@ Utility skill for prompt quality. [Skill-14](../product-backlog.md#pb-89). [ADR-
 
 The skill diagnoses a draft prompt and outputs a ready-to-paste improved version. It follows [TRUE AGENT](#true-agent). It does not write project files, run commands, or implement the user's task. It does not recommend a fixed catalog of slash commands, ECC components, or vendor models. Optional harness hints name only skill folders that exist under `{client_root}/{skills_dir}/`. Wording checks use `friendly-language.mdc` on the client root. After pack update, remove stale `{client_root}/{skills_dir}/prompt-optimizer/` when present. User confirmed usable 2026-10-05 ([feature-46](../sprint-backlog.md#sprint-7)). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-13**.
 
+### frontend-design
+
+Domain skill for distinctive UI direction. [Skill-17](../product-backlog.md#pb-113). [ADR-101](../adr/ADR-101-frontend-design-pack-skill-name.md). Not a practices job. No `constants.json` key. Same public id as [anthropics/skills frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design).
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/frontend-design/SKILL.md` |
+| License | `specs/framework/seeds/skills/frontend-design/LICENSE.txt` (Apache 2.0) |
+| After install | `{client_root}/{skills_dir}/frontend-design/SKILL.md` |
+
+The skill grounds design in the subject, lists AI-default tells to avoid, and outputs a **Design plan** before production UI code. `{client_root}` in the seed names where **rules** install, not where `{stem}-design.md` or mock files live. Production UI follows **i18n-support**, **common-test-strategy**, and **friendly-language** when those rules exist under `{client_root}/rules/`. Browser checks use **testing-expert** when that skill is installed. **writing-style** is retired. Limits forbid SDD process file writes unless the user asks. [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) may load this skill for UI SBIs. Sprint 7 [feature-61](../sprint-backlog.md#sprint-7) tracks the seed; close after **CE-SKILL-15** and user confirm. After pack update, remove stale `{client_root}/{skills_dir}/sdd-frontend-design/` when present.
+
+### testing-expert
+
+Domain skill for strategy, test creation, pyramid runs, and a short report. [Skill-18](../product-backlog.md#pb-114). [ADR-102](../adr/ADR-102-testing-expert-pack-skill-name.md). Not a practices job. No `constants.json` key.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/testing-expert/SKILL.md` |
+| Browser facts | `specs/framework/seeds/skills/testing-expert/browser.md` |
+| Report templates | `specs/framework/seeds/skills/testing-expert/templates/test-report.md`, `specs/framework/seeds/skills/testing-expert/templates/test-report-failures.md` |
+| Server helper | `specs/framework/seeds/skills/testing-expert/scripts/with_server.py` and `examples/` |
+| License | `specs/framework/seeds/skills/testing-expert/LICENSE.txt` (Apache 2.0) |
+| After install | `{client_root}/{skills_dir}/testing-expert/SKILL.md` |
+
+The skill does five jobs for one feature: strategy, tools, create, run, and report. It follows [TRUE AGENT](#true-agent): capabilities, knowledge, and limits. The host picks the order. Browser facts load from `browser.md` only when the work includes a web UI. The skill does not load `webapp-testing` or another testing skill. It confirms before writing `test-strategy.md` or new test files. The chat report is one table and one count line. A file report uses the templates only when the user asks for a saved report. It does not require a sprint backlog, `artifacts-map.json`, or process files. [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) may load this skill when an SBI needs tests. Sprint 7 [feature-62](../sprint-backlog.md#sprint-7) tracks the seed. Close after the user confirms. After pack update, remove a stale `{client_root}/{skills_dir}/sdd-tester/` folder when present.
+
+### fullstack-engineer
+
+Domain skill for one web feature across layers. [Skill-20](../product-backlog.md#pb-116). [ADR-104](../adr/ADR-104-fullstack-engineer-pack-skill-name.md). Not a practices job. No `constants.json` key.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/fullstack-engineer/SKILL.md` |
+| After install | `{client_root}/{skills_dir}/fullstack-engineer/SKILL.md` |
+
+The skill builds one feature across the screen, the API, the data model, and auth in the stack the project already uses. It reads the stack from project files and does not default to a pinned stack. It follows [TRUE AGENT](#true-agent). Production work follows **i18n-support**, **common-test-strategy**, and **friendly-language** when those rules exist under `{client_root}/rules/`. Visual direction stays on **frontend-design**, UI-only work on **frontend-developer**, and test strategy and reports on **testing-expert**. Limits forbid SDD process file writes unless the user asks. [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) may load this skill for a multi-layer SBI. Sprint 7 [feature-65](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-16** and user confirm. After pack update, remove a stale `{client_root}/{skills_dir}/fullstack-developer/` folder when present.
+
+### ai-architect
+
+Domain skill for AI and ML system design. [Skill-21](../product-backlog.md#pb-117). Not a practices job. No `constants.json` key.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/ai-architect/SKILL.md` |
+| After install | `{client_root}/{skills_dir}/ai-architect/SKILL.md` |
+
+The skill returns an **AI design proposal**: goal and constraints, the recommended design with a diagram, an options table, first release and later, decisions and risks, and open questions. A **Design checks** list covers versioning, rollback, monitoring, evaluation, measured optimization, and secrets. It is advisory by default. It writes a design file only after the user confirms the proposal and the path. It does not invent benchmark numbers, prices, or quotas. Retrieval design stays on **rag-expert** and MCP server design on **mcp-expert**. Limits forbid SDD process file writes unless the user asks. Sprint 7 [feature-66](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-17** and user confirm.
+
+### mcp-expert
+
+Domain skill for MCP (Model Context Protocol) servers. [Skill-22](../product-backlog.md#pb-118). Not a practices job. No `constants.json` key.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/mcp-expert/SKILL.md` |
+| After install | `{client_root}/{skills_dir}/mcp-expert/SKILL.md` |
+
+The skill searches the official MCP Registry before it recommends a new server, then recommends one path: reuse, configure, or build. An **MCP solution** section is the proposal, and code waits for confirm. A **Pattern menu** names one tool per action, search plus execute, elicitation, an MCP App, and an MCPB bundle, and each name is checked against the current specification. A **Transport choice** section covers stdio, Streamable HTTP, and SSE for legacy clients. The skill also designs tools, writes client config, drafts registry publish metadata, and debugs a failed connection. Limits cover a registry search before a new server, no invented popularity counts, secrets out of tool results, untrusted tool arguments, model-safe errors, confirm before a destructive or paid tool, and stdout reserved for protocol messages in a stdio server. Limits forbid SDD process file writes unless the user asks. Sprint 7 [feature-67](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-18** and user confirm.
+
+### rag-expert
+
+Domain skill for RAG (retrieval-augmented generation). [Skill-23](../product-backlog.md#pb-119). Not a practices job. No `constants.json` key.
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `specs/framework/seeds/skills/rag-expert/SKILL.md` |
+| After install | `{client_root}/{skills_dir}/rag-expert/SKILL.md` |
+
+The skill designs and builds ingestion, chunking with metadata, embeddings, the vector store, dense, sparse, or hybrid retrieval, reranking, and answers that cite sources. An **Evaluation** section names recall at k, MRR, faithfulness, answer relevance, and citation accuracy on a question set kept in the repository. Limits cover provider keys by name only, no fabricated passages on a production path, access rights at retrieval time, confirm before sending private documents to an external provider, and one embedding model per index. Limits forbid SDD process file writes unless the user asks. Sprint 7 [feature-68](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-19** and user confirm.
+
 ### Other skills
 
 | Skill | Seed |
@@ -1121,6 +1192,12 @@ The skill diagnoses a draft prompt and outputs a ready-to-paste improved version
 | `sdd-close-sprint` | Retired ([ADR-076](../adr/ADR-076-review-status-one-skill.md)). |
 | `sdd-atdd` | `specs/framework/seeds/skills/sdd-atdd/SKILL.md` |
 | `improve-prompt` | `specs/framework/seeds/skills/improve-prompt/SKILL.md` ([ADR-099](../adr/ADR-099-improve-prompt-skill-name.md)) |
+| `frontend-design` | `specs/framework/seeds/skills/frontend-design/SKILL.md` ([ADR-101](../adr/ADR-101-frontend-design-pack-skill-name.md)) |
+| `testing-expert` | `specs/framework/seeds/skills/testing-expert/SKILL.md` ([ADR-102](../adr/ADR-102-testing-expert-pack-skill-name.md)) |
+| `fullstack-engineer` | `specs/framework/seeds/skills/fullstack-engineer/SKILL.md` ([ADR-104](../adr/ADR-104-fullstack-engineer-pack-skill-name.md)) |
+| `ai-architect` | `specs/framework/seeds/skills/ai-architect/SKILL.md` |
+| `mcp-expert` | `specs/framework/seeds/skills/mcp-expert/SKILL.md` |
+| `rag-expert` | `specs/framework/seeds/skills/rag-expert/SKILL.md` |
 
 ## templates
 

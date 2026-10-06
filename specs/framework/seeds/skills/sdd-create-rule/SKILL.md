@@ -1,19 +1,18 @@
 ---
 name: sdd-create-rule
 description: >
-  Create or revise a pack rule as <name>.mdc under {client_root}/{rules_dir}/.
+  Create or revise a rule as <name>.mdc under {client_root}/{rules_dir}/.
   Use when the user wants a new rule, wants to change an existing rule, asks
   how a rule file should be structured, or says to turn a principle into a rule.
   Writes only after the user confirms the rule file path. A skill file is
-  sdd-create-skill. Spec-to-build for a sprint backlog item (SBI) is
-  sdd-spec-to-build.
+  sdd-create-skill.
 ---
 
 # Create a rule
 
 The user gets one rule file after they confirm the path.
 
-This skill adds the pack path, the file shape, and that confirm.
+This skill adds the install path, the file shape, and that confirm.
 
 ## State what the rule enforces
 
@@ -34,40 +33,38 @@ Chat in the language of the user's request.
 
 Choose `<name>` from lowercase letters, numbers, and hyphens, at most 64 characters, so the file name matches the pack rule.
 
-When the rule reads or writes framework process artifacts (`artifacts-map.json`, the five process files, or pack practices for SDD writes), name the file `sdd-<name>.mdc` ([ADR-094](../../../adr/ADR-094-sdd-prefix-framework-rules.md)). Portable rules (for example copy-only rules like `friendly-language.mdc`) use `<name>.mdc` with no `sdd-` prefix.
+Use `sdd-<name>.mdc` when the user says the rule is for the SDD pack or for process artifacts (`artifacts-map.json`, the five process files, or pack practices for SDD writes). Otherwise use `<name>.mdc` with no `sdd-` prefix.
 
 Name the file on disk as chosen above, so the host loads that rule.
 
-Name `client_root` as the parent of the loaded agent file, so the path starts at that file.
+`{client_root}` is the parent of the loaded agent file.
 
-Read `rules_dir` from `{client_root}/templates/framework.sdd.works/constants.json`, so the folder name comes from that file.
+## Resolve `{rules_dir}`
 
-## Stop when the pack lookup is missing
+`{rules_dir}` defaults to `rules`.
 
-If that `constants.json` cannot be read, or `rules_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.json`.
+Read `{client_root}/templates/framework.sdd.works/constants.json` when that file exists. When the JSON has `rules_dir`, use that value.
 
-- Stop before writing a file, so the pack stays unchanged.
-- Stop before assuming the folder name `rules`, so the path comes from `constants.json`.
-- Stop before copying a replacement `constants.json`, so the user's file stays as it is.
-- Leave `{client_root}/.sdd-installed.json` unchanged.
+The default file path is `{client_root}/{rules_dir}/<name>.mdc`.
 
 ## Place the rule file
 
-Write `{client_root}/{rules_dir}/<name>.mdc`, so the rule file sits in the pack.
+Write the confirmed path, so the rule file sits where the user agreed.
 
 Revise the existing file in place and keep the name, so one rule keeps one file.
 
-- Leave the rule file off the workspace, so the pack stays on the client root.
+- The default write path is on `{client_root}`. Write on a workspace path only when the user names that path in the confirm.
 - Leave `sdd_install_framework` and `sdd_update_framework` uncalled, so install stays outside this skill.
 
 - A request for a skill file belongs to `sdd-create-skill`.
-- A request to design or implement a sprint backlog item belongs to `sdd-spec-to-build`.
+- A request to design or implement a backlog item stays out of this skill.
 
 ## Limits
 
 - **Path confirm** for the rule file is the confirm for this skill when it runs alone.
-- When `{workspace}/artifacts-map.json` opens and an SBI or PBI in scope is being closed for pack rule work, follow `{client_root}/rules/sdd-dod.mdc` **close confirm** before any **Done** row write. Path confirm is not **close confirm**.
-- When no SBI or PBI is in scope (standalone pack authoring), do not write or invent rows on process files. The user decides usability in chat; this skill does not mark backlog items **Done**.
+- When `{workspace}/artifacts-map.json` and `{client_root}/rules/sdd-dod.mdc` both exist and an SBI or PBI in scope is being closed for pack rule work, follow **close confirm** before any **Done** row write. Path confirm is not **close confirm**.
+- When no SBI or PBI is in scope, do not write or invent rows on process files. The user decides usability in chat; this skill does not mark backlog items **Done**.
+- Do not copy a replacement `constants.json`. Leave `{client_root}/.sdd-installed.json` unchanged.
 
 ## Confirm the file path
 
@@ -75,7 +72,7 @@ State the file path and whether the rule loads every session or only for the nam
 
 - A request to create a rule still needs that yes.
 - One yes covers that file.
-- Write the file only after the user agrees to that path, because the installed pack is shared by every project that uses this client root.
+- Write the file only after the user agrees to that path, because a shared install path is shared by every project that uses this client root.
 
 ## Write the confirmed rule
 
@@ -91,7 +88,7 @@ State the file path and whether the rule loads every session or only for the nam
 - State the limit and the result in the rule, so the user can apply that limit.
 - Leave a numbered procedure in a skill, so the rule file holds the limit and the result.
 - Keep the body to one concern and under 50 lines, so the rule stays one limit.
-- Link `../../rules/friendly-language.mdc` for the wording checks, so the wording stays in that file.
+- When `friendly-language.mdc` sits beside the new rule under `{client_root}/{rules_dir}/`, link it for wording checks. Otherwise put the wording check in the rule body.
 - In the rule file, a heading names what the reader gets.
 - In the rule file, an instruction names the verb, the work, and the result.
 - In the rule file, a ban names the result.
@@ -125,25 +122,24 @@ good example: Lisbon uses the same search as every other city, so the city table
 Before you finish:
 
 - The description states what and when, in the third person, with the phrases a user types, and names a nearby skill when one owns the adjacent job
-- `SBI` is expanded on first use in the description
-- `<name>` follows the ADR-094 prefix rule for framework-bound vs portable rules
+- `<name>` follows the prefix rule the user chose: `sdd-` for pack process rules, plain `<name>` for portable rules
 - Verbatim user wording is unchanged
 - The skill chats in the language of the user's request
 - The confirm states the path and whether the rule loads every session or only for the named files
 - The rule states the limit and the result, and a numbered procedure stays in a skill, so the user can apply that limit
-- Wording checks are a link to `../../rules/friendly-language.mdc`
+- Wording checks link `friendly-language.mdc` when that file exists beside the rule, or sit in the rule body when it does not
 - The rule body is under 50 lines and uses one term per concept
 - `alwaysApply` is true, or it is false and `globs` is the pattern the user named
 - No instruction carries a date, so the instruction stays usable later
 - Every path uses a forward slash, so the path opens on the host
-- The only write is the confirmed file `{client_root}/{rules_dir}/<name>.mdc`
+- The only write is the confirmed file
 
 ## Propose the prompts
 
-Propose 2 or 3 prompts a real user would type. Ask whether the prompts look right, so the user can accept or change them.
+Propose 2 or 3 prompts a real user would type. One prompt is a near-miss that should stay with another skill. Ask whether the prompts look right, so the user can accept or change them.
 
 Stop after the prompts, so no test run starts and the user decides whether the rule is usable.
 
 ## Propose the constants row
 
-After the rule file is written, propose one key for the `rules` object in `{client_root}/templates/framework.sdd.works/constants.json`: rule key and file name. Wait for a second confirm before editing that file. Leave the product backlog, the sprint backlog, and `sdd-scrum-practices.md` unchanged.
+When `{client_root}/templates/framework.sdd.works/constants.json` exists, propose one key for the `rules` object: rule key and file name. Wait for a second confirm before editing that file. When the file is absent, skip the key. Leave the product backlog and sprint backlog unchanged.

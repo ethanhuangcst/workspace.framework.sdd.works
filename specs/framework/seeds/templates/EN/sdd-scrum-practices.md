@@ -36,7 +36,7 @@
     - [release.md](#releasemd)
     - [test-strategy.md](#test-strategymd)
     - [.secrets](#secrets)
-    - [framework-design.md](#framework-designmd)
+    - [Pack layout note](#pack-layout-note)
 - [Scrum in SDD practices](#scrum-in-sdd-practices)
   - [1. Plan sprints by MVP](#1-plan-sprints-by-mvp)
   - [2. Slice product to MVPs](#2-slice-product-to-mvps)
@@ -147,7 +147,7 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 - `knowledge` is an optional workspace-relative directory root for project knowledge notes. Omit the key when the project does not use that tree.
 - `files` lists workspace-relative paths that sit outside a module engineering triad (process files, product-level engineering files).
 - `modules` lists one object per engineering module.
-- Each module object has a `files` list (required). Paths in that list are the contract skills open ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
+- Each module object has a `files` list (required). Paths in that list are the contract skills open.
 - `folder` is optional. When present, it is the subdirectory under `{artifacts_root}` for that module. When omitted, module files live directly under `{artifacts_root}`.
 - `stem` is optional. When present, it labels the module and prefixes filenames (`{stem}-stories.md`). When omitted, match paths in `files` by suffix or by exact name (`stories.md`, `design.md`, `tests.md` for a single-module map only).
 
@@ -186,7 +186,7 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 - Leave `artifacts-map.json` off `files` and off every module `files` list, so the file does not record its own path.
 - Omit `stem` when it matches `folder`, so a matching stem has no `stem` key.
 - Omit `folder` when module files sit under `{artifacts_root}` without a subfolder, so flat paths such as `specs/app-stories.md` are valid.
-- Use unqualified `design.md`, `stories.md`, and `tests.md` under `{artifacts_root}` only when `modules` has exactly one entry ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
+- Use unqualified `design.md`, `stories.md`, and `tests.md` under `{artifacts_root}` only when `modules` has exactly one entry.
 - Write the `artifacts_root` value into each path, so the path matches the setting.
 good example: `"artifacts_root": "specs"` and `"specs/product-backlog.md"`
 bad example: `"artifacts_root": "spec"` while the path starts with `specs/`
@@ -828,7 +828,7 @@ Future actions uses `No future action is recorded yet.`
 
 #### status.md
 
-`[status.md](./status.md)` is the tracking projection. The EN authoring seed is a placeholder template (`[product name]`, bracket placeholders). It is not a second sprint backlog. It is not the defect list. Sections, in order: Header, Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs, Last updated. Column rules are in `[framework-design.md](../../../framework-design.md)`.
+`[status.md](./status.md)` is the tracking projection. The EN authoring seed is a placeholder template (`[product name]`, bracket placeholders). It is not a second sprint backlog. It is not the defect list. Sections, in order: Header, Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs, Last updated. Column rules are in [status.md](#statusmd) in this file.
 
 WIP updates use pack rule `sdd-realtime-status.mdc`. Close updates use `sdd-dod.mdc`.
 
@@ -1225,7 +1225,7 @@ Use these **fixed diagram names** as `### Diagram: …` headings. Delete optiona
 
 ###### How to write
 
-- List a small number of decisions. Move long rationale into `specs/adr/` or `{stem}-design.md`.
+- List a small number of decisions. Move long rationale into `{workspace}/{adr}/` when the map names an adr root, or into `{stem}-design.md`.
 
 ##### Module specs and release
 
@@ -1247,11 +1247,11 @@ Local startup and go-live order are in [`release.md`](./release.md).
 
 #### {module-name}-design.md
 
-The design spec path is the `*-design.md` or `design.md` entry in that module's `files` list ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)). `{stem}` or `{module-name}` in headings is the filename prefix when the map uses `{stem}-design.md`.
+The design spec path is the `*-design.md` or `design.md` entry in that module's `files` list. `{stem}` or `{module-name}` in headings is the filename prefix when the map uses `{stem}-design.md`.
 
 `{module-name}-design.md` is the usual foldered name. Flat layouts use `{artifacts_root}/{stem}-design.md` or singleton `design.md`.
 
-Section rules for a module file are written when that seed is in review. They follow [seed-artifacts-building-guide.md](../../../../seed-artifacts-building-guide.md).
+Section rules for a module file are written when that seed is in review. They use the four groups Content, Format, Writing, and Terms under that artifact heading in this file.
 
 [Back to top](#index)
 
@@ -1314,7 +1314,7 @@ Scenario: {observable outcome name}
 
 #### {module-name}-tests.md
 
-The test spec path is the `*-tests.md` or `tests.md` entry in that module's `files` list ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
+The test spec path is the `*-tests.md` or `tests.md` entry in that module's `files` list.
 
 [Back to top](#index)
 
@@ -1459,9 +1459,9 @@ ADMIN_SEED_PASSWORD=  # Portainer at first deploy
 
 [Back to top](#index)
 
-#### framework-design.md
+#### Pack layout note
 
-`[framework-design.md](../../../framework-design.md)` is the overall design for framework artifacts. The sprint-item shape (columns, Type, status, and the retrospective block) is in its templates section. It also places `artifacts-map.json` at the workspace root and names `artifacts_root` there. This practices file states how to apply that shape.
+The sprint-item shape (columns, Type, status, and the retrospective block) is under [sprint-backlog.md](#sprint-backlogmd) in this file. `artifacts-map.json` sits at the workspace root and names `artifacts_root`. This practices file states how to apply that shape.
 
 [Back to top](#index)
 

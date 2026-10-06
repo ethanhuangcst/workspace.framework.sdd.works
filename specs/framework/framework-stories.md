@@ -871,6 +871,165 @@ Scenario: Vague prompt yields diagnosis and fenced prompt
 
 Tests: CE-SKILL-13. User confirmed usable 2026-10-05 ([feature-46](../sprint-backlog.md#sprint-7)).
 
+### frontend-design
+
+**As the** developer shaping UI for an SBI
+**I want** subject-grounded design direction and a plan before code
+**So that** the interface avoids generic AI defaults and respects production rules when they exist
+
+#### AC1
+
+```gherkin
+Scenario: Seed folder and production rules
+  Given the authoring seed tree
+  When the frontend-design skill file is read
+  Then the folder is frontend-design under specs/framework/seeds/skills/
+  And sdd-frontend-design is not a seed folder
+  And LICENSE.txt sits beside SKILL.md
+  And Production UI names friendly-language and not writing-style
+  And Production UI states client_root is for rules not design file storage
+  And Limits forbid SDD process file writes by default
+```
+
+#### AC2
+
+```gherkin
+Scenario: Design plan before code when user asks plan only
+  Given the user asks for a landing page design plan with no code
+  When the frontend-design skill runs
+  Then the reply includes a Design plan with palette type layout and signature
+  And no production code file is written unless the user asks to implement
+```
+
+Tests: CE-SKILL-15. Close with [feature-61](../sprint-backlog.md#sprint-7) when the user confirms.
+
+### fullstack-engineer
+
+**As the** developer building one web feature
+**I want** the screen, the API, the data model, and auth built in the stack the project already uses
+**So that** the feature works end to end without a new framework or mock data left in place
+
+#### AC1
+
+```gherkin
+Scenario: Seed folder and neighbor skills
+  Given the authoring seed tree
+  When the fullstack-engineer skill file is read
+  Then the folder is fullstack-engineer under specs/framework/seeds/skills/
+  And fullstack-developer is not a seed folder
+  And the description names frontend-design, frontend-developer, and testing-expert as neighbor skills
+  And Knowledge names i18n-support, common-test-strategy, and friendly-language
+  And Limits forbid SDD process file writes by default
+```
+
+#### AC2
+
+```gherkin
+Scenario: Feature in the existing stack
+  Given a project with a package manifest and an existing API route
+  When the user asks to add a feature with a screen, an API route, and a table
+  Then the agent reads the stack from project files before writing code
+  And the agent asks before adding a framework, a database, or an ORM the project does not use
+  And the reply lists files by layer, commands run, and environment variable names without values
+```
+
+Tests: CE-SKILL-16. Close with [feature-65](../sprint-backlog.md#sprint-7) when the user confirms.
+
+### ai-architect
+
+**As the** developer planning an AI or ML system
+**I want** a tiered design proposal with options, decisions, and open questions
+**So that** the team picks a design that fits the constraints before any infrastructure is built
+
+#### AC1
+
+```gherkin
+Scenario: Seed folder and advisory shape
+  Given the authoring seed tree
+  When the ai-architect skill file is read
+  Then the folder is ai-architect under specs/framework/seeds/skills/
+  And the description names rag-expert and mcp-expert as neighbor skills
+  And the body includes Design checks and an AI design proposal section
+  And Limits state the skill is advisory by default
+  And Limits forbid invented benchmark numbers, prices, or quotas
+```
+
+#### AC2
+
+```gherkin
+Scenario: Proposal before any file write
+  Given the user asks how to deploy a model with a latency target and a budget
+  When the ai-architect skill runs
+  Then the reply is an AI design proposal with an options table and open questions
+  And no design file or infrastructure file is written until the user confirms
+```
+
+Tests: CE-SKILL-17. Close with [feature-66](../sprint-backlog.md#sprint-7) when the user confirms.
+
+### mcp-expert
+
+**As the** developer exposing an API or data to agents
+**I want** one recommended MCP path, reuse or build, with schema-checked tools when the path is build
+**So that** a client such as Cursor lists the tools and calls them safely
+
+#### AC1
+
+```gherkin
+Scenario: Seed folder and transport facts
+  Given the authoring seed tree
+  When the mcp-expert skill file is read
+  Then the folder is mcp-expert under specs/framework/seeds/skills/
+  And the body includes a Transport choice section for stdio and Streamable HTTP
+  And Capabilities check SDK signatures in the official docs before registration code
+  And the body includes an MCP solution section and a Pattern menu
+  And Knowledge names the official MCP Registry and forbids a directory list stored in the skill
+  And Limits keep secrets out of tool results and keep stdio standard output for protocol messages
+  And Limits forbid SDD process file writes by default
+```
+
+#### AC2
+
+```gherkin
+Scenario: Client lists no tools
+  Given a stdio MCP server that a client starts but lists no tools
+  When the user asks the mcp-expert skill to debug it
+  Then the agent checks the client log, the server error output, and a direct protocol call
+  And the reply names the cause and the fix
+```
+
+Tests: CE-SKILL-18. Close with [feature-67](../sprint-backlog.md#sprint-7) when the user confirms.
+
+### rag-expert
+
+**As the** developer building Q&A over private documents
+**I want** retrieval that cites sources and is measured on a question set
+**So that** answers stay grounded and a change is shipped only with an evaluation result
+
+#### AC1
+
+```gherkin
+Scenario: Seed folder and evaluation
+  Given the authoring seed tree
+  When the rag-expert skill file is read
+  Then the folder is rag-expert under specs/framework/seeds/skills/
+  And the body includes an Evaluation section with recall at k and faithfulness
+  And Limits forbid fabricated passages on a production path
+  And Limits apply document access rights at retrieval time
+  And Limits forbid SDD process file writes by default
+```
+
+#### AC2
+
+```gherkin
+Scenario: Private documents and an external provider
+  Given the user asks for Q&A over private policy PDFs
+  When the rag-expert skill proposes an external embedding provider
+  Then the agent asks before sending the documents to that provider
+  And the answer step cites the source of each passage
+```
+
+Tests: CE-SKILL-19. Close with [feature-68](../sprint-backlog.md#sprint-7) when the user confirms.
+
 ### sdd-retrospective
 
 **As the** agent closing work under **sdd-dod.mdc**

@@ -43,7 +43,7 @@ Return `Index broken`, so a map that cannot be read stops the audit.
 
 Open each stored path, so the verdict uses the paths the map names.
 
-- Read strings in `files` and in each module `files` list, so those strings are the stored paths. A module object may omit `folder` when files sit under `{artifacts_root}` ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
+- Read strings in `files` and in each module `files` list, so those strings are the stored paths. A module object may omit `folder` when files sit under `{artifacts_root}`. `folder` and `stem` are optional. See **artifacts-map.json** in `sdd-scrum-practices.md`.
 - Open each stored path as `{workspace}/<path>`, so the file is the one the map names.
 - Leave `artifacts_root`, `locale`, `adr`, and `knowledge` unopened as file paths, so those keys stay settings or directory roots.
 - Leave `artifacts_root` off the front of a path, so a stored path is not prefixed twice.
@@ -57,7 +57,7 @@ When the map names `adr` or `knowledge`, check each root as a directory under `{
 
 - When the path is a directory, list it under `opened`, so the report block names the root.
 - When the path is missing or not a directory, list it under `failed`, so the report block names the root.
-- A missing or broken adr or knowledge root does not alone change the verdict from `Usable` when the five process files still open from the map. [ADR-090](../../../../adr/ADR-090-adr-knowledge-map-roots.md).
+- A missing or broken adr or knowledge root does not alone change the verdict from `Usable` when the five process files still open from the map.
 
 ### 3. Search specs when the map is missing
 

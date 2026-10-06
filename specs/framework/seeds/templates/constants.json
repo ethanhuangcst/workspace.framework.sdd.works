@@ -11,7 +11,7 @@
     "skill_plan_sprint": "sdd-plan-sprint",
     "skill_retrospective": "sdd-retrospective",
     "skill_build_agent": "sdd-build-agent",
-    "sdd-atdd": "sdd-atdd",
+    "atdd-expert": "atdd-expert",
     "skill_audit_artifacts": "sdd-audit-artifacts",
     "skill_get_status": "sdd-review-status",
     "sdd-update-specs": "sdd-update-specs",
@@ -23,6 +23,7 @@
     "dod": "sdd-dod.mdc",
     "incremental-delivery": "sdd-incremental-delivery.mdc",
     "realtime-status": "sdd-realtime-status.mdc",
-    "friendly-language": "friendly-language.mdc"
+    "friendly-language": "friendly-language.mdc",
+    "pack-authoring": "sdd-pack-authoring.mdc"
   }
 }

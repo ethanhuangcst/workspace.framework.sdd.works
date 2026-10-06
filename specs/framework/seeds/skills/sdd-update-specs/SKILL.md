@@ -94,7 +94,7 @@ When every compared row aligns, say so in one sentence and skip the write offer 
 
 Do not load `framework-design.md` from the workspace. The tables above are enough for this skill.
 
-Module layout: each `modules[]` entry has a `files` list. Resolve design, stories, and tests from those paths. `folder` and `stem` are optional hints ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)). Do not reconstruct paths from `folder` and `stem` when `files` already lists them.
+Module layout: each `modules[]` entry has a `files` list. Resolve design, stories, and tests from those paths. `folder` and `stem` are optional hints. Do not reconstruct paths from `folder` and `stem` when `files` already lists them.
 
 ## Report to user
 

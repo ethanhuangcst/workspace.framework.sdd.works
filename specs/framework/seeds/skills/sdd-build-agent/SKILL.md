@@ -4,17 +4,16 @@ description: >
   Create or revise an agent file at {client_root}/{agents_dir}/<name>.md.
   Use when the user wants a new agent, a coach, or an assistant file, or asks
   how an agent prompt should be structured. Writes only after the user confirms
-  the file path. A skill file is sdd-create-skill. Product code for an SBI is
-  sdd-spec-to-build.
+  the file path. A skill file is sdd-create-skill.
 ---
 
 # Build an agent
 
 The user gets one agent file after they confirm the path.
 
-This skill adds the pack path, the file shape, and that confirm.
+This skill adds the install path, the file shape, and that confirm.
 
-Read the TRUE AGENT section in `framework-design.md` before you write, so the agent file follows that section. Leave that section in `framework-design.md`, so this skill and the agent file have no copy of it.
+State capabilities and limits in the agent file so the model chooses the next step. Read `framework-design.md` only when the user names that file.
 
 ## State what the agent is for
 
@@ -44,30 +43,27 @@ Chat in the language of the user's request.
 
 Choose `<name>` from lowercase letters, numbers, and hyphens, at most 64 characters, so the file name matches the pack rule.
 
-Name `client_root` as the parent of the loaded agent file, so the path starts at that file.
+`{client_root}` is the parent of the loaded agent file.
 
-Read `agents_dir` from `{client_root}/templates/framework.sdd.works/constants.json`, so the folder name comes from that file.
+## Resolve `{agents_dir}`
 
-## Stop when the pack lookup is missing
+`{agents_dir}` defaults to `agents`.
 
-If that `constants.json` cannot be read, or `agents_dir` is missing or blank, stop. Tell the user the pack lookup is missing and name `{client_root}/templates/framework.sdd.works/constants.json`.
+Read `{client_root}/templates/framework.sdd.works/constants.json` when that file exists. When the JSON has `agents_dir`, use that value.
 
-- Stop before writing a file, so the pack stays unchanged.
-- Stop before assuming the folder name `agents`, so the path comes from `constants.json`.
-- Stop before copying a replacement `constants.json`, so the user's file stays as it is.
-- Leave `{client_root}/.sdd-installed.json` unchanged.
+The default file path is `{client_root}/{agents_dir}/<name>.md`.
 
 ## Place the agent file
 
-Write `{client_root}/{agents_dir}/<name>.md`, so the agent file sits in the pack.
+Write the confirmed path, so the agent file sits where the user agreed.
 
 Revise the existing file in place and keep the name, so one agent keeps one file.
 
-- Leave the agent file off the workspace, so the pack stays on the client root.
+- The default write path is on `{client_root}`. Write on a workspace path only when the user names that path in the confirm.
 - Leave `sdd_install_framework` and `sdd_update_framework` uncalled, so install stays outside this skill.
 - Leave a second runtime unstarted, so the host keeps the loop.
 
-A request for a skill file belongs to `sdd-create-skill`. A request to design or implement a sprint backlog item belongs to `sdd-spec-to-build`.
+A request for a skill file belongs to `sdd-create-skill`. A request to design or implement a backlog item stays out of this skill.
 
 ## Confirm the file path
 
@@ -75,7 +71,7 @@ State the file path and the rewrite, when there is one, so the user can confirm 
 
 - A request to build an agent still needs that yes.
 - One yes covers that file.
-- Write the file only after the user agrees to that path, because the installed pack is shared by every project that uses this client root.
+- Write the file only after the user agrees to that path, because a shared install path is shared by every project that uses this client root.
 
 ## Write the confirmed agent file
 
@@ -120,8 +116,9 @@ Limits: a yes writes that draft to the confirmed file.
 ## Limits
 
 - **Path confirm** for the agent file is the confirm for this skill when it runs alone.
-- When `{workspace}/artifacts-map.json` opens and an SBI or PBI in scope is being closed for pack agent work, follow `{client_root}/rules/sdd-dod.mdc` **close confirm** before any **Done** row write. Path confirm is not **close confirm**.
-- When no SBI or PBI is in scope (standalone pack authoring), do not write or invent rows on process files. The user decides usability in chat; this skill does not mark backlog items **Done**.
+- When `{workspace}/artifacts-map.json` and `{client_root}/rules/sdd-dod.mdc` both exist and an SBI or PBI in scope is being closed for pack agent work, follow **close confirm** before any **Done** row write. Path confirm is not **close confirm**.
+- When no SBI or PBI is in scope, do not write or invent rows on process files. The user decides usability in chat; this skill does not mark backlog items **Done**.
+- Do not copy a replacement `constants.json`. Leave `{client_root}/.sdd-installed.json` unchanged.
 
 ## Check the file
 
@@ -136,12 +133,12 @@ Before you finish:
 - A tool-specific invocation flag is present only when the user named the tool
 - No instruction carries a date, so the instruction stays usable later
 - Every path uses a forward slash, so the path opens on the host
-- The only write is the confirmed file `{client_root}/{agents_dir}/<name>.md`
+- The only write is the confirmed file
 - The user sees no new skill key. The `skills` object stays as it is.
 
 ## Propose the prompts
 
-Propose 2 or 3 prompts a real user would type. Ask whether the prompts look right, so the user can accept or change them.
+Propose 2 or 3 prompts a real user would type. One prompt is a near-miss that should stay with another skill. Ask whether the prompts look right, so the user can accept or change them.
 
 Stop after the prompts, so no test run starts, the user decides whether the agent is usable, and no eval harness, grader, or package step runs.
 

@@ -31,6 +31,7 @@ test: ## Run unit + integration tests
 	npm test
 
 lint: ## Lint and typecheck
+	npm run check:pack-seeds
 	npm run lint
 	npm run typecheck
 

@@ -16,7 +16,7 @@ The skill sets `locale`, `artifacts_root`, optional `adr` and `knowledge` roots,
 
 `artifacts_root` is one folder name relative to the workspace. `specs` is the default.
 
-Each module has a `files` list (required). `folder` and `stem` are optional ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)). Rules and examples in `sdd-scrum-practices.md` cover foldered, flat + stem, and singleton layouts.
+Each module has a `files` list (required). `folder` and `stem` are optional. Rules and examples in `sdd-scrum-practices.md`, section **artifacts-map.json**, cover foldered, flat + stem, and singleton layouts.
 
 Finish one task before the next task starts.
 
@@ -99,7 +99,7 @@ Tell the user what the Knowledge root is for, then ask whether to store it in th
 
 List the candidate parts of the product, so the user can pick the modules.
 
-- Ask whether each module's design, stories, and tests live in a subfolder under `{artifacts_root}` or directly under `{artifacts_root}` ([ADR-100](../../../../adr/ADR-100-optional-module-folder.md)).
+- Ask whether each module's design, stories, and tests live in a subfolder under `{artifacts_root}` or directly under `{artifacts_root}`. Follow the three layouts in `sdd-scrum-practices.md`, section **artifacts-map.json**.
 - **Subfolder:** set `folder`, optional `stem` when the filename prefix differs from `folder`, and `files` as `{artifacts_root}/{folder}/{stem}-design.md` (and stories, tests). Create the subfolder only after the user asks.
 - **Flat + stem:** omit `folder`, set `stem`, and `files` as `{artifacts_root}/{stem}-design.md` (and stories, tests).
 - **Singleton:** when the map will have exactly one module entry, the user may choose `design.md`, `stories.md`, and `tests.md` under `{artifacts_root}` with no `folder` and no `stem`.

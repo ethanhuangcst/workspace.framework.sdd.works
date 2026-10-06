@@ -241,6 +241,13 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 - **Test steps:** He is about to apply that rule.
 - **Expected results:** He sets only `pack_complete` to false, sends the instructions URL, and stops. He does not copy the rule into the workspace.
 
+#### CE-PACK-06 — Pack seed links stay in the deliverable
+
+- **Layer:** CI (automated).
+- **Pre-condition:** `specs/framework/seeds/` is the pack authoring tree.
+- **Test steps:** Run `npm run check:pack-seeds`.
+- **Expected results:** Exit 0. No parent-relative markdown link targets this product repo's `specs/adr/`, `framework-design.md`, `seed-artifacts-building-guide.md`, or root `product-backlog.md`. Rule: `sdd-pack-authoring.mdc`.
+
 #### CE-LOCALE-01 — Empty locale
 
 - **Layer:** L1.
@@ -427,12 +434,47 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Test steps:** Paste a vague task prompt and ask to improve it. Read the seed for advisory-only limits and absence of ECC catalogs.
 - **Expected results:** The reply includes diagnosis and a fenced optimized prompt. No implementation files are written. The seed description states advisory-only use. The seed body has Capabilities, Knowledge, Limits, and Anti-patterns. The seed does not name ECC, `configure-ecc`, or fixed slash-command orchestration tables. Frontmatter has only `name` and `description`. `examples.md` holds worked examples; intent labels in that file use English signal words only. Design: [framework-design § improve-prompt](../framework/framework-design.md#improve-prompt).
 
+#### CE-SKILL-15 — frontend-design
+
+- **Layer:** L1.
+- **Pre-condition:** Seed: `specs/framework/seeds/skills/frontend-design/SKILL.md` and `LICENSE.txt`. Folder `sdd-frontend-design` is absent from the seed tree.
+- **Test steps:** Read the seed. Ask for a design plan only for a landing page (no code). Read [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) Phase 2 for `frontend-design` routing.
+- **Expected results:** Frontmatter `name` is `frontend-design`. **Production UI** states `{client_root}` is for installed rules, not design file storage. Copy cites **friendly-language** and does not instruct loading **writing-style**. **Limits** forbid process file writes and required `artifacts-map.json`. **Design plan output** section is present. Five calibration traits appear under Process. `sdd-spec-to-build` names `frontend-design` for UI SBIs. Design: [framework-design § frontend-design](../framework/framework-design.md#frontend-design).
+
+#### CE-SKILL-16 — fullstack-engineer
+
+- **Layer:** L1.
+- **Pre-condition:** Seed: `specs/framework/seeds/skills/fullstack-engineer/SKILL.md`. Folder `fullstack-developer` is absent from the seed tree.
+- **Test steps:** Read the seed. In a project with a package manifest, ask for a feature with a screen, an API route, and a table.
+- **Expected results:** Frontmatter `name` is `fullstack-engineer`. The description names **frontend-design**, **frontend-developer**, and **testing-expert**. Knowledge names **i18n-support**, **common-test-strategy**, and **friendly-language**. Limits forbid process file writes. The agent reads the stack before code and asks before adding a framework the project does not use. The reply lists files by layer, commands run, and environment variable names without values. Design: [framework-design § fullstack-engineer](../framework/framework-design.md#fullstack-engineer).
+
+#### CE-SKILL-17 — ai-architect
+
+- **Layer:** L1.
+- **Pre-condition:** Seed: `specs/framework/seeds/skills/ai-architect/SKILL.md`.
+- **Test steps:** Read the seed. Ask how to deploy a model at a stated request rate and budget.
+- **Expected results:** Frontmatter `name` is `ai-architect`. The description names **rag-expert** and **mcp-expert**. **Design checks** and **AI design proposal** sections are present. The reply follows the proposal shape with an options table and open questions. No file is written before confirm. No figure appears without a source or an estimate label. Design: [framework-design § ai-architect](../framework/framework-design.md#ai-architect).
+
+#### CE-SKILL-18 — mcp-expert
+
+- **Layer:** L1.
+- **Pre-condition:** Seed: `specs/framework/seeds/skills/mcp-expert/SKILL.md`.
+- **Test steps:** Read the seed. Report that a client starts a stdio server but lists no tools.
+- **Expected results:** Frontmatter `name` is `mcp-expert`. **Transport choice** covers stdio and Streamable HTTP. **MCP solution** and **Pattern menu** are present. Knowledge names the registry API and says not to store a directory list in the skill. Capabilities search the registry before a new server. Limits keep secrets out of tool results and keep stdio standard output for protocol messages. The reply checks the client log, the server error output, and a direct protocol call. Design: [framework-design § mcp-expert](../framework/framework-design.md#mcp-expert).
+
+#### CE-SKILL-19 — rag-expert
+
+- **Layer:** L1.
+- **Pre-condition:** Seed: `specs/framework/seeds/skills/rag-expert/SKILL.md`.
+- **Test steps:** Read the seed. Ask for cited Q&A over private PDFs.
+- **Expected results:** Frontmatter `name` is `rag-expert`. **Evaluation** names recall at k, MRR, faithfulness, answer relevance, and citation accuracy. Limits forbid fabricated passages on a production path and apply access rights at retrieval time. The agent asks before sending private documents to an external provider. The answer step cites sources. Design: [framework-design § rag-expert](../framework/framework-design.md#rag-expert).
+
 #### CE-SKILL-07 — Backlog-only skills
 
 - **Layer:** L1.
 - **Pre-condition:** A skill name appears on a product-backlog row but has no authoring seed under `specs/framework/seeds/skills/`, or the skill is retired (for example `sdd-close-sprint`).
 - **Test steps:** Read [`framework-design.md`](../framework/framework-design.md) **Other skills** and the product-backlog row for that name.
-- **Expected results:** Shipped skills (`sdd-atdd`, `sdd-update-specs`, `sdd-retrospective`, `sdd-refine-backlog`, and others with seeds) have a matching **CE-SKILL-** case or an explicit L1 note on the design section. This file adds no steps for a name that still has no seed. A future case must use `{client_root}`, wait for confirm before a project write, and must not assume locale `EN`.
+- **Expected results:** Shipped skills (`sdd-atdd`, `sdd-update-specs`, `sdd-retrospective`, `sdd-refine-backlog`, `frontend-design`, `improve-prompt`, `fullstack-engineer`, `ai-architect`, `mcp-expert`, `rag-expert`, and others with seeds) have a matching **CE-SKILL-** case or an explicit L1 note on the design section. This file adds no steps for a name that still has no seed (for example `testing-expert` until Skill-18 ships). A future case must use `{client_root}`, wait for confirm before a project write, and must not assume locale `EN`.
 
 #### CE-SKILL-14 — sdd-update-specs
 

@@ -1,0 +1,34 @@
+---
+description: Pack seed edits must not link to this product repo's ADR, knowledge, or other non-shipped docs; normative text stays in practices or the skill body.
+globs: specs/framework/seeds/**
+alwaysApply: false
+---
+
+# Rule - Pack authoring
+
+Pack files under `specs/framework/seeds/` ship to `{client_root}`. They must not link to paths that exist only in the framework.sdd.works product workspace.
+
+Wording checks: [`friendly-language.mdc`](./friendly-language.mdc).
+
+## Ban
+
+- A markdown link in a pack seed targets `specs/adr/`, `specs/knowledge/`, `framework-design.md`, `seed-artifacts-building-guide.md`, or this repo's `product-backlog.md`.
+- A pack seed cites an ADR id to justify behavior when the rule is not copied into the seed.
+
+## Allow
+
+- Links that resolve after install: `{client_root}/rules/`, `{client_root}/skills/`, `{client_root}/templates/framework.sdd.works/{locale}/`.
+- Links to `{workspace}/{adr}/` or `{workspace}/{knowledge}/` in **project** template seeds (for example `./adr/ADR-NNN-slug.md` under the customer's workspace).
+- Plain text that names ADR or Knowledge as concepts, without a link to this product repo.
+
+## When a decision must ship to clients
+
+- Copy the minimum rule into `sdd-scrum-practices.md` or the skill body, as with ADR instance shape.
+- Record the full decision in this product repo under `specs/adr/`. Do not link pack seeds to that file.
+
+## Verify before merge
+
+- Run `npm run check:pack-seeds` or `bash scripts/check-pack-seed-links.sh`.
+
+bad example: a parent-relative link from a skill to ADR-100 under this product repo's specs/adr tree.
+good example: `See **artifacts-map.json** in sdd-scrum-practices.md.` in the same skill.
