@@ -8,6 +8,14 @@
 
 ## 2026-10-06
 
+### Module `{stem}-tests.md` guide and spec-to-build wiring
+
+**Why**: `sdd-spec-to-build` job 3 targets `*-tests.md` but EN practices had no section template; jobs 2–3 lacked explicit practice loads on the skill and neighbors.
+
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) § [`{module-name}-tests.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-testsmd). [`sdd-spec-to-build`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md) and [`readiness.md`](./framework/seeds/skills/sdd-spec-to-build/readiness.md) link stories and tests anchors. [`atdd-expert`](./framework/seeds/skills/atdd-expert/SKILL.md) and [`testing-expert`](./framework/seeds/skills/testing-expert/SKILL.md) Knowledge rows load those sections. [`framework-design.md`](./framework/framework-design.md) § `{stem}-tests.md` and **CE-SKILL-04** updated.
+
+**Verification**: `rg 'module-name-testsmd' specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md specs/framework/seeds/templates/EN/sdd-scrum-practices.md`.
+
 ### OGT 2: module `{stem}-design.md` writing guide in practices
 
 **Why**: `sdd-spec-to-build` jobs 4–7 name UI and technical design sections; the EN practices file had no section templates.

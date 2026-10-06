@@ -418,7 +418,7 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Layer:** L1.
 - **Pre-condition:** One sprint backlog item is the current item. A later item exists. Seed: `specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md` and `readiness.md`.
 - **Test steps:** Read the seed and `readiness.md`. Ask it to design the current item, then ask it to implement the current item.
-- **Expected results:** **Capabilities** link `readiness.md` for applicability and paths. In the design phase it does not write production code. In the build phase it implements that item only. It does not start the next item. It proposes `sdd-build` only after readiness confirm, not in the design-only ask. Design: [framework-design § sdd-spec-to-build](../framework/framework-design.md#sdd-spec-to-build).
+- **Expected results:** **Capabilities** link `readiness.md` for applicability and paths. **Knowledge** names `#module-name-storiesmd`, `#module-name-testsmd`, and `#module-name-designmd` in practices. In the design phase it does not write production code. In the build phase it implements that item only. It does not start the next item. It proposes `sdd-build` only after readiness confirm, not in the design-only ask. Design: [framework-design § sdd-spec-to-build](../framework/framework-design.md#sdd-spec-to-build).
 
 #### CE-SKILL-06 — Do not ship both status folders
 

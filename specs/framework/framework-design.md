@@ -1514,6 +1514,8 @@ Test spec for one module.
 
 The filename is `{stem}-tests.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-tests.md` is `{workspace}/specs/web-app/app-tests.md` when the stem is `app`.
 
+Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) `#module-name-testsmd`.
+
 ### release.md
 
 Release starter for a new project: local startup and go-live order. It is not this repo's release spec.

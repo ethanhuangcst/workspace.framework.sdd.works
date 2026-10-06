@@ -30,6 +30,7 @@ The caller supplies the requirement, the scope, and the file path when a write i
 | Source | Load when |
 | --- | --- |
 | [reference.md](./reference.md) | Drafting or revising stories, scenarios, or a full `*-stories.md` shape |
+| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, `#module-name-storiesmd` | Before writing or revising `{stem}-stories.md` or `stories.md`. When `locale` is missing, use `EN` |
 | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, `#acceptance-criteria-practices` | The pack is installed and the caller asks to match project practices exactly. When `locale` is missing, use `EN`. Start at that heading. Stop at the next heading of the same level |
 
 When the practices file is absent, [reference.md](./reference.md) is the full quality bar.

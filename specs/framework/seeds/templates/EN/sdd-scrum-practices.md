@@ -1436,7 +1436,98 @@ Scenario: {observable outcome name}
 
 #### {module-name}-tests.md
 
-The test spec path is the `*-tests.md` or `tests.md` entry in that module's `files` list.
+<a id="module-name-testsmd"></a>
+
+The test spec path is the `*-tests.md` or `tests.md` entry in that module's `files` list. Do not assume `{artifacts_root}/{folder}/{stem}-tests.md` when the map lists another path.
+
+`sdd-spec-to-build` job 3 and `testing-expert` update this file when a feature needs a module test plan before build.
+
+##### What belongs where
+
+| Artifact | Put here | Do not put here |
+| --- | --- | --- |
+| [`test-strategy.md`](./test-strategy.md) | Product-wide pyramid, CI policy, environments, named critical journeys | Module case tables duplicated from every `*-tests.md` |
+| `{stem}-tests.md` | Module strategy, layer tables, cases traced to stories | Release order, smoke hostnames, system context diagrams |
+| [`{stem}-design.md`](./{module}/{stem}-design.md) | One **Tests** pointer to this file | Full scenario lists |
+| [`architecture.md`](./architecture.md) | Cross-module test policy only when product-wide | Per-route case matrices |
+
+##### Header
+
+###### Template
+
+Follow [General writing principles](#general-writing-principles).
+
+```markdown
+# {Product or module} — test strategy and plan
+
+**Area:** {short module label}
+**Stories:** [`{stem}-stories.md`](./{stem}-stories.md) · **Design:** [`{stem}-design.md`](./{stem}-design.md)
+**Quality bar:** extends **common-test-strategy** — critical path 100%, overall ≥80% where measurable.
+```
+
+###### How to write
+
+- Link sibling stories and design files. State **common-test-strategy** as the baseline.
+- Name areas or story-id prefixes when the module is large.
+
+##### Strategy
+
+###### Template
+
+```markdown
+## 1. Strategy
+
+| Layer | Scope | Default CI | Live opt-in |
+| --- | --- | --- | --- |
+| Unit | {modules under test} | Always | — |
+| Integration | {API, DB, contracts} | Always | {when live keys needed} |
+| E2E | {browser or client journeys} | {fixture or always} | {live opt-in label} |
+
+**Principles**
+
+- Map each critical story to at least one automated check when code is expected.
+- Prefer role, accessible name, or `data-testid` over English copy in UI tests.
+- Use an isolated test DB or temp data dir; never production data.
+- Fixture-green CI alone is not Done when the product requires a verified live path.
+```
+
+###### How to write
+
+- Follow the pyramid in **common-test-strategy**. Adjust shares only when `test-strategy.md` or the user names a stricter bar.
+- List 3–5 principles. Include fixture vs live when external services apply.
+
+##### Layer cases
+
+###### Template
+
+Number one heading per layer. Use a table per layer.
+
+```markdown
+## 2. Unit tests
+
+| Module or route | Cases |
+| --- | --- |
+| {name} | {behavior}; trace `{story-id}` or AC when helpful |
+
+## 3. Integration tests
+
+| Route or area | Cases |
+| --- | --- |
+| {name} | {contract or persistence behavior} |
+
+## 4. E2E
+
+| Spec area | Scenarios |
+| --- | --- |
+| {journey} | {visible outcomes from Gherkin} |
+```
+
+###### How to write
+
+- Trace cases to scenarios in `{stem}-stories.md`. Do not restate full Gherkin blocks.
+- Name commands to run the layer when the project already has them (`vitest`, `pytest`, Playwright).
+- Author and revise with `testing-expert` or as part of `sdd-spec-to-build` job 3.
+- Do not paste secrets, tokens, or real hostnames. Use env var names only.
 
 [Back to top](#index)
 
