@@ -8,6 +8,14 @@
 
 ## 2026-10-06
 
+### Review status apply rows 1–2 (Sprint 8)
+
+**Why**: User chose option 2 after onboard `sdd-review-status` listed two mismatches.
+
+**What changed**: [`status.md`](./status.md) closes OGT **Review ethan.md** to **Last 15 closed OGTs** (Closed Sprint 8). [`sprint-backlog.md`](./sprint-backlog.md) feature-51 related specs add [`coach-knowledge.md`](./framework/seeds/templates/EN/coach-knowledge.md) and [ADR-106](./adr/ADR-106-coach-knowledge-file.md).
+
+**Verification**: Open OGT table has no **Review ethan.md** row. feature-51 row lists coach-knowledge and ADR-106.
+
 ### OGT 2 closed: module design writing guide in practices
 
 **Why**: User confirmed OGT 2 done after EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) § [`{module-name}-design.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-designmd) and `sdd-spec-to-build` wiring shipped.
