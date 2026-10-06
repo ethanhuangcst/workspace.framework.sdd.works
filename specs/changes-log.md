@@ -8,6 +8,14 @@
 
 ## 2026-10-06
 
+### OGT 2 closed: module design writing guide in practices
+
+**Why**: User confirmed OGT 2 done after EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) § [`{module-name}-design.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-designmd) and `sdd-spec-to-build` wiring shipped.
+
+**What changed**: [`status.md`](./status.md) moves the task from open OGT to **Last 15 closed OGTs** (Closed Sprint 8).
+
+**Verification**: Open OGT table on `status.md` has no row for `*-design.md` UI content in practices.
+
 ### Module `{stem}-tests.md` guide and spec-to-build wiring
 
 **Why**: `sdd-spec-to-build` job 3 targets `*-tests.md` but EN practices had no section template; jobs 2–3 lacked explicit practice loads on the skill and neighbors.
