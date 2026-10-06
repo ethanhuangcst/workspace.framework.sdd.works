@@ -3,7 +3,7 @@ name: sdd-plan-sprint
 description: >
   Assign existing product backlog items (PBIs) to sprints so each sprint
   delivers one MVP. Propose the next ToDo sprint by default, or the sprints
-  the user names. List the sprint, the PBIs, and why that set is one MVP.
+  the user names. Send a lead sentence, MVP option tables, and why that set is one MVP.
   Change a process file only after the user replies in chat. Write those picks in one
   pass. Do not open a question card. After each PBI has one sprint row, list extra tasks the sprint still needs.
   Use when the user asks to plan a sprint, plan the next sprint, assign
@@ -41,7 +41,7 @@ This skill runs the steps below in order. Within a step, one clarifying question
 | --- | --- |
 | Locate the five process files | Planning uses the paths in `artifacts-map.json` |
 | Name target sprint(s) | Default is the next ToDo sprint, or the sprint after the last Done section |
-| Propose MVP options in chat | Each option is a numbered list: code and short name, then Now, then If you accept. If you accept names the SBI and `sprint-backlog.md`. When the job needs an Epic or Theme, that item stays off the sprint and names an on-going task. A PBI whose sprint items are still unnamed sits under Not ready |
+| Propose MVP options in chat | Lead, not-ready table, and each option as schedule tables per [response.md](./response.md). Epic or Theme rows use the refine table. Unnamed sprint items sit under Not ready |
 | Collect a sprint-level pick | **Your choice** sits under the list in the same chat message. The reply in chat is the pick. No question card |
 | Write accepted picks | One pass updates changes-log, issues-log, status, sprint-backlog, product-backlog |
 
@@ -57,6 +57,7 @@ This skill runs the steps below in order. Within a step, one clarifying question
 | Headings `Task` and `OGT` in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | When you list an extra task or an on-going task. Read those two rows only |
 | Headings `product-backlog.md` and `sprint-backlog.md` in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | Write pass when those files change |
 | `{client_root}/rules/friendly-language.mdc` | Wording in chat |
+| [response.md](./response.md) | Composing the MVP proposal |
 
 ## Run the plan
 
@@ -116,86 +117,15 @@ After the chat block, follow [User pick for each sprint](#user-pick-for-each-spr
 
 ## MVP candidates in chat
 
+Load [response.md](./response.md) and send one message per target sprint in that order.
+
 Every sentence you read names the sprint, the PBI or the SBI, and what will happen. A sentence that only states what was read in a file fails.
 
-Send each target sprint as Markdown in the chat message. Leave the proposal out of a code block, so the lines wrap on the screen. Use a numbered list. Do not use a table.
+Name one Feature SBI per Implementable PBI in the candidate set, per practices §5 Plan a sprint. SBI codes and names are for the write pass after you pick. They stay in the schedule table **Fix** cells.
 
-For each sprint, send a header, then Not ready when a PBI still lacks named sprint items, then one block per option.
+For several target sprints, repeat the blocks and **Your choice** once per sprint. Wait for the reply before the next sprint. Each later sprint starts from PBIs not used in an earlier candidate.
 
-**Sprint {sprint number}**
-
-**Not ready for this sprint**
-
-1. **{PBI code} — {short name}**
-- Now: {which sprint items are still unnamed, in everyday words}.
-- Further refinement is needed before this sprint can include {short name}.
-
-Send this block only when at least one PBI belongs there.
-
-For each option (A, then B, then C when present):
-
-**Option {letter}**
-
-Sprint goal for Sprint {sprint number}: {sprint goal line from Sprint goal line in practices}
-
-Reason: {the job you finish in this sprint}
-
-1. **{PBI code} — {short name}**
-- Now: {where this item stands: ToDo, WIP, or Done, and whether it is already on a sprint}.
-- If you accept: a new SBI '{SBI name}' will be added to Sprint {sprint number} in `sprint-backlog.md`. {When another SBI is already on that sprint, name it in single quotes and say it stays.}
-
-The headline is the PBI code, then the short Description. Do not send a code alone.
-
-**Now** is the board fact. Use the status words and the sprint name that are already on the backlog.
-
-**If you accept** is the change. Name each new or moved SBI in single quotes. Name the sprint. Name `sprint-backlog.md`. When an SBI is already on that sprint and stays, name that SBI in single quotes too.
-
-When the PBI moves from another sprint, **Now** names that sprint. **If you accept** says the SBI will be added to this sprint in `sprint-backlog.md` and removed from the sprint it leaves.
-
-An extra task is its own numbered item after the PBIs. **Now** says why the sprint needs it. **If you accept** names that task SBI in single quotes, names the parent PBI, and names `sprint-backlog.md`. Omit the extra-task item when the sprint does not need one. When one option includes that task and the same PBIs can ship without it, the next option letter repeats the PBIs and omits the task item.
-
-**In this MVP, refine before the sprint delivers it**
-
-1. **{PBI code} — {short name}** ({Epic or Theme})
-- Now: {why this job needs this outcome, from the loaded §1 and §2, in everyday words}.
-- If you accept: an on-going task 'Refine {Epic or Theme} PBI {PBI code} {short name}' will be added on `status.md`. {short name} stays off Sprint {sprint number} in `sprint-backlog.md` until that refine is done.
-
-The on-going task name is the Size word, the PBI code, and the short Description. It does not name the sprint or the sprint job.
-
-Send this block only when at least one Epic or Theme belongs in the job. Omit it when none do. Do not add an SBI for a PBI that appears only in this block.
-
-After the option blocks for this sprint, send the choices in the same message. Leave a question card unopened. The reply in chat is the pick. Follow [User pick for each sprint](#user-pick-for-each-sprint).
-
-For several target sprints, repeat the header, the option blocks, and the choices once per sprint. Wait for the reply before the next sprint. Each later sprint starts from PBIs not used in an earlier candidate.
-
-#### Example
-
-This is one sprint. The names show the shape. They are not a rule about accounts or card lists.
-
-**Sprint 2**
-
-**Option A**
-
-Sprint goal for Sprint 2: A collector sees their cards in a list so that they can pick one to price
-
-Reason: the collector opens the list and sees their cards before the next sprint starts
-
-1. **Collect-02 — Card list view**
-- Now: Card list view is ToDo. It is not on a sprint yet.
-- If you accept: a new SBI 'Card list' will be added to Sprint 2 in `sprint-backlog.md`. The other SBI 'My binder', which is already on Sprint 2, stays.
-
-**In this MVP, refine before the sprint delivers it**
-
-1. **ACC-01 — Account management** (Epic)
-- Now: The collector cannot keep a list that is theirs unless they have an account, and that outcome is still one Epic.
-- If you accept: an on-going task 'Refine Epic PBI ACC-01 Account management' will be added on `status.md`. Account management stays off Sprint 2 in `sprint-backlog.md` until that refine is done.
-
-**Your choice**
-
-1. Option A
-2. I will enter what to add to Sprint 2 in chat.
-3. Cancel planning. Specs stay unchanged for Sprint 2.
-4. Stop planning. Update specs for what is already accepted.
+After the option blocks for this sprint, send **Your choice** in the same message. Follow [User pick for each sprint](#user-pick-for-each-sprint).
 
 ## User pick for each sprint
 

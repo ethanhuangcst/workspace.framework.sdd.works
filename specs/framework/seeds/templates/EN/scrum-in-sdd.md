@@ -431,7 +431,7 @@ When implementing **SDD** under **Harness Engineering principles**, gaps emerge 
 - **friendly-language.mdc**: keep chat and Markdown readable for the user and for later agents
 
 ### Skills
-- **sdd-atdd**
+- **atdd-expert**
 - **sdd-update-project**
 - **sdd-refine-backlog**
 - **sdd-plan-sprint**
@@ -615,7 +615,7 @@ This guide is for both humans and AI agents.
 - **friendly-language.mdc**: readable chat and Markdown for the user and for later agents.
 
 ### Skills
-- **sdd-atdd**
+- **atdd-expert**
 - **sdd-update-project**
 - **sdd-refine-backlog**
 - **sdd-plan-sprint**

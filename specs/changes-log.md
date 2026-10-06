@@ -1,12 +1,68 @@
 # Changes log (framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-05
+> as_of: 2026-10-06
 > [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#changes-logmd)
 
 ---
 
 ## 2026-10-06
+
+### Sprint 7 closed; Sprint 8 WIP (install-first MVP)
+
+**Why**: User asked to mark Sprint 7 **Done** and plan Sprint 8.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) Sprint 7 **Status: Done** and Sprint-end retrospective block 5. Sprint 8 **Status: WIP** with existing eleven **ToDo** SBIs (Option A schedule). [`status.md`](./status.md) Sprint 7 **Done**, Sprint 8 **WIP**, current sprint and next steps updated. Top-of-file current sprint pointer is Sprint 8.
+
+**Verification**: `rg 'Sprint 7' specs/sprint-backlog.md` shows **Status: Done**. `rg 'Sprint 8' specs/sprint-backlog.md -A2` shows **Status: WIP**.
+
+### Sprint 7: seven domain pack skills closed (feature-61–68)
+
+**Why**: User **close confirm** that feature-61, feature-62, feature-64, feature-65, feature-66, feature-67, and feature-68 are usable.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) Sprint 7 moves those rows to **Done**; WIP has no open rows. [`product-backlog.md`](./product-backlog.md) [Skill-17](./product-backlog.md#pb-113) through [Skill-23](./product-backlog.md#pb-119) **Done**. [`status.md`](./status.md) notes all Sprint 7 SBIs **Done**; sprint **Status** stays **WIP** until sprint close confirm. Sprint 7 **Retrospective** learning block 4 added.
+
+**Verification**: No Sprint 7 row for feature-61 through feature-68 shows **WIP** on [`sprint-backlog.md`](./sprint-backlog.md). Product Backlog rows pb-113 through pb-119 show **Done**.
+
+### Refine backlog: accept all six findings
+
+**Why**: User accepted all rows after `sdd-refine-backlog` listed six readiness fails.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) restores `pb-N` anchors on every Product Backlog row and `req-pb-N` anchors on every requirement, per practices `#product-backlogmd`. [Web-portal-21](./product-backlog.md#pb-107) Sprint is Sprint 8. [Skill-22](./product-backlog.md#pb-118) drops the confirmation bullet. Skill-18 and Skill-23 seed file lists were already fixed by the specs catalog sync below. [`sprint-backlog.md`](./sprint-backlog.md) removes Sprint 8 task-02 and the Web-portal-21 Unplanned row. [`status.md`](./status.md) adds the OGT "Refresh CE-SKILL catalog for shipped skills".
+
+**Verification**: Every `#pb-N` and `#req-pb-N` link in `product-backlog.md` has a matching anchor. Sprint 8 task-03 parent Web-portal-21 shows Sprint 8 on the Product Backlog table.
+
+### Pack skill seeds: engineering specs catalog sync
+
+**Why**: User asked to update specs for all seeds under `specs/framework/seeds/skills/`.
+
+**What changed**: [`framework-design.md`](./framework/framework-design.md) adds **Pack skill seed catalog**, § **sdd-spec-to-build**, § **sdd-refine-backlog**, § **sdd-update-project**, § **sdd-retrospective**, and `rag-expert` **reference.md** in the path table. [`framework-stories.md`](./framework/framework-stories.md) § **sdd-spec-to-build** names `readiness.md`. [`framework-tests.md`](./framework/framework-tests.md) **CE-SKILL-04**, **CE-SKILL-06**, **CE-SKILL-19**, and **CE-SKILL-20** match sibling files. [`product-backlog.md`](./product-backlog.md) Skill-01, Skill-11, Skill-18, and Skill-23 requirement bullets name sibling seed files. Retired seed folder `frontend-design` stays out of the tree per **CE-SKILL-15**.
+
+**Verification**: `ls specs/framework/seeds/skills/*/SKILL.md | wc -l` is 20. `test ! -d specs/framework/seeds/skills/frontend-design`. `rg 'Pack skill seed catalog' specs/framework/framework-design.md`.
+
+### Status review: apply rows 1–6 (atdd-expert names, table-reply OGT)
+
+**Why**: User chose option 2 after `sdd-review-status` listed six mismatches.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) Sprint 7 Done parent labels for task-01 and feature-52 use `atdd-expert`; header as_of 2026-10-06. [`status.md`](./status.md) adds OGT "Use a numbered table reply in compare and planning skills". [`framework-design.md`](./framework/framework-design.md) section and skill path table use `atdd-expert`. [`framework-tests.md`](./framework/framework-tests.md) CE-SKILL-12 and the CE-SKILL-07 shipped list use `atdd-expert`. This file's as_of is 2026-10-06.
+
+**Verification**: `rg 'sdd-atdd' specs/sprint-backlog.md specs/framework/framework-design.md specs/framework/framework-tests.md` finds only historical SBI names, if any.
+
+### Skill-17 renamed to frontend-designer (ADR-105)
+
+**Why**: User ADR: rename pack skill from `frontend-design` to `frontend-designer` to pair with `frontend-developer` and state the designer role.
+
+**What changed**: [ADR-105](./adr/ADR-105-frontend-designer-pack-skill-name.md). Seed folder `specs/framework/seeds/skills/frontend-designer/`. [Skill-17](./product-backlog.md#pb-113), Sprint 7 [feature-61](./sprint-backlog.md#sprint-7), [framework-design.md](./framework/framework-design.md) § frontend-designer, [framework-stories.md](./framework/framework-stories.md), [framework-tests.md](./framework/framework-tests.md) **CE-SKILL-15**, and neighbor skills reference `frontend-designer`.
+
+**Verification**: `test -d specs/framework/seeds/skills/frontend-designer`. `rg 'seeds/skills/frontend-design/' specs` is empty except historical ADR-101. `rg 'name: frontend-designer' specs/framework/seeds/skills/frontend-designer/SKILL.md`.
+
+### Status review: apply rows 1–8 and feature-64 WIP
+
+**Why**: User chose option 2 after `sdd-review-status` with the numbered mismatch table.
+
+**What changed**: [`status.md`](./status.md) current SBI and OGT rows. [`sprint-backlog.md`](./sprint-backlog.md) retrospective fixes; [feature-64](./sprint-backlog.md#sprint-7) **WIP**; Sprint 7 ToDo empty. [`product-backlog.md`](./product-backlog.md) Skill-01 and Skill-19 labels. EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) and EN/HanS [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) use `atdd-expert`. [`framework-tests.md`](./framework/framework-tests.md) CE-SKILL-19 expected results for rag-expert.
+
+**Verification**: Open `sprint-backlog.md` Sprint 7 WIP lists seven rows. Current OGT on `status.md` has no atdd or fullstack rename rows.
 
 ### Sprint 7: feature-45 Skill sdd-spec-to-build Done
 
@@ -36,9 +92,9 @@
 
 **Why**: User renamed Skill-17 from `sdd-frontend-design` to `frontend-design` for minimal SDD coupling and synced the SkillsMP anthropics body.
 
-**What changed**: [ADR-101](./adr/ADR-101-frontend-design-pack-skill-name.md). Seed [`frontend-design/SKILL.md`](./framework/seeds/skills/frontend-design/SKILL.md) and `LICENSE.txt`. [`framework-design.md`](./framework/framework-design.md) § frontend-design. [`framework-tests.md`](./framework/framework-tests.md) **CE-SKILL-15**. [`framework-stories.md`](./framework/framework-stories.md) § frontend-design. [`sdd-spec-to-build`](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) loads `frontend-design` for UI SBIs. [Skill-17](./product-backlog.md#pb-113) requirement text and Sprint 7 [feature-61](./sprint-backlog.md#sprint-7) row names updated.
+**What changed**: [ADR-101](./adr/ADR-101-frontend-design-pack-skill-name.md). Seed [`frontend-design/SKILL.md`](./framework/seeds/skills/frontend-designer/SKILL.md) path later moved to `frontend-designer/` per ADR-105. [`framework-design.md`](./framework/framework-design.md) § frontend-designer. [`framework-tests.md`](./framework/framework-tests.md) **CE-SKILL-15**. [`framework-stories.md`](./framework/framework-stories.md) § frontend-designer. [`sdd-spec-to-build`](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) loads `frontend-designer` for UI SBIs. [Skill-17](./product-backlog.md#pb-113) requirement text and Sprint 7 [feature-61](./sprint-backlog.md#sprint-7) row names updated.
 
-**Verification**: `test -f specs/framework/seeds/skills/frontend-design/SKILL.md`. `rg 'sdd-frontend-design' specs/framework/seeds/skills` is empty. `rg 'frontend-design' specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md` shows Phase 2 routing.
+**Verification**: Historical entry. Current folder is `frontend-designer` per ADR-105.
 
 ## 2026-10-05
 

@@ -39,10 +39,19 @@ When the practices file is absent, [reference.md](./reference.md) is the full qu
 Show this block in chat before the user chooses apply or chat-only edit:
 
 - **Scope:** what requirement or feature slice this draft covers
-- **Stories:** titles added or changed
-- **Scenarios:** count per story and which paths (happy, failure, empty)
+- **Draft table:** when more than one story or scenario group is in scope, list each row with `#` starting at 1.
+
+| # | Item | Detail |
+| --- | --- | --- |
+| 1 | `{story title}` | `{scenario count; happy / failure / empty paths}` |
+
 - **Skipped:** anything out of scope or needing a product decision
 - **Target path:** only when the caller named one
+- **Quality gaps:** when the checklist in [reference.md](./reference.md) fails before show, send a gap table instead of the draft until fixed. **Check** is the checklist item. **Problem** is one sentence. **Fix** is one sentence for the draft change.
+
+| # | Check | Problem | Fix |
+| --- | --- | --- | --- |
+| 1 | `{checklist item}` | `{what fails}` | `{what to change in the draft}` |
 
 Then ask: edit in chat, apply writes to the named path, or stop without write.
 

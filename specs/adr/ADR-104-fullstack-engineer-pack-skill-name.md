@@ -10,7 +10,7 @@ Accepted
 
 The name `fullstack-engineer` matches public skills catalogs (for example SkillsMP `fullstack-engineer`) and states implementation across layers without implying a single pinned framework version.
 
-Visual direction stays on [Skill-17](../product-backlog.md#pb-113) `frontend-design`. UI-only work stays on [Skill-19](../product-backlog.md#pb-115) `frontend-developer`. Verification stays on [Skill-18](../product-backlog.md#pb-114) `testing-expert`.
+Visual direction stays on [Skill-17](../product-backlog.md#pb-113) `frontend-designer`. UI-only work stays on [Skill-19](../product-backlog.md#pb-115) `frontend-developer`. Verification stays on [Skill-18](../product-backlog.md#pb-114) `testing-expert`.
 
 ## Decision
 

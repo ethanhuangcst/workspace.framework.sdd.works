@@ -429,7 +429,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **friendly-language.mdc**：让用户和后续 agent 可读的 chat 与 Markdown 文案
 
 ### Skills
-- **sdd-atdd**
+- **atdd-expert**
 - **sdd-update-project**
 - **sdd-refine-backlog**
 - **sdd-plan-sprint**
@@ -619,7 +619,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **friendly-language.mdc**：可读 chat 与 Markdown（用户与后续 agent）。
 
 ### Skills
-- **sdd-atdd**
+- **atdd-expert**
 - **sdd-update-project**
 - **sdd-refine-backlog**
 - **sdd-plan-sprint**

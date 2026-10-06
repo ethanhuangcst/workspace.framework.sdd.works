@@ -6,7 +6,7 @@ description: >
   prepare for implementation, engineering readiness, spec before build, ready
   to implement, spec a feature, spec to build, or to update stories, tests, UI
   design, a mockup, or technical design. Loads atdd-expert, testing-expert,
-  sdd-update-specs, frontend-design, frontend-developer, or fullstack-engineer.
+  sdd-update-specs, frontend-designer, frontend-developer, or fullstack-engineer.
   Does not build the feature. Proposes sdd-build after the user confirms
   readiness.
 ---
@@ -38,12 +38,12 @@ Checklist for one feature. Not every job applies to every SBI. See [readiness.md
 1. Update engineering artifacts and alignment. Load `sdd-update-specs` when specs drift. Propose a skill and a job when a mapped file is missing.
 2. Update the module stories file with `atdd-expert`. Pass requirement text, scope, and the resolved path in the thread. Target: `*-stories.md` or `stories.md` from the map.
 3. Update the module tests file with `testing-expert`. Target: `*-tests.md` or `tests.md`.
-4. Update the UI design section in the module design file. Use `frontend-design` when the user asks. Target: `*-design.md` or `design.md`.
-5. Create or update a UI mockup when the feature has a user interface, using `frontend-design` and `frontend-developer`.
+4. Update the UI design section in the module design file. Use `frontend-designer` when the user asks. Target: `*-design.md` or `design.md`.
+5. Create or update a UI mockup when the feature has a user interface, using `frontend-designer` and `frontend-developer`.
 6. Sync UI assets so implementation and UI design match.
 7. Update the technical design section in the module design file with `fullstack-engineer`.
 
-`frontend-design` is the installed skill. The user may say frontend-designer. Load `frontend-design`.
+`frontend-designer` is the installed skill. The user may say frontend-design. Load `frontend-designer`.
 
 ## Knowledge
 
@@ -77,5 +77,5 @@ When readiness is satisfied and the user confirms, propose `sdd-build`. Do not s
 - Writing every artifact in one pass without per-file confirm.
 - Writing stories, tests, and design in one pass when the user named one job.
 - Building the feature inside this skill.
-- Loading `frontend-designer` when the folder name is `frontend-design`.
+- Loading `frontend-design` when the folder name is `frontend-designer`.
 - Assuming `specs/{folder}/{stem}-stories.md` when the map lists `specs/stories.md` or another path.

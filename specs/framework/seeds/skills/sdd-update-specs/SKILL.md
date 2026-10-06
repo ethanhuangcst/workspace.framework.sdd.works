@@ -29,7 +29,7 @@ The host picks order from the thread.
 | Resolve scope | The user names an SBI, a module, paths, a diff, or what they just built | One bounded set of files to compare |
 | List related specs | Scope is known | Paths from the SBI **Related specs** column, parent PBI links, and `{workspace}/artifacts-map.json` |
 | Compare | Related specs and current work are readable | Aligned rows and gap rows with file and section |
-| Send gap report | Compare finished | One chat message per [Report to user](#report-to-user) |
+| Send gap report | Compare finished | One chat message per [response.md](./response.md) |
 | Draft edits | The user needs text before confirm | Plain-language summary of each spec change |
 | Write after confirm | The user confirms listed files | One pass on confirmed engineering files only |
 | Propose changes-log line | The user confirmed a visible spec change | One draft entry; the user or DoD writes `changes-log.md` |
@@ -90,6 +90,7 @@ When every compared row aligns, say so in one sentence and skip the write offer 
 | Related paths on the SBI row | Scoped SBI |
 | `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md`, Engineering Artifacts | Naming `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md` |
 | `{client_root}/rules/friendly-language.mdc` | Wording for the gap report and drafts |
+| [response.md](./response.md) | Composing the gap report |
 | `{client_root}/rules/sdd-incremental-delivery.mdc` | Scope might jump to a second SBI |
 
 Do not load `framework-design.md` from the workspace. The tables above are enough for this skill.
@@ -98,38 +99,11 @@ Module layout: each `modules[]` entry has a `files` list. Resolve design, storie
 
 ## Report to user
 
+Load [response.md](./response.md) and send one message in that order.
+
 Every sentence the user reads is written from the user's view. It names the spec file, what work shows, and what will change. A sentence that only tells what the agent found in a file fails.
 
-Send one message. Leave the report out of a code block.
-
-**Scope**
-
-- Sync mode: {Spec before code | Spec after code}
-- Compared: {short list of spec paths}
-- Work source: {diff, files, or description}
-
-**Aligned**
-
-- When none: `none`.
-- When some: one bullet per file that matches work.
-
-**Gaps**
-
-Number each gap.
-
-1. **Spec:** `{path}` — {section or AC id}
-   **Work says:** {one sentence}
-   **Proposed spec change:** {one sentence}
-
-**Your choice**
-
-1. Confirm all listed spec updates.
-2. I will name which files to update in chat.
-3. Leave specs unchanged.
-
-The user's reply that names one choice is the confirmation. Do not open a question card.
-
-When the user picks 1 or names a subset for 2, write in one pass, then summarize what changed.
+When the user picks confirm all or names a subset in chat, write in one pass, then summarize what changed.
 
 ## Limits
 

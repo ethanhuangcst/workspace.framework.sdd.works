@@ -142,5 +142,5 @@ No future action is recorded yet.
 - Do not commit unless the user asks.
 - Leave `{client_root}/.sdd-installed.json` unchanged.
 - Leave `sdd_install_framework` and `sdd_update_framework` uncalled.
-- User Stories and Acceptance Criteria stay with `sdd-atdd` or `sdd-spec-to-build`.
+- User Stories and Acceptance Criteria stay with `atdd-expert` or `sdd-spec-to-build`.
 - `sdd-review-status` compares and writes process picks only after the user chooses; it runs this skill before any pick that sets SBI or PBI `Done`.

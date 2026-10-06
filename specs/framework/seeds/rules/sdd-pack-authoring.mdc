@@ -26,6 +26,21 @@ Wording checks: [`friendly-language.mdc`](./friendly-language.mdc).
 - Copy the minimum rule into `sdd-scrum-practices.md` or the skill body, as with ADR instance shape.
 - Record the full decision in this product repo under `specs/adr/`. Do not link pack seeds to that file.
 
+## Compare reply
+
+Compare, gap, and sprint-proposal skills send a lead sentence, then a table for each list (all rows, no cap), then fixed choices in the same message.
+
+The table header is `#`, then Key (or File), then Problem, then Fix.
+
+- **#** is a 1-based row index inside that table. Restart at 1 for the next table in the same message.
+- **Key** (or **File**) is a basename, a PBI code, or a short path. The skill names which one.
+- **Problem** is one sentence from the user's view.
+- **Fix** is one imperative sentence.
+
+Copy those column rules into the skill's own `response.md`. Do not add a shared skill folder that other skills must load.
+
+When template text would make `SKILL.md` long, put the chat shape in a sibling `response.md` one level deep from `SKILL.md`. Load that file when composing the user message.
+
 ## Verify before merge
 
 - Run `npm run check:pack-seeds` or `bash scripts/check-pack-seed-links.sh`.

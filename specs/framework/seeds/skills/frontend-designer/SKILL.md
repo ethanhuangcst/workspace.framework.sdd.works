@@ -1,7 +1,7 @@
 ---
-name: frontend-design
+name: frontend-designer
 description: >
-  Distinctive, intentional visual design for new UI or redesigns — typography, palette, layout, motion,
+  Distinctive, intentional visual design for new UI or redesigns: typography, palette, layout, motion,
   and copy that avoids generic "AI template" aesthetics. Use whenever the user asks for a landing page,
   dashboard UI, component polish, "make it look better", brand direction, hero section, marketing site,
   or frontend visuals — even if they only said "build the page" or "scaffold the UI". When the project
@@ -10,7 +10,7 @@ description: >
 license: Complete terms in LICENSE.txt
 ---
 
-# Frontend Design
+# Frontend designer
 
 Approach this as the design lead at a design studio known for giving every client a distinct visual identity that is not mistaken for anyone else's. This client has already rejected proposals that felt cliché or templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take aesthetic risk if justified.
 
@@ -107,4 +107,4 @@ Use active voice as default. A CTA says exactly what happens when it is used: "S
 
 ## Optional SDD harness
 
-When the project uses the framework pack and the current task is one sprint backlog item with UI acceptance criteria, `sdd-spec-to-build` may load this skill during Phase 1 or Phase 2. Acceptance criteria still belong in `sdd-atdd` when the SBI needs them. This skill does not replace either skill.
+When the project uses the framework pack and the current task is one sprint backlog item with UI acceptance criteria, `sdd-spec-to-build` may load this skill during Phase 1 or Phase 2. Acceptance criteria still belong in `atdd-expert` when the SBI needs them. This skill does not replace either skill.

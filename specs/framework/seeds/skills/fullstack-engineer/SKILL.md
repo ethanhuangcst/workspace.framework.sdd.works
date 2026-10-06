@@ -5,7 +5,7 @@ description: >
   in the stack the project already uses. Use when the user asks to build a web
   app feature, add an API endpoint with its screen, wire a form to a database,
   add login or roles, or says build this feature end to end or frontend and
-  backend together. frontend-design owns visual direction. frontend-developer
+  backend together. frontend-designer owns visual direction. frontend-developer
   owns UI-only work. testing-expert owns test strategy, runs, and reports. Does
   not require SDD process files.
 ---
@@ -16,7 +16,7 @@ The host runs the loop. This skill states what the agent may do, what it loads, 
 
 `{client_root}` is the parent of the folder that contains the loaded agent file. It holds installed rules and skills. Project code stays in the workspace the user opened.
 
-This skill implements one feature across layers. It does not replace **frontend-design**, **frontend-developer**, or **testing-expert**.
+This skill implements one feature across layers. It does not replace **frontend-designer**, **frontend-developer**, or **testing-expert**.
 
 ## Capabilities
 
@@ -67,7 +67,7 @@ Wait for confirm before a wide refactor. When the user asked to implement direct
 - Keep test doubles in tests. A production code path does not return fabricated data.
 - Put user-facing text behind i18n keys when the project has i18n. When it has none, add the minimal i18n setup with the first screen, or ask the user.
 - A shippable screen has accessible labels, keyboard focus, and visible loading, empty, and error states.
-- Do not load **frontend-design** for a pure wiring or API task unless the user wants a new visual direction.
+- Do not load **frontend-designer** for a pure wiring or API task unless the user wants a new visual direction.
 - Do not load **frontend-developer** when the work is API and data only with no UI change.
 - Do not load **testing-expert** unless the user asks for a test strategy, new tests across layers, or a test run and report.
 - Fix the code or the wrong test. Do not delete or skip a failing test to make the run pass.

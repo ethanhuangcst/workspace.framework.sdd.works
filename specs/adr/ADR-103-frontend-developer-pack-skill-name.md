@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-[Skill-19](../product-backlog.md#pb-115) (Sprint 7 feature-64) needs a strong frontend **implementation** skill with minimal SDD coupling. Visual direction stays on [Skill-17](../product-backlog.md#pb-113) `frontend-design`. Verification stays on [Skill-18](../product-backlog.md#pb-114) `testing-expert`.
+[Skill-19](../product-backlog.md#pb-115) (Sprint 7 feature-64) needs a strong frontend **implementation** skill with minimal SDD coupling. Visual direction stays on [Skill-17](../product-backlog.md#pb-113) `frontend-designer`. Verification stays on [Skill-18](../product-backlog.md#pb-114) `testing-expert`.
 
 The personal folder `~/.cursor/skills/frontend-developer/` is a Next.js Cache Components guide (`name`: `cache-components`). It is not the Skill-19 job. The pack skill must cover components, pages, data loading, forms, accessibility, and performance in the stack the project already uses.
 

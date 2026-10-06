@@ -58,7 +58,12 @@ Optional pack detail: `{client_root}/templates/framework.sdd.works/{locale}/sdd-
 Show this before you say the feature is ready for build or propose `sdd-build`:
 
 - **Scope:** feature id, SBI, module
-- **Table:** Job | Applicable (Y/N) | Status (done / stale / missing) | Path | Note
+- **Jobs:** one table with a row for each job 1–7. Use `#` 1–7 in checklist order.
+
+| # | Job | Applicable | Status | Path | Note |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Artifacts and alignment | Y or N | done / stale / missing | `{path or —}` | `{one sentence when N/A or stale}` |
+
 - **Ready for build:** yes or no, and what is still open
 
 Then ask: run the next job, change the summary, or stop.
@@ -68,5 +73,5 @@ Do not treat the first stale job as full readiness. Do not propose `sdd-build` u
 ## Job 1 detail
 
 - Load `sdd-update-specs` when existing specs drift from the requirement or implementation.
-- Propose `atdd-expert`, `testing-expert`, `frontend-design`, or `fullstack-engineer` when a mapped file is missing for an applicable job.
+- Propose `atdd-expert`, `testing-expert`, `frontend-designer`, or `fullstack-engineer` when a mapped file is missing for an applicable job.
 - Propose a map or path change only when the user confirms.

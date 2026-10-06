@@ -783,20 +783,21 @@ Scenario: Done pick runs retrospective before board write
 
 Tests: CE-SKILL-01, CE-SKILL-02, CE-SKILL-08, CE-SKILL-09, CE-SKILL-11.
 
-### sdd-atdd
+### atdd-expert
 
-**As the** developer specifying a Feature before build
-**I want** user stories and Gherkin acceptance criteria in `{stem}-stories.md`
-**So that** implementation and tests trace to the spec
+**As the** developer specifying a feature before build
+**I want** user stories and Gherkin acceptance criteria from a requirement I already gathered
+**So that** implementation and tests trace to the spec without the skill owning backlog paths
 
 #### AC1
 
 ```gherkin
 Scenario: Summary before write
-  Given artifacts-map.json lists a module stories file
-  When the user asks for ATDD or /sdd-atdd for one feature
-  Then the reply includes an ATDD Summary with the target path
-  And the stories file is unchanged before the user picks
+  Given the caller names one requirement and a stories file path
+  When the user asks for ATDD or /atdd-expert for one feature
+  Then the reply includes an ATDD summary with scope and a numbered draft table
+  And the stories file is unchanged before the user picks apply
+  And the skill does not read artifacts-map.json unless the caller passed the path
 ```
 
 #### AC2
@@ -804,9 +805,10 @@ Scenario: Summary before write
 ```gherkin
 Scenario: Scope limits
   Given the user confirmed apply writes
-  When sdd-atdd finishes
-  Then only the module stories file is updated
+  When atdd-expert finishes
+  Then only the confirmed stories file is updated
   And product-backlog.md is not edited
+  And no automated test file or production code is written
 ```
 
 Tests: CE-SKILL-12. User confirmed usable 2026-10-05 ([feature-52](../sprint-backlog.md#sprint-7)).
@@ -871,7 +873,7 @@ Scenario: Vague prompt yields diagnosis and fenced prompt
 
 Tests: CE-SKILL-13. User confirmed usable 2026-10-05 ([feature-46](../sprint-backlog.md#sprint-7)).
 
-### frontend-design
+### frontend-designer
 
 **As the** developer shaping UI for an SBI
 **I want** subject-grounded design direction and a plan before code
@@ -882,9 +884,11 @@ Tests: CE-SKILL-13. User confirmed usable 2026-10-05 ([feature-46](../sprint-bac
 ```gherkin
 Scenario: Seed folder and production rules
   Given the authoring seed tree
-  When the frontend-design skill file is read
-  Then the folder is frontend-design under specs/framework/seeds/skills/
+  When the frontend-designer skill file is read
+  Then the folder is frontend-designer under specs/framework/seeds/skills/
+  And frontmatter name is frontend-designer
   And sdd-frontend-design is not a seed folder
+  And frontend-design is not a seed folder
   And LICENSE.txt sits beside SKILL.md
   And Production UI names friendly-language and not writing-style
   And Production UI states client_root is for rules not design file storage
@@ -896,12 +900,77 @@ Scenario: Seed folder and production rules
 ```gherkin
 Scenario: Design plan before code when user asks plan only
   Given the user asks for a landing page design plan with no code
-  When the frontend-design skill runs
+  When the frontend-designer skill runs
   Then the reply includes a Design plan with palette type layout and signature
   And no production code file is written unless the user asks to implement
 ```
 
 Tests: CE-SKILL-15. Close with [feature-61](../sprint-backlog.md#sprint-7) when the user confirms.
+
+### frontend-developer
+
+**As the** developer implementing UI in an existing app
+**I want** components, pages, and client flows that match the project stack
+**So that** screens ship with accessibility and i18n without loading SDD process files by default
+
+#### AC1
+
+```gherkin
+Scenario: Seed folder and neighbor skills
+  Given the authoring seed tree
+  When the frontend-developer skill file is read
+  Then the folder is frontend-developer under specs/framework/seeds/skills/
+  And frontmatter name is frontend-developer
+  And the description names frontend-designer and testing-expert as neighbor skills
+  And Capabilities include detect the UI stack and implement components and pages
+  And Limits forbid SDD process file writes by default
+```
+
+#### AC2
+
+```gherkin
+Scenario: Stack before new code
+  Given a project with a package manifest and an existing page component
+  When the user asks to add a form screen wired to an API
+  Then the agent reads the stack from project files before writing code
+  And user-facing strings use the project i18n API when the project ships i18n
+  And the reply lists files touched and does not require artifacts-map.json
+```
+
+Tests: CE-SKILL-21. Close with [feature-64](../sprint-backlog.md#sprint-7) when the user confirms.
+
+### testing-expert
+
+**As the** developer verifying a feature
+**I want** strategy, test creation, pyramid runs, and a short report from one skill
+**So that** unit, API, and browser checks stay aligned without loading webapp-testing
+
+#### AC1
+
+```gherkin
+Scenario: Seed folder and five jobs
+  Given the authoring seed tree
+  When the testing-expert skill file is read
+  Then the folder is testing-expert under specs/framework/seeds/skills/
+  And frontmatter name is testing-expert
+  And browser.md and LICENSE.txt sit beside SKILL.md
+  And Capabilities name strategy, tools, create, run, and report
+  And Limits state the skill does not load webapp-testing
+  And Limits forbid SDD process file writes by default
+```
+
+#### AC2
+
+```gherkin
+Scenario: Report without mandatory process files
+  Given the user asks to test one feature in a project with a test runner
+  When the testing-expert skill runs
+  Then the reply includes a short report table and a count line
+  And new test files wait for user confirm before write
+  And the skill does not require a sprint backlog or artifacts-map.json
+```
+
+Tests: CE-SKILL-20. Close with [feature-62](../sprint-backlog.md#sprint-7) when the user confirms.
 
 ### fullstack-engineer
 
@@ -917,7 +986,7 @@ Scenario: Seed folder and neighbor skills
   When the fullstack-engineer skill file is read
   Then the folder is fullstack-engineer under specs/framework/seeds/skills/
   And fullstack-developer is not a seed folder
-  And the description names frontend-design, frontend-developer, and testing-expert as neighbor skills
+  And the description names frontend-designer, frontend-developer, and testing-expert as neighbor skills
   And Knowledge names i18n-support, common-test-strategy, and friendly-language
   And Limits forbid SDD process file writes by default
 ```
@@ -948,10 +1017,13 @@ Scenario: Seed folder and advisory shape
   Given the authoring seed tree
   When the ai-architect skill file is read
   Then the folder is ai-architect under specs/framework/seeds/skills/
+  And terms.md sits beside SKILL.md
   And the description names rag-expert and mcp-expert as neighbor skills
   And the body includes Design checks and an AI design proposal section
+  And Capabilities name architecture style and operating design
   And Limits state the skill is advisory by default
   And Limits forbid invented benchmark numbers, prices, or quotas
+  And Limits defer retrieval design to rag-expert and MCP server design to mcp-expert
 ```
 
 #### AC2
@@ -960,7 +1032,7 @@ Scenario: Seed folder and advisory shape
 Scenario: Proposal before any file write
   Given the user asks how to deploy a model with a latency target and a budget
   When the ai-architect skill runs
-  Then the reply is an AI design proposal with an options table and open questions
+  Then the reply is an AI design proposal with Style, an options table, Operating design, and open questions
   And no design file or infrastructure file is written until the user confirms
 ```
 
@@ -1110,15 +1182,17 @@ Tests: CE-SKILL-03. The same path shape applies on Windows with backslashes.
 
 ### sdd-spec-to-build
 
-
+Design: [framework-design § sdd-spec-to-build](./framework-design.md#sdd-spec-to-build). Readiness rules: [readiness.md](./seeds/skills/sdd-spec-to-build/readiness.md).
 
 #### AC1
 
 ```gherkin
 Scenario: Spec phase does not write production code
   Given the seed specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md is the skill
+  And readiness.md sits beside SKILL.md
   When the user asks it to design one sprint backlog item
   Then it does not write production code
+  And Capabilities link readiness.md for applicability and path matching
 ```
 
 

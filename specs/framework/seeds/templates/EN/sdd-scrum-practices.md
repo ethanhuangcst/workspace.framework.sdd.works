@@ -1305,7 +1305,7 @@ Scenario: {observable outcome name}
 - One Gherkin scenario is one behavior. Name the scenario for the outcome the user sees.
 - When the product has UI, scenarios use stable selectors: `role`, accessible name, or `data-testid`. They do not lock English copy as the contract.
 - PBI requirement bullets stay on `product-backlog.md`. `sdd-refine-backlog` does not author Gherkin here.
-- Author and revise this file with `sdd-atdd` or as part of `sdd-spec-to-build` when the SBI needs acceptance criteria before build.
+- Author and revise this file with `atdd-expert` or as part of `sdd-spec-to-build` when the SBI needs acceptance criteria before build.
 - Gherkin rules and coverage expectations are in [Acceptance criteria practices](#acceptance-criteria-practices).
   good example: vertical story: sign in and reach the signed-in landing
   bad example: four stories for login page, POST route, session storage, and API wiring for one Feature
@@ -1614,7 +1614,7 @@ Size is how coarse one PBI row is. It lives in the `Size` column on `product-bac
 - [Epic (PBI Size)](#term-pbi-size-epic): split into more PBI rows, or shrink the outcome, before sprint planning.
 - [Theme (PBI Size)](#term-pbi-size-theme): tighten requirement bullets to one path before sprint planning.
 - [Implementable (PBI Size)](#term-pbi-size-implementable): one outcome; the row may get a sprint and SBIs.
-- Too small is not a `Size` value. It is acceptance-criterion detail. Merge it into another related PBI, or remove it from PBI requirement bullets. User stories and acceptance criteria stay with `sdd-atdd` or `sdd-spec-to-build`.
+- Too small is not a `Size` value. It is acceptance-criterion detail. Merge it into another related PBI, or remove it from PBI requirement bullets. User stories and acceptance criteria stay with `atdd-expert` or `sdd-spec-to-build`.
 
 The ladder on mypoke.trade login wording:
 
@@ -1627,7 +1627,7 @@ The same four lines appear under [3. Evaluate Product Backlog Readiness](#3-eval
 
 - `sdd-refine-backlog` sets `Size`, requirement bullets, and related process files after the user picks each fail.
 - `sdd-plan-sprint` schedules only Implementable PBIs. It may name an Epic or Theme in the MVP plan when the job needs that outcome, and it records an OGT to refine that row. It does not set `Sprint` or add SBIs on Epic or Theme.
-- User stories and acceptance criteria stay with `sdd-atdd` or `sdd-spec-to-build`.
+- User stories and acceptance criteria stay with `atdd-expert` or `sdd-spec-to-build`.
 - Feature and Task breakdown rules and examples are in [5. Feature break down](#5-feature-break-down).
 
 [Back to top](#index)
@@ -1645,7 +1645,7 @@ A [Feature](#term-feature) is the usable outcome. A [Task](#term-task) is work t
 
 - [Epic (PBI Size)](#term-pbi-size-epic): split into more PBI rows at the next Size down. Prefer [Theme (PBI Size)](#term-pbi-size-theme) rows when the Epic hides several user-facing areas. Do not jump from Epic to Implementable in one step unless only one area remains. Do not turn the Epic into a task list.
 - [Theme (PBI Size)](#term-pbi-size-theme): tighten the requirement bullets to one path, or split into Implementable PBIs. Do not leave two user paths on one row.
-- [Implementable (PBI Size)](#term-pbi-size-implementable): leave the row as one outcome. Acceptance-criterion detail stays on the row or moves to `sdd-atdd` or `sdd-spec-to-build`. It does not become a new PBI.
+- [Implementable (PBI Size)](#term-pbi-size-implementable): leave the row as one outcome. Acceptance-criterion detail stays on the row or moves to `atdd-expert` or `sdd-spec-to-build`. It does not become a new PBI.
 - Too small is not a `Size`. Merge it into a related PBI, or drop it from the requirement bullets.
 
 #### Plan a sprint
@@ -1687,7 +1687,7 @@ User Story Mapping orders what the user does, slices vertical stories for an MVP
 1. **Backbone:** List user activities left to right in the order the user does them.
 2. **Slices:** Under each activity, list user tasks. Draw horizontal slices for MVP 1, MVP 2, and later increments. Match [2. Slice product to MVPs](#2-slice-product-to-mvps).
 3. **Pick the next slice:** Choose the top slice that delivers one job. Do not split that slice by frontend, API, or database layers on the sprint board ([5. Feature break down](#5-feature-break-down)).
-4. **Write stories:** For each task in the slice, write one user story (`As a` / `I want` / `So that`) and acceptance criteria in the module stories path from the map. Follow [Acceptance criteria practices](#acceptance-criteria-practices) and the file shape in [{module-name}-stories.md](#module-name-storiesmd). Run `sdd-atdd` when the agent should draft or revise that file.
+4. **Write stories:** For each task in the slice, write one user story (`As a` / `I want` / `So that`) and acceptance criteria in the module stories path from the map. Follow [Acceptance criteria practices](#acceptance-criteria-practices) and the file shape in [{module-name}-stories.md](#module-name-storiesmd). Run `atdd-expert` when the agent should draft or revise that file.
 
 #### Acceptance criteria practices
 
@@ -1724,7 +1724,7 @@ Acceptance criteria state testable behavior before implementation ([ATDD](#term-
 ###### Order and tools
 
 - Write or revise acceptance criteria before production code for that story ([ATDD](#term-atdd)). Unit and integration tests follow the scenarios and the project test spec.
-- `sdd-atdd` drafts or revises `{stem}-stories.md`. Automated tests implement the scenarios; they do not replace the spec file.
+- `atdd-expert` drafts or revises `{stem}-stories.md`. Automated tests implement the scenarios; they do not replace the spec file.
 
 #### Good and bad mapping
 
@@ -1737,6 +1737,6 @@ Acceptance criteria state testable behavior before implementation ([ATDD](#term-
 
 - `product-backlog.md` holds PBI outcomes and requirement bullets, not Gherkin.
 - `sdd-refine-backlog` sets Size and PBI shape. It does not write user stories or acceptance criteria.
-- `sdd-spec-to-build` may load `sdd-atdd` when an SBI needs acceptance criteria before the build phase.
+- `sdd-spec-to-build` may load `atdd-expert` when an SBI needs acceptance criteria before the build phase.
 
 [Back to top](#index)

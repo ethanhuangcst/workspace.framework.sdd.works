@@ -2,11 +2,11 @@
 name: sdd-refine-backlog
 description: >
   Review and consolidate product-backlog.md against Evaluate Product Backlog Readiness.
-  Send one findings list in chat, then one confirm. Change a process file only after
+  Send a short lead sentence, a numbered findings table, then one confirm. Change a process file only after
   the user picks. Write that pick in one pass. Use when the user asks to refine the
   product backlog, consolidate the backlog, review product-backlog, or
   sdd-refine-backlog. sdd-refine-backlog sets PBI Size and splits or tightens rows.
-  User Stories and Acceptance Criteria stay with sdd-atdd or sdd-spec-to-build.
+  User Stories and Acceptance Criteria stay with atdd-expert or sdd-spec-to-build.
   sdd-plan-sprint schedules only Implementable PBIs. sdd-review-status compares the
   board with the work.
 ---
@@ -27,7 +27,7 @@ A sprint backlog item (SBI) is one row in a sprint table on `sprint-backlog.md`.
 
 The practices file for this run is `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`.
 
-The skill reviews and consolidates `product-backlog.md`. User Stories and Acceptance Criteria are written when a feature is designed, with `sdd-atdd` or `sdd-spec-to-build`.
+The skill reviews and consolidates `product-backlog.md`. User Stories and Acceptance Criteria are written when a feature is designed, with `atdd-expert` or `sdd-spec-to-build`.
 
 The user picks what to do with the findings list.
 
@@ -37,7 +37,7 @@ The user picks what to do with the findings list.
 | --- | --- |
 | Locate the five process files | The review uses the paths in `artifacts-map.json` |
 | Load readiness and Size | The review applies practices §3 and §4 |
-| Send findings in chat | One numbered list: Issue, then Proposed fix |
+| Send findings in chat | Lead sentence, findings table, then choices per [response.md](./response.md) |
 | Collect one confirm | The same chat message lists the choices. The user's reply is the confirm. |
 | Write the accepted pick | One pass updates the process files the pick names |
 
@@ -49,7 +49,8 @@ The user picks what to do with the findings list.
 | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, headings "3. Evaluate Product Backlog Readiness" and "4. Size product backlog" | The review |
 | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, heading "5. Feature break down", subsection "Refine a backlog item" | The user picks a split, tighten, or merge that changes PBIs or requirement bullets |
 | Term rows under the heading "Terminology in practice" in that practices file | A fail names that term: Feature, Task, on-going task (OGT), Issue, RID, or a PBI Size |
-| `{client_root}/{rules_dir}/friendly-language.mdc` | Wording in the findings list and the confirm choices |
+| `{client_root}/{rules_dir}/friendly-language.mdc` | Wording in the findings table and the confirm choices |
+| [response.md](./response.md) | Composing the findings message |
 | The matching `####` heading in that practices file | A write pass is about to change that process file |
 
 ## Run the review
@@ -79,60 +80,17 @@ Read `product-backlog.md` and the related rows in the other process files, to li
 
 Apply the loaded §3 and §4 to each PBI. A Size fail names the current `Size` and the proposed `Size` from §4.
 
-A split or a new PBI is allowed only when the user picks it. The new row is a code, a noun, a `Size`, and requirement bullets. A new user story and a new acceptance criterion stay with `sdd-atdd` or `sdd-spec-to-build`.
+A split or a new PBI is allowed only when the user picks it. The new row is a code, a noun, a `Size`, and requirement bullets. A new user story and a new acceptance criterion stay with `atdd-expert` or `sdd-spec-to-build`.
 
 After the fail list, follow [Findings in chat](#findings-in-chat).
 
 ## Findings in chat
 
-Every sentence the user reads is written from the user's view. Readiness item numbers stay in the skill check, not in the findings list.
+Load [response.md](./response.md) and send one message in that order: boundary, lead, findings table, accept-all note when it applies, **Your choice**.
 
-### State the skill boundary
+Every sentence the user reads is written from the user's view. Readiness item numbers stay in the skill check, not in the table.
 
-Send this before the list:
-
-This skill reviews and consolidates `product-backlog.md`. User Stories and Acceptance Criteria are written when a feature is designed, with `sdd-atdd` or `sdd-spec-to-build`.
-
-### Send the findings list
-
-Send one numbered list for a person at the desk, not for another agent parsing the repo.
-
-Each item uses this shape:
-
-1. **{PBI code} — {noun}**
-- Issue: {part} is {verdict}. {the PBI code, the short name, and what the person sees}
-- Proposed fix: {one plain sentence}
-
-**Headline**
-
-- `{PBI code}` is the code on that row.
-- `{noun}` is the short Description on the Product Backlog table, or the noun line in Requirements when the table row is missing.
-- Use an em dash between code and noun. Do not send a code alone.
-
-**Issue**
-
-- The first sentence is `{part} is {verdict}`. `{part}` is the place on the board, such as Size, Description, Status, or a link. `{verdict}` is a short word for the fail.
-- The next sentence names the PBI code, the short name, and what the person sees. No comma chains of paths or anchor ids.
-
-**Proposed fix**
-
-- Say what you will change and what the board will look like after. Use remove or delete when the PBI should go away.
-
-- An empty fail list is the word `none`. Then stop. Leave the confirm out. Leave the write out.
-
-When every item is only an edit to an existing PBI (`Size`, requirement bullets, or both), say that **Accept all and update specs** is offered. When any item is a split, a merge, a new PBI, or removal of an SBI, say that **Accept all** is not offered and name why in one sentence.
-
-After the list, list the choices in the same message. Do not open a question card.
-
-Offer **Accept all and update specs** only when every row is an edit to an existing PBI.
-
-Always list:
-
-1. I will enter instructions in chat.
-2. Create an OGT to record these findings and I will refine later.
-3. Leave it to me.
-
-The user's reply that names one choice is the confirmation. Follow [Write the picks](#write-the-picks).
+When the fail list is empty, follow the empty-set rule in response.md. Then stop. Follow [Write the picks](#write-the-picks) only after a non-empty confirm.
 
 ## Write the picks
 
@@ -149,7 +107,7 @@ The user's reply that names one choice is the confirmation. Follow [Write the pi
 - Write the Requirements list and the table with the same code, the same noun, and the same `Size`, so both sections stay matched.
 - Write the `Size` cell on `product-backlog.md` and on Unplanned PBIs when that PBI appears there.
 - A split or a new PBI the user picked is a code, a noun, a `Size`, and requirement bullets.
-- Leave a User Story and an Acceptance Criterion unwritten, so those stay with `sdd-atdd` or `sdd-spec-to-build`.
+- Leave a User Story and an Acceptance Criterion unwritten, so those stay with `atdd-expert` or `sdd-spec-to-build`.
 - Status words stay `ToDo`, `WIP`, and `Done`. When the user picks removal, delete the PBI row and the Requirements entry.
 - Leave a PBI unmarked as `Done` while its Definition of Done checklist is open. A PBI status change waits for the user to name that status.
 
@@ -183,7 +141,7 @@ The user's reply that names one choice is the confirmation. Follow [Write the pi
 - Leave secrets out of the changes log, so the changes log stays free of secrets.
 - Leave `{client_root}/.sdd-installed.json` unchanged, so the install ledger keeps its current text.
 - Leave `sdd_install_framework` and `sdd_update_framework` uncalled, so install stays outside this skill.
-- Leave User Stories and Acceptance Criteria unwritten, so those stay with `sdd-atdd` or `sdd-spec-to-build`.
+- Leave User Stories and Acceptance Criteria unwritten, so those stay with `atdd-expert` or `sdd-spec-to-build`.
 - Leave a new sprint unplanned, so that job stays on `sdd-plan-sprint`.
 - Leave the Size ladder in practices §4, so this skill links that section and does not copy the examples.
 - Split proposals follow practices §5 good and bad shape. Do not turn one PBI row into a task list.

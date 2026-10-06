@@ -2,12 +2,11 @@
 name: sdd-review-status
 description: >
   Compare the five process files with open SBIs in the current sprint and with
-  Open RIDs on sprint-backlog.md. List each mismatch and RID status-change
-  suggestions. Change a process file only after the user picks in chat. Write
-  those picks in one pass. Use when the user asks where we are, review status,
-  update status, or whether the plan matches the work. sdd-audit-artifacts
-  checks artifacts-map.json. The pack stays uninstalled, so the skill stays on
-  the compare.
+  Open RIDs on sprint-backlog.md. Send a short lead sentence, a numbered mismatch
+  table, and four choices. Change a process file only after the user picks in
+  chat. Use when the user asks where we are, review status, update status, or
+  whether the plan matches the work. sdd-audit-artifacts checks
+  artifacts-map.json.
 ---
 
 # Review status
@@ -31,7 +30,7 @@ The user picks handling in chat. One reply can cover every mismatch.
 | Locate the five process files | Paths come from `{workspace}/artifacts-map.json` |
 | Compare SBIs | Open SBIs in the current sprint match board text and related work |
 | Compare Open RIDs | Each open RID matches Impact, Solution, and related work |
-| Send one findings message | Sprint, open SBIs, RID notes, RID suggestions, mismatches, and choices |
+| Send one findings message | Lead sentence, numbered mismatch table, optional SBI and RID lines, four choices |
 | Write after pick | One pass updates only the process files the pick names |
 
 ## Knowledge
@@ -39,14 +38,16 @@ The user picks handling in chat. One reply can cover every mismatch.
 | Source | Load when |
 | --- | --- |
 | `{workspace}/artifacts-map.json` | Start of the run |
+| [response.md](./response.md) | Composing the findings message |
 | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, RID Log section and `#term-rid` under Terminology in practice | Open RIDs or a RID write |
 | `{client_root}/rules/sdd-dod.mdc` | Before closing an RID; before an SBI or PBI Done write |
 | `{client_root}/skills/sdd-retrospective/SKILL.md` or pack seed `sdd-retrospective` | Before any pick that sets SBI or PBI to Done |
+| `{client_root}/rules/friendly-language.mdc` | Wording checks for the findings message, when that file exists |
 | Artifact `####` headings in the same practices file | Before a process file write |
 
 ## Steps
 
-### 1. Find the five process files
+### Find the five process files
 
 Read `{workspace}/artifacts-map.json` to locate the five process files.
 
@@ -55,88 +56,45 @@ Read `{workspace}/artifacts-map.json` to locate the five process files.
 - When a process file fails to open, name that file and stop.
 - Leave a missing process file uncreated.
 
-### 2. Record the five process files
+### Record and compare
 
-Read the five process files to state what each file says.
+Read the five process files and open SBIs in the current sprint whose Status is ToDo or WIP.
 
-- Record a disagreement among the five process files as one mismatch.
 - `sprint-backlog.md` holds the newest status for each SBI.
-- When another process file records a different SBI status, the mismatch names `sprint-backlog.md` as the source of truth for that SBI.
-
-### 3. Record the actual status
-
-Read each SBI in the current sprint whose Status is ToDo or WIP.
-
-- Read the work related to that SBI and state the actual status.
+- When another process file records a different SBI status, that is one mismatch. `sprint-backlog.md` is the source of truth for SBI status.
+- Read work related to each open SBI. When board status differs from checked work, that is one mismatch or one SBI status gap line.
 - When an SBI names no related work, mark that SBI as not checked.
 
 Read the Open RIDs table on `sprint-backlog.md`.
 
-- For each open RID, read Impact, Solution, and Related. Follow links to PBIs, SBIs, and specs. Inspect related work.
-- When Impact PBIs or SBIs are Done and Solution is verifiably in place, add a **RID status-change suggestion**: move that RID to Closed RIDs with Closed Sprint set to the sprint that finished the work, or the current WIP sprint when none is WIP.
-- When blocking work is still ToDo or WIP, note the RID as still valid. Do not suggest a status change.
-- When the same RID id appears in both Open and Closed tables, or a closed row lacks Closed Sprint, list a mismatch with a fix sentence.
+- When Impact PBIs or SBIs are Done and Solution is verifiably in place, add a RID close suggestion.
+- When blocking work is still ToDo or WIP, note the RID as still valid.
+- When the same RID id appears in both Open and Closed tables, or a closed row lacks Closed Sprint, add one mismatch table row.
 
-### 4. List each mismatch
+### Respond to the user
 
-- A disagreement among the five process files is one mismatch.
-- A difference between board status and the actual status of an open SBI is one mismatch.
-- A RID table drift row is one mismatch.
-- A stale open RID (suggestion in step 3) is one mismatch when the user should confirm close.
+Follow [response.md](./response.md). Stop until the user picks in chat.
 
-### 5. Respond to the user
+## Response limits
 
-Follow [Response to user](#response-to-user). Stop until the user picks in chat.
+These limits apply to the chat message only. They do not change compare logic.
 
-## Response to user
+- The first sentence is the lead from [response.md](./response.md).
+- Mismatches use the numbered table with columns `#`, File, Problem, Fix.
+- List every mismatch in the table. Do not cap the row count or add a “more mismatches” summary row.
+- Omit the SBI status gap block when every open SBI matches the board.
+- Problem and Fix cells are one sentence each. No “actual is”, no “because”, no semicolon chains.
+- Use file basenames and names from the board. Do not invent row content from this skill file.
 
-Every sentence the user reads is written from the user's view. It names the item, the status the user already sees, and what will happen. A sentence that only tells what the agent found in a file fails.
+## Your choice
 
-### Summarize the findings
+After the message body, list the four choices from [response.md](./response.md). Do not open a question card.
 
-Send one message the user can read. Leave the findings out of a code block.
+The user's reply that names row numbers or choices is the confirmation for the picks. Record every pick, then follow [Write the picks](#write-the-picks) in one pass. Do not ask for a second yes to apply non-Done picks. When a pick sets **Done**, that reply must name **Done** for that SBI or PBI and count as **close confirm** only if the thread already shows the user accepted the deliverable, or the pick explicitly closes that row after review. Otherwise list the pick as suggested and ask the **close confirm** question from `sdd-dod.mdc` before writing **Done**.
 
-- Sprint: {current sprint from sprint-backlog.md}
-- Open sprint backlog items
-  - {SBI code} {SBI name}: {actual status or not checked}
-- Open RIDs (still valid)
-  - {RID id} {title}: {one sentence why it stays open}
-- RID status-change suggestions
-  - {RID id} {title}: {proposed close or move}; {what the work shows}
-- Mismatches
-  - {item}: {board says X}; {actual is Y because Z}
+Each pick names what happens. bad example: Update process artifacts now. good example: In sprint-backlog.md, move {rid id} from Open RIDs to Closed RIDs with Closed Sprint {n}.
 
-- An empty subsection is the word `none`.
-- RID status-change suggestions lists only RIDs that step 3 marked for a status change.
-
-#### Example
-
-- Sprint: Sprint 2
-- Open sprint backlog items
-  - feature-03 Card list view: WIP
-- Open RIDs (still valid)
-  - none
-- RID status-change suggestions
-  - D-2 Pack copy must use an allow-list: close this RID; MCP-01 is Done and the installer uses an allow-list.
-- Mismatches
-  - sprint-backlog.md says feature-03 Card list view is ToDo; the actual status is WIP because the card list page is already in the web app
-
-### Your choice
-
-After the list, list the choices in the same message. Do not open a question card.
-
-Always list:
-
-1. I will enter instructions in chat.
-2. Apply the listed updates (name each SBI line and each RID close the user may accept).
-3. Create an OGT on status.md for items I will handle later.
-4. Leave it to me.
-
-The user's reply that names items or choices is the confirmation for the picks. Record every pick, then follow [Write the picks](#write-the-picks) in one pass. Do not ask for a second yes to apply non-Done picks. When a pick sets **Done**, that reply must name **Done** for that SBI or PBI and count as **close confirm** only if the thread already shows the user accepted the deliverable, or the pick explicitly closes that row after review. Otherwise list the pick as suggested and ask the **close confirm** question from `sdd-dod.mdc` before writing **Done**.
-
-Each pick names what happens. bad example: Update process artifacts now. good example: In sprint-backlog.md, move D-2 from Open RIDs to Closed RIDs with Closed Sprint 2.
-
-When the pick is an untracked defect, the OGT row says track defect xyz in issues-log. Leave the issues-log row for a later write.
+When the pick is an untracked defect, the OGT row says track the defect in issues-log. Leave the issues-log row for a later write.
 
 ## Write the picks
 
@@ -147,24 +105,6 @@ When the pick is an untracked defect, the OGT row says track defect xyz in issue
 - Before a process file write, read only that artifact's `####` heading in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. Start at that heading. Stop at the next `####` heading.
 - Before closing an RID, apply `{client_root}/rules/sdd-dod.mdc` for a RID (Common quality gate and defaults).
 - Before an SBI or PBI **Done** write, apply `{client_root}/rules/sdd-dod.mdc` for that type (defaults include **sdd-retrospective** completed).
-
-##### Example SBI write
-
-```text
-In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP.
-```
-
-##### Example RID write
-
-```text
-In sprint-backlog.md, move D-2 from Open RIDs to Closed RIDs with Closed Sprint 2.
-```
-
-##### Example OGT row
-
-```text
-| 1 | Move D-2 to Closed RIDs on sprint-backlog.md | - D-2 Pack copy must use an allow-list | Sprint 2 | ToDo |
-```
 
 ## Limits
 
@@ -179,3 +119,11 @@ In sprint-backlog.md, move D-2 from Open RIDs to Closed RIDs with Closed Sprint 
 - Leave `{client_root}/.sdd-installed.json` unchanged.
 - Leave `sdd-audit-artifacts` unrun from this skill.
 - Leave `sdd_install_framework` and `sdd_update_framework` uncalled.
+
+## Anti-patterns
+
+- A long bullet list instead of the numbered mismatch table.
+- Six always-on subsections when most are empty.
+- Mismatch text that only describes what the agent read in a file.
+- Test case ids in the user message when the user did not ask about tests.
+- OGT row numbers instead of OGT task titles in Problem or Fix cells.

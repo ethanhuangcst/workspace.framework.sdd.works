@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted (folder name superseded by [ADR-105](./ADR-105-frontend-designer-pack-skill-name.md))
 
 ## Context
 

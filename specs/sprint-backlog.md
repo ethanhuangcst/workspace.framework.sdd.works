@@ -1,7 +1,7 @@
 # sprint-backlog, framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-05
+> as_of: 2026-10-06
 > [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#sprint-backlogmd)
 
 
@@ -9,8 +9,8 @@
 ## Current project progress
 
 - Total sprints: 8
-- Current WIP sprint: [Sprint 7](#sprint-7)
-- Sprint goal: A developer specifies and builds product work with pack engineering skills and EN engineering artifact seeds.
+- Current WIP sprint: [Sprint 8](#sprint-8)
+- Sprint goal: An adopter copies a one-line prompt from the public site and installs core pack skills and rules without MCP, while Ethan completes named-job routing and framework-guided proposals.
 
 
 
@@ -518,14 +518,14 @@ Sprint Goal: A developer specifies and builds product work with pack engineering
 
 Depends on Sprint 6 (process loop and process seeds).
 
-**Status: WIP**
+**Status: Done**
 
 ### **Done**
 
 | #   | Code    | SBI                                      | Parent PBI                                                 | Module/Type    | Related specs                                                                                                                          | Status   |
 | --- | ------- | ---------------------------------------- | ---------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | task-01 | Story mapping and US/AC writing guidance | [Skill-01 Pack skill sdd-atdd](./product-backlog.md#pb-21) | Framework/Task | - [app-stories.md](./admin-portal/app-stories.md)<br>- [sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md) | **Done** |
-| 2   | feature-52 | Skill sdd-atdd          | [Skill-01 Pack skill sdd-atdd](./product-backlog.md#pb-21)            | Skill/Feature     | —                                                                                                                      | **Done** |
+| 1   | task-01 | Story mapping and US/AC writing guidance | [Skill-01 Pack skill atdd-expert](./product-backlog.md#pb-21) | Framework/Task | - [app-stories.md](./admin-portal/app-stories.md)<br>- [sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md) | **Done** |
+| 2   | feature-52 | Skill sdd-atdd          | [Skill-01 Pack skill atdd-expert](./product-backlog.md#pb-21)            | Skill/Feature     | —                                                                                                                      | **Done** |
 | 3   | feature-44 | Skill sdd-update-specs  | [Skill-09 Pack skill sdd-update-specs](./product-backlog.md#pb-64)    | Skill/Feature     | [Skill-11 Pack skill sdd-spec-to-build](./product-backlog.md#pb-80)                                                    | **Done** |
 | 4   | feature-46 | Skill improve-prompt    | [Skill-14 Pack skill improve-prompt](./product-backlog.md#pb-89)      | Skill/Feature     | [ADR-099](./adr/ADR-099-improve-prompt-skill-name.md), [framework-design § improve-prompt](./framework/framework-design.md#improve-prompt), [improve-prompt](./framework/seeds/skills/improve-prompt/SKILL.md), **CE-SKILL-13** | **Done** |
 | 5   | feature-47 | Seed architecture.md    | [Spec-seeds-10 Seed architecture.md](./product-backlog.md#pb-40)      | Framework/Feature | - [MCP-01](./product-backlog.md#pb-16)<br>- [i18n-03](./product-backlog.md#pb-69)                                    | **Done** |
@@ -534,24 +534,21 @@ Depends on Sprint 6 (process loop and process seeds).
 | 8   | feature-49 | Seed .secrets           | [Spec-seeds-12 Seed .secrets](./product-backlog.md#pb-66)             | Framework/Feature | - [MCP-01](./product-backlog.md#pb-16)<br>- [.secrets seed](./framework/seeds/templates/EN/.secrets)<br>- [i18n-03](./product-backlog.md#pb-69) | **Done** |
 | 9   | feature-63 | Pack rule friendly-language.mdc | [Rule-04 Pack rule friendly-language.mdc](./product-backlog.md#pb-95) | Rule/Feature | - [Spec-seeds-03](./product-backlog.md#pb-32)<br>- [friendly-language.mdc](./framework/seeds/rules/friendly-language.mdc)<br>- [framework-design § friendly-language.mdc](./framework/framework-design.md#friendly-languagemdc) | **Done** |
 | 10  | feature-45 | Skill sdd-spec-to-build | [Skill-11 Pack skill sdd-spec-to-build](./product-backlog.md#pb-80) | Skill/Feature | - [sdd-spec-to-build/SKILL.md](./framework/seeds/skills/sdd-spec-to-build/SKILL.md)<br>- [readiness.md](./framework/seeds/skills/sdd-spec-to-build/readiness.md)<br>- [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) | **Done** |
+| 11  | feature-61 | Skill frontend-designer | [Skill-17 Pack skill frontend-designer](./product-backlog.md#pb-113) | Skill/Feature | - [ADR-105](./adr/ADR-105-frontend-designer-pack-skill-name.md)<br>- **CE-SKILL-15** | **Done** |
+| 12  | feature-62 | Skill testing-expert | [Skill-18 Pack skill testing-expert](./product-backlog.md#pb-114) | Skill/Feature | - [ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md)<br>- **CE-SKILL-20** | **Done** |
+| 13  | feature-64 | Skill frontend-developer | [Skill-19 Pack skill frontend-developer](./product-backlog.md#pb-115) | Skill/Feature | - [ADR-103](./adr/ADR-103-frontend-developer-pack-skill-name.md)<br>- **CE-SKILL-21** | **Done** |
+| 14  | feature-65 | Skill fullstack-engineer | [Skill-20 Pack skill fullstack-engineer](./product-backlog.md#pb-116) | Skill/Feature | - [ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md)<br>- **CE-SKILL-16** | **Done** |
+| 15  | feature-66 | Skill ai-architect | [Skill-21 Pack skill ai-architect](./product-backlog.md#pb-117) | Skill/Feature | - **CE-SKILL-17** | **Done** |
+| 16  | feature-67 | Skill mcp-expert | [Skill-22 Pack skill mcp-expert](./product-backlog.md#pb-118) | Skill/Feature | - **CE-SKILL-18** | **Done** |
+| 17  | feature-68 | Skill rag-expert | [Skill-23 Pack skill rag-expert](./product-backlog.md#pb-119) | Skill/Feature | - **CE-SKILL-19** | **Done** |
 
 ### **WIP**
 
-| #   | Code       | SBI                     | Parent PBI                                                            | Module/Type       | Related specs                                                                                                          | Status   |
-| --- | ---------- | ----------------------- | --------------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | feature-65 | Skill fullstack-engineer | [Skill-20 Pack skill fullstack-engineer](./product-backlog.md#pb-116) | Skill/Feature | - [ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md)<br>- [Skill-17](./product-backlog.md#pb-113)<br>- [Skill-18](./product-backlog.md#pb-114)<br>- [Skill-19](./product-backlog.md#pb-115)<br>- [Skill-11](./product-backlog.md#pb-80) | **WIP** |
-| 2   | feature-66 | Skill ai-architect | [Skill-21 Pack skill ai-architect](./product-backlog.md#pb-117) | Skill/Feature | - [Skill-22](./product-backlog.md#pb-118)<br>- [Skill-23](./product-backlog.md#pb-119)<br>- [Skill-11](./product-backlog.md#pb-80) | **WIP** |
-| 3   | feature-67 | Skill mcp-expert | [Skill-22 Pack skill mcp-expert](./product-backlog.md#pb-118) | Skill/Feature | - [MCP-02](./product-backlog.md#pb-75)<br>- [Skill-18](./product-backlog.md#pb-114)<br>- [Skill-11](./product-backlog.md#pb-80) | **WIP** |
-| 4   | feature-68 | Skill rag-expert | [Skill-23 Pack skill rag-expert](./product-backlog.md#pb-119) | Skill/Feature | - [Spec-seeds-12](./product-backlog.md#pb-66)<br>- [Skill-18](./product-backlog.md#pb-114)<br>- [Skill-11](./product-backlog.md#pb-80) | **WIP** |
-| 5   | feature-62 | Skill testing-expert | [Skill-18 Pack skill testing-expert](./product-backlog.md#pb-114) | Skill/Feature | - [ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md)<br>- [Skill-11](./product-backlog.md#pb-80)<br>- [Spec-seeds-13](./product-backlog.md#pb-90)<br>- [Skill-17](./product-backlog.md#pb-113) | **WIP** |
-| 6   | feature-61 | Skill frontend-design | [Skill-17 Pack skill frontend-design](./product-backlog.md#pb-113) | Skill/Feature | - [Skill-11](./product-backlog.md#pb-80)<br>- [Skill-01](./product-backlog.md#pb-21)<br>- [Spec-seeds-13](./product-backlog.md#pb-90)<br>- [ADR-101](./adr/ADR-101-frontend-design-pack-skill-name.md) | **WIP** |
+No open rows.
 
 ### **ToDo**
 
-
-| #   | Code       | SBI                     | Parent PBI                                                            | Module/Type       | Related specs                                                                                                          | Status   |
-| --- | ---------- | ----------------------- | --------------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | feature-64 | Skill frontend-developer | [Skill-19 Pack skill frontend-developer](./product-backlog.md#pb-115) | Skill/Feature | - [Skill-17](./product-backlog.md#pb-113)<br>- [Skill-18](./product-backlog.md#pb-114)<br>- [Skill-11](./product-backlog.md#pb-80) | **ToDo** |
+No open rows.
 
 ### Retrospective
 
@@ -563,12 +560,21 @@ Depends on Sprint 6 (process loop and process seeds).
 
 #### 2. [Oct 5, 2026], feature-52, feature-44, feature-46, feature-47, feature-48, feature-50 done
 - User **close confirm** for six Sprint 7 SBIs in one message. **sdd-dod.mdc** **Close confirm** gate landed earlier the same day so agents stop writing **Done** without chat accept.
-- [Skill-01](./product-backlog.md#pb-21), [Skill-09](./product-backlog.md#pb-64), and [Skill-14](./product-backlog.md#pb-89) close with their Sprint 7 feature rows. [Skill-11](./product-backlog.md#pb-80) stays **ToDo** until [feature-45](./sprint-backlog.md#sprint-7).
+- [Skill-01](./product-backlog.md#pb-21), [Skill-09](./product-backlog.md#pb-64), and [Skill-14](./product-backlog.md#pb-89) close with their Sprint 7 feature rows. [Skill-11](./product-backlog.md#pb-80) closed with [feature-45](./sprint-backlog.md#sprint-7) on 2026-10-06.
 - EN product-level seeds [architecture.md](./framework/seeds/templates/EN/architecture.md), [release.md](./framework/seeds/templates/EN/release.md), and [test-strategy.md](./framework/seeds/templates/EN/test-strategy.md) match practices `#architecturemd`, `#releasemd`, and test-strategy section. HanS and HanT bodies stay on [i18n-03](./product-backlog.md#pb-69).
 
-#### 2. [Oct 5, 2026], feature-49 done
+#### 3. [Oct 5, 2026], feature-49 done
 - User confirmed the dotenv-shaped EN [`.secrets`](./framework/seeds/templates/EN/.secrets) seed usable (`looks good`). No repo under `~/code` had a good `.secrets` example; the seed uses empty `KEY=` lines and `#` comments for where values live.
 - [Spec-seeds-12](./product-backlog.md#pb-66) **Done** with [feature-49](./sprint-backlog.md#sprint-7). Practices `#secrets` documents the shape. No new ADR or knowledge file.
+
+#### 4. [Oct 6, 2026], feature-61, feature-62, feature-64, feature-65, feature-66, feature-67, feature-68 done
+- User **close confirm** in one message for seven domain pack skills. Seeds under `specs/framework/seeds/skills/` match [`framework-design` § Pack skill seed catalog](./framework/framework-design.md#pack-skill-seed-catalog) and **CE-SKILL-15** through **CE-SKILL-21**.
+- [Skill-17](./product-backlog.md#pb-113) through [Skill-23](./product-backlog.md#pb-119) close with their Sprint 7 rows.
+- No new ADR or knowledge file. L1 recorded passes for **CE-SKILL-15** through **21** stay optional follow-up per OGT 8.
+
+#### 5. [Oct 6, 2026], Sprint-end
+- User confirmed Sprint 7 usable and asked to mark the sprint **Done**. All seventeen SBIs **Done**. Sprint goal met: pack engineering skills and EN engineering artifact seeds shipped for spec-to-build workflows.
+- [Sprint 8](./sprint-backlog.md#sprint-8) opens **WIP** with the pre-scheduled install-first MVP (Option A from sprint planning).
 
 **Future actions**
 
@@ -585,7 +591,7 @@ Sprint Goal: An adopter copies a one-line prompt from the public site and instal
 
 Depends on Sprint 7 (engineering skills and seeds).
 
-**Status: ToDo**
+**Status: WIP**
 
 ### **ToDo**
 
@@ -594,16 +600,15 @@ Depends on Sprint 7 (engineering skills and seeds).
 | --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | 1   | feature-51 | Agent guiding proposals                    | [Agent-03 Guiding proposals from framework knowledge](./product-backlog.md#pb-10) | Agent/Feature  | - [scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)<br>- [sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)<br>- [artifacts-map.json](../artifacts-map.json)                                                              | **ToDo** |
 | 2   | task-01    | Complete Agent-02 job index in ethan.md    | [Agent-02 Skill call for a named job](./product-backlog.md#pb-8)             | Agent/Task     | - [ethan.md](./framework/seeds/agents/ethan.md)<br>- [Spec-seeds-03 Seed constants.json](./product-backlog.md#pb-32)<br>- [Skill-03](./product-backlog.md#pb-24)–[Skill-06](./product-backlog.md#pb-28), [Skill-08](./product-backlog.md#pb-30), [Skill-12](./product-backlog.md#pb-86), [Skill-13](./product-backlog.md#pb-87)–[Skill-16](./product-backlog.md#pb-94)<br>- [Skill-07](./product-backlog.md#pb-29) **Retired** ([ADR-076](./adr/ADR-076-review-status-one-skill.md)) | **ToDo** |
-| 3   | task-02    | Refresh CE-SKILL catalog for shipped skills | [Skill-12 Pack skill sdd-review-status](./product-backlog.md#pb-86)        | Framework/Task | - [framework-tests.md](./framework/framework-tests.md)<br>- [CE-SKILL-07](./framework/framework-tests.md)                                                                                                                                                            | **ToDo** |
-| 4   | task-03    | Unified public site entry slice            | [Web-portal-21 Install-first public landing](./product-backlog.md#pb-107)   | Webapp/Task    | - [Web-portal-07](./product-backlog.md#pb-73)<br>- [Web-portal-20](./product-backlog.md#pb-106)<br>- [Web-portal-19](./product-backlog.md#pb-100)                                                                                                                    | **ToDo** |
-| 5   | feature-53 | Pack install profile manifests             | [Spec-seeds-15 Pack install profile manifests](./product-backlog.md#pb-97) | Framework/Feature | - [Web-portal-17](./product-backlog.md#pb-98)<br>- [MCP-01](./product-backlog.md#pb-16)                                                                                                            | **ToDo** |
-| 6   | feature-54 | Partial install ledger for subset copy     | [MCP-05 Partial install ledger for subset copy](./product-backlog.md#pb-101) | MCP/Feature    | - [MCP-01](./product-backlog.md#pb-16)<br>- [Web-portal-18](./product-backlog.md#pb-99)<br>- `[mcp/mcp-design.md](./mcp/mcp-design.md)`                                                                                                                            | **ToDo** |
-| 7   | feature-55 | Install profile API                        | [Web-portal-17 Install profile API](./product-backlog.md#pb-98)            | Webapp/Feature | - [Spec-seeds-15](./product-backlog.md#pb-97)<br>- [MCP-01](./product-backlog.md#pb-16)                                                                                                            | **ToDo** |
-| 8   | feature-56 | Subset install agent prompt                | [Web-portal-18 Subset install agent prompt](./product-backlog.md#pb-99)    | Webapp/Feature | - [Web-portal-17](./product-backlog.md#pb-98)<br>- [MCP-05](./product-backlog.md#pb-101)<br>- [Web-portal-04](./product-backlog.md#pb-70)<br>- [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)                                                                    | **ToDo** |
-| 9   | feature-57 | Core install one-line copy                 | [Web-portal-19 Core install one-line copy](./product-backlog.md#pb-100)    | Webapp/Feature | - [Web-portal-18](./product-backlog.md#pb-99)<br>- [Web-portal-06](./product-backlog.md#pb-72)<br>- [Web-portal-21](./product-backlog.md#pb-107)                                                                                                                      | **ToDo** |
-| 10  | feature-58 | Pack instructions tabs JSON                | [Spec-seeds-16 Pack instructions tabs JSON](./product-backlog.md#pb-110)   | Framework/Feature | - [Web-portal-24](./product-backlog.md#pb-111)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)                                                                                              | **ToDo** |
-| 11  | feature-59 | Instructions tabs config API               | [Web-portal-24 Instructions tabs config API](./product-backlog.md#pb-111) | Webapp/Feature | - [Spec-seeds-16](./product-backlog.md#pb-110)<br>- [MCP-01](./product-backlog.md#pb-16)                                                                                                           | **ToDo** |
-| 12  | feature-60 | Dynamic instructions tab UI               | [Web-portal-25 Dynamic instructions tab UI](./product-backlog.md#pb-112)   | Webapp/Feature | - [Web-portal-24](./product-backlog.md#pb-111)<br>- [Web-portal-05](./product-backlog.md#pb-71)<br>- [Web-portal-10](./product-backlog.md#pb-77)                                                    | **ToDo** |
+| 3   | task-03    | Unified public site entry slice            | [Web-portal-21 Install-first public landing](./product-backlog.md#pb-107)   | Webapp/Task    | - [Web-portal-07](./product-backlog.md#pb-73)<br>- [Web-portal-20](./product-backlog.md#pb-106)<br>- [Web-portal-19](./product-backlog.md#pb-100)                                                                                                                    | **ToDo** |
+| 4   | feature-53 | Pack install profile manifests             | [Spec-seeds-15 Pack install profile manifests](./product-backlog.md#pb-97) | Framework/Feature | - [Web-portal-17](./product-backlog.md#pb-98)<br>- [MCP-01](./product-backlog.md#pb-16)                                                                                                            | **ToDo** |
+| 5   | feature-54 | Partial install ledger for subset copy     | [MCP-05 Partial install ledger for subset copy](./product-backlog.md#pb-101) | MCP/Feature    | - [MCP-01](./product-backlog.md#pb-16)<br>- [Web-portal-18](./product-backlog.md#pb-99)<br>- `[mcp/mcp-design.md](./mcp/mcp-design.md)`                                                                                                                            | **ToDo** |
+| 6   | feature-55 | Install profile API                        | [Web-portal-17 Install profile API](./product-backlog.md#pb-98)            | Webapp/Feature | - [Spec-seeds-15](./product-backlog.md#pb-97)<br>- [MCP-01](./product-backlog.md#pb-16)                                                                                                            | **ToDo** |
+| 7   | feature-56 | Subset install agent prompt                | [Web-portal-18 Subset install agent prompt](./product-backlog.md#pb-99)    | Webapp/Feature | - [Web-portal-17](./product-backlog.md#pb-98)<br>- [MCP-05](./product-backlog.md#pb-101)<br>- [Web-portal-04](./product-backlog.md#pb-70)<br>- [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)                                                                    | **ToDo** |
+| 8   | feature-57 | Core install one-line copy                 | [Web-portal-19 Core install one-line copy](./product-backlog.md#pb-100)    | Webapp/Feature | - [Web-portal-18](./product-backlog.md#pb-99)<br>- [Web-portal-06](./product-backlog.md#pb-72)<br>- [Web-portal-21](./product-backlog.md#pb-107)                                                                                                                      | **ToDo** |
+| 9   | feature-58 | Pack instructions tabs JSON                | [Spec-seeds-16 Pack instructions tabs JSON](./product-backlog.md#pb-110)   | Framework/Feature | - [Web-portal-24](./product-backlog.md#pb-111)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)                                                                                              | **ToDo** |
+| 10  | feature-59 | Instructions tabs config API               | [Web-portal-24 Instructions tabs config API](./product-backlog.md#pb-111) | Webapp/Feature | - [Spec-seeds-16](./product-backlog.md#pb-110)<br>- [MCP-01](./product-backlog.md#pb-16)                                                                                                           | **ToDo** |
+| 11  | feature-60 | Dynamic instructions tab UI               | [Web-portal-25 Dynamic instructions tab UI](./product-backlog.md#pb-112)   | Webapp/Feature | - [Web-portal-24](./product-backlog.md#pb-111)<br>- [Web-portal-05](./product-backlog.md#pb-71)<br>- [Web-portal-10](./product-backlog.md#pb-77)                                                    | **ToDo** |
 
 ---
 
@@ -626,5 +631,4 @@ Depends on Sprint 7 (engineering skills and seeds).
 | 8 | webapp | [Web-portal-02](./product-backlog.md#pb-49) | Install and update on the instructions page | Implementable | - [Web-portal-01](./product-backlog.md#pb-15)<br>- [MCP-01](./product-backlog.md#pb-16)<br>- [MCP-07](./product-backlog.md#pb-105)<br>- [Agent-04](./product-backlog.md#pb-17) | ToDo |
 | 9 | webapp | [Web-portal-14](./product-backlog.md#pb-88) | README for IDE invoke differences | Implementable | - [Web-portal-01](./product-backlog.md#pb-15)<br>- `[framework-design.md](./framework/framework-design.md)`<br>- `[ide-agent-invoke.md](./knowledge/agent/ide-agent-invoke.md)` | ToDo |
 | 10 | webapp | [Web-portal-20](./product-backlog.md#pb-106) | Canonical public hostname | Implementable | - [Web-portal-09](./product-backlog.md#pb-76) | ToDo |
-| 11 | webapp | [Web-portal-21](./product-backlog.md#pb-107) | Install-first public landing | Implementable | - [Web-portal-07](./product-backlog.md#pb-73)<br>- [Web-portal-20](./product-backlog.md#pb-106) | ToDo |
-| 12 | webapp | [Web-portal-22](./product-backlog.md#pb-108) | Admin routes off public hostname | Implementable | - [Web-portal-09](./product-backlog.md#pb-76)<br>- [Web-portal-20](./product-backlog.md#pb-106) | ToDo |
+| 11 | webapp | [Web-portal-22](./product-backlog.md#pb-108) | Admin routes off public hostname | Implementable | - [Web-portal-09](./product-backlog.md#pb-76)<br>- [Web-portal-20](./product-backlog.md#pb-106) | ToDo |

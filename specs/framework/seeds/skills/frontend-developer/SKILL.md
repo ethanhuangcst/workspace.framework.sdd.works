@@ -4,7 +4,7 @@ description: >
   Implement UI in the project's frontend stack: components, pages, client state,
   data loading, forms, accessibility, and performance. Use when the user asks
   to build or change a screen, component, form, or client flow, wire UI to an
-  API, or says /frontend-developer. frontend-design owns visual direction.
+  API, or says /frontend-developer. frontend-designer owns visual direction.
   testing-expert owns test strategy, runs, and reports. Does not require
   webapp-testing or SDD process files. sdd-spec-to-build may load this skill
   for UI implementation on an SBI.
@@ -16,7 +16,7 @@ The host runs the loop. This skill states what the agent may do, what it loads, 
 
 `{client_root}` is the parent of the folder that contains the loaded agent file. It is where rules and skills install, not where application source lives. Project code stays in the workspace the user opened.
 
-This skill implements UI. It does not replace **frontend-design** for distinctive visual direction or **testing-expert** for test design and runs.
+This skill implements UI. It does not replace **frontend-designer** for distinctive visual direction or **testing-expert** for test design and runs.
 
 ## Capabilities
 
@@ -77,7 +77,7 @@ When the skill writes a file, use the name or path the user gives. Otherwise fol
 
 - Do not hard-code a framework version, port, or library when the user or the repo names one.
 - Do not require a sprint backlog, `artifacts-map.json`, or process files to run.
-- Do not load **frontend-design** for pure bugfix or token tweaks unless the user wants a new visual direction.
+- Do not load **frontend-designer** for pure bugfix or token tweaks unless the user wants a new visual direction.
 - Do not load **testing-expert** unless the user asks for tests, a test strategy, or a test run.
 - Do not load **webapp-testing** or another testing skill for verification.
 - Put user-facing strings behind the project i18n API when i18n exists. When the project has no i18n yet, add the minimal i18n setup with the first shippable screen, or ask the user.
