@@ -72,7 +72,8 @@ describe("resolveInstructionsTabs", () => {
       [INSTRUCTIONS_TABS_PACK_RELATIVE]: defaultTabsConfig,
       "content/features/features.en.md": "## Features\n\n- ethan — Cache tabs EN.\n",
       "content/scrum-in-sdd/scrum-in-sdd.en.md": "# Scrum\n\nCache scrum.\n",
-      "content/invoke-agents/invoke-agents.en.md": "# Invoke\n\nCache invoke.\n",
+      "content/invoke-agents/invoke-agents.en.md":
+        "# Invoke\n\nCache invoke.\n\n| Pattern | What happens |\n| --- | --- |\n| Same chat | Stay in the thread. |\n",
     });
 
     const result = resolveInstructionsTabs("en");
@@ -87,6 +88,10 @@ describe("resolveInstructionsTabs", () => {
     expect(features?.html).toContain("Cache tabs EN");
     expect(features?.contentSource).toBe("cache");
     expect(result.tabs.find((t) => t.id === "setup")?.html).toBeUndefined();
+    const invoke = result.tabs.find((t) => t.id === "invoke-agents");
+    expect(invoke?.html).toContain('<div class="content-table"><table>');
+    expect(invoke?.html).toContain("</table></div>");
+    expect(features?.html).not.toContain("content-table");
   });
 
   it("should_fall_back_to_bundled_config_when_cache_config_invalid", () => {

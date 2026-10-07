@@ -140,7 +140,10 @@ function renderContentMarkdown(markdown: string, relPath: string): string {
   if (relPath.includes("content/features/")) {
     return renderFeaturesMarkdown(markdown);
   }
-  return renderPortalMarkdown(markdown);
+  const html = renderPortalMarkdown(markdown);
+  return html
+    .replaceAll("<table>", '<div class="content-table"><table>')
+    .replaceAll("</table>", "</table></div>");
 }
 
 function resolveContentTab(

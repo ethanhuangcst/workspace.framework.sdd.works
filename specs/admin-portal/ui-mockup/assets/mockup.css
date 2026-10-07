@@ -1682,6 +1682,100 @@ td.table-check {
   color: var(--mute);
 }
 
+.guide-section.portal-content-body h1,
+.guide-section.portal-content-body h2 {
+  font-family: var(--font-ui);
+  letter-spacing: 0;
+  color: var(--ink);
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+.guide-section.portal-content-body h1 {
+  margin: 0 0 0.85rem;
+  font-size: 1.65rem;
+}
+
+.guide-section.portal-content-body h2 {
+  margin: 1.65rem 0 0.75rem;
+  font-size: 1.2rem;
+}
+
+.guide-section.portal-content-body p,
+.guide-section.portal-content-body li {
+  color: var(--ink-2);
+  line-height: 1.65;
+  font-size: 1rem;
+}
+
+.guide-section.portal-content-body p {
+  margin: 0.7rem 0 0;
+  max-width: 40rem;
+}
+
+.guide-section.portal-content-body ul,
+.guide-section.portal-content-body ol {
+  margin: 0.55rem 0 0;
+  padding: 0 0 0 1.35rem;
+  max-width: 40rem;
+}
+
+.guide-section.portal-content-body li {
+  margin: 0.35rem 0;
+}
+
+.guide-section.portal-content-body strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.guide-section.portal-content-body .content-table {
+  width: 100%;
+  margin: 0.15rem 0 0;
+  overflow-x: auto;
+}
+
+.guide-section.portal-content-body table {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+}
+
+.guide-section.portal-content-body th {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  text-align: left;
+  vertical-align: bottom;
+  padding: 0 1.25rem 0.65rem 0;
+  border-bottom: 1.5px solid var(--line-strong);
+}
+
+.guide-section.portal-content-body td {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.55;
+  color: var(--ink-2);
+  vertical-align: top;
+  padding: 0.9rem 1.25rem 0.9rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-section.portal-content-body th:first-child,
+.guide-section.portal-content-body td:first-child {
+  width: 12rem;
+}
+
+.guide-section.portal-content-body code {
+  font-size: 0.88em;
+}
+
 @media (max-width: 640px) {
   .feature-list li {
     grid-template-columns: 1fr;
