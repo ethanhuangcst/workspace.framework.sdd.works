@@ -94,6 +94,17 @@ describe("renderFeaturesMarkdown", () => {
     expect(html).not.toContain("javascript:");
     expect(html).toContain("go");
   });
+
+  it("should_add_heading_id_and_keep_em_dash_list_split", () => {
+    const html = renderFeaturesMarkdown(
+      "## Features\n\n- ethan — The scrum-master agent.\n",
+    );
+    expect(html).toContain('id="features"');
+    expect(html).toContain('class="feature-name">ethan</span>');
+    expect(html).toContain(
+      'class="feature-desc">The scrum-master agent.</span>',
+    );
+  });
 });
 
 describe("readFeaturesCatalog", () => {

@@ -607,7 +607,7 @@ No open rows.
 
 [Back to the top](#sprint-backlog-frameworksddworks)
 
-Sprint Goal: Ethan routes named jobs and guiding proposals; lite HTTP install ships manifest, links, client receipt, prompt, and copy; instructions tabs come from pack JSON; sdd-retrospective meets the current pack skill bar.
+Sprint Goal: Ethan routes named jobs and guiding proposals; lite HTTP install ships manifest, links, client receipt, prompt, and copy; instructions tabs come from pack JSON including the Learn Scrum in SDD code tab; sdd-retrospective meets the current pack skill bar.
 
 Depends on Sprint 7 (engineering skills and seeds).
 
@@ -633,6 +633,8 @@ Depends on Sprint 7 (engineering skills and seeds).
 | 6   | feature-59 | Instructions tabs config API               | [Web-portal-24 Instructions tabs config API](./product-backlog.md#L391) | Webapp/Feature | - [Spec-seeds-16](./product-backlog.md#L277)<br>- [MCP-01](./product-backlog.md#L315)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)                                                                                                           | **ToDo** |
 | 7   | feature-60 | Dynamic instructions tab UI               | [Web-portal-25 Dynamic instructions tab UI](./product-backlog.md#L394)   | Webapp/Feature | - [Web-portal-24](./product-backlog.md#L391)<br>- [Web-portal-05](./product-backlog.md#L363)<br>- [Web-portal-10](./product-backlog.md#L421)<br>- `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                    | **ToDo** |
 | 8   | feature-69 | Skill sdd-retrospective                   | [Skill-24 Pack skill sdd-retrospective](./product-backlog.md#L191)       | Skill/Feature | - [Skill-06](./product-backlog.md#L96)<br>- [Skill-12](./product-backlog.md#L113)<br>- [Agent-02](./product-backlog.md#L68)<br>- [sdd-retrospective](../pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md)<br>- **CE-SKILL-10** | **ToDo** |
+| 9   | feature-70 | Learn Scrum in SDD tab                      | [Web-portal-27 Learn Scrum in SDD tab](./product-backlog.md#L404)         | Webapp/Feature | - [Web-portal-25](./product-backlog.md#L400)<br>- [Spec-seeds-16](./product-backlog.md#L277)<br>- WordPress portfolio embed (sdd.works `/learn/`)<br>- [`app-design.md`](./admin-portal/app-design.md)<br>- spike: `/learn`, `LearnScrumEmbedPanel`                                                                                      | **ToDo** |
+| 10  | feature-71 | Content tab heading anchors                | [Web-portal-28 Content tab heading anchors](./product-backlog.md#pb-125) | Webapp/Feature | - [ADR-109](./adr/ADR-109-content-tab-heading-anchors.md)<br>- [Web-portal-24](./product-backlog.md#L395)<br>- [Web-portal-25](./product-backlog.md#L400)<br>- [Web-portal-07](./product-backlog.md#L377)<br>- [Web-portal-12](./product-backlog.md#L383) | **ToDo** |
 
 ### Retrospective
 

@@ -43,6 +43,18 @@
         "zh-Hans": "content/invoke-agents/invoke-agents.zh-Hans.md",
         "zh-Hant": "content/invoke-agents/invoke-agents.zh-Hant.md"
       }
+    },
+    {
+      "type": "embedded_external_page",
+      "id": "learn-scrum-in-sdd",
+      "labelKey": "admin.guide.tab_learn_scrum",
+      "queryParam": "learn-scrum-in-sdd",
+      "panelTestId": "panel-learn-scrum",
+      "urls": {
+        "en": "https://sdd.works/en/learn/",
+        "zh-Hans": "https://sdd.works/en/learn/",
+        "zh-Hant": "https://sdd.works/en/learn/"
+      }
     }
   ]
 }

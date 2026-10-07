@@ -5,11 +5,20 @@ import { InstructionsPage } from "./InstructionsPage";
 import type { Locale } from "@/i18n/t";
 import type { InstructionsPageTab } from "@/lib/instructions-tabs-page";
 
+const LEARN_EMBED_URL = "https://sdd.works/en/learn/";
+
+const LEARN_TAB_LABEL: Record<Locale, string> = {
+  en: "Learn Scrum in SDD",
+  "zh-Hans": "学习 Scrum in SDD",
+  "zh-Hant": "學習 Scrum in SDD",
+};
+
 function defaultGuideTabs(options?: {
   featuresHtml?: string;
   scrumHtml?: string;
+  includeLearn?: boolean;
 }): InstructionsPageTab[] {
-  return [
+  const tabs: InstructionsPageTab[] = [
     {
       type: "code",
       id: "setup",
@@ -17,6 +26,18 @@ function defaultGuideTabs(options?: {
       labelKey: "admin.guide.tab_setup",
       panelTestId: "panel-setup",
     },
+  ];
+  if (options?.includeLearn) {
+    tabs.push({
+      type: "embedded_external_page",
+      id: "learn-scrum-in-sdd",
+      queryParam: "learn-scrum-in-sdd",
+      labelKey: "admin.guide.tab_learn_scrum",
+      panelTestId: "panel-learn-scrum",
+      embedUrl: LEARN_EMBED_URL,
+    });
+  }
+  tabs.push(
     {
       type: "content",
       id: "features",
@@ -33,7 +54,8 @@ function defaultGuideTabs(options?: {
       panelTestId: "panel-scrum",
       html: options?.scrumHtml ?? "",
     },
-  ];
+  );
+  return tabs;
 }
 
 function renderGuide(
@@ -43,14 +65,16 @@ function renderGuide(
   > & {
     featuresHtml?: string;
     scrumHtml?: string;
+    includeLearn?: boolean;
     onLocaleChange?: () => void;
   },
 ) {
-  const { featuresHtml, scrumHtml, onLocaleChange, ...rest } = props;
+  const { featuresHtml, scrumHtml, includeLearn, onLocaleChange, ...rest } =
+    props;
   return render(
     <InstructionsPage
       onLocaleChange={onLocaleChange ?? (() => undefined)}
-      tabs={defaultGuideTabs({ featuresHtml, scrumHtml })}
+      tabs={defaultGuideTabs({ featuresHtml, scrumHtml, includeLearn })}
       {...rest}
     />,
   );
@@ -138,6 +162,16 @@ describe("InstructionsPage", () => {
       expect(writeText).toHaveBeenCalledWith(SETUP_SENTENCE);
     },
   );
+
+  it("should_pin_hero_and_tabs_in_guide_sticky_when_guide_renders", () => {
+    renderGuide({ locale: "en" });
+
+    const sticky = screen.getByTestId("guide-sticky");
+    expect(sticky.querySelector(".guide-hero")).toBeTruthy();
+    expect(sticky.querySelector(".guide-tabs")).toBeTruthy();
+    expect(sticky.querySelector(".shell-locale")).toBeNull();
+    expect(document.querySelector(".shell-locale")).toBeTruthy();
+  });
 
   it("should_not_show_lite_copy_on_setup_tab", () => {
     renderGuide({ locale: "en" });
@@ -388,4 +422,50 @@ describe("InstructionsPage", () => {
       expect(screen.getByTestId("secret-get")).toHaveTextContent(copy.button);
     },
   );
+
+  it.each(["en", "zh-Hans", "zh-Hant"] as Locale[])(
+    "should_embed_learn_scrum_url_when_tab_is_learn_scrum_and_locale_is_%s",
+    (locale) => {
+      renderGuide({
+        locale,
+        includeLearn: true,
+        activeQueryParam: "learn-scrum-in-sdd",
+      });
+
+      const learnTab = screen.getByTestId("guide-tab-learn-scrum");
+      expect(learnTab).toHaveAttribute("aria-selected", "true");
+      expect(learnTab).toHaveTextContent(LEARN_TAB_LABEL[locale]);
+      expect(learnTab).toHaveAttribute(
+        "href",
+        "/?tab=learn-scrum-in-sdd",
+      );
+
+      const iframe = screen.getByTestId("learn-scrum-iframe");
+      expect(iframe).toHaveAttribute("src", LEARN_EMBED_URL);
+      expect(screen.getByTestId("panel-learn-scrum")).toBeVisible();
+      expect(screen.getByTestId("panel-setup")).not.toBeVisible();
+
+      const fallback = screen
+        .getByTestId("learn-scrum-embed")
+        .querySelector("a[target='_blank']");
+      expect(fallback).not.toBeNull();
+      expect(fallback).toHaveAttribute("href", LEARN_EMBED_URL);
+      expect(fallback).toHaveAttribute("rel", "noopener noreferrer");
+    },
+  );
+
+  it("should_hide_learn_scrum_panel_when_default_setup_tab", () => {
+    renderGuide({ locale: "en", includeLearn: true });
+
+    expect(screen.getByTestId("guide-tab-setup")).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(screen.getByTestId("guide-tab-learn-scrum")).toHaveAttribute(
+      "aria-selected",
+      "false",
+    );
+    expect(screen.getByTestId("panel-setup")).toBeVisible();
+    expect(screen.getByTestId("panel-learn-scrum")).not.toBeVisible();
+  });
 });

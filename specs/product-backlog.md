@@ -1,7 +1,7 @@
 # Product overview — [framework.sdd.works](http://framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-06
+> as_of: 2026-10-07
 > [Definition](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#product-backlogmd)
 
 ---
@@ -401,6 +401,24 @@ This section lists additional product checks on top of the standard Definition o
   - `/` and `/instructions` render the tab list and panels from the same resolver as the API ([Web-portal-24](#pb-111)), not hard-coded Features and Scrum rows ([Web-portal-07](#pb-73), [Web-portal-12](#pb-81)).
   - **Default selected tab** when the URL has no `?tab=` is always **Setup** (`queryParam` `setup`), regardless of array order.
   - Tab **display order** follows the resolved config array. Tab labels use `labelKey` from config. Setup copy and Get secret stay on the `setup` code panel ([Web-portal-06](#pb-72), [Web-portal-13](#pb-83)).
+- <a id="pb-124"></a>[Web-portal-27](#pb-124) Learn Scrum in SDD tab
+  - The instructions page adds a tab with type **`embedded_external_page`** ([ADR-110](./adr/ADR-110-embedded-external-page-tab.md)), id **`learn-scrum-in-sdd`**, query param **`learn-scrum-in-sdd`**, and label key **`admin.guide.tab_learn_scrum`**. It is not a **`code`** tab and not the **`scrum-in-sdd`** markdown tab ([Web-portal-12](#pb-81)).
+  - Bundled and pack [`content/.instructions-tabs.json`](../pack.framework.sdd.works/content/.instructions-tabs.json) include the row. **`urls.en`**, **`urls.zh-Hans`**, and **`urls.zh-Hant`** are all `https://sdd.works/en/learn/` until separate locale pages exist. A missing locale URL uses `urls.en`.
+  - The portal renders one iframe panel for this type. The iframe `src` is the resolved URL. The host must be on the app allowlist (`sdd.works`). Tab label, iframe title, and the open-in-new-tab fallback use i18n keys only.
+  - **Setup** stays a **`code`** tab and the default when the URL has no `?tab=` ([Web-portal-25](#pb-112)).
+  - Depends on [Web-portal-25](#pb-112) and [ADR-110](./adr/ADR-110-embedded-external-page-tab.md).
+- <a id="pb-125"></a>[Web-portal-28](#pb-125) Content tab heading anchors
+  - Every instructions tab with `type` **`content`** renders headings with GitHub-style `id` attributes ([ADR-109](./adr/ADR-109-content-tab-heading-anchors.md)). An in-page link such as `#part-i-the-2020-scrum-guide-summary` scrolls to that heading. The same renderer covers Features, Scrum in SDD, Invoke custom agents, and any later content tab from [Web-portal-25](#pb-112).
+  - The slug uses the heading’s plain text. Bold and other inline marks are stripped. The first duplicate slug is bare. Later duplicates use `slug-1`, `slug-2`. The counter resets per document.
+  - Features em-dash list rows stay unchanged ([Web-portal-07](#pb-73)). Pack markdown files are not edited to add HTML ids.
+  - Headings in the guide body use `scroll-margin-top` so the sticky guide header ([ADR-111](./adr/ADR-111-guide-header-sticky.md), [Web-portal-29](#pb-126)) does not cover the target.
+  - A repeated Index fragment still opens the first matching heading. A separate target for a later duplicate heading waits on a markdown change, which this PBI does not do.
+- <a id="pb-126"></a>[Web-portal-29](#pb-126) Sticky guide header
+  - On `/` and `/instructions`, the logo and title, the tagline `SKILLS.RULES.AGENTS.TEMPLATES`, and the tab names stay on screen while the tab body scrolls ([ADR-111](./adr/ADR-111-guide-header-sticky.md)).
+  - The hairline under the tagline is removed. The tab row keeps its underline and the active tab mark.
+  - The locale switch and the site footer are unchanged. The locale switch is not part of the sticky block.
+  - A narrow viewport may wrap the title inside the sticky block and may scroll the tab row sideways inside that block. The page does not scroll sideways.
+  - In-page heading links still land fully in view ([Web-portal-28](#pb-125)).
 - <a id="pb-82"></a>[Spec-seeds-14](#pb-82) Seed features.md under content/features
   - You finalize the three Features catalog seeds under `content/features/` in the pack repo.
 
@@ -562,6 +580,9 @@ The **lite.sdd.works HTTP installer** is a shorter path for partner sites (for e
 | 79  | webapp    | [Web-portal-25](#pb-112) | Dynamic instructions tab UI                      | Implementable | - [Web-portal-24](#pb-111) - [Web-portal-05](#pb-71) - [Web-portal-10](#pb-77) - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                                                              | Sprint 8 | ToDo    |
 | 80  | framework | [Spec-seeds-17](#pb-121) | Reviewed full pack seeds file                    | Implementable | - [MCP-01](#pb-16) - [Agent-04](#pb-17) - [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md) - [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md) - [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md) - [`.sdd-installed.example.json`](../pack.framework.sdd.works/.sdd-installed.example.json) | —        | ToDo    |
 | 81  | webapp    | [Web-portal-26](#pb-123) | Pack repo file note on Admin Settings            | Implementable | - [ADR-107](./adr/ADR-107-lite-pack-allowlist-filename.md) - [Spec-seeds-15](#pb-97) - [Spec-seeds-16](#pb-110) - [Spec-seeds-18](#pb-122) - [MCP-07](#pb-105) - [`src/content/.admin-note.md`](../src/content/.admin-note.md) | —        | ToDo    |
+| 82  | webapp    | [Web-portal-27](#pb-124) | Learn Scrum in SDD tab                           | Implementable | - [Web-portal-25](#pb-112) - [Spec-seeds-16](#pb-110) - [Web-portal-12](#pb-81) - WordPress portfolio embed on sdd.works - [`admin-portal/app-design.md`](./admin-portal/app-design.md)                                                                                                                                                          | Sprint 8 | ToDo    |
+| 83  | webapp    | [Web-portal-28](#pb-125) | Content tab heading anchors                      | Implementable | - [ADR-109](./adr/ADR-109-content-tab-heading-anchors.md) - [Web-portal-24](#pb-111) - [Web-portal-25](#pb-112) - [Web-portal-07](#pb-73) - [Web-portal-12](#pb-81)                                                                                                                                                                     | Sprint 8 | ToDo    |
+| 84  | webapp    | [Web-portal-29](#pb-126) | Sticky guide header                              | Implementable | - [ADR-111](./adr/ADR-111-guide-header-sticky.md) - [Web-portal-05](#pb-71) - [Web-portal-25](#pb-112) - [Web-portal-28](#pb-125)                                                                                                                                                                                                        | —        | ToDo    |
 
 
 
@@ -751,6 +772,11 @@ The **lite.sdd.works HTTP installer** is a shorter path for partner sites (for e
 | 2026-10-07 | User confirmed [feature-57](../sprint-backlog.md#sprint-8) usable. [Spec-seeds-18](#pb-122) **Done**. |
 | 2026-10-07 | Instructions tabs design confirmed: pack `content/.instructions-tabs.json` + bundled fallback only; `code` and `content` types; default tab always Setup; operator rules in [`src/content/.admin-note.md`](../src/content/.admin-note.md). Updated [Spec-seeds-16](#pb-110), [Web-portal-24](#pb-111), [Web-portal-25](#pb-112), [`app-design.md`](./admin-portal/app-design.md), AC22–AC24. |
 | 2026-10-07 | Pack authoring tree moved from `specs/framework/seeds/` to [`pack.framework.sdd.works/`](../pack.framework.sdd.works/). Living requirement path strings and Definition links retargeted. See [`changes-log.md`](./changes-log.md). |
+| 2026-10-07 | Added [Web-portal-27](#pb-124) **Learn Scrum in SDD** instructions **`code`** tab. Sprint 8 **feature-70**. |
+| 2026-10-07 | [Web-portal-27](#pb-124): requirements set to **`code`** tab embedding **WordPress portfolio** learn pages on sdd.works with locale **i18n** (not a pack markdown tab). |
+| 2026-10-07 | [ADR-109](./adr/ADR-109-content-tab-heading-anchors.md): content tabs emit GitHub-style heading ids. Added [Web-portal-28](#pb-125). Sprint 8 **feature-71**. |
+| 2026-10-07 | [ADR-110](./adr/ADR-110-embedded-external-page-tab.md): tab type `embedded_external_page`. [Web-portal-27](#pb-124) Learn Scrum URLs are all `https://sdd.works/en/learn/`. |
+| 2026-10-07 | [ADR-111](./adr/ADR-111-guide-header-sticky.md): guide logo, tagline, and tabs stay on screen. Tagline hairline removed. Added [Web-portal-29](#pb-126). Unscheduled. |
 
 
 

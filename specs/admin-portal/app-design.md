@@ -387,11 +387,11 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | Install framework.sdd.works to AI tools |
-| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES`; **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /setup/install`); install phrase + `sdd_install_framework` after MCP connect; Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Setup ends with the secret form after the tools table ([ADR-067](../adr/ADR-067-get-secret-on-setup.md), feature-17); footer Admin portal link then copyright |
-| Tabs (WA-06) | Setup, Features, and Scrum in SDD are links (`?tab=features` / `?tab=scrum-in-sdd` on the current path). Click updates client state and the URL, so a full load still opens the selected tab. `.guide-tabs` is `position: relative; z-index: 10`. Inactive panel uses `hidden` with `display: none !important`. Same on `/` and `/instructions`. |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#pb-126)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /setup/install`); install phrase + `sdd_install_framework` after MCP connect; Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Setup ends with the secret form after the tools table ([ADR-067](../adr/ADR-067-get-secret-on-setup.md), feature-17); footer Admin portal link then copyright |
+| Tabs (WA-06) | Setup, Features, and Scrum in SDD are links (`?tab=features` / `?tab=scrum-in-sdd` on the current path). Click updates client state and the URL, so a full load still opens the selected tab. The tab list sits inside `.guide-sticky` (`z-index: 20`). Inactive panel uses `hidden` with `display: none !important`. Same on `/` and `/instructions`. |
 | Guide tab (Web-portal-12 / feature-16) | Third tab after Features (`?tab=scrum-in-sdd`, `#panel-scrum`). Label key `admin.guide.tab_scrum` is `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant` (not translated). Cache path is `<unpacked>/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Fallback is `src/content/scrum-in-sdd/`. The panel uses `.scrum-body`: `h1` is 1.65rem with 2.75rem above later part titles; `h2` is 1.2rem. List items keep inline markdown. No Features em-dash split. Template seeds stay `templates/{locale}/scrum-in-sdd.md`. Get secret stays on Setup ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)). |
 | Secret form (feature-04 / feature-05, placement [ADR-067](../adr/ADR-067-get-secret-on-setup.md) / feature-17) | On Setup only, after the tools table, section `#setup-secret` with no heading. The Features panel does not include the form. Wrapper `.secret-stack`: column, `width: fit-content`, `max-width: 100%`, `gap: 1.25rem` between the lookup row and the result. Form `.secret-lookup` inside the stack: placeholder input (`admin.guide.secret_hint`) + Get secret control (`admin.guide.secret_button`) as `button type="button"` (must not issue a document GET). Catalog: en `Enter the name of the secret, example: sdd-trial-googlemaps` / `Get secret`; zh-Hans `输入要获得的密钥名称，例如：sdd-trial-googlemaps` / `获取密钥`; zh-Hant `輸入要取得的密鑰名稱，例如：sdd-trial-googlemaps` / `獲取密鑰`. CSS: row gap `0.75rem`; input `flex: 0 0 32rem` (does not shrink), width/min/max `32rem`, height `2.125rem`; button content-sized, height `2.125rem`. Found result and not-found notice stretch to the stack (`width: 0; min-width: 100%`) so the right edge lines up with Get secret. Found UI: existing portal `.codeblock` with `CopyButton`, `data-testid="secret-result"`, `aria-live="polite"`. Missing / empty: `.secret-error` (`data-testid="secret-error"`) with `admin.guide.secret_missing` or `admin.guide.secret_empty`. After the result renders, scroll `secret-result` or `secret-error` into view (`block: "start"`). Below `640px`: stack and field full width, button stacks under the field. **Lookup (feature-05):** `POST` one exact `key_name` to a public route that decrypts via the same store as `getKey`; response is only that plaintext value or keyed `admin.guide.secret_missing` (lists no other names). Viewport stays on `#setup-secret` with the Setup tab selected. Exact name match only (no fuzzy match). Mock: [`13-instructions.html`](./ui-mockup/13-instructions.html) (same form in [`01-home.html`](./ui-mockup/01-home.html)). |
-| Test ids | `instructions-guide`, `guide-tab-setup`, `guide-tab-features`, `guide-tab-scrum`, `panel-features`, `features-body`, `panel-scrum`, `scrum-body`, `guide-agents`, `copy-setup-prompt`, `copy-mcp-config`, `secret-lookup`, `secret-name`, `secret-get`, `secret-result`, `secret-error` |
+| Test ids | `instructions-guide`, `guide-sticky`, `guide-tab-setup`, `guide-tab-features`, `guide-tab-scrum`, `panel-features`, `features-body`, `panel-scrum`, `scrum-body`, `guide-agents`, `copy-setup-prompt`, `copy-mcp-config`, `secret-lookup`, `secret-name`, `secret-get`, `secret-result`, `secret-error` |
 | Entry | Home + header open **new tab** |
 | Keys | `admin.guide.*` (secret form: `secret_hint`, `secret_button`, `secret_empty`, `secret_missing`) |
 
@@ -519,6 +519,7 @@ Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scr
 | i18n | Tab labels from `labelKey`; new keys need en / zh-Hans / zh-Hant catalogs |
 | Install | Config and content markdown paths are not on MCP install allow-list |
 | Mockup | [`13-instructions.html`](./ui-mockup/13-instructions.html) shows dynamic tab row; sample **Knowledge** tab is illustrative only |
+| Heading anchors | [ADR-109](../adr/ADR-109-content-tab-heading-anchors.md). See **Content tab heading anchors** below. |
 
 **JSON schema (version 1)**
 
@@ -574,6 +575,16 @@ flowchart LR
 
 Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and scrum route may stay for direct access until a later cleanup story; the instructions page uses instructions-tabs only after feature-60.
 
+#### Embedded external page (feature-70 / ADR-110)
+
+| | |
+| --- | --- |
+| Type | `embedded_external_page` in `content/.instructions-tabs.json` |
+| Last tab | `learn-scrum-in-sdd`. `labelKey` `admin.guide.tab_learn_scrum`. `urls.en`, `urls.zh-Hans`, and `urls.zh-Hant` are all `https://sdd.works/en/learn/` |
+| Panel | One iframe (`learn-scrum-iframe`) plus an open-in-new-tab link. Guide tokens only. No extra card chrome |
+| Allowlist | `https` and host `sdd.works` or `www.sdd.works` |
+| Default tab | Setup when `?tab=` is absent |
+
 #### Mail — `14-email-reset.html` / `15-email-invite.html`
 
 | | |
@@ -609,3 +620,57 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | `14` / `15` email | Resend templates | `email.css` |
 
 Optional confirmation `08-key-created.html` is not a required route — create redirects to list with saved tip.
+
+#### Content tab heading anchors (feature-71 / Web-portal-28)
+
+[ADR-109](../adr/ADR-109-content-tab-heading-anchors.md). [Web-portal-28](../product-backlog.md#pb-125).
+
+##### UI
+
+No new screen, tab, or palette. Content tabs keep the type scale already on `.features-body`, `.scrum-body`, and `.portal-content-body`.
+
+Headings in those three bodies use `scroll-margin-top` so a fragment scroll is not covered by the tab bar. [Web-portal-29](../product-backlog.md#pb-126) raises that offset to the full sticky block (logo, tagline, and tabs). No new color, motion, or label.
+
+##### Technical
+
+Shared renderer: `createRenderer` in [`src/lib/features-catalog.ts`](../../src/lib/features-catalog.ts). Both `renderFeaturesMarkdown` and `renderPortalMarkdown` emit heading `id`s. `renderContentMarkdown` in [`src/lib/instructions-tabs.ts`](../../src/lib/instructions-tabs.ts) stays the only content-tab entry, so every `type: "content"` tab inherits the ids.
+
+Slug rules:
+
+- Plain text of the heading. Strip inline marks such as bold.
+- GitHub-style slug: lowercase, spaces to hyphens, drop punctuation.
+- First use of a slug is the bare id. The next is `slug-1`, then `slug-2`.
+- Reset the counter at the start of each `marked.parse` call.
+
+Features em-dash list splitting stays unchanged. Pack markdown is not rewritten. A repeated Index fragment still targets the first heading.
+
+CSS lives in [`src/styles/portal.css`](../../src/styles/portal.css) and the mockup stylesheet [`specs/admin-portal/ui-mockup/assets/mockup.css`](./ui-mockup/assets/mockup.css) for the same three body classes.
+
+Tests: unit cases in [`src/lib/features-catalog.test.ts`](../../src/lib/features-catalog.test.ts) and [`src/lib/scrum-in-sdd-catalog.test.ts`](../../src/lib/scrum-in-sdd-catalog.test.ts). See [`app-tests.md`](./app-tests.md) §12.
+
+#### Sticky guide header (Web-portal-29)
+
+[ADR-111](../adr/ADR-111-guide-header-sticky.md). [Web-portal-29](../product-backlog.md#pb-126). AC27 in [`app-stories.md`](./app-stories.md).
+
+##### UI
+
+No new screen, palette, or type. The existing logo, title (`admin.guide.title`), tagline (`admin.guide.lead`), and tab names stay. The hairline under the tagline is removed. The tab row keeps its underline and the active tab mark.
+
+The pinned block is one column, left aligned, same width as the guide. On a narrow viewport the title wraps inside the block. The tab names scroll sideways inside the tab row. The page does not scroll sideways.
+
+The locale switch stays in the top-right of the shell and scrolls away. The footer stays at the bottom of the page.
+
+Mockups: [`01-home.html`](./ui-mockup/01-home.html) and [`13-instructions.html`](./ui-mockup/13-instructions.html). Shared rules in [`assets/mockup.css`](./ui-mockup/assets/mockup.css).
+
+##### Technical
+
+Markup in [`src/components/features/InstructionsPage.tsx`](../../src/components/features/InstructionsPage.tsx): wrap `header.guide-hero` and `div.guide-tabs` in `div.guide-sticky` with `data-testid="guide-sticky"`. The locale switch stays in `AuthShell` (`.shell-locale`), outside that wrapper. No new message keys. No API and no auth change.
+
+CSS in [`src/styles/portal.css`](../../src/styles/portal.css), mirrored in the mockup stylesheet:
+
+- `.guide-sticky`: `position: sticky; top: 0; z-index: 20; background: var(--bg)`. Negative horizontal margin equal to `.guide-shell .home-main` padding (`1.5rem`) so the background covers the column gutters. Matching horizontal padding keeps the logo and tabs on the content edge.
+- `.guide-hero`: no `border-bottom`. Bottom spacing about `0.75rem`. No extra padding under the tagline.
+- `.guide-tabs`: keep `border-bottom`. `margin-bottom: 0` so the gap under the tabs belongs to the sticky block's margin. `flex-wrap: nowrap; overflow-x: auto` so extra tabs scroll inside the row.
+- Heading `scroll-margin-top` on `.features-body`, `.scrum-body`, and `.portal-content-body` is at least the sticky block height (logo row, tagline, tab row), replacing the tab-bar-only `4.5rem`.
+
+Tests: component cases on `InstructionsPage` and a browser check on `/` and `/instructions`. See [`app-tests.md`](./app-tests.md) §14.

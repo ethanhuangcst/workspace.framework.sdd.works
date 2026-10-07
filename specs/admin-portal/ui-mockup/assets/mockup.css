@@ -1459,10 +1459,19 @@ td.table-check {
   margin: 0 0 1.5rem;
 }
 
+.guide-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+  margin: 0 -1.5rem 1.75rem;
+  padding: 0 1.5rem;
+}
+
 .guide-hero {
-  margin-bottom: 2.25rem;
-  padding-bottom: 1.75rem;
-  border-bottom: 1px solid var(--line);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .guide-hero-title {
@@ -1535,11 +1544,12 @@ td.table-check {
 
 .guide-tabs {
   display: flex;
+  flex-wrap: nowrap;
   gap: 1.35rem;
-  margin: 0 0 1.75rem;
+  margin: 0;
   border-bottom: 1px solid var(--line);
+  overflow-x: auto;
   position: relative;
-  z-index: 10;
 }
 
 .guide-tab {
@@ -1547,6 +1557,7 @@ td.table-check {
   background: transparent;
   border: 0;
   border-bottom: 2px solid transparent;
+  flex-shrink: 0;
   color: var(--mute);
   cursor: pointer;
   font-family: var(--font-ui);
@@ -1596,6 +1607,27 @@ td.table-check {
   color: var(--mute);
   font-size: 0.95rem;
   line-height: 1.45;
+}
+
+.features-body h1,
+.features-body h2,
+.features-body h3,
+.features-body h4,
+.features-body h5,
+.features-body h6,
+.guide-section.scrum-body h1,
+.guide-section.scrum-body h2,
+.guide-section.scrum-body h3,
+.guide-section.scrum-body h4,
+.guide-section.scrum-body h5,
+.guide-section.scrum-body h6,
+.guide-section.portal-content-body h1,
+.guide-section.portal-content-body h2,
+.guide-section.portal-content-body h3,
+.guide-section.portal-content-body h4,
+.guide-section.portal-content-body h5,
+.guide-section.portal-content-body h6 {
+  scroll-margin-top: 12rem;
 }
 
 .features-body h2,

@@ -6,7 +6,13 @@ export const INSTRUCTIONS_TABS_PACK_RELATIVE = "content/.instructions-tabs.json"
 
 export const DEFAULT_CODE_TAB_ALLOWLIST: readonly string[] = ["setup"];
 
-const TAB_TYPES = new Set(["code", "content"]);
+/** Hosts allowed on embedded_external_page urls (ADR-110). */
+export const EMBED_PAGE_HOST_ALLOWLIST: readonly string[] = [
+  "sdd.works",
+  "www.sdd.works",
+];
+
+const TAB_TYPES = new Set(["code", "content", "embedded_external_page"]);
 const KNOWN_PATH_LOCALES = new Set(["en", "zh-Hans", "zh-Hant"]);
 
 export type ValidateInstructionsTabsConfigOptions = {
@@ -37,6 +43,22 @@ function pathInsideRoot(contentRoot: string, relativePath: string): boolean {
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+export function embedUrlError(url: string): string | null {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return "is not a valid URL";
+  }
+  if (parsed.protocol !== "https:") return "must use https";
+  if (parsed.username || parsed.password) return "must not include userinfo";
+  const host = parsed.hostname.toLowerCase();
+  if (!EMBED_PAGE_HOST_ALLOWLIST.includes(host)) {
+    return `host is not allowlisted: ${host}`;
+  }
+  return null;
 }
 
 export function validateInstructionsTabsConfig(
@@ -127,6 +149,39 @@ export function validateInstructionsTabsConfig(
       }
     }
 
+    if (type === "embedded_external_page") {
+      const urlsRaw = tab.urls;
+      if (
+        urlsRaw === null ||
+        typeof urlsRaw !== "object" ||
+        Array.isArray(urlsRaw)
+      ) {
+        errors.push(`${prefix}.urls must be an object`);
+        continue;
+      }
+      const urls = urlsRaw as Record<string, unknown>;
+      if (!isNonEmptyString(urls.en)) {
+        errors.push(`${prefix}.urls.en is required`);
+      }
+      for (const [locale, url] of Object.entries(urls)) {
+        if (!KNOWN_PATH_LOCALES.has(locale)) {
+          errors.push(`${prefix}.urls unknown locale key: ${locale}`);
+          continue;
+        }
+        if (!isNonEmptyString(url)) {
+          errors.push(`${prefix}.urls.${locale} must be a non-empty string`);
+          continue;
+        }
+        const urlError = embedUrlError(url);
+        if (urlError) {
+          errors.push(`${prefix}.urls.${locale} ${urlError}`);
+        }
+      }
+      if (tab.paths !== undefined) {
+        errors.push(`${prefix} embedded_external_page must not include paths`);
+      }
+    }
+
     if (type === "content") {
       const pathsRaw = tab.paths;
       if (
@@ -192,7 +247,19 @@ export type InstructionsTabContent = {
   paths: Record<string, string>;
 };
 
-export type InstructionsTab = InstructionsTabCode | InstructionsTabContent;
+export type InstructionsTabEmbed = {
+  type: "embedded_external_page";
+  id: string;
+  labelKey: string;
+  queryParam: string;
+  panelTestId: string;
+  urls: Record<string, string>;
+};
+
+export type InstructionsTab =
+  | InstructionsTabCode
+  | InstructionsTabContent
+  | InstructionsTabEmbed;
 
 export type InstructionsTabsDocument = {
   version: 1;

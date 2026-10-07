@@ -165,3 +165,49 @@ Run after dynamic tabs ship, before **feature-60** is **Done**. Fixture cache (`
 - [ ] `GET /api/sdd/features?locale=en` still returns 200 (legacy route until removed)
 - [ ] Invalid cache `content/.instructions-tabs.json` still serves tabs from bundled JSON only
 - [ ] No console or server error on these paths
+
+## 12. Regression after feature-70
+
+Run before **feature-70** is **Done**. [ADR-110](../adr/ADR-110-embedded-external-page-tab.md). AC26 in [`app-stories.md`](./app-stories.md).
+
+| Layer | Check |
+| --- | --- |
+| Unit | Bundled JSON `learn-scrum-in-sdd` is `embedded_external_page`. All three `urls` values are `https://sdd.works/en/learn/`. A host outside `sdd.works` fails validation. |
+| Component | `?tab=learn-scrum-in-sdd` shows `learn-scrum-iframe` with that src in `en`, `zh-Hans`, and `zh-Hant`. Fallback link uses the same href. Setup stays default without `?tab=`. |
+| Browser | Open `/?tab=learn-scrum-in-sdd`. Confirm the iframe or the fallback link. A blank frame is a sdd.works framing policy, not a missing tab. |
+
+## 13. Regression after feature-71
+
+Run before **feature-71** is **Done**. Unit tests in Vitest. No new API route. Markdown files stay unchanged.
+
+| Case | Expect |
+| --- | --- |
+| `# **Part I** The 2020 Scrum Guide Summary` through `renderPortalMarkdown` | `<h1 id="part-i-the-2020-scrum-guide-summary">` |
+| Two headings with plain text `Rules` in one document | ids `rules` and `rules-1` |
+| A second `renderPortalMarkdown` call | slug counter starts again at the bare id |
+| Features markdown with an `h2` and an em-dash list row | heading has an `id`; the row still uses `feature-name` and `feature-desc` |
+| Browser | On `/instructions?tab=scrum-in-sdd`, activate the Part I index link. The heading is in view and not under the tab bar. |
+
+- [ ] Bold Part I heading id matches the Index fragment
+- [ ] Duplicate heading ids use `slug` then `slug-1`
+- [ ] Features em-dash split still works and the heading has an id
+- [ ] Part I index link on the Scrum tab scrolls to that heading
+- [ ] No console or server error on that path
+
+## 14. Regression after Web-portal-29
+
+Run before [Web-portal-29](../product-backlog.md#pb-126) is **Done**. AC27 in [`app-stories.md`](./app-stories.md). [ADR-111](../adr/ADR-111-guide-header-sticky.md). No new API route and no new message keys.
+
+| Layer | Check |
+| --- | --- |
+| Component | `guide-sticky` wraps `guide-hero` and `guide-tabs` on the instructions guide. `guide-hero` has no bottom border. `guide-tabs` keeps a bottom border. Locale markup stays outside `guide-sticky`. |
+| Browser, happy | Open `/` and `/instructions`. Scroll the tab body. Logo, title, tagline, and the selected tab stay at the top. No hairline under the tagline. Tab underline and active mark remain. |
+| Browser, edge | At 375px width, the title may wrap and the tab row may scroll inside the bar. The page does not scroll sideways. The locale switch leaves the viewport on scroll. |
+| Browser, heading | On a content tab, activate a heading link from AC25. The heading sits fully below the pinned block. |
+
+- [ ] `guide-sticky` contains the hero and the tab list, and not the locale switch
+- [ ] Tagline has no bottom border; tab list keeps its bottom border
+- [ ] Scroll on `/` and `/instructions` keeps logo, title, tagline, and tabs in view
+- [ ] 375px viewport: no horizontal page scroll
+- [ ] Heading fragment lands below the pinned block
+- [ ] No console or server error on those paths

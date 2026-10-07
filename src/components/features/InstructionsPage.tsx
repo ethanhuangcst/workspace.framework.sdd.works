@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { t, type Locale } from "@/i18n/t";
 import { AuthShell } from "@/components/layout/AuthShell";
 import { Logo } from "@/components/ui/Logo";
+import { LearnScrumEmbedPanel } from "@/components/features/LearnScrumEmbedPanel";
 import { SetupGuidePanel } from "@/components/features/SetupGuidePanel";
 import {
   contentBodyClassName,
@@ -51,40 +52,42 @@ export function InstructionsPage({
       footerVariant="guide"
     >
       <article className="guide" data-testid="instructions-guide">
-        <header className="guide-hero">
-          <div className="guide-hero-title">
-            <Logo size="header" href="/" />
-            <h1>{t(locale, "admin.guide.title")}</h1>
-          </div>
-          <p className="guide-hero-tag">{t(locale, "admin.guide.lead")}</p>
-        </header>
+        <div className="guide-sticky" data-testid="guide-sticky">
+          <header className="guide-hero">
+            <div className="guide-hero-title">
+              <Logo size="header" href="/" />
+              <h1>{t(locale, "admin.guide.title")}</h1>
+            </div>
+            <p className="guide-hero-tag">{t(locale, "admin.guide.lead")}</p>
+          </header>
 
-        <div
-          className="guide-tabs"
-          role="tablist"
-          aria-label={t(locale, "admin.guide.tabs_label")}
-        >
-          {tabs.map((tab) => (
-            <Link
-              key={tab.id}
-              href={tabHref(tab.queryParam)}
-              scroll={false}
-              className={
-                activeQueryParam === tab.queryParam
-                  ? "guide-tab is-active"
-                  : "guide-tab"
-              }
-              role="tab"
-              id={guideTabDomId(tab.id)}
-              aria-selected={activeQueryParam === tab.queryParam}
-              aria-controls={tab.panelTestId}
-              data-tab={tab.queryParam}
-              data-testid={guideTabTestId(tab.id)}
-              onClick={() => setActiveQueryParam(tab.queryParam)}
-            >
-              {t(locale, tab.labelKey)}
-            </Link>
-          ))}
+          <div
+            className="guide-tabs"
+            role="tablist"
+            aria-label={t(locale, "admin.guide.tabs_label")}
+          >
+            {tabs.map((tab) => (
+              <Link
+                key={tab.id}
+                href={tabHref(tab.queryParam)}
+                scroll={false}
+                className={
+                  activeQueryParam === tab.queryParam
+                    ? "guide-tab is-active"
+                    : "guide-tab"
+                }
+                role="tab"
+                id={guideTabDomId(tab.id)}
+                aria-selected={activeQueryParam === tab.queryParam}
+                aria-controls={tab.panelTestId}
+                data-tab={tab.queryParam}
+                data-testid={guideTabTestId(tab.id)}
+                onClick={() => setActiveQueryParam(tab.queryParam)}
+              >
+                {t(locale, tab.labelKey)}
+              </Link>
+            ))}
+          </div>
         </div>
 
         {tabs.map((tab) => (
@@ -100,6 +103,9 @@ export function InstructionsPage({
           >
             {tab.type === "code" && tab.id === "setup" ? (
               <SetupGuidePanel locale={locale} />
+            ) : null}
+            {tab.type === "embedded_external_page" && tab.embedUrl ? (
+              <LearnScrumEmbedPanel locale={locale} embedUrl={tab.embedUrl} />
             ) : null}
             {tab.type === "content" ? (
               <article

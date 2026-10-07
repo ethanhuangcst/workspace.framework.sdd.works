@@ -33,12 +33,13 @@ export type InstructionsTabsConfigSource = "cache" | "bundled";
 export type ContentMarkdownSource = "cache" | "package";
 
 export type ResolvedInstructionsTab = {
-  type: "code" | "content";
+  type: "code" | "content" | "embedded_external_page";
   id: string;
   labelKey: string;
   queryParam: string;
   panelTestId: string;
   html?: string;
+  embedUrl?: string;
   sourceLocale?: Locale;
   contentSource?: ContentMarkdownSource;
 };
@@ -222,6 +223,15 @@ export function resolveInstructionsTabs(locale: Locale): InstructionsTabsResult 
 
     if (tab.type === "code") {
       return base;
+    }
+
+    if (tab.type === "embedded_external_page") {
+      const embedUrl = tab.urls[locale] ?? tab.urls.en;
+      return {
+        ...base,
+        embedUrl,
+        sourceLocale: tab.urls[locale] ? locale : "en",
+      };
     }
 
     const content = resolveContentTab(tab, locale, unpackedPath);

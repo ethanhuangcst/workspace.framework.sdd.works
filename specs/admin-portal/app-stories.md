@@ -1189,6 +1189,81 @@ Scenario: Tab switching preserves Setup surface and secret placement
   And manual setup and setup copy controls stay on Setup per AC4 and AC21
 ```
 
+#### AC25 — feature-71 / Web-portal-28
+
+[ADR-109](../adr/ADR-109-content-tab-heading-anchors.md). Applies to every `content` tab. Pack markdown is not edited.
+
+```gherkin
+Scenario: Index link scrolls to the matching heading
+  Given a content tab renders markdown that contains a heading "Part I The 2020 Scrum Guide Summary"
+  And the same markdown contains a link to #part-i-the-2020-scrum-guide-summary
+  When the visitor opens that tab and activates the link
+  Then the page scrolls to that heading
+  And the heading element id is part-i-the-2020-scrum-guide-summary
+
+Scenario: A later duplicate heading does not steal the first fragment
+  Given a content tab renders two headings with the same plain text "Rules"
+  When the visitor activates a link to #rules
+  Then the page scrolls to the first Rules heading
+  And the second Rules heading id is rules-1
+```
+
+#### AC26 — feature-70 / Web-portal-27
+
+[ADR-110](../adr/ADR-110-embedded-external-page-tab.md). The Learn Scrum tab is `embedded_external_page`, not `code` and not the Scrum markdown tab.
+
+```gherkin
+Scenario: Learn Scrum tab embeds the shared learn URL
+  Given content/.instructions-tabs.json lists learn-scrum-in-sdd with type embedded_external_page
+  And urls.en, urls.zh-Hans, and urls.zh-Hant are https://sdd.works/en/learn/
+  When the visitor opens / or /instructions with tab=learn-scrum-in-sdd in locale en, zh-Hans, or zh-Hant
+  Then guide-tab-learn-scrum has aria-selected true
+  And the tab label resolves from admin.guide.tab_learn_scrum
+  And learn-scrum-iframe src is https://sdd.works/en/learn/
+  And a link with the same href opens in a new tab
+  And panel-setup is hidden
+
+Scenario: An embed URL on a disallowed host fails config validation
+  Given a tab type is embedded_external_page
+  And urls.en is https://example.com/learn/
+  When validateInstructionsTabsConfig runs
+  Then the result is not ok
+  And the error names the host
+```
+
+#### AC27 — Web-portal-29
+
+[ADR-111](../adr/ADR-111-guide-header-sticky.md). Same chrome on `/` and `/instructions`. No new label keys. The tagline stays `admin.guide.lead`. Tab labels stay the existing tab keys.
+
+```gherkin
+Scenario: Title and tabs stay in view while the body scrolls
+  Given the visitor opens / or /instructions
+  And the guide body is taller than the viewport
+  When the visitor scrolls the tab body
+  Then the logo, the title with key admin.guide.title, the tagline with key admin.guide.lead, and the tab list stay at the top of the viewport
+  And the tagline has no rule under it
+  And the tab list keeps its underline
+  And the selected tab keeps its mark on that underline
+
+Scenario: The locale switch is not pinned with the title
+  Given the visitor opens the guide
+  When the visitor scrolls the tab body
+  Then the locale switch leaves the viewport with the page
+  And the site footer is not part of the pinned block
+
+Scenario: A narrow viewport does not scroll the page sideways
+  Given the viewport is 375px wide
+  And the title wraps inside the pinned block
+  When the visitor scrolls the tab names sideways inside the tab list
+  Then the page itself does not scroll sideways
+  And the logo, title, tagline, and tab list stay pinned
+
+Scenario: A heading link clears the pinned block
+  Given a content tab has a heading link per AC25
+  When the visitor activates that link
+  Then the heading is fully in view below the pinned logo, tagline, and tabs
+```
+
 ---
 
 ## `sdd-admin-i18n` — Admin i18n

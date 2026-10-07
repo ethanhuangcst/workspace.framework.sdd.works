@@ -21,6 +21,7 @@ export function mapResolvedTab(tab: ResolvedInstructionsTab): InstructionsPageTa
     labelKey: tab.labelKey,
     panelTestId: tab.panelTestId,
     html: tab.html,
+    embedUrl: tab.embedUrl,
   };
 }
 

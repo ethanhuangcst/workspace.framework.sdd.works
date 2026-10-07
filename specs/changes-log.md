@@ -8,6 +8,30 @@
 
 ## 2026-10-07
 
+### ADR-110 embedded external page tab
+
+**Why**: Learn Scrum in SDD embeds a WordPress page. The URL and tab name belong in pack JSON, not a hard-coded React panel.
+
+**What changed**: [ADR-110](./adr/ADR-110-embedded-external-page-tab.md). [Web-portal-27](./product-backlog.md#pb-124) uses type `embedded_external_page`. `urls.en`, `urls.zh-Hans`, and `urls.zh-Hant` are `https://sdd.works/en/learn/`. Stories AC26, [`app-design.md`](./admin-portal/app-design.md), and [`app-tests.md`](./admin-portal/app-tests.md) §12.
+
+**Verification**: `npm test -- src/core/seeds/instructions-tabs-config.test.ts src/lib/instructions-tabs.test.ts src/lib/sdd-works-learn-url.test.ts src/components/features/LearnScrumEmbedPanel.test.tsx`.
+
+### Web-portal-28 Content tab heading anchors
+
+**Why**: Index links in content tabs use GitHub fragments. The portal renderer emits headings with no `id`, so those links do not scroll.
+
+**What changed**: [ADR-109](./adr/ADR-109-content-tab-heading-anchors.md). New Implementable PBI [Web-portal-28](./product-backlog.md#pb-125) (`#pb-125`). Sprint 8 SBI **feature-71**. Markdown files stay unchanged. Implementation is not in this entry.
+
+**Verification**: [`product-backlog.md`](./product-backlog.md) table row 83 and [`sprint-backlog.md`](./sprint-backlog.md#sprint-8) feature-71 row.
+
+### Web-portal-27 Learn Scrum in SDD tab
+
+**Why**: Visitors need a **`code`** instructions tab that embeds the **WordPress portfolio** learn course on sdd.works per locale, separate from the pack **Scrum in SDD** markdown tab.
+
+**What changed**: Implementable PBI [Web-portal-27](./product-backlog.md#L404) (`#pb-124`) on **Sprint 8** as **feature-70**. Requirements: `learn-scrum-in-sdd` in tab JSON and `CODE_TAB_REGISTRY`, locale-mapped iframe URLs, i18n keys for label and fallback copy. Spike code: `/learn`, `LearnScrumEmbedPanel`, `sddWorksLearnUrl`.
+
+**Verification**: [`product-backlog.md`](./product-backlog.md) row 82; [`sprint-backlog.md`](./sprint-backlog.md#sprint-8) feature-70.
+
 ### Pack ledger field example basename
 
 **Why**: Pack-root `.sdd-installed.json` looked like a client receipt. Install never copies it.

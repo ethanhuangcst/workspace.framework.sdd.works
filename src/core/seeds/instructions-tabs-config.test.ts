@@ -57,6 +57,7 @@ describe("CE-TABS-01 — default bundled config", () => {
       "features",
       "scrum-in-sdd",
       "invoke-agents",
+      "learn-scrum-in-sdd",
     ]);
   });
 
@@ -163,6 +164,26 @@ describe("CE-TABS-02 — reject invalid config", () => {
       expect(result.errors.some((e) => e.includes("unsafe") || e.includes(".."))).toBe(
         true,
       );
+    }
+  });
+
+  it("should_fail_when_embed_host_is_not_allowlisted", () => {
+    const doc = baseValidDoc();
+    (doc.tabs as unknown[]).push({
+      type: "embedded_external_page",
+      id: "learn-scrum-in-sdd",
+      labelKey: "admin.guide.tab_learn_scrum",
+      queryParam: "learn-scrum-in-sdd",
+      panelTestId: "panel-learn-scrum",
+      urls: { en: "https://example.com/learn/" },
+    });
+    const result = validateInstructionsTabsConfig(doc, {
+      contentRoot: packRoot,
+      checkFilesExist: false,
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.some((e) => e.includes("example.com"))).toBe(true);
     }
   });
 });

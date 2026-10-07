@@ -1,6 +1,7 @@
 import {
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   writeFileSync,
   rmSync,
 } from "node:fs";
@@ -96,6 +97,50 @@ describe("renderPortalMarkdown", () => {
     const html = renderPortalMarkdown("[go](javascript:alert(1))\n");
     expect(html).not.toContain("javascript:");
     expect(html).toContain("go");
+  });
+
+  it("should_render_nested_list_items_in_index", () => {
+    const html = renderPortalMarkdown(
+      "- [Part I Summary](#part-i)\n  - [Purpose](#purpose)\n  - [Definition](#definition)\n",
+    );
+    expect(html).toContain("<ul>");
+    expect(html).toContain("Part I Summary");
+    expect(html).toContain("Purpose");
+    expect(html).toContain("Part I Summary</a><ul>");
+  });
+
+  it("should_render_pack_scrum_index_without_throwing", () => {
+    const md = readFileSync(
+      join(
+        process.cwd(),
+        "pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md",
+      ),
+      "utf8",
+    );
+    expect(() => renderPortalMarkdown(md)).not.toThrow();
+    expect(renderPortalMarkdown(md)).toContain("Scrum in SDD");
+  });
+
+  it("should_add_github_style_id_when_heading_has_bold", () => {
+    const html = renderPortalMarkdown(
+      "# **Part I** The 2020 Scrum Guide Summary\n",
+    );
+    expect(html).toContain('id="part-i-the-2020-scrum-guide-summary"');
+    expect(html).toContain("<strong>Part I</strong>");
+  });
+
+  it("should_suffix_duplicate_heading_ids", () => {
+    const html = renderPortalMarkdown("## Rules\n\n## Rules\n");
+    expect(html).toContain('id="rules"');
+    expect(html).toContain('id="rules-1"');
+  });
+
+  it("should_reset_slug_counter_between_documents", () => {
+    const first = renderPortalMarkdown("## Rules\n");
+    const second = renderPortalMarkdown("## Rules\n");
+    expect(first).toContain('id="rules"');
+    expect(second).toContain('id="rules"');
+    expect(second).not.toContain('id="rules-1"');
   });
 });
 

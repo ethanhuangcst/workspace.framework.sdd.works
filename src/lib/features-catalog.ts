@@ -38,7 +38,29 @@ function formatListItemText(text: string): string {
   return `<span class="feature-name">${escapeHtml(name)}</span><span class="feature-desc">${escapeHtml(desc)}</span>`;
 }
 
-function createRenderer(splitEmDash: boolean): Renderer {
+/** GitHub-style slug of heading plain text (ADR-109). */
+function githubHeadingSlug(plain: string): string {
+  return plain
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
+function nextHeadingId(
+  plain: string,
+  counts: Map<string, number>,
+): string {
+  const base = githubHeadingSlug(plain) || "section";
+  const used = counts.get(base) ?? 0;
+  counts.set(base, used + 1);
+  return used === 0 ? base : `${base}-${used}`;
+}
+
+function createRenderer(
+  splitEmDash: boolean,
+  headingIds: Map<string, number>,
+): Renderer {
   const renderer = new Renderer();
   renderer.html = () => "";
   renderer.link = ({ href, text }: Tokens.Link) => {
@@ -47,21 +69,28 @@ function createRenderer(splitEmDash: boolean): Renderer {
     }
     return `<a href="${escapeHtml(href)}">${escapeHtml(text)}</a>`;
   };
+  renderer.heading = function ({ tokens, depth, text }: Tokens.Heading) {
+    const plain = (text ?? "").replace(/\*+/g, "").trim();
+    const id = nextHeadingId(plain, headingIds);
+    const body = this.parser.parseInline(tokens);
+    return `<h${depth} id="${escapeHtml(id)}">${body}</h${depth}>\n`;
+  };
   renderer.listitem = function (item: Tokens.ListItem) {
     if (splitEmDash) {
       const raw = item.text?.trim() ?? "";
       return `<li>${formatListItemText(raw)}</li>\n`;
     }
-    const body = this.parser.parseInline(item.tokens);
+    const body = this.parser.parse(item.tokens);
     return `<li>${body}</li>\n`;
   };
   return renderer;
 }
 
 function renderMarkdown(markdown: string, splitEmDash: boolean): string {
+  const headingIds = new Map<string, number>();
   const html = marked.parse(markdown, {
     async: false,
-    renderer: createRenderer(splitEmDash),
+    renderer: createRenderer(splitEmDash, headingIds),
     gfm: true,
   }) as string;
   return html.replace(/<\/?script\b[^>]*>/gi, "");
