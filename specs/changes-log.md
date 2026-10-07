@@ -8,6 +8,14 @@
 
 ## 2026-10-07
 
+### Web-portal-30 hostnames learn.sdd.works and sdd.works
+
+**Why**: The WordPress learn site and the framework portal need distinct public hostnames.
+
+**What changed**: Implementable PBI [Web-portal-30](./product-backlog.md#pb-127) (`#pb-127`). WordPress moves to `learn.sdd.works`. The portal moves to `sdd.works` (from `framework.sdd.works`). [Sprint 9](./sprint-backlog.md#sprint-9) opens **ToDo** with SBI **feature-72**. [Web-portal-20](./product-backlog.md#pb-106) points at this cutover.
+
+**Verification**: [`product-backlog.md`](./product-backlog.md) table row 85 and [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) feature-72 row.
+
 ### Sprint 8 close confirm for eight shipped SBIs
 
 **Why**: User confirmed feature-55, feature-56, feature-58, feature-59, feature-60, feature-69, feature-70, and feature-71 usable. Board Status still showed **ToDo** or **WIP** while routes, seeds, tests, and the pack skill were already in the tree.

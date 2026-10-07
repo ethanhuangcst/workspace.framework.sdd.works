@@ -584,7 +584,9 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | Panel | One iframe (`learn-scrum-iframe`) plus an open-in-new-tab link. Guide tokens only. No border on the iframe ([ADR-112](../adr/ADR-112-learn-embed-frame.md)) |
 | Allowlist | `https` and host `sdd.works` or `www.sdd.works` |
 | Default tab | Setup when `?tab=` is absent |
-| Frame | `.learn-embed-frame`: `width: 100%`, `height: auto`, `aspect-ratio: 1 / 1`, `border: 0`. No `min-height: min(72vh, 780px)`. No crop via `transform` or `overflow`. Inner page padding stays on sdd.works |
+| Frame | `.learn-embed-frame`: `width: 100%`, `border: 0`. No fixed `aspect-ratio` ([ADR-114](../adr/ADR-114-learn-embed-auto-height.md)). Height set inline from postMessage. Fallback height until first valid message. No crop via `transform` or `overflow` |
+| Resize | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx) (client): listen for `{ type: "sdd-learn-embed-height", height: number }` from embed host origins. Shared constant in [`src/lib/learn-embed-messaging.ts`](../../src/lib/learn-embed-messaging.ts) (new). |
+| sdd.works dependency | `learn-embedded` page: full-width grid CSS and script that posts height to the portal origin. Not built in this repo. |
 | Copy ([ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md)) | Intro: `admin.guide.learn_scrum_intro`. Fallback: one `Link` with `admin.guide.learn_scrum_open_external`, `href` from `SDD_LEARN_SITE_URL` in [`src/lib/sdd-works-learn-url.ts`](../../src/lib/sdd-works-learn-url.ts) (`https://learn.sdd.works`). Iframe `src` stays `embedUrl` from resolver |
 | Code | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx): drop prefix plus split link keys; one external link. [`messages/*.json`](../../messages/en.json): update intro; replace two fallback keys with one |
 | Embed page | Grid-only view at `https://sdd.works/en/learn-embedded/` (replaces full `/en/learn/` hub in tab `urls`) |

@@ -12,13 +12,13 @@ function frameBlock(css: string): string {
   return css.slice(open + 1, close);
 }
 
-describe("learn-embed-frame CSS (ADR-112)", () => {
-  it("should_use_square_frame_with_no_border_and_no_viewport_min_height", () => {
+describe("learn-embed-frame CSS (ADR-112 / ADR-114)", () => {
+  it("should_use_full_width_with_fallback_min_height_and_no_square_aspect", () => {
     const block = frameBlock(portalCss);
-    expect(block).toMatch(/aspect-ratio:\s*1\s*\/\s*1/);
-    expect(block).toMatch(/border:\s*0/);
     expect(block).toMatch(/width:\s*100%/);
-    expect(block).toMatch(/height:\s*auto/);
+    expect(block).toMatch(/min-height:\s*12rem/);
+    expect(block).toMatch(/border:\s*0/);
+    expect(block).not.toMatch(/aspect-ratio/);
     expect(block).not.toContain("min(72vh");
     expect(portalCss).not.toMatch(
       /\.learn-spike\s+\.learn-embed-frame\s*\{[^}]*min-height/,

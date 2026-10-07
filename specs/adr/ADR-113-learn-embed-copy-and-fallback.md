@@ -18,7 +18,7 @@ Making the nine tiles 20% larger and aligning their left edge with the intro nee
 2. **Fallback link** is one control. Visible text is i18n key `admin.guide.learn_scrum_open_external`. `href` is always `https://learn.sdd.works`. It opens in a new tab with `rel="noopener noreferrer"`.
 3. **Iframe `src`** stays the resolved embed URL from tab config (`https://sdd.works/en/learn-embedded/`). The fallback URL is not read from `urls` in `.instructions-tabs.json`.
 4. Retire `admin.guide.learn_scrum_open_external_prefix` and `admin.guide.learn_scrum_open_external_link` after the single key ships.
-5. **Grid size and tile alignment** are out of scope for framework.sdd.works until sdd.works publishes an embed view with no page chrome and tiles flush to the document edge. Track that work on sdd.works, not as a portal crop.
+5. **Grid layout inside the frame** (padding, flush left edge, tile scale) is owned by the sdd.works `learn-embedded` page ([ADR-114](./ADR-114-learn-embed-auto-height.md)). The portal does not crop the iframe.
 
 ## Rationale
 

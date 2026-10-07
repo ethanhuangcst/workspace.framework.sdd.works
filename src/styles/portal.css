@@ -1562,8 +1562,7 @@ td.table-check {
 
 .learn-embed-frame {
   width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
+  min-height: 12rem;
   border: 0;
   background: var(--surface);
 }

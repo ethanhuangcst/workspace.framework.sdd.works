@@ -10,9 +10,10 @@
 
 ## Current project progress
 
-- Total sprints: 8
+- Total sprints: 9
 - Current WIP sprint: [Sprint 8](#sprint-8)
 - Sprint goal: Ethan routes named jobs and guiding proposals; lite HTTP install ships manifest, links, client receipt, prompt, and copy; instructions tabs come from pack JSON including the Learn Scrum in SDD code tab; sdd-retrospective meets the current pack skill bar.
+- Next planned sprint: [Sprint 9](#sprint-9) (ToDo)
 
 
 
@@ -27,6 +28,7 @@
 - [Sprint 6](#sprint-6)
 - [Sprint 7](#sprint-7)
 - [Sprint 8](#sprint-8)
+- [Sprint 9](#sprint-9)
 - [Unplanned PBIs](#unplanned-pbis)
 
 ---
@@ -661,6 +663,38 @@ Depends on Sprint 7 (engineering skills and seeds).
 
 #### 3. [Oct 7, 2026], feature-55 Lite install file links API done, feature-56 Lite install prompt and one-line copy done, feature-58 Pack instructions tabs JSON done, feature-59 Instructions tabs config API done, feature-60 Dynamic instructions tab UI done, feature-69 Skill sdd-retrospective done, feature-70 Learn Scrum in SDD tab done, feature-71 Content tab heading anchors done
 - At the next Sprint-end, score whether same-day board refreshes after multi-SBI ships landed; inspect the next similar close batch.
+
+---
+
+<a id="sprint-9"></a>
+
+## Sprint 9
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
+Sprint Goal: Visitors use the portal at sdd.works and the WordPress learn course at learn.sdd.works.
+
+Depends on Sprint 8 (Learn embed tab and content tabs).
+
+**Status: ToDo**
+
+### **Done**
+
+No rows yet.
+
+### **WIP**
+
+No open rows.
+
+### **ToDo**
+
+| #   | Code       | SBI                                        | Parent PBI                                                                 | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
+| --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 1   | feature-72 | Hostnames learn.sdd.works and sdd.works    | [Web-portal-30 Hostnames learn.sdd.works and sdd.works](./product-backlog.md#pb-127) | Webapp/Feature | - [Web-portal-20](./product-backlog.md#pb-106)<br>- [Web-portal-09](./product-backlog.md#pb-76)<br>- [Web-portal-22](./product-backlog.md#pb-108)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- DNS, TLS, redirects, embed allowlist, setup copy URLs | **ToDo** |
+
+### Retrospective
+
+No entries yet.
 
 ---
 

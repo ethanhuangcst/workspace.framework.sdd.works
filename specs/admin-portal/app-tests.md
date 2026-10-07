@@ -242,3 +242,21 @@ Run before the Learn copy and fallback change ships. AC29 in [`app-stories.md`](
 - [ ] Single fallback key; old prefix and link keys gone
 - [ ] Iframe src unchanged; fallback href is learn.sdd.works
 - [ ] No console or server error on that path
+
+## 17. Regression after ADR-114
+
+Run before the Learn auto-height change ships. AC30 in [`app-stories.md`](./app-stories.md). [ADR-114](../adr/ADR-114-learn-embed-auto-height.md). Supersedes ADR-112 square frame checks in §15 where they conflict.
+
+| Layer | Check |
+| --- | --- |
+| CSS | `.learn-embed-frame` has `width: 100%`, `border: 0`, no `aspect-ratio: 1 / 1`, no `min(72vh`. |
+| Component | `LearnScrumEmbedPanel` registers a `message` listener with origin allowlist. Valid `sdd-learn-embed-height` sets iframe `height`. Unknown types and bad origins are ignored. Fallback height applies before the first valid message. |
+| Contract | Message type string `sdd-learn-embed-height` lives in one module (for example `src/lib/learn-embed-messaging.ts`) and is imported by the panel and tests. |
+| Browser | On `/?tab=learn-scrum-in-sdd`, iframe width matches intro column. After sdd.works posts height, the frame height fits the grid without a large empty square. |
+
+- [ ] No fixed square aspect ratio on the iframe
+- [ ] postMessage origin gate tested
+- [ ] Height update tested with a mocked message
+- [ ] No console or server error on that path
+
+**Dependency (sdd.works, manual or separate repo):** `learn-embedded` posts `sdd-learn-embed-height` and uses full-width embed CSS per ADR-114.

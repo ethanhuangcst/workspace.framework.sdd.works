@@ -405,9 +405,9 @@ This section lists additional product checks on top of the standard Definition o
   - The instructions page adds a tab with type **`embedded_external_page`** ([ADR-110](./adr/ADR-110-embedded-external-page-tab.md)), id **`learn-scrum-in-sdd`**, query param **`learn-scrum-in-sdd`**, and label key **`admin.guide.tab_learn_scrum`**. It is not a **`code`** tab and not the **`scrum-in-sdd`** markdown tab ([Web-portal-12](#pb-81)).
   - Bundled and pack [`content/.instructions-tabs.json`](../pack.framework.sdd.works/content/.instructions-tabs.json) include the row. **`urls.en`**, **`urls.zh-Hans`**, and **`urls.zh-Hant`** are all `https://sdd.works/en/learn-embedded/` until separate locale pages exist. A missing locale URL uses `urls.en`.
   - The portal renders one iframe panel for this type. The iframe `src` is the resolved URL. The host must be on the app allowlist (`sdd.works`). Tab label, iframe title, and the open-in-new-tab fallback use i18n keys only.
-  - The iframe has no border. The frame is square (`aspect-ratio: 1 / 1`) and fills the guide column ([ADR-112](./adr/ADR-112-learn-embed-frame.md)). Portal CSS does not restyle the WordPress page inside the frame.
+  - The iframe has no border and `width: 100%` of the guide column ([ADR-112](./adr/ADR-112-learn-embed-frame.md)). Height follows the embed document via postMessage ([ADR-114](./adr/ADR-114-learn-embed-auto-height.md)). Portal CSS does not restyle the WordPress page inside the frame.
   - Intro copy tells the visitor to complete the nine modules to learn Scrum in SDD ([ADR-113](./adr/ADR-113-learn-embed-copy-and-fallback.md)). The new-tab link text is one i18n string and opens `https://learn.sdd.works`. The iframe `src` stays the embed URL from tab config.
-  - A 20% larger grid and left alignment of tiles with the intro wait on a grid-only embed URL on sdd.works. This PBI does not crop the iframe.
+  - Flush left grid and tile scale on the embed page are sdd.works changes under ADR-114. This PBI does not crop or scale the iframe.
   - **Setup** stays a **`code`** tab and the default when the URL has no `?tab=` ([Web-portal-25](#pb-112)).
   - Depends on [Web-portal-25](#pb-112) and [ADR-110](./adr/ADR-110-embedded-external-page-tab.md).
 - <a id="pb-125"></a>[Web-portal-28](#pb-125) Content tab heading anchors
@@ -435,6 +435,14 @@ This section lists additional product checks on top of the standard Definition o
 - <a id="pb-106"></a>[Web-portal-20](#pb-106) Canonical public hostname
   - One hostname is canonical for marketing and instructions. The other redirects or serves the same app without duplicating setup flows.
   - Operators document redirect and routing rules.
+  - The concrete hostname cutover is [Web-portal-30](#pb-127).
+- <a id="pb-127"></a>[Web-portal-30](#pb-127) Hostnames learn.sdd.works and sdd.works
+  - The WordPress learn site moves from `sdd.works` to `learn.sdd.works`.
+  - The framework portal (today `framework.sdd.works`) becomes the public site at `sdd.works`.
+  - DNS, TLS, host config, and redirects land so visitors and bookmarks reach the new hosts. `framework.sdd.works` redirects to `sdd.works`. Old WordPress paths on `sdd.works` redirect to `learn.sdd.works` where needed.
+  - App and pack strings that name the hosts update: Learn embed and fallback URLs ([Web-portal-27](#pb-124)), iframe allowlist, setup copy (`GET /setup`), and operator docs.
+  - Admin routes stay off the public entry hostname or path per [Web-portal-22](#pb-108).
+  - Depends on [Web-portal-20](#pb-106) intent and [Web-portal-09](#pb-76). Coordinates with [Web-portal-27](#pb-124) URL rows.
 - <a id="pb-107"></a>[Web-portal-21](#pb-107) Install-first public landing
   - The partner public site (for example 2study.ai) landing leads with the framework lite or full install prompt and links to setup and instructions.
   - This PBI is not framework.sdd.works `/` redesign; that site already serves the instructions guide ([Web-portal-09](#pb-76)).
@@ -586,6 +594,7 @@ The **lite.sdd.works HTTP installer** is a shorter path for partner sites (for e
 | 82  | webapp    | [Web-portal-27](#pb-124) | Learn Scrum in SDD tab                           | Implementable | - [Web-portal-25](#pb-112) - [Spec-seeds-16](#pb-110) - [Web-portal-12](#pb-81) - WordPress portfolio embed on sdd.works - [`admin-portal/app-design.md`](./admin-portal/app-design.md)                                                                                                                                                          | Sprint 8 | Done    |
 | 83  | webapp    | [Web-portal-28](#pb-125) | Content tab heading anchors                      | Implementable | - [ADR-109](./adr/ADR-109-content-tab-heading-anchors.md) - [Web-portal-24](#pb-111) - [Web-portal-25](#pb-112) - [Web-portal-07](#pb-73) - [Web-portal-12](#pb-81)                                                                                                                                                                     | Sprint 8 | Done    |
 | 84  | webapp    | [Web-portal-29](#pb-126) | Sticky guide header                              | Implementable | - [ADR-111](./adr/ADR-111-guide-header-sticky.md) - [Web-portal-05](#pb-71) - [Web-portal-25](#pb-112) - [Web-portal-28](#pb-125)                                                                                                                                                                                                        | —        | ToDo    |
+| 85  | webapp    | [Web-portal-30](#pb-127) | Hostnames learn.sdd.works and sdd.works          | Implementable | - [Web-portal-20](#pb-106) - [Web-portal-09](#pb-76) - [Web-portal-22](#pb-108) - [Web-portal-27](#pb-124)                                                                                                                                                                                                                            | Sprint 9 | ToDo    |
 
 
 
@@ -782,7 +791,9 @@ The **lite.sdd.works HTTP installer** is a shorter path for partner sites (for e
 | 2026-10-07 | [ADR-111](./adr/ADR-111-guide-header-sticky.md): guide logo, tagline, and tabs stay on screen. Tagline hairline removed. Added [Web-portal-29](#pb-126). Unscheduled. |
 | 2026-10-07 | [ADR-112](./adr/ADR-112-learn-embed-frame.md): Learn iframe is square and has no border. URL stays `https://sdd.works/en/learn/`. |
 | 2026-10-07 | [ADR-113](./adr/ADR-113-learn-embed-copy-and-fallback.md): Learn intro and fallback copy. Fallback opens `https://learn.sdd.works`. Embed URL unchanged. |
+| 2026-10-07 | [ADR-114](./adr/ADR-114-learn-embed-auto-height.md): Learn iframe auto height via postMessage. Supersedes ADR-112 square aspect ratio. sdd.works embed layout is a dependency. |
 | 2026-10-07 | User confirmed feature-55, feature-56, feature-58–60, feature-69–71 usable. Parent PBIs **Done**: [Web-portal-17](#pb-98), [Web-portal-18](#pb-99), [Spec-seeds-16](#pb-110), [Web-portal-24](#pb-111), [Web-portal-25](#pb-112), [Skill-24](#pb-120), [Web-portal-27](#pb-124), [Web-portal-28](#pb-125). [Spec-seeds-15](#pb-97) stays **ToDo** until [MCP-07](#pb-105). |
+| 2026-10-07 | Added [Web-portal-30](#pb-127) hostname cutover: WordPress → `learn.sdd.works`, portal → `sdd.works`. Sprint 9 **feature-72**. |
 
 
 

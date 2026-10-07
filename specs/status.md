@@ -18,6 +18,7 @@
 | Sprint 1 - 6 | Done | - Sprint 1 closed 2026-09-25.<br>- Sprint 2 closed 2026-09-26.<br>- Sprint 3 closed the web portal and MCP for R2.<br>- Sprint 4 closed 2026-10-03.<br>- [Sprint 5](./sprint-backlog.md#sprint-5) closed 2026-10-05.<br>- [Sprint 6](./sprint-backlog.md#sprint-6) closed 2026-10-05. |
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | WIP | - Twelve SBIs: ten **Done** ([feature-53](./sprint-backlog.md#sprint-8), [feature-57](./sprint-backlog.md#sprint-8), [feature-55](./sprint-backlog.md#sprint-8), [feature-56](./sprint-backlog.md#sprint-8), [feature-58](./sprint-backlog.md#sprint-8)–[feature-60](./sprint-backlog.md#sprint-8), [feature-69](./sprint-backlog.md#sprint-8)–[feature-71](./sprint-backlog.md#sprint-8)). **WIP:** [feature-51](./sprint-backlog.md#sprint-8), [task-01](./sprint-backlog.md#sprint-8). |
+| [Sprint 9](./sprint-backlog.md#sprint-9) | ToDo | - One SBI **ToDo**: [feature-72](./sprint-backlog.md#sprint-9) hostnames (`learn.sdd.works` for WordPress; portal at `sdd.works`). |
 | Unplanned PBIs | ToDo | - 12 rows in [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis). Includes [Web-portal-21](./product-backlog.md#L438) (partner site), [Web-portal-26](./product-backlog.md#L419), [MCP-07](./product-backlog.md#L325). |
 
 ## where we are now
@@ -28,6 +29,7 @@
 ## what could be the next
 
 - Continue [feature-51](./sprint-backlog.md#sprint-8) and [task-01](./sprint-backlog.md#sprint-8) to finish Agent-03 and Agent-02 on Sprint 8.
+- After Sprint 8, start [Sprint 9](./sprint-backlog.md#sprint-9) [feature-72](./sprint-backlog.md#sprint-9) hostname cutover ([Web-portal-30](./product-backlog.md#pb-127)).
 - [Spec-seeds-15](./product-backlog.md#L474) stays **ToDo** until [MCP-07](./product-backlog.md#L328) puts the lite allow-list in production sync cache and the install tarball.
 - [Web-portal-21](./product-backlog.md#L438) install-first landing is **unplanned** (2study.ai workspace, not Sprint 8).
 
@@ -63,4 +65,4 @@
 | 14 | Add practices section feature-break-down | - [feature-38 Pack rule sdd-incremental-delivery.mdc](./sprint-backlog.md#sprint-6) | Sprint 6 | Sprint 6 |
 | 15 | sdd-review-status needs to review the RID log | - [Skill-12 Pack skill sdd-review-status](./product-backlog.md#L113) | Sprint 5 | Sprint 6 |
 
-Last updated: 2026-10-07 close confirm feature-55, feature-56, feature-58–60, feature-69–71
+Last updated: 2026-10-07 added Sprint 9 / Web-portal-30 feature-72

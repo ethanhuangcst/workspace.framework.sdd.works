@@ -1,16 +1,13 @@
 import { existsSync, statSync } from "node:fs";
 import { join, resolve, sep } from "node:path";
+import { EMBED_PAGE_HOST_ALLOWLIST } from "@/lib/embed-page-host-allowlist";
 
 /** Pack path after sync (relative to unpack root). Spec-seeds-16. */
 export const INSTRUCTIONS_TABS_PACK_RELATIVE = "content/.instructions-tabs.json";
 
 export const DEFAULT_CODE_TAB_ALLOWLIST: readonly string[] = ["setup"];
 
-/** Hosts allowed on embedded_external_page urls (ADR-110). */
-export const EMBED_PAGE_HOST_ALLOWLIST: readonly string[] = [
-  "sdd.works",
-  "www.sdd.works",
-];
+export { EMBED_PAGE_HOST_ALLOWLIST };
 
 const TAB_TYPES = new Set(["code", "content", "embedded_external_page"]);
 const KNOWN_PATH_LOCALES = new Set(["en", "zh-Hans", "zh-Hant"]);

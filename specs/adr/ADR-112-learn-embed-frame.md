@@ -13,7 +13,7 @@ The portfolio on that page is a 3 by 3 grid of square tiles. The frame is a tall
 ## Decision
 
 1. `.learn-embed-frame` has no border and no border radius.
-2. The frame is `width: 100%`, `height: auto`, and `aspect-ratio: 1 / 1`. Drop `min-height: min(72vh, 780px)` and the `.learn-spike` min-height override.
+2. The frame is `width: 100%` and fills the guide column. Drop `min-height: min(72vh, 780px)` and the `.learn-spike` min-height override. **Fixed `aspect-ratio: 1 / 1` shipped under this ADR and is superseded by [ADR-114](./ADR-114-learn-embed-auto-height.md)** (auto height via postMessage).
 3. The portal does not crop the iframe with `transform`, `overflow: hidden`, or a negative offset.
 4. Tab `urls` use the grid-only embed page `https://sdd.works/en/learn-embedded/` (2026-10-07). Portal CSS does not crop the iframe.
 

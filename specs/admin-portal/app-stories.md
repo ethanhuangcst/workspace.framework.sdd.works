@@ -1266,14 +1266,13 @@ Scenario: A heading link clears the pinned block
 
 #### AC28 — Web-portal-27 / ADR-112
 
-[ADR-112](../adr/ADR-112-learn-embed-frame.md). The embed URL stays AC26. No new label keys.
+[ADR-112](../adr/ADR-112-learn-embed-frame.md). The embed URL stays AC26. No new label keys. Square `aspect-ratio` checks are superseded by AC30 ([ADR-114](../adr/ADR-114-learn-embed-auto-height.md)).
 
 ```gherkin
-Scenario: Learn embed frame is square and has no border
+Scenario: Learn embed frame has no border and fills column width
   Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
   When the Learn Scrum panel is shown
   Then learn-scrum-iframe has no border
-  And the iframe box uses aspect-ratio 1 / 1
   And the iframe width fills the guide column
   And the iframe does not use a viewport min-height
   And learn-scrum-iframe src is still https://sdd.works/en/learn-embedded/
@@ -1281,7 +1280,7 @@ Scenario: Learn embed frame is square and has no border
 
 #### AC29 — Web-portal-27 / ADR-113
 
-[ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md). Embed URL stays AC26. Grid size and tile alignment inside the frame are out of scope.
+[ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md). Embed URL stays AC26. Inner grid layout is sdd.works ([ADR-114](../adr/ADR-114-learn-embed-auto-height.md)).
 
 ```gherkin
 Scenario: Learn intro and fallback use separate URLs
@@ -1292,6 +1291,21 @@ Scenario: Learn intro and fallback use separate URLs
   And a link opens https://learn.sdd.works in a new tab
   And the link visible text resolves from admin.guide.learn_scrum_open_external
   And the link does not use admin.guide.learn_scrum_open_external_prefix
+```
+
+#### AC30 — Web-portal-27 / ADR-114
+
+[ADR-114](../adr/ADR-114-learn-embed-auto-height.md). Portal half only. sdd.works embed CSS and postMessage script are a dependency for a tight fit.
+
+```gherkin
+Scenario: Learn iframe height follows the embed document
+  Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
+  When the Learn Scrum panel is shown
+  Then learn-scrum-iframe width fills the guide column
+  And learn-scrum-iframe does not use aspect-ratio 1 / 1
+  When the portal receives a valid sdd-learn-embed-height message from sdd.works
+  Then learn-scrum-iframe height matches the reported height in pixels
+  And the portal ignores postMessage from origins outside the embed host allowlist
 ```
 
 ---
