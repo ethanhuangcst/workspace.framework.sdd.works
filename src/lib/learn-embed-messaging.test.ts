@@ -5,6 +5,8 @@ import {
   estimateLearnEmbedGridHeightPx,
   isAllowedLearnEmbedMessageOrigin,
   parseLearnEmbedHeightMessage,
+  resolveLearnEmbedFrameHeightPx,
+  LEARN_EMBED_HEIGHT_SLACK_PX,
 } from "./learn-embed-messaging";
 
 describe("learn-embed-messaging", () => {
@@ -43,7 +45,14 @@ describe("learn-embed-messaging", () => {
   });
 
   it("should_estimate_grid_height_from_iframe_width", () => {
-    expect(estimateLearnEmbedGridHeightPx(900)).toBe(838);
-    expect(estimateLearnEmbedGridHeightPx(952)).toBe(886);
+    expect(estimateLearnEmbedGridHeightPx(900)).toBe(675);
+    expect(estimateLearnEmbedGridHeightPx(952)).toBe(714);
+  });
+
+  it("should_cap_postMessage_height_to_grid_estimate_plus_slack", () => {
+    const width = 900;
+    const cap = estimateLearnEmbedGridHeightPx(width) + LEARN_EMBED_HEIGHT_SLACK_PX;
+    expect(resolveLearnEmbedFrameHeightPx(2000, width)).toBe(cap);
+    expect(resolveLearnEmbedFrameHeightPx(400, width)).toBe(400);
   });
 });

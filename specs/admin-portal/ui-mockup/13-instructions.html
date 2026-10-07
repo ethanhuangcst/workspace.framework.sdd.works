@@ -292,41 +292,6 @@
               </table>
             </div>
           </section>
-
-          <section class="guide-section" id="setup-secret">
-            <div class="secret-stack">
-              <form class="secret-lookup" data-testid="secret-lookup">
-                <input
-                  class="input-box"
-                  type="text"
-                  name="secret_name"
-                  autocomplete="off"
-                  spellcheck="false"
-                  value="sdd-trial-googlemaps"
-                  data-i18n="admin.guide.secret_hint"
-                  data-i18n-attr="placeholder"
-                  placeholder="Enter the name of the secret, example: sdd-trial-googlemaps"
-                  data-testid="secret-name"
-                />
-                <button class="btn" type="button" data-i18n="admin.guide.secret_button" data-testid="secret-get">
-                  Get secret
-                </button>
-              </form>
-              <div class="codeblock secret-result-block" data-testid="secret-result" aria-live="polite">
-                <pre class="codeblock-text mono secret-result-text">sample-secret-value</pre>
-                <button
-                  type="button"
-                  class="codeblock-copy"
-                  data-i18n="admin.keys.copy"
-                  data-copy="sample-secret-value"
-                  data-testid="secret-result-copy"
-                >
-                  Copy
-                </button>
-              </div>
-              <p class="field-note secret-error" hidden data-testid="secret-error" aria-live="polite"></p>
-            </div>
-          </section>
         </div>
 
         <div
@@ -413,6 +378,88 @@
         <div
           class="guide-tab-panel"
           role="tabpanel"
+          id="panel-learn-scrum"
+          aria-labelledby="tab-learn-scrum-in-sdd"
+          data-panel="learn-scrum-in-sdd"
+          hidden
+          data-testid="panel-learn-scrum"
+        >
+          <section class="learn-embed" data-testid="learn-scrum-embed">
+            <div
+              class="learn-embed-frame-host"
+              aria-busy="true"
+              aria-label="Loading course"
+              data-mockup-state="loading"
+            >
+              <div
+                class="learn-embed-skeleton"
+                data-testid="learn-embed-loading"
+                aria-hidden="true"
+              >
+                <span class="learn-embed-skeleton-cell"></span>
+                <span class="learn-embed-skeleton-cell"></span>
+                <span class="learn-embed-skeleton-cell"></span>
+                <span class="learn-embed-skeleton-cell"></span>
+                <span class="learn-embed-skeleton-cell"></span>
+                <span class="learn-embed-skeleton-cell"></span>
+                <span class="learn-embed-skeleton-cell"></span>
+                <span class="learn-embed-skeleton-cell"></span>
+                <span class="learn-embed-skeleton-cell"></span>
+              </div>
+              <span class="sr-only" data-i18n="admin.guide.learn_scrum_embed_loading">Loading course</span>
+              <iframe
+                class="learn-embed-frame"
+                data-testid="learn-scrum-iframe"
+                src="https://sdd.works/en/learn-embedded/"
+                title="Learn Scrum in SDD course"
+                loading="lazy"
+              ></iframe>
+            </div>
+            <p class="learn-embed-fallback">
+              <a href="https://learn.sdd.works" target="_blank" rel="noopener noreferrer" data-i18n="admin.guide.learn_scrum_open_external">
+                Open learn.sdd.works in a new tab.
+              </a>
+            </p>
+            <section class="guide-section learn-embed-secret" id="learn-secret">
+              <div class="secret-stack">
+                <form class="secret-lookup secret-row-grid" data-testid="secret-lookup">
+                  <input
+                    class="input-box"
+                    type="text"
+                    name="secret_name"
+                    autocomplete="off"
+                    spellcheck="false"
+                    value="cursor-qwen"
+                    data-i18n="admin.guide.secret_hint"
+                    data-i18n-attr="placeholder"
+                    placeholder="Enter the name of the secret, example: sdd-trial-googlemaps"
+                    data-testid="secret-name"
+                  />
+                <button class="btn secret-action-btn" type="button" data-i18n="admin.guide.secret_button" data-testid="secret-get">
+                  Get secret
+                </button>
+              </form>
+                <div class="secret-result-row secret-row-grid" data-testid="secret-result" aria-live="polite">
+                  <pre class="input-box mono secret-result-value">xyz-cursor-qwen</pre>
+                  <button
+                    type="button"
+                    class="btn secret-action-btn"
+                    data-i18n="admin.guide.secret_copy"
+                    data-copy="xyz-cursor-qwen"
+                    data-testid="secret-result-copy"
+                  >
+                    Copy secret
+                  </button>
+                </div>
+                <p class="field-note secret-error" hidden data-testid="secret-error" aria-live="polite"></p>
+              </div>
+            </section>
+          </section>
+        </div>
+
+        <div
+          class="guide-tab-panel"
+          role="tabpanel"
           id="panel-knowledge"
           aria-labelledby="tab-knowledge"
           data-panel="knowledge"
@@ -430,6 +477,8 @@
         <a
           class="site-footer-admin"
           href="02-login.html"
+          target="_blank"
+          rel="noopener noreferrer"
           data-i18n="admin.footer.admin_portal"
           data-testid="footer-admin-portal"
         >Admin portal</a>

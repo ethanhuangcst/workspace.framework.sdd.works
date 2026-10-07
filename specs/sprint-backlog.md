@@ -613,7 +613,7 @@ Sprint Goal: Ethan routes named jobs and guiding proposals; lite HTTP install sh
 
 Depends on Sprint 7 (engineering skills and seeds).
 
-**Status: WIP**
+**Status: Done**
 
 ### **Done**
 
@@ -629,13 +629,12 @@ Depends on Sprint 7 (engineering skills and seeds).
 | 8   | feature-69 | Skill sdd-retrospective | [Skill-24 Pack skill sdd-retrospective](./product-backlog.md#L191) | Skill/Feature | - [`sdd-retrospective`](../pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md)<br>- **CE-SKILL-10** | **Done** |
 | 9   | feature-70 | Learn Scrum in SDD tab | [Web-portal-27 Learn Scrum in SDD tab](./product-backlog.md#L404) | Webapp/Feature | - [ADR-110](./adr/ADR-110-embedded-external-page-tab.md)<br>- [`LearnScrumEmbedPanel`](../src/components/features/LearnScrumEmbedPanel.tsx) | **Done** |
 | 10  | feature-71 | Content tab heading anchors | [Web-portal-28 Content tab heading anchors](./product-backlog.md#L413) | Webapp/Feature | - [ADR-109](./adr/ADR-109-content-tab-heading-anchors.md)<br>- GitHub-style heading ids in content-tab renderers | **Done** |
+| 11  | feature-51 | Agent guiding proposals | [Agent-03 Guiding proposals from framework knowledge](./product-backlog.md#L73) | Agent/Feature | - [coach-knowledge.md](../pack.framework.sdd.works/templates/EN/coach-knowledge.md)<br>- [ADR-106](./adr/ADR-106-coach-knowledge-file.md)<br>- [`ethan.md`](../pack.framework.sdd.works/agents/ethan.md) Guiding proposals | **Done** |
+| 12  | task-01 | Complete Agent-02 job index in ethan.md | [Agent-02 Skill call for a named job](./product-backlog.md#L68) | Agent/Task | - [`ethan.md`](../pack.framework.sdd.works/agents/ethan.md) Jobs<br>- [`constants.json`](../pack.framework.sdd.works/templates/constants.json) `skills` keys | **Done** |
 
 ### **WIP**
 
-| #   | Code       | SBI                                        | Parent PBI                                                                 | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
-| --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | feature-51 | Agent guiding proposals                    | [Agent-03 Guiding proposals from framework knowledge](./product-backlog.md#L73) | Agent/Feature  | - [scrum-in-sdd.md](../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md)<br>- [coach-knowledge.md](../pack.framework.sdd.works/templates/EN/coach-knowledge.md)<br>- [sdd-scrum-practices.md](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md)<br>- [ADR-106](./adr/ADR-106-coach-knowledge-file.md)<br>- [artifacts-map.json](../artifacts-map.json) | **WIP** |
-| 2   | task-01    | Complete Agent-02 job index in ethan.md    | [Agent-02 Skill call for a named job](./product-backlog.md#L68)             | Agent/Task     | - [ethan.md](../pack.framework.sdd.works/agents/ethan.md)<br>- [Skill-03](./product-backlog.md#L89)–[Skill-06](./product-backlog.md#L96), [Skill-08](./product-backlog.md#L101), [Skill-12](./product-backlog.md#L113), [Skill-13](./product-backlog.md#L115)–[Skill-16](./product-backlog.md#L126), [Skill-17](./product-backlog.md#L130)–[Skill-24](./product-backlog.md#L191) | **WIP** |
+No open rows.
 
 ### Retrospective
 
@@ -654,15 +653,25 @@ Depends on Sprint 7 (engineering skills and seeds).
 #### 3. [Oct 7, 2026], feature-55 Lite install file links API done, feature-56 Lite install prompt and one-line copy done, feature-58 Pack instructions tabs JSON done, feature-59 Instructions tabs config API done, feature-60 Dynamic instructions tab UI done, feature-69 Skill sdd-retrospective done, feature-70 Learn Scrum in SDD tab done, feature-71 Content tab heading anchors done
 - Board Status still said **ToDo** or **WIP** while the routes, seeds, tests, and pack skill were already shipped; close confirm after an evidence check closed the rows. [board-status-lags-shipped-code](./knowledge/agent/board-status-lags-shipped-code.md).
 
+#### 4. [Oct 7, 2026], feature-51 Agent guiding proposals done, task-01 Complete Agent-02 job index in ethan.md done, Sprint-end
+- Same-day board refresh after the eight-SBI close landed: `status.md` named the remaining WIP rows in that turn. [board-status-lags-shipped-code](./knowledge/agent/board-status-lags-shipped-code.md).
+- Ethan’s Jobs list follows `constants.json` skill keys and Guiding proposals stay a chat-only next action with one coach-knowledge heading. [`ethan.md`](../pack.framework.sdd.works/agents/ethan.md).
+
 **Opportunities**
 
 #### 3. [Oct 7, 2026], feature-55 Lite install file links API done, feature-56 Lite install prompt and one-line copy done, feature-58 Pack instructions tabs JSON done, feature-59 Instructions tabs config API done, feature-60 Dynamic instructions tab UI done, feature-69 Skill sdd-retrospective done, feature-70 Learn Scrum in SDD tab done, feature-71 Content tab heading anchors done
 - When several SBIs ship in one day, refresh `status.md` before the next agent turn so a later agent does not treat shipped work as unstarted.
 
+#### 4. [Oct 7, 2026], feature-51 Agent guiding proposals done, task-01 Complete Agent-02 job index in ethan.md done, Sprint-end
+- When a later pack skill is added to `constants.json`, update Ethan’s Jobs bullet in the same change so Agent-02 does not lag the registry.
+
 **Future actions**
 
 #### 3. [Oct 7, 2026], feature-55 Lite install file links API done, feature-56 Lite install prompt and one-line copy done, feature-58 Pack instructions tabs JSON done, feature-59 Instructions tabs config API done, feature-60 Dynamic instructions tab UI done, feature-69 Skill sdd-retrospective done, feature-70 Learn Scrum in SDD tab done, feature-71 Content tab heading anchors done
 - At the next Sprint-end, score whether same-day board refreshes after multi-SBI ships landed; inspect the next similar close batch.
+
+#### 4. [Oct 7, 2026], feature-51 Agent guiding proposals done, task-01 Complete Agent-02 job index in ethan.md done, Sprint-end
+- At the next similar SBI that adds a `skills` key, inspect whether `ethan.md` Jobs gained a matching bullet in the same change.
 
 ---
 
@@ -672,7 +681,7 @@ Depends on Sprint 7 (engineering skills and seeds).
 
 [Back to the top](#sprint-backlog-frameworksddworks)
 
-Sprint Goal: Visitors use the portal at sdd.works and the WordPress learn course at learn.sdd.works.
+Sprint Goal: Visitors use the portal at sdd.works and the WordPress learn course at learn.sdd.works; Get secret sits on the Learn tab under the course embed.
 
 Depends on Sprint 8 (Learn embed tab and content tabs).
 
@@ -691,6 +700,7 @@ No open rows.
 | #   | Code       | SBI                                        | Parent PBI                                                                 | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
 | --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | 1   | feature-72 | Hostnames learn.sdd.works and sdd.works    | [Web-portal-30 Hostnames learn.sdd.works and sdd.works](./product-backlog.md#pb-127) | Webapp/Feature | - [Web-portal-20](./product-backlog.md#pb-106)<br>- [Web-portal-09](./product-backlog.md#pb-76)<br>- [Web-portal-22](./product-backlog.md#pb-108)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- DNS, TLS, redirects, embed allowlist, setup copy URLs | **ToDo** |
+| 2   | feature-73 | Get secret on Learn Scrum tab              | [Web-portal-31 Get secret on Learn Scrum tab](./product-backlog.md#pb-128) | Webapp/Feature | - [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- [`LearnScrumEmbedPanel`](../../src/components/features/LearnScrumEmbedPanel.tsx)<br>- AC31 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
 
 ### Retrospective
 

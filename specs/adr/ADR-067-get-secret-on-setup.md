@@ -1,7 +1,8 @@
 # ADR-067: Get secret sits on Setup
 
 ## Status
-Accepted
+
+Accepted (placement **superseded** by [ADR-115](./ADR-115-get-secret-on-learn-tab.md) for the live guide; lookup rules below still apply)
 
 ## Context
 Get secret looks up one stored key by name. Sprint 3 feature-04 and feature-05 put that form at the bottom of the Features tab, after the catalog.

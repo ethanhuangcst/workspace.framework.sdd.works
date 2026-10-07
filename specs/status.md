@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-07 (eight Sprint 8 SBIs Done; Agent-02 and Agent-03 WIP)
+> as_of: 2026-10-07 (Sprint 8 Done; Sprint 9 ToDo)
 > [Definition](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#statusmd)
 
 ---
@@ -17,19 +17,18 @@
 | --- | --- | --- |
 | Sprint 1 - 6 | Done | - Sprint 1 closed 2026-09-25.<br>- Sprint 2 closed 2026-09-26.<br>- Sprint 3 closed the web portal and MCP for R2.<br>- Sprint 4 closed 2026-10-03.<br>- [Sprint 5](./sprint-backlog.md#sprint-5) closed 2026-10-05.<br>- [Sprint 6](./sprint-backlog.md#sprint-6) closed 2026-10-05. |
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
-| [Sprint 8](./sprint-backlog.md#sprint-8) | WIP | - Twelve SBIs: ten **Done** ([feature-53](./sprint-backlog.md#sprint-8), [feature-57](./sprint-backlog.md#sprint-8), [feature-55](./sprint-backlog.md#sprint-8), [feature-56](./sprint-backlog.md#sprint-8), [feature-58](./sprint-backlog.md#sprint-8)–[feature-60](./sprint-backlog.md#sprint-8), [feature-69](./sprint-backlog.md#sprint-8)–[feature-71](./sprint-backlog.md#sprint-8)). **WIP:** [feature-51](./sprint-backlog.md#sprint-8), [task-01](./sprint-backlog.md#sprint-8). |
-| [Sprint 9](./sprint-backlog.md#sprint-9) | ToDo | - One SBI **ToDo**: [feature-72](./sprint-backlog.md#sprint-9) hostnames (`learn.sdd.works` for WordPress; portal at `sdd.works`). |
+| [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Twelve SBIs **Done** (Ethan jobs and guiding proposals, lite HTTP install, instructions tabs, Learn Scrum tab, heading anchors, Skill-24 retrospective). |
+| [Sprint 9](./sprint-backlog.md#sprint-9) | ToDo | - Two SBIs **ToDo**: [feature-72](./sprint-backlog.md#sprint-9) hostnames; [feature-73](./sprint-backlog.md#sprint-9) Get secret on Learn tab ([ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md)). |
 | Unplanned PBIs | ToDo | - 12 rows in [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis). Includes [Web-portal-21](./product-backlog.md#L438) (partner site), [Web-portal-26](./product-backlog.md#L419), [MCP-07](./product-backlog.md#L325). |
 
 ## where we are now
 
-- Which sprint are we working on now: [Sprint 8](./sprint-backlog.md#sprint-8) is **WIP**.
-- What SBI are we working on now: [feature-51 Agent guiding proposals](./sprint-backlog.md#sprint-8) and [task-01 Complete Agent-02 job index in ethan.md](./sprint-backlog.md#sprint-8) stay **WIP**. Lite install HTTP, instructions tabs, Learn Scrum tab, heading anchors, and Skill-24 retrospective are **Done**.
+- Which sprint are we working on now: [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**. [Sprint 9](./sprint-backlog.md#sprint-9) is **ToDo**.
+- What SBI are we working on now: no Sprint 8 WIP. Next SBI is [feature-72 Hostnames learn.sdd.works and sdd.works](./sprint-backlog.md#sprint-9).
 
 ## what could be the next
 
-- Continue [feature-51](./sprint-backlog.md#sprint-8) and [task-01](./sprint-backlog.md#sprint-8) to finish Agent-03 and Agent-02 on Sprint 8.
-- After Sprint 8, start [Sprint 9](./sprint-backlog.md#sprint-9) [feature-72](./sprint-backlog.md#sprint-9) hostname cutover ([Web-portal-30](./product-backlog.md#pb-127)).
+- Start [Sprint 9](./sprint-backlog.md#sprint-9) [feature-72](./sprint-backlog.md#sprint-9) hostname cutover ([Web-portal-30](./product-backlog.md#pb-127)).
 - [Spec-seeds-15](./product-backlog.md#L474) stays **ToDo** until [MCP-07](./product-backlog.md#L328) puts the lite allow-list in production sync cache and the install tarball.
 - [Web-portal-21](./product-backlog.md#L438) install-first landing is **unplanned** (2study.ai workspace, not Sprint 8).
 
@@ -65,4 +64,4 @@
 | 14 | Add practices section feature-break-down | - [feature-38 Pack rule sdd-incremental-delivery.mdc](./sprint-backlog.md#sprint-6) | Sprint 6 | Sprint 6 |
 | 15 | sdd-review-status needs to review the RID log | - [Skill-12 Pack skill sdd-review-status](./product-backlog.md#L113) | Sprint 5 | Sprint 6 |
 
-Last updated: 2026-10-07 added Sprint 9 / Web-portal-30 feature-72
+Last updated: 2026-10-07 Sprint 8 closed (feature-51, task-01, sprint Done)

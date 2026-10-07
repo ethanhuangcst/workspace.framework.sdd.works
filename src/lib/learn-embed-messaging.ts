@@ -9,6 +9,9 @@ export const LEARN_EMBED_FALLBACK_MAX_PX = 720;
 
 export const LEARN_EMBED_FALLBACK_VH_RATIO = 0.9;
 
+/** Extra pixels above width-based 3×3 grid estimate when capping postMessage height. */
+export const LEARN_EMBED_HEIGHT_SLACK_PX = 16;
+
 export function isAllowedLearnEmbedMessageOrigin(origin: string): boolean {
   try {
     const host = new URL(origin).hostname;
@@ -29,6 +32,20 @@ export function parseLearnEmbedHeightMessage(data: unknown): number | null {
   return Math.ceil(height);
 }
 
+/** Cap oversized embed scrollHeight so empty space below the tile grid is not framed. */
+export function resolveLearnEmbedFrameHeightPx(
+  heightPx: number,
+  iframeWidthPx: number,
+): number {
+  const posted = Math.ceil(heightPx);
+  if (!Number.isFinite(iframeWidthPx) || iframeWidthPx <= 0) {
+    return Math.min(posted, LEARN_EMBED_FALLBACK_MAX_PX);
+  }
+  const gridCap =
+    estimateLearnEmbedGridHeightPx(iframeWidthPx) + LEARN_EMBED_HEIGHT_SLACK_PX;
+  return Math.min(posted, gridCap);
+}
+
 export function computeLearnEmbedFallbackHeightPx(viewportHeight: number): number {
   return Math.min(
     Math.round(viewportHeight * LEARN_EMBED_FALLBACK_VH_RATIO),
@@ -36,8 +53,11 @@ export function computeLearnEmbedFallbackHeightPx(viewportHeight: number): numbe
   );
 }
 
-/** Interim height until sdd.works posts scrollHeight (3×3 tiles ~430×400). */
+/** sdd.works learn-embedded portfolio tiles (500×375 PNGs, 3×3 grid). */
 export const LEARN_EMBED_GRID_ROWS = 3;
+export const LEARN_EMBED_GRID_COLS = 3;
+export const LEARN_EMBED_TILE_WIDTH_PX = 500;
+export const LEARN_EMBED_TILE_HEIGHT_PX = 375;
 
 export function estimateLearnEmbedGridHeightPx(iframeWidthPx: number): number {
   if (!Number.isFinite(iframeWidthPx) || iframeWidthPx <= 0) {
@@ -45,7 +65,8 @@ export function estimateLearnEmbedGridHeightPx(iframeWidthPx: number): number {
       typeof window !== "undefined" ? window.innerHeight : 800,
     );
   }
-  const columnWidth = iframeWidthPx / 3;
-  const rowHeight = columnWidth * (400 / 430);
+  const columnWidth = iframeWidthPx / LEARN_EMBED_GRID_COLS;
+  const rowHeight =
+    columnWidth * (LEARN_EMBED_TILE_HEIGHT_PX / LEARN_EMBED_TILE_WIDTH_PX);
   return Math.ceil(rowHeight * LEARN_EMBED_GRID_ROWS);
 }

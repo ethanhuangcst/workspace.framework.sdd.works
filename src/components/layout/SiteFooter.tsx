@@ -24,6 +24,8 @@ export function SiteFooter({
           <Link
             className="site-footer-admin"
             href="/login"
+            target="_blank"
+            rel="noopener noreferrer"
             data-testid="footer-admin-portal"
           >
             {t(locale, "admin.footer.admin_portal")}

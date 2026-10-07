@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { InstructionsPage } from "./InstructionsPage";
 import type { Locale } from "@/i18n/t";
@@ -81,6 +81,17 @@ function renderGuide(
   );
 }
 
+/** Learn tab open; secret lookup lives on that panel (ADR-115). */
+function renderGuideOnLearnTab(
+  props: Parameters<typeof renderGuide>[0],
+) {
+  return renderGuide({
+    includeLearn: true,
+    activeQueryParam: "learn-scrum-in-sdd",
+    ...props,
+  });
+}
+
 vi.mock("next/link", () => ({
   default: ({
     children,
@@ -126,24 +137,36 @@ const STDIO_FRAGMENT = '"command": "${userHome}/.sdd/sdd-mcp"';
 
 const SECRET_COPY: Record<
   Locale,
-  { hint: string; button: string }
+  { hint: string; button: string; copy: string }
 > = {
   en: {
     hint: "Enter the name of the secret, example: sdd-trial-googlemaps",
     button: "Get secret",
+    copy: "Copy secret",
   },
   "zh-Hans": {
     hint: "输入要获得的密钥名称，例如：sdd-trial-googlemaps",
     button: "获取密钥",
+    copy: "复制密钥",
   },
   "zh-Hant": {
     hint: "輸入要取得的密鑰名稱，例如：sdd-trial-googlemaps",
     button: "獲取密鑰",
+    copy: "複製密鑰",
   },
 };
 
+beforeEach(() => {
+  class ResizeObserverMock {
+    observe() {}
+    disconnect() {}
+  }
+  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+});
+
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
 });
 
 describe("InstructionsPage", () => {
@@ -257,7 +280,7 @@ describe("InstructionsPage", () => {
   it("should_show_secret_empty_when_name_is_blank", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
-    renderGuide({ locale: "en" });
+    renderGuideOnLearnTab({ locale: "en" });
 
     fireEvent.click(screen.getByTestId("secret-get"));
 
@@ -266,7 +289,7 @@ describe("InstructionsPage", () => {
       /Enter the name of the secret/i,
     );
     expect(screen.queryByTestId("secret-result")).not.toBeInTheDocument();
-    expect(screen.getByTestId("guide-tab-setup")).toHaveAttribute(
+    expect(screen.getByTestId("guide-tab-learn-scrum")).toHaveAttribute(
       "aria-selected",
       "true",
     );
@@ -281,7 +304,7 @@ describe("InstructionsPage", () => {
       json: async () => ({ key_value: "plain-secret-value" }),
     } as Response);
 
-    renderGuide({ locale: "en" });
+    renderGuideOnLearnTab({ locale: "en" });
 
     fireEvent.change(screen.getByTestId("secret-name"), {
       target: { value: "sdd-trial-googlemaps" },
@@ -293,11 +316,17 @@ describe("InstructionsPage", () => {
     });
     const result = screen.getByTestId("secret-result");
     expect(result).toHaveTextContent("plain-secret-value");
-    expect(result).toHaveClass("codeblock");
+    expect(result).toHaveClass("secret-result-row", "secret-row-grid");
+    expect(result.querySelector(".secret-result-value")).toHaveClass("input-box");
+    expect(result.querySelector(".secret-result-value")).toHaveTextContent(
+      "plain-secret-value",
+    );
     expect(result.closest(".secret-stack")).not.toBeNull();
-    expect(screen.getByTestId("secret-result-copy")).toBeInTheDocument();
+    expect(screen.getByTestId("secret-result-copy")).toHaveTextContent(
+      "Copy secret",
+    );
     expect(screen.queryByTestId("secret-error")).not.toBeInTheDocument();
-    expect(screen.getByTestId("guide-tab-setup")).toHaveAttribute(
+    expect(screen.getByTestId("guide-tab-learn-scrum")).toHaveAttribute(
       "aria-selected",
       "true",
     );
@@ -313,7 +342,7 @@ describe("InstructionsPage", () => {
       }),
     } as Response);
 
-    renderGuide({ locale: "en" });
+    renderGuideOnLearnTab({ locale: "en" });
 
     fireEvent.change(screen.getByTestId("secret-name"), {
       target: { value: "add-trail-googlemaps" },
@@ -328,52 +357,67 @@ describe("InstructionsPage", () => {
     );
     expect(screen.getByTestId("secret-error").closest(".secret-stack")).not.toBeNull();
     expect(screen.queryByTestId("secret-result")).not.toBeInTheDocument();
-    expect(screen.getByTestId("guide-tab-setup")).toHaveAttribute(
+    expect(screen.getByTestId("guide-tab-learn-scrum")).toHaveAttribute(
       "aria-selected",
       "true",
     );
     expect(screen.getByTestId("secret-lookup")).toBeVisible();
   });
 
-  it("should_place_secret_form_after_tools_on_setup_tab", () => {
-    const { container } = renderGuide({
+  it("should_place_secret_form_on_learn_tab_between_iframe_and_fallback", () => {
+    const { container } = renderGuideOnLearnTab({
       locale: "en",
       featuresHtml: "<h2>Features</h2><p>ethan</p>",
     });
 
-    const tools = container.querySelector("#tools");
-    const secret = container.querySelector("#setup-secret");
     const setupPanel = container.querySelector("#panel-setup");
     const featuresPanel = container.querySelector("#panel-features");
-    expect(tools).not.toBeNull();
-    expect(secret).not.toBeNull();
-    expect(setupPanel?.querySelector("[data-testid='secret-lookup']")).not.toBeNull();
+    const learnPanel = container.querySelector("#panel-learn-scrum");
+    const embed = screen.getByTestId("learn-scrum-embed");
+    const iframe = screen.getByTestId("learn-scrum-iframe");
+    const secret = container.querySelector("#learn-secret");
+    const fallbackLink = screen.getByRole("link", {
+      name: "Open learn.sdd.works in a new tab.",
+    });
+
+    expect(setupPanel?.querySelector("[data-testid='secret-lookup']")).toBeNull();
     expect(featuresPanel?.querySelector("[data-testid='secret-lookup']")).toBeNull();
+    expect(learnPanel?.querySelector("[data-testid='secret-lookup']")).not.toBeNull();
+    expect(secret).not.toBeNull();
     expect(
       Boolean(
-        tools &&
-          secret &&
-          Boolean(tools.compareDocumentPosition(secret) & Node.DOCUMENT_POSITION_FOLLOWING),
+        iframe.compareDocumentPosition(fallbackLink) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
       ),
     ).toBe(true);
+    expect(
+      Boolean(
+        fallbackLink.compareDocumentPosition(secret!) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    ).toBe(true);
+    expect(embed.contains(secret)).toBe(true);
     expect(screen.getByTestId("secret-lookup")).toBeVisible();
   });
 
   it("should_hide_secret_form_on_features_tab", () => {
-    const { container } = renderGuide({ locale: "en" });
+    const { container } = renderGuideOnLearnTab({ locale: "en" });
 
     expect(screen.getByTestId("secret-lookup")).toBeVisible();
 
     fireEvent.click(screen.getByTestId("guide-tab-features"));
 
     const featuresPanel = container.querySelector("#panel-features");
+    const setupPanel = container.querySelector("#panel-setup");
     expect(featuresPanel?.querySelector("[data-testid='secret-lookup']")).toBeNull();
+    expect(setupPanel?.querySelector("[data-testid='secret-lookup']")).toBeNull();
     expect(screen.getByTestId("secret-lookup")).not.toBeVisible();
   });
 
   it("should_switch_to_scrum_tab_after_features_with_label", () => {
     renderGuide({
       locale: "en",
+      includeLearn: true,
       featuresHtml: "<h2>Features</h2>",
       scrumHtml:
         "<h1>Scrum in SDD</h1><p>Part I summary.</p><ul><li>KEEP — classic roles stay.</li></ul>",
@@ -413,7 +457,7 @@ describe("InstructionsPage", () => {
   it.each(["en", "zh-Hans", "zh-Hant"] as Locale[])(
     "should_resolve_secret_hint_and_button_when_locale_is_%s",
     (locale) => {
-      renderGuide({ locale });
+      renderGuideOnLearnTab({ locale });
 
       const copy = SECRET_COPY[locale];
       expect(screen.getByTestId("secret-name")).toHaveAttribute(
@@ -421,6 +465,30 @@ describe("InstructionsPage", () => {
         copy.hint,
       );
       expect(screen.getByTestId("secret-get")).toHaveTextContent(copy.button);
+    },
+  );
+
+  it.each(["en", "zh-Hans", "zh-Hant"] as Locale[])(
+    "should_resolve_secret_copy_when_lookup_shows_result_and_locale_is_%s",
+    async (locale) => {
+      vi.spyOn(globalThis, "fetch").mockResolvedValue({
+        ok: true,
+        json: async () => ({ key_value: "plain-secret-value" }),
+      } as Response);
+
+      renderGuideOnLearnTab({ locale });
+
+      fireEvent.change(screen.getByTestId("secret-name"), {
+        target: { value: "sdd-trial-googlemaps" },
+      });
+      fireEvent.click(screen.getByTestId("secret-get"));
+
+      await waitFor(() => {
+        expect(screen.getByTestId("secret-result-copy")).toBeInTheDocument();
+      });
+      expect(screen.getByTestId("secret-result-copy")).toHaveTextContent(
+        SECRET_COPY[locale].copy,
+      );
     },
   );
 

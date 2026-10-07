@@ -8,6 +8,38 @@
 
 ## 2026-10-07
 
+### WA-13 Footer Admin portal opens in a new tab
+
+**Why**: The guide footer Admin portal link replaced the instructions tab with `/login`. Visitors should keep the guide open.
+
+**What changed**: [`SiteFooter.tsx`](../src/components/layout/SiteFooter.tsx) guide variant uses `target="_blank"` and `rel="noopener noreferrer"`. Mockups `01-home.html` and `13-instructions.html` match. [`app-design.md`](./admin-portal/app-design.md) §8 documents the guide footer Admin portal link. Closed [WA-13](./issues-log.md).
+
+**Verification**: `npm test -- src/components/layout/SiteFooter.test.tsx` (2 passed). `npm run typecheck` passed.
+
+### ADR-116 Learn embed layout and secret result row (WA-15)
+
+**Why**: Found-secret UI did not match the key row. Product removed Learn intro and moved the learn.sdd.works link under the iframe.
+
+**What changed**: [ADR-116](./adr/ADR-116-learn-embed-layout-and-secret-result-row.md). [WA-15](./issues-log.md) open. Learn order: iframe → fallback → Get secret. `.secret-result-row` replaces `.codeblock` for values. Specs AC29/AC31, [`app-tests.md`](./admin-portal/app-tests.md) §20, mockup `13-instructions.html`.
+
+**Verification**: Vitest on Learn and Instructions panels; browser check on `/?tab=learn-scrum-in-sdd`.
+
+### ADR-115 Get secret on Learn Scrum tab
+
+**Why**: Visitors who use the Learn embed need key lookup on that tab, not at the bottom of Setup.
+
+**What changed**: [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md). [Web-portal-31](./product-backlog.md#pb-128) and Sprint 9 **feature-73**. Engineering specs: AC31 [`app-stories.md`](./admin-portal/app-stories.md), [`app-design.md`](./admin-portal/app-design.md), [`app-tests.md`](./admin-portal/app-tests.md) §18, mockups `13-instructions.html` / `01-home.html`, `.learn-embed-secret` in [`portal.css`](../src/styles/portal.css). Pack admin note: Get secret on Learn tab. Implementation not in this entry.
+
+**Verification**: `sdd-spec-to-build` jobs 1–7 complete; build with TDD on `GuideSecretLookup` and panel tests.
+
+### Sprint 8 closed
+
+**Why**: User confirmed feature-51 and task-01 usable and asked whether Sprint 8 can close. Those were the last open SBIs. The sprint goal is met.
+
+**What changed**: Marked [feature-51](./sprint-backlog.md#sprint-8) and [task-01](./sprint-backlog.md#sprint-8) **Done**. [Agent-03](./product-backlog.md#pb-10) and [Agent-02](./product-backlog.md#pb-8) **Done**. Sprint 8 **Status: Done**. All twelve SBIs **Done**. [Spec-seeds-15](./product-backlog.md#pb-97) stays **ToDo** until [MCP-07](./product-backlog.md#pb-105). Next scheduled work is [Sprint 9](./sprint-backlog.md#sprint-9) [feature-72](./sprint-backlog.md#sprint-9).
+
+**Verification**: [`ethan.md`](../pack.framework.sdd.works/agents/ethan.md) Jobs match `constants.json` skill keys; Guiding proposals read one `coach-knowledge.md` heading and do not write without confirm. User close confirm in chat.
+
 ### Web-portal-30 hostnames learn.sdd.works and sdd.works
 
 **Why**: The WordPress learn site and the framework portal need distinct public hostnames.

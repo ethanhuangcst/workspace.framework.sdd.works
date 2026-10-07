@@ -113,22 +113,23 @@ test.describe("MCP instructions", () => {
     ).toHaveCount(0);
   });
 
-  test("should_show_secret_form_on_setup_with_locale_strings", async ({
+  test("should_show_secret_form_on_learn_tab_with_locale_strings", async ({
     page,
   }) => {
-    await page.goto("/instructions");
+    await page.goto("/instructions?tab=learn-scrum-in-sdd");
     await page.waitForLoadState("networkidle");
 
-    const tools = page.locator("#tools");
+    const iframe = page.getByTestId("learn-scrum-iframe");
     const secret = page.getByTestId("secret-lookup");
     await expect(secret).toBeVisible();
-    await expect(page.locator("#setup-secret")).toBeVisible();
+    await expect(page.locator("#learn-secret")).toBeVisible();
+    await expect(page.locator("#setup-secret")).toHaveCount(0);
 
-    const toolsBox = await tools.boundingBox();
+    const iframeBox = await iframe.boundingBox();
     const secretBox = await secret.boundingBox();
-    expect(toolsBox).not.toBeNull();
+    expect(iframeBox).not.toBeNull();
     expect(secretBox).not.toBeNull();
-    expect(secretBox!.y).toBeGreaterThan(toolsBox!.y);
+    expect(secretBox!.y).toBeGreaterThan(iframeBox!.y);
 
     await expect(page.getByTestId("secret-name")).toHaveAttribute(
       "placeholder",
@@ -163,13 +164,13 @@ test.describe("MCP instructions", () => {
     ).toHaveCount(0);
   });
 
-  test("should_stay_on_setup_and_show_not_found_for_unknown_secret", async ({
+  test("should_stay_on_learn_tab_and_show_not_found_for_unknown_secret", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/?tab=learn-scrum-in-sdd");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.getByTestId("guide-tab-setup")).toHaveAttribute(
+    await expect(page.getByTestId("guide-tab-learn-scrum")).toHaveAttribute(
       "aria-selected",
       "true",
     );
@@ -177,7 +178,7 @@ test.describe("MCP instructions", () => {
     await page.getByTestId("secret-get").click();
 
     await expect(page).not.toHaveURL(/tab=features/);
-    await expect(page.getByTestId("guide-tab-setup")).toHaveAttribute(
+    await expect(page.getByTestId("guide-tab-learn-scrum")).toHaveAttribute(
       "aria-selected",
       "true",
     );
@@ -220,4 +221,27 @@ test.describe("MCP instructions", () => {
     expect(metrics!.gapRem).toBeGreaterThan(1.1);
     expect(metrics!.gapRem).toBeLessThan(1.4);
   });
+
+  for (const { width, paths } of [
+    { width: 375, paths: ["/", "/instructions", "/?tab=learn-scrum-in-sdd"] },
+    { width: 768, paths: ["/", "/?tab=learn-scrum-in-sdd"] },
+    { width: 1280, paths: ["/", "/?tab=learn-scrum-in-sdd"] },
+  ]) {
+    for (const path of paths) {
+      test(`should_not_scroll_page_horizontally_at_${width}px_on_${path.replace(/\//g, "_") || "root"}`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto(path);
+        await page.waitForLoadState("networkidle");
+        await expect(page.getByTestId("instructions-guide")).toBeVisible();
+
+        const overflow = await page.evaluate(() => {
+          const root = document.documentElement;
+          return root.scrollWidth - root.clientWidth;
+        });
+        expect(overflow).toBeLessThanOrEqual(1);
+      });
+    }
+  }
 });

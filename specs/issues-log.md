@@ -1,7 +1,7 @@
 # Issues log (framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-06
+> as_of: 2026-10-07
 > [Definition](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#issues-logmd)
 
 ---
@@ -10,11 +10,14 @@
 
 | Id | Title | Component | Priority | Description | Related | Close Check | Status | Added time |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WA-14 | Instructions guide scrolls sideways | Web-app | High | On `/` and `/instructions`, the guide column is no longer centered in the viewport. The visitor can swipe or drag the page horizontally. Regression against [AC27](./admin-portal/app-stories.md) after Learn embed, sticky header, and Get secret on the Learn tab. | [AC27](./admin-portal/app-stories.md); [ADR-111](./adr/ADR-111-guide-header-sticky.md); [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md); [`portal.css`](../src/styles/portal.css) `.guide-sticky`, `.secret-lookup`, `.learn-embed-frame`; [`app-tests.md`](./admin-portal/app-tests.md) §19 | On `/`, `/instructions`, and `/?tab=learn-scrum-in-sdd` at 375px, 768px, and a desktop width, `document.documentElement.scrollWidth` is at most `document.documentElement.clientWidth` (no horizontal page scroll). The guide column stays centered. Tab names may scroll inside `.guide-tabs` only. §19 checks pass. | Open | 07/Oct/2026 |
+| WA-15 | Get secret value row mismatches key row | Web-app | Medium | After lookup on the Learn tab, the value row must use `.codeblock` with a visible border, `var(--fill)` background, square corners, row height **2.125rem** matching the key field, and Copy the same width as Get secret. Learn spacing: **15px** iframe→link, **45px** link→Get secret. | [ADR-117](./adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md); [`GuideSecretLookup.tsx`](../src/components/features/GuideSecretLookup.tsx); [`portal.css`](../src/styles/portal.css); [`app-tests.md`](./admin-portal/app-tests.md) §20 | Mockup `13-instructions.html` matches; live page matches mockup on Learn tab after lookup. §20 checks pass. | Open | 07/Oct/2026 |
 
 ## Closed issues
 
 | Id | Title | Component | Priority | Description | Related | Close Check | Closed Sprint | Closed time |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WA-13 | Footer Admin portal replaces the guide tab | Web-app | High | The guide footer Admin portal link navigates the same tab to `/login`. It should open `/login` in a new tab so the guide stays open. | [app-design.md](./admin-portal/app-design.md) §8 / guide footer; test id `footer-admin-portal` | On `/` and `/instructions`, `[data-testid="footer-admin-portal"]` has `target="_blank"` and `rel="noopener noreferrer"`. A unit or E2E test asserts this. | Unplanned | 07/Oct/2026 |
 | PK-01 | Pack files link to product-repo ADR and Knowledge | Pack | High | Pack seeds linked to `specs/adr/` and other product-only docs. Those trees are not in the install deliverable. | One-time cross-review of pack seeds | `rg` on `pack.framework.sdd.works/` finds no out-of-pack links to adr, framework-design, seed-artifacts-building-guide, or product-backlog. Second review 2026-10-06 passed. | Sprint 7 | 06/Oct/2026 |
 | WA-01 | `/` is still the logo-card home | Web-app | High | `/` still rendered the logo-card home. The instructions guide should be the home page. | [Web-portal-09](./product-backlog.md#L430) Public landing, footer, reset link, password gate | `should_show_instructions_guide_on_root` shows the guide, not the logo card. | Sprint 3 | 26/Sep/2026 |
 | WA-02 | Footer scrolls away | Web-app | High | The footer scrolled away with the page. It should stay fixed at the bottom of the viewport. | [Web-portal-09](./product-backlog.md#L430) Public landing, footer, reset link, password gate | `.site-footer` stays in view after scroll to the bottom. | Sprint 3 | 26/Sep/2026 |

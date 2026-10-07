@@ -16,6 +16,7 @@ describe("learn-embed-frame CSS (ADR-112 / ADR-114)", () => {
   it("should_use_full_width_with_fallback_min_height_and_no_square_aspect", () => {
     const block = frameBlock(portalCss);
     expect(block).toMatch(/width:\s*100%/);
+    expect(block).toMatch(/max-width:\s*100%/);
     expect(block).toMatch(/min-height:\s*12rem/);
     expect(block).toMatch(/border:\s*0/);
     expect(block).not.toMatch(/aspect-ratio/);

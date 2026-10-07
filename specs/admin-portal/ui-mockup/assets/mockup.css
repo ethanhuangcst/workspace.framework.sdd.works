@@ -1095,7 +1095,8 @@ textarea:focus {
 input.input-box,
 input[type="email"].input-box,
 input[type="text"].input-box,
-input[type="password"].input-box {
+input[type="password"].input-box,
+pre.input-box.secret-result-value {
   box-sizing: border-box;
   font-family: var(--font-cn);
   height: 2.125rem;
@@ -1422,6 +1423,8 @@ td.table-check {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
+  min-width: 0;
+  overflow-x: clip;
   padding: 2.75rem 1.5rem 2rem;
 }
 
@@ -1470,6 +1473,8 @@ td.table-check {
   background: var(--bg);
   margin: 0 -1.5rem 1.75rem;
   padding: 0 1.5rem;
+  max-width: calc(100% + 3rem);
+  overflow-x: clip;
 }
 
 .guide-hero {
@@ -1819,36 +1824,149 @@ td.table-check {
     gap: 0.2rem;
   }
 
-  .secret-lookup {
-    flex-direction: column;
-    align-items: stretch;
+  .secret-row-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
   }
 
-  .secret-lookup .btn {
+  .secret-row-grid .input-box,
+  .secret-row-grid .secret-result-value {
+    max-width: 100%;
+  }
+
+  .secret-row-grid .btn.secret-action-btn {
     width: 100%;
+    min-width: 0;
   }
 }
 
-.secret-lookup {
-  display: flex;
+.learn-embed {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.learn-embed-frame-host {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 12rem;
+}
+
+.learn-embed-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
-  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  background: var(--surface);
+}
+
+.learn-embed-skeleton-cell {
+  display: block;
+  min-height: 0;
+  border: 1.5px solid var(--line-strong);
+  background: var(--fill);
+  border-radius: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .learn-embed-skeleton-cell {
+    animation: learn-embed-skeleton-pulse 1.4s ease-in-out infinite;
+  }
+
+  .learn-embed-skeleton-cell:nth-child(3n + 2) {
+    animation-delay: 0.12s;
+  }
+
+  .learn-embed-skeleton-cell:nth-child(3n) {
+    animation-delay: 0.24s;
+  }
+}
+
+@keyframes learn-embed-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.learn-embed-frame {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 12rem;
+  border: 0;
+  background: var(--surface);
+  position: relative;
+  z-index: 0;
+}
+
+.learn-embed-secret {
+  margin: 45px 0 0;
+}
+
+.learn-embed-fallback {
+  margin: 15px 0 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.learn-embed-fallback a {
+  color: var(--ink);
+}
+
+.secret-row-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 32rem) 6.75rem;
+  column-gap: 0.75rem;
+  align-items: stretch;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.secret-lookup,
+.secret-result-row {
   margin: 0;
 }
 
-.secret-lookup .input-box {
-  flex: 0 0 32rem;
-  width: 32rem;
-  min-width: 32rem;
+.secret-row-grid .input-box,
+.secret-row-grid .secret-result-value {
+  grid-column: 1;
+  width: 100%;
+  min-width: 0;
   max-width: 32rem;
   height: 2.125rem;
   min-height: 2.125rem;
 }
 
-.secret-lookup .btn {
+.secret-result-value {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+.secret-row-grid .btn.secret-action-btn {
+  grid-column: 2;
+  width: 6.75rem;
+  min-width: 6.75rem;
   height: 2.125rem;
-  min-height: 0;
+  min-height: 2.125rem;
   padding: 0 0.8rem;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .secret-stack {
@@ -1860,10 +1978,7 @@ td.table-check {
   gap: 1.25rem;
 }
 
-.secret-result-block,
 .secret-error {
-  /* Do not add to the stack width. Stretch to the lookup row so the
-     right edge lines up with the Get secret button. */
   width: 0;
   min-width: 100%;
   margin: 0;
@@ -1917,9 +2032,9 @@ td.table-check {
   display: flex;
   align-items: stretch;
   margin: 0;
-  border: 1px solid var(--line-strong);
-  border-radius: 8px;
-  background: var(--bg-elevated);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--fill);
   overflow: hidden;
 }
 
@@ -1943,7 +2058,7 @@ td.table-check {
   border-left: 1px solid var(--line);
   border-radius: 0;
   padding: 0 1.05rem;
-  background: var(--fill);
+  background: var(--bg);
   color: var(--mute);
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -1969,7 +2084,7 @@ td.table-check {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  background: var(--fill);
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
 
@@ -1982,15 +2097,13 @@ td.table-check {
   align-self: center;
 }
 
-.codeblock-head .codeblock-copy {
-  background: transparent;
-}
-
 .codeblock--file .codeblock-text {
   display: block;
   white-space: pre;
   padding: 0.95rem 1.1rem;
   overflow-x: auto;
+  background: var(--fill);
+  color: var(--ink);
 }
 
 .setup-pill {

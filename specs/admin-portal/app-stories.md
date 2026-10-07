@@ -751,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. Feature-16 ([Web-portal-12](../product-backlog.md#L383)) adds the Scrum in SDD tab. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is Get secret on Setup. AC18 is the guide tab before configurable tabs ([Web-portal-25](../product-backlog.md#L400), feature-60). Sprint 8 feature-53 and feature-55–57 cover lite manifest seed, lite file links API, lite client receipt spec ([Spec-seeds-18](../product-backlog.md#L482)), lite install prompt, and lite one-line copy. Sprint 8 feature-58–60 cover pack `.instructions-tabs.json`, the config API, and dynamic tab UI.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moved the form to Setup; [ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md) moves it to the Learn Scrum tab (**AC31**). AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped on Features before feature-17. AC17 is historical Setup placement only. AC18 is the guide tab before configurable tabs ([Web-portal-25](../product-backlog.md#L400), feature-60). Sprint 8 feature-53 and feature-55–57 cover lite manifest seed, lite file links API, lite client receipt spec ([Spec-seeds-18](../product-backlog.md#L482)), lite install prompt, and lite one-line copy. Sprint 8 feature-58–60 cover pack `.instructions-tabs.json`, the config API, and dynamic tab UI.
 
 ### User story 1 — Read instructions
 
@@ -970,20 +970,54 @@ Scenario: A failed sync still shows the previous file
   Then features-body still shows the previous file
 ```
 
-#### AC17 — feature-17 / ADR-067
+#### AC17 — feature-17 / ADR-067 (historical; placement superseded by AC31 / ADR-115)
 
 ```gherkin
-Scenario: Get secret sits at the bottom of Setup
+Scenario: Get secret sat at the bottom of Setup before ADR-115
   Given the visitor opens / or /instructions
   When the visitor selects the Setup tab
-  Then secret-lookup is after the tools table
-  And the section id is setup-secret
-  And the Features tab panel does not contain secret-lookup
+  Then secret-lookup was after the tools table
+  And the section id was setup-secret
+```
+
+#### AC31 — feature-73 / Web-portal-31 / ADR-115
+
+[ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md). Lookup rules match feature-05 and ADR-067 item 3. No new i18n keys.
+
+```gherkin
+Scenario: Get secret sits on Learn Scrum below fallback link
+  Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
+  When the Learn Scrum panel is shown
+  Then learn-scrum-iframe is before the link with admin.guide.learn_scrum_open_external
+  And the fallback link is before secret-lookup in document order
+  And the panel does not show admin.guide.learn_scrum_intro
+  And the section id is learn-secret
+  And panel-setup does not contain secret-lookup
+  And panel-features does not contain secret-lookup
   And the placeholder and button keys stay admin.guide.secret_hint and admin.guide.secret_button
+
+Scenario: Get secret stays on Learn Scrum after lookup
+  Given the visitor is on / or /instructions with tab=learn-scrum-in-sdd
   When the visitor activates Get secret with a non-empty name
-  Then the URL does not set tab=features
-  And the Setup panel stays shown
-  And the viewport stays on #setup-secret
+  Then the URL keeps tab=learn-scrum-in-sdd
+  And panel-learn-scrum stays shown
+  And the viewport stays on #learn-secret
+
+Scenario: Known secret on Learn tab matches feature-05 behavior
+  Given a key named "sdd-trial-googlemaps" exists in the admin key store
+  And the visitor is on tab=learn-scrum-in-sdd
+  When the visitor enters that exact name and activates Get secret
+  Then test id secret-result is a code block that shows only that key's plaintext value
+  And secret-result is scrolled into view below the sticky guide header when present
+  And secret-error is not shown
+
+Scenario: Unknown and empty secret names on Learn tab
+  Given the visitor is on tab=learn-scrum-in-sdd
+  When the visitor enters a name that does not exist and activates Get secret
+  Then secret-error uses key admin.guide.secret_missing
+  When the visitor activates Get secret with an empty name
+  Then secret-error uses key admin.guide.secret_empty
+  And the page does not call the secret lookup API
 ```
 
 #### AC18 — feature-16 / Web-portal-12, superseded by AC24 (feature-60) for tab order and labels
@@ -1181,12 +1215,14 @@ Scenario: Dynamic content tab loads markdown with locale fallback
   When the visitor switches to locale zh-Hant and the cache has no zh-Hant file for that tab
   Then the panel shows the English file from the sync cache like AC13
 
-Scenario: Tab switching preserves Setup surface and secret placement
+Scenario: Tab switching preserves Setup surface and Learn secret placement
   Given the visitor opens the guide
   When the visitor selects a content tab then Setup
-  Then secret-lookup stays on Setup per AC17
+  Then panel-setup does not contain secret-lookup
   And content panels hide when not selected
   And manual setup and setup copy controls stay on Setup per AC4 and AC21
+  When the visitor selects tab=learn-scrum-in-sdd
+  Then secret-lookup is in panel-learn-scrum per AC31
 ```
 
 #### AC25 — feature-71 / Web-portal-28
@@ -1233,7 +1269,7 @@ Scenario: An embed URL on a disallowed host fails config validation
 
 #### AC27 — Web-portal-29
 
-[ADR-111](../adr/ADR-111-guide-header-sticky.md). Same chrome on `/` and `/instructions`. No new label keys. The tagline stays `admin.guide.lead`. Tab labels stay the existing tab keys.
+[ADR-111](../adr/ADR-111-guide-header-sticky.md). Same chrome on `/` and `/instructions`. No new label keys. The tagline stays `admin.guide.lead`. Tab labels stay the existing tab keys. Open defect [WA-14](../issues-log.md) tracks horizontal page scroll; close it when AC27 and [`app-tests.md`](./app-tests.md) §19 pass.
 
 ```gherkin
 Scenario: Title and tabs stay in view while the body scrolls
@@ -1283,14 +1319,28 @@ Scenario: Learn embed frame has no border and fills column width
 [ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md). Embed URL stays AC26. Inner grid layout is sdd.works ([ADR-114](../adr/ADR-114-learn-embed-auto-height.md)).
 
 ```gherkin
-Scenario: Learn intro and fallback use separate URLs
+Scenario: Learn fallback uses learn.sdd.works below iframe
   Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
   When the Learn Scrum panel is shown
-  Then the intro resolves from admin.guide.learn_scrum_intro
-  And learn-scrum-iframe src is https://sdd.works/en/learn-embedded/
-  And a link opens https://learn.sdd.works in a new tab
+  Then learn-scrum-iframe src is https://sdd.works/en/learn-embedded/
+  And a link directly below the iframe opens https://learn.sdd.works in a new tab
   And the link visible text resolves from admin.guide.learn_scrum_open_external
-  And the link does not use admin.guide.learn_scrum_open_external_prefix
+  And the panel does not render admin.guide.learn_scrum_intro
+
+Scenario: Learn embed spacing below iframe (ADR-117)
+  Given the visitor opens tab=learn-scrum-in-sdd
+  When the Learn Scrum panel is shown
+  Then the fallback link top margin from the iframe is 15px
+  And the learn-secret block top margin from the fallback link is 45px
+
+Scenario: Found secret row uses compact codeblock (ADR-117 / WA-15)
+  Given the visitor opens tab=learn-scrum-in-sdd
+  And a key named "sdd-trial-googlemaps" exists
+  When the visitor activates Get secret with that name
+  Then secret-result is a codeblock with class secret-result-block
+  And the codeblock border is visible and border-radius is 0
+  And the value row height matches secret-name field height at 2.125rem
+  And secret-result-copy width matches secret-get width
 ```
 
 #### AC30 — Web-portal-27 / ADR-114
@@ -1306,6 +1356,28 @@ Scenario: Learn iframe height follows the embed document
   When the portal receives a valid sdd-learn-embed-height message from sdd.works
   Then learn-scrum-iframe height matches the reported height in pixels
   And the portal ignores postMessage from origins outside the embed host allowlist
+```
+
+#### AC32 — Learn embed loading skeleton / ADR-118
+
+[ADR-118](../adr/ADR-118-learn-embed-loading-skeleton.md). Portal half only. All user-facing loading strings use i18n keys in `en`, `zh-Hans`, and `zh-Hant`.
+
+```gherkin
+Scenario: Learn embed shows a skeleton while the iframe loads
+  Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
+  When the Learn Scrum panel is shown
+  And learn-scrum-iframe has not yet fired load
+  Then test id learn-embed-loading is visible
+  And the loading region uses aria-busy true
+  And the loading label resolves from admin.guide.learn_scrum_embed_loading
+  And the skeleton shows nine placeholder cells in a 3 by 3 grid
+  And learn-embed-fallback and secret-lookup stay visible below the iframe host
+
+Scenario: Learn embed hides the skeleton after iframe load
+  Given the visitor is on tab=learn-scrum-in-sdd
+  And learn-scrum-iframe has fired load
+  Then test id learn-embed-loading is not visible
+  And the iframe host uses aria-busy false
 ```
 
 ---
