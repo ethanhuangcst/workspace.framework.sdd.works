@@ -12,4 +12,4 @@ Phase 1 portal and MCP design stay in [`admin-portal/`](./admin-portal/) and [`m
 
 ## 2. Phase 2 decisions
 
-**coach-ethan product presence: local Cursor agent** (installable prompt in the client `agents/` tree). Remote MCP stays the installer. Design: [`framework/framework-design.md`](./framework/framework-design.md). Decision: [D1](./sprint-backlog.md#rid-d1). Tracking: [Agent-01](product-backlog.md#L63).
+**coach-ethan product presence: local Cursor agent** (installable prompt in the client `agents/` tree). Remote MCP stays the installer. Design: [`framework/framework-design.md`](./framework/framework-design.md). Decision: [D1](./sprint-backlog.md#rid-d1). Tracking: [Agent-01](./product-backlog.md#L63).

@@ -176,7 +176,7 @@ Scenario: Missing or invalid bearer is rejected
 
 ## `sdd-mcp-tool-surface` — MCP tools without `sdd_list_versions` (MCP-03)
 
-The model cannot call `sdd_list_versions`. Version listing stays on `GET /api/sdd/versions` and `listVersions()`. ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md), [MCP-03](product-backlog.md#L335))
+The model cannot call `sdd_list_versions`. Version listing stays on `GET /api/sdd/versions` and `listVersions()`. ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md), [MCP-03](../product-backlog.md#L339))
 
 ### User story 1 — Model sees only install, update, and (HTTP) get_key
 
@@ -273,7 +273,7 @@ Scenario: Unauthorized get_key
 
 ## `sdd-mcp-install` — `sdd_install_framework` (stdio + HTTP, Cursor)
 
-Install the **pack allow-list** (`agents`, `skills`, `rules`, `workflows`, `templates`) onto `{client_root}`. Stdio writes locally; HTTP returns tarball URL for AI extraction (ADR-054). Path allow-list. Structured summary. (MCPI-01, [MCP-01](product-backlog.md#L315))
+Install the **pack allow-list** (`agents`, `skills`, `rules`, `workflows`, `templates`) onto `{client_root}`. Stdio writes locally; HTTP returns tarball URL for AI extraction (ADR-054). Path allow-list. Structured summary. (MCPI-01, [MCP-01](../product-backlog.md#L318))
 
 Phase 1 already copies skills/rules/agents/workflows. Feature-01 adds `templates/` and forbids copying product trees (`src`, `prisma`, app files) even when Settings GitHub URL is this service repo.
 
@@ -357,7 +357,7 @@ Scenario: Same ref label but repo content changed
 
 ## `sdd-mcp-install-ledger` — Install ledger (`.sdd-installed.json`, ADR-057)
 
-After a successful install or update, write `{client_root}/.sdd-installed.json` once with `pack_complete: true`, version, commit, and `files`. Ethan’s start gate ([Agent-04](product-backlog.md#L76)) reads only this file. Do not write `framework.sdd.works.json`. ([MCP-01](product-backlog.md#L315), Sprint 2 Feature-01)
+After a successful install or update, write `{client_root}/.sdd-installed.json` once with `pack_complete: true`, version, commit, and `files`. Ethan’s start gate ([Agent-04](../product-backlog.md#L76)) reads only this file. Do not write `framework.sdd.works.json`. ([MCP-01](../product-backlog.md#L318), Sprint 2 Feature-01)
 
 ### User story 1 — Ledger after a successful copy
 
@@ -438,7 +438,7 @@ Scenario: HTTP already_up_to_date is still not returned
 
 ## `sdd-mcp-client-root-scenarios` — Eight client-root outcomes (stdio)
 
-The local program (ADR-058) must produce the Expected outcomes in [`mcp-design.md`](./mcp-design.md) client-root scenarios. ([MCP-01](product-backlog.md#L315))
+The local program (ADR-058) must produce the Expected outcomes in [`mcp-design.md`](./mcp-design.md) client-root scenarios. ([MCP-01](../product-backlog.md#L318))
 
 ### User story 1 — Preserve user files and record pack files
 

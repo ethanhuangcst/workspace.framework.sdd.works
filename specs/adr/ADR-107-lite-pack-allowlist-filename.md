@@ -24,7 +24,7 @@ The client lite receipt (`.sdd-lite-installed.json` on `{client_root}`) is separ
 `allowlist` states the file role. A visible filename helps pack maintainers in GitHub. One constant limits rename churn in code.
 
 ## Consequences
-- [Spec-seeds-15](product-backlog.md#L446), [Web-portal-17](product-backlog.md#L441), and [Web-portal-26](product-backlog.md#L419) reference this basename.
+- [Spec-seeds-15](../product-backlog.md#L446), [Web-portal-17](../product-backlog.md#L441), and [Web-portal-26](../product-backlog.md#L419) reference this basename.
 - Operators rename the file at the pack repo root and re-sync Admin Settings.
 - Supersedes informal use of `lite.framework.sdd.works.json` and `.lite-pack.config.on-server.json` in living docs.
 

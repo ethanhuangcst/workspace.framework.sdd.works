@@ -91,7 +91,7 @@ describe("resolveInstructionsTabs", () => {
     expect(result.tabs.find((t) => t.id === "setup")?.html).toBeUndefined();
     const learn = result.tabs.find((t) => t.id === "learn-scrum-in-sdd");
     expect(learn?.type).toBe("embedded_external_page");
-    expect(learn?.embedUrl).toBe("https://sdd.works/en/learn/");
+    expect(learn?.embedUrl).toBe("https://sdd.works/en/learn-embedded/");
     const invoke = result.tabs.find((t) => t.id === "invoke-agents");
     expect(invoke?.html).toContain('<div class="content-table"><table>');
     expect(invoke?.html).toContain("</table></div>");

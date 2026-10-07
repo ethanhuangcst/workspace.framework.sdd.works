@@ -231,6 +231,10 @@ code {
   right: 1.75rem;
 }
 
+.guide-shell .shell-locale {
+  right: max(1.5rem, calc((100% - var(--guide-max)) / 2 + 1.5rem));
+}
+
 /* Buttons */
 
 .btn {
@@ -1627,7 +1631,8 @@ td.table-check {
 .guide-section.portal-content-body h4,
 .guide-section.portal-content-body h5,
 .guide-section.portal-content-body h6 {
-  scroll-margin-top: 12rem;
+  /* Clears the sticky logo + tagline + tabs, including a wrapped title on a narrow viewport. */
+  scroll-margin-top: 20rem;
 }
 
 .features-body h2,

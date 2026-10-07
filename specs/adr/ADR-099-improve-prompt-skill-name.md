@@ -5,7 +5,7 @@ Accepted
 
 ## Context
 
-[Skill-14](product-backlog.md#L120) ships a utility skill that improves user prompts without executing the task. The seed folder was `prompt-optimizer` and the body matched an ECC-specific catalog (slash commands, component tables, vendor models). The PBI requires generic prompt quality and no ECC component matching.
+[Skill-14](../product-backlog.md#L120) ships a utility skill that improves user prompts without executing the task. The seed folder was `prompt-optimizer` and the body matched an ECC-specific catalog (slash commands, component tables, vendor models). The PBI requires generic prompt quality and no ECC component matching.
 
 ## Decision
 

@@ -20,7 +20,7 @@ Instructions **content** tabs render pack markdown in the portal ([ADR-071](ADR-
 One renderer already serves every content tab. Anchors belong there so a new content tab inherits them. GitHub slug rules match the fragments already written in the seeds.
 
 ## Consequences
-- [Web-portal-28](../product-backlog.md#pb-125) implements this ADR. [Web-portal-07](../product-backlog.md#L377) and [Web-portal-12](../product-backlog.md#L383) keep their Done status. This ADR adds anchors on top of those tabs.
+- [Web-portal-28](../product-backlog.md#L413) implements this ADR. [Web-portal-07](../product-backlog.md#L377) and [Web-portal-12](../product-backlog.md#L383) keep their Done status. This ADR adds anchors on top of those tabs.
 - Tests cover a bold heading slug, a duplicate slug, and a Features heading id without dropping the em-dash split.
 - Index rows that reuse one fragment for a later duplicate heading stay on the first heading until the markdown changes.
 

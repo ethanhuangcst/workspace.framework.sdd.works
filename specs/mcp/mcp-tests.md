@@ -316,7 +316,7 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] S1 agent-setup stdio prompt body (feature-05) — markdown names `~/.sdd/sdd-mcp`, `command`, and HTTP fallback URL
 - [x] S1 path (`backend-01`) — public `GET /setup` serves that markdown; `GET /agent-setup` redirects to `/setup`
 - [x] S1 local (`backend-01`) — with local `PUBLIC_BASE_URL`, body rewrites pack base and MCP fallback URL
-- [x] B1 feature-14 — compiled host binary handshake (install, update; no get_key). After [MCP-03](product-backlog.md#L335) feature-08: no `sdd_list_versions` on tools/list either.
+- [x] B1 feature-14 — compiled host binary handshake (install, update; no get_key). After [MCP-03](../product-backlog.md#L339) feature-08: no `sdd_list_versions` on tools/list either.
 - [x] B2 feature-14 — five OS/arch build outputs
 - [x] B3 feature-14 — `GET /setup` has no release-download instruction for the binary
 - [x] B4 feature-14 — compiled host binary writes pack ledger via fixture package server (cursor + trae-cn)

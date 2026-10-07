@@ -2,7 +2,7 @@
 
 Operator web app at `framework.sdd.works`. Stories and ACs for the **app**. MCP tools live in [`mcp-stories.md`](../mcp/mcp-stories.md). Design: [`app-design.md`](./app-design.md). Mockups: [`ui-mockup/`](./ui-mockup/). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Phase 2 upcoming (no Gherkin yet):** [Web-portal-06](product-backlog.md#L368) will update the Instructions page for full-repo install, templates, process skills, and coach-ethan. Acceptance scenarios are written when that story starts.
+**Phase 2 upcoming (no Gherkin yet):** [Web-portal-06](../product-backlog.md#L372) will update the Instructions page for full-repo install, templates, process skills, and coach-ethan. Acceptance scenarios are written when that story starts.
 
 **Locales:** `en` (default), `zh-Hans`, `zh-Hant`. User-facing copy is i18n keys. Tests assert keys / `data-testid` / roles, not one language’s sentences. Protocol ids (`framework.sdd.works`, tool names, locale codes) are not localized.
 
@@ -14,7 +14,7 @@ Operator web app at `framework.sdd.works`. Stories and ACs for the **app**. MCP 
 
 ## `sdd-admin-home` — Public home
 
-Public landing is the instructions guide. Labels and controls use i18n keys (`sdd-admin-i18n`). [Web-portal-09](product-backlog.md#L403).
+Public landing is the instructions guide. Labels and controls use i18n keys (`sdd-admin-i18n`). [Web-portal-09](../product-backlog.md#L430).
 
 ### User story 1 — `/` shows the instructions guide
 
@@ -751,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. Feature-16 ([Web-portal-12](product-backlog.md#L379)) adds the Scrum in SDD tab. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is Get secret on Setup. AC18 is the guide tab before configurable tabs ([Web-portal-25](product-backlog.md#L394), feature-60). Sprint 8 feature-53 and feature-55–57 cover lite manifest seed, lite file links API, lite client receipt spec ([Spec-seeds-18](../product-backlog.md#L449)), lite install prompt, and lite one-line copy. Sprint 8 feature-58–60 cover pack `.instructions-tabs.json`, the config API, and dynamic tab UI.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. Feature-16 ([Web-portal-12](../product-backlog.md#L383)) adds the Scrum in SDD tab. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is Get secret on Setup. AC18 is the guide tab before configurable tabs ([Web-portal-25](../product-backlog.md#L400), feature-60). Sprint 8 feature-53 and feature-55–57 cover lite manifest seed, lite file links API, lite client receipt spec ([Spec-seeds-18](../product-backlog.md#L482)), lite install prompt, and lite one-line copy. Sprint 8 feature-58–60 cover pack `.instructions-tabs.json`, the config API, and dynamic tab UI.
 
 ### User story 1 — Read instructions
 
@@ -1028,11 +1028,11 @@ Scenario: Install omits the portal guide files
 **I want** lite install instructions from the public site
 **So that** I can copy listed pack skills and rules without the full MCP install
 
-[Web-portal-18](../product-backlog.md#L449) delivers two parts: **AC20** (public agent markdown at `GET /setup/install`) and **AC21** (Setup copy control for that URL). Sprint SBI [feature-56](../sprint-backlog.md#sprint-8) covers both; the PBI is **Done** only when AC20 and AC21 pass.
+[Web-portal-18](../product-backlog.md#L488) delivers two parts: **AC20** (public agent markdown at `GET /setup/install`) and **AC21** (Setup copy control for that URL). Sprint SBI [feature-56](../sprint-backlog.md#sprint-8) covers both; the PBI is **Done** only when AC20 and AC21 pass.
 
 #### AC19 — feature-55 / Web-portal-17
 
-Public HTTP only. No admin session. The list route matches [Spec-seeds-18](../product-backlog.md#L449) server list fields (`package_version`, `package_commit`, combined `files`).
+Public HTTP only. No admin session. The list route matches [Spec-seeds-18](../product-backlog.md#L482) server list fields (`package_version`, `package_commit`, combined `files`).
 
 ```gherkin
 Scenario: Lite file list returns same-origin links for allow-listed paths
@@ -1130,7 +1130,7 @@ Scenario: framework.sdd.works Setup is full pack only
 
 #### AC22 — feature-58 / Spec-seeds-16
 
-Pack contract verified through the portal sync cache ([Spec-seeds-16](product-backlog.md#L277)).
+Pack contract verified through the portal sync cache ([Spec-seeds-16](../product-backlog.md#L277)).
 
 ```gherkin
 Scenario: Synced pack includes default instructions tabs config
@@ -1215,11 +1215,11 @@ Scenario: A later duplicate heading does not steal the first fragment
 ```gherkin
 Scenario: Learn Scrum tab embeds the shared learn URL
   Given content/.instructions-tabs.json lists learn-scrum-in-sdd with type embedded_external_page
-  And urls.en, urls.zh-Hans, and urls.zh-Hant are https://sdd.works/en/learn/
+  And urls.en, urls.zh-Hans, and urls.zh-Hant are https://sdd.works/en/learn-embedded/
   When the visitor opens / or /instructions with tab=learn-scrum-in-sdd in locale en, zh-Hans, or zh-Hant
   Then guide-tab-learn-scrum has aria-selected true
   And the tab label resolves from admin.guide.tab_learn_scrum
-  And learn-scrum-iframe src is https://sdd.works/en/learn/
+  And learn-scrum-iframe src is https://sdd.works/en/learn-embedded/
   And a link with the same href opens in a new tab
   And panel-setup is hidden
 
@@ -1262,6 +1262,36 @@ Scenario: A heading link clears the pinned block
   Given a content tab has a heading link per AC25
   When the visitor activates that link
   Then the heading is fully in view below the pinned logo, tagline, and tabs
+```
+
+#### AC28 — Web-portal-27 / ADR-112
+
+[ADR-112](../adr/ADR-112-learn-embed-frame.md). The embed URL stays AC26. No new label keys.
+
+```gherkin
+Scenario: Learn embed frame is square and has no border
+  Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
+  When the Learn Scrum panel is shown
+  Then learn-scrum-iframe has no border
+  And the iframe box uses aspect-ratio 1 / 1
+  And the iframe width fills the guide column
+  And the iframe does not use a viewport min-height
+  And learn-scrum-iframe src is still https://sdd.works/en/learn-embedded/
+```
+
+#### AC29 — Web-portal-27 / ADR-113
+
+[ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md). Embed URL stays AC26. Grid size and tile alignment inside the frame are out of scope.
+
+```gherkin
+Scenario: Learn intro and fallback use separate URLs
+  Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
+  When the Learn Scrum panel is shown
+  Then the intro resolves from admin.guide.learn_scrum_intro
+  And learn-scrum-iframe src is https://sdd.works/en/learn-embedded/
+  And a link opens https://learn.sdd.works in a new tab
+  And the link visible text resolves from admin.guide.learn_scrum_open_external
+  And the link does not use admin.guide.learn_scrum_open_external_prefix
 ```
 
 ---

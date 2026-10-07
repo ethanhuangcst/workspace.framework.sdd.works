@@ -5,7 +5,8 @@ import { InstructionsPage } from "./InstructionsPage";
 import type { Locale } from "@/i18n/t";
 import type { InstructionsPageTab } from "@/lib/instructions-tabs-page";
 
-const LEARN_EMBED_URL = "https://sdd.works/en/learn/";
+const LEARN_EMBED_URL = "https://sdd.works/en/learn-embedded/";
+const LEARN_SITE_URL = "https://learn.sdd.works";
 
 const LEARN_TAB_LABEL: Record<Locale, string> = {
   en: "Learn Scrum in SDD",
@@ -442,6 +443,7 @@ describe("InstructionsPage", () => {
 
       const iframe = screen.getByTestId("learn-scrum-iframe");
       expect(iframe).toHaveAttribute("src", LEARN_EMBED_URL);
+      expect(iframe).toHaveClass("learn-embed-frame");
       expect(screen.getByTestId("panel-learn-scrum")).toBeVisible();
       expect(screen.getByTestId("panel-setup")).not.toBeVisible();
 
@@ -449,7 +451,7 @@ describe("InstructionsPage", () => {
         .getByTestId("learn-scrum-embed")
         .querySelector("a[target='_blank']");
       expect(fallback).not.toBeNull();
-      expect(fallback).toHaveAttribute("href", LEARN_EMBED_URL);
+      expect(fallback).toHaveAttribute("href", LEARN_SITE_URL);
       expect(fallback).toHaveAttribute("rel", "noopener noreferrer");
     },
   );

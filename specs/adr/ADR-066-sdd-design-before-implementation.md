@@ -23,7 +23,7 @@ Design is a gate in front of implementation, not a ninth Scrum job and not a sla
 `sdd-implement` matches the Features catalog and the other short skill ids. The old id named a fixed two-step recipe. The skill’s job is to load whichever of those skills the SBI’s acceptance criteria and the Definition of Done require.
 
 ## Consequences
-- [Skill-11](product-backlog.md#L108) owns `sdd-design`. Sprint 13 feature-13 stores that initial `SKILL.md`. Install onto `{client_root}` stays with the pack copy.
+- [Skill-11](../product-backlog.md#L108) owns `sdd-design`. Sprint 13 feature-13 stores that initial `SKILL.md`. Install onto `{client_root}` stays with the pack copy.
 - Skill-10 (retired) is `sdd-implement`. Sprint 13 feature-15 stores the rename to `sdd-implement`. Sprint 13 feature-03 ships the skill.
 - Do not ship `sdd-implement-feature`. Living skill lists use `sdd-implement`.
 

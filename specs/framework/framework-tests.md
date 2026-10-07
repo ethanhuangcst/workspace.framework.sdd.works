@@ -1146,7 +1146,7 @@ Stories: [`app-stories.md`](../admin-portal/app-stories.md) AC22 ([feature-58](.
 
 ### Strategy
 
-Unit checks on the bundled JSON seed and the config validator. No HTTP server in this slice. Pack copy of the same file is verified after [MCP-07](product-backlog.md#L325) sync. Validator `contentRoot` is the sync unpack root (directory that contains `content/`). JSON `paths` values are relative to that root, not to `src/content/` alone.
+Unit checks on the bundled JSON seed and the config validator. No HTTP server in this slice. Pack copy of the same file is verified after [MCP-07](../product-backlog.md#L325) sync. Validator `contentRoot` is the sync unpack root (directory that contains `content/`). JSON `paths` values are relative to that root, not to `src/content/` alone.
 
 ### Plan
 

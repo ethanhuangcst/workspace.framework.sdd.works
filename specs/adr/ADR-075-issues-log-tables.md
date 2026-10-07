@@ -23,7 +23,7 @@ The Open table holds work that is not finished. The Closed table holds defects w
 
 ## Consequences
 - [ADR-070](./ADR-070-change-log-and-issues-log.md) decision 2 no longer names the status values. This ADR does.
-- [Spec-seeds-13](product-backlog.md#L258) and the EN seed `specs/framework/seeds/templates/EN/issues-log.md` follow these tables. HanS and HanT bodies stay on i18n-02.
+- [Spec-seeds-13](../product-backlog.md#L258) and the EN seed `specs/framework/seeds/templates/EN/issues-log.md` follow these tables. HanS and HanT bodies stay on i18n-02.
 - The live `specs/issues-log.md` uses these tables. The twelve Web-app rows closed in Sprint 3 sit in Closed issues.
 
 ## Date

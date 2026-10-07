@@ -423,6 +423,75 @@ Scenario: Seed matches design section 14
 
 Tests: CE-PROMPT-01.
 
+### `sdd-ethan-guiding-proposals` — Guiding proposals from framework knowledge (Agent-03)
+
+**As the** user who asks ethan what to do next
+**I want** one next action grounded in the board and coach knowledge
+**So that** I get a proposal without an unconfirmed project write
+
+#### AC1
+
+```gherkin
+Scenario: Guiding proposal reads one coach-knowledge heading
+  Given pack_complete is true
+  And the audit returned Usable
+  And the user asks for a guiding proposal about harness engineering
+  When ethan answers
+  Then ethan opens one heading in coach-knowledge.md for that topic
+  And ethan does not open coach-knowledge.md during onboard
+  And ethan states one next action from the board and that heading
+  And ethan does not write a project file
+```
+
+#### AC2
+
+```gherkin
+Scenario: A choice that would change the next write waits for confirm
+  Given pack_complete is true
+  And the audit returned Usable
+  And the user asks what to do next
+  And more than one backlog write is valid
+  When ethan answers
+  Then ethan asks one question
+  And ethan names the result of each option
+  And ethan waits before any project write
+```
+
+Tests: CE-GUIDE-01, CE-GUIDE-02.
+
+### `sdd-ethan-named-jobs` — Skill call for a named job (Agent-02)
+
+**As the** user who names a job after onboard
+**I want** ethan to route to the skill folder in constants.json
+**So that** every pack job has one path from the agent file
+
+#### AC1
+
+```gherkin
+Scenario: Each skills key in constants maps to a named job in ethan.md
+  Given constants.json on the client root lists every entry in the skills object
+  When ethan.md Jobs is read
+  Then each key has a matching named job line or bullet
+  And prepare one feature or sprint backlog item to build routes to sdd-spec-to-build
+  And update specs to match the work routes to sdd-update-specs
+  And draft stories and acceptance criteria routes to atdd-expert
+  And where the project is routes to skill_get_status
+```
+
+#### AC2
+
+```gherkin
+Scenario: A named job follows the folder from constants
+  Given pack_complete is true
+  And the audit returned Usable
+  And the user names refine the product backlog
+  When ethan runs that job
+  Then ethan follows the folder named for skill_refine_pb in constants.json
+  And ethan does not embed skill steps in ethan.md
+```
+
+Tests: CE-JOBS-01, CE-JOBS-02.
+
 ## skills
 
 Stories for skills whose behavior the design already decides. Tests: `[framework-tests.md](./framework-tests.md#skills)`.
@@ -1230,7 +1299,7 @@ Tests: CE-SKILL-06. The on-disk folder `pack.framework.sdd.works/skills/sdd-trac
 
 Design: `[framework-design.md](./framework-design.md#rules)`. Tests: `[framework-tests.md](./framework-tests.md#rules)`.
 
-The four pack rule files install at `{client_root}/rules/<name>.mdc`. Framework-bound names use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). On Windows the directory is `rules\` under that client root. `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, and `sdd-realtime-status.mdc` have behavior stories in the seed tree. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](product-backlog.md#L208) Done). [Rule-03](product-backlog.md#L206) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). The pack does not ship `artifacts-map.mdc` or `realtime-status.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
+The four pack rule files install at `{client_root}/rules/<name>.mdc`. Framework-bound names use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). On Windows the directory is `rules\` under that client root. `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, and `sdd-realtime-status.mdc` have behavior stories in the seed tree. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](../product-backlog.md#L208) Done). [Rule-03](../product-backlog.md#L206) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). The pack does not ship `artifacts-map.mdc` or `realtime-status.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### `artifacts-map.mdc`
 
@@ -1616,15 +1685,15 @@ Scenario: Secrets seed holds no secret values
   And it contains no secret value
 ```
 
-User confirmed EN `.secrets` seed usable 2026-10-05 ([Spec-seeds-12](product-backlog.md#L270), [feature-49](../sprint-backlog.md#sprint-7)); AC3 passes. Post-close edits add grouped example keys; practices and CE-TPL-13 track the shape.
+User confirmed EN `.secrets` seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#L270), [feature-49](../sprint-backlog.md#sprint-7)); AC3 passes. Post-close edits add grouped example keys; practices and CE-TPL-13 track the shape.
 
 Tests: CE-TPL-12 for flat module paths (AC2). CE-TPL-13 for `.secrets` seed shape (AC3).
 
-User confirmed EN seeds usable 2026-10-05 for [Spec-seeds-10](product-backlog.md#L266) (`architecture.md`), [Spec-seeds-11](product-backlog.md#L268) (`release.md`), [Spec-seeds-12](product-backlog.md#L270) (`.secrets`), and [Spec-seeds-13](product-backlog.md#L274) (`test-strategy.md`) via Sprint 7 [feature-47](../sprint-backlog.md#sprint-7), [feature-48](../sprint-backlog.md#sprint-7), [feature-49](../sprint-backlog.md#sprint-7), and [feature-50](../sprint-backlog.md#sprint-7). This repo's live [`architecture.md`](../architecture.md) and [`release.md`](../release.md) stay JIT pointers; the pack starters live under `pack.framework.sdd.works/templates/EN/`.
+User confirmed EN seeds usable 2026-10-05 for [Spec-seeds-10](../product-backlog.md#L266) (`architecture.md`), [Spec-seeds-11](../product-backlog.md#L268) (`release.md`), [Spec-seeds-12](../product-backlog.md#L270) (`.secrets`), and [Spec-seeds-13](../product-backlog.md#L274) (`test-strategy.md`) via Sprint 7 [feature-47](../sprint-backlog.md#sprint-7), [feature-48](../sprint-backlog.md#sprint-7), [feature-49](../sprint-backlog.md#sprint-7), and [feature-50](../sprint-backlog.md#sprint-7). This repo's live [`architecture.md`](../architecture.md) and [`release.md`](../release.md) stay JIT pointers; the pack starters live under `pack.framework.sdd.works/templates/EN/`.
 
 ## `lite-install-manifest` — Lite install allow-list (feature-53)
 
-Design: [`framework-design.md`](./framework-design.md#lite-install-manifest). Tests: [`framework-tests.md`](./framework-tests.md#lite-install-manifest). Basename [ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md). [Spec-seeds-15](product-backlog.md#L442). No UI. Portal sync and the file-links route stay on later SBIs.
+Design: [`framework-design.md`](./framework-design.md#lite-install-manifest). Tests: [`framework-tests.md`](./framework-tests.md#lite-install-manifest). Basename [ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md). [Spec-seeds-15](../product-backlog.md#L474). No UI. Portal sync and the file-links route stay on later SBIs.
 
 ### User story 1 — Know which pack files a lite copy may take
 
@@ -1667,17 +1736,17 @@ Scenario: A path outside the allow-list shape fails review
   Then the allow-list does not pass review
 ```
 
-User confirmed usable 2026-10-07 ([feature-53](../sprint-backlog.md#sprint-8)). Authoring seed, [`validateLiteInstallManifest`](../../src/core/seeds/lite-install-manifest.ts), and **CE-LITE-01** / **CE-LITE-02** ship in this repo. Pack repo root copy is manual go-live; [Spec-seeds-15](product-backlog.md#L442) stays open until [MCP-07](product-backlog.md#L325) includes the file in sync cache and install tarball.
+User confirmed usable 2026-10-07 ([feature-53](../sprint-backlog.md#sprint-8)). Authoring seed, [`validateLiteInstallManifest`](../../src/core/seeds/lite-install-manifest.ts), and **CE-LITE-01** / **CE-LITE-02** ship in this repo. Pack repo root copy is manual go-live; [Spec-seeds-15](../product-backlog.md#L474) stays open until [MCP-07](../product-backlog.md#L325) includes the file in sync cache and install tarball.
 
 ## `instructions-tabs-config` — Pack instructions tabs JSON (feature-58)
 
-Design: [`app-design.md`](../admin-portal/app-design.md) instructions tabs section. Tests: [`framework-tests.md`](./framework-tests.md#instructions-tabs-config) (**CE-TABS-01**, **CE-TABS-02**). [Spec-seeds-16](product-backlog.md#L277). Operator rules: [`src/content/.admin-note.md`](../../src/content/.admin-note.md). Portal resolver, API, and UI are [Web-portal-24](product-backlog.md#L392), [Web-portal-25](product-backlog.md#L395), [feature-59](../sprint-backlog.md#sprint-8), [feature-60](../sprint-backlog.md#sprint-8).
+Design: [`app-design.md`](../admin-portal/app-design.md) instructions tabs section. Tests: [`framework-tests.md`](./framework-tests.md#instructions-tabs-config) (**CE-TABS-01**, **CE-TABS-02**). [Spec-seeds-16](../product-backlog.md#L277). Operator rules: [`src/content/.admin-note.md`](../../src/content/.admin-note.md). Portal resolver, API, and UI are [Web-portal-24](../product-backlog.md#L395), [Web-portal-25](../product-backlog.md#L395), [feature-59](../sprint-backlog.md#sprint-8), [feature-60](../sprint-backlog.md#sprint-8).
 
 Acceptance scenarios live in [`app-stories.md`](../admin-portal/app-stories.md) AC22. This repo ships the bundled seed at [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json). The pack repo copy is `content/.instructions-tabs.json` after sync.
 
 ## `lite-install-receipt` — Lite install client receipt (feature-57)
 
-Design: [`framework-design.md`](./framework-design.md#lite-install-receipt). Tests: [`framework-tests.md`](./framework-tests.md#lite-install-receipt). [Spec-seeds-18](product-backlog.md#L444). No UI. The public prompt that tells the agent to follow these rules is [Web-portal-18](product-backlog.md#L450). The file-links route is [Web-portal-17](product-backlog.md#L441).
+Design: [`framework-design.md`](./framework-design.md#lite-install-receipt). Tests: [`framework-tests.md`](./framework-tests.md#lite-install-receipt). [Spec-seeds-18](../product-backlog.md#L482). No UI. The public prompt that tells the agent to follow these rules is [Web-portal-18](../product-backlog.md#L488). The file-links route is [Web-portal-17](../product-backlog.md#L441).
 
 ### User story 1 — Record a finished lite copy
 
@@ -1747,4 +1816,4 @@ Scenario: A failed copy keeps the previous receipt
   And a first run that never succeeded still has no receipt
 ```
 
-User confirmed usable 2026-10-07 ([feature-57](../sprint-backlog.md#sprint-8)). Authoring example, [`validateLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), and **CE-LITE-03** / **CE-LITE-04** ship in this repo. [Web-portal-18](product-backlog.md#L450) Part 1 and the local agent apply these rules at runtime.
+User confirmed usable 2026-10-07 ([feature-57](../sprint-backlog.md#sprint-8)). Authoring example, [`validateLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), and **CE-LITE-03** / **CE-LITE-04** ship in this repo. [Web-portal-18](../product-backlog.md#L488) Part 1 and the local agent apply these rules at runtime.

@@ -365,7 +365,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | | |
 | --- | --- |
-| Job | One GitHub URL; dirty Save; validate then persist; pack repo file note for operators ([Web-portal-26](../product-backlog.md#L420)) |
+| Job | One GitHub URL; dirty Save; validate then persist; pack repo file note for operators ([Web-portal-26](../product-backlog.md#L446)) |
 | Layout | Title + lead; success/error callouts; **Repository URL** as `.section-subtitle` (no rule under label); underline `input[type=url]` (mono); hint; Save disabled until dirty; **Admin note** block renders markdown from synced `content/.admin-note.md` (authoring seed [`src/content/.admin-note.md`](../../src/content/.admin-note.md)) |
 | Flow | Unchanged → Save disabled; success → tip + DB; fail → tip, no DB write. Note body updates after pack sync only. |
 | Keys | `admin.settings.*`, `errors.settings_url_*` |
@@ -387,7 +387,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | Install framework.sdd.works to AI tools |
-| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#pb-126)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /setup/install`); install phrase + `sdd_install_framework` after MCP connect; Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Setup ends with the secret form after the tools table ([ADR-067](../adr/ADR-067-get-secret-on-setup.md), feature-17); footer Admin portal link then copyright |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#L419)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /setup/install`); install phrase + `sdd_install_framework` after MCP connect; Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Setup ends with the secret form after the tools table ([ADR-067](../adr/ADR-067-get-secret-on-setup.md), feature-17); footer Admin portal link then copyright |
 | Tabs (WA-06) | Setup, Features, and Scrum in SDD are links (`?tab=features` / `?tab=scrum-in-sdd` on the current path). Click updates client state and the URL, so a full load still opens the selected tab. The tab list sits inside `.guide-sticky` (`z-index: 20`). Inactive panel uses `hidden` with `display: none !important`. Same on `/` and `/instructions`. |
 | Guide tab (Web-portal-12 / feature-16) | Third tab after Features (`?tab=scrum-in-sdd`, `#panel-scrum`). Label key `admin.guide.tab_scrum` is `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant` (not translated). Cache path is `<unpacked>/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Fallback is `src/content/scrum-in-sdd/`. The panel uses `.scrum-body`: `h1` is 1.65rem with 2.75rem above later part titles; `h2` is 1.2rem. List items keep inline markdown. No Features em-dash split. Template seeds stay `templates/{locale}/scrum-in-sdd.md`. Get secret stays on Setup ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)). |
 | Secret form (feature-04 / feature-05, placement [ADR-067](../adr/ADR-067-get-secret-on-setup.md) / feature-17) | On Setup only, after the tools table, section `#setup-secret` with no heading. The Features panel does not include the form. Wrapper `.secret-stack`: column, `width: fit-content`, `max-width: 100%`, `gap: 1.25rem` between the lookup row and the result. Form `.secret-lookup` inside the stack: placeholder input (`admin.guide.secret_hint`) + Get secret control (`admin.guide.secret_button`) as `button type="button"` (must not issue a document GET). Catalog: en `Enter the name of the secret, example: sdd-trial-googlemaps` / `Get secret`; zh-Hans `输入要获得的密钥名称，例如：sdd-trial-googlemaps` / `获取密钥`; zh-Hant `輸入要取得的密鑰名稱，例如：sdd-trial-googlemaps` / `獲取密鑰`. CSS: row gap `0.75rem`; input `flex: 0 0 32rem` (does not shrink), width/min/max `32rem`, height `2.125rem`; button content-sized, height `2.125rem`. Found result and not-found notice stretch to the stack (`width: 0; min-width: 100%`) so the right edge lines up with Get secret. Found UI: existing portal `.codeblock` with `CopyButton`, `data-testid="secret-result"`, `aria-live="polite"`. Missing / empty: `.secret-error` (`data-testid="secret-error"`) with `admin.guide.secret_missing` or `admin.guide.secret_empty`. After the result renders, scroll `secret-result` or `secret-error` into view (`block: "start"`). Below `640px`: stack and field full width, button stacks under the field. **Lookup (feature-05):** `POST` one exact `key_name` to a public route that decrypts via the same store as `getKey`; response is only that plaintext value or keyed `admin.guide.secret_missing` (lists no other names). Viewport stays on `#setup-secret` with the Setup tab selected. Exact name match only (no fuzzy match). Mock: [`13-instructions.html`](./ui-mockup/13-instructions.html) (same form in [`01-home.html`](./ui-mockup/01-home.html)). |
@@ -454,7 +454,7 @@ Do these in order. Write the failing test for a step before the code for that st
 
 #### Lite install prompt (feature-56 / Web-portal-18)
 
-Part 1 is public agent markdown at `GET /setup/install`. Part 2 is the **partner** one-line paste ([`app-stories.md`](./app-stories.md) AC21), not a control on framework.sdd.works. Depends on [feature-55](./app-design.md#lite-install-file-links-feature-55--web-portal-17) lite file routes and on [Spec-seeds-18](../product-backlog.md#L449) / [`framework-design.md`](../framework/framework-design.md) lite receipt merge on the client.
+Part 1 is public agent markdown at `GET /setup/install`. Part 2 is the **partner** one-line paste ([`app-stories.md`](./app-stories.md) AC21), not a control on framework.sdd.works. Depends on [feature-55](./app-design.md#lite-install-file-links-feature-55--web-portal-17) lite file routes and on [Spec-seeds-18](../product-backlog.md#L482) / [`framework-design.md`](../framework/framework-design.md) lite receipt merge on the client.
 
 ##### Partner one-line (Part 2)
 
@@ -486,7 +486,7 @@ The served body must match `public/agent-setup/install.md` after rewrite. Integr
 | File index | Instruct `GET /api/sdd/lite/files` (or same-origin path after rewrite) |
 | Per-file download | Instruct `GET /api/sdd/lite/file` with allow-listed relative paths only |
 | Client root | Instruct resolving `{client_root}` for the running IDE or agent host |
-| Receipt | Instruct merge and `.sdd-lite-installed.json` per [Spec-seeds-18](../product-backlog.md#L449) and [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts) rules |
+| Receipt | Instruct merge and `.sdd-lite-installed.json` per [Spec-seeds-18](../product-backlog.md#L482) and [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts) rules |
 | Forbidden | Must not instruct `sdd_install_framework`, `sdd_update_framework`, or writing `.sdd-installed.json` |
 | Scope | Copy only paths from the manifest (`skills/`, `rules/`). No agents, workflows, or templates from lite allow-list |
 
@@ -580,10 +580,14 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | | |
 | --- | --- |
 | Type | `embedded_external_page` in `content/.instructions-tabs.json` |
-| Last tab | `learn-scrum-in-sdd`. `labelKey` `admin.guide.tab_learn_scrum`. `urls.en`, `urls.zh-Hans`, and `urls.zh-Hant` are all `https://sdd.works/en/learn/` |
-| Panel | One iframe (`learn-scrum-iframe`) plus an open-in-new-tab link. Guide tokens only. No extra card chrome |
+| Last tab | `learn-scrum-in-sdd`. `labelKey` `admin.guide.tab_learn_scrum`. `urls.en`, `urls.zh-Hans`, and `urls.zh-Hant` are all `https://sdd.works/en/learn-embedded/` |
+| Panel | One iframe (`learn-scrum-iframe`) plus an open-in-new-tab link. Guide tokens only. No border on the iframe ([ADR-112](../adr/ADR-112-learn-embed-frame.md)) |
 | Allowlist | `https` and host `sdd.works` or `www.sdd.works` |
 | Default tab | Setup when `?tab=` is absent |
+| Frame | `.learn-embed-frame`: `width: 100%`, `height: auto`, `aspect-ratio: 1 / 1`, `border: 0`. No `min-height: min(72vh, 780px)`. No crop via `transform` or `overflow`. Inner page padding stays on sdd.works |
+| Copy ([ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md)) | Intro: `admin.guide.learn_scrum_intro`. Fallback: one `Link` with `admin.guide.learn_scrum_open_external`, `href` from `SDD_LEARN_SITE_URL` in [`src/lib/sdd-works-learn-url.ts`](../../src/lib/sdd-works-learn-url.ts) (`https://learn.sdd.works`). Iframe `src` stays `embedUrl` from resolver |
+| Code | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx): drop prefix plus split link keys; one external link. [`messages/*.json`](../../messages/en.json): update intro; replace two fallback keys with one |
+| Embed page | Grid-only view at `https://sdd.works/en/learn-embedded/` (replaces full `/en/learn/` hub in tab `urls`) |
 
 #### Mail — `14-email-reset.html` / `15-email-invite.html`
 
@@ -623,13 +627,13 @@ Optional confirmation `08-key-created.html` is not a required route — create r
 
 #### Content tab heading anchors (feature-71 / Web-portal-28)
 
-[ADR-109](../adr/ADR-109-content-tab-heading-anchors.md). [Web-portal-28](../product-backlog.md#pb-125).
+[ADR-109](../adr/ADR-109-content-tab-heading-anchors.md). [Web-portal-28](../product-backlog.md#L413).
 
 ##### UI
 
 No new screen, tab, or palette. Content tabs keep the type scale already on `.features-body`, `.scrum-body`, and `.portal-content-body`.
 
-Headings in those three bodies use `scroll-margin-top` so a fragment scroll is not covered by the tab bar. [Web-portal-29](../product-backlog.md#pb-126) raises that offset to the full sticky block (logo, tagline, and tabs). No new color, motion, or label.
+Headings in those three bodies use `scroll-margin-top` so a fragment scroll is not covered by the tab bar. [Web-portal-29](../product-backlog.md#L419) raises that offset to the full sticky block (logo, tagline, and tabs). No new color, motion, or label.
 
 ##### Technical
 
@@ -650,7 +654,7 @@ Tests: unit cases in [`src/lib/features-catalog.test.ts`](../../src/lib/features
 
 #### Sticky guide header (Web-portal-29)
 
-[ADR-111](../adr/ADR-111-guide-header-sticky.md). [Web-portal-29](../product-backlog.md#pb-126). AC27 in [`app-stories.md`](./app-stories.md).
+[ADR-111](../adr/ADR-111-guide-header-sticky.md). [Web-portal-29](../product-backlog.md#L419). AC27 in [`app-stories.md`](./app-stories.md).
 
 ##### UI
 

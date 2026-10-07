@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-[Skill-18](product-backlog.md#L140) (Sprint 7 feature-62) was named `sdd-tester`. The job is generic software testing: browser, API, and the unit runner the project already uses. It should work in any software project with minimal SDD coupling.
+[Skill-18](../product-backlog.md#L140) (Sprint 7 feature-62) was named `sdd-tester`. The job is generic software testing: browser, API, and the unit runner the project already uses. It should work in any software project with minimal SDD coupling.
 
 [ADR-092](./ADR-092-pack-authoring-skill-sdd-prefix.md) applies to authoring skills that collide with Cursor built-ins. [ADR-101](./ADR-101-frontend-design-pack-skill-name.md) already allows an unprefixed domain skill when the folder is not an authoring skill. `testing-expert` does not match a Cursor built-in name. Ethan may keep a personal `webapp-testing` copy for history; the pack ships one all-in-one skill and does not require any other testing skill at install time.
 
@@ -28,7 +28,7 @@ Accepted
 
 ## Consequences
 
-- [Skill-18](product-backlog.md#L140) and Sprint 7 feature-62 use `testing-expert`.
+- [Skill-18](../product-backlog.md#L140) and Sprint 7 feature-62 use `testing-expert`.
 - framework-design, framework-stories, and a **CE-SKILL** case land when the seed is written and the user confirms.
 - Historical changelog lines may still say `sdd-tester`.
 

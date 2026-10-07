@@ -8,7 +8,7 @@ Accepted
 
 `/` and `/instructions` open with a logo, the page title, the line `SKILLS.RULES.AGENTS.TEMPLATES`, and the tab row (Setup, Features, and later tabs). A hairline sits under the tagline (`.guide-hero` `border-bottom` in `src/styles/portal.css`). Long tab bodies scroll that chrome off the viewport, so the visitor loses the title and the tab row.
 
-[Web-portal-05](../product-backlog.md#pb-71) shipped this layout. [Web-portal-25](../product-backlog.md#pb-112) owns which tabs appear. [ADR-109](./ADR-109-content-tab-heading-anchors.md) already offsets in-page heading targets by the tab bar height.
+[Web-portal-05](../product-backlog.md#L367) shipped this layout. [Web-portal-25](../product-backlog.md#L400) owns which tabs appear. [ADR-109](./ADR-109-content-tab-heading-anchors.md) already offsets in-page heading targets by the tab bar height.
 
 ## Decision
 
@@ -25,9 +25,9 @@ Sticky keeps the block in normal flow, so the first screen does not need a space
 
 ## Consequences
 
-- [Web-portal-29](../product-backlog.md#pb-126) implements this ADR on the live page and on mockups `01-home.html` and `13-instructions.html`.
-- [Web-portal-05](../product-backlog.md#pb-71) stays Done. This ADR changes the chrome on top of that layout.
-- [Web-portal-28](../product-backlog.md#pb-125) heading offset must clear the full sticky block, not only the tab row.
+- [Web-portal-29](../product-backlog.md#L419) implements this ADR on the live page and on mockups `01-home.html` and `13-instructions.html`.
+- [Web-portal-05](../product-backlog.md#L367) stays Done. This ADR changes the chrome on top of that layout.
+- [Web-portal-28](../product-backlog.md#L413) heading offset must clear the full sticky block, not only the tab row.
 
 ## Date
 

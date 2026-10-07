@@ -12,7 +12,7 @@ Accepted. The filename `artifacts-map.md` is superseded by [ADR-082](./ADR-082-a
 1. The pack has no `artifacts-map.md` template seed. Do not add a HanS or HanT copy of that seed.
 2. The Pokymon Card Collection map is the example in the artifacts-map section of `sdd-scrum-practices.md`. It is not a file a new project copies.
 3. `sdd-update-project` writes `{workspace}/artifacts-map.md` from the Header, File, and Module templates in that section, after the user confirms.
-4. [Spec-seeds-04](product-backlog.md#L238) and Sprint 4 feature-03 are retired. They are not Done. [i18n-02](product-backlog.md#L296) does not translate an artifacts-map seed.
+4. [Spec-seeds-04](../product-backlog.md#L238) and Sprint 4 feature-03 are retired. They are not Done. [i18n-02](../product-backlog.md#L299) does not translate an artifacts-map seed.
 
 ## Rationale
 

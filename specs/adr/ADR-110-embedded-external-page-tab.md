@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-Instructions tabs are `code` (a React panel such as Setup) or `content` (pack markdown). [Web-portal-27](../product-backlog.md#pb-124) needs a tab that embeds a page hosted elsewhere. The first page is the WordPress learn hub at [https://sdd.works/en/learn/](https://sdd.works/en/learn/). The tab name must use i18n keys. The embed URL must live in `content/.instructions-tabs.json` so an operator can change it without a new React panel.
+Instructions tabs are `code` (a React panel such as Setup) or `content` (pack markdown). [Web-portal-27](../product-backlog.md#L404) needs a tab that embeds a page hosted elsewhere. The first page is the WordPress learn hub at [https://sdd.works/en/learn/](https://sdd.works/en/learn/). The tab name must use i18n keys. The embed URL must live in `content/.instructions-tabs.json` so an operator can change it without a new React panel.
 
 A `code` tab cannot carry a URL. Hard-coding the URL in the app hides it from the pack file.
 
@@ -26,7 +26,7 @@ One generic panel covers later embeds. Per-locale URLs match the content-tab pat
 
 ## Consequences
 
-- [Web-portal-27](../product-backlog.md#pb-124) and Sprint 8 feature-70 follow this ADR.
+- [Web-portal-27](../product-backlog.md#L404) and Sprint 8 feature-70 follow this ADR.
 - A blank frame is a host policy on sdd.works (`frame-ancestors`), not a portal bug. The fallback link remains.
 - A reverse proxy is out of scope.
 

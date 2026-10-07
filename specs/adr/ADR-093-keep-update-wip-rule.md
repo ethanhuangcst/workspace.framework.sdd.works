@@ -15,7 +15,7 @@ Accepted
 1. Ship pack rule `sdd-keep-update.mdc` with constants key `keep-update`. It applies on WIP checkpoints while a PBI, SBI, or OGT is not Done.
 2. The rule drafts tier-1 and tier-2 updates, waits for user confirm, then writes. Tier 1 is `status.md`. Tier 2 is open defects on `issues-log.md`, WIP rows and Open RIDs on `sprint-backlog.md`, and PBI WIP on `product-backlog.md` only after the user confirmed that PBI is in progress.
 3. The rule does not mark Done, close a sprint, close an RID, or write routine `changes-log.md` entries. Close stays on [`sdd-dod.mdc`](../framework/seeds/rules/sdd-dod.mdc).
-4. Reopen [Rule-03](product-backlog.md#L206) as the keep-update rule PBI. Do not restore `realtime-status.mdc`.
+4. Reopen [Rule-03](../product-backlog.md#L206) as the keep-update rule PBI. Do not restore `realtime-status.mdc`.
 
 ## Relationship to ADR-091
 

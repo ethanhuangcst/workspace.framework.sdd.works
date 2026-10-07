@@ -21,7 +21,7 @@ This repo has two local stdio MCP processes. Editing TypeScript updates only the
 ## Evidence
 
 - Cursor's MCP entry for this repo is `npm exec tsx src/mcp/stdio.ts`. Stopping that process and refreshing MCP in Cursor loads the current source.
-- `~/.sdd/sdd-mcp` is the compiled host binary from `npm run mcp:build` and `npm run mcp:place`. TRAE CN uses that file. A source change, including the [MCP-03](product-backlog.md#L335) tool list, does not appear there until those two commands run and the client reloads.
+- `~/.sdd/sdd-mcp` is the compiled host binary from `npm run mcp:build` and `npm run mcp:place`. TRAE CN uses that file. A source change, including the [MCP-03](../../product-backlog.md#L339) tool list, does not appear there until those two commands run and the client reloads.
 - Killing the `tsx` process does not stop or replace `~/.sdd/sdd-mcp`.
 
 ## Lesson / guidance

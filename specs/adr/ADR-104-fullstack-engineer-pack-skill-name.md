@@ -6,11 +6,11 @@ Accepted
 
 ## Context
 
-[Skill-20](product-backlog.md#L158) (Sprint 7 feature-65) shipped as `fullstack-developer`. The job is one web feature end to end: screen, API, data, and auth in the stack the project already uses. It should stay stack-agnostic and minimally coupled to SDD process files.
+[Skill-20](../product-backlog.md#L158) (Sprint 7 feature-65) shipped as `fullstack-developer`. The job is one web feature end to end: screen, API, data, and auth in the stack the project already uses. It should stay stack-agnostic and minimally coupled to SDD process files.
 
 The name `fullstack-engineer` matches public skills catalogs (for example SkillsMP `fullstack-engineer`) and states implementation across layers without implying a single pinned framework version.
 
-Visual direction stays on [Skill-17](product-backlog.md#L134) `frontend-designer`. UI-only work stays on [Skill-19](product-backlog.md#L150) `frontend-developer`. Verification stays on [Skill-18](product-backlog.md#L140) `testing-expert`.
+Visual direction stays on [Skill-17](../product-backlog.md#L134) `frontend-designer`. UI-only work stays on [Skill-19](../product-backlog.md#L150) `frontend-developer`. Verification stays on [Skill-18](../product-backlog.md#L140) `testing-expert`.
 
 ## Decision
 
@@ -30,7 +30,7 @@ Visual direction stays on [Skill-17](product-backlog.md#L134) `frontend-designer
 
 ## Consequences
 
-- Update [Skill-20](product-backlog.md#L158) requirement bullets and Sprint 7 feature-65 row text to `fullstack-engineer`.
+- Update [Skill-20](../product-backlog.md#L158) requirement bullets and Sprint 7 feature-65 row text to `fullstack-engineer`.
 - framework-design, framework-stories, and a **CE-SKILL** case land when the user confirms the seed usable.
 - Historical changelog lines may still say `fullstack-developer`.
 

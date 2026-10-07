@@ -12,7 +12,7 @@ That split left two handoffs and a separate TDD folder that had no seed. The pac
 1. The skill folder is `sdd-spec-to-build`. The constants key is `sdd-spec-to-build` (key equals folder name).
 2. The skill runs two phases on one SBI: (1) consolidate the requirement, ask the human about unknowns, write the design the SBI points at; (2) implement that SBI only, loading `sdd-update-specs` and `sdd-atdd` when the acceptance criteria and the Definition of Done require them.
 3. The pack does not ship `sdd-design`, `sdd-implement`, or `sdd-tdd`. Remove those keys from `constants.json`.
-4. [Skill-11](product-backlog.md#L108) owns `sdd-spec-to-build`. Skill-02 and Skill-10 (retired) are Retired. Sprint 13 feature-13 stores the initial `SKILL.md`. feature-15 and feature-03 (implement rename / ship) are Retired. feature-01 is `sdd-atdd` only.
+4. [Skill-11](../product-backlog.md#L108) owns `sdd-spec-to-build`. Skill-02 and Skill-10 (retired) are Retired. Sprint 13 feature-13 stores the initial `SKILL.md`. feature-15 and feature-03 (implement rename / ship) are Retired. feature-01 is `sdd-atdd` only.
 5. This ADR supersedes [ADR-066](./ADR-066-sdd-design-before-implementation.md) for living behavior.
 
 ## Rationale

@@ -19,7 +19,7 @@ Process files sit directly under `artifacts_root`. The set is `product-backlog.m
 A reader can tell a finished change from an open defect by which file the row is in. The sprint OGT table stays a short list for the item in progress.
 
 ## Consequences
-- [Spec-seeds-08](product-backlog.md#L255) moves from Sprint 5 to Sprint 3. [Spec-seeds-13](product-backlog.md#L258) is the issues-log seed, also Sprint 3. Sprint 3 feature-21 writes both EN starters.
+- [Spec-seeds-08](../product-backlog.md#L255) moves from Sprint 5 to Sprint 3. [Spec-seeds-13](../product-backlog.md#L258) is the issues-log seed, also Sprint 3. Sprint 3 feature-21 writes both EN starters.
 - Sprint 5 no longer has a change-log seed row.
 - `sdd-audit-artifacts` does not invent a third log. Confirmed defects go to `issues-log.md`.
 

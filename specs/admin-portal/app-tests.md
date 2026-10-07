@@ -122,7 +122,7 @@ Run this after task-04 and task-05, before feature-07 is marked Done. Use `/` an
 
 - MCP tool contracts and path detection E2E → [`../mcp/mcp-tests.md`](../mcp/mcp-tests.md)
 - Live Resend / live GitHub in default CI
-- Lite receipt merge on the server (agent + [Spec-seeds-18](../product-backlog.md#L449); **feature-57** **Done** in product repo)
+- Lite receipt merge on the server (agent + [Spec-seeds-18](../product-backlog.md#L482); **feature-57** **Done** in product repo)
 
 ---
 
@@ -168,17 +168,17 @@ Run after dynamic tabs ship, before **feature-60** is **Done**. Fixture cache (`
 
 ## 12. Regression after feature-70
 
-Run before **feature-70** is **Done**. [ADR-110](../adr/ADR-110-embedded-external-page-tab.md). AC26 in [`app-stories.md`](./app-stories.md).
+Re-run when Learn Scrum embed or instructions-tabs config changes. **feature-70** closed 2026-10-07. [ADR-110](../adr/ADR-110-embedded-external-page-tab.md). AC26 in [`app-stories.md`](./app-stories.md).
 
 | Layer | Check |
 | --- | --- |
-| Unit | Bundled JSON `learn-scrum-in-sdd` is `embedded_external_page`. All three `urls` values are `https://sdd.works/en/learn/`. A host outside `sdd.works` fails validation. |
+| Unit | Bundled JSON `learn-scrum-in-sdd` is `embedded_external_page`. All three `urls` values are `https://sdd.works/en/learn-embedded/`. A host outside `sdd.works` fails validation. |
 | Component | `?tab=learn-scrum-in-sdd` shows `learn-scrum-iframe` with that src in `en`, `zh-Hans`, and `zh-Hant`. Fallback link uses the same href. Setup stays default without `?tab=`. |
 | Browser | Open `/?tab=learn-scrum-in-sdd`. Confirm the iframe or the fallback link. A blank frame is a sdd.works framing policy, not a missing tab. |
 
 ## 13. Regression after feature-71
 
-Run before **feature-71** is **Done**. Unit tests in Vitest. No new API route. Markdown files stay unchanged.
+Re-run when content-tab markdown renderers or heading slug rules change. **feature-71** closed 2026-10-07. Unit tests in Vitest. No new API route. Markdown files stay unchanged.
 
 | Case | Expect |
 | --- | --- |
@@ -196,7 +196,7 @@ Run before **feature-71** is **Done**. Unit tests in Vitest. No new API route. M
 
 ## 14. Regression after Web-portal-29
 
-Run before [Web-portal-29](../product-backlog.md#pb-126) is **Done**. AC27 in [`app-stories.md`](./app-stories.md). [ADR-111](../adr/ADR-111-guide-header-sticky.md). No new API route and no new message keys.
+Run before [Web-portal-29](../product-backlog.md#L419) is **Done**. AC27 in [`app-stories.md`](./app-stories.md). [ADR-111](../adr/ADR-111-guide-header-sticky.md). No new API route and no new message keys.
 
 | Layer | Check |
 | --- | --- |
@@ -211,3 +211,34 @@ Run before [Web-portal-29](../product-backlog.md#pb-126) is **Done**. AC27 in [`
 - [ ] 375px viewport: no horizontal page scroll
 - [ ] Heading fragment lands below the pinned block
 - [ ] No console or server error on those paths
+
+## 15. Regression after ADR-112
+
+Run before the Learn embed frame change ships. AC28 in [`app-stories.md`](./app-stories.md). [ADR-112](../adr/ADR-112-learn-embed-frame.md). No new API route and no new message keys. The WordPress padding inside the frame is out of scope.
+
+| Layer | Check |
+| --- | --- |
+| Component | `learn-scrum-iframe` is still in `learn-scrum-embed`. `src` is `https://sdd.works/en/learn-embedded/`. The element has class `learn-embed-frame`. |
+| CSS | `.learn-embed-frame` sets `aspect-ratio: 1 / 1`, `width: 100%`, `height: auto`, `border: 0`. It does not set `min-height: min(72vh, 780px)`. |
+| Browser | On `/?tab=learn-scrum-in-sdd`, the frame is square, has no border, and the open-in-new-tab link still uses the same URL. |
+
+- [ ] Iframe src is unchanged from AC26
+- [ ] Frame has no border
+- [ ] Frame aspect ratio is 1 / 1 and width is 100%
+- [ ] Frame does not use the 72vh min-height
+- [ ] No console or server error on that path
+
+## 16. Regression after ADR-113
+
+Run before the Learn copy and fallback change ships. AC29 in [`app-stories.md`](./app-stories.md). [ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md). Embed host allowlist unchanged.
+
+| Layer | Check |
+| --- | --- |
+| i18n | `admin.guide.learn_scrum_intro` and `admin.guide.learn_scrum_open_external` exist in `en`, `zh-Hans`, and `zh-Hant`. Prefix and split link keys are removed. |
+| Component | `learn-scrum-iframe` `src` is still the embed URL from tab config. Fallback `href` is `https://learn.sdd.works`. Fallback text comes from `admin.guide.learn_scrum_open_external`. |
+| Browser | On `/?tab=learn-scrum-in-sdd`, intro matches the active locale catalog. Fallback opens learn.sdd.works. Iframe still loads sdd.works embed. |
+
+- [ ] Intro key updated in all three locale files
+- [ ] Single fallback key; old prefix and link keys gone
+- [ ] Iframe src unchanged; fallback href is learn.sdd.works
+- [ ] No console or server error on that path

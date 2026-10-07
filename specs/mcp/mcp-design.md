@@ -334,14 +334,14 @@ HTTP install never reaches `FS` on the operator server. Stdio reaches `FS` on th
 
 **When:** A partner site or the public guide offers a one-line **lite** prompt (for example 2study.ai). The person wants only the skills and rules listed in the pack manifest, not the full allow-list copy through MCP.
 
-**Not in scope for MCP tools:** Lite copy does not call `sdd_install_framework` or `sdd_update_framework`. It does not merge into `.sdd-installed.json` and does not set `pack_complete`. [MCP-05](product-backlog.md#L340) partial-ledger merge is **Retired**; full install ledger stays on [MCP-01](product-backlog.md#L315).
+**Not in scope for MCP tools:** Lite copy does not call `sdd_install_framework` or `sdd_update_framework`. It does not merge into `.sdd-installed.json` and does not set `pack_complete`. [MCP-05](../product-backlog.md#L344) partial-ledger merge is **Retired**; full install ledger stays on [MCP-01](../product-backlog.md#L318).
 
 | Step | Who | Where |
 | --- | --- | --- |
-| Pack ships `lite-pack.allowlist.json` | Pack repo | Repo root ([ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md), [Spec-seeds-15](product-backlog.md#L442)) |
-| Operator sync | Admin server | Same cache as full install ([MCP-07](product-backlog.md#L325)) |
-| Return same-origin file links | `GET /api/sdd/lite/files` and `GET /api/sdd/lite/file` ([Web-portal-17](product-backlog.md#L446), [`app-design.md`](../admin-portal/app-design.md) Lite install file links) | Sync cache only; no live GitHub at request time |
-| Public install markdown | `GET /setup/install` ([Web-portal-18](product-backlog.md#L449) Part 1, [ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) | Tells the agent to fetch links, resolve `{client_root}`, copy listed paths |
+| Pack ships `lite-pack.allowlist.json` | Pack repo | Repo root ([ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md), [Spec-seeds-15](../product-backlog.md#L474)) |
+| Operator sync | Admin server | Same cache as full install ([MCP-07](../product-backlog.md#L325)) |
+| Return same-origin file links | `GET /api/sdd/lite/files` and `GET /api/sdd/lite/file` ([Web-portal-17](../product-backlog.md#L446), [`app-design.md`](../admin-portal/app-design.md) Lite install file links) | Sync cache only; no live GitHub at request time |
+| Public install markdown | `GET /setup/install` ([Web-portal-18](../product-backlog.md#L488) Part 1, [ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) | Tells the agent to fetch links, resolve `{client_root}`, copy listed paths |
 | Copy listed skills and rules | Local agent | Client folder; **no** `.sdd-installed.json` write |
 
 Full framework install remains: paste `GET /setup`, register stdio, then MCP install or update.
@@ -372,7 +372,7 @@ Register with Zod input schemas. Descriptions state parameters, success shape, a
 | `sdd_install_framework` | **stdio:** writes client paths. **HTTP:** returns tarball URL + metadata; AI extracts locally | stdio + HTTP |
 | `sdd_update_framework` | Alias of install; idempotent on same version + commit | stdio + HTTP |
 
-`sdd_list_versions` is **not** registered on either transport ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md), [MCP-03](product-backlog.md#L335)). Version listing is server-only: `listVersions()` in `src/core/tools/list-versions.ts` and `GET /api/sdd/versions`. Do not expose the same payload as an MCP resource.
+`sdd_list_versions` is **not** registered on either transport ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md), [MCP-03](../product-backlog.md#L339)). Version listing is server-only: `listVersions()` in `src/core/tools/list-versions.ts` and `GET /api/sdd/versions`. Do not expose the same payload as an MCP resource.
 
 Setup confirm sentence: the agent confirms `sdd_install_framework` and `sdd_update_framework` (HTTP also has `sdd_get_key`). It does not name `sdd_list_versions`. The embedded prompt body in §2.1 matches `public/agent-setup/prompt.md`.
 
