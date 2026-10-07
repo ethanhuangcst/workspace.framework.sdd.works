@@ -15,6 +15,10 @@ describe("setup public paths", () => {
   it("should_rewrite_setup_to_agent_setup_api", () => {
     expect(SETUP_REWRITES).toEqual([
       {
+        source: "/setup/install",
+        destination: "/api/agent-setup/install",
+      },
+      {
         source: "/setup",
         destination: "/api/agent-setup",
       },

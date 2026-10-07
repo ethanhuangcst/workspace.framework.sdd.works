@@ -118,4 +118,4 @@ Apply the Verdict and locale checks when the spec is `sdd-audit-artifacts`.
 
 - `specs/framework/framework-design.md` and the seed file state the same rule.
 - A change to a verdict row updates the design table and the seed in the same change.
-- The seed ledger `{client_root}/.sdd-installed.json` in the pack tree stays `pack_complete` false.
+- The pack field example `pack.framework.sdd.works/.sdd-installed.example.json` stays `pack_complete` false. The live client ledger stays `{client_root}/.sdd-installed.json`.

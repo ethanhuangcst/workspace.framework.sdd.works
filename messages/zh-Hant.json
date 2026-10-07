@@ -182,6 +182,7 @@
   "admin.guide.tab_setup": "安裝",
   "admin.guide.tab_features": "功能",
   "admin.guide.tab_scrum": "Scrum in SDD",
+  "admin.guide.tab_invoke_agents": "叫出自訂智能體",
   "admin.guide.h_setup": "設定",
   "admin.guide.setup_body": "將此提示貼到 Cursor 或你的 Agent。它會取得設定說明並把 MCP 服務加入你的工具。所有使用者共用同一則提示。",
   "admin.guide.setup_prompt": "Fetch and execute the setup instructions from https://framework.sdd.works/setup",

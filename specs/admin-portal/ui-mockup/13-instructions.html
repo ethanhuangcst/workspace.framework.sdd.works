@@ -29,7 +29,21 @@
           <p class="guide-hero-tag" data-i18n="admin.guide.lead">SKILLS.RULES.AGENTS.TEMPLATES</p>
         </header>
 
-        <div class="guide-tabs" role="tablist" aria-label="Guide sections">
+        <!--
+          feature-60 mock (Web-portal-25). Tab bar order follows content/.instructions-tabs.json.
+          Default selected tab on load is always Setup when the URL has no ?tab=.
+          Knowledge is a sample extra row, not a required product tab.
+        -->
+        <p class="guide-tabs-note">
+          Tab order follows <code>content/.instructions-tabs.json</code>. Default tab on load is Setup.
+          Knowledge is a sample extra row, not a required tab.
+        </p>
+        <div
+          class="guide-tabs"
+          role="tablist"
+          aria-label="Guide sections"
+          data-config="content/.instructions-tabs.json"
+        >
           <button
             type="button"
             class="guide-tab is-active"
@@ -38,7 +52,9 @@
             aria-selected="true"
             aria-controls="panel-setup"
             data-tab="setup"
+            data-fixed="true"
             data-i18n="admin.guide.tab_setup"
+            data-testid="guide-tab-setup"
           >
             Setup
           </button>
@@ -50,7 +66,10 @@
             aria-selected="false"
             aria-controls="panel-features"
             data-tab="features"
+            data-query="features"
+            data-label-key="admin.guide.tab_features"
             data-i18n="admin.guide.tab_features"
+            data-testid="guide-tab-features"
           >
             Features
           </button>
@@ -62,12 +81,28 @@
             aria-selected="false"
             aria-controls="panel-scrum"
             data-tab="scrum-in-sdd"
+            data-query="scrum-in-sdd"
+            data-label-key="admin.guide.tab_scrum"
             data-i18n="admin.guide.tab_scrum"
             data-testid="guide-tab-scrum"
           >
             Scrum in SDD
           </button>
-
+          <button
+            type="button"
+            class="guide-tab"
+            role="tab"
+            id="tab-knowledge"
+            aria-selected="false"
+            aria-controls="panel-knowledge"
+            data-tab="knowledge"
+            data-query="knowledge"
+            data-label-key="admin.guide.tab_knowledge"
+            data-mock-extra="pack-added"
+            data-testid="guide-tab-knowledge"
+          >
+            Knowledge
+          </button>
         </div>
 
         <div
@@ -355,6 +390,20 @@
               but this Guide does not cover them because they are not defined in
               Scrum.
             </p>
+          </article>
+        </div>
+
+        <div
+          class="guide-tab-panel"
+          role="tabpanel"
+          id="panel-knowledge"
+          aria-labelledby="tab-knowledge"
+          data-panel="knowledge"
+          hidden
+          data-testid="panel-knowledge"
+        >
+          <article class="guide-section features-body" id="knowledge-body" data-testid="knowledge-body">
+            <p>Sample panel for a pack-added tab. The live page renders the markdown path named for this row in content/.instructions-tabs.json.</p>
           </article>
         </div>
       </article>

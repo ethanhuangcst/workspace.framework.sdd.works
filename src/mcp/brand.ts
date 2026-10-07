@@ -96,6 +96,14 @@ export function getAgentSetupUrl(): string {
   return `${getMcpWebsiteUrl().replace(/\/$/, "")}/setup`;
 }
 
+export function getLiteInstallSetupUrl(): string {
+  return `${getMcpWebsiteUrl().replace(/\/$/, "")}/setup/install`;
+}
+
+/** Partner-site paste sentence (production URL; not shown on framework.sdd.works Setup). */
+export const LITE_PARTNER_SETUP_SENTENCE =
+  "Fetch and execute the setup instructions from https://framework.sdd.works/setup/install";
+
 export function isLocalMcpDev(): boolean {
   const base = process.env.PUBLIC_BASE_URL?.trim() ?? "";
   return /localhost|127\.0\.0\.1/i.test(base);

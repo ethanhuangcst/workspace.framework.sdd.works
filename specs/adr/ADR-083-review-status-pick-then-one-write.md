@@ -30,7 +30,7 @@ The pick already names the result. A second yes adds a round and tokens without 
 
 - [ADR-076](./ADR-076-review-status-one-skill.md) decisions 6 and 7 are superseded. Decisions 1–5, 8, 9, and 11 stay. How to write each process file stays in `sdd-scrum-practices.md`.
 - The seed [`sdd-review-status/SKILL.md`](../framework/seeds/skills/sdd-review-status/SKILL.md) records picks, then writes once.
-- [Skill-15](../product-backlog.md#pb-86) stays the status skill.
+- [Skill-15](product-backlog.md#L113) stays the status skill.
 
 ## Date
 2026-10-03

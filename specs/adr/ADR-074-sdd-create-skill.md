@@ -22,7 +22,7 @@ Skills in this framework install at `{client_root}/{skills_dir}/<name>/SKILL.md`
 One authoring skill can follow `create-skill`’s structure rules and still install the way this pack installs every other skill. Shipping both old folders would put two competing instructions on `{client_root}` and would teach the agent a path that is not `skills_dir`.
 
 ## Consequences
-- [Skill-16](../product-backlog.md#pb-87) owns `sdd-create-skill`. The seed is `specs/framework/seeds/skills/sdd-create-skill/SKILL.md`.
+- [Skill-16](product-backlog.md#L115) owns `sdd-create-skill`. The seed is `specs/framework/seeds/skills/sdd-create-skill/SKILL.md`.
 - The guide skill lists name `sdd-create-skill`. `constants.json` maps `skill_create_skill` to that folder.
 - A later install must not list `skills/skill-creator/` or `skills/create-skill/`.
 - Adding a key to the `constants.json` `skills` object is a separate write. The skill proposes it after the skill folder is written and waits for a second confirm.

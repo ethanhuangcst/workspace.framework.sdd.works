@@ -19,9 +19,9 @@ Those three files are portal copy. They sit beside agents, skills, rules, and te
 One local unpack serves install and the portal. The portal only needs two folders inside it. Keeping those folders under `content/` matches the in-app seed layout and leaves the pack root for installable artifacts.
 
 ## Consequences
-- [Web-portal-07](../product-backlog.md#pb-73) pack path moves from the repo root to `content/features/`. The shipped reader still uses the root until this ADR is implemented.
-- [Web-portal-12](../product-backlog.md#pb-81) reads `content/scrum-in-sdd/` on the same cache-then-package order.
-- [Spec-seeds-12](../product-backlog.md#pb-82) finalizes the three Features files under `content/features/` in the pack repo, not at the root.
+- [Web-portal-07](product-backlog.md#L373) pack path moves from the repo root to `content/features/`. The shipped reader still uses the root until this ADR is implemented.
+- [Web-portal-12](product-backlog.md#L379) reads `content/scrum-in-sdd/` on the same cache-then-package order.
+- [Spec-seeds-12](product-backlog.md#L398) finalizes the three Features files under `content/features/` in the pack repo, not at the root.
 - An operator who already synced `features.*.md` at the pack root must move those files and sync again before the new reader serves them from cache.
 
 ## Date

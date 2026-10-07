@@ -2,7 +2,7 @@
 # Fail when pack seeds link upward to product-repo-only paths (PK-01 close check).
 set -euo pipefail
 
-ROOT="${1:-specs/framework/seeds}"
+ROOT="${1:-pack.framework.sdd.works}"
 
 if [[ ! -d "$ROOT" ]]; then
   echo "check-pack-seed-links: missing directory $ROOT" >&2

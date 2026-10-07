@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "package_version": "0.0.0-example",
+  "package_commit": "0000000000000000000000000000000000000000",
+  "installed_at": "2026-10-07T00:00:00.000Z",
+  "files": [
+    "rules/friendly-language.mdc",
+    "skills/ai-architect/SKILL.md",
+    "skills/atdd-expert/SKILL.md",
+    "skills/frontend-designer/SKILL.md",
+    "skills/frontend-developer/SKILL.md",
+    "skills/fullstack-engineer/SKILL.md",
+    "skills/improve-prompt/SKILL.md",
+    "skills/mcp-expert/SKILL.md",
+    "skills/rag-expert/SKILL.md",
+    "skills/sdd-build-agent/SKILL.md",
+    "skills/sdd-create-rule/SKILL.md",
+    "skills/sdd-create-skill/SKILL.md",
+    "skills/testing-expert/SKILL.md"
+  ]
+}

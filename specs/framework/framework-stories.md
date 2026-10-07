@@ -415,7 +415,7 @@ Tests: CE-VERDICT-01 through CE-VERDICT-05.
 
 ```gherkin
 Scenario: Seed matches design section 14
-  Given design section 14 and specs/framework/seeds/agents/ethan.md are both readable
+  Given design section 14 and pack.framework.sdd.works/agents/ethan.md are both readable
   When the two prompt bodies are compared
   Then the texts match
   And the body does not name .cursor, .claude, or .trae
@@ -852,7 +852,7 @@ Tests: CE-SKILL-14. User confirmed usable 2026-10-05 ([feature-44](../sprint-bac
 Scenario: Seed folder and advisory shape
   Given the authoring seed tree
   When the improve-prompt skill file is read
-  Then the folder is improve-prompt under specs/framework/seeds/skills/
+  Then the folder is improve-prompt under pack.framework.sdd.works/skills/
   And prompt-optimizer is not a seed folder
   And the description states advisory-only use
   And the body includes Capabilities, Knowledge, Limits, and Anti-patterns
@@ -885,7 +885,7 @@ Tests: CE-SKILL-13. User confirmed usable 2026-10-05 ([feature-46](../sprint-bac
 Scenario: Seed folder and production rules
   Given the authoring seed tree
   When the frontend-designer skill file is read
-  Then the folder is frontend-designer under specs/framework/seeds/skills/
+  Then the folder is frontend-designer under pack.framework.sdd.works/skills/
   And frontmatter name is frontend-designer
   And sdd-frontend-design is not a seed folder
   And frontend-design is not a seed folder
@@ -919,7 +919,7 @@ Tests: CE-SKILL-15. Close with [feature-61](../sprint-backlog.md#sprint-7) when 
 Scenario: Seed folder and neighbor skills
   Given the authoring seed tree
   When the frontend-developer skill file is read
-  Then the folder is frontend-developer under specs/framework/seeds/skills/
+  Then the folder is frontend-developer under pack.framework.sdd.works/skills/
   And frontmatter name is frontend-developer
   And the description names frontend-designer and testing-expert as neighbor skills
   And Capabilities include detect the UI stack and implement components and pages
@@ -951,7 +951,7 @@ Tests: CE-SKILL-21. Close with [feature-64](../sprint-backlog.md#sprint-7) when 
 Scenario: Seed folder and five jobs
   Given the authoring seed tree
   When the testing-expert skill file is read
-  Then the folder is testing-expert under specs/framework/seeds/skills/
+  Then the folder is testing-expert under pack.framework.sdd.works/skills/
   And frontmatter name is testing-expert
   And browser.md and LICENSE.txt sit beside SKILL.md
   And Capabilities name strategy, tools, create, run, and report
@@ -984,7 +984,7 @@ Tests: CE-SKILL-20. Close with [feature-62](../sprint-backlog.md#sprint-7) when 
 Scenario: Seed folder and neighbor skills
   Given the authoring seed tree
   When the fullstack-engineer skill file is read
-  Then the folder is fullstack-engineer under specs/framework/seeds/skills/
+  Then the folder is fullstack-engineer under pack.framework.sdd.works/skills/
   And fullstack-developer is not a seed folder
   And the description names frontend-designer, frontend-developer, and testing-expert as neighbor skills
   And Knowledge names i18n-support, common-test-strategy, and friendly-language
@@ -1016,7 +1016,7 @@ Tests: CE-SKILL-16. Close with [feature-65](../sprint-backlog.md#sprint-7) when 
 Scenario: Seed folder and advisory shape
   Given the authoring seed tree
   When the ai-architect skill file is read
-  Then the folder is ai-architect under specs/framework/seeds/skills/
+  Then the folder is ai-architect under pack.framework.sdd.works/skills/
   And terms.md sits beside SKILL.md
   And the description names rag-expert and mcp-expert as neighbor skills
   And the body includes Design checks and an AI design proposal section
@@ -1050,7 +1050,7 @@ Tests: CE-SKILL-17. Close with [feature-66](../sprint-backlog.md#sprint-7) when 
 Scenario: Seed folder and transport facts
   Given the authoring seed tree
   When the mcp-expert skill file is read
-  Then the folder is mcp-expert under specs/framework/seeds/skills/
+  Then the folder is mcp-expert under pack.framework.sdd.works/skills/
   And the body includes a Transport choice section for stdio and Streamable HTTP
   And Capabilities check SDK signatures in the official docs before registration code
   And the body includes an MCP solution section and a Pattern menu
@@ -1083,7 +1083,7 @@ Tests: CE-SKILL-18. Close with [feature-67](../sprint-backlog.md#sprint-7) when 
 Scenario: Seed folder and evaluation
   Given the authoring seed tree
   When the rag-expert skill file is read
-  Then the folder is rag-expert under specs/framework/seeds/skills/
+  Then the folder is rag-expert under pack.framework.sdd.works/skills/
   And the body includes an Evaluation section with recall at k and faithfulness
   And Limits forbid fabricated passages on a production path
   And Limits apply document access rights at retrieval time
@@ -1182,13 +1182,13 @@ Tests: CE-SKILL-03. The same path shape applies on Windows with backslashes.
 
 ### sdd-spec-to-build
 
-Design: [framework-design § sdd-spec-to-build](./framework-design.md#sdd-spec-to-build). Readiness rules: [readiness.md](./seeds/skills/sdd-spec-to-build/readiness.md).
+Design: [framework-design § sdd-spec-to-build](./framework-design.md#sdd-spec-to-build). Readiness rules: [readiness.md](../../pack.framework.sdd.works/skills/sdd-spec-to-build/readiness.md).
 
 #### AC1
 
 ```gherkin
 Scenario: Spec phase does not write production code
-  Given the seed specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md is the skill
+  Given the seed pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md is the skill
   And readiness.md sits beside SKILL.md
   When the user asks it to design one sprint backlog item
   Then it does not write production code
@@ -1224,13 +1224,13 @@ Scenario: Status skill ships as one folder
   And sdd-tracking and sdd-update-status are not shippable status folders
 ```
 
-Tests: CE-SKILL-06. The on-disk folder `specs/framework/seeds/skills/sdd-tracking/` is not the status skill.
+Tests: CE-SKILL-06. The on-disk folder `pack.framework.sdd.works/skills/sdd-tracking/` is not the status skill.
 
 ## rules
 
 Design: `[framework-design.md](./framework-design.md#rules)`. Tests: `[framework-tests.md](./framework-tests.md#rules)`.
 
-The four pack rule files install at `{client_root}/rules/<name>.mdc`. Framework-bound names use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). On Windows the directory is `rules\` under that client root. `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, and `sdd-realtime-status.mdc` have behavior stories in the seed tree. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](../product-backlog.md#pb-95) Done). [Rule-03](../product-backlog.md#pb-20) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). The pack does not ship `artifacts-map.mdc` or `realtime-status.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
+The four pack rule files install at `{client_root}/rules/<name>.mdc`. Framework-bound names use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). On Windows the directory is `rules\` under that client root. `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, and `sdd-realtime-status.mdc` have behavior stories in the seed tree. Their path still has to match AC1. `friendly-language.mdc` ships in the seed tree ([Rule-04](product-backlog.md#L208) Done). [Rule-03](product-backlog.md#L206) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). The pack does not ship `artifacts-map.mdc` or `realtime-status.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
 ### `artifacts-map.mdc`
 
@@ -1317,7 +1317,7 @@ Scenario Outline: Guide and practices are read from the locale folder
 
 ```gherkin
 Scenario: A seed header has no status line
-  Given an authoring seed under specs/framework/seeds/templates/
+  Given an authoring seed under pack.framework.sdd.works/templates/
   When the header is read
   Then it has no status line initialized, draft, confirmed, updated, or status: active
   And a Framework (process) artifact header has Type, as_of, and a Definition link
@@ -1338,7 +1338,7 @@ Tests: CE-TPL-01, CE-TPL-03, CE-TPL-05, CE-TPL-07.
 ```gherkin
 Scenario Outline: The stored path is joined to the workspace once
   Given artifacts_root is specs
-  And the map stores specs/product-backlog.md
+  And the map stores ../product-backlog.md
   And the workspace is "<workspace>"
   When the stored path is opened
   Then the file is "<opened>"
@@ -1347,7 +1347,7 @@ Scenario Outline: The stored path is joined to the workspace once
 
   Examples:
     | workspace | opened | map |
-    | /work/demo | /work/demo/specs/product-backlog.md | /work/demo/artifacts-map.json |
+    | /work/demo | /work/demo../product-backlog.md | /work/demo/artifacts-map.json |
     | C:\work\demo | C:\work\demo\specs\product-backlog.md | C:\work\demo\artifacts-map.json |
 ```
 
@@ -1411,8 +1411,8 @@ Scenario: Product backlog columns on the EN seed
   And body sections appear in order Product overview, Definition of Done, Requirements, Product Backlog, Change record
   And the Definition of Done section lists additional PBI checks on top of sdd-dod.mdc
   And each Requirements item has a PBI code, one noun, and bullets
-  And the Requirements PBI code links to #pb-N on the Product Backlog table
-  And the table PBI Code links to #req-pb-N on the Requirements line
+  And the Requirements PBI code links to #pb-N on the Requirements line
+  And the table PBI Code links to #pb-N on the Requirements line
   And Description is that noun
 ```
 
@@ -1579,7 +1579,7 @@ Tests: CE-TPL-11.
 
 Engineering artifacts are `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `release.md`, `test-strategy.md`, `.secrets`, and `issues-log.md`.
 
-`architecture.md`, `release.md`, `test-strategy.md`, and `.secrets` have EN seeds under `specs/framework/seeds/templates/EN/`. Do not add them to a project map before the file exists.
+`architecture.md`, `release.md`, `test-strategy.md`, and `.secrets` have EN seeds under `pack.framework.sdd.works/templates/EN/`. Do not add them to a project map before the file exists.
 
 #### AC1
 
@@ -1616,8 +1616,135 @@ Scenario: Secrets seed holds no secret values
   And it contains no secret value
 ```
 
-User confirmed EN `.secrets` seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#pb-66), [feature-49](../sprint-backlog.md#sprint-7)); AC3 passes. Post-close edits add grouped example keys; practices and CE-TPL-13 track the shape.
+User confirmed EN `.secrets` seed usable 2026-10-05 ([Spec-seeds-12](product-backlog.md#L270), [feature-49](../sprint-backlog.md#sprint-7)); AC3 passes. Post-close edits add grouped example keys; practices and CE-TPL-13 track the shape.
 
 Tests: CE-TPL-12 for flat module paths (AC2). CE-TPL-13 for `.secrets` seed shape (AC3).
 
-User confirmed EN seeds usable 2026-10-05 for [Spec-seeds-10](../product-backlog.md#pb-40) (`architecture.md`), [Spec-seeds-11](../product-backlog.md#pb-41) (`release.md`), [Spec-seeds-12](../product-backlog.md#pb-66) (`.secrets`), and [Spec-seeds-13](../product-backlog.md#pb-90) (`test-strategy.md`) via Sprint 7 [feature-47](../sprint-backlog.md#sprint-7), [feature-48](../sprint-backlog.md#sprint-7), [feature-49](../sprint-backlog.md#sprint-7), and [feature-50](../sprint-backlog.md#sprint-7). This repo's live [`architecture.md`](../architecture.md) and [`release.md`](../release.md) stay JIT pointers; the pack starters live under `specs/framework/seeds/templates/EN/`.
+User confirmed EN seeds usable 2026-10-05 for [Spec-seeds-10](product-backlog.md#L266) (`architecture.md`), [Spec-seeds-11](product-backlog.md#L268) (`release.md`), [Spec-seeds-12](product-backlog.md#L270) (`.secrets`), and [Spec-seeds-13](product-backlog.md#L274) (`test-strategy.md`) via Sprint 7 [feature-47](../sprint-backlog.md#sprint-7), [feature-48](../sprint-backlog.md#sprint-7), [feature-49](../sprint-backlog.md#sprint-7), and [feature-50](../sprint-backlog.md#sprint-7). This repo's live [`architecture.md`](../architecture.md) and [`release.md`](../release.md) stay JIT pointers; the pack starters live under `pack.framework.sdd.works/templates/EN/`.
+
+## `lite-install-manifest` — Lite install allow-list (feature-53)
+
+Design: [`framework-design.md`](./framework-design.md#lite-install-manifest). Tests: [`framework-tests.md`](./framework-tests.md#lite-install-manifest). Basename [ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md). [Spec-seeds-15](product-backlog.md#L442). No UI. Portal sync and the file-links route stay on later SBIs.
+
+### User story 1 — Know which pack files a lite copy may take
+
+**As a** pack maintainer
+**I want** one allow-list of skill and rule files for lite install
+**So that** a later copy step can take only those files
+
+#### AC1 — feature-53
+
+```gherkin
+Scenario: Allow-list names the agreed skill and rule files
+  Given the authoring file pack.framework.sdd.works/lite-pack.allowlist.json exists
+  When the file is read
+  Then skills lists exactly these pack-root paths
+    | skills/ai-architect/SKILL.md |
+    | skills/atdd-expert/SKILL.md |
+    | skills/frontend-designer/SKILL.md |
+    | skills/frontend-developer/SKILL.md |
+    | skills/fullstack-engineer/SKILL.md |
+    | skills/improve-prompt/SKILL.md |
+    | skills/mcp-expert/SKILL.md |
+    | skills/rag-expert/SKILL.md |
+    | skills/sdd-build-agent/SKILL.md |
+    | skills/sdd-create-rule/SKILL.md |
+    | skills/sdd-create-skill/SKILL.md |
+    | skills/testing-expert/SKILL.md |
+  And rules lists exactly rules/friendly-language.mdc
+  And each path exists under pack.framework.sdd.works/ with the same relative path
+```
+
+#### AC2 — feature-53
+
+```gherkin
+Scenario: A path outside the allow-list shape fails review
+  Given the authoring file lists a path
+  When that path does not start with skills/ or rules/
+  Or the path is not present under pack.framework.sdd.works/
+  Or skills includes an sdd- folder other than sdd-build-agent, sdd-create-rule, or sdd-create-skill
+  Or rules includes a file whose name starts with sdd-
+  Then the allow-list does not pass review
+```
+
+User confirmed usable 2026-10-07 ([feature-53](../sprint-backlog.md#sprint-8)). Authoring seed, [`validateLiteInstallManifest`](../../src/core/seeds/lite-install-manifest.ts), and **CE-LITE-01** / **CE-LITE-02** ship in this repo. Pack repo root copy is manual go-live; [Spec-seeds-15](product-backlog.md#L442) stays open until [MCP-07](product-backlog.md#L325) includes the file in sync cache and install tarball.
+
+## `instructions-tabs-config` — Pack instructions tabs JSON (feature-58)
+
+Design: [`app-design.md`](../admin-portal/app-design.md) instructions tabs section. Tests: [`framework-tests.md`](./framework-tests.md#instructions-tabs-config) (**CE-TABS-01**, **CE-TABS-02**). [Spec-seeds-16](product-backlog.md#L277). Operator rules: [`src/content/.admin-note.md`](../../src/content/.admin-note.md). Portal resolver, API, and UI are [Web-portal-24](product-backlog.md#L392), [Web-portal-25](product-backlog.md#L395), [feature-59](../sprint-backlog.md#sprint-8), [feature-60](../sprint-backlog.md#sprint-8).
+
+Acceptance scenarios live in [`app-stories.md`](../admin-portal/app-stories.md) AC22. This repo ships the bundled seed at [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json). The pack repo copy is `content/.instructions-tabs.json` after sync.
+
+## `lite-install-receipt` — Lite install client receipt (feature-57)
+
+Design: [`framework-design.md`](./framework-design.md#lite-install-receipt). Tests: [`framework-tests.md`](./framework-tests.md#lite-install-receipt). [Spec-seeds-18](product-backlog.md#L444). No UI. The public prompt that tells the agent to follow these rules is [Web-portal-18](product-backlog.md#L450). The file-links route is [Web-portal-17](product-backlog.md#L441).
+
+### User story 1 — Record a finished lite copy
+
+**As a** person who runs lite install
+**I want** one local receipt after every listed file is on disk
+**So that** a later run can see what this copy placed
+
+#### AC1 — feature-57
+
+```gherkin
+Scenario: A full copy writes the lite receipt
+  Given client_root has no .sdd-lite-installed.json
+  And the server list names a package version, a package commit, and a set of skills and rules paths
+  When every path in that set is a file under client_root
+  Then client_root/.sdd-lite-installed.json exists
+  And the receipt schema_version is 1
+  And package_version and package_commit match the server list
+  And files lists every path from that set, sorted
+  And the receipt has no pack_complete field
+  And client_root/.sdd-installed.json is unchanged
+```
+
+### User story 2 — Skip work when the copy is already current
+
+**As a** person who runs lite install again
+**I want** the run to stop when version, commit, and files already match
+**So that** files are not downloaded or deleted again
+
+#### AC2 — feature-57
+
+```gherkin
+Scenario: Matching receipt and files stop the run
+  Given a lite receipt whose package_version, package_commit, and files match the server list
+  And every path in files exists under client_root
+  When the next lite run compares the receipt to the server list
+  Then the result is already up to date
+  And no file is downloaded
+  And no file is deleted
+  And the receipt bytes stay the same
+```
+
+### User story 3 — Drop only paths that left the list
+
+**As a** person who updates a lite copy
+**I want** old listed files removed only after the new files are ready
+**So that** a path rename does not delete the only copy before the new file arrives
+
+#### AC3 — feature-57
+
+```gherkin
+Scenario: A path that left the list is deleted after new files are staged
+  Given a receipt whose files include skills/old-name/SKILL.md
+  And the new server list omits that path and includes skills/fullstack-engineer/SKILL.md
+  When the new file is staged
+  Then skills/old-name/SKILL.md is deleted under client_root
+  And skills/fullstack-engineer/SKILL.md is placed under client_root
+  And the new receipt files match the new server list
+```
+
+#### AC4 — feature-57
+
+```gherkin
+Scenario: A failed copy keeps the previous receipt
+  Given a lite receipt from an earlier successful copy
+  When a later run does not place every path in the new server list
+  Then the previous .sdd-lite-installed.json stays in place
+  And a first run that never succeeded still has no receipt
+```
+
+User confirmed usable 2026-10-07 ([feature-57](../sprint-backlog.md#sprint-8)). Authoring example, [`validateLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), and **CE-LITE-03** / **CE-LITE-04** ship in this repo. [Web-portal-18](product-backlog.md#L450) Part 1 and the local agent apply these rules at runtime.

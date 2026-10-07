@@ -1,7 +1,60 @@
+import type { ComponentProps } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { InstructionsPage } from "./InstructionsPage";
 import type { Locale } from "@/i18n/t";
+import type { InstructionsPageTab } from "@/lib/instructions-tabs-page";
+
+function defaultGuideTabs(options?: {
+  featuresHtml?: string;
+  scrumHtml?: string;
+}): InstructionsPageTab[] {
+  return [
+    {
+      type: "code",
+      id: "setup",
+      queryParam: "setup",
+      labelKey: "admin.guide.tab_setup",
+      panelTestId: "panel-setup",
+    },
+    {
+      type: "content",
+      id: "features",
+      queryParam: "features",
+      labelKey: "admin.guide.tab_features",
+      panelTestId: "panel-features",
+      html: options?.featuresHtml ?? "",
+    },
+    {
+      type: "content",
+      id: "scrum-in-sdd",
+      queryParam: "scrum-in-sdd",
+      labelKey: "admin.guide.tab_scrum",
+      panelTestId: "panel-scrum",
+      html: options?.scrumHtml ?? "",
+    },
+  ];
+}
+
+function renderGuide(
+  props: Omit<
+    ComponentProps<typeof InstructionsPage>,
+    "tabs" | "onLocaleChange"
+  > & {
+    featuresHtml?: string;
+    scrumHtml?: string;
+    onLocaleChange?: () => void;
+  },
+) {
+  const { featuresHtml, scrumHtml, onLocaleChange, ...rest } = props;
+  return render(
+    <InstructionsPage
+      onLocaleChange={onLocaleChange ?? (() => undefined)}
+      tabs={defaultGuideTabs({ featuresHtml, scrumHtml })}
+      {...rest}
+    />,
+  );
+}
 
 vi.mock("next/link", () => ({
   default: ({
@@ -78,9 +131,7 @@ describe("InstructionsPage", () => {
         value: { writeText },
       });
 
-      render(
-        <InstructionsPage locale={locale} onLocaleChange={() => undefined} />,
-      );
+      renderGuide({ locale }),
 
       fireEvent.click(screen.getByTestId("copy-setup-prompt"));
 
@@ -88,10 +139,13 @@ describe("InstructionsPage", () => {
     },
   );
 
+  it("should_not_show_lite_copy_on_setup_tab", () => {
+    renderGuide({ locale: "en" });
+    expect(screen.queryByTestId("copy-lite-setup-prompt")).toBeNull();
+  });
+
   it("should_show_stdio_mcp_sample_on_setup_tab", () => {
-    render(
-      <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
-    );
+    renderGuide({ locale: "en" });
 
     const mcp = screen.getByTestId("copy-mcp-config");
     expect(mcp.closest(".codeblock")?.textContent).toContain(STDIO_FRAGMENT);
@@ -103,9 +157,7 @@ describe("InstructionsPage", () => {
   });
 
   it("should_list_install_and_update_tools_without_list_versions", () => {
-    render(
-      <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
-    );
+    renderGuide({ locale: "en" });
 
     const tools = document.getElementById("tools");
     expect(tools).toBeTruthy();
@@ -115,11 +167,9 @@ describe("InstructionsPage", () => {
   });
 
   it("should_switch_to_features_tab_and_list_ethan", () => {
-    render(
-      <InstructionsPage
-        locale="en"
-        onLocaleChange={() => undefined}
-        featuresHtml={`
+    renderGuide({
+      locale: "en",
+      featuresHtml: `
           <h2>Features</h2>
           <h3>Agents</h3>
           <ul><li><span class="feature-name">ethan</span><span class="feature-desc">The scrum-master agent for this service.</span></li></ul>
@@ -129,9 +179,8 @@ describe("InstructionsPage", () => {
           <ul><li><span class="feature-name">sdd-dod.mdc</span><span class="feature-desc">Definition of Done.</span></li></ul>
           <h2>Artifacts</h2>
           <ul><li><span class="feature-name">product-backlog.md</span><span class="feature-desc">Product Backlog.</span></li></ul>
-        `}
-      />,
-    );
+        `,
+    });
 
     expect(screen.getByTestId("panel-features")).not.toBeVisible();
     expect(screen.getByTestId("guide-tab-features")).toHaveAttribute(
@@ -173,9 +222,7 @@ describe("InstructionsPage", () => {
   it("should_show_secret_empty_when_name_is_blank", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
-    render(
-      <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
-    );
+    renderGuide({ locale: "en" });
 
     fireEvent.click(screen.getByTestId("secret-get"));
 
@@ -199,9 +246,7 @@ describe("InstructionsPage", () => {
       json: async () => ({ key_value: "plain-secret-value" }),
     } as Response);
 
-    render(
-      <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
-    );
+    renderGuide({ locale: "en" });
 
     fireEvent.change(screen.getByTestId("secret-name"), {
       target: { value: "sdd-trial-googlemaps" },
@@ -233,9 +278,7 @@ describe("InstructionsPage", () => {
       }),
     } as Response);
 
-    render(
-      <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
-    );
+    renderGuide({ locale: "en" });
 
     fireEvent.change(screen.getByTestId("secret-name"), {
       target: { value: "add-trail-googlemaps" },
@@ -258,13 +301,10 @@ describe("InstructionsPage", () => {
   });
 
   it("should_place_secret_form_after_tools_on_setup_tab", () => {
-    const { container } = render(
-      <InstructionsPage
-        locale="en"
-        onLocaleChange={() => undefined}
-        featuresHtml="<h2>Features</h2><p>ethan</p>"
-      />,
-    );
+    const { container } = renderGuide({
+      locale: "en",
+      featuresHtml: "<h2>Features</h2><p>ethan</p>",
+    });
 
     const tools = container.querySelector("#tools");
     const secret = container.querySelector("#setup-secret");
@@ -285,9 +325,7 @@ describe("InstructionsPage", () => {
   });
 
   it("should_hide_secret_form_on_features_tab", () => {
-    const { container } = render(
-      <InstructionsPage locale="en" onLocaleChange={() => undefined} />,
-    );
+    const { container } = renderGuide({ locale: "en" });
 
     expect(screen.getByTestId("secret-lookup")).toBeVisible();
 
@@ -299,14 +337,12 @@ describe("InstructionsPage", () => {
   });
 
   it("should_switch_to_scrum_tab_after_features_with_label", () => {
-    render(
-      <InstructionsPage
-        locale="en"
-        onLocaleChange={() => undefined}
-        featuresHtml="<h2>Features</h2>"
-        scrumHtml="<h1>Scrum in SDD</h1><p>Part I summary.</p><ul><li>KEEP — classic roles stay.</li></ul>"
-      />,
-    );
+    renderGuide({
+      locale: "en",
+      featuresHtml: "<h2>Features</h2>",
+      scrumHtml:
+        "<h1>Scrum in SDD</h1><p>Part I summary.</p><ul><li>KEEP — classic roles stay.</li></ul>",
+    });
 
     const setup = screen.getByTestId("guide-tab-setup");
     const features = screen.getByTestId("guide-tab-features");
@@ -332,9 +368,7 @@ describe("InstructionsPage", () => {
   it.each(["en", "zh-Hans", "zh-Hant"] as Locale[])(
     "should_keep_scrum_tab_label_untranslated_when_locale_is_%s",
     (locale) => {
-      render(
-        <InstructionsPage locale={locale} onLocaleChange={() => undefined} />,
-      );
+      renderGuide({ locale });
       expect(screen.getByTestId("guide-tab-scrum")).toHaveTextContent(
         "Scrum in SDD",
       );
@@ -344,9 +378,7 @@ describe("InstructionsPage", () => {
   it.each(["en", "zh-Hans", "zh-Hant"] as Locale[])(
     "should_resolve_secret_hint_and_button_when_locale_is_%s",
     (locale) => {
-      render(
-        <InstructionsPage locale={locale} onLocaleChange={() => undefined} />,
-      );
+      renderGuide({ locale });
 
       const copy = SECRET_COPY[locale];
       expect(screen.getByTestId("secret-name")).toHaveAttribute(

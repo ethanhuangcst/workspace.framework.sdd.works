@@ -7,7 +7,7 @@ tags:
   - markdown
   - cursor
   - preview
-related_spec: specs/framework/seeds/templates/EN/sdd-scrum-practices.md
+related_spec: pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md
 related:
   - knowledge/agent/features-markdown-em-dash.md
 ---
@@ -20,7 +20,7 @@ Cursor markdown preview stopped rendering `product-backlog.md` after the Require
 
 ## Evidence
 
-Spike on 2026-09-30, bisected with small copies of `specs/product-backlog.md` in a temporary folder:
+Spike on 2026-09-30, bisected with small copies of `../../product-backlog.md` in a temporary folder:
 
 - Full header blockquote plus a tight list rendered. The same header plus a loose list stopped.
 - The loose list alone, or after a short header, rendered.
@@ -37,5 +37,5 @@ Spike on 2026-09-30, bisected with small copies of `specs/product-backlog.md` in
 
 ## Links
 
-- [`sdd-scrum-practices.md`](../../framework/seeds/templates/EN/sdd-scrum-practices.md) Writing markdown
+- [`sdd-scrum-practices.md`](../../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) Writing markdown
 - [`product-backlog.md`](../../product-backlog.md)

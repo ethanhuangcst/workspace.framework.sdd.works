@@ -182,6 +182,7 @@
   "admin.guide.tab_setup": "Setup",
   "admin.guide.tab_features": "Features",
   "admin.guide.tab_scrum": "Scrum in SDD",
+  "admin.guide.tab_invoke_agents": "Invoke custom agents",
   "admin.guide.h_setup": "Setup",
   "admin.guide.setup_body": "Paste this prompt into Cursor or your agent. It fetches the setup instructions and adds MCP service to your tool. One prompt for all users.",
   "admin.guide.setup_prompt": "Fetch and execute the setup instructions from https://framework.sdd.works/setup",

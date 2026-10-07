@@ -7,7 +7,7 @@ Accepted
 
 [ADR-072](./ADR-072-rule-artifacts-map.md) added `artifacts-map.mdc` so an ordinary turn would update `{workspace}/artifacts-map.md` when a project artifact was created, renamed, or deleted.
 
-A rule is text loaded while a turn is already running. It does not see a delete, rename, or move the user makes in the file tree. After `product-backlog.md` is renamed to `pb.md`, the map stays on `specs/product-backlog.md`. The next audit returns Index broken. No notice is sent when the file changes.
+A rule is text loaded while a turn is already running. It does not see a delete, rename, or move the user makes in the file tree. After `product-backlog.md` is renamed to `pb.md`, the map stays on `../product-backlog.md`. The next audit returns Index broken. No notice is sent when the file changes.
 
 That gap is the job the rule was asked to cover. The rule does not cover it.
 

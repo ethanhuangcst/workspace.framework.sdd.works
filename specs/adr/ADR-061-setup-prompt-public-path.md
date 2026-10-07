@@ -25,6 +25,7 @@ One sentence on the page and one markdown file on the server avoid two copies of
 - Sprint 2 `backend-01` owns the `/setup` route (including the redirect). Feature-05 stays Done for the markdown body. Feature-11 owns the instructions-page copy sentence.
 - Feature-12 owns the single manual `mcp.json`. Feature-13 tests the copy sentence and that one sample.
 - Living specs name `GET /setup`. Closed Phase 1 snapshots that still say `GET /agent-setup` stay as history.
+- Lite install uses a separate public path (for example `GET /setup/install`) for markdown that fetches allow-listed pack file links. That path does not replace `GET /setup` for full MCP stdio setup ([Web-portal-18](product-backlog.md#L449)).
 
 ## Date
 2026-09-25

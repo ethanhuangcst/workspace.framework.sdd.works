@@ -12,7 +12,7 @@ Ethan’s onboard, process headers, artifacts maps, Features catalog copy, and t
 1. The guide filename is `scrum-in-sdd.md` in every locale folder under `templates/{EN|HanS|HanT}/`.
 2. Practices stay `sdd-scrum-practices.md`.
 3. Living pointers use the new name. Dated change-log paragraphs and dated product-backlog history keep the name that was true on that date.
-4. When a HanT guide is added ([i18n-01](../product-backlog.md#pb-67)), it is `scrum-in-sdd.md` in `templates/HanT/`.
+4. When a HanT guide is added ([i18n-01](product-backlog.md#L294)), it is `scrum-in-sdd.md` in `templates/HanT/`.
 
 ## Rationale
 One filename that matches the artifact’s common name reduces mismatch between the index label “Scrum-in-SDD guide” and the path agents and catalogs open.

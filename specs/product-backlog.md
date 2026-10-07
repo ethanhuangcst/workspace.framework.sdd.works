@@ -2,7 +2,7 @@
 
 > Type: Framework (process) artifact of framework.sdd.works
 > as_of: 2026-10-06
-> [Definition](./framework/seeds/templates/EN/sdd-scrum-practices.md#product-backlogmd)
+> [Definition](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#product-backlogmd)
 
 ---
 
@@ -11,9 +11,10 @@
 - [Product overview](#product-overview)
 - [Definition of Done](#definition-of-done)
 - [Requirements](#requirements)
-  - [framework](#framework)
+  - [framework](#component-framework)
   - [mcp](#mcp)
   - [web-portal](#web-portal)
+  - [lite installer](#category-framework-http-lite-installer-through-local-agent)
 - [Product Backlog](#product-backlog)
 - [Change record](#change-record)
 
@@ -21,7 +22,7 @@
 
 # Product overview
 
-- framework.sdd.works is an MCP service plus an admin portal that installs and updates an SDD framework in the calling AI client.
+- You use framework.sdd.works to install and update an SDD framework pack in your AI client through a web portal and a local MCP (Model Context Protocol) installer.
 - Phase 1 is closed.
 - Phase 2 ships the guide, practices, project templates, ethan, rules, and skills.
 - Files under `specs/` in this repo are process assets for building the pack.
@@ -33,9 +34,11 @@
 
 
 
+<a id="definition-of-done"></a>
+
 # Definition of Done
 
-This section lists additional product checks on top of the standard Definition of Done in `[sdd-dod.mdc](./framework/seeds/rules/sdd-dod.mdc)`. Mark a PBI or SBI **Done** only when every standard check and every additional check here passes. `[sprint-backlog.md](./sprint-backlog.md)` links here instead of duplicating this list ([ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md)).
+This section lists additional product checks on top of the standard Definition of Done in `[sdd-dod.mdc](../pack.framework.sdd.works/rules/sdd-dod.mdc)`. Mark a PBI or SBI **Done** only when every standard check and every additional check here passes. `[sprint-backlog.md](./sprint-backlog.md)` links here instead of duplicating this list ([ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md)).
 
 - Quality meets [agent test](./framework/framework-tests.md) · [MCP test](./mcp/mcp-tests.md) · [portal test](./admin-portal/app-tests.md)
 
@@ -49,26 +52,28 @@ This section lists additional product checks on top of the standard Definition o
 
 
 
-## framework
+<a id="component-framework"></a>
 
+## Component: framework
 
+### agents
 
-### agents: ethan
+#### ethan
 
-- <a id="req-pb-6"></a>[Agent-01](#pb-6) Local Cursor agent
+- <a id="pb-6"></a>[Agent-01](#pb-6) Local Cursor agent
   - Ethan runs as a local Cursor agent.
   - Proof of concept is closed ([D1](./sprint-backlog.md#rid-d1) Closed).
   - The pack includes the ethan prompt in the seed tree.
   - Pack publish is go-live, not this row.
-- <a id="req-pb-8"></a>[Agent-02](#pb-8) Skill call for a named job
+- <a id="pb-8"></a>[Agent-02](#pb-8) Skill call for a named job
   - `ethan.md` lists each named job from `constants.json` and routes the chat to the matching pack skill folder.
   - Ethan does not embed skill steps in the agent file.
   - Where the project is comes from `sdd-review-status`.
   - Ethan writes a project file only after the user confirms.
-- <a id="req-pb-10"></a>[Agent-03](#pb-10) Guiding proposals from framework knowledge
-  - Ethan reads the framework artifacts and knowledge.
+- <a id="pb-10"></a>[Agent-03](#pb-10) Guiding proposals from framework knowledge
+  - Ethan reads the framework artifacts and knowledge, including `coach-knowledge.md` per [ADR-106](./adr/ADR-106-coach-knowledge-file.md).
   - Ethan gives guiding proposals in chat.
-- <a id="req-pb-17"></a>[Agent-04](#pb-17) Agent ethan onboard with pack receipt start gate
+- <a id="pb-17"></a>[Agent-04](#pb-17) Agent ethan onboard with pack receipt start gate
   - On start, Ethan reads only `{client_root}/.sdd-installed.json`.
   - Missing ledger or `pack_complete` not true is a fatal stop.
   - He may set `pack_complete` to false when a later job needs a missing framework file.
@@ -76,65 +81,64 @@ This section lists additional product checks on top of the standard Definition o
 
 
 
+
 ### skills
 
-Workflows: none until a workflow is planned. No workflow PBI.
-
-- <a id="req-pb-21"></a>[Skill-01](#pb-21) Pack skill atdd-expert
-  - The pack ships `specs/framework/seeds/skills/atdd-expert/` with `SKILL.md` and `reference.md` for user stories and Gherkin acceptance criteria. `sdd-spec-to-build` may load it for stories files.
-- <a id="req-pb-24"></a>[Skill-03](#pb-24) Pack skill sdd-update-project
+- <a id="pb-21"></a>[Skill-01](#pb-21) Pack skill atdd-expert
+  - The pack ships `pack.framework.sdd.works/skills/atdd-expert/` with `SKILL.md` and `reference.md` for user stories and Gherkin acceptance criteria. `sdd-spec-to-build` may load it for stories files.
+- <a id="pb-24"></a>[Skill-03](#pb-24) Pack skill sdd-update-project
   - The pack includes the update-project skill (`skill_update_project`).
   - The job is Update project settings. [ADR-079](./adr/ADR-079-one-job-update-project.md).
-- <a id="req-pb-25"></a>[Skill-04](#pb-25) Pack skill sdd-refine-backlog
+- <a id="pb-25"></a>[Skill-04](#pb-25) Pack skill sdd-refine-backlog
   - The pack includes the refine-product-backlog skill (`skill_refine_pb`).
-- <a id="req-pb-26"></a>[Skill-05](#pb-26) Pack skill sdd-plan-sprint
+- <a id="pb-26"></a>[Skill-05](#pb-26) Pack skill sdd-plan-sprint
   - The pack includes the sprint-planning skill (`skill_plan_sprint`).
-- <a id="req-pb-28"></a>[Skill-06](#pb-28) Pack skill sdd-retrospective
+- <a id="pb-28"></a>[Skill-06](#pb-28) Pack skill sdd-retrospective
   - The pack includes the retrospective skill (`skill_retrospective`).
   - The record uses three headings: Learnings, Opportunities, and Future actions.
-- <a id="req-pb-29"></a>[Skill-07](#pb-29) Pack skill sdd-close-sprint **Retired**
+- <a id="pb-29"></a>[Skill-07](#pb-29) Pack skill sdd-close-sprint **Retired**
   - No pack seed. Sprint open and close stay in practices and planning skills ([ADR-076](./adr/ADR-076-review-status-one-skill.md)). Sprint 6 [feature-41](./sprint-backlog.md#sprint-6) records retirement **Done**.
-- <a id="req-pb-30"></a>[Skill-08](#pb-30) Pack skill sdd-audit-artifacts
+- <a id="pb-30"></a>[Skill-08](#pb-30) Pack skill sdd-audit-artifacts
   - After the pack gate the skill reads `{workspace}/artifacts-map.json` and opens each stored path as `{workspace}/<path>`.
   - It returns one verdict: `Uninitialized`, `Index broken`, or `Usable`.
   - It reports paths opened, paths that failed, and whether `locale` is empty.
   - It does not write a project file or the ledger.
-- <a id="req-pb-64"></a>[Skill-09](#pb-64) Pack skill sdd-update-specs
+- <a id="pb-64"></a>[Skill-09](#pb-64) Pack skill sdd-update-specs
   - The skill keeps the specs that a change touches aligned with the implementation.
-- <a id="req-pb-80"></a>[Skill-11](#pb-80) Pack skill sdd-spec-to-build
-  - The pack ships `specs/framework/seeds/skills/sdd-spec-to-build/` with `SKILL.md` and `readiness.md`.
+- <a id="pb-80"></a>[Skill-11](#pb-80) Pack skill sdd-spec-to-build
+  - The pack ships `pack.framework.sdd.works/skills/sdd-spec-to-build/` with `SKILL.md` and `readiness.md`.
   - The skill brings one feature or SBI to engineering readiness before a build: applicable stories, tests, UI specs, and technical design.
-  - It loads `atdd-expert`, `testing-expert`, `sdd-update-specs`, `frontend-designer`, `frontend-developer`, and `fullstack-engineer` per job. It proposes `sdd-build` after readiness confirm. It does not implement the feature.
+  - It loads `atdd-expert`, `testing-expert`, `sdd-update-specs`, `frontend-designer`, `frontend-developer`, and `fullstack-engineer` per job. After readiness confirm, it proposes domain implement skills per [ADR-108](./adr/ADR-108-no-pack-sdd-build-skill.md). It does not implement the feature and does not ship `sdd-build`.
   - [ADR-085](./adr/ADR-085-sdd-spec-to-build.md). Supersedes [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md).
-- <a id="req-pb-86"></a>[Skill-12](#pb-86) Pack skill sdd-review-status
+- <a id="pb-86"></a>[Skill-12](#pb-86) Pack skill sdd-review-status
   - The skill compares the board with the current sprint's named work, lists each mismatch, records each choice, and writes once (`skill_get_status`).
-- <a id="req-pb-87"></a>[Skill-13](#pb-87) Pack skill sdd-create-skill
+- <a id="pb-87"></a>[Skill-13](#pb-87) Pack skill sdd-create-skill
   - The skill creates or revises a skill (`skill_create_skill`).
   - It writes `{client_root}/{skills_dir}/<name>/SKILL.md` after confirm.
   - Pack folder `sdd-create-skill` avoids Cursor built-in `create-skill`. [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md).
   - It is not a practices job.
-- <a id="req-pb-89"></a>[Skill-14](#pb-89) Pack skill improve-prompt
-  - The pack ships `specs/framework/seeds/skills/improve-prompt/` with `SKILL.md` and `examples.md`.
+- <a id="pb-89"></a>[Skill-14](#pb-89) Pack skill improve-prompt
+  - The pack ships `pack.framework.sdd.works/skills/improve-prompt/` with `SKILL.md` and `examples.md`.
   - The skill improves a draft prompt for copy-paste use. It is advisory only and does not execute the task.
   - The body follows [TRUE AGENT](./framework/framework-design.md#true-agent): Capabilities, Knowledge, Limits, and Anti-patterns. It does not match ECC or other fixed component catalogs.
   - Frontmatter is `name` and `description` only. Description triggers are English phrases; the reply matches the user's input language.
   - No row in `constants.json`. Not a practices job. [ADR-099](./adr/ADR-099-improve-prompt-skill-name.md).
-- <a id="req-pb-93"></a>[Skill-15](#pb-93) Pack skill sdd-build-agent
+- <a id="pb-93"></a>[Skill-15](#pb-93) Pack skill sdd-build-agent
   - The pack includes the build-agent skill (`skill_build_agent`).
   - The skill writes one agent file under `{client_root}/{agents_dir}/` after confirm.
   - Pack folder `sdd-build-agent`. [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md).
-- <a id="req-pb-94"></a>[Skill-16](#pb-94) Pack skill sdd-create-rule
+- <a id="pb-94"></a>[Skill-16](#pb-94) Pack skill sdd-create-rule
   - The pack includes the create-rule skill (`skill_create_rule`).
   - The skill writes one rule file under `{client_root}/{rules_dir}/` after confirm.
   - Pack folder `sdd-create-rule` avoids Cursor built-in `create-rule`. [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md).
-- <a id="req-pb-113"></a>[Skill-17](#pb-113) Pack skill frontend-designer
-  - The pack ships `specs/framework/seeds/skills/frontend-designer/` with `SKILL.md` and `LICENSE.txt` ([ADR-105](./adr/ADR-105-frontend-designer-pack-skill-name.md)).
+- <a id="pb-113"></a>[Skill-17](#pb-113) Pack skill frontend-designer
+  - The pack ships `pack.framework.sdd.works/skills/frontend-designer/` with `SKILL.md` and `LICENSE.txt` ([ADR-105](./adr/ADR-105-frontend-designer-pack-skill-name.md)).
   - The skill guides distinctive UI design for new screens or redesigns: typography, palette, layout, motion, and subject-grounded direction. Minimal SDD coupling; optional load from `sdd-spec-to-build` for UI SBIs.
   - Production UI names **i18n-support** and **common-test-strategy** when those rules exist on `{client_root}`; the skill does not ship hard-coded product copy as the contract.
   - Pack folder and frontmatter `name`: `frontend-designer`. Upstream craft may refresh from [anthropics/skills frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design). No `constants.json` row.
   - Not a numbered practices job until practices assign one.
-- <a id="req-pb-114"></a>[Skill-18](#pb-114) Pack skill testing-expert
-  - The pack ships `specs/framework/seeds/skills/testing-expert/` with `SKILL.md`, `browser.md`, `LICENSE.txt`, report templates under `templates/`, `scripts/with_server.py`, and `examples/` ([ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md)).
+- <a id="pb-114"></a>[Skill-18](#pb-114) Pack skill testing-expert
+  - The pack ships `pack.framework.sdd.works/skills/testing-expert/` with `SKILL.md`, `browser.md`, `LICENSE.txt`, report templates under `templates/`, `scripts/with_server.py`, and `examples/` ([ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md)).
   - The skill does five jobs for one feature: design the testing strategy, define methods and tools, create the tests, run them, and write the report. Running tests that already exist is only the run step.
   - Layers follow the test pyramid in **common-test-strategy** when that rule is present: unit and component (about 70%), integration and API (about 20%), browser end-to-end (about 10%). Each run covers the happy path and one failure path.
   - Default tools, with the project's existing choice as the escape hatch: Vitest or Jest plus Testing Library for JavaScript unit and component tests; pytest for Python unit tests; HTTP calls against the app for API tests; Playwright for browser E2E (server helper, screenshot, console, role or test-id selectors) bundled in the seed. The skill does not depend on `webapp-testing` or other testing skills.
@@ -143,23 +147,23 @@ Workflows: none until a workflow is planned. No workflow PBI.
   - The skill does not mark a backlog row **Done** unless the user asks.
   - Pack folder and frontmatter `name`: `testing-expert`. No `constants.json` row. Not a practices job until practices assign one.
   - `sdd-spec-to-build` may load this skill when a feature needs tests. The skill runs without that load.
-- <a id="req-pb-115"></a>[Skill-19](#pb-115) Pack skill frontend-developer
-  - The pack ships `specs/framework/seeds/skills/frontend-developer/` with `SKILL.md` and optional `next-cache-components.md` ([ADR-103](./adr/ADR-103-frontend-developer-pack-skill-name.md)).
+- <a id="pb-115"></a>[Skill-19](#pb-115) Pack skill frontend-developer
+  - The pack ships `pack.framework.sdd.works/skills/frontend-developer/` with `SKILL.md` and optional `next-cache-components.md` ([ADR-103](./adr/ADR-103-frontend-developer-pack-skill-name.md)).
   - The skill is a strong frontend implementation skill: components, pages, client state, data loading, forms, accessibility, and performance in the project's UI stack. It is not a Next.js cache-only guide.
   - Minimal framework dependency. The skill does not require a sprint backlog, `artifacts-map.json`, or process files. `sdd-spec-to-build` may load it for a UI SBI. The skill runs without that load. No `constants.json` row.
   - Visual direction stays on [Skill-17](#pb-113). Verification stays on [Skill-18](#pb-114). The body follows [TRUE AGENT](./framework/framework-design.md#true-agent): capabilities, knowledge, and limits. The host picks the order.
   - It follows **i18n-support** for user-facing strings and **friendly-language** for interface copy when those rules exist on `{client_root}`.
   - Pack folder and frontmatter `name`: `frontend-developer`. Not a practices job until practices assign one.
   - The personal folder `~/.cursor/skills/frontend-developer/` is a Cache Components guide (`name`: `cache-components`). The pack seed may reuse its cache facts as one knowledge file. It is not a copy of that file as the whole skill.
-- <a id="req-pb-116"></a>[Skill-20](#pb-116) Pack skill fullstack-engineer
-  - The pack ships `specs/framework/seeds/skills/fullstack-engineer/` with `SKILL.md` ([ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md)).
+- <a id="pb-116"></a>[Skill-20](#pb-116) Pack skill fullstack-engineer
+  - The pack ships `pack.framework.sdd.works/skills/fullstack-engineer/` with `SKILL.md` ([ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md)).
   - The skill builds one web feature across the frontend, the backend API, the database, and auth in the stack the project already uses. Visual direction stays on [Skill-17](#pb-113). UI-only work stays on [Skill-19](#pb-115). Verification stays on [Skill-18](#pb-114).
   - Minimal SDD coupling. The body follows [TRUE AGENT](./framework/framework-design.md#true-agent). It does not default to a pinned web stack in the skill text.
   - It follows **i18n-support** for user-facing strings and **common-test-strategy** for tests when those rules exist on `{client_root}`.
   - Pack folder and frontmatter `name`: `fullstack-engineer`. No `constants.json` row until a later confirm. Not a practices job until practices assign one.
   - Distinct from the personal folder `~/.cursor/skills/Fullstack/`. The pack seed is not a copy of that file unless a later confirm says so.
-- <a id="req-pb-117"></a>[Skill-21](#pb-117) Pack skill ai-architect
-  - The pack ships `specs/framework/seeds/skills/ai-architect/` with `SKILL.md` and `terms.md`.
+- <a id="pb-117"></a>[Skill-21](#pb-117) Pack skill ai-architect
+  - The pack ships `pack.framework.sdd.works/skills/ai-architect/` with `SKILL.md` and `terms.md`.
   - The skill understands current AI terminology, concepts, technologies, techniques, and practices. It checks current provider and standards docs before it treats a term or a product as current.
   - The skill understands current AI solutions and architectures, including enterprise scale: model serving, gateways, evaluation, governance, cost, and rollout. Retrieval design stays on [Skill-23](#pb-119). MCP (Model Context Protocol) server design stays on [Skill-22](#pb-118).
   - The skill proposes one recommended design from the facts in the thread and in the project. It states constraints, options, what ships first, and what is costly to reverse. It does not invent prices, quotas, or benchmark numbers.
@@ -167,16 +171,16 @@ Workflows: none until a workflow is planned. No workflow PBI.
   - Confirmed architect jobs in the seed: choose the lightest style that meets the constraints, compare build and buy, add enterprise controls only when scale or regulation requires them, gate a release on an evaluation suite with rollback, treat retrieved text and tool output as untrusted, size cost from stated constraints, and state the operating design without running an incident. Terms live in `terms.md`.
   - Pack folder `ai-architect`. No `constants.json` row until a later confirm. Not a practices job until practices assign one.
   - Distinct from the personal folder `~/.cursor/skills/ai-architect-expert/`. The pack seed is not a copy of that file unless a later confirm says so.
-- <a id="req-pb-118"></a>[Skill-22](#pb-118) Pack skill mcp-expert
-  - The pack ships `specs/framework/seeds/skills/mcp-expert/` with `SKILL.md`.
+- <a id="pb-118"></a>[Skill-22](#pb-118) Pack skill mcp-expert
+  - The pack ships `pack.framework.sdd.works/skills/mcp-expert/` with `SKILL.md`.
   - The skill understands current MCP (Model Context Protocol) patterns: tools, resources, prompts, transports, tool-surface shape, annotations, elicitation, MCP Apps, and MCPB (a local bundle). It checks the current specification and SDK docs before it treats a pattern or a method name as current.
   - The skill understands where a person finds an existing server. It searches the official MCP Registry at `registry.modelcontextprotocol.io` first, then the client directory and community directories a fresh search names. It does not keep a ranked marketplace list inside the seed.
   - The skill proposes one solution from the facts in the thread and in those sources: reuse a published server, configure one, or build one. It states constraints, options, what ships first, and what is costly to reverse. It writes code or a design file only after the user confirms.
   - Other architect jobs in the same skill: tool and schema design, transport and auth choice, client config, a failed connection, and registry publish metadata. A wider AI system stays on [Skill-21](#pb-117). A web feature around the server stays on [Skill-20](#pb-116). Test runs stay on [Skill-18](#pb-114).
   - Pack folder `mcp-expert`. No `constants.json` row until a later confirm. Not a practices job until practices assign one.
   - Distinct from `~/.cursor/skills/mcp-server-patterns/` and from public builder skills such as `mcp-builder` and `build-mcp-server`. The pack seed is not a copy of those files.
-- <a id="req-pb-119"></a>[Skill-23](#pb-119) Pack skill rag-expert
-  - The pack ships `specs/framework/seeds/skills/rag-expert/` with `SKILL.md` and `reference.md`.
+- <a id="pb-119"></a>[Skill-23](#pb-119) Pack skill rag-expert
+  - The pack ships `pack.framework.sdd.works/skills/rag-expert/` with `SKILL.md` and `reference.md`.
   - The skill understands current RAG (retrieval-augmented generation) patterns and architectures: ingestion and parsing, chunking, embeddings, vector and keyword indexes, hybrid search, reranking, GraphRAG, agentic or corrective retrieval, grounding with citations, and evaluation. It checks current sources before it treats a pattern, model name, or default as current. It does not keep a ranked model or product table inside the seed.
   - The skill understands where a person finds RAG products and solutions, paid and free: vector stores, hosted file search, rerankers, and evaluation tools. It searches current vendor and open-source docs in the thread. It does not keep a marketplace ranking inside the seed.
   - The skill proposes one architecture from the facts in the thread and in those sources. It states constraints, options, what ships first, and what is costly to reverse. It may recommend skipping a custom vector stack when long context, hosted file search, tools, or a structured store fits. It writes code or a design file only after the user confirms.
@@ -184,22 +188,29 @@ Workflows: none until a workflow is planned. No workflow PBI.
   - Provider keys are read by name from `.secrets`. A production path does not return fabricated retrieval results.
   - Pack folder `rag-expert`. No `constants.json` row until a later confirm. Not a practices job until practices assign one.
   - Distinct from `~/.cursor/skills/rag-implementation/` and from public skills such as `rag-system`, `rag-architect`, `ai-rag`, `building-rag-pipelines`, and `langchain-rag`. The pack seed is not a copy of those files.
+- <a id="pb-120"></a>[Skill-24](#pb-120) Pack skill sdd-retrospective
+  - [Skill-06](#pb-28) **Done** (Sprint 6) shipped the first `sdd-retrospective` seed. This PBI brings the seed to the current pack skill bar for Sprint 8.
+  - The pack ships or revises `pack.framework.sdd.works/skills/sdd-retrospective/` (`SKILL.md` and sibling files per [sdd-pack-authoring](../pack.framework.sdd.works/rules/sdd-pack-authoring.mdc)).
+  - The skill runs after DoD, at sprint-end, or on demand: classify lessons as ADR or knowledge, append the sprint **Retrospective** block, and report **Retrospective Summary**. **Close confirm** for backlog **Done** stays on `sdd-dod.mdc`, not on retrospective alone ([ADR-097](./adr/ADR-097-done-runs-retrospective.md)).
+  - **CE-SKILL-10** passes. [Agent-02](#pb-8) lists the named job when [task-01](./sprint-backlog.md#sprint-8) updates `ethan.md`.
+  - Constants key `skill_retrospective` stays on [Spec-seeds-03](#pb-32). Pack folder `sdd-retrospective`.
 
 
 
 ### rules
 
-- <a id="req-pb-18"></a>[Rule-01](#pb-18) Pack rule sdd-dod.mdc
+- <a id="pb-18"></a>[Rule-01](#pb-18) Pack rule sdd-dod.mdc
   - The pack includes the Definition of Done rule file.
-- <a id="req-pb-19"></a>[Rule-02](#pb-19) Pack rule sdd-incremental-delivery.mdc
+- <a id="pb-19"></a>[Rule-02](#pb-19) Pack rule sdd-incremental-delivery.mdc
   - The pack includes the incremental delivery rule file.
-- <a id="req-pb-20"></a>[Rule-03](#pb-20) Pack rule sdd-realtime-status.mdc
+- <a id="pb-20"></a>[Rule-03](#pb-20) Pack rule sdd-realtime-status.mdc
   - WIP checkpoints for the five process files: draft, confirm, write. Done stays on `sdd-dod.mdc`. [ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md) ([ADR-093](./adr/ADR-093-keep-update-wip-rule.md) charter). Unprefixed `realtime-status.mdc` stays retired ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)).
-- <a id="req-pb-95"></a>[Rule-04](#pb-95) Pack rule friendly-language.mdc
+- <a id="pb-95"></a>[Rule-04](#pb-95) Pack rule friendly-language.mdc
   - The pack includes `rules/friendly-language.mdc`.
   - The constants key is `friendly-language`.
   - The rule replaces personal `writing-style.mdc` and loads with `alwaysApply: true`.
   - Skills link this file for wording checks. They do not copy the check list.
+
 
 
 
@@ -213,18 +224,18 @@ Workflows: none until a workflow is planned. No workflow PBI.
 
 ##### Core artifacts
 
-- <a id="req-pb-33"></a>[Spec-seeds-01](#pb-33) Seed scrum-in-sdd.md
+- <a id="pb-33"></a>[Spec-seeds-01](#pb-33) Seed scrum-in-sdd.md
   - The seed is the framework guide for every project: names and meaning.
   - It does not take what, how, and when from practices.
-- <a id="req-pb-34"></a>[Spec-seeds-02](#pb-34) Seed sdd-scrum-practices.md
+- <a id="pb-34"></a>[Spec-seeds-02](#pb-34) Seed sdd-scrum-practices.md
   - The seed is the framework practices for every project: what, how, and when.
   - It does not redefine guide terms.
   - Workflow steps live in skills.
-- <a id="req-pb-32"></a>[Spec-seeds-03](#pb-32) Seed constants.json
+- <a id="pb-32"></a>[Spec-seeds-03](#pb-32) Seed constants.json
   - The seed is the lookup file for path names, skill keys, and rule keys.
   - It is not inside a locale folder.
   - After install it lives on `{client_root}/templates/framework.sdd.works/constants.json`. [ADR-081](./adr/ADR-081-constants-json.md).
-- <a id="req-pb-35"></a>[Spec-seeds-04](#pb-35) Project file artifacts-map.json
+- <a id="pb-35"></a>[Spec-seeds-04](#pb-35) Project file artifacts-map.json
   - The project path file is `{workspace}/artifacts-map.json`.
   - There is no template seed.
   - The example is in the artifacts-map section of `sdd-scrum-practices.md`. [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md). [ADR-082](./adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots. [ADR-090](./adr/ADR-090-adr-knowledge-map-roots.md).
@@ -233,63 +244,67 @@ Workflows: none until a workflow is planned. No workflow PBI.
 
 ##### Process artifacts
 
-- <a id="req-pb-36"></a>[Spec-seeds-05](#pb-36) Seed product-backlog.md
+- <a id="pb-36"></a>[Spec-seeds-05](#pb-36) Seed product-backlog.md
   - The seed is the placeholder template product backlog a new project copies.
   - It is not this repo's product backlog.
-- <a id="req-pb-37"></a>[Spec-seeds-06](#pb-37) Seed sprint-backlog.md
+- <a id="pb-37"></a>[Spec-seeds-06](#pb-37) Seed sprint-backlog.md
   - The seed is the generic sprint-backlog starter for a new project.
-- <a id="req-pb-38"></a>[Spec-seeds-07](#pb-38) Seed status.md
+- <a id="pb-38"></a>[Spec-seeds-07](#pb-38) Seed status.md
   - The seed is the status starter for a new project.
-  - Column and row rules are in [status.md](./framework/seeds/templates/EN/sdd-scrum-practices.md#statusmd).
-- <a id="req-pb-39"></a>[Spec-seeds-08](#pb-39) Seed changes-log.md
+  - Column and row rules are in [status.md](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#statusmd).
+- <a id="pb-39"></a>[Spec-seeds-08](#pb-39) Seed changes-log.md
   - The seed is the generic change-log starter for a new project.
   - A conclusion record: what changed, why, and how it was verified.
-- <a id="req-pb-84"></a>[Spec-seeds-09](#pb-84) Seed issues-log.md
+- <a id="pb-84"></a>[Spec-seeds-09](#pb-84) Seed issues-log.md
   - The seed is the issues-log starter for a new project.
-  - Column and row rules are in [issues-log.md](./framework/seeds/templates/EN/sdd-scrum-practices.md#issues-logmd).
+  - Column and row rules are in [issues-log.md](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#issues-logmd).
 
 
 
 ##### Engineering artifacts
 
-- <a id="req-pb-40"></a>[Spec-seeds-10](#pb-40) Seed architecture.md
+- <a id="pb-40"></a>[Spec-seeds-10](#pb-40) Seed architecture.md
   - The seed is the generic architecture starter for a new project.
-- <a id="req-pb-41"></a>[Spec-seeds-11](#pb-41) Seed release.md
+- <a id="pb-41"></a>[Spec-seeds-11](#pb-41) Seed release.md
   - The seed is the generic release starter for a new project (local startup and go-live order).
-- <a id="req-pb-66"></a>[Spec-seeds-12](#pb-66) Seed .secrets
-  - The seed is the dotenv-shaped `.secrets` starter at `specs/framework/seeds/templates/EN/.secrets`.
+- <a id="pb-66"></a>[Spec-seeds-12](#pb-66) Seed .secrets
+  - The seed is the dotenv-shaped `.secrets` starter at `pack.framework.sdd.works/templates/EN/.secrets`.
   - Each line is `NAME=` with an empty value; `#` comments state rules, groups, and where values live.
   - It holds no secret values. Delete sample keys the product does not need.
-- <a id="req-pb-90"></a>[Spec-seeds-13](#pb-90) Seed test-strategy.md
+- <a id="pb-90"></a>[Spec-seeds-13](#pb-90) Seed test-strategy.md
   - The seed is the generic test-strategy starter for a new project.
   - It is not this repo's test strategy.
-- <a id="req-pb-97"></a>[Spec-seeds-15](#pb-97) Pack install profile manifests
-  - The pack repo ships versioned JSON under `profiles/`. Each file lists skill folder names, rule file names, and minimal template paths (for example slim `constants.json`).
-  - At least one preset profile names the core planning-loop skills and harness rules for subset install ([Web-portal-17](#pb-98)).
-  - Pack sync and the install tarball include `profiles/`.
-- <a id="req-pb-110"></a>[Spec-seeds-16](#pb-110) Pack instructions tabs JSON
-  - The pack repo ships `content/instructions-tabs.json` (or equivalent path named in portal design).
-  - The file lists each content tab after Setup: id, i18n label key, query param, panel id, and per-locale content paths under the synced pack tree.
-  - The default file reproduces today’s **Features** and **Scrum in SDD** tabs ([Web-portal-07](#pb-73), [Web-portal-12](#pb-81)).
-  - Setup is not listed in the file; the app always renders Setup first ([Web-portal-23](#pb-109)).
+- <a id="pb-110"></a>[Spec-seeds-16](#pb-110) Pack instructions tabs JSON
+  - The pack repo ships `content/.instructions-tabs.json`. The bundled fallback is [`src/content/.instructions-tabs.json`](../src/content/.instructions-tabs.json) in the web app repo.
+  - The file has `version` and a `tabs` array. **Tab order on the instructions page is array order.**
+  - Each row has `type` (`code` or `content`), `id`, `labelKey`, `queryParam`, and `panelTestId`.
+  - **`code`:** built-in portal panel; `id` must match an app allowlist (today `setup` only). See [`app-design.md`](./admin-portal/app-design.md) instructions tabs section.
+  - **`content`:** `paths` maps locale to a relative markdown path under the sync unpack (at least `en`; zh locales optional with en fallback). Same read order as Features ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
+  - The default seed reproduces Setup (`code`), Features, and Scrum in SDD (`content`) ([Web-portal-07](#pb-73), [Web-portal-12](#pb-81)).
+  - Operator rules for this file also live in [`content/.admin-note.md`](../src/content/.admin-note.md) ([Web-portal-26](#pb-123)).
+- <a id="pb-121"></a>[Spec-seeds-17](#pb-121) Reviewed full pack seeds file
+  - The pack ships one reviewed manifest of the full seed tree under `pack.framework.sdd.works/` (path named in [framework-design](./framework/framework-design.md)).
+  - The manifest lists every installable pack path: agents, skills, rules, workflows, and templates, grouped the same way as [MCP-01](#pb-16) allow-list and [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md).
+  - The manifest matches the authoring tree at delivery time. A person can confirm each row against disk and against installer copy rules in [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md).
+  - The pack includes an authoring seed [`pack.framework.sdd.works/.sdd-installed.example.json`](../pack.framework.sdd.works/.sdd-installed.example.json). It shows ledger shape for Ethan and audit fixtures ([Agent-04](#pb-17), [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md)). The live client receipt stays `{client_root}/.sdd-installed.json`.
+  - The git seed keeps `pack_complete` false and empty or placeholder version fields. Install and stdio copy set `pack_complete` true on `{client_root}`; the git tree does not commit a true ledger.
+  - The manifest documents how `files.skills`, `files.rules`, `files.agents`, `files.workflows`, and `files.templates` relate to that seed example.
 
 
 
-#### HanS and HanT
+#### Locale (i18n) for HanS and HanT
 
-HanS and HanT bodies for the locale template folders. Spec-seeds rows own the EN starter only. One PBI covers both locales.
-
-- <a id="req-pb-67"></a>[i18n-01](#pb-67) HanS and HanT core artifacts **Retired**
+- <a id="pb-67"></a>[i18n-01](#pb-67) HanS and HanT core artifacts **Retired**
   - Superseded by [i18n-04](#pb-102). `sdd-scrum-practices.md` stays EN only.
-- <a id="req-pb-68"></a>[i18n-02](#pb-68) HanS and HanT process artifacts **Retired**
+- <a id="pb-68"></a>[i18n-02](#pb-68) HanS and HanT process artifacts **Retired**
   - Superseded by [i18n-05](#pb-103).
-- <a id="req-pb-102"></a>[i18n-04](#pb-102) HanS and HanT scrum-in-sdd.md
+- <a id="pb-102"></a>[i18n-04](#pb-102) HanS and HanT scrum-in-sdd.md
   - HanS and HanT bodies of `scrum-in-sdd.md` match the EN meaning in `templates/HanS/` and `templates/HanT/`.
-  - Each file links [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice) and the practices sections their jobs need.
-- <a id="req-pb-103"></a>[i18n-05](#pb-103) HanS and HanT process template seeds
+  - Each file links [Terminology in practice](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#terminology-in-practice) and the practices sections their jobs need.
+- <a id="pb-103"></a>[i18n-05](#pb-103) HanS and HanT process template seeds
   - HanS and HanT starters for `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, and `issues-log.md` match the EN starter meaning.
   - There is no `artifacts-map.md` template seed.
-- <a id="req-pb-69"></a>[i18n-03](#pb-69) HanS and HanT engineering artifacts
+- <a id="pb-69"></a>[i18n-03](#pb-69) HanS and HanT engineering artifacts
   - HanS and HanT starters for `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `release.md`, `.secrets`, and `test-strategy.md` match the EN starter meaning.
 
 [Back to top](#index)
@@ -298,37 +313,36 @@ HanS and HanT bodies for the locale template folders. Spec-seeds rows own the EN
 
 
 
-## mcp
+## **Component: mcp**
 
-- <a id="req-pb-16"></a>[MCP-01](#pb-16) Installer allow-list and file ledger
-  - `sdd_install_framework` and `sdd_update_framework` copy the pack allow-list onto `{client_root}`.
-  - The tools write `{client_root}/.sdd-installed.json` with `pack_complete: true` when the copy finishes (ADR-057).
-  - `files` lists each pack file path, not the folder name (ADR-059).
-  - Sprint 2 installer SBIs parent this PBI. [MCP-06](#pb-104) and [MCP-07](#pb-105) own production go-live.
-- <a id="req-pb-92"></a>[MCP-04](#pb-92) Pack go-live on the client root **Retired**
+- <a id="pb-16"></a>[MCP-01](#pb-16) Installer allow-list and file ledger
+  - You install or update the full framework pack through the local MCP tools `sdd_install_framework` and `sdd_update_framework`.
+  - The tools copy every allow-listed pack file onto your client root and write `.sdd-installed.json` with `pack_complete: true` when the copy finishes ([ADR-057](./adr/ADR-057-install-ledger-pack-complete.md)).
+  - The ledger lists each pack file path, not folder names only ([ADR-059](./adr/ADR-059-ledger-lists-pack-files.md)).
+  - The lite HTTP installer ([Category: framework HTTP lite installer](#category-framework-http-lite-installer-through-local-agent)) does not change this full install path.
+- <a id="pb-92"></a>[MCP-04](#pb-92) Pack go-live on the client root **Retired**
   - Superseded by [MCP-06](#pb-104) and [MCP-07](#pb-105).
-- <a id="req-pb-104"></a>[MCP-06](#pb-104) sdd-mcp GitHub Releases
-  - Publish the five `sdd-mcp` binaries on GitHub Releases for end-user stdio setup ([ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md)).
+- <a id="pb-104"></a>[MCP-06](#pb-104) sdd-mcp GitHub Releases
+  - Operators publish the five `sdd-mcp` release binaries for end-user stdio setup ([ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md)).
   - Release assets match the OS and CPU matrix in [MCP-02](#pb-75).
-- <a id="req-pb-105"></a>[MCP-07](#pb-105) Production pack sync for install
+- <a id="pb-105"></a>[MCP-07](#pb-105) Production pack sync for install
   - Admin portal sync ships the pack commit end users install in production.
-  - End-user install stays stdio primary with HTTP fallback ([ADR-054](./adr/ADR-054-hybrid-http-ai-tarball.md)).
-- <a id="req-pb-75"></a>[MCP-02](#pb-75) Local binary ~/.sdd/sdd-mcp
-  - The running program does not need Node, npm, Bun, Python, or any other runtime. Bun is the build machine only ([ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md)).
-  - One executable covers macOS, Windows, and Linux (ADR-051 targets: `darwin-arm64`, `darwin-x64`, `linux-arm64`, `linux-x64`, `windows-x64`).
-  - The same program is the stdio `command` for every client in `[mcp-design.md](./mcp/mcp-design.md)` §4.1: Cursor, Cursor Agents, CodeBuddy CN, TRAE, TRAE CN, Claude Code, and Cline. Codex and Copilot use it after their paths are verified.
-  - The program does the stdio write in `[mcp-design.md](./mcp/mcp-design.md)`: `sdd_install_framework` and `sdd_update_framework` copy the pack allow-list onto `{client_root}` and write `.sdd-installed.json` with `pack_complete: true` and file paths. It does not write `framework.sdd.works.json`.
+  - End-user full install stays stdio primary with HTTP tarball fallback ([ADR-054](./adr/ADR-054-hybrid-http-ai-tarball.md)).
+  - Sync cache and the install tarball include pack-root `lite-pack.allowlist.json` ([ADR-107](./adr/ADR-107-lite-pack-allowlist-filename.md), [Spec-seeds-15](#pb-97)).
+- <a id="pb-75"></a>[MCP-02](#pb-75) Local binary ~/.sdd/sdd-mcp
+  - You run one local program with no Node, npm, Bun, Python, or other runtime on the client machine. Bun is build-only ([ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md)).
+  - One executable covers macOS, Windows, and Linux ([ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md) targets: `darwin-arm64`, `darwin-x64`, `linux-arm64`, `linux-x64`, `windows-x64`).
+  - The same program is the stdio `command` for supported clients in [`mcp-design.md`](./mcp/mcp-design.md) §4.1.
+  - The program runs full install and update through MCP-01. It does not write `framework.sdd.works.json`.
   - The binary holds no operator secrets and writes only under the allow-listed client root.
-  - Setup tells the agent to run the local file `~/.sdd/sdd-mcp`. It does not tell the agent to download an executable from the network and run it.
-- <a id="req-pb-78"></a>[MCP-03](#pb-78) MCP tools without sdd_list_versions
-  - The person in the IDE installs or updates the latest pack. They do not pick a version from an MCP tool.
-  - `sdd_install_framework` already resolves omitted `version` to latest via the sync cache and `GET /api/sdd/package`. The model does not need a catalog call first.
-  - MCP has no private tool. If a name is on `tools/list`, the model can call it. Keep version listing off that list.
-  - Pack contents for people are the Features tab (three synced markdown files, [Web-portal-07](#pb-73)), not an agent tool.
-  - Keep `listVersions()` and `GET /api/sdd/versions` as server-internal APIs. Do not register `sdd_list_versions` on stdio or HTTP. Do not mirror the payload as an MCP resource ([ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md)).
-- <a id="req-pb-101"></a>[MCP-05](#pb-101) Partial install ledger for subset copy
-  - Prompt-driven subset install merges into `{client_root}/.sdd-installed.json`: union `files.skills` and `files.rules`, record `install_profile`, keep `pack_complete` false until a full allow-list copy ([MCP-01](#pb-16)).
-  - `[mcp/mcp-design.md](./mcp/mcp-design.md)` and `[mcp/mcp-tests.md](./mcp/mcp-tests.md)` cover subset install. No new MCP tool name ([Web-portal-18](#pb-99)).
+  - Setup tells you to run `~/.sdd/sdd-mcp`. It does not tell you to download and run an executable from the network ad hoc.
+- <a id="pb-78"></a>[MCP-03](#pb-78) MCP tools without sdd_list_versions
+  - You install or update the latest pack from the IDE. You do not pick a version from an MCP tool list.
+  - `sdd_install_framework` resolves omitted `version` to latest via the sync cache and `GET /api/sdd/package`.
+  - Pack contents for people appear on the Features tab ([Web-portal-07](#pb-73)), not as a version-list MCP tool.
+  - `listVersions()` and `GET /api/sdd/versions` stay server-internal. `sdd_list_versions` is not on stdio or HTTP ([ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md)).
+- <a id="pb-101"></a>[MCP-05](#pb-101) Partial install ledger for subset copy **Retired**
+  - Superseded by the lite HTTP installer category. Lite copy does not write `.sdd-installed.json`. Full install ledger stays on [MCP-01](#pb-16).
 
 [Back to top](#index)
 
@@ -336,141 +350,130 @@ HanS and HanT bodies for the locale template folders. Spec-seeds rows own the EN
 
 
 
-## web-portal
+## **Component: web-portal**
 
-- <a id="req-pb-15"></a>[Web-portal-01](#pb-15) Per-client call-up on the instructions page
-  - The instructions page gains a section on how each agent tool calls up an agent.
-  - Research comes before the section is written.
-  - Cursor `/ethan` and TRAE CN `@` are known.
-- <a id="req-pb-49"></a>[Web-portal-02](#pb-49) Install and update on the instructions page
-  - The instructions page covers install and update, `{client_root}/.sdd-installed.json`, and the fatal stop when `pack_complete` is not true.
-- <a id="req-pb-70"></a>[Web-portal-04](#pb-70) Setup markdown for stdio and HTTP
-  - `public/agent-setup/prompt.md` tells the agent to download `~/.sdd/sdd-mcp`, write a `command` MCP entry with `SDD_SERVER_URL`, and use `"url": "https://framework.sdd.works/mcp"` when the binary cannot be installed or the client accepts only a URL.
-  - The public path is `GET /setup` ([ADR-061](./adr/ADR-061-setup-prompt-public-path.md)).
-  - The person does not edit the MCP file by hand.
-  - Pack install is a later step.
-- <a id="req-pb-71"></a>[Web-portal-05](#pb-71) Instructions page layout
-  - The public instructions page matches the Setup / Features mock.
-  - Setup copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup`.
-  - Manual setup is one stdio `command` `mcp.json`.
+#### Instructions page
+
+- <a id="pb-15"></a>[Web-portal-01](#pb-15) Invoking agents, skills, and rules tab
+  - You see a tab on the instructions page for invoking agents, skills, and rules.
+  - The tab renders synced markdown like Features and Scrum in SDD: `invoke-agents.en.md`, `invoke-agents.zh-Hans.md`, and `invoke-agents.zh-Hant.md` under `content/invoke-agents/` ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
+  - The portal uses the admin sync cache, then bundled fallbacks. A missing locale file shows English from the same source.
+  - The markdown documents how each supported client starts an agent, a skill, or a rule (for example Cursor `/` and TRAE CN `@`). Unverified clients stay marked unknown until checked.
+  - There is no separate repo README for this tab. Pack-owned locale files are the source of truth. Supersedes [Web-portal-14](#pb-88) **Retired**.
+- <a id="pb-70"></a>[Web-portal-04](#pb-70) Setup markdown for stdio and HTTP
+  - `GET /setup` returns markdown that tells your agent to install the local MCP program and register stdio, or use the HTTP MCP URL when the client allows only a URL ([ADR-061](./adr/ADR-061-setup-prompt-public-path.md)).
+  - You do not edit the MCP config file by hand for the default path.
+  - Full pack install is a separate step after setup.
+- <a id="pb-71"></a>[Web-portal-05](#pb-71) Instructions page layout
+  - The public instructions page matches the Setup and Features layout in the portal mock.
+  - Setup offers one copy action for the setup sentence (see [Web-portal-06](#pb-72)).
   - Features lists Agents, Skills, Rules, and Templates as fixed rows.
-  - A secret name field and Get secret button are visible and do not return a value in this item.
-  - There is no Back to home link.
-  - Per-client call-up research stays on unscheduled [Web-portal-01](#pb-15).
-- <a id="req-pb-72"></a>[Web-portal-06](#pb-72) One-line GET /setup copy
-  - The instructions page copies one sentence: `Fetch and execute the setup instructions from https://framework.sdd.works/setup`.
-  - That URL returns the stdio setup markdown.
-  - `GET /agent-setup` redirects to `GET /setup`.
-  - Manual setup shows one `mcp.json` with the `command` entry.
-  - The page does not show a second `mcp.json` or `curl`.
-  - Page labels are i18n keys. The copied sentence is the same protocol line in every locale.
-- <a id="req-pb-73"></a>[Web-portal-07](#pb-73) Features tab from three markdown files
-  - The Features tab on `/` and `/instructions` shows markdown from the synced pack.
-  - Three files sit at `content/features/` in the pack repo: `features.en.md`, `features.zh-Hans.md`, and `features.zh-Hant.md` ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
-  - The same three files ship in the server package at `src/content/features/`.
-  - The page reads the latest local unpack at `.data/sdd-packages/<commit>/unpacked/content/features/` first. It does not call GitHub.
-  - The active locale picks the file. A missing zh-Hans or zh-Hant file in that source shows that source’s English file.
-  - If the sync cache cannot be read, the page reads `src/content/features/` instead.
-  - Setup and Get secret stay usable.
-  - Manual sync and the 30-minute sync publish edits without an app deploy. A failed sync keeps the previous cache.
-  - There is no admin editor and no unavailable message.
-  - Install does not copy these files onto `{client_root}`.
-  - The file body is free markdown. Tab labels stay i18n keys.
-- <a id="req-pb-74"></a>[Web-portal-08](#pb-74) Secret lookup by name
-  - A text field and a button look up one secret from the admin key store.
-  - The field hint is “Enter the name of the secret, example: sdd-trial-googlemaps” (简体: “输入要获得的密钥名称，例如：sdd-trial-googlemaps”; 繁體: “輸入要取得的密鑰名稱，例如：sdd-trial-googlemaps”).
-  - The button is “Get secret” (简体: “获取密钥”; 繁體: “獲取密鑰”).
-  - The page shows that secret’s value.
-  - Placement on Features is superseded by [Web-portal-13](#pb-83).
-  - The setup prompt and `mcp.json` stay without a token.
-  - `sdd_get_key` stays off the stdio tool list.
-- <a id="req-pb-76"></a>[Web-portal-09](#pb-76) Public landing, footer, and password gate
-  - `/` serves the instructions guide (logo-card home goes away).
-  - Site footer is fixed to the viewport on auth and admin shells.
-  - After reset mail is sent, the link is Back to login → `/login`.
-  - An admin with a non-empty `passwordHash` is not shown the empty-account set-password lead and can sign in.
-  - An admin with an empty hash still sees the lead and can set a password.
-  - E2E setup does not overwrite an existing seed password hash.
-- <a id="req-pb-77"></a>[Web-portal-10](#pb-77) On-page reset submit and Features tab switch
-  - Reset request stays on `/reset-password` (no full document reload).
-  - Success shows `admin.reset.sent` and Back to login.
-  - Failed send or request shows a keyed error and keeps the form.
-  - Features tab on `/` and `/instructions` switches to the features panel and is the hit target at its center.
-- <a id="req-pb-79"></a>[Web-portal-11](#pb-79) Reset success without email in the URL
-  - After a successful reset request, the success callout uses the previous `admin.reset.sent` sentence (en: “If that email is an admin account, a reset mail is on its way. Check inbox and junk.”; zh-Hans and zh-Hant matching).
-  - It does not interpolate `{email}`.
-  - The request lead is hidden.
+  - The invoking-agents tab stays on [Web-portal-01](#pb-15).
+- <a id="pb-72"></a>[Web-portal-06](#pb-72) One-line GET /setup copy
+  - You copy one sentence from the instructions page: `Fetch and execute the setup instructions from https://framework.sdd.works/setup`.
+  - That URL returns the stdio setup markdown. `GET /agent-setup` redirects to `GET /setup`.
+  - Manual setup shows one `mcp.json` with the `command` entry. The page does not show a second `mcp.json` or `curl`.
+  - Tab labels use i18n keys. The copied setup sentence is the same in every locale.
+- <a id="pb-73"></a>[Web-portal-07](#pb-73) Features tab from three markdown files
+  - You open the Features tab on `/` and `/instructions` and read markdown synced from the pack.
+  - The pack ships `features.en.md`, `features.zh-Hans.md`, and `features.zh-Hant.md` under `content/features/` ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
+  - The portal prefers the latest admin sync cache, then bundled fallbacks. A missing locale file shows English from the same source.
+  - Setup and Get secret stay usable while Features loads. A failed sync keeps the previous cache.
+  - Full install does not copy these markdown files onto your client root.
+- <a id="pb-81"></a>[Web-portal-12](#pb-81) Scrum in SDD tab
+  - You see a Scrum in SDD tab after Setup and Features on `/` and `/instructions`.
+  - The tab label uses i18n key `admin.guide.tab_scrum`. Query `?tab=scrum-in-sdd` opens that panel on load.
+  - The panel reads synced `scrum-in-sdd.{locale}.md` with the same locale fallback as Features ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
+  - Full install does not copy portal content onto your client root. Project template seeds under `templates/{locale}/` stay separate.
+- <a id="pb-83"></a>[Web-portal-13](#pb-83) Get secret on Setup
+  - You enter a secret name and tap Get secret at the bottom of the Setup tab, not on Features.
+  - Field hint and button labels use i18n keys in en, zh-Hans, and zh-Hant.
+  - A found value appears in a code block with copy; not-found and empty-name use keyed messages. The result scrolls into view.
+  - Setup and MCP config stay without a token. Supersedes Features placement from [Web-portal-08](#pb-74) **Retired**.
+- <a id="pb-88"></a>[Web-portal-14](#pb-88) README for IDE invoke differences **Retired**
+  - Superseded by [Web-portal-01](#pb-15) synced invoke-agents markdown tab.
+- <a id="pb-111"></a>[Web-portal-24](#pb-111) Instructions tabs config API
+  - `GET /api/sdd/instructions-tabs?locale=` resolves tab config from the synced pack cache first ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
+  - When the cache file is missing or invalid, the handler uses **only** the bundled [`src/content/.instructions-tabs.json`](../src/content/.instructions-tabs.json). There is no partial merge.
+  - The response lists tabs in file order. Each `content` tab includes rendered markdown metadata for the requested locale (cache then package fallback per path). Each `code` tab includes metadata only (no markdown body).
+  - The handler does not call GitHub at request time.
+- <a id="pb-112"></a>[Web-portal-25](#pb-112) Dynamic instructions tab UI
+  - `/` and `/instructions` render the tab list and panels from the same resolver as the API ([Web-portal-24](#pb-111)), not hard-coded Features and Scrum rows ([Web-portal-07](#pb-73), [Web-portal-12](#pb-81)).
+  - **Default selected tab** when the URL has no `?tab=` is always **Setup** (`queryParam` `setup`), regardless of array order.
+  - Tab **display order** follows the resolved config array. Tab labels use `labelKey` from config. Setup copy and Get secret stay on the `setup` code panel ([Web-portal-06](#pb-72), [Web-portal-13](#pb-83)).
+- <a id="pb-82"></a>[Spec-seeds-14](#pb-82) Seed features.md under content/features
+  - You finalize the three Features catalog seeds under `content/features/` in the pack repo.
+
+#### Public site
+
+- <a id="pb-76"></a>[Web-portal-09](#pb-76) Public landing, footer, and password gate
+  - `/` serves the instructions guide. The old logo-card home goes away.
+  - The site footer stays fixed on auth and admin shells.
+  - After reset mail is sent, Back to login goes to `/login`.
+  - An admin with a password can sign in. An admin without a password sees the set-password lead first.
+- <a id="pb-106"></a>[Web-portal-20](#pb-106) Canonical public hostname
+  - One hostname is canonical for marketing and instructions. The other redirects or serves the same app without duplicating setup flows.
+  - Operators document redirect and routing rules.
+- <a id="pb-107"></a>[Web-portal-21](#pb-107) Install-first public landing
+  - The partner public site (for example 2study.ai) landing leads with the framework lite or full install prompt and links to setup and instructions.
+  - This PBI is not framework.sdd.works `/` redesign; that site already serves the instructions guide ([Web-portal-09](#pb-76)).
+- <a id="pb-108"></a>[Web-portal-22](#pb-108) Admin routes off public hostname
+  - Admin login, reset, and operator routes stay off the public marketing and instructions entry hostname or path.
+
+#### Admin
+
+- <a id="pb-123"></a>[Web-portal-26](#pb-123) Pack repo file note on Admin Settings
+  - A signed-in admin on Admin Settings sees a note that names which files belong in the pack GitHub repository, and the content and format of each file.
+  - Admin Settings loads the note body from `content/.admin-note.md` in the synced pack. The authoring seed is [`src/content/.admin-note.md`](../src/content/.admin-note.md).
+  - The note includes `lite-pack.allowlist.json` at the repo root: top-level `skills` and `rules` arrays of sorted relative paths.
+  - The note documents `content/.instructions-tabs.json`: tab types (`code`, `content`), field rules, display order, bundled fallback, and default Setup selection ([Spec-seeds-16](#pb-110)).
+  - The note states that `{client_root}/.sdd-lite-installed.json` and `{client_root}/.sdd-installed.json` are written on the client after a successful copy. They are not pack files to commit or to sync. Do not commit `framework.sdd.works.json`.
+  - Public pages do not show the note. Labels around the note use i18n keys. The note body is the markdown file.
+
+#### Account and secrets
+
+- <a id="pb-74"></a>[Web-portal-08](#pb-74) Secret lookup by name **Retired**
+  - Superseded by [Web-portal-13](#pb-83) on Setup. Sprint 3 shipped lookup on Features first.
+- <a id="pb-77"></a>[Web-portal-10](#pb-77) On-page reset submit and Features tab switch
+  - Reset request stays on `/reset-password` without a full document reload.
+  - Success and error states use keyed messages. The Features tab switches panels when you select it.
+- <a id="pb-79"></a>[Web-portal-11](#pb-79) Reset success without email in the URL
+  - After a successful reset request, the success message does not show the email address in the page or URL.
   - The document stays on `/reset-password` with no `?email=` navigation.
-  - The submit control cannot issue a document GET.
-- <a id="req-pb-81"></a>[Web-portal-12](#pb-81) Scrum in SDD tab
-  - On `/` and `/instructions`, a third tab sits after Features. Order: Setup, Features, Scrum in SDD.
-  - The label is i18n key `admin.guide.tab_scrum` with the same string `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant`.
-  - Query `?tab=scrum-in-sdd` opens that panel on a full load.
-  - The panel reads `scrum-in-sdd.{locale}.md` from `<unpacked>/content/scrum-in-sdd/` first, then `src/content/scrum-in-sdd/` ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
-  - A missing Chinese file in the chosen source uses that source’s English file.
-  - A failed sync that keeps the previous unpack stays `source: cache`.
-  - Public `GET /api/sdd/scrum-in-sdd?locale=` returns `{ locale, sourceLocale, source, html }` and no key values.
-  - HTML rules use `.scrum-body`: an `h1` is larger than an `h2` and has space above it except when it is the first block. List items keep inline markdown. There is no Features em-dash name/description split.
-  - Install does not copy the three portal files onto `{client_root}`. Template seeds under `templates/{locale}/scrum-in-sdd.md` stay the project seeds.
-  - Setup, Features, and Get secret on Setup stay as they are. The guide panel has no secret form.
-- <a id="req-pb-83"></a>[Web-portal-13](#pb-83) Get secret on Setup
-  - The secret form leaves the bottom of Features and sits at the bottom of Setup, after the tools table.
-  - Features does not show the form.
-  - Lookup, copy, not-found, and empty-name behavior stay as [Web-portal-08](#pb-74).
-- <a id="req-pb-88"></a>[Web-portal-14](#pb-88) README for IDE invoke differences
-  - The repo `README.md` explains how each IDE starts an agent.
-  - Cursor `/ethan` starts the chat, and later jobs in that chat are plain text.
-  - TRAE and TRAE CN use `@` (TRAE CN also @智能体). `/ethan` does not start Ethan there.
-  - Claude Code, CodeBuddy CN, and Cline are listed as not verified, with the agent file path and the reason.
-  - Codex and Copilot stay out until a root is recorded.
-  - The page points at `[framework-design.md](./framework/framework-design.md)` and `[ide-agent-invoke.md](./knowledge/agent/ide-agent-invoke.md)`.
-  - It does not claim a gesture that has not been checked.
-  - The instructions page stays [Web-portal-01](#pb-15).
-- <a id="req-pb-91"></a>[Web-portal-15](#pb-91) Unified public site **Retired**
-  - Superseded by [Web-portal-20](#pb-106), [Web-portal-21](#pb-107), and [Web-portal-22](#pb-108).
-- <a id="req-pb-106"></a>[Web-portal-20](#pb-106) Canonical public hostname
-  - One hostname is canonical for marketing and instructions entry. The other redirects or serves the same app without a second copy of setup flows.
-  - Redirect and routing rules are documented for operators.
-- <a id="req-pb-107"></a>[Web-portal-21](#pb-107) Install-first public landing
-  - The redesigned first page leads with the framework install prompt and links to setup and instructions.
-  - Setup, Features, and Scrum in SDD on the instructions surface stay usable after the redesign.
-- <a id="req-pb-108"></a>[Web-portal-22](#pb-108) Admin routes off public hostname
-  - Admin login, reset, and operator routes stay on paths or hosts separate from the public marketing and instructions entry.
-- <a id="req-pb-82"></a>[Spec-seeds-14](#pb-82) Seed features.md under content/features
-  - Review and finalize the three Features catalog seeds under `content/features/` in the pack repo: `features.en.md`, `features.zh-Hans.md`, and `features.zh-Hant.md`.
-- <a id="req-pb-96"></a>[Web-portal-16](#pb-96) Install core skills and rules only **Retired**
-  - Superseded by [Spec-seeds-15](#pb-97), [MCP-05](#pb-101), [Web-portal-17](#pb-98), [Web-portal-18](#pb-99), and [Web-portal-19](#pb-100).
-- <a id="req-pb-98"></a>[Web-portal-17](#pb-98) Install profile API
-  - `GET /api/sdd/install-profile/{id}` reads the synced pack cache only. It does not call GitHub at request time.
-  - The response includes `packageUrl`, `package_commit`, tarball-relative `paths`, and a manifest template for `.sdd-installed.json` with subset `files.*` and `pack_complete: false`.
-  - An unknown profile id returns a structured error.
-- <a id="req-pb-99"></a>[Web-portal-18](#pb-99) Subset install agent prompt
-  - The public path is `GET /setup/install` with optional `?profile=`. [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) pattern.
-  - The canonical body is `public/agent-setup/install-prompt.md`, kept in sync with `[mcp/mcp-design.md](./mcp/mcp-design.md)`.
-  - The prompt authorizes download and selective extract only. It does not call `sdd_install_framework`. The agent writes `.sdd-installed.json` last.
-- <a id="req-pb-100"></a>[Web-portal-19](#pb-100) Core install one-line copy
-  - The public site (**2study.ai** when live; until then framework.sdd.works instructions Setup) exposes a copy control for the one sentence that fetches `GET /setup/install`.
-  - The copied protocol sentence is the same in every locale. Surrounding labels use i18n keys ([Web-portal-06](#pb-72)).
-  - The page links at least one preset profile id for the core skills and rules bundle.
-  - Public entry aligns with [Web-portal-21](#pb-107) when the landing redesign ships.
-- <a id="req-pb-109"></a>[Web-portal-23](#pb-109) Configurable instructions page tabs **Retired**
-  - Superseded by [Spec-seeds-16](#pb-110), [Web-portal-24](#pb-111), and [Web-portal-25](#pb-112).
-- <a id="req-pb-111"></a>[Web-portal-24](#pb-111) Instructions tabs config API
-  - `GET /api/sdd/instructions-tabs` reads `content/instructions-tabs.json` from the synced pack cache only ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
-  - The response returns the parsed tab list and resolved content metadata for the requested locale.
-  - A missing or invalid config returns a structured error; the app may fall back to a bundled default until sync succeeds.
-- <a id="req-pb-112"></a>[Web-portal-25](#pb-112) Dynamic instructions tab UI
-  - On `/` and `/instructions`, **Setup** stays the first tab and the default on load; its panel stays the current Setup surface ([Web-portal-05](#pb-71), [Web-portal-13](#pb-83)).
-  - **Features**, **Scrum in SDD**, and further content tabs render from the config API instead of hard-coded React tab definitions ([Web-portal-07](#pb-73), [Web-portal-12](#pb-81)).
-  - Tab labels use i18n keys from config; Setup copy rules stay as [Web-portal-06](#pb-72).
-  - Each content panel loads markdown for the active locale with the same missing-locale fallback as today.
 
 
+<a id="category-framework-http-lite-installer-through-local-agent"></a>
+
+#### framework HTTP lite installer through local agent
+
+This path is **not** the framework.sdd.works MCP installer. Full install stays: copy the setup prompt from framework.sdd.works, register MCP stdio, then run `sdd_install_framework` or `sdd_update_framework`.
+
+The **lite.sdd.works HTTP installer** is a shorter path for partner sites (for example 2study.ai): you copy a one-line prompt, the sdd.works server returns allow-listed pack file links, your local agent picks `{client_root}` for the running tool, and copies only the listed skills and rules. The pack GitHub URL is the same as Admin Settings sync. The pack repo adds `lite-pack.allowlist.json` at the repo root. Lite copy does **not** write `.sdd-installed.json` and does **not** set `pack_complete`. After a successful lite copy, the agent writes a separate lite receipt on `{client_root}` ([Spec-seeds-18](#pb-122)).
+
+- <a id="pb-97"></a>[Spec-seeds-15](#pb-97) Lite install manifest file
+  - Pack-root basename is `lite-pack.allowlist.json` ([ADR-107](./adr/ADR-107-lite-pack-allowlist-filename.md)).
+  - The pack includes that file at the repo root.
+  - The file lists relative skill and rule paths the lite installer may copy.
+  - Pack sync and the install tarball include that file.
+- <a id="pb-98"></a>[Web-portal-17](#pb-98) Lite install file links API
+  - You call an HTTP route that reads `lite-pack.allowlist.json` from the synced pack cache and returns same-origin download links for those paths only.
+  - Unknown or out-of-pack paths fail. The route does not call GitHub at request time.
+- <a id="pb-122"></a>[Spec-seeds-18](#pb-122) Lite install client receipt
+  - Lite copy uses `{client_root}/.sdd-lite-installed.json`. It is not `.sdd-installed.json` and does not set `pack_complete`.
+  - The pack includes an authoring seed that documents the receipt shape. The product repo holds the canonical JSON schema and merge rules in framework design.
+  - Before delete or copy, the agent reads the receipt and compares it with the current server manifest from [Web-portal-17](#pb-98). When `package_version`, `package_commit`, and every listed file on disk already match, the agent stops.
+  - The agent downloads every new file before it deletes a path that left the manifest. It deletes a local file only when that path is in the previous receipt and absent from the new server list.
+  - The agent writes the receipt only after every path in the new server list is on disk. The receipt lists that full set plus version and commit. A partial copy does not write a new receipt. A first failed install leaves no receipt. A later failed install keeps the previous receipt.
+- <a id="pb-99"></a>[Web-portal-18](#pb-99) Lite install prompt and one-line copy
+  - This PBI has **two parts**. Both must ship before the row is **Done** (same split as full MCP setup: fetched markdown plus paste line for [Web-portal-06](#pb-72)).
+  - **Part 1 — Agent markdown (server):** `GET /setup/install` (or equivalent public path per [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)) returns markdown for your agent. The body tells the agent to call the lite file-links route, resolve `{client_root}` for the running tool, follow [Spec-seeds-18](#pb-122) merge and receipt rules, and copy only manifest-listed paths. It does not instruct `sdd_install_framework` and does not instruct writing `.sdd-installed.json`.
+  - **Part 2 — Visitor copy (portal):** On framework.sdd.works Setup (and the partner public site when live), a control copies one English sentence that fetches Part 1, for example `Fetch and execute the setup instructions from https://framework.sdd.works/setup/install`. That protocol sentence is the same in every locale. Surrounding labels use i18n keys ([Web-portal-06](#pb-72)). The visitor can start lite install without leaving the guide shell.
+- <a id="pb-100"></a>[Web-portal-19](#pb-100) Lite install one-line copy **Retired**
+  - Merged into [Web-portal-18](#pb-99) Part 2. AC21 in [`admin-portal/app-stories.md`](./admin-portal/app-stories.md) still names the copy behavior.
 
 [Back to top](#index)
 
 ---
-
 
 
 # Product Backlog
@@ -478,88 +481,87 @@ HanS and HanT bodies for the locale template folders. Spec-seeds rows own the EN
 
 | #   | Component | PBI Code                     | Description                                      | Size          | Related                                                                                                                                                                                                                                                                                                                                     | Sprint   | Status  |
 | --- | --------- | ---------------------------- | ------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| 1   | framework | <a id="pb-6"></a>[Agent-01](#req-pb-6)        | Local Cursor agent                               | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)` - [D1](./sprint-backlog.md#rid-d1) - [MCP-01](#pb-16)                                                                                                                                                                                                                  | Sprint 1 | Done    |
-| 2   | framework | <a id="pb-8"></a>[Agent-02](#req-pb-8)        | Skill call for a named job                       | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)` - [Skill-03](#pb-24) - [Skill-04](#pb-25) - [Skill-05](#pb-26) - [Skill-12](#pb-86) - [Skill-06](#pb-28) - [Skill-07](#pb-29) **Retired** - [ethan.md](./framework/seeds/agents/ethan.md)                                                                                  | Sprint 8 | ToDo    |
-| 3   | framework | <a id="pb-10"></a>[Agent-03](#req-pb-10)       | Guiding proposals from framework knowledge       | Implementable | - `[scrum-in-sdd.md](./framework/seeds/templates/EN/scrum-in-sdd.md)` - `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` - `[artifacts-map.json](../artifacts-map.json)`                                                                                                                                   | Sprint 8 | ToDo    |
-| 4   | framework | <a id="pb-17"></a>[Agent-04](#req-pb-17)       | Agent ethan onboard with pack receipt start gate | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)` §2.4 - `[framework/framework-stories.md](./framework/framework-stories.md)` - [MCP-01](#pb-16)                                                                                                                                                                         | Sprint 2 | Done    |
-| 5   | framework | <a id="pb-21"></a>[Skill-01](#req-pb-21)       | Pack skill atdd-expert                           | Implementable | —                                                                                                                                                                                                                                                                                                                                           | Sprint 7 | Done    |
-| 6   | framework | <a id="pb-24"></a>[Skill-03](#req-pb-24)       | Pack skill sdd-update-project                    | Implementable | - [Agent-02](#pb-8) - [ADR-079](./adr/ADR-079-one-job-update-project.md)                                                                                                                                                                                                                                                                    | Sprint 5 | Done    |
-| 7   | framework | <a id="pb-25"></a>[Skill-04](#req-pb-25)       | Pack skill sdd-refine-backlog                    | Implementable | [Agent-02](#pb-8)                                                                                                                                                                                                                                                                                                                           | Sprint 5 | Done    |
-| 8   | framework | <a id="pb-26"></a>[Skill-05](#req-pb-26)       | Pack skill sdd-plan-sprint                       | Implementable | - [Agent-02](#pb-8) - [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md)                                                                                                                                                                                                                                                  | Sprint 5 | Done    |
-| 9   | framework | <a id="pb-28"></a>[Skill-06](#req-pb-28)       | Pack skill sdd-retrospective                     | Implementable | [Agent-02](#pb-8)                                                                                                                                                                                                                                                                                                                           | Sprint 6 | Done    |
-| 10  | framework | <a id="pb-29"></a>[Skill-07](#req-pb-29)       | Pack skill sdd-close-sprint                      | Implementable | [Agent-02](#pb-8)                                                                                                                                                                                                                                                                                                                           | Sprint 6 | Retired |
-| 11  | framework | <a id="pb-30"></a>[Skill-08](#req-pb-30)       | Pack skill sdd-audit-artifacts                   | Implementable | - `[framework-design.md](./framework/framework-design.md#sdd-audit-artifacts)` - `[framework-stories.md](./framework/framework-stories.md#sdd-audit-artifacts)` - [ADR-073](./adr/ADR-073-skill-get-status.md)                                                                                                                              | Sprint 4 | Done    |
-| 12  | framework | <a id="pb-64"></a>[Skill-09](#req-pb-64)       | Pack skill sdd-update-specs                      | Implementable | [Skill-11](#pb-80)                                                                                                                                                                                                                                                                                                                          | Sprint 7 | Done    |
-| 13  | framework | <a id="pb-80"></a>[Skill-11](#req-pb-80)       | Pack skill sdd-spec-to-build                     | Implementable | - [Skill-09](#pb-64) - [Skill-01](#pb-21) - [ADR-085](./adr/ADR-085-sdd-spec-to-build.md)                                                                                                                                                                                                                                                   | Sprint 7 | Done    |
-| 14  | framework | <a id="pb-86"></a>[Skill-12](#req-pb-86)       | Pack skill sdd-review-status                     | Implementable | - [ADR-076](./adr/ADR-076-review-status-one-skill.md) - [ADR-073](./adr/ADR-073-skill-get-status.md) - [Skill-08](#pb-30)                                                                                                                                                                                                                   | Sprint 4 | Done    |
-| 15  | framework | <a id="pb-87"></a>[Skill-13](#req-pb-87)       | Pack skill sdd-create-skill                      | Implementable | - [ADR-074](./adr/ADR-074-sdd-create-skill.md) - [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) - [sdd-create-skill](./framework/seeds/skills/sdd-create-skill/SKILL.md)                                                                                                                                                       | Sprint 5 | Done    |
-| 16  | framework | <a id="pb-89"></a>[Skill-14](#req-pb-89) | Pack skill improve-prompt                        | Implementable | - [ADR-099](./adr/ADR-099-improve-prompt-skill-name.md) - [framework-design § improve-prompt](./framework/framework-design.md#improve-prompt) - [improve-prompt](./framework/seeds/skills/improve-prompt/SKILL.md) - **CE-SKILL-13**                                                                                                          | Sprint 7 | Done    |
-| 17  | framework | <a id="pb-93"></a>[Skill-15](#req-pb-93)       | Pack skill sdd-build-agent                       | Implementable | - [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) - [framework-design § sdd-build-agent](./framework/framework-design.md#sdd-build-agent) - [sdd-build-agent](./framework/seeds/skills/sdd-build-agent/SKILL.md)                                                                                                                | Sprint 5 | Done    |
-| 18  | framework | <a id="pb-94"></a>[Skill-16](#req-pb-94)       | Pack skill sdd-create-rule                       | Implementable | - [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) - [sdd-create-rule](./framework/seeds/skills/sdd-create-rule/SKILL.md) - [framework-design § sdd-create-rule](./framework/framework-design.md#sdd-create-rule)                                                                                                                | Sprint 5 | Done    |
-| 19  | framework | <a id="pb-113"></a>[Skill-17](#req-pb-113)      | Pack skill frontend-designer                       | Implementable | - [Skill-11](#pb-80) - [Skill-01](#pb-21) - [Spec-seeds-13](#pb-90) - [ADR-105](./adr/ADR-105-frontend-designer-pack-skill-name.md)                                                                                                                                                                                                          | Sprint 7 | Done    |
-| 20  | framework | <a id="pb-114"></a>[Skill-18](#req-pb-114)      | Pack skill testing-expert                        | Implementable | - [ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md) - [Skill-11](#pb-80) - [Spec-seeds-13](#pb-90) - [Skill-17](#pb-113)                                                                                                                                                                                                         | Sprint 7 | Done    |
-| 21  | framework | <a id="pb-115"></a>[Skill-19](#req-pb-115)      | Pack skill frontend-developer                    | Implementable | - [Skill-17](#pb-113) - [Skill-18](#pb-114) - [Skill-11](#pb-80)                                                                                                                                                                                                                                                                         | Sprint 7 | Done    |
-| 22  | framework | <a id="pb-116"></a>[Skill-20](#req-pb-116)      | Pack skill fullstack-engineer                    | Implementable | - [ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md) - [Skill-17](#pb-113) - [Skill-18](#pb-114) - [Skill-19](#pb-115) - [Skill-11](#pb-80) | Sprint 7 | Done    |
-| 23  | framework | <a id="pb-117"></a>[Skill-21](#req-pb-117)      | Pack skill ai-architect                          | Implementable | - [Skill-22](#pb-118) - [Skill-23](#pb-119) - [Skill-11](#pb-80) | Sprint 7 | Done    |
-| 24  | framework | <a id="pb-118"></a>[Skill-22](#req-pb-118)      | Pack skill mcp-expert                            | Implementable | - [MCP-02](#pb-75) - [Skill-18](#pb-114) - [Skill-11](#pb-80) | Sprint 7 | Done    |
-| 25  | framework | <a id="pb-119"></a>[Skill-23](#req-pb-119)      | Pack skill rag-expert                            | Implementable | - [Spec-seeds-12](#pb-66) - [Skill-18](#pb-114) - [Skill-11](#pb-80) | Sprint 7 | Done    |
-| 26  | framework | <a id="pb-18"></a>[Rule-01](#req-pb-18)        | Pack rule sdd-dod.mdc                            | Implementable | [Spec-seeds-03](#pb-32)                                                                                                                                                                                                                                                                                                                     | Sprint 6 | Done    |
-| 27  | framework | <a id="pb-19"></a>[Rule-02](#req-pb-19)        | Pack rule sdd-incremental-delivery.mdc           | Implementable | [Spec-seeds-03](#pb-32)                                                                                                                                                                                                                                                                                                                     | Sprint 6 | Done    |
-| 28  | framework | <a id="pb-20"></a>[Rule-03](#req-pb-20)        | Pack rule sdd-realtime-status.mdc                | Implementable | [ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md)                                                                                                                                                                                                                                                                                   | Sprint 6 | Done    |
-| 29  | framework | <a id="pb-95"></a>[Rule-04](#req-pb-95)        | Pack rule friendly-language.mdc                  | Implementable | - [Spec-seeds-03](#pb-32) - [framework-design § friendly-language.mdc](./framework/framework-design.md#friendly-languagemdc)                                                                                                                                                                                                                | Sprint 7 | Done    |
-| 30  | framework | <a id="pb-33"></a>[Spec-seeds-01](#req-pb-33)  | Seed scrum-in-sdd.md                             | Implementable | - [MCP-01](#pb-16) - [i18n-01](#pb-67)                                                                                                                                                                                                                                                                                                      | Sprint 1 | Done    |
-| 31  | framework | <a id="pb-34"></a>[Spec-seeds-02](#req-pb-34)  | Seed sdd-scrum-practices.md                      | Implementable | - [MCP-01](#pb-16) - [i18n-01](#pb-67)                                                                                                                                                                                                                                                                                                      | Sprint 1 | Done    |
-| 32  | framework | <a id="pb-32"></a>[Spec-seeds-03](#req-pb-32)  | Seed constants.json                              | Implementable | - [MCP-01](#pb-16) - [ADR-081](./adr/ADR-081-constants-json.md) - [ADR-060](./adr/ADR-060-constants-on-client-root.md)                                                                                                                                                                                                                      | Sprint 2 | Done    |
-| 33  | framework | <a id="pb-35"></a>[Spec-seeds-04](#req-pb-35)  | Project file artifacts-map.json                  | Implementable | - [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md) - [ADR-082](./adr/ADR-082-artifacts-map-json.md)                                                                                                                                                                                                                                        | Sprint 4 | Done    |
-| 34  | framework | <a id="pb-36"></a>[Spec-seeds-05](#req-pb-36)  | Seed product-backlog.md                          | Implementable | - [MCP-01](#pb-16) - [i18n-02](#pb-68)                                                                                                                                                                                                                                                                                                      | Sprint 6 | Done    |
-| 35  | framework | <a id="pb-37"></a>[Spec-seeds-06](#req-pb-37)  | Seed sprint-backlog.md                           | Implementable | - [MCP-01](#pb-16) - [i18n-02](#pb-68)                                                                                                                                                                                                                                                                                                      | Sprint 4 | Done    |
-| 36  | framework | <a id="pb-38"></a>[Spec-seeds-07](#req-pb-38)  | Seed status.md                                   | Implementable | - [MCP-01](#pb-16) - [i18n-02](#pb-68)                                                                                                                                                                                                                                                                                                      | Sprint 4 | Done    |
-| 37  | framework | <a id="pb-39"></a>[Spec-seeds-08](#req-pb-39)  | Seed changes-log.md                              | Implementable | - [MCP-01](#pb-16) - [i18n-02](#pb-68) - [ADR-070](./adr/ADR-070-change-log-and-issues-log.md)                                                                                                                                                                                                                                              | Sprint 4 | Done    |
-| 38  | framework | <a id="pb-84"></a>[Spec-seeds-09](#req-pb-84)  | Seed issues-log.md                               | Implementable | - [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) - [ADR-075](./adr/ADR-075-issues-log-tables.md) - [Spec-seeds-08](#pb-39)                                                                                                                                                                                                           | Sprint 4 | Done    |
-| 39  | framework | <a id="pb-40"></a>[Spec-seeds-10](#req-pb-40)  | Seed architecture.md                             | Implementable | - [MCP-01](#pb-16) - [i18n-03](#pb-69)                                                                                                                                                                                                                                                                                                      | Sprint 7 | Done    |
-| 40  | framework | <a id="pb-41"></a>[Spec-seeds-11](#req-pb-41)  | Seed release.md                                  | Implementable | - [MCP-01](#pb-16) - [i18n-03](#pb-69)                                                                                                                                                                                                                                                                                                      | Sprint 7 | Done    |
-| 41  | framework | <a id="pb-66"></a>[Spec-seeds-12](#req-pb-66)  | Seed .secrets                                    | Implementable | - [MCP-01](#pb-16) - [Spec-seeds-11](#pb-41) - [i18n-03](#pb-69)                                                                                                                                                                                                                                                                            | Sprint 7 | Done    |
-| 42  | framework | <a id="pb-90"></a>[Spec-seeds-13](#req-pb-90)  | Seed test-strategy.md                            | Implementable | - [Spec-seeds-02](#pb-34) - [i18n-03](#pb-69)                                                                                                                                                                                                                                                                                               | Sprint 7 | Done    |
-| 43  | framework | <a id="pb-67"></a>[i18n-01](#req-pb-67)        | HanS and HanT core artifacts                     | Theme         | - [i18n-04](#pb-102)                                                                                                                                                                                                                                                        | —        | Retired |
-| 44  | framework | <a id="pb-68"></a>[i18n-02](#req-pb-68)        | HanS and HanT process artifacts                  | Theme         | - [i18n-05](#pb-103)                                                                                                                                                                                                                                                        | —        | Retired |
-| 45  | framework | <a id="pb-69"></a>[i18n-03](#req-pb-69)        | HanS and HanT engineering artifacts              | Implementable | - [Spec-seeds-10](#pb-40) - [Spec-seeds-11](#pb-41) - [Spec-seeds-12](#pb-66) - [Spec-seeds-13](#pb-90)                                                                                                                                                                                                                                     | —        | ToDo    |
-| 46  | mcp       | <a id="pb-16"></a>[MCP-01](#req-pb-16)         | Installer allow-list and file ledger             | Implementable | - `[mcp/mcp-design.md](./mcp/mcp-design.md)` - [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md) - [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md) - [MCP-04](#pb-92)                                                                                                                                                            | Sprint 2 | Done    |
-| 47  | mcp       | <a id="pb-92"></a>[MCP-04](#req-pb-92)         | Pack go-live on the client root                  | Theme         | - [MCP-06](#pb-104) - [MCP-07](#pb-105)                                                                                                                                                                                                                                     | —        | Retired |
-| 48  | mcp       | <a id="pb-75"></a>[MCP-02](#req-pb-75)         | Local binary ~/.sdd/sdd-mcp                      | Implementable | - [ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md) - [ADR-053](./adr/ADR-053-server-side-sync-thin-stdio.md) - [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) - `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 and §4.1 - [MCP-01](#pb-16)                                                                                      | Sprint 2 | Done    |
-| 49  | mcp       | <a id="pb-78"></a>[MCP-03](#req-pb-78)         | MCP tools without sdd_list_versions              | Implementable | - [ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md) - `[mcp/mcp-design.md](./mcp/mcp-design.md)` §3 - `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-tool-surface` - [MCP-02](#pb-75) - [Web-portal-07](#pb-73)                                                                                                               | Sprint 3 | Done    |
-| 50  | webapp    | <a id="pb-15"></a>[Web-portal-01](#req-pb-15)  | Per-client call-up on the instructions page      | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)` - `[mcp/client.paths.md](./mcp/client.paths.md)`                                                                                                                                                                                                                       | —        | ToDo    |
-| 51  | webapp    | <a id="pb-49"></a>[Web-portal-02](#req-pb-49)  | Install and update on the instructions page      | Implementable | - [Web-portal-01](#pb-15) - [MCP-01](#pb-16) - [MCP-07](#pb-105) - [Agent-04](#pb-17)                                                                                                                                                                                                                                                       | —        | ToDo    |
-| 52  | webapp    | <a id="pb-70"></a>[Web-portal-04](#req-pb-70)  | Setup markdown for stdio and HTTP                | Implementable | - [MCP-02](#pb-75) - [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) - `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-prompt-setup`                                                                                                                                  | Sprint 2 | Done    |
-| 53  | webapp    | <a id="pb-71"></a>[Web-portal-05](#req-pb-71)  | Instructions page layout                         | Implementable | - `[admin-portal/ui-mockup/01-home.html](./admin-portal/ui-mockup/01-home.html)` - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) - [Web-portal-06](#pb-72)                                                                                                                                                                           | Sprint 2 | Done    |
-| 54  | webapp    | <a id="pb-72"></a>[Web-portal-06](#req-pb-72)  | One-line GET /setup copy                         | Implementable | - [Web-portal-04](#pb-70) - `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)                                                                                                                                                                                                          | Sprint 2 | Done    |
-| 55  | webapp    | <a id="pb-73"></a>[Web-portal-07](#req-pb-73)  | Features tab from three markdown files           | Implementable | - [MCP-03](#pb-78) - [ADR-071](./adr/ADR-071-portal-content-paths.md) - `[admin-portal/app-design.md](./admin-portal/app-design.md)` Features catalog                                                                                                                                                                                       | Sprint 3 | Done    |
-| 56  | webapp    | <a id="pb-74"></a>[Web-portal-08](#req-pb-74)  | Secret lookup by name                            | Implementable | - `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-get-key` - `[admin-portal/app-stories.md](./admin-portal/app-stories.md)` AC7 - `[admin-portal/ui-mockup/13-instructions.html](./admin-portal/ui-mockup/13-instructions.html)` - `[issues-log.md](./issues-log.md)` WA-09 - WA-11 - [ADR-067](./adr/ADR-067-get-secret-on-setup.md) | Sprint 3 | Done    |
-| 57  | webapp    | <a id="pb-76"></a>[Web-portal-09](#req-pb-76)  | Public landing, footer, and password gate        | Implementable | - `[issues-log.md](./issues-log.md)` WA-01–WA-04 - `[admin-portal/app-stories.md](./admin-portal/app-stories.md)` - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                            | Sprint 3 | Done    |
-| 58  | webapp    | <a id="pb-77"></a>[Web-portal-10](#req-pb-77)  | On-page reset submit and Features tab switch     | Implementable | - `[issues-log.md](./issues-log.md)` WA-05–WA-06 - `[admin-portal/app-stories.md](./admin-portal/app-stories.md)` - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                            | Sprint 3 | Done    |
-| 59  | webapp    | <a id="pb-79"></a>[Web-portal-11](#req-pb-79)  | Reset success without email in the URL           | Implementable | - `[issues-log.md](./issues-log.md)` WA-08 - WA-10 - `[admin-portal/app-stories.md](./admin-portal/app-stories.md)` - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                          | Sprint 3 | Done    |
-| 60  | webapp    | <a id="pb-81"></a>[Web-portal-12](#req-pb-81)  | Scrum in SDD tab                                 | Implementable | - [Spec-seeds-01](#pb-33) - `[admin-portal/app-design.md](./admin-portal/app-design.md)` `/instructions` - [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md) - `[scrum-in-sdd.en.md](../src/content/scrum-in-sdd/scrum-in-sdd.en.md)`                                                                                                       | Sprint 3 | Done    |
-| 61  | webapp    | <a id="pb-83"></a>[Web-portal-13](#req-pb-83)  | Get secret on Setup                              | Implementable | - [ADR-067](./adr/ADR-067-get-secret-on-setup.md) - [Web-portal-08](#pb-74) - `[admin-portal/ui-mockup/13-instructions.html](./admin-portal/ui-mockup/13-instructions.html)`                                                                                                                                                                | Sprint 3 | Done    |
-| 62  | webapp    | <a id="pb-88"></a>[Web-portal-14](#req-pb-88)  | README for IDE invoke differences                | Implementable | - [Web-portal-01](#pb-15) - `[framework-design.md](./framework/framework-design.md)` - `[ide-agent-invoke.md](./knowledge/agent/ide-agent-invoke.md)`                                                                                                                                                                                       | —        | ToDo    |
-| 63  | webapp    | <a id="pb-91"></a>[Web-portal-15](#req-pb-91)  | Unified public site                              | Epic          | - [Web-portal-20](#pb-106) - [Web-portal-21](#pb-107) - [Web-portal-22](#pb-108)                                                                                                                                                                                                                                                            | —        | Retired |
-| 64  | webapp    | <a id="pb-82"></a>[Spec-seeds-14](#req-pb-82)  | Seed features.md under content/features          | Implementable | - [Web-portal-07](#pb-73) - [MCP-07](#pb-105)                                                                                                                                                                                                                                                                                               | —        | ToDo    |
-| 65  | webapp    | <a id="pb-96"></a>[Web-portal-16](#req-pb-96)  | Install core skills and rules only               | Epic          | - [Spec-seeds-15](#pb-97) - [Web-portal-17](#pb-98) - [Web-portal-18](#pb-99) - [Web-portal-19](#pb-100) - [MCP-05](#pb-101)                                                                                                                                                                                                               | —        | Retired |
-| 66  | framework | <a id="pb-97"></a>[Spec-seeds-15](#req-pb-97)  | Pack install profile manifests                   | Implementable | - [Web-portal-17](#pb-98) - [MCP-01](#pb-16)                                                                                                                                                                                                                                                                                                | Sprint 8 | ToDo    |
-| 67  | mcp       | <a id="pb-101"></a>[MCP-05](#req-pb-101)        | Partial install ledger for subset copy           | Implementable | - [MCP-01](#pb-16) - [Web-portal-18](#pb-99) - `[mcp/mcp-design.md](./mcp/mcp-design.md)`                                                                                                                                                                                                                                                   | Sprint 8 | ToDo    |
-| 68  | webapp    | <a id="pb-98"></a>[Web-portal-17](#req-pb-98)  | Install profile API                              | Implementable | - [Spec-seeds-15](#pb-97) - [MCP-01](#pb-16)                                                                                                                                                                                                                                                                                                | Sprint 8 | ToDo    |
-| 69  | webapp    | <a id="pb-99"></a>[Web-portal-18](#req-pb-99)  | Subset install agent prompt                      | Implementable | - [Web-portal-17](#pb-98) - [MCP-05](#pb-101) - [Web-portal-04](#pb-70) - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)                                                                                                                                                                                                              | Sprint 8 | ToDo    |
-| 70  | webapp    | <a id="pb-100"></a>[Web-portal-19](#req-pb-100) | Core install one-line copy                       | Implementable | - [Web-portal-18](#pb-99) - [Web-portal-06](#pb-72) - [Web-portal-21](#pb-107)                                                                                                                                                                                                                                                             | Sprint 8 | ToDo    |
-| 71  | framework | <a id="pb-102"></a>[i18n-04](#req-pb-102)       | HanS and HanT scrum-in-sdd.md                    | Implementable | - [Spec-seeds-01](#pb-33) - [i18n-01](#pb-67) **Retired**                                                                                                                                                                                                                                                                                   | —        | ToDo    |
-| 72  | framework | <a id="pb-103"></a>[i18n-05](#req-pb-103)       | HanS and HanT process template seeds             | Implementable | - [Spec-seeds-05](#pb-36) - [Spec-seeds-06](#pb-37) - [Spec-seeds-07](#pb-38) - [Spec-seeds-08](#pb-39) - [i18n-02](#pb-68) **Retired**                                                                                                                                                                                                    | —        | ToDo    |
-| 73  | mcp       | <a id="pb-104"></a>[MCP-06](#req-pb-104)        | sdd-mcp GitHub Releases                          | Implementable | - [MCP-02](#pb-75) - [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) - [MCP-04](#pb-92) **Retired**                                                                                                                                                                                                                                | —        | ToDo    |
-| 74  | mcp       | <a id="pb-105"></a>[MCP-07](#req-pb-105)        | Production pack sync for install                 | Implementable | - [MCP-01](#pb-16) - [MCP-04](#pb-92) **Retired** - [Spec-seeds-14](#pb-82)                                                                                                                                                                                                                                                                | —        | ToDo    |
-| 75  | webapp    | <a id="pb-106"></a>[Web-portal-20](#req-pb-106) | Canonical public hostname                        | Implementable | - [Web-portal-09](#pb-76) - [Web-portal-15](#pb-91) **Retired**                                                                                                                                                                                                                                                                            | —        | ToDo    |
-| 76  | webapp    | <a id="pb-107"></a>[Web-portal-21](#req-pb-107) | Install-first public landing                     | Implementable | - [Web-portal-07](#pb-73) - [Web-portal-06](#pb-72) - [Web-portal-20](#pb-106)                                                                                                                                                                                                                                                             | Sprint 8        | ToDo    |
-| 77  | webapp    | <a id="pb-108"></a>[Web-portal-22](#req-pb-108) | Admin routes off public hostname                 | Implementable | - [Web-portal-09](#pb-76) - [Web-portal-20](#pb-106)                                                                                                                                                                                                                                                                                        | —        | ToDo    |
-| 78  | webapp    | <a id="pb-109"></a>[Web-portal-23](#req-pb-109) | Configurable instructions page tabs              | Theme         | - [Spec-seeds-16](#pb-110) - [Web-portal-24](#pb-111) - [Web-portal-25](#pb-112)                                                                                                                                                                                                                                                            | —        | Retired |
-| 79  | framework | <a id="pb-110"></a>[Spec-seeds-16](#req-pb-110) | Pack instructions tabs JSON                      | Implementable | - [Web-portal-23](#pb-109) **Retired** - [Web-portal-24](#pb-111) - [ADR-071](./adr/ADR-071-portal-content-paths.md)                                                                                                                                                                                                                        | Sprint 8 | ToDo    |
-| 80  | webapp    | <a id="pb-111"></a>[Web-portal-24](#req-pb-111) | Instructions tabs config API                     | Implementable | - [Spec-seeds-16](#pb-110) - [MCP-01](#pb-16) - [ADR-071](./adr/ADR-071-portal-content-paths.md)                                                                                                                                                                                                                                           | Sprint 8 | ToDo    |
-| 81  | webapp    | <a id="pb-112"></a>[Web-portal-25](#req-pb-112) | Dynamic instructions tab UI                      | Implementable | - [Web-portal-24](#pb-111) - [Web-portal-05](#pb-71) - [Web-portal-10](#pb-77) - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                                                              | Sprint 8 | ToDo    |
-
+| 1   | framework | [Agent-01](#pb-6)        | Local Cursor agent                               | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)` - [D1](./sprint-backlog.md#rid-d1) - [MCP-01](#pb-16)                                                                                                                                                                                                                  | Sprint 1 | Done    |
+| 2   | framework | [Agent-02](#pb-8)        | Skill call for a named job                       | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)` - [Skill-03](#pb-24) - [Skill-04](#pb-25) - [Skill-05](#pb-26) - [Skill-12](#pb-86) - [Skill-06](#pb-28) - [Skill-07](#pb-29) **Retired** - [ethan.md](../pack.framework.sdd.works/agents/ethan.md)                                                                                  | Sprint 8 | WIP     |
+| 3   | framework | [Agent-03](#pb-10)       | Guiding proposals from framework knowledge       | Implementable | - `[scrum-in-sdd.md](../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md)` - `[coach-knowledge.md](../pack.framework.sdd.works/templates/EN/coach-knowledge.md)` - `[sdd-scrum-practices.md](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md)` - [ADR-106](./adr/ADR-106-coach-knowledge-file.md) - `[artifacts-map.json](../artifacts-map.json)`                                                                                                                                   | Sprint 8 | WIP     |
+| 4   | framework | [Agent-04](#pb-17)       | Agent ethan onboard with pack receipt start gate | Implementable | - `[framework/framework-design.md](./framework/framework-design.md)` §2.4 - `[framework/framework-stories.md](./framework/framework-stories.md)` - [MCP-01](#pb-16)                                                                                                                                                                         | Sprint 2 | Done    |
+| 5   | framework | [Skill-01](#pb-21)       | Pack skill atdd-expert                           | Implementable | —                                                                                                                                                                                                                                                                                                                                           | Sprint 7 | Done    |
+| 6   | framework | [Skill-03](#pb-24)       | Pack skill sdd-update-project                    | Implementable | - [Agent-02](#pb-8) - [ADR-079](./adr/ADR-079-one-job-update-project.md)                                                                                                                                                                                                                                                                    | Sprint 5 | Done    |
+| 7   | framework | [Skill-04](#pb-25)       | Pack skill sdd-refine-backlog                    | Implementable | [Agent-02](#pb-8)                                                                                                                                                                                                                                                                                                                           | Sprint 5 | Done    |
+| 8   | framework | [Skill-05](#pb-26)       | Pack skill sdd-plan-sprint                       | Implementable | - [Agent-02](#pb-8) - [sdd-plan-sprint](../pack.framework.sdd.works/skills/sdd-plan-sprint/SKILL.md)                                                                                                                                                                                                                                                  | Sprint 5 | Done    |
+| 9   | framework | [Skill-06](#pb-28)       | Pack skill sdd-retrospective                     | Implementable | [Agent-02](#pb-8)                                                                                                                                                                                                                                                                                                                           | Sprint 6 | Done    |
+| 10  | framework | [Skill-07](#pb-29)       | Pack skill sdd-close-sprint                      | Implementable | [Agent-02](#pb-8)                                                                                                                                                                                                                                                                                                                           | Sprint 6 | Retired |
+| 11  | framework | [Skill-08](#pb-30)       | Pack skill sdd-audit-artifacts                   | Implementable | - `[framework-design.md](./framework/framework-design.md#sdd-audit-artifacts)` - `[framework-stories.md](./framework/framework-stories.md#sdd-audit-artifacts)` - [ADR-073](./adr/ADR-073-skill-get-status.md)                                                                                                                              | Sprint 4 | Done    |
+| 12  | framework | [Skill-09](#pb-64)       | Pack skill sdd-update-specs                      | Implementable | [Skill-11](#pb-80)                                                                                                                                                                                                                                                                                                                          | Sprint 7 | Done    |
+| 13  | framework | [Skill-11](#pb-80)       | Pack skill sdd-spec-to-build                     | Implementable | - [Skill-09](#pb-64) - [Skill-01](#pb-21) - [ADR-085](./adr/ADR-085-sdd-spec-to-build.md)                                                                                                                                                                                                                                                   | Sprint 7 | Done    |
+| 14  | framework | [Skill-12](#pb-86)       | Pack skill sdd-review-status                     | Implementable | - [ADR-076](./adr/ADR-076-review-status-one-skill.md) - [ADR-073](./adr/ADR-073-skill-get-status.md) - [Skill-08](#pb-30)                                                                                                                                                                                                                   | Sprint 4 | Done    |
+| 15  | framework | [Skill-13](#pb-87)       | Pack skill sdd-create-skill                      | Implementable | - [ADR-074](./adr/ADR-074-sdd-create-skill.md) - [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) - [sdd-create-skill](../pack.framework.sdd.works/skills/sdd-create-skill/SKILL.md)                                                                                                                                                       | Sprint 5 | Done    |
+| 16  | framework | [Skill-14](#pb-89) | Pack skill improve-prompt                        | Implementable | - [ADR-099](./adr/ADR-099-improve-prompt-skill-name.md) - [framework-design § improve-prompt](./framework/framework-design.md#improve-prompt) - [improve-prompt](../pack.framework.sdd.works/skills/improve-prompt/SKILL.md) - **CE-SKILL-13**                                                                                                          | Sprint 7 | Done    |
+| 17  | framework | [Skill-15](#pb-93)       | Pack skill sdd-build-agent                       | Implementable | - [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) - [framework-design § sdd-build-agent](./framework/framework-design.md#sdd-build-agent) - [sdd-build-agent](../pack.framework.sdd.works/skills/sdd-build-agent/SKILL.md)                                                                                                                | Sprint 5 | Done    |
+| 18  | framework | [Skill-16](#pb-94)       | Pack skill sdd-create-rule                       | Implementable | - [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) - [sdd-create-rule](../pack.framework.sdd.works/skills/sdd-create-rule/SKILL.md) - [framework-design § sdd-create-rule](./framework/framework-design.md#sdd-create-rule)                                                                                                                | Sprint 5 | Done    |
+| 19  | framework | [Skill-17](#pb-113)      | Pack skill frontend-designer                       | Implementable | - [Skill-11](#pb-80) - [Skill-01](#pb-21) - [Spec-seeds-13](#pb-90) - [ADR-105](./adr/ADR-105-frontend-designer-pack-skill-name.md)                                                                                                                                                                                                          | Sprint 7 | Done    |
+| 20  | framework | [Skill-18](#pb-114)      | Pack skill testing-expert                        | Implementable | - [ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md) - [Skill-11](#pb-80) - [Spec-seeds-13](#pb-90) - [Skill-17](#pb-113)                                                                                                                                                                                                         | Sprint 7 | Done    |
+| 21  | framework | [Skill-19](#pb-115)      | Pack skill frontend-developer                    | Implementable | - [Skill-17](#pb-113) - [Skill-18](#pb-114) - [Skill-11](#pb-80)                                                                                                                                                                                                                                                                         | Sprint 7 | Done    |
+| 22  | framework | [Skill-20](#pb-116)      | Pack skill fullstack-engineer                    | Implementable | - [ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md) - [Skill-17](#pb-113) - [Skill-18](#pb-114) - [Skill-19](#pb-115) - [Skill-11](#pb-80) | Sprint 7 | Done    |
+| 23  | framework | [Skill-21](#pb-117)      | Pack skill ai-architect                          | Implementable | - [Skill-22](#pb-118) - [Skill-23](#pb-119) - [Skill-11](#pb-80) | Sprint 7 | Done    |
+| 24  | framework | [Skill-22](#pb-118)      | Pack skill mcp-expert                            | Implementable | - [MCP-02](#pb-75) - [Skill-18](#pb-114) - [Skill-11](#pb-80) | Sprint 7 | Done    |
+| 25  | framework | [Skill-23](#pb-119)      | Pack skill rag-expert                            | Implementable | - [Spec-seeds-12](#pb-66) - [Skill-18](#pb-114) - [Skill-11](#pb-80) | Sprint 7 | Done    |
+| 26  | framework | [Skill-24](#pb-120)      | Pack skill sdd-retrospective                     | Implementable | - [Skill-06](#pb-28) - [Skill-12](#pb-86) - [Agent-02](#pb-8) - [ADR-097](./adr/ADR-097-done-runs-retrospective.md) - **CE-SKILL-10** | Sprint 8 | ToDo    |
+| 27  | framework | [Rule-01](#pb-18)        | Pack rule sdd-dod.mdc                            | Implementable | [Spec-seeds-03](#pb-32)                                                                                                                                                                                                                                                                                                                     | Sprint 6 | Done    |
+| 28  | framework | [Rule-02](#pb-19)        | Pack rule sdd-incremental-delivery.mdc           | Implementable | [Spec-seeds-03](#pb-32)                                                                                                                                                                                                                                                                                                                     | Sprint 6 | Done    |
+| 29  | framework | [Rule-03](#pb-20)        | Pack rule sdd-realtime-status.mdc                | Implementable | [ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md)                                                                                                                                                                                                                                                                                   | Sprint 6 | Done    |
+| 30  | framework | [Rule-04](#pb-95)        | Pack rule friendly-language.mdc                  | Implementable | - [Spec-seeds-03](#pb-32) - [framework-design § friendly-language.mdc](./framework/framework-design.md#friendly-languagemdc)                                                                                                                                                                                                                | Sprint 7 | Done    |
+| 31  | framework | [Spec-seeds-01](#pb-33)  | Seed scrum-in-sdd.md                             | Implementable | - [MCP-01](#pb-16) - [i18n-01](#pb-67)                                                                                                                                                                                                                                                                                                      | Sprint 1 | Done    |
+| 32  | framework | [Spec-seeds-02](#pb-34)  | Seed sdd-scrum-practices.md                      | Implementable | - [MCP-01](#pb-16) - [i18n-01](#pb-67)                                                                                                                                                                                                                                                                                                      | Sprint 1 | Done    |
+| 33  | framework | [Spec-seeds-03](#pb-32)  | Seed constants.json                              | Implementable | - [MCP-01](#pb-16) - [ADR-081](./adr/ADR-081-constants-json.md) - [ADR-060](./adr/ADR-060-constants-on-client-root.md)                                                                                                                                                                                                                      | Sprint 2 | Done    |
+| 34  | framework | [Spec-seeds-04](#pb-35)  | Project file artifacts-map.json                  | Implementable | - [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md) - [ADR-082](./adr/ADR-082-artifacts-map-json.md)                                                                                                                                                                                                                                        | Sprint 4 | Done    |
+| 35  | framework | [Spec-seeds-05](#pb-36)  | Seed product-backlog.md                          | Implementable | - [MCP-01](#pb-16) - [i18n-02](#pb-68)                                                                                                                                                                                                                                                                                                      | Sprint 6 | Done    |
+| 36  | framework | [Spec-seeds-06](#pb-37)  | Seed sprint-backlog.md                           | Implementable | - [MCP-01](#pb-16) - [i18n-02](#pb-68)                                                                                                                                                                                                                                                                                                      | Sprint 4 | Done    |
+| 37  | framework | [Spec-seeds-07](#pb-38)  | Seed status.md                                   | Implementable | - [MCP-01](#pb-16) - [i18n-02](#pb-68)                                                                                                                                                                                                                                                                                                      | Sprint 4 | Done    |
+| 38  | framework | [Spec-seeds-08](#pb-39)  | Seed changes-log.md                              | Implementable | - [MCP-01](#pb-16) - [i18n-02](#pb-68) - [ADR-070](./adr/ADR-070-change-log-and-issues-log.md)                                                                                                                                                                                                                                              | Sprint 4 | Done    |
+| 39  | framework | [Spec-seeds-09](#pb-84)  | Seed issues-log.md                               | Implementable | - [ADR-070](./adr/ADR-070-change-log-and-issues-log.md) - [ADR-075](./adr/ADR-075-issues-log-tables.md) - [Spec-seeds-08](#pb-39)                                                                                                                                                                                                           | Sprint 4 | Done    |
+| 40  | framework | [Spec-seeds-10](#pb-40)  | Seed architecture.md                             | Implementable | - [MCP-01](#pb-16) - [i18n-03](#pb-69)                                                                                                                                                                                                                                                                                                      | Sprint 7 | Done    |
+| 41  | framework | [Spec-seeds-11](#pb-41)  | Seed release.md                                  | Implementable | - [MCP-01](#pb-16) - [i18n-03](#pb-69)                                                                                                                                                                                                                                                                                                      | Sprint 7 | Done    |
+| 42  | framework | [Spec-seeds-12](#pb-66)  | Seed .secrets                                    | Implementable | - [MCP-01](#pb-16) - [Spec-seeds-11](#pb-41) - [i18n-03](#pb-69)                                                                                                                                                                                                                                                                            | Sprint 7 | Done    |
+| 43  | framework | [Spec-seeds-13](#pb-90)  | Seed test-strategy.md                            | Implementable | - [Spec-seeds-02](#pb-34) - [i18n-03](#pb-69)                                                                                                                                                                                                                                                                                               | Sprint 7 | Done    |
+| 44  | framework | [i18n-01](#pb-67)        | HanS and HanT core artifacts                     | Theme         | - [i18n-04](#pb-102)                                                                                                                                                                                                                                                        | —        | Retired |
+| 45  | framework | [i18n-02](#pb-68)        | HanS and HanT process artifacts                  | Theme         | - [i18n-05](#pb-103)                                                                                                                                                                                                                                                        | —        | Retired |
+| 46  | framework | [i18n-03](#pb-69)        | HanS and HanT engineering artifacts              | Implementable | - [Spec-seeds-10](#pb-40) - [Spec-seeds-11](#pb-41) - [Spec-seeds-12](#pb-66) - [Spec-seeds-13](#pb-90)                                                                                                                                                                                                                                     | —        | ToDo    |
+| 47  | mcp       | [MCP-01](#pb-16)         | Installer allow-list and file ledger             | Implementable | - `[mcp/mcp-design.md](./mcp/mcp-design.md)` - [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md) - [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md) - [MCP-04](#pb-92)                                                                                                                                                            | Sprint 2 | Done    |
+| 48  | mcp       | [MCP-04](#pb-92)         | Pack go-live on the client root                  | Theme         | - [MCP-06](#pb-104) - [MCP-07](#pb-105)                                                                                                                                                                                                                                     | —        | Retired |
+| 49  | mcp       | [MCP-02](#pb-75)         | Local binary ~/.sdd/sdd-mcp                      | Implementable | - [ADR-051](./adr/ADR-051-zero-dep-stdio-binary.md) - [ADR-053](./adr/ADR-053-server-side-sync-thin-stdio.md) - [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) - `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 and §4.1 - [MCP-01](#pb-16)                                                                                      | Sprint 2 | Done    |
+| 50  | mcp       | [MCP-03](#pb-78)         | MCP tools without sdd_list_versions              | Implementable | - [ADR-063](./adr/ADR-063-unregister-sdd-list-versions.md) - `[mcp/mcp-design.md](./mcp/mcp-design.md)` §3 - `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-tool-surface` - [MCP-02](#pb-75) - [Web-portal-07](#pb-73)                                                                                                               | Sprint 3 | Done    |
+| 51  | webapp    | [Web-portal-01](#pb-15)  | Invoking agents, skills, and rules tab           | Implementable | - [ADR-071](./adr/ADR-071-portal-content-paths.md) - [Web-portal-07](#pb-73) - `[mcp/client.paths.md](./mcp/client.paths.md)` - [Web-portal-14](#pb-88) **Retired**                                                                                                                                                                                                                                       | —        | ToDo    |
+| 52  | webapp    | [Web-portal-04](#pb-70)  | Setup markdown for stdio and HTTP                | Implementable | - [MCP-02](#pb-75) - [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) - `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-prompt-setup`                                                                                                                                  | Sprint 2 | Done    |
+| 53  | webapp    | [Web-portal-05](#pb-71)  | Instructions page layout                         | Implementable | - `[admin-portal/ui-mockup/01-home.html](./admin-portal/ui-mockup/01-home.html)` - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) - [Web-portal-06](#pb-72)                                                                                                                                                                           | Sprint 2 | Done    |
+| 54  | webapp    | [Web-portal-06](#pb-72)  | One-line GET /setup copy                         | Implementable | - [Web-portal-04](#pb-70) - `[mcp/mcp-design.md](./mcp/mcp-design.md)` §2.1 - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)                                                                                                                                                                                                          | Sprint 2 | Done    |
+| 55  | webapp    | [Web-portal-07](#pb-73)  | Features tab from three markdown files           | Implementable | - [MCP-03](#pb-78) - [ADR-071](./adr/ADR-071-portal-content-paths.md) - `[admin-portal/app-design.md](./admin-portal/app-design.md)` Features catalog                                                                                                                                                                                       | Sprint 3 | Done    |
+| 56  | webapp    | [Web-portal-08](#pb-74)  | Secret lookup by name                            | Implementable | - [Web-portal-13](#pb-83) - [ADR-067](./adr/ADR-067-get-secret-on-setup.md)                                                                                                                                                                                                                                                                 | Sprint 3 | Retired |
+| 57  | webapp    | [Web-portal-09](#pb-76)  | Public landing, footer, and password gate        | Implementable | - `[issues-log.md](./issues-log.md)` WA-01–WA-04 - `[admin-portal/app-stories.md](./admin-portal/app-stories.md)` - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                            | Sprint 3 | Done    |
+| 58  | webapp    | [Web-portal-10](#pb-77)  | On-page reset submit and Features tab switch     | Implementable | - `[issues-log.md](./issues-log.md)` WA-05–WA-06 - `[admin-portal/app-stories.md](./admin-portal/app-stories.md)` - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                            | Sprint 3 | Done    |
+| 59  | webapp    | [Web-portal-11](#pb-79)  | Reset success without email in the URL           | Implementable | - `[issues-log.md](./issues-log.md)` WA-08 - WA-10 - `[admin-portal/app-stories.md](./admin-portal/app-stories.md)` - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                          | Sprint 3 | Done    |
+| 60  | webapp    | [Web-portal-12](#pb-81)  | Scrum in SDD tab                                 | Implementable | - [Spec-seeds-01](#pb-33) - `[admin-portal/app-design.md](./admin-portal/app-design.md)` `/instructions` - [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md) - `[scrum-in-sdd.en.md](../src/content/scrum-in-sdd/scrum-in-sdd.en.md)`                                                                                                       | Sprint 3 | Done    |
+| 61  | webapp    | [Web-portal-13](#pb-83)  | Get secret on Setup                              | Implementable | - [ADR-067](./adr/ADR-067-get-secret-on-setup.md) - `[admin-portal/ui-mockup/13-instructions.html](./admin-portal/ui-mockup/13-instructions.html)` - `[mcp/mcp-stories.md](./mcp/mcp-stories.md)` `sdd-mcp-get-key`                                                                                                                                                                                          | Sprint 3 | Done    |
+| 62  | webapp    | [Web-portal-14](#pb-88)  | README for IDE invoke differences                | Implementable | - [Web-portal-01](#pb-15)                                                                                                                                                                                                                                                                                                                   | —        | Retired |
+| 63  | webapp    | [Spec-seeds-14](#pb-82)  | Seed features.md under content/features          | Implementable | - [Web-portal-07](#pb-73) - [MCP-07](#pb-105)                                                                                                                                                                                                                                                                                               | —        | ToDo    |
+| 64  | framework | [Spec-seeds-15](#pb-97)  | Lite install manifest file                       | Implementable | - [ADR-107](./adr/ADR-107-lite-pack-allowlist-filename.md) - [Web-portal-17](#pb-98) - [Spec-seeds-18](#pb-122) - [MCP-07](#pb-105)                                                                                                                                                                                                                                                                                               | Sprint 8 | ToDo    |
+| 65  | mcp       | [MCP-05](#pb-101)        | Partial install ledger for subset copy           | Implementable | - [Category: lite installer](#category-framework-http-lite-installer-through-local-agent) - [MCP-01](#pb-16)                                                                                                                                                                                                                                | —        | Retired |
+| 66  | webapp    | [Web-portal-17](#pb-98)  | Lite install file links API                      | Implementable | - [Spec-seeds-15](#pb-97) - [Spec-seeds-18](#pb-122) - [MCP-07](#pb-105)                                                                                                                                                                                                                                                                                               | Sprint 8 | ToDo    |
+| 67  | framework | [Spec-seeds-18](#pb-122) | Lite install client receipt                      | Implementable | - [Spec-seeds-15](#pb-97) - [Web-portal-17](#pb-98) - [Web-portal-18](#pb-99) - [MCP-01](#pb-16)                                                                                                                                                                                                                                          | Sprint 8 | Done    |
+| 68  | webapp    | [Web-portal-18](#pb-99)  | Lite install prompt and one-line copy (two parts) | Implementable | - [Web-portal-17](#pb-98) - [Spec-seeds-18](#pb-122) - [Web-portal-04](#pb-70) - [Web-portal-06](#pb-72) - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) - [`admin-portal/app-stories.md`](./admin-portal/app-stories.md) AC20–AC21                                                                                                                                                                                          | Sprint 8 | ToDo    |
+| 69  | webapp    | [Web-portal-19](#pb-100) | Lite install one-line copy                       | Implementable | - [Web-portal-18](#pb-99) **Retired** (merged)                                                                                                                                                                                                                                                                                              | —        | Retired |
+| 70  | framework | [i18n-04](#pb-102)       | HanS and HanT scrum-in-sdd.md                    | Implementable | - [Spec-seeds-01](#pb-33) - [i18n-01](#pb-67) **Retired**                                                                                                                                                                                                                                                                                   | —        | ToDo    |
+| 71  | framework | [i18n-05](#pb-103)       | HanS and HanT process template seeds             | Implementable | - [Spec-seeds-05](#pb-36) - [Spec-seeds-06](#pb-37) - [Spec-seeds-07](#pb-38) - [Spec-seeds-08](#pb-39) - [i18n-02](#pb-68) **Retired**                                                                                                                                                                                                    | —        | ToDo    |
+| 72  | mcp       | [MCP-06](#pb-104)        | sdd-mcp GitHub Releases                          | Implementable | - [MCP-02](#pb-75) - [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md) - [MCP-04](#pb-92) **Retired**                                                                                                                                                                                                                                | —        | ToDo    |
+| 73  | mcp       | [MCP-07](#pb-105)        | Production pack sync for install                 | Implementable | - [MCP-01](#pb-16) - [MCP-04](#pb-92) **Retired** - [Spec-seeds-14](#pb-82)                                                                                                                                                                                                                                                                | —        | ToDo    |
+| 74  | webapp    | [Web-portal-20](#pb-106) | Canonical public hostname                        | Implementable | - [Web-portal-09](#pb-76) - [Web-portal-21](#pb-107) - [Web-portal-22](#pb-108)                                                                                                                                                                                                                                                            | —        | ToDo    |
+| 75  | webapp    | [Web-portal-21](#pb-107) | Install-first public landing                     | Implementable | - [Web-portal-07](#pb-73) - [Web-portal-06](#pb-72) - [Web-portal-20](#pb-106)                                                                                                                                                                                                                                                             | —        | ToDo    |
+| 76  | webapp    | [Web-portal-22](#pb-108) | Admin routes off public hostname                 | Implementable | - [Web-portal-09](#pb-76) - [Web-portal-20](#pb-106)                                                                                                                                                                                                                                                                                        | —        | ToDo    |
+| 77  | framework | [Spec-seeds-16](#pb-110) | Pack instructions tabs JSON                      | Implementable | - [Web-portal-24](#pb-111) - [Web-portal-25](#pb-112) - [ADR-071](./adr/ADR-071-portal-content-paths.md)                                                                                                                                                                                                                        | Sprint 8 | ToDo    |
+| 78  | webapp    | [Web-portal-24](#pb-111) | Instructions tabs config API                     | Implementable | - [Spec-seeds-16](#pb-110) - [MCP-01](#pb-16) - [ADR-071](./adr/ADR-071-portal-content-paths.md)                                                                                                                                                                                                                                           | Sprint 8 | ToDo    |
+| 79  | webapp    | [Web-portal-25](#pb-112) | Dynamic instructions tab UI                      | Implementable | - [Web-portal-24](#pb-111) - [Web-portal-05](#pb-71) - [Web-portal-10](#pb-77) - `[admin-portal/app-design.md](./admin-portal/app-design.md)`                                                                                                                                                                                              | Sprint 8 | ToDo    |
+| 80  | framework | [Spec-seeds-17](#pb-121) | Reviewed full pack seeds file                    | Implementable | - [MCP-01](#pb-16) - [Agent-04](#pb-17) - [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md) - [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md) - [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md) - [`.sdd-installed.example.json`](../pack.framework.sdd.works/.sdd-installed.example.json) | —        | ToDo    |
+| 81  | webapp    | [Web-portal-26](#pb-123) | Pack repo file note on Admin Settings            | Implementable | - [ADR-107](./adr/ADR-107-lite-pack-allowlist-filename.md) - [Spec-seeds-15](#pb-97) - [Spec-seeds-16](#pb-110) - [Spec-seeds-18](#pb-122) - [MCP-07](#pb-105) - [`src/content/.admin-note.md`](../src/content/.admin-note.md) | —        | ToDo    |
 
 
 
@@ -574,24 +576,27 @@ HanS and HanT bodies for the locale template folders. Spec-seeds rows own the EN
 
 | Date       | Change                                                                                                                                                                                                                                                                                                                                                                                                          |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-10-06 | `sdd-refine-backlog` accept all: every Product Backlog row has a `pb-N` anchor and every requirement a `req-pb-N` anchor. Links to removed Skill-02, Skill-03 (old), Skill-10, and Skill-13 (old) ids are plain text. [Web-portal-21](#pb-107) is Sprint 8 (parent of task-03). [Skill-22](#pb-118) drops the confirmation bullet. Sprint 8 task-02 moved to an OGT on `status.md`. |
+| 2026-10-07 | Pack field example renamed to [`.sdd-installed.example.json`](../pack.framework.sdd.works/.sdd-installed.example.json). Client ledger stays `{client_root}/.sdd-installed.json`. |
+| 2026-10-07 | Added [Spec-seeds-17](#pb-121) reviewed full pack seeds manifest plus authoring [`.sdd-installed.json`](../pack.framework.sdd.works/.sdd-installed.json) seed. Unscheduled. |
+| 2026-10-07 | Added [Skill-24](#pb-120) `sdd-retrospective` on **Sprint 8** ([feature-69](./sprint-backlog.md#sprint-8)). [Skill-06](#pb-28) stays **Done** (Sprint 6 first delivery). |
+| 2026-10-06 | `sdd-refine-backlog` accept all: every Product Backlog row has a `pb-N` anchor and one `pb-N` anchor on every Requirements line. Links to removed Skill-02, Skill-03 (old), Skill-10, and Skill-13 (old) ids are plain text. [Web-portal-21](#pb-107) is Sprint 8 (parent of task-03). [Skill-22](#pb-118) drops the confirmation bullet. Sprint 8 task-02 moved to an OGT on `status.md`. |
 | 2026-10-06 | Sprint 7 **Done**; Sprint 8 **WIP** with eleven scheduled SBIs (install-first MVP). |
-| 2026-10-06 | User **close confirm** for [feature-61](./sprint-backlog.md#sprint-7), [feature-62](./sprint-backlog.md#sprint-7), [feature-64](./sprint-backlog.md#sprint-7) through [feature-68](./sprint-backlog.md#sprint-7): [Skill-17](./product-backlog.md#pb-113) through [Skill-23](./product-backlog.md#pb-119) **Done**. |
+| 2026-10-06 | User **close confirm** for [feature-61](./sprint-backlog.md#sprint-7), [feature-62](./sprint-backlog.md#sprint-7), [feature-64](./sprint-backlog.md#sprint-7) through [feature-68](./sprint-backlog.md#sprint-7): [Skill-17](#pb-113) through [Skill-23](#pb-119) **Done**. |
 | 2026-10-06 | All pack skill seeds: [`framework-design`](./framework/framework-design.md#pack-skill-seed-catalog) catalog, § **sdd-spec-to-build**, sibling files on Skill-01, Skill-11, Skill-18, Skill-23, and **CE-SKILL-04** / **19** / **20** aligned with the authoring tree. |
 | 2026-10-06 | [Skill-22](#pb-118) `mcp-expert` seed matches the confirmed requirement: current patterns, a registry search, and one MCP solution before code. |
 | 2026-10-06 | [Skill-21](#pb-117) `ai-architect`: `framework-design`, `framework-stories`, and **CE-SKILL-17** match the seed (`terms.md`, style, operating design). feature stays **WIP** until close confirm. |
 | 2026-10-06 | [Skill-21](#pb-117) `ai-architect`: seed adds the seven confirmed architect jobs and `terms.md`. feature stays **WIP** until close confirm. |
 | 2026-10-06 | [Skill-21](#pb-117) `ai-architect`: the skill covers current AI terms and enterprise architecture, and it proposes a design from known facts. Extra architect jobs wait for chat confirm. Seed not rewritten. |
-| 2026-10-06 | [Skill-20](#pb-116) renamed to `fullstack-engineer` per [ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md). Seed at `specs/framework/seeds/skills/fullstack-engineer/`. feature-65 stays **ToDo**. |
+| 2026-10-06 | [Skill-20](#pb-116) renamed to `fullstack-engineer` per [ADR-104](./adr/ADR-104-fullstack-engineer-pack-skill-name.md). Seed at `pack.framework.sdd.works/skills/fullstack-engineer/`. feature-65 stays **ToDo**. |
 | 2026-10-06 | [Skill-19](#pb-115) `frontend-developer`: strong UI implementation skill with minimal framework dependency. Not a copy of the personal Cache Components skill. Sprint row stays [feature-64](./sprint-backlog.md#sprint-7) **ToDo**. |
 | 2026-10-06 | [Skill-18](#pb-114) `testing-expert`: the skill designs the strategy, defines tools, creates tests, runs the pyramid, and writes the report. It does not only run tests that already exist. |
-| 2026-10-06 | [Skill-20](#pb-116) `fullstack-engineer`, [Skill-21](#pb-117) `ai-architect`, [Skill-22](#pb-118) `mcp-expert`, and [Skill-23](#pb-119) `rag-expert` are **WIP**: seeds exist under `specs/framework/seeds/skills/`. Each closes after its CE-SKILL case and user confirm. |
+| 2026-10-06 | [Skill-20](#pb-116) `fullstack-engineer`, [Skill-21](#pb-117) `ai-architect`, [Skill-22](#pb-118) `mcp-expert`, and [Skill-23](#pb-119) `rag-expert` are **WIP**: seeds exist under `pack.framework.sdd.works/skills/`. Each closes after its CE-SKILL case and user confirm. |
 | 2026-10-06 | Added [Skill-20](#pb-116) `fullstack-developer`, [Skill-21](#pb-117) `ai-architect`, [Skill-22](#pb-118) `mcp-expert`, and [Skill-23](#pb-119) `rag-expert` as Sprint 7 feature-65 to feature-68 **ToDo**. |
 | 2026-10-06 | [Skill-18](#pb-114) renamed to `testing-expert` per [ADR-102](./adr/ADR-102-testing-expert-pack-skill-name.md). feature-62 stays **WIP**. Seed not written. |
 | 2026-10-06 | Sprint 7: [feature-61](./sprint-backlog.md#sprint-7) and [feature-62](./sprint-backlog.md#sprint-7) **WIP**. Added [Skill-19](#pb-115) `frontend-developer` as Sprint 7 feature-64 **ToDo**. Skill-18 scope widened to generic testing. |
-| 2026-10-06 | [Skill-17](./product-backlog.md#pb-113) pack folder renamed to `frontend-designer` per [ADR-105](./adr/ADR-105-frontend-designer-pack-skill-name.md). Authoring seed shipped; feature-61 stays **WIP** until CE-SKILL-15 and close confirm. |
-| 2026-10-05 | Sprint 7: [Skill-17](./product-backlog.md#pb-113) **feature-61**, [Skill-18](./product-backlog.md#pb-114) **feature-62** **ToDo**; [Rule-04](./product-backlog.md#pb-95) **feature-63** **Done** (PBI closed 2026-10-04, sprint row added for accounting). |
-| 2026-10-05 | Added [Skill-17](./product-backlog.md#pb-113) `sdd-frontend-design` and [Skill-18](./product-backlog.md#pb-114) `sdd-tester` (unscheduled **ToDo**). Unplanned PBIs table synced on [`sprint-backlog.md`](./sprint-backlog.md). No pack seeds yet.                                                                                                                                                              |
+| 2026-10-06 | [Skill-17](#pb-113) pack folder renamed to `frontend-designer` per [ADR-105](./adr/ADR-105-frontend-designer-pack-skill-name.md). Authoring seed shipped; feature-61 stays **WIP** until CE-SKILL-15 and close confirm. |
+| 2026-10-05 | Sprint 7: [Skill-17](#pb-113) **feature-61**, [Skill-18](#pb-114) **feature-62** **ToDo**; [Rule-04](#pb-95) **feature-63** **Done** (PBI closed 2026-10-04, sprint row added for accounting). |
+| 2026-10-05 | Added [Skill-17](#pb-113) `sdd-frontend-design` and [Skill-18](#pb-114) `sdd-tester` (unscheduled **ToDo**). Unplanned PBIs table synced on [`sprint-backlog.md`](./sprint-backlog.md). No pack seeds yet.                                                                                                                                                              |
 | 2026-09-21 | Replaced the sample-product draft with Phase 2 items SPEC-01, ARTIFACTS-01, COACH-01, and TEMPLATES-01.                                                                                                                                                                                                                                                                                                         |
 | 2026-09-21 | Split Phase 2: practices SSOT, four templates, six process skills, coach-ethan (presence TBD), Instructions page.                                                                                                                                                                                                                                                                                               |
 | 2026-09-22 | Priority: `sdd-scrum-guide.md` as framework SSOT; coach-ethan as three MVPs (Sprint 2–4); other themes cleared from Sprint.                                                                                                                                                                                                                                                                                     |
@@ -614,7 +619,7 @@ HanS and HanT bodies for the locale template folders. Spec-seeds rows own the EN
 | 2026-09-24 | Added [Spec-seeds-11](#pb-66) `.secrets` (guide name). Scheduled [Spec-seeds-08](#pb-39) on Sprint 5 and [Spec-seeds-09](#pb-40), [Spec-seeds-10](#pb-41), and Spec-seeds-11 on Sprint 14.                                                                                                                                                                                                                      |
 | 2026-09-25 | Added category i18n: [i18n-01](#pb-67) framework definition, [i18n-02](#pb-68) five process artifacts, [i18n-03](#pb-69) engineering artifacts. Sprint 15. Spec-seeds rows stay the file-existence owners.                                                                                                                                                                                                      |
 | 2026-09-25 | HanS and HanT bodies moved off Spec-seeds acceptance. Spec-seeds own the EN starter. Sprint 1 HanS guide, HanT guide, and HanS/HanT practices are Sprint 15.                                                                                                                                                                                                                                                    |
-| 2026-09-25 | Spec-seeds acceptance is the same four checks for every row: user review, stored in `specs/framework/seeds/`, associated specs updated, seed tree cross-reviewed.                                                                                                                                                                                                                                               |
+| 2026-09-25 | Spec-seeds acceptance is the same four checks for every row: user review, stored in `pack.framework.sdd.works/`, associated specs updated, seed tree cross-reviewed.                                                                                                                                                                                                                                               |
 | 2026-09-25 | Sprint 1 closed. Spec-seeds-02 and Spec-seeds-03 Done. Phase 1 archive path is `phase1-process-specs/`.                                                                                                                                                                                                                                                                                                         |
 | 2026-09-25 | Agent-15 is the seed file `agents/ethan.md`. Pack copy and admin sync are go-live, not Spec-seeds acceptance.                                                                                                                                                                                                                                                                                                   |
 | 2026-09-25 | Agent-07 Done: seed prompt gates on `.sdd-installed.json` `pack_complete`. Stories and design §14 hold the prompt.                                                                                                                                                                                                                                                                                              |
@@ -690,47 +695,62 @@ HanS and HanT bodies for the locale template folders. Spec-seeds rows own the EN
 | 2026-10-04 | Agent-15 merges into Agent-01. Agent-05 and Agent-06 merge into Agent-03 Guiding proposals. Agent-07 becomes Agent-04 onboard with pack receipt. Skill and Spec-seeds codes are sequential. Web-portal-15 (`#pb-91`) is Integrated sites. Unused: `#pb-11`, `#pb-63`.                                                                                                                                           |
 | 2026-10-04 | [Skill-11](#pb-80) is `sdd-spec-to-build` ([ADR-085](./adr/ADR-085-sdd-spec-to-build.md)). Skill-02 and Skill-10 are Retired. Living catalogs drop `sdd-tdd`, `sdd-design`, and `sdd-implement`.                                                                                                                                                                                            |
 | 2026-10-04 | Removed Sprint 5–16 from `[sprint-backlog.md](./sprint-backlog.md)`. Those PBIs use `Sprint` `—` and appear in Unplanned PBIs after Sprint 4.                                                                                                                                                                                                                                                                   |
-| 2026-10-04 | [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice) is a six-row table (PBI, SBI, Feature, Task, OGT, MVP). Artifact Definition links point at Artifacts writing guideline sections.                                                                                                                                                                       |
-| 2026-10-04 | `sdd-refine-backlog`: [MCP-01](./product-backlog.md#pb-16) is Done for the installer slice (Sprint 2). [MCP-04](./product-backlog.md#pb-92) is go-live. Added [Skill-15](./product-backlog.md#pb-93) and [Skill-16](./product-backlog.md#pb-94). Removed retired Skill-02 and Skill-10 rows. [Skill-05](./product-backlog.md#pb-26) is WIP.                                                                     |
-| 2026-10-04 | `sdd-refine-backlog`: [Web-portal-15](./product-backlog.md#pb-91) is Theme **Unified public site** (sdd.works + framework.sdd.works integration and redesign). [Web-portal-03](./product-backlog.md#pb-50) is Done ([Web-portal-09](./product-backlog.md#pb-76)). [Agent-02](./product-backlog.md#pb-8), [MCP-04](./product-backlog.md#pb-92), and [i18n-01](./product-backlog.md#pb-67) are Theme.             |
-| 2026-10-04 | `sdd-refine-backlog` (user picks): Added [Web-portal-07](./product-backlog.md#pb-73) table row. Removed Web-portal-03. [Web-portal-12](./product-backlog.md#pb-81) Done. [Web-portal-15](./product-backlog.md#pb-91) Epic **Unified public site**. Agent-03 `artifacts-map.json` link fixed. Sprint backlog `#rid-d1` on D-1.                                                                                   |
-| 2026-10-04 | Requirements use `req-pb-N` and link `[PBI code](#pb-N)` to the table. The Product Backlog table links `[PBI code](#req-pb-N)` to Requirements. `#pb-N` stays on the table for sprint-backlog and Related.                                                                                                                                                                                                      |
+| 2026-10-04 | [Terminology in practice](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#terminology-in-practice) is a six-row table (PBI, SBI, Feature, Task, OGT, MVP). Artifact Definition links point at Artifacts writing guideline sections.                                                                                                                                                                       |
+| 2026-10-04 | `sdd-refine-backlog`: [MCP-01](#pb-16) is Done for the installer slice (Sprint 2). [MCP-04](#pb-92) is go-live. Added [Skill-15](#pb-93) and [Skill-16](#pb-94). Removed retired Skill-02 and Skill-10 rows. [Skill-05](#pb-26) is WIP.                                                                     |
+| 2026-10-04 | `sdd-refine-backlog`: Web-portal-15 is Theme **Unified public site** (sdd.works + framework.sdd.works integration and redesign). Web-portal-03 is Done ([Web-portal-09](#pb-76)). [Agent-02](#pb-8), [MCP-04](#pb-92), and [i18n-01](#pb-67) are Theme.             |
+| 2026-10-04 | `sdd-refine-backlog` (user picks): Added [Web-portal-07](#pb-73) table row. Removed Web-portal-03. [Web-portal-12](#pb-81) Done. Web-portal-15 Epic **Unified public site**. Agent-03 `artifacts-map.json` link fixed. Sprint backlog `#rid-d1` on D-1.                                                                                   |
+| 2026-10-04 | Requirements use one `pb-N` anchor. The Requirements line and Product Backlog table both link `[PBI code](#pb-N)` to that anchor. Cross-file links from `sprint-backlog.md` use `./product-backlog.md#L{line}`.                                                                                                                                                                                                      |
 | 2026-10-04 | [Rule-04](#pb-95) **Done**: pack rule `friendly-language.mdc` (constants key `friendly-language`). Repo audit found no `sdd-friendly-language`. Guides, features catalogs, framework design/stories/tests, and admin portal AC list four harness rules.                                                                                                                                                         |
 | 2026-10-04 | `sdd-refine-backlog` accept all: Unplanned PBIs adds Rule-04; Spec-seeds Related sync; Skill-05 ToDo; i18n-01 EN-only practices; Web-portal-05 points call-up research at Web-portal-01.                                                                                                                                                                                                                        |
-| 2026-10-04 | [Agent-02](./product-backlog.md#pb-8) `Size` is **Epic** on the Product Backlog table and Unplanned PBIs. Child skill PBIs stay Implementable until split or schedule.                                                                                                                                                                                                                                          |
-| 2026-10-05 | [Skill-13](./product-backlog.md#pb-87), [Skill-15](./product-backlog.md#pb-93), [Skill-16](./product-backlog.md#pb-94): pack folders `create-skill`, `build-agent`, `create-rule` ([ADR-089](./adr/ADR-089-pack-authoring-skill-names.md)). Constants keys unchanged. Superseded same day by [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) revert to `sdd-*` folders.                             |
+| 2026-10-04 | [Agent-02](#pb-8) `Size` is **Epic** on the Product Backlog table and Unplanned PBIs. Child skill PBIs stay Implementable until split or schedule.                                                                                                                                                                                                                                          |
+| 2026-10-05 | [Skill-13](#pb-87), [Skill-15](#pb-93), [Skill-16](#pb-94): pack folders `create-skill`, `build-agent`, `create-rule` ([ADR-089](./adr/ADR-089-pack-authoring-skill-names.md)). Constants keys unchanged. Superseded same day by [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) revert to `sdd-*` folders.                             |
 | 2026-10-05 | [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md): pack authoring folders `sdd-create-skill`, `sdd-build-agent`, `sdd-create-rule`. Seeds, constants, specs, and operator `~/.cursor/skills/` synced. Unprefixed pack copies removed on update.                                                                                                                                                       |
-| 2026-10-05 | [Spec-seeds-04](./product-backlog.md#pb-35): optional `adr` and `knowledge` map keys name directory roots ([ADR-090](./adr/ADR-090-adr-knowledge-map-roots.md)).                                                                                                                                                                                                                                                |
-| 2026-10-05 | [Rule-03](./product-backlog.md#pb-20) **Retired**: `realtime-status.mdc` removed; `status.md` on close in `sdd-dod.mdc` ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)).                                                                                                                                                                                                                              |
-| 2026-10-05 | [Rule-03](./product-backlog.md#pb-20) reopened as **sdd-keep-update.mdc** WIP sync ([ADR-093](./adr/ADR-093-keep-update-wip-rule.md)); Sprint 6 feature-43 **WIP**.                                                                                                                                                                                                                                             |
-| 2026-10-05 | [Skill-14](./product-backlog.md#pb-89) seed **improve-prompt** ([ADR-099](./adr/ADR-099-improve-prompt-skill-name.md)); replaces `prompt-optimizer`; TRUE AGENT body, no ECC catalog.                                                                                                                                                                                                                           |
-| 2026-10-05 | [Skill-14](./product-backlog.md#pb-89) living specs: framework-design § improve-prompt, **CE-SKILL-13**, expanded PBI bullets, English-only seed triggers/examples.                                                                                                                                                                                                                                            |
+| 2026-10-05 | [Spec-seeds-04](#pb-35): optional `adr` and `knowledge` map keys name directory roots ([ADR-090](./adr/ADR-090-adr-knowledge-map-roots.md)).                                                                                                                                                                                                                                                |
+| 2026-10-05 | [Rule-03](#pb-20) **Retired**: `realtime-status.mdc` removed; `status.md` on close in `sdd-dod.mdc` ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)).                                                                                                                                                                                                                              |
+| 2026-10-05 | [Rule-03](#pb-20) reopened as **sdd-keep-update.mdc** WIP sync ([ADR-093](./adr/ADR-093-keep-update-wip-rule.md)); Sprint 6 feature-43 **WIP**.                                                                                                                                                                                                                                             |
+| 2026-10-05 | [Skill-14](#pb-89) seed **improve-prompt** ([ADR-099](./adr/ADR-099-improve-prompt-skill-name.md)); replaces `prompt-optimizer`; TRUE AGENT body, no ECC catalog.                                                                                                                                                                                                                           |
+| 2026-10-05 | [Skill-14](#pb-89) living specs: framework-design § improve-prompt, **CE-SKILL-13**, expanded PBI bullets, English-only seed triggers/examples.                                                                                                                                                                                                                                            |
 | 2026-10-05 | Framework-bound pack rules use `sdd-` filenames ([ADR-094](./adr/ADR-094-sdd-prefix-framework-rules.md)): `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-keep-update.mdc`; `friendly-language.mdc` unchanged. Rule-01–03 titles and constants values updated.                                                                                                                                              |
-| 2026-10-05 | `sdd-refine-backlog` accept all: [i18n-02](./product-backlog.md#pb-68) Size **Theme**. Skill-13, Skill-15, Skill-16 Related and ADR-089 install-folder bullets. Unplanned PBIs synced. [Web-portal-15](./product-backlog.md#pb-91) Size **Epic** on the table (not Theme).                                                                                                                                      |
-| 2026-10-05 | `sdd-plan-sprint` Option A: [Skill-03](./product-backlog.md#pb-24), [Skill-04](./product-backlog.md#pb-25), [Skill-05](./product-backlog.md#pb-26), [Skill-13](./product-backlog.md#pb-87), [Skill-15](./product-backlog.md#pb-93), [Skill-16](./product-backlog.md#pb-94) scheduled **Sprint 5**. [Rule-04](./product-backlog.md#pb-95) stays Done, unscheduled.                                               |
-| 2026-10-05 | Sprint 5 Done. User confirmed usable. [Skill-03](./product-backlog.md#pb-24) through [Skill-16](./product-backlog.md#pb-94) (planning loop and pack authoring seeds) marked **Done**.                                                                                                                                                                                                                           |
-| 2026-10-05 | `sdd-plan-sprint` Option A for Sprints 6–8: process rules and skills + Spec-seeds-05 (S6); engineering skills and seeds (S7); [Agent-03](./product-backlog.md#pb-10) plus Agent-02 and CE-SKILL tasks (S8). OGT refine [i18n-03](./product-backlog.md#pb-69).                                                                                                                                                   |
-| 2026-10-05 | EN `[sdd-scrum-practices.md](./framework/seeds/templates/EN/sdd-scrum-practices.md)` §5 Feature break down. `[sdd-refine-backlog](./framework/seeds/skills/sdd-refine-backlog/SKILL.md)` and `[sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md)` Knowledge rows point at that section.                                                                                                       |
-| 2026-10-05 | [Rule-01](./product-backlog.md#pb-18) and [Rule-02](./product-backlog.md#pb-19) **Done**. User confirmed usable. Sprint 6 [feature-37](./sprint-backlog.md#sprint-6)–[feature-39](./sprint-backlog.md#sprint-6) **Done**. [Rule-03](./product-backlog.md#pb-20) stays **Retired** (no rule shipped).                                                                                                            |
-| 2026-10-05 | OGT 4–6 closed: `release.md` seed ([Spec-seeds-11](./product-backlog.md#pb-41)), `test-strategy.md` seed ([Spec-seeds-13](./product-backlog.md#pb-90)), `artifacts-map.json` as SDD Core artifact in practices and guides.                                                                                                                                                                                      |
-| 2026-10-05 | Status review: RIDs D-2, D-3, R-1 closed. [Spec-seeds-11](./product-backlog.md#pb-41) and [Spec-seeds-13](./product-backlog.md#pb-90) **WIP**; [feature-48](./sprint-backlog.md#sprint-7) and [feature-50](./sprint-backlog.md#sprint-7) **WIP**.                                                                                                                                                               |
-| 2026-10-05 | [Rule-03](./product-backlog.md#pb-20) renamed to **sdd-realtime-status.mdc**; constants key `realtime-status` ([ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md)). feature-43 **WIP**.                                                                                                                                                                                                                  |
-| 2026-10-05 | User confirmed feature-43 usable: [Rule-03](./product-backlog.md#pb-20) **Done**. [Skill-07](./product-backlog.md#pb-29) **Retired**; Sprint 6 feature-41 **Done**. [Skill-06](./product-backlog.md#pb-28) and feature-40 **WIP**.                                                                                                                                                                              |
-| 2026-10-05 | Status review: [feature-37](./sprint-backlog.md#sprint-6) and [Rule-01](./product-backlog.md#pb-18) **WIP**. Sprint 7 atdd SBI **feature-52**; Sprint 7 all **ToDo**. ethan.md: no close-sprint job.                                                                                                                                                                                                            |
-| 2026-10-05 | User confirmed usable: [Spec-seeds-05](./product-backlog.md#pb-36) and Sprint 6 [feature-42](./sprint-backlog.md#sprint-6) **Done** after **sdd-retrospective**.                                                                                                                                                                                                                                                |
-| 2026-10-05 | User confirmed usable: [Rule-01](./product-backlog.md#pb-18) and [Skill-06](./product-backlog.md#pb-28); Sprint 6 [feature-37](./sprint-backlog.md#sprint-6) and [feature-40](./sprint-backlog.md#sprint-6) **Done** after **sdd-retrospective**. [Spec-seeds-05](./product-backlog.md#pb-36) and [feature-42](./sprint-backlog.md#sprint-6) **WIP** again.                                                     |
-| 2026-10-05 | User confirmed usable: [Spec-seeds-05](./product-backlog.md#pb-36) and Sprint 6 [feature-42](./sprint-backlog.md#sprint-6) **Done** after **sdd-retrospective** (re-close; Learnings **#4**).                                                                                                                                                                                                                   |
-| 2026-10-05 | Sprint 6 [task-01](./sprint-backlog.md#sprint-6) cross-review of five process files **Done**; [req-pb-36](./product-backlog.md#req-pb-36) wording aligned to placeholder template.                                                                                                                                                                                                                              |
+| 2026-10-05 | `sdd-refine-backlog` accept all: [i18n-02](#pb-68) Size **Theme**. Skill-13, Skill-15, Skill-16 Related and ADR-089 install-folder bullets. Unplanned PBIs synced. Web-portal-15 Size **Epic** on the table (not Theme).                                                                                                                                      |
+| 2026-10-05 | `sdd-plan-sprint` Option A: [Skill-03](#pb-24), [Skill-04](#pb-25), [Skill-05](#pb-26), [Skill-13](#pb-87), [Skill-15](#pb-93), [Skill-16](#pb-94) scheduled **Sprint 5**. [Rule-04](#pb-95) stays Done, unscheduled.                                               |
+| 2026-10-05 | Sprint 5 Done. User confirmed usable. [Skill-03](#pb-24) through [Skill-16](#pb-94) (planning loop and pack authoring seeds) marked **Done**.                                                                                                                                                                                                                           |
+| 2026-10-05 | `sdd-plan-sprint` Option A for Sprints 6–8: process rules and skills + Spec-seeds-05 (S6); engineering skills and seeds (S7); [Agent-03](#pb-10) plus Agent-02 and CE-SKILL tasks (S8). OGT refine [i18n-03](#pb-69).                                                                                                                                                   |
+| 2026-10-05 | EN `[sdd-scrum-practices.md](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md)` §5 Feature break down. `[sdd-refine-backlog](../pack.framework.sdd.works/skills/sdd-refine-backlog/SKILL.md)` and `[sdd-plan-sprint](../pack.framework.sdd.works/skills/sdd-plan-sprint/SKILL.md)` Knowledge rows point at that section.                                                                                                       |
+| 2026-10-05 | [Rule-01](#pb-18) and [Rule-02](#pb-19) **Done**. User confirmed usable. Sprint 6 [feature-37](./sprint-backlog.md#sprint-6)–[feature-39](./sprint-backlog.md#sprint-6) **Done**. [Rule-03](#pb-20) stays **Retired** (no rule shipped).                                                                                                            |
+| 2026-10-05 | OGT 4–6 closed: `release.md` seed ([Spec-seeds-11](#pb-41)), `test-strategy.md` seed ([Spec-seeds-13](#pb-90)), `artifacts-map.json` as SDD Core artifact in practices and guides.                                                                                                                                                                                      |
+| 2026-10-05 | Status review: RIDs D-2, D-3, R-1 closed. [Spec-seeds-11](#pb-41) and [Spec-seeds-13](#pb-90) **WIP**; [feature-48](./sprint-backlog.md#sprint-7) and [feature-50](./sprint-backlog.md#sprint-7) **WIP**.                                                                                                                                                               |
+| 2026-10-05 | [Rule-03](#pb-20) renamed to **sdd-realtime-status.mdc**; constants key `realtime-status` ([ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md)). feature-43 **WIP**.                                                                                                                                                                                                                  |
+| 2026-10-05 | User confirmed feature-43 usable: [Rule-03](#pb-20) **Done**. [Skill-07](#pb-29) **Retired**; Sprint 6 feature-41 **Done**. [Skill-06](#pb-28) and feature-40 **WIP**.                                                                                                                                                                              |
+| 2026-10-05 | Status review: [feature-37](./sprint-backlog.md#sprint-6) and [Rule-01](#pb-18) **WIP**. Sprint 7 atdd SBI **feature-52**; Sprint 7 all **ToDo**. ethan.md: no close-sprint job.                                                                                                                                                                                                            |
+| 2026-10-05 | User confirmed usable: [Spec-seeds-05](#pb-36) and Sprint 6 [feature-42](./sprint-backlog.md#sprint-6) **Done** after **sdd-retrospective**.                                                                                                                                                                                                                                                |
+| 2026-10-05 | User confirmed usable: [Rule-01](#pb-18) and [Skill-06](#pb-28); Sprint 6 [feature-37](./sprint-backlog.md#sprint-6) and [feature-40](./sprint-backlog.md#sprint-6) **Done** after **sdd-retrospective**. [Spec-seeds-05](#pb-36) and [feature-42](./sprint-backlog.md#sprint-6) **WIP** again.                                                     |
+| 2026-10-05 | User confirmed usable: [Spec-seeds-05](#pb-36) and Sprint 6 [feature-42](./sprint-backlog.md#sprint-6) **Done** after **sdd-retrospective** (re-close; Learnings **#4**).                                                                                                                                                                                                                   |
+| 2026-10-05 | Sprint 6 [task-01](./sprint-backlog.md#sprint-6) cross-review of five process files **Done**; [pb-36](#pb-36) wording aligned to placeholder template.                                                                                                                                                                                                                              |
 | 2026-10-05 | User confirmed Sprint 6 usable; [Sprint 6](./sprint-backlog.md#sprint-6) **Status: Done** on `[sprint-backlog.md](./sprint-backlog.md)`.                                                                                                                                                                                                                                                                        |
 | 2026-10-05 | [ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md): **Definition of Done** is canonical here; `sprint-backlog.md` links to `#definition-of-done` instead of duplicating checks.                                                                                                                                                                                                                |
-| 2026-10-05 | Added Epic [Web-portal-16](#pb-96): prompt-driven install of core pack skills and rules only (2study.ai copy line; framework.sdd.works backend; pack from separate Git repo).                                                                                                                                                                                                                                   |
-| 2026-10-05 | `sdd-refine-backlog`: split [Web-portal-16](#pb-96) into Implementable [Spec-seeds-15](#pb-97), [MCP-05](#pb-101), [Web-portal-17](#pb-98), [Web-portal-18](#pb-99), [Web-portal-19](#pb-100). Epic stays ToDo until children Done.                                                                                                                                                                             |
-| 2026-10-05 | `sdd-plan-sprint`: Sprint 8 adds [Web-portal-15](#pb-91) task-03, [Spec-seeds-15](#pb-97), [MCP-05](#pb-101), [Web-portal-17](#pb-98)–[Web-portal-19](#pb-100) (feature-53–57). Epics [Web-portal-15](#pb-91) and [Web-portal-16](#pb-96) stay unscheduled. Agent-03 and ethan tasks remain on Sprint 8.                                                                                                        |
-| 2026-10-05 | `sdd-refine-backlog`: All Epic and Theme PBIs split or retired. [Agent-02](#pb-8) **Implementable** Sprint 8. New: [i18n-04](#pb-102), [i18n-05](#pb-103), [MCP-06](#pb-104), [MCP-07](#pb-105), [Web-portal-20](#pb-106)–[Web-portal-22](#pb-108). Retired: [i18n-01](#pb-67), [i18n-02](#pb-68), [MCP-04](#pb-92), [Web-portal-15](#pb-91), [Web-portal-16](#pb-96). |
-| 2026-10-05 | Added Theme [Web-portal-23](#pb-109): configurable instructions tabs (Setup fixed default; Features, Scrum in SDD, and future tabs from pack JSON; sync cache; i18n). |
-| 2026-10-05 | `sdd-refine-backlog` + `sdd-plan-sprint`: split [Web-portal-23](#pb-109) into [Spec-seeds-16](#pb-110), [Web-portal-24](#pb-111), [Web-portal-25](#pb-112) on **Sprint 8** (feature-58–60). |
-| 2026-10-05 | User confirmed usable: Sprint 7 [feature-52](./sprint-backlog.md#sprint-7), [feature-44](./sprint-backlog.md#sprint-7), [feature-46](./sprint-backlog.md#sprint-7), [feature-47](./sprint-backlog.md#sprint-7), [feature-48](./sprint-backlog.md#sprint-7), [feature-50](./sprint-backlog.md#sprint-7) **Done**. [Skill-01](./product-backlog.md#pb-21), [Skill-09](./product-backlog.md#pb-64), [Skill-14](./product-backlog.md#pb-89), [Spec-seeds-10](./product-backlog.md#pb-40), [Spec-seeds-11](./product-backlog.md#pb-41), [Spec-seeds-13](./product-backlog.md#pb-90) **Done**. [Skill-11](./product-backlog.md#pb-80) and [Spec-seeds-12](./product-backlog.md#pb-66) stay **ToDo**. |
-| 2026-10-05 | User confirmed [feature-49](./sprint-backlog.md#sprint-7) usable. [Spec-seeds-12](./product-backlog.md#pb-66) **Done**. EN [`.secrets`](./framework/seeds/templates/EN/.secrets) seed and practices `#secrets` updated. Sprint 7 open: [feature-45](./sprint-backlog.md#sprint-7) only. |
+| 2026-10-05 | Added Epic Web-portal-16: prompt-driven install of core pack skills and rules only (2study.ai copy line; framework.sdd.works backend; pack from separate Git repo).                                                                                                                                                                                                                                   |
+| 2026-10-05 | `sdd-refine-backlog`: split Web-portal-16 into Implementable [Spec-seeds-15](#pb-97), [MCP-05](#pb-101), [Web-portal-17](#pb-98), [Web-portal-18](#pb-99), [Web-portal-19](#pb-100). Epic stays ToDo until children Done.                                                                                                                                                                             |
+| 2026-10-05 | `sdd-plan-sprint`: Sprint 8 adds Web-portal-15 task-03, [Spec-seeds-15](#pb-97), [MCP-05](#pb-101), [Web-portal-17](#pb-98)–[Web-portal-19](#pb-100) (feature-53–57). Epics Web-portal-15 and Web-portal-16 stay unscheduled. Agent-03 and ethan tasks remain on Sprint 8.                                                                                                        |
+| 2026-10-05 | `sdd-refine-backlog`: All Epic and Theme PBIs split or retired. [Agent-02](#pb-8) **Implementable** Sprint 8. New: [i18n-04](#pb-102), [i18n-05](#pb-103), [MCP-06](#pb-104), [MCP-07](#pb-105), [Web-portal-20](#pb-106)–[Web-portal-22](#pb-108). Retired: [i18n-01](#pb-67), [i18n-02](#pb-68), [MCP-04](#pb-92), Web-portal-15, Web-portal-16. |
+| 2026-10-05 | Added Theme Web-portal-23: configurable instructions tabs (Setup fixed default; Features, Scrum in SDD, and future tabs from pack JSON; sync cache; i18n). |
+| 2026-10-05 | `sdd-refine-backlog` + `sdd-plan-sprint`: split Web-portal-23 into [Spec-seeds-16](#pb-110), [Web-portal-24](#pb-111), [Web-portal-25](#pb-112) on **Sprint 8** (feature-58–60). |
+| 2026-10-05 | User confirmed usable: Sprint 7 [feature-52](./sprint-backlog.md#sprint-7), [feature-44](./sprint-backlog.md#sprint-7), [feature-46](./sprint-backlog.md#sprint-7), [feature-47](./sprint-backlog.md#sprint-7), [feature-48](./sprint-backlog.md#sprint-7), [feature-50](./sprint-backlog.md#sprint-7) **Done**. [Skill-01](#pb-21), [Skill-09](#pb-64), [Skill-14](#pb-89), [Spec-seeds-10](#pb-40), [Spec-seeds-11](#pb-41), [Spec-seeds-13](#pb-90) **Done**. [Skill-11](#pb-80) and [Spec-seeds-12](#pb-66) stay **ToDo**. |
+| 2026-10-05 | User confirmed [feature-49](./sprint-backlog.md#sprint-7) usable. [Spec-seeds-12](#pb-66) **Done**. EN [`.secrets`](../pack.framework.sdd.works/templates/EN/.secrets) seed and practices `#secrets` updated. Sprint 7 open: [feature-45](./sprint-backlog.md#sprint-7) only. |
+| 2026-10-07 | Readable Requirements rewrite, lite installer category ([Spec-seeds-15](#pb-97), [Web-portal-17](#pb-98)–[Web-portal-19](#pb-100)), [MCP-05](#pb-101) **Retired** (no partial ledger on lite path). Practices writing guide; related specs aligned. See [`changes-log.md`](./changes-log.md) 2026-10-07. |
+| 2026-10-07 | Removed split epic or theme rows Web-portal-15, Web-portal-16, Web-portal-23 from Requirements and Product Backlog table. Anchors `#pb-91`, `#pb-96`, `#pb-109` unused. Work stays on [Web-portal-20](#pb-106)–[Web-portal-22](#pb-108), lite PBIs, and [Spec-seeds-16](#pb-110) / [Web-portal-24](#pb-111) / [Web-portal-25](#pb-112). |
+| 2026-10-07 | Merged [Web-portal-14](#pb-88) into [Web-portal-01](#pb-15) (synced invoke-agents markdown tab). Retired [Web-portal-08](#pb-74); [Web-portal-13](#pb-83) owns Get secret. Web-portal-02 is the **Install and update** markdown tab after MCP setup (full pack only). |
+| 2026-10-07 | Removed Web-portal-02 from Requirements and Product Backlog table. Anchor `#pb-49` unused. Full install stays on Setup, Features, and MCP. |
+| 2026-10-07 | `sdd-plan-sprint`: Sprint 8 eleven SBIs aligned to Sprint 8 PBIs; **feature-54** (MCP-05) removed from sprint table. |
+| 2026-10-07 | Removed Sprint 8 **task-03**; [Web-portal-21](#pb-107) unscheduled (2study.ai partner landing, not framework `/`). |
+| 2026-10-07 | Merged [Web-portal-19](#pb-100) into [Web-portal-18](#pb-99) (Part 1 agent markdown, Part 2 one-line copy). Sprint **feature-57** removed; **feature-56** owns both AC20 and AC21. |
+| 2026-10-07 | Added [Spec-seeds-18](#pb-122) lite client receipt (`.sdd-lite-installed.json`, merge rules). Sprint **feature-57** reused for receipt SBI; lite HTTP order **feature-55** → **feature-57** → **feature-56**. |
+| 2026-10-07 | `sdd-review-status` rows 1–4: [Agent-02](#pb-8) and [Agent-03](#pb-10) **WIP**; Agent-03 **Related** adds `coach-knowledge.md` and [ADR-106](./adr/ADR-106-coach-knowledge-file.md). |
+| 2026-10-07 | Added [Web-portal-26](#pb-123) admin-only Settings note for pack GitHub files. Unscheduled. |
+| 2026-10-07 | [ADR-107](./adr/ADR-107-lite-pack-allowlist-filename.md): lite pack allow-list basename `lite-pack.allowlist.json`. |
+| 2026-10-07 | [Web-portal-26](#pb-123) loads the Admin Settings note from `content/.admin-note.md`. Seed: `src/content/.admin-note.md`. |
+| 2026-10-07 | User confirmed [feature-57](../sprint-backlog.md#sprint-8) usable. [Spec-seeds-18](#pb-122) **Done**. |
+| 2026-10-07 | Instructions tabs design confirmed: pack `content/.instructions-tabs.json` + bundled fallback only; `code` and `content` types; default tab always Setup; operator rules in [`src/content/.admin-note.md`](../src/content/.admin-note.md). Updated [Spec-seeds-16](#pb-110), [Web-portal-24](#pb-111), [Web-portal-25](#pb-112), [`app-design.md`](./admin-portal/app-design.md), AC22–AC24. |
+| 2026-10-07 | Pack authoring tree moved from `specs/framework/seeds/` to [`pack.framework.sdd.works/`](../pack.framework.sdd.works/). Living requirement path strings and Definition links retargeted. See [`changes-log.md`](./changes-log.md). |
 
 
 

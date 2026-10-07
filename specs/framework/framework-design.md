@@ -1,14 +1,14 @@
 # Design — framework
 
-> **Purpose**: Overall design for every framework artifact: where the file lives, the shape it keeps, and how the coach runs. What, how, and when stay in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). Names and meaning stay in [`scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md).
-> **Practices**: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md).
-> **Framework**: [`scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md).
+> **Purpose**: Overall design for every framework artifact: where the file lives, the shape it keeps, and how the coach runs. What, how, and when stay in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md). Names and meaning stay in [`scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md).
+> **Practices**: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md).
+> **Framework**: [`scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md).
 > **Stories**: [`framework-stories.md`](./framework-stories.md). **Tests**: [`framework-tests.md`](./framework-tests.md).
-> **Seed prompt**: [`./seeds/agents/ethan.md`](./seeds/agents/ethan.md).
+> **Seed prompt**: [`../../pack.framework.sdd.works/agents/ethan.md`](../../pack.framework.sdd.works/agents/ethan.md).
 
 ## framework-artifacts
 
-An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header): a title line, then a blockquote with `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.json` while `sdd-update-project` is still copying files.
+An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#header): a title line, then a blockquote with `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.json` while `sdd-update-project` is still copying files.
 
 ### Two repositories
 
@@ -40,7 +40,7 @@ Ethan reads this file on start. A missing file, or `pack_complete` not `true`, i
 | Role | Path |
 | --- | --- |
 | After install | `{client_root}/.sdd-installed.json`, written by the installer |
-| Field example | `specs/framework/seeds/.sdd-installed.json` |
+| Field example | `pack.framework.sdd.works/.sdd-installed.example.json` |
 
 The field example sits at the seed root, outside the pack allow-list (`agents`, `skills`, `rules`, `workflows`, `templates`), so install does not copy it. It has `pack_complete: false`, empty version and commit, and empty file groups. It is not a receipt. Do not ship a ledger with `pack_complete: true` in the pack tree.
 
@@ -68,11 +68,11 @@ Coach ethan: presence, onboard, jobs, and the installable prompt. The prompt in 
 
 > **Purpose**: Define how coach-ethan is present, what it does, what it reads, how start-up resolves files, and how capabilities grow across MVPs.
 > **Status**: design · as_of 2026-09-29 · onboard is the audit verdict, then `sdd-review-status` when the verdict is Usable
-> **Backlog**: [Agent-04 Agent ethan onboard with pack receipt start gate](../product-backlog.md#pb-17) · [Agent-01 Local Cursor agent](../product-backlog.md#pb-6) · [MCP-01 Pack copy onto the client root](../product-backlog.md#pb-16)
-> **Framework**: [`scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md) · **Practices**: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) (what, how, when)
+> **Backlog**: [Agent-04 Agent ethan onboard with pack receipt start gate](product-backlog.md#L76) · [Agent-01 Local Cursor agent](product-backlog.md#L63) · [MCP-01 Pack copy onto the client root](product-backlog.md#L315)
+> **Framework**: [`scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md) · **Practices**: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
 > **Stories**: [`framework-stories.md`](./framework-stories.md#agents) · **Tests**: [`framework-tests.md`](./framework-tests.md#agents)
-> **Seed prompt**: [`./seeds/agents/ethan.md`](./seeds/agents/ethan.md)
+> **Seed prompt**: [`../../pack.framework.sdd.works/agents/ethan.md`](../../pack.framework.sdd.works/agents/ethan.md)
 
 This file is the design for the coach. The installable prompt is §14 and the seed file. It does not fill the Scrum guide or build skills.
 
@@ -236,7 +236,7 @@ Update project settings uses `sdd-update-project` (`skill_update_project`). [ADR
 
 ### 3. Jobs
 
-**What / how / when** for each job lives only in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) **Jobs**. Ethan does not embed those steps in the agent prompt.
+**What / how / when** for each job lives only in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) **Jobs**. Ethan does not embed those steps in the agent prompt.
 
 The prompt does not keep a job table. The `skills` object in `constants.json` is the job index. The user may ask in `artifact_locale`. When the user asks for a job, ethan matches the key, opens `{client_root}/{skills_dir}/{folder}` from that object, and follows the skill. Onboard uses `skill_audit_artifacts`, `skill_update_project`, and `skill_get_status`. Skills perform the work. The table below is author documentation. It is not copied into the prompt.
 
@@ -248,7 +248,7 @@ The prompt does not keep a job table. The `skills` object in `constants.json` is
 | Report status | `skill_get_status` |
 | Retrospective | `skill_retrospective` |
 
-Sprint open and close stay in `sdd-scrum-practices.md` and `sdd-plan-sprint`. There is no `skill_close_sprint` key ([ADR-076](../adr/ADR-076-review-status-one-skill.md); [Skill-07](../product-backlog.md#pb-29) **Retired**).
+Sprint open and close stay in `sdd-scrum-practices.md` and `sdd-plan-sprint`. There is no `skill_close_sprint` key ([ADR-076](../adr/ADR-076-review-status-one-skill.md); [Skill-07](product-backlog.md#L99) **Retired**).
 
 Report status is `sdd-review-status`. Onboard follows that same skill when the audit verdict is Usable. [ADR-076](../adr/ADR-076-review-status-one-skill.md).
 
@@ -324,7 +324,7 @@ The table below is the Sprint 2–4 sketch. Live onboard is §2.2. Live missing-
 | 2 | Sprint 3 | Run event `plan` via a minimal `plan` skill. Update `sprint-backlog.md` using practices columns. | Execute `track` or `retrospective`. Full skill pack. |
 | 3 | Sprint 4 | Reply from chat plus those files. One backlog refinement. One change-log entry, within guide maintenance rules. | Full event set. Second-client presence. |
 
-Acceptance criteria stay on the backlog rows ([MVP 1](../product-backlog.md#pb-8), [MVP 2](../product-backlog.md#pb-8), [MVP 3](../product-backlog.md#pb-10)). Extend MVP 1 AC when implementing: onboard + recovery behaviors in this design.
+Acceptance criteria stay on the backlog rows ([MVP 1](product-backlog.md#L68), [MVP 2](product-backlog.md#L68), [MVP 3](product-backlog.md#L73)). Extend MVP 1 AC when implementing: onboard + recovery behaviors in this design.
 
 ### 9. Events and skills
 
@@ -345,7 +345,7 @@ MVP 2 needs only a minimal `plan` skill. The rest ship with the full pack.
 
 ### 11. Out of scope
 
-- Filling [`scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md) content (GUIDE-01 / sprint guide slices).
+- Filling [`scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md) content (GUIDE-01 / sprint guide slices).
 - Building the six skills in this design turn. The installable prompt is §14 and the seed file.
 - Hosting coach-ethan as a remote MCP tool or resource.
 - Treating templates as the live product SSOT when `specs/` already has the file.
@@ -419,13 +419,13 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 | --- | --- |
 | [`framework-stories.md`](./framework-stories.md#agents) | Agent-04 start-gate stories and ACs |
 | [`framework-tests.md`](./framework-tests.md#agents) | Load/recovery and CE-GATE cases |
-| [`./seeds/agents/ethan.md`](./seeds/agents/ethan.md) | Seed prompt. Same text as §14. |
+| [`../../pack.framework.sdd.works/agents/ethan.md`](../../pack.framework.sdd.works/agents/ethan.md) | Seed prompt. Same text as §14. |
 | [`../product-backlog.md`](../product-backlog.md) | Parent and MVP acceptance |
 | [`../sprint-backlog.md`](../sprint-backlog.md) | Schedule and D1 |
 | [`../architecture.md`](../architecture.md) | Stack pointer; presence decision |
 | [`../artifacts-map.json`](../artifacts-map.json) | Project index (framework / process / tracking / knowledge / optional / this product) |
-| [`./seeds/templates/EN/scrum-in-sdd.md`](./seeds/templates/EN/scrum-in-sdd.md) | Names and meaning |
-| [`./seeds/templates/EN/sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
+| [`../../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md) | Names and meaning |
+| [`../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
 | [`../mcp/mcp-design.md`](../mcp/mcp-design.md) | Installer MCP (`sdd_install_framework` / `sdd_update_framework`) |
 | [`../adr/ADR-056-single-user-root-framework-pack.md`](../adr/ADR-056-single-user-root-framework-pack.md) | One pack on the user root |
 | [`../adr/ADR-057-install-ledger-pack-complete.md`](../adr/ADR-057-install-ledger-pack-complete.md) | `pack_complete` on `.sdd-installed.json` |
@@ -434,7 +434,7 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 
 ### 14. Installable prompt (`agents/ethan.md`)
 
-This section and [`./seeds/agents/ethan.md`](./seeds/agents/ethan.md) are the same prompt. Edit both in the same change. Pack publish is go-live.
+This section and [`../../pack.framework.sdd.works/agents/ethan.md`](../../pack.framework.sdd.works/agents/ethan.md) are the same prompt. Edit both in the same change. Pack publish is go-live.
 
 ```markdown
 ---
@@ -595,14 +595,14 @@ The skill for `skill_get_status` owns the status reply.
 
 ## rules
 
-Harness rules install under `{client_root}/rules/`. Framework-bound rules use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). The guide names four harness rules: `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-realtime-status.mdc`, and `friendly-language.mdc`. [Rule-03](../product-backlog.md#pb-20) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). Close writes live in `sdd-dod.mdc`; WIP checkpoints live in `sdd-realtime-status.mdc`. [ADR-091](../adr/ADR-091-retire-realtime-status-rule.md) retired `realtime-status.mdc` only. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `specs/framework/seeds/templates/constants.json`.
+Harness rules install under `{client_root}/rules/`. Framework-bound rules use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). The guide names four harness rules: `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-realtime-status.mdc`, and `friendly-language.mdc`. [Rule-03](product-backlog.md#L206) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). Close writes live in `sdd-dod.mdc`; WIP checkpoints live in `sdd-realtime-status.mdc`. [ADR-091](../adr/ADR-091-retire-realtime-status-rule.md) retired `realtime-status.mdc` only. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `pack.framework.sdd.works/templates/constants.json`.
 
 | Rule | Authoring seed | After install |
 | --- | --- | --- |
-| `sdd-dod.mdc` | `specs/framework/seeds/rules/sdd-dod.mdc` | `{client_root}/rules/sdd-dod.mdc` |
-| `sdd-incremental-delivery.mdc` | `specs/framework/seeds/rules/sdd-incremental-delivery.mdc` | `{client_root}/rules/sdd-incremental-delivery.mdc` |
-| `sdd-realtime-status.mdc` | `specs/framework/seeds/rules/sdd-realtime-status.mdc` | `{client_root}/rules/sdd-realtime-status.mdc` |
-| `friendly-language.mdc` | `specs/framework/seeds/rules/friendly-language.mdc` | `{client_root}/rules/friendly-language.mdc` |
+| `sdd-dod.mdc` | `pack.framework.sdd.works/rules/sdd-dod.mdc` | `{client_root}/rules/sdd-dod.mdc` |
+| `sdd-incremental-delivery.mdc` | `pack.framework.sdd.works/rules/sdd-incremental-delivery.mdc` | `{client_root}/rules/sdd-incremental-delivery.mdc` |
+| `sdd-realtime-status.mdc` | `pack.framework.sdd.works/rules/sdd-realtime-status.mdc` | `{client_root}/rules/sdd-realtime-status.mdc` |
+| `friendly-language.mdc` | `pack.framework.sdd.works/rules/friendly-language.mdc` | `{client_root}/rules/friendly-language.mdc` |
 
 The pack does not ship `artifacts-map.mdc`. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
@@ -624,7 +624,7 @@ The file is already loaded on every chat. The miss is in the instructions, not i
 - "Standard terminology" allows a specialist word with no plain meaning beside it.
 - The rule never names the marks that show up in the replies: an em dash, a spaced double hyphen used as a break, an emoji, a coined short form, or a first sentence about what the agent did.
 - Cursor's default prose favors long, complete sentences. A soft preference loses to that default. A replacement has to name the mark and require a rewrite.
-- The rule never mentions the Cursor preview stop. A loose list after a header blockquote with several links still hides the rest of the file. Evidence is in [`cursor-markdown-preview-loose-list.md`](../knowledge/agent/cursor-markdown-preview-loose-list.md). The same tight-list rule is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) under Writing markdown.
+- The rule never mentions the Cursor preview stop. A loose list after a header blockquote with several links still hides the rest of the file. Evidence is in [`cursor-markdown-preview-loose-list.md`](../knowledge/agent/cursor-markdown-preview-loose-list.md). The same tight-list rule is in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) under Writing markdown.
 
 #### How the replacement is designed
 
@@ -875,38 +875,38 @@ A skill's steps live in its `SKILL.md`. Onboard uses the three skills below. The
 
 ### Pack skill seed catalog
 
-Authoring tree: `specs/framework/seeds/skills/<folder>/`. Install copies each folder below except `sdd-tracking` (legacy; not the status skill per [ADR-076](../adr/ADR-076-review-status-one-skill.md)). Folder `frontend-design` is retired; use `frontend-designer` ([ADR-105](../adr/ADR-105-frontend-designer-pack-skill-name.md)).
+Authoring tree: `pack.framework.sdd.works/skills/<folder>/`. Install copies each folder below except `sdd-tracking` (legacy; not the status skill per [ADR-076](../adr/ADR-076-review-status-one-skill.md)). Folder `frontend-design` is retired; use `frontend-designer` ([ADR-105](../adr/ADR-105-frontend-designer-pack-skill-name.md)).
 
 | Folder | Backlog | Sibling files (beside `SKILL.md`) | L1 test |
 | --- | --- | --- | --- |
-| `sdd-audit-artifacts` | [Skill-08](../product-backlog.md#pb-30) | — | CE-AUDIT-01–19 |
-| `sdd-review-status` | [Skill-12](../product-backlog.md#pb-86) | — | CE-SKILL-01, 02, 09, 11 |
-| `sdd-update-project` | [Skill-03](../product-backlog.md#pb-24) | — | Onboard CE-ENV / practices |
-| `sdd-refine-backlog` | [Skill-04](../product-backlog.md#pb-25) | — | Onboard CE-ENV / practices |
-| `sdd-plan-sprint` | [Skill-05](../product-backlog.md#pb-26) | — | Onboard CE-ENV / practices |
-| `sdd-retrospective` | [Skill-06](../product-backlog.md#pb-28) | — | CE-SKILL-10 |
-| `sdd-update-specs` | [Skill-09](../product-backlog.md#pb-64) | — | CE-SKILL-14 |
-| `sdd-spec-to-build` | [Skill-11](../product-backlog.md#pb-80) | `readiness.md` | CE-SKILL-04 |
-| `atdd-expert` | [Skill-01](../product-backlog.md#pb-21) | `reference.md` | CE-SKILL-12 |
-| `sdd-create-skill` | [Skill-13](../product-backlog.md#pb-87) | — | CE-SKILL-03 |
-| `sdd-build-agent` | [Skill-15](../product-backlog.md#pb-93) | — | CE-SKILL-03 pattern |
-| `sdd-create-rule` | [Skill-16](../product-backlog.md#pb-94) | — | CE-SKILL-03 pattern |
-| `improve-prompt` | [Skill-14](../product-backlog.md#pb-89) | `examples.md` | CE-SKILL-13 |
-| `frontend-designer` | [Skill-17](../product-backlog.md#pb-113) | `LICENSE.txt` | CE-SKILL-15 |
-| `frontend-developer` | [Skill-19](../product-backlog.md#pb-115) | `next-cache-components.md` (optional) | CE-SKILL-21 |
-| `testing-expert` | [Skill-18](../product-backlog.md#pb-114) | `browser.md`, `LICENSE.txt`, `templates/`, `scripts/with_server.py`, `examples/` | CE-SKILL-20 |
-| `fullstack-engineer` | [Skill-20](../product-backlog.md#pb-116) | — | CE-SKILL-16 |
-| `ai-architect` | [Skill-21](../product-backlog.md#pb-117) | `terms.md` | CE-SKILL-17 |
-| `mcp-expert` | [Skill-22](../product-backlog.md#pb-118) | — | CE-SKILL-18 |
-| `rag-expert` | [Skill-23](../product-backlog.md#pb-119) | `reference.md` | CE-SKILL-19 |
+| `sdd-audit-artifacts` | [Skill-08](product-backlog.md#L101) | — | CE-AUDIT-01–19 |
+| `sdd-review-status` | [Skill-12](product-backlog.md#L113) | — | CE-SKILL-01, 02, 09, 11 |
+| `sdd-update-project` | [Skill-03](product-backlog.md#L89) | — | Onboard CE-ENV / practices |
+| `sdd-refine-backlog` | [Skill-04](product-backlog.md#L92) | — | Onboard CE-ENV / practices |
+| `sdd-plan-sprint` | [Skill-05](product-backlog.md#L94) | — | Onboard CE-ENV / practices |
+| `sdd-retrospective` | [Skill-06](product-backlog.md#L96) | — | CE-SKILL-10 |
+| `sdd-update-specs` | [Skill-09](product-backlog.md#L106) | — | CE-SKILL-14 |
+| `sdd-spec-to-build` | [Skill-11](product-backlog.md#L108) | `readiness.md` | CE-SKILL-04 |
+| `atdd-expert` | [Skill-01](product-backlog.md#L87) | `reference.md` | CE-SKILL-12 |
+| `sdd-create-skill` | [Skill-13](product-backlog.md#L115) | — | CE-SKILL-03 |
+| `sdd-build-agent` | [Skill-15](product-backlog.md#L126) | — | CE-SKILL-03 pattern |
+| `sdd-create-rule` | [Skill-16](product-backlog.md#L130) | — | CE-SKILL-03 pattern |
+| `improve-prompt` | [Skill-14](product-backlog.md#L120) | `examples.md` | CE-SKILL-13 |
+| `frontend-designer` | [Skill-17](product-backlog.md#L134) | `LICENSE.txt` | CE-SKILL-15 |
+| `frontend-developer` | [Skill-19](product-backlog.md#L150) | `next-cache-components.md` (optional) | CE-SKILL-21 |
+| `testing-expert` | [Skill-18](product-backlog.md#L140) | `browser.md`, `LICENSE.txt`, `templates/`, `scripts/with_server.py`, `examples/` | CE-SKILL-20 |
+| `fullstack-engineer` | [Skill-20](product-backlog.md#L158) | — | CE-SKILL-16 |
+| `ai-architect` | [Skill-21](product-backlog.md#L165) | `terms.md` | CE-SKILL-17 |
+| `mcp-expert` | [Skill-22](product-backlog.md#L174) | — | CE-SKILL-18 |
+| `rag-expert` | [Skill-23](product-backlog.md#L182) | `reference.md` | CE-SKILL-19 |
 
 ### sdd-audit-artifacts
 
-Read-only skill. [Skill-08](../product-backlog.md#pb-30). Stories: [`framework-stories.md`](./framework-stories.md#sdd-audit-artifacts). Tests: [`framework-tests.md`](./framework-tests.md) `CE-AUDIT-01` through `CE-AUDIT-19`. Sprint 4 feature-23 is Done. The authoring seed is the skill. Ethan confirmed the skill usable on 2026-09-30. CE-AUDIT-13 Windows stays Not observed in [`results.md`](./fixtures/sdd-audit-artifacts/results.md).
+Read-only skill. [Skill-08](product-backlog.md#L101). Stories: [`framework-stories.md`](./framework-stories.md#sdd-audit-artifacts). Tests: [`framework-tests.md`](./framework-tests.md) `CE-AUDIT-01` through `CE-AUDIT-19`. Sprint 4 feature-23 is Done. The authoring seed is the skill. Ethan confirmed the skill usable on 2026-09-30. CE-AUDIT-13 Windows stays Not observed in [`results.md`](./fixtures/sdd-audit-artifacts/results.md).
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-audit-artifacts/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-audit-artifacts/SKILL.md` |
 | After install | `{client_root}/skills/sdd-audit-artifacts/SKILL.md` |
 
 Onboard follows this skill after `pack_complete` is true. The verdict table in [artifacts-map.json](#artifacts-mapjson) stays the contract. The skill reaches it as follows.
@@ -992,19 +992,19 @@ The later `SKILL.md` copies these lines:
 
 ### sdd-review-status
 
-The status skill is [Skill-12](../product-backlog.md#pb-86).
+The status skill is [Skill-12](product-backlog.md#L113).
 
 [ADR-076](../adr/ADR-076-review-status-one-skill.md) is the decision.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-review-status/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-review-status/SKILL.md` |
 | After install | `{client_root}/skills/sdd-review-status/SKILL.md` |
 
 #### What the skill holds
 
 - The skill compares the board with the named work, lists each mismatch, and writes after the user says yes to the shown text.
-- How to write a process file stays in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md).
+- How to write a process file stays in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md).
 - The skill loads that section when a file is about to change.
 
 #### The board
@@ -1055,193 +1055,193 @@ The board is changes-log, issues-log, status, sprint-backlog, and product-backlo
 
 #### What remains
 
-- The seed tree has no `specs/framework/seeds/skills/sdd-update-status/` folder.
+- The seed tree has no `pack.framework.sdd.works/skills/sdd-update-status/` folder.
 - `sdd-review-status` is the status skill.
 - The on-disk folder `skills/sdd-tracking/` stays until a later removal.
   The pack does not copy that folder as the status skill.
 
 ### sdd-plan-sprint
 
-Sprint-planning skill. [Skill-05](../product-backlog.md#pb-26). Constants key `skill_plan_sprint`.
+Sprint-planning skill. [Skill-05](product-backlog.md#L94). Constants key `skill_plan_sprint`.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-plan-sprint/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-plan-sprint/SKILL.md` |
 | After install | `{client_root}/skills/sdd-plan-sprint/SKILL.md` |
 
-The skill proposes existing PBIs for the next ToDo sprint (or the sprints the user names) so each sprint is one MVP. [2. Slice product to MVPs](./seeds/templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) stays in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). The skill writes the five process files only after the user picks. It does not create a PBI, mark Done, or edit the install ledger.
+The skill proposes existing PBIs for the next ToDo sprint (or the sprints the user names) so each sprint is one MVP. [2. Slice product to MVPs](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) stays in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md). The skill writes the five process files only after the user picks. It does not create a PBI, mark Done, or edit the install ledger.
 
 ### sdd-refine-backlog
 
-Product backlog refinement skill. [Skill-04](../product-backlog.md#pb-25). Constants key `skill_refine_pb`.
+Product backlog refinement skill. [Skill-04](product-backlog.md#L92). Constants key `skill_refine_pb`.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-refine-backlog/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-refine-backlog/SKILL.md` |
 | After install | `{client_root}/skills/sdd-refine-backlog/SKILL.md` |
 
 The skill reviews `product-backlog.md` against Evaluate Product Backlog Readiness in practices, sends a numbered findings table, and writes only after the user confirms. It does not mark a PBI Done or edit the install ledger. L1 coverage stays onboard and practices flows until a dedicated **CE-SKILL-** case exists.
 
 ### sdd-update-project
 
-Project settings and map skill. [Skill-03](../product-backlog.md#pb-24). Constants key `skill_update_project`. [ADR-079](../adr/ADR-079-one-job-update-project.md).
+Project settings and map skill. [Skill-03](product-backlog.md#L89). Constants key `skill_update_project`. [ADR-079](../adr/ADR-079-one-job-update-project.md).
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-update-project/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-update-project/SKILL.md` |
 | After install | `{client_root}/skills/sdd-update-project/SKILL.md` |
 
 The skill sets language, specs folder, ADR and knowledge roots, module folders, and writes `artifacts-map.json` after the user confirms. It copies template seeds only where the target file is missing. L1 coverage stays onboard CE-ENV cases and audit-driven update flows until a dedicated **CE-SKILL-** case exists.
 
 ### sdd-retrospective
 
-Retrospective skill. [Skill-06](../product-backlog.md#pb-28). Constants key `skill_retrospective`.
+Retrospective skill. [Skill-06](product-backlog.md#L96). Constants key `skill_retrospective`.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-retrospective/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md` |
 | After install | `{client_root}/skills/sdd-retrospective/SKILL.md` |
 
 The skill runs after DoD, at sprint-end, or on demand. It classifies lessons as ADR or knowledge, writes instance files under map roots, and appends the sprint **Retrospective** section when needed. When `adr` or `knowledge` is missing from the map, it stops and names **sdd-update-project**. Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-10**.
 
 ### atdd-expert
 
-Acceptance Test-Driven Development skill. [Skill-01](../product-backlog.md#pb-21). Constants key `atdd-expert`. [ADR-085](../adr/ADR-085-sdd-spec-to-build.md) loads it from `sdd-spec-to-build` when an SBI needs acceptance criteria before build.
+Acceptance Test-Driven Development skill. [Skill-01](product-backlog.md#L87). Constants key `atdd-expert`. [ADR-085](../adr/ADR-085-sdd-spec-to-build.md) loads it from `sdd-spec-to-build` when an SBI needs acceptance criteria before build.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/atdd-expert/SKILL.md` |
-| Quality bar | `specs/framework/seeds/skills/atdd-expert/reference.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/atdd-expert/SKILL.md` |
+| Quality bar | `pack.framework.sdd.works/skills/atdd-expert/reference.md` |
 | After install | `{client_root}/skills/atdd-expert/SKILL.md` |
 
-The skill drafts or revises user stories and Gherkin acceptance criteria from a requirement the caller already gathered. It does not resolve `artifacts-map.json`, backlogs, or practices paths unless the caller names them; `sdd-spec-to-build` passes the stories path. [`reference.md`](./seeds/skills/atdd-expert/reference.md) is the full quality bar when practices are absent. The ATDD summary uses a numbered draft table and a quality gap table before show. It confirms before write. It does not write `product-backlog.md`, automated tests, or production code. Renamed from `sdd-atdd` in Sprint 7 ([feature-52](../sprint-backlog.md#sprint-7)). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-12**.
+The skill drafts or revises user stories and Gherkin acceptance criteria from a requirement the caller already gathered. It does not resolve `artifacts-map.json`, backlogs, or practices paths unless the caller names them; `sdd-spec-to-build` passes the stories path. [`reference.md`](../../pack.framework.sdd.works/skills/atdd-expert/reference.md) is the full quality bar when practices are absent. The ATDD summary uses a numbered draft table and a quality gap table before show. It confirms before write. It does not write `product-backlog.md`, automated tests, or production code. Renamed from `sdd-atdd` in Sprint 7 ([feature-52](../sprint-backlog.md#sprint-7)). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-12**.
 
 ### sdd-update-specs
 
-Engineering spec alignment skill. [Skill-09](../product-backlog.md#pb-64). Constants key `sdd-update-specs`. [ADR-085](../adr/ADR-085-sdd-spec-to-build.md) loads it from `sdd-spec-to-build` when an SBI needs specs to move with the build.
+Engineering spec alignment skill. [Skill-09](product-backlog.md#L106). Constants key `sdd-update-specs`. [ADR-085](../adr/ADR-085-sdd-spec-to-build.md) loads it from `sdd-spec-to-build` when an SBI needs specs to move with the build.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-update-specs/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-update-specs/SKILL.md` |
 | After install | `{client_root}/skills/sdd-update-specs/SKILL.md` |
 
 The skill compares current work with related engineering specs from the sprint row and `{workspace}/artifacts-map.json`, sends a gap report, and writes only after the user confirms. Scope is `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `architecture.md`, `release.md`, `test-strategy.md`, and module files from the map. It does not write the five process files. It does not mark backlog rows Done. User confirmed usable 2026-10-05 ([feature-44](../sprint-backlog.md#sprint-7)). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-14**.
 
 ### sdd-spec-to-build
 
-Engineering readiness skill. [Skill-11](../product-backlog.md#pb-80). [ADR-085](../adr/ADR-085-sdd-spec-to-build.md). Supersedes design-before-build as one skill.
+Engineering readiness skill. [Skill-11](product-backlog.md#L108). [ADR-085](../adr/ADR-085-sdd-spec-to-build.md). Supersedes design-before-build as one skill.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md` |
-| Readiness rules | `specs/framework/seeds/skills/sdd-spec-to-build/readiness.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md` |
+| Readiness rules | `pack.framework.sdd.works/skills/sdd-spec-to-build/readiness.md` |
 | After install | `{client_root}/skills/sdd-spec-to-build/SKILL.md` |
 
-The skill brings one feature or SBI to engineering readiness before implementation. Applicability, path matching, and the readiness summary template live in [`readiness.md`](./seeds/skills/sdd-spec-to-build/readiness.md). It loads **atdd-expert**, **testing-expert**, **sdd-update-specs**, **frontend-designer**, **frontend-developer**, or **fullstack-engineer** per job. It proposes **sdd-build** after the user confirms readiness. It does not implement the feature or mark backlog rows Done. User confirmed usable on Sprint 7 [feature-45](../sprint-backlog.md#sprint-7). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-04**.
+The skill brings one feature or SBI to engineering readiness before implementation. Applicability, path matching, and the readiness summary template live in [`readiness.md`](../../pack.framework.sdd.works/skills/sdd-spec-to-build/readiness.md). It loads **atdd-expert**, **testing-expert**, **sdd-update-specs**, **frontend-designer**, **frontend-developer**, or **fullstack-engineer** per job. After the user confirms readiness, it proposes domain implement skills (for example **fullstack-engineer** or **mcp-expert**) per [build handoff](../../pack.framework.sdd.works/skills/sdd-spec-to-build/readiness.md#build-handoff). It does not ship or propose **sdd-build** ([ADR-108](./adr/ADR-108-no-pack-sdd-build-skill.md)). It does not implement the feature or mark backlog rows Done. User confirmed usable on Sprint 7 [feature-45](../sprint-backlog.md#sprint-7). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-04**.
 
 ### sdd-create-skill
 
-Authoring skill. [Skill-13](../product-backlog.md#pb-87). [ADR-074](../adr/ADR-074-sdd-create-skill.md), [ADR-092](../adr/ADR-092-pack-authoring-skill-sdd-prefix.md). Not a practices job.
+Authoring skill. [Skill-13](product-backlog.md#L115). [ADR-074](../adr/ADR-074-sdd-create-skill.md), [ADR-092](../adr/ADR-092-pack-authoring-skill-sdd-prefix.md). Not a practices job.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-create-skill/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-create-skill/SKILL.md` |
 | After install | `{client_root}/skills/sdd-create-skill/SKILL.md` |
 
 The skill writes another skill only in `{client_root}/{skills_dir}/<name>/`. `skills_dir` comes from `constants.json`. One confirm covers every file in that folder. When `constants.json` or `skills_dir` cannot be read, it stops without writing. A new key in the `constants.json` `skills` object is a second confirm. It does not write production code. It does not ship `skill-creator`. The written skill defaults to capabilities, knowledge, limits, and anti-patterns; a numbered procedure is only for a user-confirmed fragile job ([TRUE AGENT](#true-agent)).
 
 ### sdd-build-agent
 
-Authoring skill for an agent file. [Skill-15](../product-backlog.md#pb-93). Not a practices job. It follows [TRUE AGENT](#true-agent).
+Authoring skill for an agent file. [Skill-15](product-backlog.md#L126). Not a practices job. It follows [TRUE AGENT](#true-agent).
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-build-agent/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-build-agent/SKILL.md` |
 | After install | `{client_root}/skills/sdd-build-agent/SKILL.md` |
 
 The skill writes one agent file at `{client_root}/{agents_dir}/<name>.md`. `agents_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `agents_dir` cannot be read, it stops without writing. It does not create a workspace agent file, name a tool folder, or start a second runtime. The agent file states capabilities and limits. It does not link to this design, and it does not get a Skills-table row. A constants row for `sdd-build-agent` itself is a separate confirm.
 
 ### sdd-create-rule
 
-Authoring skill for a pack rule file. [Skill-16](../product-backlog.md#pb-94). [ADR-092](../adr/ADR-092-pack-authoring-skill-sdd-prefix.md). Not a practices job.
+Authoring skill for a pack rule file. [Skill-16](product-backlog.md#L130). [ADR-092](../adr/ADR-092-pack-authoring-skill-sdd-prefix.md). Not a practices job.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/sdd-create-rule/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/sdd-create-rule/SKILL.md` |
 | After install | `{client_root}/skills/sdd-create-rule/SKILL.md` |
 
 The skill writes one rule file at `{client_root}/{rules_dir}/<name>.mdc`. `rules_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `rules_dir` cannot be read, it stops without writing. A new key in the `constants.json` `rules` object is a second confirm. Framework-bound rule file names use an `sdd-` prefix per [ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md).
 
 ### improve-prompt
 
-Utility skill for prompt quality. [Skill-14](../product-backlog.md#pb-89). [ADR-099](../adr/ADR-099-improve-prompt-skill-name.md). Not a practices job. No `constants.json` key.
+Utility skill for prompt quality. [Skill-14](product-backlog.md#L120). [ADR-099](../adr/ADR-099-improve-prompt-skill-name.md). Not a practices job. No `constants.json` key.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/improve-prompt/SKILL.md` |
-| Sibling reference | `specs/framework/seeds/skills/improve-prompt/examples.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/improve-prompt/SKILL.md` |
+| Sibling reference | `pack.framework.sdd.works/skills/improve-prompt/examples.md` |
 | After install | `{client_root}/{skills_dir}/improve-prompt/SKILL.md` |
 
 The skill diagnoses a draft prompt and outputs a ready-to-paste improved version. It follows [TRUE AGENT](#true-agent). It does not write project files, run commands, or implement the user's task. It does not recommend a fixed catalog of slash commands, ECC components, or vendor models. Optional harness hints name only skill folders that exist under `{client_root}/{skills_dir}/`. Wording checks use `friendly-language.mdc` on the client root. After pack update, remove stale `{client_root}/{skills_dir}/prompt-optimizer/` when present. User confirmed usable 2026-10-05 ([feature-46](../sprint-backlog.md#sprint-7)). Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-13**.
 
 ### frontend-designer
 
-Domain skill for distinctive UI direction. [Skill-17](../product-backlog.md#pb-113). [ADR-105](../adr/ADR-105-frontend-designer-pack-skill-name.md). Not a practices job. No `constants.json` key. Upstream craft may refresh from [anthropics/skills frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design).
+Domain skill for distinctive UI direction. [Skill-17](product-backlog.md#L134). [ADR-105](../adr/ADR-105-frontend-designer-pack-skill-name.md). Not a practices job. No `constants.json` key. Upstream craft may refresh from [anthropics/skills frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design).
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/frontend-designer/SKILL.md` |
-| License | `specs/framework/seeds/skills/frontend-designer/LICENSE.txt` (Apache 2.0) |
+| Authoring seed | `pack.framework.sdd.works/skills/frontend-designer/SKILL.md` |
+| License | `pack.framework.sdd.works/skills/frontend-designer/LICENSE.txt` (Apache 2.0) |
 | After install | `{client_root}/{skills_dir}/frontend-designer/SKILL.md` |
 
-The skill grounds design in the subject, lists AI-default tells to avoid, and outputs a **Design plan** before production UI code. `{client_root}` in the seed names where **rules** install, not where `{stem}-design.md` or mock files live. Production UI follows **i18n-support**, **common-test-strategy**, and **friendly-language** when those rules exist under `{client_root}/rules/`. Browser checks use **testing-expert** when that skill is installed. **writing-style** is retired. Limits forbid SDD process file writes unless the user asks. [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) may load this skill for UI SBIs. Sprint 7 [feature-61](../sprint-backlog.md#sprint-7) tracks the seed; close after **CE-SKILL-15** and user confirm. After pack update, remove stale `{client_root}/{skills_dir}/frontend-design/` and `sdd-frontend-design/` when present.
+The skill grounds design in the subject, lists AI-default tells to avoid, and outputs a **Design plan** before production UI code. `{client_root}` in the seed names where **rules** install, not where `{stem}-design.md` or mock files live. Production UI follows **i18n-support**, **common-test-strategy**, and **friendly-language** when those rules exist under `{client_root}/rules/`. Browser checks use **testing-expert** when that skill is installed. **writing-style** is retired. Limits forbid SDD process file writes unless the user asks. [sdd-spec-to-build](../../pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md) may load this skill for UI SBIs. Sprint 7 [feature-61](../sprint-backlog.md#sprint-7) tracks the seed; close after **CE-SKILL-15** and user confirm. After pack update, remove stale `{client_root}/{skills_dir}/frontend-design/` and `sdd-frontend-design/` when present.
 
 ### frontend-developer
 
-Domain skill for UI implementation in the project stack. [Skill-19](../product-backlog.md#pb-115). [ADR-103](../adr/ADR-103-frontend-developer-pack-skill-name.md). Not a practices job. No `constants.json` key.
+Domain skill for UI implementation in the project stack. [Skill-19](product-backlog.md#L150). [ADR-103](../adr/ADR-103-frontend-developer-pack-skill-name.md). Not a practices job. No `constants.json` key.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/frontend-developer/SKILL.md` |
-| Optional Next reference | `specs/framework/seeds/skills/frontend-developer/next-cache-components.md` (load only when Cache Components is enabled in `next.config`) |
+| Authoring seed | `pack.framework.sdd.works/skills/frontend-developer/SKILL.md` |
+| Optional Next reference | `pack.framework.sdd.works/skills/frontend-developer/next-cache-components.md` (load only when Cache Components is enabled in `next.config`) |
 | After install | `{client_root}/{skills_dir}/frontend-developer/SKILL.md` |
 
-The skill implements components, pages, data loading, forms, accessibility, and performance in the stack the project already uses. It follows [TRUE AGENT](#true-agent). Visual direction stays on **frontend-designer**. Test strategy and runs stay on **testing-expert**. Production work follows **i18n-support**, **common-test-strategy**, and **friendly-language** when those rules exist under `{client_root}/rules/`. Limits forbid SDD process file writes unless the user asks. [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) may load this skill for UI implementation on an SBI. Sprint 7 [feature-64](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-21** and user confirm.
+The skill implements components, pages, data loading, forms, accessibility, and performance in the stack the project already uses. It follows [TRUE AGENT](#true-agent). Visual direction stays on **frontend-designer**. Test strategy and runs stay on **testing-expert**. Production work follows **i18n-support**, **common-test-strategy**, and **friendly-language** when those rules exist under `{client_root}/rules/`. Limits forbid SDD process file writes unless the user asks. [sdd-spec-to-build](../../pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md) may load this skill for UI implementation on an SBI. Sprint 7 [feature-64](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-21** and user confirm.
 
 ### testing-expert
 
-Domain skill for strategy, test creation, pyramid runs, and a short report. [Skill-18](../product-backlog.md#pb-114). [ADR-102](../adr/ADR-102-testing-expert-pack-skill-name.md). Not a practices job. No `constants.json` key.
+Domain skill for strategy, test creation, pyramid runs, and a short report. [Skill-18](product-backlog.md#L140). [ADR-102](../adr/ADR-102-testing-expert-pack-skill-name.md). Not a practices job. No `constants.json` key.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/testing-expert/SKILL.md` |
-| Browser facts | `specs/framework/seeds/skills/testing-expert/browser.md` |
-| Report templates | `specs/framework/seeds/skills/testing-expert/templates/test-report.md`, `specs/framework/seeds/skills/testing-expert/templates/test-report-failures.md` |
-| Server helper | `specs/framework/seeds/skills/testing-expert/scripts/with_server.py` and `examples/` |
-| License | `specs/framework/seeds/skills/testing-expert/LICENSE.txt` (Apache 2.0) |
+| Authoring seed | `pack.framework.sdd.works/skills/testing-expert/SKILL.md` |
+| Browser facts | `pack.framework.sdd.works/skills/testing-expert/browser.md` |
+| Report templates | `pack.framework.sdd.works/skills/testing-expert/templates/test-report.md`, `pack.framework.sdd.works/skills/testing-expert/templates/test-report-failures.md` |
+| Server helper | `pack.framework.sdd.works/skills/testing-expert/scripts/with_server.py` and `examples/` |
+| License | `pack.framework.sdd.works/skills/testing-expert/LICENSE.txt` (Apache 2.0) |
 | After install | `{client_root}/{skills_dir}/testing-expert/SKILL.md` |
 
-The skill does five jobs for one feature: strategy, tools, create, run, and report. It follows [TRUE AGENT](#true-agent): capabilities, knowledge, and limits. The host picks the order. Browser facts load from `browser.md` only when the work includes a web UI. The skill does not load `webapp-testing` or another testing skill. It confirms before writing `test-strategy.md` or new test files. The chat report is one table and one count line. A file report uses the templates only when the user asks for a saved report. It does not require a sprint backlog, `artifacts-map.json`, or process files. [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) may load this skill when an SBI needs tests. Sprint 7 [feature-62](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-20** and user confirm. After pack update, remove a stale `{client_root}/{skills_dir}/sdd-tester/` folder when present.
+The skill does five jobs for one feature: strategy, tools, create, run, and report. It follows [TRUE AGENT](#true-agent): capabilities, knowledge, and limits. The host picks the order. Browser facts load from `browser.md` only when the work includes a web UI. The skill does not load `webapp-testing` or another testing skill. It confirms before writing `test-strategy.md` or new test files. The chat report is one table and one count line. A file report uses the templates only when the user asks for a saved report. It does not require a sprint backlog, `artifacts-map.json`, or process files. [sdd-spec-to-build](../../pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md) may load this skill when an SBI needs tests. Sprint 7 [feature-62](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-20** and user confirm. After pack update, remove a stale `{client_root}/{skills_dir}/sdd-tester/` folder when present.
 
 ### fullstack-engineer
 
-Domain skill for one web feature across layers. [Skill-20](../product-backlog.md#pb-116). [ADR-104](../adr/ADR-104-fullstack-engineer-pack-skill-name.md). Not a practices job. No `constants.json` key.
+Domain skill for one web feature across layers. [Skill-20](product-backlog.md#L158). [ADR-104](../adr/ADR-104-fullstack-engineer-pack-skill-name.md). Not a practices job. No `constants.json` key.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/fullstack-engineer/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/fullstack-engineer/SKILL.md` |
 | After install | `{client_root}/{skills_dir}/fullstack-engineer/SKILL.md` |
 
-The skill builds one feature across the screen, the API, the data model, and auth in the stack the project already uses. It reads the stack from project files and does not default to a pinned stack. It follows [TRUE AGENT](#true-agent). Production work follows **i18n-support**, **common-test-strategy**, and **friendly-language** when those rules exist under `{client_root}/rules/`. Visual direction stays on **frontend-designer**, UI-only work on **frontend-developer**, and test strategy and reports on **testing-expert**. Limits forbid SDD process file writes unless the user asks. [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) may load this skill for a multi-layer SBI. Sprint 7 [feature-65](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-16** and user confirm. After pack update, remove a stale `{client_root}/{skills_dir}/fullstack-developer/` folder when present.
+The skill builds one feature across the screen, the API, the data model, and auth in the stack the project already uses. It reads the stack from project files and does not default to a pinned stack. It follows [TRUE AGENT](#true-agent). Production work follows **i18n-support**, **common-test-strategy**, and **friendly-language** when those rules exist under `{client_root}/rules/`. Visual direction stays on **frontend-designer**, UI-only work on **frontend-developer**, and test strategy and reports on **testing-expert**. Limits forbid SDD process file writes unless the user asks. [sdd-spec-to-build](../../pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md) may load this skill for a multi-layer SBI. Sprint 7 [feature-65](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-16** and user confirm. After pack update, remove a stale `{client_root}/{skills_dir}/fullstack-developer/` folder when present.
 
 ### ai-architect
 
-Domain skill for AI and ML system design. [Skill-21](../product-backlog.md#pb-117). Not a practices job. No `constants.json` key.
+Domain skill for AI and ML system design. [Skill-21](product-backlog.md#L165). Not a practices job. No `constants.json` key.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/ai-architect/SKILL.md` |
-| Terms reference | `specs/framework/seeds/skills/ai-architect/terms.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/ai-architect/SKILL.md` |
+| Terms reference | `pack.framework.sdd.works/skills/ai-architect/terms.md` |
 | After install | `{client_root}/{skills_dir}/ai-architect/SKILL.md` |
 
 The skill recommends one AI or ML architecture from the facts in the thread and the project. It follows [TRUE AGENT](#true-agent). It names the lightest style that meets the constraints: wrap a model API, retrieval, a fixed workflow, or an agent, with fine-tuning last. It compares build and buy when more than one vendor fits, adds enterprise controls only when scale, tenancy, or regulation requires them, and states an operating design without running an incident.
@@ -1252,26 +1252,26 @@ It is advisory by default. It writes a design file only after the user confirms 
 
 ### mcp-expert
 
-Domain skill for MCP (Model Context Protocol) servers. [Skill-22](../product-backlog.md#pb-118). Not a practices job. No `constants.json` key.
+Domain skill for MCP (Model Context Protocol) servers. [Skill-22](product-backlog.md#L174). Not a practices job. No `constants.json` key.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/mcp-expert/SKILL.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/mcp-expert/SKILL.md` |
 | After install | `{client_root}/{skills_dir}/mcp-expert/SKILL.md` |
 
 The skill searches the official MCP Registry before it recommends a new server, then recommends one path: reuse, configure, or build. An **MCP solution** section is the proposal, and code waits for confirm. A **Pattern menu** names one tool per action, search plus execute, elicitation, an MCP App, and an MCPB bundle, and each name is checked against the current specification. A **Transport choice** section covers stdio, Streamable HTTP, and SSE for legacy clients. The skill also designs tools, writes client config, drafts registry publish metadata, and debugs a failed connection. Limits cover a registry search before a new server, no invented popularity counts, secrets out of tool results, untrusted tool arguments, model-safe errors, confirm before a destructive or paid tool, and stdout reserved for protocol messages in a stdio server. Limits forbid SDD process file writes unless the user asks. Sprint 7 [feature-67](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-18** and user confirm.
 
 ### rag-expert
 
-Domain skill for RAG (retrieval-augmented generation). [Skill-23](../product-backlog.md#pb-119). Not a practices job. No `constants.json` key.
+Domain skill for RAG (retrieval-augmented generation). [Skill-23](product-backlog.md#L182). Not a practices job. No `constants.json` key.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/skills/rag-expert/SKILL.md` |
-| Pattern reference | `specs/framework/seeds/skills/rag-expert/reference.md` |
+| Authoring seed | `pack.framework.sdd.works/skills/rag-expert/SKILL.md` |
+| Pattern reference | `pack.framework.sdd.works/skills/rag-expert/reference.md` |
 | After install | `{client_root}/{skills_dir}/rag-expert/SKILL.md` |
 
-The skill designs and builds ingestion, chunking with metadata, embeddings, the vector store, dense, sparse, or hybrid retrieval, reranking, and answers that cite sources. Retrieval mode choice and evaluation metrics load from [`reference.md`](./seeds/skills/rag-expert/reference.md) when the thread needs them. Limits cover provider keys by name only, no fabricated passages on a production path, access rights at retrieval time, confirm before sending private documents to an external provider, and one embedding model per index. Limits forbid SDD process file writes unless the user asks. Sprint 7 [feature-68](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-19** and user confirm.
+The skill designs and builds ingestion, chunking with metadata, embeddings, the vector store, dense, sparse, or hybrid retrieval, reranking, and answers that cite sources. Retrieval mode choice and evaluation metrics load from [`reference.md`](../../pack.framework.sdd.works/skills/rag-expert/reference.md) when the thread needs them. Limits cover provider keys by name only, no fabricated passages on a production path, access rights at retrieval time, confirm before sending private documents to an external provider, and one embedding model per index. Limits forbid SDD process file writes unless the user asks. Sprint 7 [feature-68](../sprint-backlog.md#sprint-7) tracks the seed. Close after **CE-SKILL-19** and user confirm.
 
 ### Other skills
 
@@ -1279,25 +1279,141 @@ Index for quick lookup. Each row above in [Pack skill seed catalog](#pack-skill-
 
 | Skill | Seed |
 | --- | --- |
-| `sdd-spec-to-build` | `specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md` (+ `readiness.md`) |
-| `sdd-plan-sprint` | `specs/framework/seeds/skills/sdd-plan-sprint/SKILL.md` |
-| `sdd-tracking` | `specs/framework/seeds/skills/sdd-tracking/SKILL.md` (not the status skill; [ADR-076](../adr/ADR-076-review-status-one-skill.md)) |
-| `sdd-update-project` | `specs/framework/seeds/skills/sdd-update-project/SKILL.md` |
-| `sdd-refine-backlog` | `specs/framework/seeds/skills/sdd-refine-backlog/SKILL.md` |
-| `sdd-update-specs` | `specs/framework/seeds/skills/sdd-update-specs/SKILL.md` |
-| `sdd-retrospective` | `specs/framework/seeds/skills/sdd-retrospective/SKILL.md` |
+| `sdd-spec-to-build` | `pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md` (+ `readiness.md`) |
+| `sdd-plan-sprint` | `pack.framework.sdd.works/skills/sdd-plan-sprint/SKILL.md` |
+| `sdd-tracking` | `pack.framework.sdd.works/skills/sdd-tracking/SKILL.md` (not the status skill; [ADR-076](../adr/ADR-076-review-status-one-skill.md)) |
+| `sdd-update-project` | `pack.framework.sdd.works/skills/sdd-update-project/SKILL.md` |
+| `sdd-refine-backlog` | `pack.framework.sdd.works/skills/sdd-refine-backlog/SKILL.md` |
+| `sdd-update-specs` | `pack.framework.sdd.works/skills/sdd-update-specs/SKILL.md` |
+| `sdd-retrospective` | `pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md` |
 | `sdd-close-sprint` | Retired ([ADR-076](../adr/ADR-076-review-status-one-skill.md)). |
-| `atdd-expert` | `specs/framework/seeds/skills/atdd-expert/SKILL.md` |
-| `improve-prompt` | `specs/framework/seeds/skills/improve-prompt/SKILL.md` ([ADR-099](../adr/ADR-099-improve-prompt-skill-name.md)) |
-| `frontend-designer` | `specs/framework/seeds/skills/frontend-designer/SKILL.md` ([ADR-105](../adr/ADR-105-frontend-designer-pack-skill-name.md)) |
-| `frontend-developer` | `specs/framework/seeds/skills/frontend-developer/SKILL.md` ([ADR-103](../adr/ADR-103-frontend-developer-pack-skill-name.md)) |
-| `testing-expert` | `specs/framework/seeds/skills/testing-expert/SKILL.md` ([ADR-102](../adr/ADR-102-testing-expert-pack-skill-name.md)) |
-| `fullstack-engineer` | `specs/framework/seeds/skills/fullstack-engineer/SKILL.md` ([ADR-104](../adr/ADR-104-fullstack-engineer-pack-skill-name.md)) |
-| `ai-architect` | `specs/framework/seeds/skills/ai-architect/SKILL.md` |
-| `mcp-expert` | `specs/framework/seeds/skills/mcp-expert/SKILL.md` |
-| `rag-expert` | `specs/framework/seeds/skills/rag-expert/SKILL.md` (+ `reference.md`) |
+| `atdd-expert` | `pack.framework.sdd.works/skills/atdd-expert/SKILL.md` |
+| `improve-prompt` | `pack.framework.sdd.works/skills/improve-prompt/SKILL.md` ([ADR-099](../adr/ADR-099-improve-prompt-skill-name.md)) |
+| `frontend-designer` | `pack.framework.sdd.works/skills/frontend-designer/SKILL.md` ([ADR-105](../adr/ADR-105-frontend-designer-pack-skill-name.md)) |
+| `frontend-developer` | `pack.framework.sdd.works/skills/frontend-developer/SKILL.md` ([ADR-103](../adr/ADR-103-frontend-developer-pack-skill-name.md)) |
+| `testing-expert` | `pack.framework.sdd.works/skills/testing-expert/SKILL.md` ([ADR-102](../adr/ADR-102-testing-expert-pack-skill-name.md)) |
+| `fullstack-engineer` | `pack.framework.sdd.works/skills/fullstack-engineer/SKILL.md` ([ADR-104](../adr/ADR-104-fullstack-engineer-pack-skill-name.md)) |
+| `ai-architect` | `pack.framework.sdd.works/skills/ai-architect/SKILL.md` |
+| `mcp-expert` | `pack.framework.sdd.works/skills/mcp-expert/SKILL.md` |
+| `rag-expert` | `pack.framework.sdd.works/skills/rag-expert/SKILL.md` (+ `reference.md`) |
 
 Retired authoring folder: `frontend-design` (use `frontend-designer`). Not copied on pack update.
+
+## lite-install-manifest
+
+Pack allow-list for lite copy. Basename [ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md). [Spec-seeds-15](product-backlog.md#L442), [feature-53](../sprint-backlog.md#sprint-8) **Done** (2026-10-07). Stories: [`framework-stories.md`](./framework-stories.md#lite-install-manifest). Tests: [`framework-tests.md`](./framework-tests.md#lite-install-manifest).
+
+[feature-53](../sprint-backlog.md#sprint-8) ships the authoring seed and CI validation in this product repo. It does not add an HTTP route, write `.sdd-installed.json`, or change portal sync. Those stay on [Web-portal-17](product-backlog.md#L446) and [MCP-07](product-backlog.md#L325). Copy the seed to the pack repo root at go-live ([Go-live](#go-live)).
+
+| Role | Path |
+| --- | --- |
+| Authoring seed | `pack.framework.sdd.works/lite-pack.allowlist.json` |
+| Pack repo | Repo root `lite-pack.allowlist.json` |
+| Validator (product repo) | `src/core/seeds/lite-install-manifest.ts` (`LITE_PACK_ALLOWLIST_FILENAME`) |
+| Automated tests | `src/core/seeds/lite-install-manifest.test.ts` (**CE-LITE-01**, **CE-LITE-02**) |
+
+Paths inside the JSON are relative to the pack root. The same relative path exists under `pack.framework.sdd.works/` in this workspace.
+
+`skills` and `rules` are the only top-level keys. Both are arrays of strings. Entries are sorted. The shipped file lists:
+
+**skills**
+
+- `skills/ai-architect/SKILL.md`
+- `skills/atdd-expert/SKILL.md`
+- `skills/frontend-designer/SKILL.md`
+- `skills/frontend-developer/SKILL.md`
+- `skills/fullstack-engineer/SKILL.md`
+- `skills/improve-prompt/SKILL.md`
+- `skills/mcp-expert/SKILL.md`
+- `skills/rag-expert/SKILL.md`
+- `skills/sdd-build-agent/SKILL.md`
+- `skills/sdd-create-rule/SKILL.md`
+- `skills/sdd-create-skill/SKILL.md`
+- `skills/testing-expert/SKILL.md`
+
+**rules**
+
+- `rules/friendly-language.mdc`
+
+Skills whose folder starts with `sdd-` stay off the list except `sdd-build-agent`, `sdd-create-rule`, and `sdd-create-skill`. Rules whose file name starts with `sdd-` stay off the list. A path that is missing on disk, or that does not start with `skills/` or `rules/`, fails review (**CE-LITE-02**).
+
+`validateLiteInstallManifest(input, options)` returns `{ ok: true }` or `{ ok: false, errors: string[] }`. Options:
+
+| Option | Role |
+| --- | --- |
+| `seedRoot` | Directory that contains `skills/` and `rules/` seeds (authoring: `pack.framework.sdd.works`) |
+| `checkFilesExist` | When true, each listed path must be a file under `seedRoot` |
+| `requireExactLists` | When true, `skills` and `rules` must equal `EXPECTED_LITE_SKILLS` and `EXPECTED_LITE_RULES` in the same module |
+
+[Web-portal-17](product-backlog.md#L446) calls the same validator on the sync unpack (`checkFilesExist: true`, `requireExactLists: false`). Route contract: [`app-design.md`](../admin-portal/app-design.md) Lite install file links (feature-55).
+
+## instructions-tabs-config
+
+Instructions page tab order and types ([Spec-seeds-16](product-backlog.md#L277), [feature-58](../sprint-backlog.md#sprint-8)). Stories: [`framework-stories.md`](./framework-stories.md#instructions-tabs-config). Tests: [`framework-tests.md`](./framework-tests.md#instructions-tabs-config).
+
+| Artifact | Path |
+| --- | --- |
+| Bundled config (authoring) | [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) |
+| Pack path after sync | `{unpacked}/content/.instructions-tabs.json` |
+| Operator doc | [`src/content/.admin-note.md`](../../src/content/.admin-note.md) |
+| Validator (feature-58) | [`validateInstructionsTabsConfig`](../../src/core/seeds/instructions-tabs-config.ts) |
+| Resolver + API (feature-59) | [`resolveInstructionsTabs`](../../src/lib/instructions-tabs.ts), [`GET /api/sdd/instructions-tabs`](../../src/app/api/sdd/instructions-tabs/route.ts) |
+| UI (feature-60) | `InstructionsPage` dynamic tab list; `CODE_TAB_REGISTRY` with `setup` panel |
+
+**Validator contract (feature-58):** `validateInstructionsTabsConfig(document, { contentRoot, codeAllowlist })`. `contentRoot` is the sync unpack root (the directory that contains `content/`). Each `paths.{locale}` value joins to `contentRoot` for safety and optional file-existence checks. CE-TABS-01 uses `pack.framework.sdd.works` as `contentRoot` because the bundled JSON lives at `src/content/.instructions-tabs.json` but path strings stay pack-shaped (`content/features/…`). At runtime the resolver reads markdown from cache under `contentRoot`, then package fallback under `src/content/` with the same path mapping as Features ([ADR-071](../adr/ADR-071-portal-content-paths.md)).
+
+**API contract (feature-59):** Top-level `source` is `cache` or `bundled` for which config file validated. Do not use `configSource`. Each content tab may set `contentSource` `cache` or `package` for its markdown body, plus `sourceLocale` when locale fallback applies.
+
+Config resolution: valid cache file first; missing or invalid cache uses bundled JSON only. Default selected tab when URL has no `?tab=` is always Setup. Full behavior is in [`app-design.md`](../admin-portal/app-design.md).
+
+## lite-install-receipt
+
+Local receipt after a successful lite copy. [Spec-seeds-18](product-backlog.md#L444), [feature-57](../sprint-backlog.md#sprint-8). Stories: [`framework-stories.md`](./framework-stories.md#lite-install-receipt). Tests: [`framework-tests.md`](./framework-tests.md#lite-install-receipt).
+
+The receipt is `{client_root}/.sdd-lite-installed.json`. It is not `.sdd-installed.json`. It has no `pack_complete` field. Full MCP install keeps writing `.sdd-installed.json` only.
+
+The server file list comes from [Web-portal-17](product-backlog.md#L441) (same paths as [lite-install-manifest](#lite-install-manifest)). The agent prompt that tells a person to run these steps is [Web-portal-18](product-backlog.md#L450) Part 1. This section is the rules those steps follow.
+
+| Role | Path |
+| --- | --- |
+| Authoring example | `pack.framework.sdd.works/.sdd-lite-installed.example.json` |
+| On the client | `{client_root}/.sdd-lite-installed.json` |
+| Rules (product repo) | `src/core/seeds/lite-install-receipt.ts` |
+| Automated tests | `src/core/seeds/lite-install-receipt.test.ts` (**CE-LITE-03**, **CE-LITE-04**) |
+
+### Receipt shape
+
+Top-level keys, and no others:
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `schema_version` | number | `1` for this release |
+| `package_version` | string | Pack version from the server list response |
+| `package_commit` | string | Pack commit from the server list response |
+| `installed_at` | string | ISO-8601 time written with the receipt |
+| `files` | string[] | Every relative path copied, sorted, same strings as the manifest `skills` and `rules` arrays combined |
+
+`files` entries start with `skills/` or `rules/`. The receipt does not list agents, workflows, or templates.
+
+### Merge
+
+Inputs: the previous receipt (or none), the new server list (`package_version`, `package_commit`, `files`), and which of those paths exist on disk under `{client_root}`.
+
+| Step | Result |
+| --- | --- |
+| 1. Compare | When `package_version`, `package_commit`, and every path in `files` already match the receipt and those files exist on disk, stop. No download and no delete. |
+| 2. Download | Fetch every path in the new `files` list into a staging area before any delete. |
+| 3. Delete | After every new file is staged, delete a file under `{client_root}` only when its path is in the previous receipt `files` and absent from the new `files`. |
+| 4. Place | Copy staged files onto `{client_root}` at those relative paths. |
+| 5. Write receipt | Write `.sdd-lite-installed.json` only when every path in the new `files` list is a file on disk. The new receipt lists that full set plus the new version and commit. |
+
+Failure:
+
+- A first install that does not place every new path writes no receipt.
+- A later install that does not place every new path leaves the previous receipt unchanged.
+- A partial copy does not write a new receipt.
+
+`planLiteInstallReceipt(previous, next)` returns `already_up_to_date` or `{ downloads, deletes }` where `deletes` is previous paths minus next paths. `validateLiteInstallReceipt` rejects a document that has `pack_complete`, extra keys, or a `files` entry outside `skills/` and `rules/`.
 
 ## templates
 
@@ -1309,7 +1425,7 @@ Lookup file for pack path names, the instructions URL, skill keys, and rule keys
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/templates/constants.json` (beside the locale folders, not inside one) |
+| Authoring seed | `pack.framework.sdd.works/templates/constants.json` (beside the locale folders, not inside one) |
 | After install | `{client_root}/templates/framework.sdd.works/constants.json` |
 
 Do not copy `constants.json` into the workspace, into `{workspace}/specs`, or into the artifacts root. It has no row in `artifacts-map.json`.
@@ -1320,7 +1436,7 @@ Names and meaning. It does not take what, how, and when from practices.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/templates/{EN\|HanS\|HanT}/scrum-in-sdd.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/{EN\|HanS\|HanT}/scrum-in-sdd.md` |
 | After install | `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md` |
 
 It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads it from the client-root locale folder.
@@ -1331,7 +1447,7 @@ Pack meaning for harness engineering, XP (Extreme Programming), BDD (Behavior-Dr
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/templates/EN/coach-knowledge.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/coach-knowledge.md` |
 | After install | `{client_root}/templates/framework.sdd.works/{locale}/coach-knowledge.md` |
 
 It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads one heading from the client-root locale folder. HanS and HanT bodies are not in this change.
@@ -1342,21 +1458,21 @@ What, how, and when. It does not redefine guide terms.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `specs/framework/seeds/templates/{EN\|HanS\|HanT}/sdd-scrum-practices.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/{EN\|HanS\|HanT}/sdd-scrum-practices.md` |
 | After install | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` |
 
 It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads it from the client-root locale folder.
 
 ### artifacts-map.json
 
-Path configuration for this project. It is an SDD Core artifact with `scrum-in-sdd.md` and `sdd-scrum-practices.md`. It is not a Framework process Markdown artifact and not a copied template seed. The JSON shape is in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md). Module `files` lists are authoritative; `folder` is optional ([ADR-100](../adr/ADR-100-optional-module-folder.md)).
+Path configuration for this project. It is an SDD Core artifact with `scrum-in-sdd.md` and `sdd-scrum-practices.md`. It is not a Framework process Markdown artifact and not a copied template seed. The JSON shape is in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md). Module `files` lists are authoritative; `folder` is optional ([ADR-100](../adr/ADR-100-optional-module-folder.md)).
 
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/artifacts-map.json` |
-| Templates and example | [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson) |
+| Templates and example | [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#artifacts-mapjson) |
 
-There is no template seed. [ADR-080](../adr/ADR-080-no-artifacts-map-seed.md). `sdd-update-project` writes the project file from the configuration in that section. It does not copy the Pokymon example. [Spec-seeds-04](../product-backlog.md#pb-35) and Sprint 4 feature-03 are retired.
+There is no template seed. [ADR-080](../adr/ADR-080-no-artifacts-map-seed.md). `sdd-update-project` writes the project file from the configuration in that section. It does not copy the Pokymon example. [Spec-seeds-04](product-backlog.md#L238) and Sprint 4 feature-03 are retired.
 
 Keep the name `artifacts-map.json`. Do not rename it to a dotfile. Do not put the only copy inside `artifacts_root`. This repo's live file is `{workspace}/artifacts-map.json`.
 
@@ -1385,24 +1501,24 @@ Product requirements and acceptance for the project. The seed is a placeholder t
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/product-backlog.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/product-backlog.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/product-backlog.md` |
 
 Columns, in this order: `#`, Component, PBI Code, Description, Size, Related, Sprint, Status.
 
-The column name stays Component. There is no DoD column. Body section order is Product overview, Definition of Done, Requirements, Product Backlog, Change record. The Definition of Done section lists additional PBI checks on top of `sdd-dod.mdc`; standard close checks stay in the rule. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. Requirements link `{pbi code}` to `#pb-N` on the table row. The table links `{pbi code}` to `#req-pb-N` on the Requirements line. `#pb-N` stays on the PBI Code cell for sprint-backlog and `Related` links. Section rules are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
+The column name stays Component. There is no DoD column. Body section order is Product overview, Definition of Done, Requirements, Product Backlog, Change record. The Definition of Done section lists additional PBI checks on top of `sdd-dod.mdc`; standard close checks stay in the rule. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. Requirements carry one `#pb-N` anchor. The table links `{pbi code}` to `#pb-N` on the Requirements line. Same-file `Related` links use `#pb-N`. Cross-file links from `sprint-backlog.md` use `./product-backlog.md#L{line}` for that Requirements line. Section rules are in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
 
 ### sprint-backlog.md
 
-Sprint schedule and the SBI list. The seed is a placeholder template for a new project. It is not this repo's sprint backlog. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [sprint-backlog.md](./seeds/templates/EN/sdd-scrum-practices.md#sprint-backlogmd). After the last sprint section, [Unplanned PBIs](./seeds/templates/EN/sdd-scrum-practices.md#unplanned-pbis) lists PBIs with no sprint using the Product Backlog columns minus `Sprint`.
+Sprint schedule and the SBI list. The seed is a placeholder template for a new project. It is not this repo's sprint backlog. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#header). `Definition` links [sprint-backlog.md](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#sprint-backlogmd). After the last sprint section, [Unplanned PBIs](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#unplanned-pbis) lists PBIs with no sprint using the Product Backlog columns minus `Sprint`.
 
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/sprint-backlog.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/sprint-backlog.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/sprint-backlog.md` |
 
 #### Sprint item table
 
-The template and one note per placeholder are in [Sprint item table](./seeds/templates/EN/sdd-scrum-practices.md#sprint-item-table) in `sdd-scrum-practices.md`. This section keeps the facts that the stories and tests check.
+The template and one note per placeholder are in [Sprint item table](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#sprint-item-table) in `sdd-scrum-practices.md`. This section keeps the facts that the stories and tests check.
 
 Columns, in this order: `#`, Code, SBI, Parent PBI, Module/Type, Related specs, Status.
 
@@ -1416,7 +1532,7 @@ There is no DoD column. The Definition of Done section above the first sprint ta
 
 **Module/Type** is one cell: the module name, a slash, and the Type. Example: `Framework/Feature`.
 
-**Type** is one word. **Feature** and **Task** are defined in [Terminology in practice](./seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice).
+**Type** is one word. **Feature** and **Task** are defined in [Terminology in practice](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#terminology-in-practice).
 
 - **Research**: the item finds and records evidence before a feature is specified. It does not ship the feature.
 - **Bug-fix**: the item corrects a defect in something already delivered. It does not add a new capability.
@@ -1448,7 +1564,7 @@ The sprint line uses the same three words. `Done` only when every SBI in that sp
 
 #### Retrospective
 
-The template and one note per placeholder are in [Retrospective](./seeds/templates/EN/sdd-scrum-practices.md#retrospective) in `sdd-scrum-practices.md`.
+The template and one note per placeholder are in [Retrospective](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#retrospective) in `sdd-scrum-practices.md`.
 
 - Each sprint has one Retrospective section. A later retrospective in that sprint is appended to the same section. Do not open a second Retrospective heading.
 - Three labels, in this order: Learnings, Opportunities, and Future actions. A later retrospective adds a record under those same labels.
@@ -1466,9 +1582,9 @@ Current sprint projection. It is not a second sprint backlog. It is not the defe
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/status.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/status.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/status.md` |
 
-The title is `The latest status of [product name]`. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [status.md](./seeds/templates/EN/sdd-scrum-practices.md#statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings as a placeholder template. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+The title is `The latest status of [product name]`. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#header). `Definition` links [status.md](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings as a placeholder template. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
 
 ### changes-log.md
 
@@ -1477,9 +1593,9 @@ Conclusion record. An entry is written when a change is done. It states what cha
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/changes-log.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/changes-log.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/changes-log.md` |
 
-Section rules for the header and the entry are in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#changes-logmd). The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). The EN seed is a placeholder template with one sample entry block. It does not copy this repo's live change log.
+Section rules for the header and the entry are in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#changes-logmd). The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#header). The EN seed is a placeholder template with one sample entry block. It does not copy this repo's live change log.
 
 ### issues-log.md
 
@@ -1488,7 +1604,7 @@ Defect record. A row is opened when a defect is found and stays after it is clos
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/issues-log.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/issues-log.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/issues-log.md` |
 
 Two tables, in order.
 
@@ -1498,7 +1614,7 @@ Closed issues: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`,
 
 Priority is `Fatal`, `High`, `Medium`, or `Low`. `Id` does not change when a row is sorted or moves. `Description` is under 3 lines. `Close Check` is shorter. Use bullets when a sentence is not enough. `Related` is a spec id, a link, and the name. Both tables sort by component A to Z, then by time, oldest first. Open uses `Added time`. Closed uses `Closed time`. The date shape is `30/Sep/2026`.
 
-It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The file header uses [Header (process artifacts)](./seeds/templates/EN/sdd-scrum-practices.md#header). `Definition` links [issues-log.md](./seeds/templates/EN/sdd-scrum-practices.md#issues-logmd). The EN seed is a placeholder template with empty tables and an optional sample row in an HTML comment only. It does not copy this repo's live issues.
+It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#header). `Definition` links [issues-log.md](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#issues-logmd). The EN seed is a placeholder template with empty tables and an optional sample row in an HTML comment only. It does not copy this repo's live issues.
 
 ### architecture.md
 
@@ -1507,9 +1623,9 @@ Architecture starter for a new project. It is not this repo's architecture spec.
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/architecture.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/architecture.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/architecture.md` |
 
-Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) `#architecturemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-10](../product-backlog.md#pb-40), [feature-47](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#pb-69). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) `#architecturemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-10](product-backlog.md#L266), [feature-47](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](product-backlog.md#L304). Do not add a map row until the project file exists.
 
 ### {stem}-stories.md
 
@@ -1529,7 +1645,7 @@ Test spec for one module.
 
 The filename is `{stem}-tests.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-tests.md` is `{workspace}/specs/web-app/app-tests.md` when the stem is `app`.
 
-Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) `#module-name-testsmd`.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) `#module-name-testsmd`.
 
 ### release.md
 
@@ -1538,9 +1654,9 @@ Release starter for a new project: local startup and go-live order. It is not th
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/release.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/release.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/release.md` |
 
-Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) `#releasemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-11](../product-backlog.md#pb-41), [feature-48](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#pb-69). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) `#releasemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-11](product-backlog.md#L268), [feature-48](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](product-backlog.md#L304). Do not add a map row until the project file exists.
 
 ### test-strategy.md
 
@@ -1549,9 +1665,9 @@ Product-level test strategy starter for a new project. It extends **common-test-
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/test-strategy.md` |
-| Authoring seed | `specs/framework/seeds/templates/EN/test-strategy.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/test-strategy.md` |
 
-Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) test-strategy section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-13](../product-backlog.md#pb-90), [feature-50](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#pb-69). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) test-strategy section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-13](product-backlog.md#L274), [feature-50](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](product-backlog.md#L304). Do not add a map row until the project file exists.
 
 ### .secrets
 
@@ -1560,9 +1676,9 @@ Dotenv-shaped registry: secret **names**, empty values, `#` comments for rules a
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/.secrets` |
-| Authoring seed | `specs/framework/seeds/templates/EN/.secrets` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/.secrets` |
 
-Section rules: [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md) `.secrets` section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#pb-66), [feature-49](../sprint-backlog.md#sprint-7)). The seed includes bracketed sample keys (database, auth, third-party, deploy, bootstrap) and a `{SECRET_NAME}=` placeholder line. HanS and HanT bodies stay on [i18n-03](../product-backlog.md#pb-69). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) `.secrets` section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-12](product-backlog.md#L270), [feature-49](../sprint-backlog.md#sprint-7)). The seed includes bracketed sample keys (database, auth, third-party, deploy, bootstrap) and a `{SECRET_NAME}=` placeholder line. HanS and HanT bodies stay on [i18n-03](product-backlog.md#L304). Do not add a map row until the project file exists.
 
 ### adr/
 

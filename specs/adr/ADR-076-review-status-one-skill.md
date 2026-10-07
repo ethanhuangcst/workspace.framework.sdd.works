@@ -73,7 +73,7 @@ Accepted. Decisions 6 and 7 superseded by [ADR-083](./ADR-083-review-status-pick
 
 - This record replaces [ADR-073](./ADR-073-skill-get-status.md) decision 4 and decision 6.
 - This record replaces the second folder in [ADR-065](./ADR-065-skill-update-status.md).
-- [Skill-12](../product-backlog.md#pb-86) is the status skill.
+- [Skill-12](product-backlog.md#L113) is the status skill.
 - Skill-07 is retired.
 - Sprint 4 feature-24 holds the skill seed.
 - Sprint 4 feature-30 holds practices job 6.

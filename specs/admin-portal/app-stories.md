@@ -2,7 +2,7 @@
 
 Operator web app at `framework.sdd.works`. Stories and ACs for the **app**. MCP tools live in [`mcp-stories.md`](../mcp/mcp-stories.md). Design: [`app-design.md`](./app-design.md). Mockups: [`ui-mockup/`](./ui-mockup/). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Phase 2 upcoming (no Gherkin yet):** [Instructions page](../product-backlog.md#pb-7) will update the Instructions page for full-repo install, templates, process skills, and coach-ethan. Acceptance scenarios are written when that story starts.
+**Phase 2 upcoming (no Gherkin yet):** [Web-portal-06](product-backlog.md#L368) will update the Instructions page for full-repo install, templates, process skills, and coach-ethan. Acceptance scenarios are written when that story starts.
 
 **Locales:** `en` (default), `zh-Hans`, `zh-Hant`. User-facing copy is i18n keys. Tests assert keys / `data-testid` / roles, not one language’s sentences. Protocol ids (`framework.sdd.works`, tool names, locale codes) are not localized.
 
@@ -14,7 +14,7 @@ Operator web app at `framework.sdd.works`. Stories and ACs for the **app**. MCP 
 
 ## `sdd-admin-home` — Public home
 
-Public landing is the instructions guide. Labels and controls use i18n keys (`sdd-admin-i18n`). [Web-portal-09](../product-backlog.md#pb-76).
+Public landing is the instructions guide. Labels and controls use i18n keys (`sdd-admin-i18n`). [Web-portal-09](product-backlog.md#L403).
 
 ### User story 1 — `/` shows the instructions guide
 
@@ -751,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. Feature-16 ([Web-portal-12](../product-backlog.md#pb-81)) adds the Scrum in SDD tab. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is Get secret on Setup. AC18 is the guide tab before configurable tabs ([Web-portal-25](../product-backlog.md#pb-112), feature-60). Sprint 8 feature-55–57 cover install profile API, subset install prompt, and core install copy. Sprint 8 feature-58–60 cover pack `instructions-tabs.json`, the config API, and dynamic tab UI.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moves the form to Setup. Feature-16 ([Web-portal-12](product-backlog.md#L379)) adds the Scrum in SDD tab. AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped. AC17 is Get secret on Setup. AC18 is the guide tab before configurable tabs ([Web-portal-25](product-backlog.md#L394), feature-60). Sprint 8 feature-53 and feature-55–57 cover lite manifest seed, lite file links API, lite client receipt spec ([Spec-seeds-18](../product-backlog.md#L449)), lite install prompt, and lite one-line copy. Sprint 8 feature-58–60 cover pack `.instructions-tabs.json`, the config API, and dynamic tab UI.
 
 ### User story 1 — Read instructions
 
@@ -781,9 +781,9 @@ Scenario: Signed-in instructions open from the header
   Then the guide with key admin.guide.title is shown
 ```
 
-#### AC3 — feature-11, superseded by AC21 (feature-57)
+#### AC3 — feature-11, superseded by AC21 (feature-56 / Web-portal-18 Part 2)
 
-Shipped the one-line fetch for `GET /setup`. After feature-57, assert AC21 for the subset install URL.
+Shipped the one-line fetch for `GET /setup`. After [feature-56](../sprint-backlog.md#sprint-8), assert AC21 for the lite install URL (`GET /setup/install`).
 
 ```gherkin
 Scenario: Setup copy is the one-line fetch prompt
@@ -1022,122 +1022,156 @@ Scenario: Install omits the portal guide files
   And they are not listed in .sdd-installed.json
 ```
 
-### User story 2 — Install a skill and rule subset
+### User story 2 — Lite install of listed skills and rules
 
 **As a** visitor
-**I want** profile-based subset install instructions from the public site
-**So that** I can copy core skills and rules without the full pack
+**I want** lite install instructions from the public site
+**So that** I can copy listed pack skills and rules without the full MCP install
+
+[Web-portal-18](../product-backlog.md#L449) delivers two parts: **AC20** (public agent markdown at `GET /setup/install`) and **AC21** (Setup copy control for that URL). Sprint SBI [feature-56](../sprint-backlog.md#sprint-8) covers both; the PBI is **Done** only when AC20 and AC21 pass.
 
 #### AC19 — feature-55 / Web-portal-17
 
+Public HTTP only. No admin session. The list route matches [Spec-seeds-18](../product-backlog.md#L449) server list fields (`package_version`, `package_commit`, combined `files`).
+
 ```gherkin
-Scenario: Known install profile returns tarball paths and partial manifest
-  Given the sync cache unpack includes profiles/core-planning-loop.json
-  And that profile lists skill folder names and rule file names for subset install
-  When GET /api/sdd/install-profile/core-planning-loop is called
-  Then the response status is success
-  And the body includes packageUrl and package_commit from the cache only
-  And the body includes tarball-relative paths for each listed skill and rule
-  And the body includes a manifest template with pack_complete false
-  And the manifest template files.skills and files.rules list only those profile paths
+Scenario: Lite file list returns same-origin links for allow-listed paths
+  Given the sync cache latest unpack includes lite-pack.allowlist.json at the pack root
+  And that file lists valid sorted skill and rule paths that exist as files under the unpack
+  When GET /api/sdd/lite/files is called with no version query or with version=latest
+  Then the response status is 200
+  And the body includes package_version and package_commit from the sync manifest
+  And the body includes files as a sorted array of relative paths
+  And the body includes downloads as an array of objects with path and url
+  And each url is same-origin and targets GET /api/sdd/lite/file with that path encoded
+  And downloads lists exactly the paths in files and no other paths
   And the handler does not call GitHub at request time
 
-Scenario: Unknown install profile returns structured error
-  Given the sync cache unpack exists
-  When GET /api/sdd/install-profile/does-not-exist is called
-  Then the response is a structured error
-  And the response does not include packageUrl
-```
-
-#### AC20 — feature-56 / Web-portal-18
-
-```gherkin
-Scenario: Default subset install prompt is public without MCP tools
-  When GET /setup/install is called without query params
+Scenario: Lite file download serves unpack bytes for one allow-listed path
+  Given GET /api/sdd/lite/files returned a url for skills/testing-expert/SKILL.md
+  When GET /api/sdd/lite/file is called with that path query
   Then the response status is 200
-  And the body matches public/agent-setup/install-prompt.md
-  And the body authorizes download and selective extract only
-  And the body does not instruct calling sdd_install_framework
-  And the body instructs writing .sdd-installed.json last
+  And the body bytes match the file under the sync cache unpack at that relative path
 
-Scenario: Profile query selects install profile manifest
-  Given profiles/core-planning-loop.json exists in the sync cache
-  When GET /setup/install?profile=core-planning-loop is called
-  Then the response references profile id core-planning-loop
-  And the response includes extract paths limited to that profile
-  And the response manifest template has pack_complete false
+Scenario: Path outside the lite allow-list is rejected on download
+  Given the sync cache unpack includes lite-pack.allowlist.json
+  When GET /api/sdd/lite/file is called with path agents/ethan.md
+  Then the response is a structured error
+  And the response status is not 200
+
+Scenario: Path traversal or absolute path is rejected on download
+  When GET /api/sdd/lite/file is called with path ../package.json
+  Then the response is a structured error
+  And the response status is not 200
+
+Scenario: Missing lite manifest returns structured error
+  Given the sync cache latest unpack exists without lite-pack.allowlist.json
+  When GET /api/sdd/lite/files is called
+  Then the response is a structured error with code lite_manifest_missing
+  And the response does not include download links for pack paths
+
+Scenario: Invalid lite manifest returns structured error
+  Given lite-pack.allowlist.json is present but fails validateLiteInstallManifest against the unpack
+  When GET /api/sdd/lite/files is called
+  Then the response is a structured error with code lite_manifest_invalid
+  And the response does not include download links for pack paths
+
+Scenario: Sync not ready returns sync_pending
+  Given no package sync manifest exists on the server
+  When GET /api/sdd/lite/files is called
+  Then the response status is 409
+  And the error code is sync_pending
 ```
 
-#### AC21 — feature-57 / Web-portal-19
+#### AC20 — feature-56 / Web-portal-18 Part 1 (agent markdown)
+
+Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** — source `public/agent-setup/install.md`, rewrite `GET /setup/install`.
 
 ```gherkin
-Scenario: Setup copy fetches subset install URL
-  Given the visitor opens / or /instructions
-  When the visitor uses the setup copy control
-  Then the copied text is Fetch and execute the setup instructions from https://framework.sdd.works/setup/install
-  And that protocol sentence is the same in locale en, zh-Hans, and zh-Hant
-  And the setup label uses an i18n key
+Scenario: Lite install prompt is public without MCP tools
+  When GET /setup/install is called
+  Then the response status is 200
+  And the body matches the public lite install markdown source
+  And the body instructs the agent to fetch the lite link list and copy only those files
+  And the body instructs resolving {client_root} for the running tool
+  And the body does not instruct calling sdd_install_framework
+  And the body does not instruct writing .sdd-installed.json
 
-Scenario: Setup links at least one preset profile
-  Given the visitor opens the Setup tab
-  Then a control or link opens subset install for profile core-planning-loop
-  And the visitor can copy or follow that profile without leaving the guide shell
+Scenario: Lite prompt references synced manifest paths
+  Given lite-pack.allowlist.json exists in the sync cache
+  When GET /setup/install is called
+  Then the response tells the agent to use GET /api/sdd/lite/files
+  And extract paths stay limited to paths in that manifest
 ```
 
-### User story 3 — Configurable content tabs after Setup
+#### AC21 — feature-56 / Web-portal-18 Part 2 (partner one-line)
+
+Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** — [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts); not on framework.sdd.works Setup UI.
+
+```gherkin
+Scenario: Partner paste uses production lite URL
+  Given a partner site (not framework.sdd.works Setup)
+  When the visitor pastes the lite install one-line prompt into an agent
+  Then the pasted text is Fetch and execute the setup instructions from https://framework.sdd.works/setup/install
+  And that protocol sentence is the same in every locale
+
+Scenario: framework.sdd.works Setup is full pack only
+  Given the visitor opens / or /instructions on framework.sdd.works
+  When the visitor opens the Setup tab
+  Then there is no lite install copy control
+  And the full MCP copy control for GET /setup remains
+```
+
+### User story 3 — Configurable instructions tabs
 
 **As a** visitor
-**I want** Features, Scrum in SDD, and future guide tabs from the synced pack
-**So that** new tabs ship without hard-coded React tab definitions
+**I want** tab order and content tabs from the synced pack, and built-in Setup from the portal
+**So that** operators can reorder tabs and add markdown tabs without a portal redeploy
 
 #### AC22 — feature-58 / Spec-seeds-16
 
-Pack contract verified through the portal sync cache ([Spec-seeds-16](../product-backlog.md#pb-110)).
+Pack contract verified through the portal sync cache ([Spec-seeds-16](product-backlog.md#L277)).
 
 ```gherkin
 Scenario: Synced pack includes default instructions tabs config
-  Given operator sync completed from a pack that ships content/instructions-tabs.json
+  Given operator sync completed from a pack that ships content/.instructions-tabs.json
   When the sync cache unpack is read
-  Then content/instructions-tabs.json exists
-  And the file lists at least features and scrum-in-sdd content tabs
-  And each entry includes id, labelKey, queryParam, panelTestId, and per-locale content paths under the pack tree
-  And the file does not list Setup
+  Then content/.instructions-tabs.json exists
+  And the file has version 1 and a tabs array
+  And the tabs array includes a code tab with id setup
+  And the tabs array includes content tabs for features and scrum-in-sdd
+  And each tab includes type, id, labelKey, queryParam, and panelTestId
+  And each content tab includes paths with at least en under the pack tree
 ```
 
 #### AC23 — feature-59 / Web-portal-24
 
 ```gherkin
 Scenario: Instructions tabs API returns parsed tabs for locale en
-  Given content/instructions-tabs.json exists in the sync cache
+  Given content/.instructions-tabs.json exists in the sync cache
   When GET /api/sdd/instructions-tabs?locale=en is called
-  Then the response lists content tabs in file order
-  And each tab includes resolved content metadata for locale en
-  And Setup is not in the response list
+  Then the response lists tabs in file order including the setup code tab
+  And each content tab includes resolved markdown metadata for locale en
   And the handler reads the sync cache only
 
-Scenario: Missing instructions tabs config returns structured error
-  Given the sync cache unpack has no content/instructions-tabs.json
-  When GET /api/sdd/instructions-tabs is called
-  Then the response is a structured error
-
-Scenario: Bundled default applies when sync config is missing
-  Given GET /api/sdd/instructions-tabs returns a structured error for missing config
-  When the visitor opens / or /instructions
-  Then the app may render Features and Scrum in SDD from a bundled default until sync succeeds
+Scenario: Missing or invalid cache config uses bundled JSON only
+  Given the sync cache unpack has no content/.instructions-tabs.json or the file fails validation
+  When GET /api/sdd/instructions-tabs?locale=en is called
+  Then the response lists tabs from src/content/.instructions-tabs.json only
+  And the response source for config is bundled
 ```
 
 #### AC24 — feature-60 / Web-portal-25
 
 ```gherkin
-Scenario: Guide renders Setup first and default with dynamic content tabs
-  Given GET /api/sdd/instructions-tabs returns features and scrum-in-sdd tabs
-  When the visitor opens / or /instructions
-  Then guide-tab-setup is first in tab order
-  And guide-tab-setup has aria-selected true on load
+Scenario: Guide default tab is Setup with dynamic tab order from config
+  Given the resolved instructions tabs config includes setup, features, and scrum-in-sdd
+  When the visitor opens / or /instructions without a tab query param
+  Then guide-tab-setup has aria-selected true
   And panel-setup is shown
-  And content tabs after Setup match the API order
-  And each content tab label resolves from its labelKey
-  And selecting a content tab sets the URL query param from config
+  And tab buttons appear in config array order
+  And each tab label resolves from its labelKey
+  And selecting a tab sets the URL query param from config queryParam
 
 Scenario: Dynamic content tab loads markdown with locale fallback
   Given the config tab id is features

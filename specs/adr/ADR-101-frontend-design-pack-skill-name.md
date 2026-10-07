@@ -6,7 +6,7 @@ Accepted (folder name superseded by [ADR-105](./ADR-105-frontend-designer-pack-s
 
 ## Context
 
-[Skill-17](../product-backlog.md#pb-113) (Sprint 7 feature-61) originally named the pack skill `sdd-frontend-design` so the folder would not match the Cursor catalog skill `frontend-design`. [ADR-092](./ADR-092-pack-authoring-skill-sdd-prefix.md) applies to **authoring** skills that collide with Cursor built-ins (`create-skill`, `create-rule`, `build-agent`).
+[Skill-17](product-backlog.md#L134) (Sprint 7 feature-61) originally named the pack skill `sdd-frontend-design` so the folder would not match the Cursor catalog skill `frontend-design`. [ADR-092](./ADR-092-pack-authoring-skill-sdd-prefix.md) applies to **authoring** skills that collide with Cursor built-ins (`create-skill`, `create-rule`, `build-agent`).
 
 The design skill is a **domain utility**: distinctive UI direction before or during implementation. It should work in any web project with minimal SDD coupling. The canonical body is the merged [anthropics/skills frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) craft (SkillsMP, 2026-09-03), plus optional production gates when the client ships i18n and test rules.
 
@@ -29,7 +29,7 @@ The design skill is a **domain utility**: distinctive UI direction before or dur
 
 ## Consequences
 
-- Update [Skill-17](../product-backlog.md#pb-113) requirement bullets and Sprint 7 feature-61 row text to `frontend-design`.
+- Update [Skill-17](product-backlog.md#L134) requirement bullets and Sprint 7 feature-61 row text to `frontend-design`.
 - framework-design § frontend-design, **CE-SKILL-15**, and framework-stories § frontend-design: done 2026-10-06.
 - [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) Phase 2 names `frontend-design` for UI SBIs: done 2026-10-06. feature-61 close still needs CE-SKILL-15 run and user confirm.
 - Historical changelog lines may still say `sdd-frontend-design`.

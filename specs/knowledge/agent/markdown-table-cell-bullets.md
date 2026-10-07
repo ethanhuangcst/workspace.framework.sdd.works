@@ -7,7 +7,7 @@ tags:
   - markdown
   - cursor
   - sprint-backlog
-related_spec: specs/framework/seeds/templates/EN/sdd-scrum-practices.md
+related_spec: pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md
 related:
   - knowledge/agent/cursor-markdown-preview-loose-list.md
 ---
@@ -37,5 +37,5 @@ Sprint 4 feature-04, the sprint-backlog seed, on 2026-10-01:
 
 ## Links
 
-- [`sdd-scrum-practices.md`](../../framework/seeds/templates/EN/sdd-scrum-practices.md) Sprint item table and RID Log
+- [`sdd-scrum-practices.md`](../../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) Sprint item table and RID Log
 - [`sprint-backlog.md`](../../sprint-backlog.md)

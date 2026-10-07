@@ -365,11 +365,11 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | | |
 | --- | --- |
-| Job | One GitHub URL; dirty Save; validate then persist |
-| Layout | Title + lead; success/error callouts; **Repository URL** as `.section-subtitle` (no rule under label); underline `input[type=url]` (mono); hint; Save disabled until dirty |
-| Flow | Unchanged → Save disabled; success → tip + DB; fail → tip, no DB write |
+| Job | One GitHub URL; dirty Save; validate then persist; pack repo file note for operators ([Web-portal-26](../product-backlog.md#L420)) |
+| Layout | Title + lead; success/error callouts; **Repository URL** as `.section-subtitle` (no rule under label); underline `input[type=url]` (mono); hint; Save disabled until dirty; **Admin note** block renders markdown from synced `content/.admin-note.md` (authoring seed [`src/content/.admin-note.md`](../../src/content/.admin-note.md)) |
+| Flow | Unchanged → Save disabled; success → tip + DB; fail → tip, no DB write. Note body updates after pack sync only. |
 | Keys | `admin.settings.*`, `errors.settings_url_*` |
-| Test ids | `settings-url`, `settings-save` |
+| Test ids | `settings-url`, `settings-save`, `settings-pack-note` |
 
 #### `/admin/framework` — Framework · `12-framework.html`
 
@@ -387,7 +387,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | Install framework.sdd.works to AI tools |
-| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES`; **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge); Setup: pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)), install phrase + `sdd_install_framework`, Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Setup ends with the secret form after the tools table ([ADR-067](../adr/ADR-067-get-secret-on-setup.md), feature-17); footer Admin portal link then copyright |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES`; **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /setup/install`); install phrase + `sdd_install_framework` after MCP connect; Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Setup ends with the secret form after the tools table ([ADR-067](../adr/ADR-067-get-secret-on-setup.md), feature-17); footer Admin portal link then copyright |
 | Tabs (WA-06) | Setup, Features, and Scrum in SDD are links (`?tab=features` / `?tab=scrum-in-sdd` on the current path). Click updates client state and the URL, so a full load still opens the selected tab. `.guide-tabs` is `position: relative; z-index: 10`. Inactive panel uses `hidden` with `display: none !important`. Same on `/` and `/instructions`. |
 | Guide tab (Web-portal-12 / feature-16) | Third tab after Features (`?tab=scrum-in-sdd`, `#panel-scrum`). Label key `admin.guide.tab_scrum` is `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant` (not translated). Cache path is `<unpacked>/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Fallback is `src/content/scrum-in-sdd/`. The panel uses `.scrum-body`: `h1` is 1.65rem with 2.75rem above later part titles; `h2` is 1.2rem. List items keep inline markdown. No Features em-dash split. Template seeds stay `templates/{locale}/scrum-in-sdd.md`. Get secret stays on Setup ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)). |
 | Secret form (feature-04 / feature-05, placement [ADR-067](../adr/ADR-067-get-secret-on-setup.md) / feature-17) | On Setup only, after the tools table, section `#setup-secret` with no heading. The Features panel does not include the form. Wrapper `.secret-stack`: column, `width: fit-content`, `max-width: 100%`, `gap: 1.25rem` between the lookup row and the result. Form `.secret-lookup` inside the stack: placeholder input (`admin.guide.secret_hint`) + Get secret control (`admin.guide.secret_button`) as `button type="button"` (must not issue a document GET). Catalog: en `Enter the name of the secret, example: sdd-trial-googlemaps` / `Get secret`; zh-Hans `输入要获得的密钥名称，例如：sdd-trial-googlemaps` / `获取密钥`; zh-Hant `輸入要取得的密鑰名稱，例如：sdd-trial-googlemaps` / `獲取密鑰`. CSS: row gap `0.75rem`; input `flex: 0 0 32rem` (does not shrink), width/min/max `32rem`, height `2.125rem`; button content-sized, height `2.125rem`. Found result and not-found notice stretch to the stack (`width: 0; min-width: 100%`) so the right edge lines up with Get secret. Found UI: existing portal `.codeblock` with `CopyButton`, `data-testid="secret-result"`, `aria-live="polite"`. Missing / empty: `.secret-error` (`data-testid="secret-error"`) with `admin.guide.secret_missing` or `admin.guide.secret_empty`. After the result renders, scroll `secret-result` or `secret-error` into view (`block: "start"`). Below `640px`: stack and field full width, button stacks under the field. **Lookup (feature-05):** `POST` one exact `key_name` to a public route that decrypts via the same store as `getKey`; response is only that plaintext value or keyed `admin.guide.secret_missing` (lists no other names). Viewport stays on `#setup-secret` with the Setup tab selected. Exact name match only (no fuzzy match). Mock: [`13-instructions.html`](./ui-mockup/13-instructions.html) (same form in [`01-home.html`](./ui-mockup/01-home.html)). |
@@ -424,6 +424,156 @@ Do these in order. Write the failing test for a step before the code for that st
 5. **task-05.** When the cache is missing or has no English file, read `src/content/features/` and set `source` to `package`. The page still shows `features-body`. Test locale `en` and a missing Chinese package file falling back to the English package file.
 6. **task-06.** Run the regression in [`app-tests.md`](./app-tests.md) §7 before marking feature-07 Done. That pass covers Setup, the tools table, Get secret, tab switch, and reset success on `/` and `/instructions`.
 
+#### Lite install file links (feature-55 / Web-portal-17)
+
+Lite HTTP install ([`mcp-design.md`](../mcp/mcp-design.md) §2.1c) needs a public index route and a public file route. They read only the synced unpack. They do not call GitHub at request time. They do not write `{client_root}` or `.sdd-installed.json`.
+
+| | |
+| --- | --- |
+| Allow-list file | `{unpacked}/lite-pack.allowlist.json` at pack repo root ([ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md), [`LITE_PACK_ALLOWLIST_FILENAME`](../../src/core/seeds/lite-install-manifest.ts)) |
+| Validation | [`validateLiteInstallManifest`](../../src/core/seeds/lite-install-manifest.ts) with `seedRoot` = latest unpack dir, `checkFilesExist: true`, `requireExactLists: false` |
+| List route | `GET /api/sdd/lite/files`. Optional query `version` (default `latest`). Same cache resolution as [`GET /api/sdd/package`](../../src/app/api/sdd/package/route.ts) via [`resolveCachedVersion`](../../src/core/sync/cache.ts). |
+| List success body | `{ package_version, package_commit, cache_synced_at, files, downloads }`. `files` is sorted relative paths (`skills/…`, `rules/…`). `downloads` is `{ path, url }[]` with one entry per path. `package_version` and `package_commit` match the cached package ref. |
+| File route | `GET /api/sdd/lite/file?path={relativePath}`. Optional query `version` (default `latest`). |
+| Same-origin URLs | Build `url` from the request origin (or `PUBLIC_BASE_URL` when set, same pattern as setup markdown rewrite). Path query value is the relative path, URL-encoded. |
+| File success | Stream or buffer the file from `{unpacked}/{path}` with a sensible `Content-Type` from extension (`.md`, `.mdc`). |
+| File auth | Re-read and validate `lite-pack.allowlist.json` for the resolved commit. Allow the download only when `path` is in the combined skills and rules list. Reject `..`, leading `/`, backslashes, and NUL. |
+| Errors | JSON `{ error: { code, message } }`. Codes: `sync_pending` (409, no sync manifest), `version_not_found` (404), `lite_manifest_missing` (404), `lite_manifest_invalid` (422), `path_not_allowed` (404), `path_invalid` (400). No secret values in messages. |
+| Out of scope | Admin session, MCP tools, writing `.sdd-lite-installed.json`, tarball extract on the server |
+
+Shared module (recommended): `src/lib/lite-pack-files.ts` or `src/core/seeds/lite-pack-files.ts` — load allow-list JSON from an unpack root, validate, return sorted `files`, and resolve whether a path is allowed. Routes stay thin.
+
+#### Implementation plan (feature-55 only)
+
+Do these in order. Write the failing test for a step before the code for that step.
+
+1. **task-01.** Add the shared loader or export a function from `lite-install-manifest.ts` that reads `{unpacked}/lite-pack.allowlist.json` and returns sorted paths after validation.
+2. **task-02.** Add `GET /api/sdd/lite/files` and integration tests in [`sdd-api.test.ts`](../../src/app/api/sdd/sdd-api.test.ts): success with fixture unpack + allow-list; `sync_pending`; missing file `lite_manifest_missing`; invalid JSON or bad paths `lite_manifest_invalid`.
+3. **task-03.** Add `GET /api/sdd/lite/file` and tests: 200 for an allow-listed path; `path_not_allowed` for a path not in the list; `path_invalid` for traversal.
+4. **task-04.** Run [`app-tests.md`](./app-tests.md) §9 before marking feature-55 Done.
+
+#### Lite install prompt (feature-56 / Web-portal-18)
+
+Part 1 is public agent markdown at `GET /setup/install`. Part 2 is the **partner** one-line paste ([`app-stories.md`](./app-stories.md) AC21), not a control on framework.sdd.works. Depends on [feature-55](./app-design.md#lite-install-file-links-feature-55--web-portal-17) lite file routes and on [Spec-seeds-18](../product-backlog.md#L449) / [`framework-design.md`](../framework/framework-design.md) lite receipt merge on the client.
+
+##### Partner one-line (Part 2)
+
+| | |
+| --- | --- |
+| Portal | `/` and `/instructions` Setup show **full MCP only**. No `copy-lite-setup-prompt`. |
+| Partner sites | Paste [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts): `Fetch and execute the setup instructions from https://framework.sdd.works/setup/install` (production URL in every locale). |
+| Authoring | Document the sentence in [`public/agent-setup/install.md`](../../public/agent-setup/install.md) section **Partner site one-line prompt**. |
+| Verification | Agent fetches `GET /setup/install` after the user pastes the sentence in Trae CN or another partner UI. |
+
+##### Technical design (Part 1)
+
+| | |
+| --- | --- |
+| Public URL | `GET /setup/install` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
+| Rewrite | Add to [`SETUP_REWRITES`](../../src/mcp/setup-paths.ts): `source` `/setup/install`, `destination` `/api/agent-setup/install` |
+| Handler | [`src/app/api/agent-setup/install/route.ts`](../../src/app/api/agent-setup/install/route.ts) — mirror [`agent-setup/route.ts`](../../src/app/api/agent-setup/route.ts): read template from disk, optional local origin substitution, return `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
+| Source file | [`public/agent-setup/install.md`](../../public/agent-setup/install.md) (new). Version line at top (for example `Lite install version: YYYY-MM-DD.vN`) like full `prompt.md`. |
+| Local dev rewrite | When `isLocalMcpDev()`, replace production origin `https://framework.sdd.works` with `getMcpWebsiteUrl()` so fetches hit the local portal. Same pattern as full setup markdown. |
+| Auth | None. Public like `GET /setup`. |
+| Dependency | Agent steps call `GET /api/sdd/lite/files` and `GET /api/sdd/lite/file?path=` ([feature-55](#lite-install-file-links-feature-55--web-portal-17)). |
+
+**Markdown contract (AC20)**
+
+The served body must match `public/agent-setup/install.md` after rewrite. Integration tests assert the following (substring or dedicated section headings):
+
+| Requirement | In body |
+| --- | --- |
+| File index | Instruct `GET /api/sdd/lite/files` (or same-origin path after rewrite) |
+| Per-file download | Instruct `GET /api/sdd/lite/file` with allow-listed relative paths only |
+| Client root | Instruct resolving `{client_root}` for the running IDE or agent host |
+| Receipt | Instruct merge and `.sdd-lite-installed.json` per [Spec-seeds-18](../product-backlog.md#L449) and [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts) rules |
+| Forbidden | Must not instruct `sdd_install_framework`, `sdd_update_framework`, or writing `.sdd-installed.json` |
+| Scope | Copy only paths from the manifest (`skills/`, `rules/`). No agents, workflows, or templates from lite allow-list |
+
+Shared helpers: `getLiteInstallSetupUrl()` and `LITE_PARTNER_SETUP_SENTENCE` in [`src/mcp/brand.ts`](../../src/mcp/brand.ts).
+
+##### Implementation plan (feature-56 only)
+
+Do these in order. Write the failing test for a step before the code for that step. **feature-55** routes must be green first.
+
+1. **task-01.** Add `public/agent-setup/install.md` with the contract above and the partner one-line section. Review with operator before merge.
+2. **task-02.** Add rewrite + `GET /api/agent-setup/install` handler + `setup-paths` test update. Integration tests in [`sdd-api.test.ts`](../../src/app/api/sdd/sdd-api.test.ts): 200 body contains required phrases and `LITE_PARTNER_SETUP_SENTENCE`; `GET /setup` rewrite still serves stdio `prompt.md` (not lite body).
+3. **task-03.** Keep Setup UI full-pack only (`SetupGuidePanel`). Unit test: no `copy-lite-setup-prompt` on Setup.
+4. **task-04.** Mockups without lite pill. Run [`app-tests.md`](./app-tests.md) §10 before marking feature-56 Done.
+
+#### Instructions tabs (feature-58 / feature-59 / feature-60)
+
+Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scrum tab buttons. Operator rules for the JSON file are in [`src/content/.admin-note.md`](../../src/content/.admin-note.md). Technical design confirmed 2026-10-07: pack-primary config (B), default tab always Setup, bundled JSON-only fallback when cache config is missing or invalid.
+
+| | |
+| --- | --- |
+| Config file (pack) | `content/.instructions-tabs.json` at pack repo root under `content/` |
+| Config file (bundled) | [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) — same schema; used when cache file missing or fails validation |
+| Resolver | Shared module (for example `src/lib/instructions-tabs.ts`): read cache unpack → validate → else read bundled file only |
+| Tab order | Order of objects in `tabs[]` |
+| Default tab | When URL has no `?tab=`, select Setup (`queryParam` `setup`) even if another row is first in JSON |
+| Tab types | **`code`:** React panel from app registry (`CODE_TAB_REGISTRY`; ship `setup` → `<SetupGuidePanel />` extracted from current `InstructionsPage`). **`content`:** server-rendered markdown from explicit per-locale paths in `paths`. |
+| Content paths | `paths.en` required; `zh-Hans` / `zh-Hant` optional. Values are relative to unpack root. Reject `..` and absolute paths. Read cache file first, then package fallback under `src/content/…` for that path (reuse features/scrum reader helpers). |
+| API | `GET /api/sdd/instructions-tabs?locale=` — public; same resolver; response `{ version, source, tabs: [{ type, id, labelKey, queryParam, panelTestId, html?, sourceLocale?, contentSource? }] }` where `source` is `cache` or `bundled` for the config file |
+| Page | Server components on `/` and `/instructions` call resolver + markdown hydration for content tabs; client keeps WA-06 link tabs and panel `hidden` behavior |
+| i18n | Tab labels from `labelKey`; new keys need en / zh-Hans / zh-Hant catalogs |
+| Install | Config and content markdown paths are not on MCP install allow-list |
+| Mockup | [`13-instructions.html`](./ui-mockup/13-instructions.html) shows dynamic tab row; sample **Knowledge** tab is illustrative only |
+
+**JSON schema (version 1)**
+
+```json
+{
+  "version": 1,
+  "tabs": [
+    {
+      "type": "code",
+      "id": "setup",
+      "labelKey": "admin.guide.tab_setup",
+      "queryParam": "setup",
+      "panelTestId": "panel-setup"
+    },
+    {
+      "type": "content",
+      "id": "features",
+      "labelKey": "admin.guide.tab_features",
+      "queryParam": "features",
+      "panelTestId": "panel-features",
+      "paths": {
+        "en": "content/features/features.en.md",
+        "zh-Hans": "content/features/features.zh-Hans.md",
+        "zh-Hant": "content/features/features.zh-Hant.md"
+      }
+    }
+  ]
+}
+```
+
+Validation (fail → bundled file only): JSON parse; `version === 1`; non-empty `tabs`; unique `id` and `queryParam`; every `code.id` in allowlist; every `content` row has `paths.en`; paths safe and under allowed roots; at least one `setup` code row recommended for default tab behavior. `validateInstructionsTabsConfig` takes `contentRoot` = sync unpack root; path strings join under that root for checks (see [`framework-design.md`](../framework/framework-design.md#instructions-tabs-config)).
+
+```mermaid
+flowchart LR
+  Pack["content/.instructions-tabs.json"]
+  Sync["Sync unpack"]
+  Bundle["src/content/.instructions-tabs.json"]
+  Resolver["instructionsTabsResolver"]
+  API["GET /api/sdd/instructions-tabs"]
+  Page["InstructionsPage SSR"]
+  Pack --> Sync
+  Sync --> Resolver
+  Bundle --> Resolver
+  Resolver --> API
+  Resolver --> Page
+```
+
+#### Implementation plan (feature-58 → feature-59 → feature-60)
+
+1. **feature-58.** Add pack seed + bundled JSON; validator unit tests; document in `.admin-note.md` (done in seed). Copy to pack on sync.
+2. **feature-59.** Resolver + route + Vitest integration tests (cache hit, invalid cache → bundled, content html + locale fallback).
+3. **feature-60.** Extract Setup panel; dynamic tab list and panels; default Setup; deprecate direct `readFeaturesCatalog` / `readScrumInSddCatalog` on page once config drives those tabs. Update [`13-instructions.html`](./ui-mockup/13-instructions.html) note if order differs from legacy “Setup first in bar”.
+
+Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and scrum route may stay for direct access until a later cleanup story; the instructions page uses instructions-tabs only after feature-60.
+
 #### Mail — `14-email-reset.html` / `15-email-invite.html`
 
 | | |
@@ -455,7 +605,7 @@ Do these in order. Write the failing test for a step before the code for that st
 | `10-admins.html` | `/admin/accounts` | Accounts feature |
 | `11-settings.html` | `/admin/settings` | `SettingsForm` + `AppShell` |
 | `12-framework.html` | `/admin/framework` | Framework tree feature |
-| `13-instructions.html` | `/instructions` | Guide feature |
+| `13-instructions.html` | `/`, `/instructions` | `InstructionsPage` + `InstructionsClient`; tab bar from `instructions-tabs` resolver (feature-60); Setup code panel + dynamic content panels |
 | `14` / `15` email | Resend templates | `email.css` |
 
 Optional confirmation `08-key-created.html` is not a required route — create redirects to list with saved tip.

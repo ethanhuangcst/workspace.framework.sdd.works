@@ -8,7 +8,7 @@ The MCP server registered four tools historically: `sdd_install_framework`, `sdd
 
 The person in the IDE installs or updates the latest pack. They do not pick a version from a tool. `sdd_install_framework` already resolves omitted `version` to latest via `resolveCachedVersion` and `GET /api/sdd/package`. A catalog call before install does not change that path.
 
-MCP has no private tool. If a name is on `tools/list`, the model can call it. Keeping `sdd_list_versions` registered wastes a round trip and invites discovery questions the Features tab ([Web-portal-07](../product-backlog.md#pb-73)) owns for people.
+MCP has no private tool. If a name is on `tools/list`, the model can call it. Keeping `sdd_list_versions` registered wastes a round trip and invites discovery questions the Features tab ([Web-portal-07](product-backlog.md#L373)) owns for people.
 
 Server-side listing still matters for the sync cache, package API, and tests.
 
@@ -24,7 +24,7 @@ Server-side listing still matters for the sync cache, package API, and tests.
 Install already picks latest on the server. A read-only catalog on the tool list does not help the default user path and cannot be “internal” while registered. Pack inventory for people lives on the Features tab. Operators and tests keep the versions REST route.
 
 ## Consequences
-- [MCP-03](../product-backlog.md#pb-78) owns the change. Sprint 3 feature-08 unregisters the tool and updates the tool-list tests. Feature-09 updates setup and instructions copy.
+- [MCP-03](product-backlog.md#L335) owns the change. Sprint 3 feature-08 unregisters the tool and updates the tool-list tests. Feature-09 updates setup and instructions copy.
 - Living MCP stories, design §3, and tests no longer expect `sdd_list_versions` on `tools/list`.
 - Go-live checklists that still list the tool must be updated when this PBI lands.
 

@@ -1521,6 +1521,18 @@ td.table-check {
   width: 100%;
 }
 
+.guide-tabs-note {
+  margin: 0 0 0.65rem;
+  color: var(--mute);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.guide-tabs-note code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
 .guide-tabs {
   display: flex;
   gap: 1.35rem;

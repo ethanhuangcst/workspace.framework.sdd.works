@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "tabs": [
+    {
+      "type": "code",
+      "id": "setup",
+      "labelKey": "admin.guide.tab_setup",
+      "queryParam": "setup",
+      "panelTestId": "panel-setup"
+    },
+    {
+      "type": "content",
+      "id": "features",
+      "labelKey": "admin.guide.tab_features",
+      "queryParam": "features",
+      "panelTestId": "panel-features",
+      "paths": {
+        "en": "content/features/features.en.md",
+        "zh-Hans": "content/features/features.zh-Hans.md",
+        "zh-Hant": "content/features/features.zh-Hant.md"
+      }
+    },
+    {
+      "type": "content",
+      "id": "scrum-in-sdd",
+      "labelKey": "admin.guide.tab_scrum",
+      "queryParam": "scrum-in-sdd",
+      "panelTestId": "panel-scrum",
+      "paths": {
+        "en": "content/scrum-in-sdd/scrum-in-sdd.en.md",
+        "zh-Hans": "content/scrum-in-sdd/scrum-in-sdd.zh-Hans.md",
+        "zh-Hant": "content/scrum-in-sdd/scrum-in-sdd.zh-Hant.md"
+      }
+    },
+    {
+      "type": "content",
+      "id": "invoke-agents",
+      "labelKey": "admin.guide.tab_invoke_agents",
+      "queryParam": "invoke-agents",
+      "panelTestId": "panel-invoke-agents",
+      "paths": {
+        "en": "content/invoke-agents/invoke-agents.en.md",
+        "zh-Hans": "content/invoke-agents/invoke-agents.zh-Hans.md",
+        "zh-Hant": "content/invoke-agents/invoke-agents.zh-Hant.md"
+      }
+    }
+  ]
+}

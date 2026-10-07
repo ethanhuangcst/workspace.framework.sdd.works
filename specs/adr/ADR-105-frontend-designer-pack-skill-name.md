@@ -10,9 +10,9 @@ Accepted
 
 ## Context
 
-[Skill-17](../product-backlog.md#pb-113) (Sprint 7 feature-61) shipped as `frontend-design` to match the [anthropics/skills frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) catalog id.
+[Skill-17](product-backlog.md#L134) (Sprint 7 feature-61) shipped as `frontend-design` to match the [anthropics/skills frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) catalog id.
 
-The job is a **designer** role: distinctive UI direction before or during implementation. The name `frontend-designer` pairs with [Skill-19](../product-backlog.md#pb-115) `frontend-developer` and states the actor, not the upstream catalog folder.
+The job is a **designer** role: distinctive UI direction before or during implementation. The name `frontend-designer` pairs with [Skill-19](product-backlog.md#L150) `frontend-developer` and states the actor, not the upstream catalog folder.
 
 [ADR-092](./ADR-092-pack-authoring-skill-sdd-prefix.md) does not apply. The skill is not an authoring skill. `frontend-designer` is not a Cursor built-in skill name.
 
@@ -33,7 +33,7 @@ The job is a **designer** role: distinctive UI direction before or during implem
 
 ## Consequences
 
-- Update [Skill-17](../product-backlog.md#pb-113), Sprint 7 feature-61, framework-design, framework-stories, framework-tests **CE-SKILL-15**, and every skill that names **frontend-designer** as a neighbor.
+- Update [Skill-17](product-backlog.md#L134), Sprint 7 feature-61, framework-design, framework-stories, framework-tests **CE-SKILL-15**, and every skill that names **frontend-designer** as a neighbor.
 - Historical changelog and ADR-101 text may still say `frontend-design`.
 
 ## Date

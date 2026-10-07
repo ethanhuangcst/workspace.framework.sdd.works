@@ -7,7 +7,7 @@ tags:
   - dod
   - retrospective
   - sdd-review-status
-related_spec: specs/framework/seeds/skills/sdd-retrospective/SKILL.md
+related_spec: pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md
 related:
   - adr/ADR-097-done-runs-retrospective.md
   - adr/ADR-091-retire-realtime-status-rule.md
@@ -35,6 +35,6 @@ An SBI row can show **Done** while **sdd-dod.mdc** is incomplete if the agent on
 
 ## Links
 
-- [`sdd-retrospective`](../../framework/seeds/skills/sdd-retrospective/SKILL.md)
-- [`sdd-dod.mdc`](../../framework/seeds/rules/sdd-dod.mdc)
-- [`sdd-review-status`](../../framework/seeds/skills/sdd-review-status/SKILL.md)
+- [`sdd-retrospective`](../../../pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md)
+- [`sdd-dod.mdc`](../../../pack.framework.sdd.works/rules/sdd-dod.mdc)
+- [`sdd-review-status`](../../../pack.framework.sdd.works/skills/sdd-review-status/SKILL.md)

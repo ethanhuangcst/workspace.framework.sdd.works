@@ -7,7 +7,7 @@ tags:
   - askquestion
   - status
   - skills
-related_spec: specs/framework/seeds/skills/sdd-review-status/SKILL.md
+related_spec: pack.framework.sdd.works/skills/sdd-review-status/SKILL.md
 related:
   - adr/ADR-083-review-status-pick-then-one-write.md
 ---
@@ -38,5 +38,5 @@ Sprint 4 live runs of `sdd-review-status` on 2026-10-03:
 
 ## Links
 
-- [`sdd-review-status`](../../framework/seeds/skills/sdd-review-status/SKILL.md)
+- [`sdd-review-status`](../../../pack.framework.sdd.works/skills/sdd-review-status/SKILL.md)
 - [ADR-083](../../adr/ADR-083-review-status-pick-then-one-write.md)

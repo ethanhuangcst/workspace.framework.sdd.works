@@ -19,9 +19,9 @@ Features is the pack’s markdown catalog: what the framework contains. Setup is
 Leaving the form on Features keeps a setup action under a reading list. Moving only the chrome, and not the lookup rules, avoids a second secret product.
 
 ## Consequences
-- [Web-portal-13](../product-backlog.md#pb-83) is Sprint 3 feature-17. [Web-portal-08](../product-backlog.md#pb-74) stays Done for the lookup that shipped on Features.
+- [Web-portal-13](product-backlog.md#L384) is Sprint 3 feature-17 and owns Get secret on Setup. [Web-portal-08](product-backlog.md#L419) is **Retired** (Features placement only; shipped Sprint 3).
 - The live page renders the form on Setup after the tools table.
-- The guide tab ([Web-portal-12](../product-backlog.md#pb-81)) does not contain the form.
+- The guide tab ([Web-portal-12](product-backlog.md#L379)) does not contain the form.
 
 ## Date
 2026-09-26

@@ -124,7 +124,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 2. When `pack_complete` is true, assert that he follows the audit verdict and does not choose it himself (CE-VERDICT).
 3. Assert the missing-file rule (CE-PACK) separately from a pack-gate stop: he may set only `pack_complete` to false, and only when the step he is about to run cannot read a skill, a rule, or a seed template.
 4. Assert locale (CE-LOCALE) after a `Usable` verdict. Allowed values are `EN`, `HanS`, and `HanT`.
-5. Prompt identity (CE-PROMPT) is a text compare of design §14 and [`ethan.md`](./seeds/agents/ethan.md).
+5. Prompt identity (CE-PROMPT) is a text compare of design §14 and [`ethan.md`](../../pack.framework.sdd.works/agents/ethan.md).
 6. Call-up (CE-CALL) and environment (CE-ENV) cover project precedence, OS path shape, and the non-Cursor gesture. They do not add a second coach runtime.
 
 ### Cases
@@ -244,7 +244,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 #### CE-PACK-06 — Pack seed links stay in the deliverable
 
 - **Layer:** CI (automated).
-- **Pre-condition:** `specs/framework/seeds/` is the pack authoring tree.
+- **Pre-condition:** `pack.framework.sdd.works/` is the pack authoring tree.
 - **Test steps:** Run `npm run check:pack-seeds`.
 - **Expected results:** Exit 0. No parent-relative markdown link targets this product repo's `specs/adr/`, `framework-design.md`, `seed-artifacts-building-guide.md`, or root `product-backlog.md`. Rule: `sdd-pack-authoring.mdc`.
 
@@ -279,7 +279,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 #### CE-PROMPT-01 — Seed matches the design
 
 - **Layer:** L1.
-- **Pre-condition:** Design §14 and `specs/framework/seeds/agents/ethan.md` are both readable.
+- **Pre-condition:** Design §14 and `pack.framework.sdd.works/agents/ethan.md` are both readable.
 - **Test steps:** Compare the prompt body, including frontmatter.
 - **Expected results:** The two texts match. The body does not contain a hardcoded `.cursor`, `.claude`, or `.trae` folder name.
 
@@ -360,140 +360,140 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 #### CE-SKILL-01 — sdd-review-status
 
 - **Layer:** L1.
-- **Pre-condition:** Audit verdict is `Usable`. The five process files open. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
+- **Pre-condition:** Audit verdict is `Usable`. The five process files open. Seed: `pack.framework.sdd.works/skills/sdd-review-status/SKILL.md`.
 - **Test steps:** Ask where the project is.
 - **Expected results:** The skill states `status_from_board` and `status_from_implementation`. It lists each mismatch. It does not create or edit a project file before the user picks in chat. It does not mark a product item Done.
 
 #### CE-SKILL-02 — Second yes on sdd-review-status
 
 - **Layer:** L1.
-- **Pre-condition:** Two mismatches are listed. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
+- **Pre-condition:** Two mismatches are listed. Seed: `pack.framework.sdd.works/skills/sdd-review-status/SKILL.md`.
 - **Test steps:** Pick apply updates for one mismatch and leave to me for the other, in one chat reply. The reply names the accepted write for the first mismatch only.
 - **Expected results:** Before the write pass, no project file changes. After the write pass, only the accepted text is written. The other mismatch writes nothing. An untracked defect uses the OGT text "track defect xyz in issues-log". The skill does not mark a product item Done.
 
 #### CE-SKILL-09 — sdd-review-status Open RIDs
 
 - **Layer:** L1.
-- **Pre-condition:** Audit verdict is `Usable`. The five process files open. `sprint-backlog.md` has at least one Open RID whose Impact names a PBI that is Done on `product-backlog.md` while the solution is verifiable (this repo: D-2, D-3, or R-1 with MCP-01 Done). Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md`.
+- **Pre-condition:** Audit verdict is `Usable`. The five process files open. `sprint-backlog.md` has at least one Open RID whose Impact names a PBI that is Done on `product-backlog.md` while the solution is verifiable (this repo: D-2, D-3, or R-1 with MCP-01 Done). Seed: `pack.framework.sdd.works/skills/sdd-review-status/SKILL.md`.
 - **Test steps:** Ask where the project is or to review status.
 - **Expected results:** The reply lists Open RIDs or RID status-change suggestions. At least one open RID with Done impact work appears under RID status-change suggestions or Mismatches with a proposed close. The message includes **Your choice** in the same reply. The skill does not create or edit a project file before the user picks. It does not use a question card. It does not mark a product item Done.
 
 #### CE-SKILL-10 — sdd-retrospective
 
 - **Layer:** L1.
-- **Pre-condition:** Audit verdict is `Usable`. `artifacts-map.json` has `adr` and `knowledge` keys. `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` includes `#adr-instance-shape` and `#knowledge-instance-shape`. Seed: `specs/framework/seeds/skills/sdd-retrospective/SKILL.md`.
+- **Pre-condition:** Audit verdict is `Usable`. `artifacts-map.json` has `adr` and `knowledge` keys. `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` includes `#adr-instance-shape` and `#knowledge-instance-shape`. Seed: `pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md`.
 - **Test steps:** Mark a small task done per **sdd-dod.mdc**, or run `/sdd-retrospective` for the current sprint.
 - **Expected results:** The reply includes a **Retrospective Summary** (ADRs created, knowledge added or updated, or an explicit empty retrospective). The skill writes ADR, knowledge, and sprint-backlog **Retrospective** records in the same turn when needed, without a second user confirm. When the sprint has no `### Retrospective` section, the skill creates it per the seed **Ensure Retrospective section** rules, then appends the numbered block. When `adr` or `knowledge` is missing from the map, it stops and names **sdd-update-project** instead of inventing paths.
 
 #### CE-SKILL-12 — atdd-expert
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/atdd-expert/SKILL.md` and `reference.md`. The caller supplies one requirement and, for a write, the stories file path.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/atdd-expert/SKILL.md` and `reference.md`. The caller supplies one requirement and, for a write, the stories file path.
 - **Test steps:** Ask for user stories and acceptance criteria for one feature and name the stories file path, or run `/atdd-expert`.
 - **Expected results:** Frontmatter `name` is `atdd-expert`. The reply includes an **ATDD summary** with scope, a numbered draft table (story and scenario paths), skipped items, and the target path. When the reference quality checklist fails, the reply shows a numbered gap table instead of the draft. The skill does not read `artifacts-map.json` or a backlog unless the caller passed the path. It does not edit the stories file before the user chooses apply. It does not write `product-backlog.md`, automated tests, or production code.
 
 #### CE-SKILL-11 — sdd-review-status Done pick runs retrospective
 
 - **Layer:** L1.
-- **Pre-condition:** Audit verdict is `Usable`. Seed: `specs/framework/seeds/skills/sdd-review-status/SKILL.md` and `specs/framework/seeds/skills/sdd-retrospective/SKILL.md`.
+- **Pre-condition:** Audit verdict is `Usable`. Seed: `pack.framework.sdd.works/skills/sdd-review-status/SKILL.md` and `pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md`.
 - **Test steps:** After a status review, pick in chat to set one SBI to **Done** (user already gave **close confirm** for that SBI).
 - **Expected results:** **sdd-retrospective** runs in the same turn before the **Done** row write. Sprint **Retrospective** (create-if-missing plus append) and any ADR or knowledge from that run land before `sprint-backlog.md` or `product-backlog.md` shows **Done** for that item.
 
 #### CE-RULE-01 — no Done without close confirm
 
 - **Layer:** L1.
-- **Pre-condition:** SBI deliverable files exist; row is **WIP** or **ToDo**. Seed: `specs/framework/seeds/rules/sdd-dod.mdc`.
+- **Pre-condition:** SBI deliverable files exist; row is **WIP** or **ToDo**. Seed: `pack.framework.sdd.works/rules/sdd-dod.mdc`.
 - **Test steps:** Agent completes the last deliverable edit in one turn without a prior user **close confirm**.
 - **Expected results:** `sprint-backlog.md` row stays **WIP** or **ToDo**; agent asks the **close confirm** question from `sdd-dod.mdc`; `status.md` does not show that SBI as **Done**.
 
 #### CE-SKILL-03 — sdd-create-skill
 
 - **Layer:** L1.
-- **Pre-condition:** `skills_dir` in constants is `skills`. Seed: `specs/framework/seeds/skills/sdd-create-skill/SKILL.md`.
+- **Pre-condition:** `skills_dir` in constants is `skills`. Seed: `pack.framework.sdd.works/skills/sdd-create-skill/SKILL.md`.
 - **Test steps:** Ask to create a skill named `sample-skill`.
 - **Expected results:** It waits for confirm. The only write is `{client_root}/skills/sample-skill/SKILL.md`, which is that client's skills folder in [Pack folders](#pack-folders). On TRAE CN that is `~/.trae-cn/skills/sample-skill/SKILL.md`, not `~/.trae/skills/`. It does not write production code. It does not write `skill-creator` or a second authoring folder at `{client_root}/skills/create-skill/` (Cursor built-in name). It does not write under the workspace.
 
 #### CE-SKILL-04 — sdd-spec-to-build
 
 - **Layer:** L1.
-- **Pre-condition:** One sprint backlog item is the current item. A later item exists. Seed: `specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md` and `readiness.md`.
+- **Pre-condition:** One sprint backlog item is the current item. A later item exists. Seed: `pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md` and `readiness.md`.
 - **Test steps:** Read the seed and `readiness.md`. Ask it to design the current item, then ask it to implement the current item.
-- **Expected results:** **Capabilities** link `readiness.md` for applicability and paths. **Knowledge** names `#module-name-storiesmd`, `#module-name-testsmd`, and `#module-name-designmd` in practices. In the design phase it does not write production code. In the build phase it implements that item only. It does not start the next item. It proposes `sdd-build` only after readiness confirm, not in the design-only ask. Design: [framework-design § sdd-spec-to-build](../framework/framework-design.md#sdd-spec-to-build).
+- **Expected results:** **Capabilities** link `readiness.md` for applicability, paths, and **Build handoff**. **Knowledge** names `#module-name-storiesmd`, `#module-name-testsmd`, and `#module-name-designmd` in practices. On a design-only ask it does not write production code and does not propose implement skills before readiness confirm. After readiness confirm it proposes a domain implement skill from the handoff table, not `sdd-build`. When the user asks this skill to implement the current item, it refuses and names the domain skill. It does not start the next backlog item. Design: [framework-design § sdd-spec-to-build](../framework/framework-design.md#sdd-spec-to-build), [ADR-108](../adr/ADR-108-no-pack-sdd-build-skill.md).
 
 #### CE-SKILL-06 — Do not ship both status folders
 
 - **Layer:** L1.
 - **Pre-condition:** The seed tree is the authoring tree.
 - **Test steps:** List skill folders that would be copied to the pack.
-- **Expected results:** `sdd-review-status` is the status skill. `sdd-tracking` and `sdd-update-status` are not shippable status folders. The on-disk folder `specs/framework/seeds/skills/sdd-tracking/` is not copied as the status skill. Folder `frontend-design` is absent from the seed tree; `frontend-designer` is the UI design seed.
+- **Expected results:** `sdd-review-status` is the status skill. `sdd-tracking` and `sdd-update-status` are not shippable status folders. The on-disk folder `pack.framework.sdd.works/skills/sdd-tracking/` is not copied as the status skill. Folder `frontend-design` is absent from the seed tree; `frontend-designer` is the UI design seed.
 
 #### CE-SKILL-13 — improve-prompt
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/improve-prompt/SKILL.md` and `examples.md`. Folder `prompt-optimizer` is absent from the seed tree.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/improve-prompt/SKILL.md` and `examples.md`. Folder `prompt-optimizer` is absent from the seed tree.
 - **Test steps:** Paste a vague task prompt and ask to improve it. Read the seed for advisory-only limits and absence of ECC catalogs.
 - **Expected results:** The reply includes diagnosis and a fenced optimized prompt. No implementation files are written. The seed description states advisory-only use. The seed body has Capabilities, Knowledge, Limits, and Anti-patterns. The seed does not name ECC, `configure-ecc`, or fixed slash-command orchestration tables. Frontmatter has only `name` and `description`. `examples.md` holds worked examples; intent labels in that file use English signal words only. Design: [framework-design § improve-prompt](../framework/framework-design.md#improve-prompt).
 
 #### CE-SKILL-15 — frontend-designer
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/frontend-designer/SKILL.md` and `LICENSE.txt`. Folders `frontend-design` and `sdd-frontend-design` are absent from the seed tree.
-- **Test steps:** Read the seed. Ask for a design plan only for a landing page (no code). Read [sdd-spec-to-build](../framework/seeds/skills/sdd-spec-to-build/SKILL.md) Phase 2 for `frontend-designer` routing.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/frontend-designer/SKILL.md` and `LICENSE.txt`. Folders `frontend-design` and `sdd-frontend-design` are absent from the seed tree.
+- **Test steps:** Read the seed. Ask for a design plan only for a landing page (no code). Read [sdd-spec-to-build](../../pack.framework.sdd.works/skills/sdd-spec-to-build/SKILL.md) Phase 2 for `frontend-designer` routing.
 - **Expected results:** Frontmatter `name` is `frontend-designer`. **Production UI** states `{client_root}` is for installed rules, not design file storage. Copy cites **friendly-language** and does not instruct loading **writing-style**. **Limits** forbid process file writes and required `artifacts-map.json`. **Design plan output** section is present. Five calibration traits appear under Process. `sdd-spec-to-build` names `frontend-designer` for UI SBIs. Design: [framework-design § frontend-designer](../framework/framework-design.md#frontend-designer).
 
 #### CE-SKILL-20 — testing-expert
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/testing-expert/SKILL.md`, `browser.md`, `LICENSE.txt`, `templates/test-report.md`, `templates/test-report-failures.md`, and `scripts/with_server.py`. Folder `sdd-tester` is absent from the seed tree.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/testing-expert/SKILL.md`, `browser.md`, `LICENSE.txt`, `templates/test-report.md`, `templates/test-report-failures.md`, and `scripts/with_server.py`. Folder `sdd-tester` is absent from the seed tree.
 - **Test steps:** Read the seed. Ask for a test strategy and one unit test path for a small feature (no write until confirm).
 - **Expected results:** Frontmatter `name` is `testing-expert`. Capabilities name strategy, tools, create, run, and report. **Limits** forbid loading `webapp-testing` and forbid SDD process file writes by default. The skill does not require `artifacts-map.json` or a sprint backlog. Design: [framework-design § testing-expert](../framework/framework-design.md#testing-expert).
 
 #### CE-SKILL-21 — frontend-developer
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/frontend-developer/SKILL.md`. Folder `sdd-frontend-developer` is absent from the seed tree.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/frontend-developer/SKILL.md`. Folder `sdd-frontend-developer` is absent from the seed tree.
 - **Test steps:** Read the seed. In a project with a package manifest, ask to add one form screen wired to an API.
 - **Expected results:** Frontmatter `name` is `frontend-developer`. The description names **frontend-designer** and **testing-expert**. Capabilities include stack detection and component implementation. **Limits** forbid SDD process file writes by default. The agent reads the stack before new code. Design: [framework-design § frontend-developer](../framework/framework-design.md#frontend-developer).
 
 #### CE-SKILL-16 — fullstack-engineer
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/fullstack-engineer/SKILL.md`. Folder `fullstack-developer` is absent from the seed tree.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/fullstack-engineer/SKILL.md`. Folder `fullstack-developer` is absent from the seed tree.
 - **Test steps:** Read the seed. In a project with a package manifest, ask for a feature with a screen, an API route, and a table.
 - **Expected results:** Frontmatter `name` is `fullstack-engineer`. The description names **frontend-designer**, **frontend-developer**, and **testing-expert**. Knowledge names **i18n-support**, **common-test-strategy**, and **friendly-language**. Limits forbid process file writes. The agent reads the stack before code and asks before adding a framework the project does not use. The reply lists files by layer, commands run, and environment variable names without values. Design: [framework-design § fullstack-engineer](../framework/framework-design.md#fullstack-engineer).
 
 #### CE-SKILL-17 — ai-architect
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/ai-architect/SKILL.md` and `terms.md`.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/ai-architect/SKILL.md` and `terms.md`.
 - **Test steps:** Read the seed. Ask how to deploy a model at a stated request rate and budget.
 - **Expected results:** Frontmatter `name` is `ai-architect`. The description names **rag-expert** and **mcp-expert**. **Design checks** and **AI design proposal** sections are present. Knowledge names **terms.md**. Capabilities name architecture style and operating design. The reply follows the proposal shape with **Style**, an options table, **Operating design**, and open questions. No file is written before confirm. No figure appears without a source or an estimate label. Design: [framework-design § ai-architect](../framework/framework-design.md#ai-architect).
 
 #### CE-SKILL-18 — mcp-expert
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/mcp-expert/SKILL.md`.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/mcp-expert/SKILL.md`.
 - **Test steps:** Read the seed. Report that a client starts a stdio server but lists no tools.
 - **Expected results:** Frontmatter `name` is `mcp-expert`. **Transport choice** covers stdio and Streamable HTTP. **MCP solution** and **Pattern menu** are present. Knowledge names the registry API and says not to store a directory list in the skill. Capabilities search the registry before a new server. Limits keep secrets out of tool results and keep stdio standard output for protocol messages. The reply checks the client log, the server error output, and a direct protocol call. Design: [framework-design § mcp-expert](../framework/framework-design.md#mcp-expert).
 
 #### CE-SKILL-19 — rag-expert
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/rag-expert/SKILL.md` and `reference.md`.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/rag-expert/SKILL.md` and `reference.md`.
 - **Test steps:** Read the seed. Ask for cited Q&A over private PDFs.
-- **Expected results:** Frontmatter `name` is `rag-expert`. **RAG checks** and [reference.md](../framework/seeds/skills/rag-expert/reference.md) name recall at k, MRR, faithfulness, answer relevance, and citation accuracy. Limits forbid fabricated passages on a production path and apply access rights at retrieval time. The agent asks before sending private documents to an external provider. The answer step cites sources. Design: [framework-design § rag-expert](../framework/framework-design.md#rag-expert).
+- **Expected results:** Frontmatter `name` is `rag-expert`. **RAG checks** and [reference.md](../../pack.framework.sdd.works/skills/rag-expert/reference.md) name recall at k, MRR, faithfulness, answer relevance, and citation accuracy. Limits forbid fabricated passages on a production path and apply access rights at retrieval time. The agent asks before sending private documents to an external provider. The answer step cites sources. Design: [framework-design § rag-expert](../framework/framework-design.md#rag-expert).
 
 #### CE-SKILL-07 — Backlog-only skills
 
 - **Layer:** L1.
-- **Pre-condition:** A skill name appears on a product-backlog row but has no authoring seed under `specs/framework/seeds/skills/`, or the skill is retired (for example `sdd-close-sprint`).
+- **Pre-condition:** A skill name appears on a product-backlog row but has no authoring seed under `pack.framework.sdd.works/skills/`, or the skill is retired (for example `sdd-close-sprint`).
 - **Test steps:** Read [`framework-design.md`](../framework/framework-design.md) **Other skills** and the product-backlog row for that name.
 - **Expected results:** Shipped skills (`atdd-expert`, `sdd-update-specs`, `sdd-retrospective`, `sdd-refine-backlog`, `frontend-designer`, `frontend-developer`, `testing-expert`, `improve-prompt`, `fullstack-engineer`, `ai-architect`, `mcp-expert`, `rag-expert`, and others with seeds) have a matching **CE-SKILL-** case or an explicit L1 note on the design section. A future case must use `{client_root}`, wait for confirm before a project write, and must not assume locale `EN`.
 
 #### CE-SKILL-14 — sdd-update-specs
 
 - **Layer:** L1.
-- **Pre-condition:** Seed: `specs/framework/seeds/skills/sdd-update-specs/SKILL.md`.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/sdd-update-specs/SKILL.md`.
 - **Test steps:** Read the description and Limits section.
 - **Expected results:** The description states engineering specs and names adjacent skills. Limits ban writes to the five process files. The skill waits for chat confirm before a project write.
 
@@ -528,7 +528,7 @@ Cases are numbered in one sequence. They are not one scenario repeated. Read thi
 - The client root is `~/.codebuddy`. On Windows it is `%USERPROFILE%\.codebuddy`. The agent file is `~/.codebuddy/agents/ethan.md`. Skills are `~/.codebuddy/skills/<name>/SKILL.md` ([Pack folders](#pack-folders)). Copy the files in [Minimum framework installation](#minimum-framework-installation) into that live home, run the catalog, then delete those paths. Do not copy the skill to `~/.codebuddy/skills-marketplace/` or to `~/.claude/skills/`.
 - One workspace per case, under `specs/framework/fixtures/sdd-audit-artifacts/`. The folder name is the case id plus the case name, for example `CE-AUDIT-01-no-map-and-no-process-files`. Open that folder as the CodeBuddy CN workspace. Do not open this product repo as the workspace.
 - The ledger has `pack_complete` true before the audit runs. A pack-gate stop is not an audit result.
-- A map stores `artifacts_root`, `locale`, and workspace-relative paths in `files` and module `files`, as in the Pokymon example in [`sdd-scrum-practices.md`](./seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). Audit fixtures use JSON `files` lists. A process file that onboard does not read may be a one-line stub. Each `Usable` workspace names `Sprint 1` and `feature-01` in `specs/status.md` and `specs/sprint-backlog.md`, so `sdd-review-status` has a line to return.
+- A map stores `artifacts_root`, `locale`, and workspace-relative paths in `files` and module `files`, as in the Pokymon example in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). Audit fixtures use JSON `files` lists. A process file that onboard does not read may be a one-line stub. Each `Usable` workspace names `Sprint 1` and `feature-01` in `specs/status.md` and `specs/sprint-backlog.md`, so `sdd-review-status` has a line to return.
 - CE-AUDIT-17 clears the read bit on the checked-in map for the run, then restores it. The file in git stays readable.
 
 ### Minimum framework installation
@@ -537,11 +537,11 @@ Copy only these files. Paths are the CodeBuddy CN row of [Pack folders](#pack-fo
 
 | Pack file | Live path on macOS or Linux | Seed |
 | --- | --- | --- |
-| Ledger, `pack_complete` true | `~/.codebuddy/.sdd-installed.json` | [`seeds/.sdd-installed.json`](./seeds/.sdd-installed.json). The seed ships `pack_complete` false. Set it to true in the copy |
-| Agent | `~/.codebuddy/agents/ethan.md` | [`seeds/agents/ethan.md`](./seeds/agents/ethan.md) |
-| Skill | `~/.codebuddy/skills/sdd-audit-artifacts/SKILL.md` | [`seeds/skills/sdd-audit-artifacts/SKILL.md`](./seeds/skills/sdd-audit-artifacts/SKILL.md) |
-| Status read | `~/.codebuddy/skills/sdd-review-status/SKILL.md` | [`seeds/skills/sdd-review-status/SKILL.md`](./seeds/skills/sdd-review-status/SKILL.md). Onboard reads this only after a `Usable` block. Without it, that reply sets `pack_complete` to false |
-| Constants | `~/.codebuddy/templates/framework.sdd.works/constants.json` | [`seeds/templates/constants.json`](./seeds/templates/constants.json) |
+| Ledger, `pack_complete` true | `~/.codebuddy/.sdd-installed.json` | [`pack.framework.sdd.works/.sdd-installed.example.json`](../../pack.framework.sdd.works/.sdd-installed.example.json). The seed ships `pack_complete` false. Copy to the client path as `.sdd-installed.json` and set `pack_complete` true |
+| Agent | `~/.codebuddy/agents/ethan.md` | [`pack.framework.sdd.works/agents/ethan.md`](../../pack.framework.sdd.works/agents/ethan.md) |
+| Skill | `~/.codebuddy/skills/sdd-audit-artifacts/SKILL.md` | [`pack.framework.sdd.works/skills/sdd-audit-artifacts/SKILL.md`](../../pack.framework.sdd.works/skills/sdd-audit-artifacts/SKILL.md) |
+| Status read | `~/.codebuddy/skills/sdd-review-status/SKILL.md` | [`pack.framework.sdd.works/skills/sdd-review-status/SKILL.md`](../../pack.framework.sdd.works/skills/sdd-review-status/SKILL.md). Onboard reads this only after a `Usable` block. Without it, that reply sets `pack_complete` to false |
+| Constants | `~/.codebuddy/templates/framework.sdd.works/constants.json` | [`pack.framework.sdd.works/templates/constants.json`](../../pack.framework.sdd.works/templates/constants.json) |
 
 Quit CodeBuddy CN and open it again after the agent file is copied, so the agent list reloads.
 
@@ -1011,16 +1011,16 @@ Check the seed header, the map path rule, the files that stay on the client root
 #### CE-TPL-01 — Seed header
 
 - **Layer:** L1.
-- **Pre-condition:** An authoring seed under `specs/framework/seeds/templates/`, including one file from `EN` and, when the file exists, one from `HanS` or `HanT`.
+- **Pre-condition:** An authoring seed under `pack.framework.sdd.works/templates/`, including one file from `EN` and, when the file exists, one from `HanS` or `HanT`.
 - **Test steps:** Read the header.
 - **Expected results:** No status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header has three lines: `Type`, `as_of`, and a Definition link.
 
 #### CE-TPL-02 — Map path is not prefixed twice
 
 - **Layer:** L1.
-- **Pre-condition:** The map stores `specs/product-backlog.md`. `artifacts_root` is `specs`. The workspace is a macOS or Linux path.
+- **Pre-condition:** The map stores `../product-backlog.md`. `artifacts_root` is `specs`. The workspace is a macOS or Linux path.
 - **Test steps:** Open the stored path.
-- **Expected results:** The file opened is `{workspace}/specs/product-backlog.md`. The root is not prefixed again.
+- **Expected results:** The file opened is `{workspace}../product-backlog.md`. The root is not prefixed again.
 
 #### CE-TPL-03 — Client-root files stay off the project
 
@@ -1039,14 +1039,14 @@ Check the seed header, the map path rule, the files that stay on the client root
 #### CE-TPL-05 — Locale folders for the guide and practices
 
 - **Layer:** L1.
-- **Pre-condition:** The authoring tree `specs/framework/seeds/templates/`.
+- **Pre-condition:** The authoring tree `pack.framework.sdd.works/templates/`.
 - **Test steps:** Look up `scrum-in-sdd.md` and `sdd-scrum-practices.md` for `EN`, `HanS`, and `HanT`.
 - **Expected results:** Each locale that has a body uses that locale folder. A locale with no body is reported as missing. The EN body is not copied into the project to fill the gap. `constants.json` stays beside the locale folders, not inside one.
 
 #### CE-TPL-06 — Windows path join
 
 - **Layer:** L1.
-- **Pre-condition:** `{workspace}` is `C:\work\demo`. The map stores `specs/product-backlog.md`. `artifacts_root` is `specs`.
+- **Pre-condition:** `{workspace}` is `C:\work\demo`. The map stores `../product-backlog.md`. `artifacts_root` is `specs`.
 - **Test steps:** Open the stored path.
 - **Expected results:** The file opened is `C:\work\demo\specs\product-backlog.md`. The root is not prefixed again. The map file itself stays `C:\work\demo\artifacts-map.json`.
 
@@ -1067,7 +1067,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 #### CE-TPL-08 — EN status seed shape
 
 - **Layer:** L1.
-- **Pre-condition:** `specs/framework/seeds/templates/EN/status.md`.
+- **Pre-condition:** `pack.framework.sdd.works/templates/EN/status.md`.
 - **Test steps:** Read the title, the related list, Project progress, and both OGT tables.
 - **Expected results:** The title is `The latest status of [product name]`. The header has three lines: `Type`, `as_of`, and a Definition link. The sections are Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), and Last 15 closed OGTs. Project progress has rows Project kickoff and Initial product backlog refined, then a sprint table with columns `Sprint`, `Status`, and `Note`. The where-we-are-now sprint line has room for one sentence after the sprint name. An Affected SBIs sample is a bullet list. Each bullet is a code and an SBI name. The file ends with Last updated, a timestamp, and the agent name. The open OGT columns are `#`, Task Name, Affected SBIs, Created, and Status. The closed OGT columns are `#`, Task Name, Affected SBIs, Created, and Closed.
 
@@ -1081,20 +1081,143 @@ Check the seed header, the map path rule, the files that stay on the client root
 #### CE-TPL-10 — EN issues-log seed shape
 
 - **Layer:** L1.
-- **Pre-condition:** `specs/framework/seeds/templates/EN/issues-log.md`.
+- **Pre-condition:** `pack.framework.sdd.works/templates/EN/issues-log.md`.
 - **Test steps:** Read the two tables and the header comment.
 - **Expected results:** The title is `Issues log ([product name])`. The sections are Open issues, then Closed issues. Open columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Status`, and `Added time`. Open status values are `Open`, `Fixed`, and `Deferred`. Closed columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Closed Sprint`, and `Closed time`. Priority values are `Fatal`, `High`, `Medium`, and `Low`. A sample row sits only in a comment with bracket placeholders. The header has three lines: `Type`, `as_of`, and a Definition link. Pass is a person reading the seed and confirming those lines. No fixture workspace. Playwright does not apply.
 
 #### CE-TPL-11 — EN changes-log seed shape
 
 - **Layer:** L1.
-- **Pre-condition:** `specs/framework/seeds/templates/EN/changes-log.md`.
+- **Pre-condition:** `pack.framework.sdd.works/templates/EN/changes-log.md`.
 - **Test steps:** Read the title, header, and first entry block.
 - **Expected results:** The title is `Changes log ([product name])`. The header has three lines: `Type`, `as_of`, and a Definition link. One `##` date heading and one `###` entry title use bracket placeholders. The entry has **Why**, **What changed**, and **Verification** paragraphs with bracket placeholders. No Pokymon or other sample product name appears in the body.
 
 #### CE-TPL-13 — EN .secrets seed shape
 
 - **Layer:** L1.
-- **Pre-condition:** `specs/framework/seeds/templates/EN/.secrets`.
+- **Pre-condition:** `pack.framework.sdd.works/templates/EN/.secrets`.
 - **Test steps:** Read the file line by line.
 - **Expected results:** The file is dotenv-shaped: `#` comment lines for rules and groups; secret lines are `NAME=` with nothing after `=` before an optional end-of-line `#` that names where the value lives. No `Type`, `as_of`, or Markdown table. No line contains a token-like secret value. A placeholder line `{SECRET_NAME}=` appears at the end. Pass is a person reading the seed and confirming those lines. No fixture workspace.
+
+## lite-install-manifest
+
+Stories: [`framework-stories.md`](./framework-stories.md#lite-install-manifest). Design: [`framework-design.md`](./framework-design.md#lite-install-manifest). [feature-53](../sprint-backlog.md#sprint-8) **Done** (2026-10-07).
+
+### Strategy
+
+Unit checks on the JSON file and `validateLiteInstallManifest`. No HTTP route, no browser, no portal sync. Happy path is the agreed path lists and files on disk. Failure path is a path that is missing, outside `skills/` or `rules/`, an extra `sdd-` skill, or an `sdd-` rule.
+
+### Plan
+
+| Layer | Share | Tool |
+| --- | --- | --- |
+| Unit | 100% for this SBI | Vitest [`src/core/seeds/lite-install-manifest.test.ts`](../../src/core/seeds/lite-install-manifest.test.ts) |
+| API | N/A | File-links route is Web-portal-17 |
+| Browser | N/A | No screen |
+
+### Automation
+
+Run: `npm test -- src/core/seeds/lite-install-manifest.test.ts`
+
+| Case | Vitest describe / behavior |
+| --- | --- |
+| CE-LITE-01 | `CE-LITE-01 — agreed skill and rule paths` reads the authoring JSON and validates with `checkFilesExist` and `requireExactLists` |
+| CE-LITE-02 | `CE-LITE-02 — reject invalid allow-list paths` table cases on in-memory documents and a partial temp seed tree |
+
+### Cases
+
+#### CE-LITE-01 — Agreed skill and rule paths
+
+- **Layer:** L1 (automated).
+- **Pre-condition:** `pack.framework.sdd.works/lite-pack.allowlist.json` exists.
+- **Test steps:** Parse JSON. Call `validateLiteInstallManifest` with `seedRoot` `pack.framework.sdd.works`, `checkFilesExist: true`, `requireExactLists: true`. Compare arrays to `EXPECTED_LITE_SKILLS` and `EXPECTED_LITE_RULES`.
+- **Expected results:** `skills` has the twelve paths in design, sorted. `rules` is exactly `rules/friendly-language.mdc`. Every path is a file. No other top-level keys.
+
+#### CE-LITE-02 — Reject a path that is not an allow-listed seed file
+
+- **Layer:** L1 (automated).
+- **Pre-condition:** In-memory manifest documents or a temp `seedRoot` with one bad path.
+- **Test steps:** Call `validateLiteInstallManifest` with the same rules as CE-LITE-01.
+- **Expected results:** The check fails when a path is missing on disk, does not start with `skills/` or `rules/`, `skills` names an `sdd-` folder other than `sdd-build-agent`, `sdd-create-rule`, or `sdd-create-skill`, `rules` names a file whose basename starts with `sdd-`, or the document has an unexpected top-level key.
+
+## instructions-tabs-config
+
+Stories: [`app-stories.md`](../admin-portal/app-stories.md) AC22 ([feature-58](../sprint-backlog.md#sprint-8)). Design: [`app-design.md`](../admin-portal/app-design.md) instructions tabs section. Portal API and UI: feature-59, feature-60.
+
+### Strategy
+
+Unit checks on the bundled JSON seed and the config validator. No HTTP server in this slice. Pack copy of the same file is verified after [MCP-07](product-backlog.md#L325) sync. Validator `contentRoot` is the sync unpack root (directory that contains `content/`). JSON `paths` values are relative to that root, not to `src/content/` alone.
+
+### Plan
+
+| Layer | Share | Tool |
+| --- | --- | --- |
+| Unit | 100% for feature-58 validator | Vitest `src/core/seeds/instructions-tabs-config.test.ts` |
+| API | feature-59 | [`app-tests.md`](../admin-portal/app-tests.md) integration rows |
+| Browser | feature-60 | [`app-tests.md`](../admin-portal/app-tests.md) §11 |
+
+### Automation
+
+Run: `npm test -- src/core/seeds/instructions-tabs-config.test.ts`
+
+| Case | Vitest describe / behavior |
+| --- | --- |
+| CE-TABS-01 | Bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) passes validation when `contentRoot` is pack-shaped (`pack.framework.sdd.works/`) |
+| CE-TABS-02 | Invalid documents fail: wrong `version`, duplicate `queryParam`, unknown `code.id`, missing `paths.en`, path traversal |
+
+### Cases
+
+#### CE-TABS-01 — Default bundled config
+
+- **Layer:** L1 (automated).
+- **Pre-condition:** Authoring JSON exists at `src/content/.instructions-tabs.json`. Pack tree under `pack.framework.sdd.works/content/` includes the markdown paths named in that file.
+- **Test steps:** Parse the bundled JSON. Call `validateInstructionsTabsConfig` with `contentRoot` set to `pack.framework.sdd.works` (unpack-shaped root) and `codeAllowlist` `["setup"]`.
+- **Expected results:** Three tabs in order setup, features, scrum-in-sdd. Each content `paths.en` resolves to an on-disk file under `contentRoot` (for example `content/features/features.en.md`).
+
+#### CE-TABS-02 — Reject invalid config
+
+- **Layer:** L1 (automated).
+- **Pre-condition:** In-memory config documents.
+- **Test steps:** Call `validateInstructionsTabsConfig`.
+- **Expected results:** Fails on duplicate `id`, duplicate `queryParam`, `code.id` not in allowlist, `content` without `paths.en`, or path containing `..`.
+
+## lite-install-receipt
+
+Stories: [`framework-stories.md`](./framework-stories.md#lite-install-receipt). Design: [`framework-design.md`](./framework-design.md#lite-install-receipt). [feature-57](../sprint-backlog.md#sprint-8).
+
+### Strategy
+
+Unit checks on receipt shape and the merge plan. No HTTP server, no browser, no write to a real `{client_root}`. Happy path is a valid receipt and `already_up_to_date`. Failure path is `pack_complete`, a bad path, a partial place, and delete-before-stage.
+
+### Plan
+
+| Layer | Share | Tool |
+| --- | --- | --- |
+| Unit | 100% for this SBI | Vitest [`src/core/seeds/lite-install-receipt.test.ts`](../../src/core/seeds/lite-install-receipt.test.ts) |
+| API | N/A | File links stay on Web-portal-17 |
+| Browser | N/A | No screen |
+
+### Automation
+
+Run: `npm test -- src/core/seeds/lite-install-receipt.test.ts`
+
+| Case | Vitest describe / behavior |
+| --- | --- |
+| CE-LITE-03 | `CE-LITE-03 — receipt shape` reads the example JSON and rejects `pack_complete` and paths outside `skills/` or `rules/` |
+| CE-LITE-04 | `CE-LITE-04 — merge plan` covers already up to date, deletes only after the new set is named, and does not replace the receipt when a path is missing on disk |
+
+### Cases
+
+#### CE-LITE-03 — Receipt shape
+
+- **Layer:** L1 (automated).
+- **Pre-condition:** `pack.framework.sdd.works/.sdd-lite-installed.example.json` exists.
+- **Test steps:** Parse JSON. Call `validateLiteInstallReceipt`. Repeat with a document that adds `pack_complete` or a `files` entry `agents/ethan.md`.
+- **Expected results:** The example passes with `schema_version` 1 and sorted `files`. The bad documents fail.
+
+#### CE-LITE-04 — Merge plan
+
+- **Layer:** L1 (automated).
+- **Pre-condition:** In-memory previous receipt, next server list, and a set of paths that exist.
+- **Test steps:** Call `planLiteInstallReceipt`.
+- **Expected results:** Matching version, commit, and existing files return `already_up_to_date` and empty download and delete lists. A path only on the previous receipt is in `deletes` and is not applied until every next path is present. When a next path is absent, the plan does not authorize a receipt write.
