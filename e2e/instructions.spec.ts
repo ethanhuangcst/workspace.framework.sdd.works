@@ -83,6 +83,32 @@ test.describe("MCP instructions", () => {
     await expect(page.getByTestId("panel-features")).toBeHidden();
   });
 
+  test("should_browse_knowledge_folder_and_open_same_tab_article", async ({
+    page,
+  }) => {
+    await page.goto("/?tab=knowledge");
+    await page.waitForLoadState("networkidle");
+
+    await expect(page.getByTestId("panel-knowledge")).toBeVisible();
+    await expect(page.getByTestId("knowledge-list")).toBeVisible();
+    await expect(page.getByTestId("knowledge-folder-archived")).toBeVisible();
+
+    await page.getByTestId("knowledge-folder-archived").click();
+    await expect(page).toHaveURL(/tab=knowledge&path=archived/);
+    await expect(page.getByTestId("knowledge-file-invoke-agent-trae")).toBeVisible();
+
+    await page.getByTestId("knowledge-file-invoke-agent-trae").click();
+    await expect(page).toHaveURL(/doc=invoke-agent-trae/);
+    await expect(page.getByTestId("knowledge-article-body")).toBeVisible();
+    await expect(page.getByTestId("knowledge-list")).toBeHidden();
+
+    await page.getByTestId("knowledge-back").click();
+    await expect(page).toHaveURL(/tab=knowledge/);
+    await expect(page).toHaveURL(/path=archived/);
+    expect(page.url()).not.toContain("doc=");
+    await expect(page.getByTestId("knowledge-list")).toBeVisible();
+  });
+
   test("should_open_scrum_in_sdd_tab_after_features", async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");

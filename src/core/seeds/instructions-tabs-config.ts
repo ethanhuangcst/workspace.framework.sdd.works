@@ -9,7 +9,12 @@ export const DEFAULT_CODE_TAB_ALLOWLIST: readonly string[] = ["setup"];
 
 export { EMBED_PAGE_HOST_ALLOWLIST };
 
-const TAB_TYPES = new Set(["code", "content", "embedded_external_page"]);
+const TAB_TYPES = new Set([
+  "code",
+  "content",
+  "embedded_external_page",
+  "internal_page_folder",
+]);
 const KNOWN_PATH_LOCALES = new Set(["en", "zh-Hans", "zh-Hant"]);
 
 export type ValidateInstructionsTabsConfigOptions = {
@@ -104,7 +109,7 @@ export function validateInstructionsTabsConfig(
 
     if (typeof type !== "string" || !TAB_TYPES.has(type)) {
       errors.push(
-        `${prefix}.type must be code, content, or embedded_external_page`,
+        `${prefix}.type must be code, content, embedded_external_page, or internal_page_folder`,
       );
       continue;
     }
@@ -203,6 +208,29 @@ export function validateInstructionsTabsConfig(
       }
     }
 
+    if (type === "internal_page_folder") {
+      const rootPath = tab.rootPath;
+      if (!isNonEmptyString(rootPath)) {
+        errors.push(`${prefix}.rootPath must be a non-empty string`);
+      } else if (!pathInsideRoot(options.contentRoot, rootPath)) {
+        errors.push(`${prefix}.rootPath is unsafe or invalid: ${rootPath}`);
+      } else if (checkFilesExist) {
+        const indexRel = join(rootPath, ".index.json");
+        const abs = join(options.contentRoot, indexRel);
+        if (!existsSync(abs)) {
+          errors.push(`missing folder index: ${indexRel}`);
+        } else if (!statSync(abs).isFile()) {
+          errors.push(`folder index is not a file: ${indexRel}`);
+        }
+      }
+      if (tab.paths !== undefined) {
+        errors.push(`${prefix} internal_page_folder must not include paths`);
+      }
+      if (tab.urls !== undefined) {
+        errors.push(`${prefix} internal_page_folder must not include urls`);
+      }
+    }
+
     if (type === "content") {
       const pathsRaw = tab.paths;
       if (
@@ -283,6 +311,15 @@ export type InstructionsTabEmbed = {
   urls: Record<string, string>;
 };
 
+export type InstructionsTabInternalFolder = {
+  type: "internal_page_folder";
+  id: string;
+  labels: InstructionsTabLabels;
+  queryParam: string;
+  panelTestId: string;
+  rootPath: string;
+};
+
 /** Resolve tab bar text for a locale; missing locales use labels.en. */
 export function resolveInstructionsTabLabel(
   labels: InstructionsTabLabels,
@@ -296,7 +333,8 @@ export function resolveInstructionsTabLabel(
 export type InstructionsTab =
   | InstructionsTabCode
   | InstructionsTabContent
-  | InstructionsTabEmbed;
+  | InstructionsTabEmbed
+  | InstructionsTabInternalFolder;
 
 export type InstructionsTabsDocument = {
   version: 1;

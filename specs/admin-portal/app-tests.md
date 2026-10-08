@@ -109,8 +109,8 @@ Portal must stay green while MCP install lands:
 Run this after task-04 and task-05, before feature-07 is marked Done. Use `/` and `/instructions`. Desktop and a viewport under 640px for the secret row.
 
 - [x] Setup copy control still copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup`
-- [x] Manual setup still shows one `mcp.json` and no `curl`
-- [x] Tools table has `sdd_install_framework` and `sdd_update_framework` and no `sdd_list_versions` row
+- [x] ~~Manual setup still shows one `mcp.json` and no `curl`~~ Superseded after [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md): no on-page Manual setup
+- [x] ~~Tools table has `sdd_install_framework` and `sdd_update_framework` and no `sdd_list_versions` row~~ Superseded after ADR-122: no Tools table on Setup
 - [x] Features tab switch still sets `aria-selected` and shows `panel-features` (WA-06)
 - [x] Get secret: known name shows `secret-result` in view; unknown name shows `secret-missing`; empty name shows `secret-empty` and does not call the API
 - [x] Reset success still uses the previous `admin.reset.sent` sentence and stays on `/reset-password` with no `?email=`
@@ -150,7 +150,7 @@ Run after feature-56 ships, before the SBI is **Done**. Covers AC20 and AC21. Fi
 - [ ] `copy-setup-prompt` still copies the `/setup` sentence
 - [ ] Setup has no `copy-lite-setup-prompt`
 - [ ] `GET /setup/install` body documents partner paste: `Fetch and execute the setup instructions from https://framework.sdd.works/setup/install`
-- [ ] Manual setup still shows one stdio `mcp.json` and no `curl`
+- [ ] ~~Manual setup still shows one stdio `mcp.json` and no `curl`~~ N/A after ADR-122 (see §25)
 - [ ] Get secret on Learn tab only; Setup and Features unchanged
 - [ ] No admin session required for `GET /setup/install`
 - [ ] No console or server error on these paths
@@ -383,7 +383,65 @@ Run before **Web-portal-34** is **Done**. [ADR-121](../adr/ADR-121-sdd-works-wor
 | Browser | `/instructions` header, `/login`, and `/` hero: wordmark sharp, no clipped splatter, no layout jump on load. Link `aria-label` still uses host string only. |
 | Out of scope | `sdd-mark.png`, favicon, apple-icon unchanged. |
 
-- [ ] Operator approved mockup before `public/` update
+- [x] Operator approved mockup before `public/` update
 - [ ] `/sdd-logo.png` serves new art in dev and CI
 - [ ] No regression on sticky guide header (ADR-111)
 - [ ] No console or server error on `/`, `/instructions`, `/login`
+
+## 25. Regression after ADR-122 (guide hero and Setup tab)
+
+Run before **Web-portal-35** is **Done**. [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md). AC36. Mockup approved 2026-10-08.
+
+| Layer | Check |
+| --- | --- |
+| i18n | `admin.guide.title` is Built on Harness. Ready for Scrum in en, zh-Hans, zh-Hant. Keys `setup_highlight`, `setup_install_phrase`, `setup_update_tool` present in all three catalogs. |
+| Hero CSS | `--font-hero` loads Antonio. `.guide-hero-title` logo height **5.625rem**, `margin-left: -23px`, h1 **700** and clamp per `app-design.md`. |
+| Setup DOM | `setup-highlight`, `copy-setup-prompt`, `copy-install-phrase`, `copy-install-cmd`, `setup-update-preface`, `guide-agents`. No `#manual-setup`, `#tools`, `copy-update-cmd`. |
+| `/setup` API | `GET /setup` markdown still documents stdio `mcp.json` (portal does not duplicate it). |
+| Component tests | `InstructionsPage.test.tsx` asserts Setup panel without manual MCP block or Tools table. |
+| Mockup | `01-home.html` and `13-instructions.html` match production structure for hero and Setup. |
+
+- [ ] Hero title and Antonio render on `/` and `/instructions`
+- [ ] Setup highlight and update preface visible in three locales
+- [ ] Install phrase copies localized text; install cmd copies `sdd_install_framework`
+- [ ] Seven agents in roster; no agents intro
+- [ ] No regression on ADR-111 sticky header or ADR-115 secret on Learn only
+- [ ] No console or server error on `/instructions`
+
+## 26. Regression after ADR-123 / WA-18 (unified guide markdown body)
+
+Run before [WA-18](../issues-log.md) closes. AC37. Mockup approved before production. [ADR-123](../adr/ADR-123-unified-guide-markdown-body.md).
+
+| Layer | Check |
+| --- | --- |
+| DOM class | Every content tab article uses `guide-md-body`; Features adds `guide-md-body--catalog`; Scrum in SDD and invoke-agents use `guide-md-body--prose`; new content tabs default to `--prose`. Legacy `features-body`, `scrum-body`, and `portal-content-body` are not on the article. |
+| HTML pipeline | `renderContentMarkdown` wraps `<table>` in `content-table` for all content paths, including `content/features/`. |
+| CSS | One rule block in `portal.css` mirrors mockup `guide-md-body`; admin global `table` / `th` / `td` do not style content-tab tables. Token `--guide-md-catalog-col1` in `tokens.css`. |
+| Width | Markdown body uses full `--guide-max` column; no inner `40rem` cap on paragraphs or tables. |
+| Mockup | `13-instructions.html` Features and Scrum samples; `14-invoke-agents-review.html`; `01-home.html` Features tab. |
+
+- [ ] User confirmed mockup for catalog tables and h3 alignment
+- [ ] Features, Scrum, and invoke-agents match mockup at desktop width
+- [ ] `instructions-tabs.test.ts` expects Features HTML to include `content-table`
+- [ ] No horizontal scroll regression (AC27 / §19)
+
+## 27. Regression after ADR-124 / feature-74 (Knowledge folder tab)
+
+Run before [feature-74](../sprint-backlog.md#sprint-9) closes. AC38. Mockup [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) confirmed 2026-10-08.
+
+| Layer | Check |
+| --- | --- |
+| Validator | `validateInstructionsTabsConfig` accepts `internal_page_folder` with `rootPath`; rejects `..` and missing root `.index.json` when file checks enabled. Index parser rejects duplicate file `id`, missing `open`, and non-`.md` paths. |
+| API / resolver | Resolves `content/knowledge/.index.json` and nested `archived/.index.json` from bundled seeds; locale label fallback to `en`; returns `open` on file entries. |
+| Unit / component | `KnowledgeFolderPanel` (or equivalent): root list hides duplicate title; subfolder shows `h2` from index labels; **Back** uses `admin.guide.knowledge_back`; `same_tab` sets `doc` and toggles list vs prose article classes. |
+| URL | `?tab=knowledge`, `?tab=knowledge&path=archived`, `?tab=knowledge&path=archived&doc=invoke-agent-trae` deep-link without client-only blank panel. |
+| new_tab | Row `href` matches same-tab article URL; `target="_blank"`; current tab stays on folder list without `doc`. |
+| CSS | `.knowledge-*` rules live in `portal.css`; list matches guide underline link pattern; no boxed file-manager chrome. |
+| E2E | Playwright: open Knowledge → archived folder → open `same_tab` article → Back → open `new_tab` row → new page has hero tabs and article. |
+| Seeds | `npm run check:pack-seeds` green after Knowledge tab row in `.instructions-tabs.json`. |
+
+- [ ] User confirmed mockup before production (done 2026-10-08)
+- [ ] Three locales smoke: root labels and **Back** string resolve
+- [ ] Broken `doc` id shows panel error, not a blank panel
+- [ ] No regression on content tabs (§26) or Learn embed (§20–§25)
+- [ ] No console or server error on Knowledge happy path

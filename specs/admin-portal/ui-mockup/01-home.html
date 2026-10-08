@@ -193,45 +193,272 @@
           hidden
         >
           <!-- Sample catalog only. The live page shows whatever markdown is in the synced file. -->
-          <article class="guide-section features-body" id="features-body" data-testid="features-body">
-            <p class="features-version">0.1.1</p>
-            <p>A short description of this pack.</p>
+          <article
+            class="guide-section guide-md-body guide-md-body--catalog"
+            id="features-body"
+            data-testid="features-body"
+          >
             <h2>What the framework does</h2>
-            <ul>
-              <li>Installs the SDD pack into the AI client.</li>
-              <li>Gives Ethan jobs for the scrum events.</li>
-              <li>Keeps project specs in a known shape.</li>
-            </ul>
+            <p>Scrum in SDD: Defines a Scrum-aligned approach to Spec-Driven Development.</p>
+            <p>SDD.works: Installs a framework pack for implementing Scrum in SDD under Harness Engineering governance.</p>
             <h2>Features</h2>
             <h3>Agents</h3>
-            <ul>
-              <li><span class="feature-name">ethan</span><span class="feature-desc">Your local sdd-scrum coach</span></li>
-            </ul>
-            <h3>Skills</h3>
-            <ul>
-              <li><span class="feature-name">sdd-kickoff-project</span><span class="feature-desc">Starts a new project</span></li>
-              <li><span class="feature-name">sdd-spec-to-build</span><span class="feature-desc">Spec then build one SBI</span></li>
-            </ul>
+            <div class="content-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ethan</td>
+                    <td>Local Scrum in SDD coach; does not install the pack</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3>Skills (Scrum and process)</h3>
+            <div class="content-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>sdd-update-project</td>
+                    <td>Set specs folder and module map; write <code>artifacts-map.json</code> after confirm</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-audit-artifacts</td>
+                    <td>Read-only audit: Uninitialized, Index broken, or Usable</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-review-status</td>
+                    <td>Compare the five process files and propose next steps</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-refine-backlog</td>
+                    <td>Review product backlog readiness; write after the user picks</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-plan-sprint</td>
+                    <td>Assign PBIs to sprints; sprint open and close in one skill</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-retrospective</td>
+                    <td>Retrospective after DoD, sprint-end, or on demand</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-spec-to-build</td>
+                    <td>Engineering readiness then build for one SBI</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-update-specs</td>
+                    <td>Sync engineering specs with the implementation</td>
+                  </tr>
+                  <tr>
+                    <td>atdd-expert</td>
+                    <td>User stories and Gherkin acceptance criteria</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-build-agent</td>
+                    <td>Create or revise an agent file after confirm</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-create-skill</td>
+                    <td>Create or revise a skill file after confirm</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-create-rule</td>
+                    <td>Create or revise a rule file after confirm</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3>Skills (Build helpers)</h3>
+            <div class="content-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>testing-expert</td>
+                    <td>Test strategy, layers, and execution</td>
+                  </tr>
+                  <tr>
+                    <td>fullstack-engineer</td>
+                    <td>Web feature end to end in the project stack</td>
+                  </tr>
+                  <tr>
+                    <td>frontend-developer</td>
+                    <td>UI components, pages, and client wiring</td>
+                  </tr>
+                  <tr>
+                    <td>frontend-designer</td>
+                    <td>Visual design for new or redesigned UI</td>
+                  </tr>
+                  <tr>
+                    <td>ai-architect</td>
+                    <td>AI and ML system design</td>
+                  </tr>
+                  <tr>
+                    <td>rag-expert</td>
+                    <td>RAG architecture and recommendations</td>
+                  </tr>
+                  <tr>
+                    <td>mcp-expert</td>
+                    <td>MCP server design and integration</td>
+                  </tr>
+                  <tr>
+                    <td>improve-prompt</td>
+                    <td>Rewrite a draft prompt for paste</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Lite HTTP install ships a subset of build helpers and <code>friendly-language.mdc</code> only.</p>
             <h3>Rules</h3>
-            <ul>
-              <li><span class="feature-name">sdd-dod.mdc</span><span class="feature-desc">Says when a story is done</span></li>
-              <li><span class="feature-name">friendly-language.mdc</span><span class="feature-desc">Keeps chat and Markdown readable for the user</span></li>
-            </ul>
+            <div class="content-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>File</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>sdd-dod.mdc</td>
+                    <td>Definition of Done; backlog close writes</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-incremental-delivery.mdc</td>
+                    <td>Finish one SBI before the next</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-realtime-status.mdc</td>
+                    <td>WIP checkpoints on process files</td>
+                  </tr>
+                  <tr>
+                    <td>friendly-language.mdc</td>
+                    <td>Clear chat and Markdown</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <h2>Artifacts</h2>
-            <h3>sdd-scrum framework</h3>
-            <ul>
-              <li><span class="feature-name">scrum-in-sdd.md</span><span class="feature-desc">Defines the framework</span></li>
-              <li><span class="feature-name">sdd-scrum-practices.md</span><span class="feature-desc">Says what to do, and when</span></li>
-            </ul>
-            <h3>sdd-scrum process</h3>
-            <ul>
-              <li><span class="feature-name">product-backlog.md</span><span class="feature-desc">Lists what the product must do</span></li>
-              <li><span class="feature-name">status.md</span><span class="feature-desc">Says where the work stands now</span></li>
-            </ul>
-            <h3>Engineering</h3>
-            <ul>
-              <li><span class="feature-name">architecture.md</span><span class="feature-desc">Says how the system is built</span></li>
-            </ul>
+            <h3>Framework templates</h3>
+            <div class="content-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>File</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>scrum-in-sdd.md</td>
+                    <td>Names and meaning for Scrum in SDD</td>
+                  </tr>
+                  <tr>
+                    <td>sdd-scrum-practices.md</td>
+                    <td>What, how, and when for each job</td>
+                  </tr>
+                  <tr>
+                    <td>artifacts-map.json</td>
+                    <td>Workspace index at the repo root</td>
+                  </tr>
+                  <tr>
+                    <td>constants.json</td>
+                    <td>Skill keys, rule keys, instructions URL</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3>Process (five files)</h3>
+            <div class="content-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>File</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>product-backlog.md</td>
+                    <td>PBIs and product Definition of Done</td>
+                  </tr>
+                  <tr>
+                    <td>sprint-backlog.md</td>
+                    <td>Sprint goal, SBIs, and RIDs</td>
+                  </tr>
+                  <tr>
+                    <td>status.md</td>
+                    <td>Current item and open OGTs</td>
+                  </tr>
+                  <tr>
+                    <td>changes-log.md</td>
+                    <td>Shipped change history</td>
+                  </tr>
+                  <tr>
+                    <td>issues-log.md</td>
+                    <td>Defect log</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3>Engineering (per module)</h3>
+            <div class="content-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pattern</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{stem}-stories.md</td>
+                    <td>User stories and acceptance criteria</td>
+                  </tr>
+                  <tr>
+                    <td>{stem}-design.md</td>
+                    <td>Design spec</td>
+                  </tr>
+                  <tr>
+                    <td>{stem}-tests.md</td>
+                    <td>Test spec</td>
+                  </tr>
+                  <tr>
+                    <td>architecture.md</td>
+                    <td>Product architecture template</td>
+                  </tr>
+                  <tr>
+                    <td>release.md</td>
+                    <td>Local start and go-live order</td>
+                  </tr>
+                  <tr>
+                    <td>test-strategy.md</td>
+                    <td>Product test strategy</td>
+                  </tr>
+                  <tr>
+                    <td>.secrets</td>
+                    <td>Secret names only; values stay outside git</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </article>
 
         </div>
@@ -246,22 +473,76 @@
           data-testid="panel-scrum"
         >
           <!-- Spike sample only. The live page shows the full synced markdown. -->
-          <article class="guide-section features-body" id="scrum-body" data-testid="scrum-body">
+          <article
+            class="guide-section guide-md-body guide-md-body--prose"
+            id="scrum-body"
+            data-testid="scrum-body"
+          >
+            <h1>Scrum in SDD</h1>
+            <p><strong>Author:</strong> Ethan Huang</p>
+            <p>
+              This document defines how Scrum is adopted in Spec-Driven Development, with Agentic
+              Programming under Harness Engineering principles.
+            </p>
+            <p>The Scrum Guide defines Scrum. This document does not replace it.</p>
+            <p>
+              Read <strong>Part I</strong> through <strong>Part III</strong> for SDD and the Scrum in
+              SDD definition. <strong>Part IV</strong> is the 2020 Scrum Guide summary at the end as
+              reference.
+            </p>
+            <h2>Index</h2>
+            <ul>
+              <li>Part I — Agentic Programming, Harness Engineering, and SDD</li>
+              <li>Part II — The gap in classic Scrum for agentic SDD</li>
+              <li>Part III — Scrum in SDD guide (KEEP / ADD / MODIFY)</li>
+              <li>Part IV — The 2020 Scrum Guide summary</li>
+            </ul>
+            <h1>Part I — Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD)</h1>
+            <p>
+              With <strong>Agentic Programming</strong> and <strong>Spec-Driven Development</strong>,
+              under <strong>Harness Engineering</strong> principles, software delivery is reshaped.
+            </p>
+            <h2>Agentic Programming</h2>
+            <p>
+              <strong>Agentic Programming</strong> is a software development approach in which
+              <strong>AI agents</strong> act as active collaborators in the engineering workflow:
+              planning, coding, testing, debugging, reviewing, and sometimes operating software.
+            </p>
+            <h2>Harness Engineering</h2>
+            <p>
+              <strong>Harness Engineering</strong> is the discipline of designing the runtime framework
+              that enables AI agents to operate reliably, safely, and effectively in real-world
+              environments.
+            </p>
+            <ul>
+              <li><strong>Tool integration</strong>: connects agents to files, APIs, and systems</li>
+              <li><strong>Execution orchestration</strong>: manages planning, action, checking, and retries</li>
+              <li><strong>Permissions and guardrails</strong>: constrain actions and reduce risk</li>
+            </ul>
+            <h2>Spec-Driven Development (SDD)</h2>
+            <p>
+              <strong>Spec-Driven Development (SDD)</strong> is an approach within agentic programming
+              in which the <strong>specification</strong> is the primary artifact.
+            </p>
+            <h1>Part IV — The 2020 Scrum Guide (summary)</h1>
             <h2>Purpose of the Scrum Guide</h2>
             <p>
-              The Scrum Guide defines Scrum, and every element serves a purpose.
-              Partial implementation can make Scrum ineffective.
+              The Scrum Guide defines Scrum, and every element serves a purpose. Partial implementation
+              can make Scrum ineffective.
             </p>
             <p>
-              Scrum applies to complex work beyond software. “Developers” refers
-              to anyone doing that work, so anyone who gains value from Scrum is
-              included.
+              Scrum applies to complex work beyond software. “Developers” refers to anyone doing that
+              work, so anyone who gains value from Scrum is included.
             </p>
+            <h2>Scrum Definition</h2>
             <p>
-              People may apply patterns, processes, and insights within Scrum,
-              but this Guide does not cover them because they are not defined in
-              Scrum.
+              Scrum is a lightweight framework that helps people, teams and organizations generate value
+              through adaptive solutions for complex problems.
             </p>
+            <h2>Scrum Theory</h2>
+            <p>Scrum is founded on empiricism and lean thinking. Empiricism asserts that knowledge comes from experience and making decisions based on what is observed.</p>
+            <h2>Scrum Values</h2>
+            <p>Successful use of Scrum depends on people becoming more proficient in living five values: Commitment, Focus, Openness, Respect, and Courage.</p>
           </article>
         </div>
       </article>

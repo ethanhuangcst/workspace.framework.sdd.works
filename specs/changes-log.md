@@ -8,13 +8,29 @@
 
 ## 2026-10-08
 
+### ADR-123 Unified guide markdown body (WA-18)
+
+**Why**: Features, Scrum, and invoke-agents each used a different body class and table CSS path. New pack content tabs would copy a third style.
+
+**What changed**: [ADR-123](./adr/ADR-123-unified-guide-markdown-body.md). [WA-18](./issues-log.md) open. AC37, [`app-design.md`](./admin-portal/app-design.md) Guide markdown body, [`app-tests.md`](./admin-portal/app-tests.md) §26. Mockup CSS and HTML use `guide-md-body` (+ `--catalog` / `--prose`). **Production not changed** until mockup confirm and build.
+
+**Verification**: Open mockup Features and `14-invoke-agents-review.html`. §26 after implementation.
+
+### ADR-122 Instructions guide hero and Setup tab (Web-portal-35)
+
+**Why**: The guide hero and Setup tab duplicated stdio config and a Tools table on the page while `/setup` markdown already holds the authoritative install doc.
+
+**What changed**: [ADR-122](./adr/ADR-122-instructions-guide-hero-and-setup-tab.md). [Web-portal-35](./product-backlog.md#pb-132) **ToDo**. AC36, [`app-tests.md`](./admin-portal/app-tests.md) §25, [`app-design.md`](./admin-portal/app-design.md) `/instructions` table. Supersedes on-page Manual setup assertions (AC4 note). Mockup approved; production parity with mockup is the build gate.
+
+**Verification**: §25 and `npm run test -- src/components/features/InstructionsPage.test.tsx` after build.
+
 ### ADR-121 SDD WORKS wordmark logo (Web-portal-34)
 
 **Why**: The portal wordmark PNG was stale. The operator supplied `src/618x618.logos.png` (718×256 SDD WORKS art).
 
-**What changed**: [ADR-121](./adr/ADR-121-sdd-works-wordmark-logo.md). [Web-portal-34](./product-backlog.md#pb-131) **ToDo**. AC35, [`app-tests.md`](./admin-portal/app-tests.md) §24, [`app-design.md`](./admin-portal/app-design.md) brand rows, [knowledge](./knowledge/agent/admin-portal-seed-and-logo.md). Mockup `assets/sdd-logo.png` updated for review. **Production `public/sdd-logo.png` and `Logo.tsx` wait on mockup approval.**
+**What changed**: [ADR-121](./adr/ADR-121-sdd-works-wordmark-logo.md). [Web-portal-34](./product-backlog.md#pb-131) **ToDo**. AC35, [`app-tests.md`](./admin-portal/app-tests.md) §24, [`app-design.md`](./admin-portal/app-design.md) brand rows, [knowledge](./knowledge/agent/admin-portal-seed-and-logo.md). Mockup approved 2026-10-08. **Production `public/sdd-logo.png` and `Logo.tsx` remain the open build step.**
 
-**Verification**: Open `specs/admin-portal/ui-mockup/13-instructions.html` in a browser. §24 after implementation.
+**Verification**: §24 after `public/` copy and `Logo.tsx` update.
 
 ### WA-17 Learn embed centered loading indicator
 

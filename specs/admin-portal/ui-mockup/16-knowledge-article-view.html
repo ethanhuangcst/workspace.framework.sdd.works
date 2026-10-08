@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Knowledge article</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="assets/mockup.css" />
+  </head>
+  <body class="home-shell guide-shell" data-title-key="admin.guide.title">
+    <a class="sr-only" href="#content">Skip to content</a>
+    <div class="shell-locale">
+      <div class="locale-switch" role="group" aria-label="Locale">
+        <button type="button" data-locale="EN">EN</button>
+        <button type="button" data-locale="CN">简</button>
+        <button type="button" data-locale="HANT">繁</button>
+      </div>
+    </div>
+    <main id="content" class="home-main">
+      <article class="guide">
+        <div class="guide-sticky">
+          <header class="guide-hero">
+            <div class="guide-hero-title">
+              <a class="logo" href="16-knowledge-folder-spike.html" aria-label="framework.sdd.works">
+                <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="718" height="256" />
+              </a>
+              <h1>Built on Harness. Ready for Scrum</h1>
+            </div>
+            <p class="guide-hero-tag">SKILLS.RULES.AGENTS.TEMPLATES</p>
+          </header>
+          <div class="guide-tabs" role="tablist" aria-label="Guide sections">
+            <button type="button" class="guide-tab" disabled aria-disabled="true">Setup</button>
+            <button type="button" class="guide-tab" disabled aria-disabled="true">Features</button>
+            <button type="button" class="guide-tab is-active" aria-selected="true">Knowledge</button>
+          </div>
+        </div>
+        <section
+          class="guide-section guide-md-body guide-md-body--prose"
+          id="knowledge-popout-body"
+        >
+          <p>Loading…</p>
+        </section>
+      </article>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="assets/i18n.js"></script>
+    <script src="assets/mockup.js"></script>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var src = params.get("src");
+        var title = params.get("title") || "Article";
+        if (title) document.title = title;
+        if (!src) {
+          document.getElementById("knowledge-popout-body").innerHTML =
+            "<p>Missing src query parameter.</p>";
+          return;
+        }
+        fetch(src)
+          .then(function (r) {
+            if (!r.ok) throw new Error(r.statusText);
+            return r.text();
+          })
+          .then(function (md) {
+            var html = window.marked.parse(md, { gfm: true });
+            html = html.replace(/<table>/g, '<div class="content-table"><table>').replace(
+              /<\/table>/g,
+              "</table></div>",
+            );
+            document.getElementById("knowledge-popout-body").innerHTML = html;
+          })
+          .catch(function (e) {
+            document.getElementById("knowledge-popout-body").textContent =
+              "Could not load: " + e.message;
+          });
+      })();
+    </script>
+  </body>
+</html>

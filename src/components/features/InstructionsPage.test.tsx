@@ -473,6 +473,21 @@ describe("InstructionsPage", () => {
     expect(screen.getByTestId("secret-lookup")).not.toBeVisible();
   });
 
+  it("should_use_guide_md_body_classes_on_content_tab_articles", () => {
+    renderGuide({
+      locale: "en",
+      featuresHtml: "<h2>Features</h2>",
+      scrumHtml: "<h1>Scrum</h1>",
+    });
+
+    expect(screen.getByTestId("features-body").className).toBe(
+      "guide-section guide-md-body guide-md-body--catalog",
+    );
+    expect(screen.getByTestId("scrum-body").className).toBe(
+      "guide-section guide-md-body guide-md-body--prose",
+    );
+  });
+
   it.each(["en", "zh-Hans", "zh-Hant"] as Locale[])(
     "should_keep_scrum_tab_label_untranslated_when_locale_is_%s",
     (locale) => {

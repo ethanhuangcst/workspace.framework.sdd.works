@@ -2,22 +2,18 @@
 
 > Type: Core artifact of framework.sdd.works
 > as_of: 2026-10-08
-> [Definition](./sdd-scrum-practices.md#terminology-in-practice)
+> **Author:** © 2026 Ethan Huang
 
-**Author:** Ethan Huang
-
-© 2026 Ethan Huang
+---
 
 This document defines how Scrum is adopted in Spec-Driven Development, with Agentic Programming under Harness Engineering principles.
 
 The Scrum Guide defines Scrum. This document does not replace it.
 
-Read **Part I** through **Part III** for SDD and the Scrum in SDD definition. **Part IV** is the 2020 Scrum Guide summary at the end as reference.
-
 - **Part I** names Agentic Programming, Harness Engineering, and Spec-Driven Development.
 - **Part II** states what classic Scrum does not cover in that setting.
 - **Part III** is the definition: what stays, what is added, and what changes.
-- **Part IV** summarizes the 2020 Scrum Guide. That summary is the baseline.
+- **Appendix**: short summary of the 2020 Scrum Guide. That summary is the baseline for classic Scrum.
 
 ## Index
 
@@ -28,20 +24,18 @@ Read **Part I** through **Part III** for SDD and the Scrum in SDD definition. **
   - [Implementing Harness Engineering Principles with SDD](#implementing-harness-engineering-principles-with-sdd)
   - [Integrating eXtreme Programming practices with SDD](#integrating-extreme-programming-practices-with-sdd)
   - [Integrating Scrum with SDD](#integrating-scrum-with-sdd)
-- [Part II The Gap in Classic Scrum When Implementing Agentic Programming with SDD](#part-ii-the-gap-in-classic-scrum-when-implementing-agentic-programming-with-sdd)
+  - [Integrating other Agile practices with SDD](#integrating-other-agile-practices-with-sdd)
+- [Part II The Scrum Gap for SDD](#part-ii-the-scrum-gap-for-sdd)
   - [SDD concepts that need to be added into scrum implementation](#sdd-concepts-that-need-to-be-added-into-scrum-implementation)
   - [Scrum concepts that need to be modified in Scrum in SDD](#scrum-concepts-that-need-to-be-modified-in-scrum-in-sdd)
 - [Part III Scrum in SDD Guide](#part-iii-scrum-in-sdd-guide)
-  - [Purpose](#purpose)
-  - [Audience](#audience)
-  - [How to read this guide](#how-to-read-this-guide)
-  - [Terminology](#terminology)
+  - [Overview](#overview)
   - [KEEP - what remains unchanged](#keep---what-remains-unchanged)
   - [ADD - what is added](#add---what-is-added)
   - [MODIFY: What changes](#modify-what-changes)
   - [Minimum Scrum in SDD setup](#minimum-scrum-in-sdd-setup)
   - [Operating principles](#operating-principles)
-- [Part IV The 2020 Scrum Guide Summary](#part-iv-the-2020-scrum-guide-summary)
+- [Appendix: Short summary of the 2020 Scrum Guide](#appendix-short-summary-of-the-2020-scrum-guide)
   - [Purpose of the Scrum Guide](#purpose-of-the-scrum-guide)
   - [Scrum Definition](#scrum-definition)
   - [Scrum Theory](#scrum-theory-1)
@@ -132,9 +126,19 @@ In **SDD**, **eXtreme Programming (XP)** practices can be embedded in the **harn
 - **Humans validate and supervise**: review outputs, resolve ambiguity, approve sensitive actions, and update the source of truth.
 - **AI provides feedback**: compare outcomes against the spec and surface gaps or failures.
 
+## Integrating other Agile practices with SDD
+
+**SDD** treats the **spec** as the shared source of truth. Several Agile methods already center on examples, tests, and small verified steps, so they fit the same harness without a separate process stack.
+
+- **Behavior-Driven Development (BDD)**: express behavior as scenarios (often Gherkin) derived from the spec. Product, engineering, and agents share one vocabulary before code changes.
+- **Acceptance Test-Driven Development (ATDD)**: agree on acceptance tests from the spec first, then implement until those tests pass. Aligns with the **atdd-expert** skill and the ATDD line under XP above.
+- **Lean thinking**: keep batches small, reduce handoff waste, and inspect outcomes against the spec often. Matches short sprints and incremental delivery in this guide.
+- **Kanban**: visualize work on the backlog and sprint board, limit work in progress, and pull the next item only when the spec for it is ready enough to build.
+- **Continuous delivery**: integrate and deploy when the spec, tests, and Definition of Done all pass. CI/CD in the harness automates that check.
+
 [Back to top](#index)
 
-# **Part II** The Gap in Classic Scrum When Implementing Agentic Programming with SDD
+# **Part II** The Scrum Gap for SDD
 
 When implementing **SDD** under **Harness Engineering principles**, gaps emerge that change the **Scrum definition**.
 
@@ -223,11 +227,11 @@ Harness layers and SDD artifacts are added to classic Scrum. The authoritative l
 
 # **Part III** Scrum in SDD Guide
 
-## Purpose
+## Overview
 
 This guide defines Scrum in SDD by stating what stays, what is added, and what changes.
 
-## Audience
+**Audience**
 
 This guide is for both humans and AI agents.
 
@@ -235,14 +239,14 @@ This guide is for both humans and AI agents.
 - **AI agents** execute within defined constraints.
 - Both use the same rules, artifacts, and terminology.
 
-## How to read this guide
+**How to read this guide**
 
 - **Keep**: classic Scrum concepts that remain valid.
 - **Add**: new concepts required by SDD under Harness Engineering principles.
 - **Modify**: classic Scrum concepts that change in Scrum in SDD.
 
 
-## Terminology
+**Terminology**
 
 - **Scrum in SDD**: Scrum adapted for SDD under Harness Engineering principles.
 - **Spec**: the source of truth for behavior, constraints, and acceptance criteria.
@@ -434,7 +438,7 @@ These are not project artifacts. They are not in any group above.
 
 [Back to top](#index)
 
-# **Part IV** The 2020 Scrum Guide Summary
+# Appendix: Short summary of the 2020 Scrum Guide
 
 **Authors:** Ken Schwaber & Jeff Sutherland
 

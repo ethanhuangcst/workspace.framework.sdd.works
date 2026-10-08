@@ -11,6 +11,7 @@ import { GET as getVersions } from "./versions/route";
 import { GET as getPackage } from "./package/route";
 import { GET as getFeatures } from "./features/route";
 import { GET as getInstructionsTabs } from "./instructions-tabs/route";
+import { GET as getInstructionsFolder } from "./instructions-folder/route";
 import { INSTRUCTIONS_TABS_PACK_RELATIVE } from "@/core/seeds/instructions-tabs-config";
 import { GET as getLiteFiles } from "./lite/files/route";
 import { GET as getLiteFile } from "./lite/file/route";
@@ -323,7 +324,10 @@ describe("GET /api/sdd/instructions-tabs", () => {
       "content/features/features.en.md":
         "## Features\n\n- ethan — Tabs API cache.\n",
       "content/scrum-in-sdd/scrum-in-sdd.en.md": "# Scrum\n\nTabs API.\n",
-      "content/invoke-agents/invoke-agents.en.md": "# Invoke\n\nTabs API.\n",
+      "content/knowledge/.index.json": readFileSync(
+        join(process.cwd(), "src/content/knowledge/.index.json"),
+        "utf8",
+      ),
     });
     const res = await getInstructionsTabs(tabsRequest("en"));
     expect(res.status).toBe(200);
@@ -343,7 +347,8 @@ describe("GET /api/sdd/instructions-tabs", () => {
       "setup",
       "features",
       "scrum-in-sdd",
-      "invoke-agents",
+      "knowledge",
+      "learn-scrum-in-sdd",
     ]);
     expect(body.tabs.find((t) => t.id === "setup")?.type).toBe("code");
     expect(body.tabs.find((t) => t.id === "features")?.html).toContain(
@@ -365,13 +370,30 @@ describe("GET /api/sdd/instructions-tabs", () => {
       [INSTRUCTIONS_TABS_PACK_RELATIVE]: JSON.stringify(invalid),
       "content/features/features.en.md": "## Features\n\n- ethan — Bundled config.\n",
       "content/scrum-in-sdd/scrum-in-sdd.en.md": "# Scrum\n\nBundled config.\n",
-      "content/invoke-agents/invoke-agents.en.md": "# Invoke\n\nBundled config.\n",
+      "content/knowledge/.index.json": readFileSync(
+        join(process.cwd(), "src/content/knowledge/.index.json"),
+        "utf8",
+      ),
     });
     const res = await getInstructionsTabs(tabsRequest("en"));
     expect(res.status).toBe(200);
     const body = (await res.json()) as { source: string; tabs: { id: string }[] };
     expect(body.source).toBe("bundled");
     expect(body.tabs.some((t) => t.id === "setup")).toBe(true);
+  });
+
+  it("should_return_folder_listing_for_knowledge_root", async () => {
+    const req = new NextRequest(
+      "http://localhost/api/sdd/instructions-folder?locale=en&rootPath=content/knowledge",
+    );
+    const res = await getInstructionsFolder(req);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      ok: boolean;
+      listing: { entries: { id: string }[] };
+    };
+    expect(body.ok).toBe(true);
+    expect(body.listing.entries.map((e) => e.id)).toContain("archived");
   });
 });
 

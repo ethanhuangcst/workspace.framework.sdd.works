@@ -146,7 +146,7 @@ A missing or incomplete pack is handled in §2.4. Ethan does not fill the gap by
 
 If `<workspace>/.cursor/agents/ethan.md` already exists, Cursor loads that file instead of the user-root agent. The product does not create it. Remove it when this project should use the installed agent.
 
-This repository has no `.cursor/` directory. It was removed on 2026-09-23. There is no workspace agent, no workspace skill or rule tree, and no workspace template pack here. `/ethan` in this repo is `~/.cursor/agents/ethan.md` only. Live product specs stay in `specs/`.
+This product repo may ship **maintainer-only** skills under `<workspace>/.cursor/skills/` (for example **`sdd-guide-editor`**). Those folders are not copied by MCP install, are not listed in pack `constants.json`, and are not part of Ethan onboard. There is no workspace agent file here unless an operator adds one; `/ethan` in this repo still loads `~/.cursor/agents/ethan.md` when no workspace agent exists. Live product specs stay in `specs/`.
 
 #### 2.2 Onboard
 
@@ -1189,6 +1189,19 @@ Authoring skill for a pack rule file. [Skill-16](../product-backlog.md#L130). [A
 
 The skill writes one rule file at `{client_root}/{rules_dir}/<name>.mdc`. `rules_dir` comes from `constants.json`. One confirm covers that file. When `constants.json` or `rules_dir` cannot be read, it stops without writing. A new key in the `constants.json` `rules` object is a second confirm. Framework-bound rule file names use an `sdd-` prefix per [ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md).
 
+### sdd-guide-editor
+
+Maintainer skill for dual-audience Scrum in SDD guides. [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md). Product repo only. Not a practices job. No pack seed. No `constants.json` key.
+
+| Role | Path |
+| --- | --- |
+| Skill | `.cursor/skills/sdd-guide-editor/SKILL.md` |
+| Variant rules and seed map | `.cursor/skills/sdd-guide-editor/reference.md` |
+
+The skill edits human portal seeds and agent template seeds per [`reference.md`](../../.cursor/skills/sdd-guide-editor/reference.md). Default canonical EN path is `pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md`. It applies friendly-language and pack-authoring link rules on human files. It runs `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` after EN structural edits. It mirrors human seeds to `src/content/scrum-in-sdd/`. Agent template sync is manual per reference until `--derive-agent` exists.
+
+It loads **`sdd-update-specs`** when Index anchors, part or appendix titles, or `.instructions-tabs.json` paths change. It does not ship files under `pack.framework.sdd.works/skills/`. It does not edit the five process files. It does not mark backlog rows Done. Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-23**.
+
 ### improve-prompt
 
 Utility skill for prompt quality. [Skill-14](../product-backlog.md#L120). [ADR-099](../adr/ADR-099-improve-prompt-skill-name.md). Not a practices job. No `constants.json` key.
@@ -1377,7 +1390,7 @@ Instructions page tab order and types ([Spec-seeds-16](../product-backlog.md#L27
 | Resolver + API (feature-59) | [`resolveInstructionsTabs`](../../src/lib/instructions-tabs.ts), [`GET /api/sdd/instructions-tabs`](../../src/app/api/sdd/instructions-tabs/route.ts) |
 | UI (feature-60) | `InstructionsPage` dynamic tab list; `CODE_TAB_REGISTRY` with `setup` panel |
 
-**Validator contract (feature-58, amended [ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md)):** `validateInstructionsTabsConfig(document, { contentRoot, codeAllowlist })`. Each tab requires **`labels.en`**; **`labelKey` is invalid**. `contentRoot` is the sync unpack root (the directory that contains `content/`). Each `paths.{locale}` value joins to `contentRoot` for safety and optional file-existence checks. CE-TABS-01 uses `pack.framework.sdd.works` as `contentRoot` because the bundled JSON lives at `src/content/.instructions-tabs.json` but path strings stay pack-shaped (`content/features/…`). At runtime the resolver reads markdown from cache under `contentRoot`, then package fallback under `src/content/` with the same path mapping as Features ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Resolver exposes **`label`** per tab for the requested locale.
+**Validator contract (feature-58, amended [ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md), [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md) for feature-74):** `validateInstructionsTabsConfig(document, { contentRoot, codeAllowlist })`. Each tab requires **`labels.en`**; **`labelKey` is invalid**. `contentRoot` is the sync unpack root (the directory that contains `content/`). Each `paths.{locale}` value joins to `contentRoot` for safety and optional file-existence checks. Each **`internal_page_folder`** row requires **`rootPath`** (pack-relative directory under `content/`); reject escape via `..`; when file checks run, require **`{contentRoot}/{rootPath}/.index.json`**. Per-folder **`.index.json`** files validate in the folder resolver (see [`app-design.md`](../admin-portal/app-design.md) Internal page folder). CE-TABS-01 uses `pack.framework.sdd.works` as `contentRoot` because the bundled JSON lives at `src/content/.instructions-tabs.json` but path strings stay pack-shaped (`content/features/…`). At runtime the resolver reads markdown from cache under `contentRoot`, then package fallback under `src/content/` with the same path mapping as Features ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Resolver exposes **`label`** per tab for the requested locale.
 
 **API contract (feature-59):** Top-level `source` is `cache` or `bundled` for which config file validated. Do not use `configSource`. Each content tab may set `contentSource` `cache` or `package` for its markdown body, plus `sourceLocale` when locale fallback applies.
 
@@ -1457,6 +1470,22 @@ Names and meaning. It does not take what, how, and when from practices.
 | After install | `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md` |
 
 It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads it from the client-root locale folder.
+
+**Agent variant.** No `## Index`. Links target install-safe pack paths (`./sdd-scrum-practices.md`, `{client_root}/skills/`, `{client_root}/rules/`). Do not link to `specs/adr/` or other product-only trees in the agent seed.
+
+#### Portal human variant (Scrum in SDD tab)
+
+Long-form guide for people on the instructions portal. [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md).
+
+| Role | Path |
+| --- | --- |
+| Pack authoring | `pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` |
+| Product mirror | `src/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` |
+| Tab config | `pack.framework.sdd.works/content/.instructions-tabs.json` (`scrum-in-sdd` content tab) |
+
+**Human variant.** Includes `## Index` (h1 and h2 headings only). No links that require this product repo or other non-shipped artifacts. English body order: Part I–III, then **Appendix: Short summary of the 2020 Scrum Guide**. After structural EN edits, run `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` in this repo. Run `npm run check:pack-seeds` before pack push.
+
+Semantic content stays aligned with the agent template seeds; Index and link policy differ. Maintainers use **`sdd-guide-editor`** in `.cursor/skills/sdd-guide-editor/`. When anchors or tab paths change, load **`sdd-update-specs`** for admin-portal specs.
 
 ### coach-knowledge.md
 

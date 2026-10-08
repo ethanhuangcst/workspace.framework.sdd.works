@@ -8,6 +8,7 @@ import { AuthShell } from "@/components/layout/AuthShell";
 import { Logo } from "@/components/ui/Logo";
 import { LearnScrumEmbedPanel } from "@/components/features/LearnScrumEmbedPanel";
 import { SetupGuidePanel } from "@/components/features/SetupGuidePanel";
+import { KnowledgeFolderPanel } from "@/components/features/KnowledgeFolderPanel";
 import {
   contentBodyClassName,
   contentBodyTestId,
@@ -40,7 +41,9 @@ export function InstructionsPage({
 
   function tabHref(queryParam: string): string {
     if (queryParam === setupQueryParam) return pathname;
-    return `${pathname}?tab=${encodeURIComponent(queryParam)}`;
+    const params = new URLSearchParams();
+    params.set("tab", queryParam);
+    return `${pathname}?${params.toString()}`;
   }
 
   return (
@@ -113,6 +116,20 @@ export function InstructionsPage({
                 id={contentBodyTestId(tab.id)}
                 data-testid={contentBodyTestId(tab.id)}
                 dangerouslySetInnerHTML={{ __html: tab.html ?? "" }}
+              />
+            ) : null}
+            {tab.type === "internal_page_folder" &&
+            tab.rootPath &&
+            tab.knowledge ? (
+              <KnowledgeFolderPanel
+                locale={locale}
+                queryParam={tab.queryParam}
+                rootPath={tab.rootPath}
+                folderSegments={tab.knowledge.folderSegments}
+                doc={tab.knowledge.doc}
+                listing={tab.knowledge.listing}
+                articleHtml={tab.knowledge.articleHtml}
+                error={tab.knowledge.error}
               />
             ) : null}
           </div>

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildInstructionsPageModel,
   resolveActiveTabQueryParam,
   type InstructionsPageTab,
 } from "./instructions-tabs-page";
@@ -32,5 +33,32 @@ describe("resolveActiveTabQueryParam", () => {
 
   it("should_select_matching_tab_query_param", () => {
     expect(resolveActiveTabQueryParam("features", tabs)).toBe("features");
+  });
+});
+
+describe("buildInstructionsPageModel — knowledge folder", () => {
+  it("should_attach_listing_when_knowledge_tab_selected", () => {
+    const { tabs, activeQueryParam } = buildInstructionsPageModel(
+      "en",
+      "knowledge",
+    );
+    expect(activeQueryParam).toBe("knowledge");
+    const knowledge = tabs.find((t) => t.id === "knowledge");
+    expect(knowledge?.type).toBe("internal_page_folder");
+    expect(knowledge?.knowledge?.listing?.entries.length).toBeGreaterThan(0);
+    expect(knowledge?.knowledge?.doc).toBeNull();
+  });
+
+  it("should_attach_article_html_when_doc_query_present", () => {
+    const { tabs } = buildInstructionsPageModel(
+      "en",
+      "knowledge",
+      "archived",
+      "invoke-agent-trae",
+    );
+    const knowledge = tabs.find((t) => t.id === "knowledge");
+    expect(knowledge?.knowledge?.doc).toBe("invoke-agent-trae");
+    expect(knowledge?.knowledge?.articleHtml).toContain("internal_page_folder");
+    expect(knowledge?.knowledge?.listing).toBeNull();
   });
 });

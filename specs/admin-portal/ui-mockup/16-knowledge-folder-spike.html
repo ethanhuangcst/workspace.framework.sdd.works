@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Knowledge folder spike</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="assets/mockup.css" />
+  </head>
+  <body class="home-shell guide-shell" data-title-key="admin.guide.title">
+    <a class="sr-only" href="#content">Skip to content</a>
+    <div class="shell-locale">
+      <div class="locale-switch" role="group" aria-label="Locale">
+        <button type="button" data-locale="EN">EN</button>
+        <button type="button" data-locale="CN">简</button>
+        <button type="button" data-locale="HANT">繁</button>
+      </div>
+    </div>
+    <main id="content" class="home-main">
+      <article class="guide">
+        <p class="guide-tabs-note">
+          Spike for Web-portal-36 <code>internal_page_folder</code>. Run
+          <code>npx serve specs/admin-portal/ui-mockup</code> from the product repo, then open
+          <code>/16-knowledge-folder-spike.html</code>. Listing and articles load from
+          <code>assets/samples/knowledge/**/.index.json</code> and locale markdown paths.
+        </p>
+        <div class="guide-sticky">
+          <header class="guide-hero">
+            <div class="guide-hero-title">
+              <a class="logo" href="index.html" aria-label="Mockup gallery">
+                <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="718" height="256" />
+              </a>
+              <h1>Built on Harness. Ready for Scrum</h1>
+            </div>
+            <p class="guide-hero-tag">SKILLS.RULES.AGENTS.TEMPLATES</p>
+          </header>
+          <div class="guide-tabs" role="tablist" aria-label="Guide sections">
+            <button type="button" class="guide-tab" disabled aria-disabled="true">Setup</button>
+            <button type="button" class="guide-tab" disabled aria-disabled="true">Features</button>
+            <button type="button" class="guide-tab is-active" aria-selected="true">Knowledge</button>
+          </div>
+        </div>
+
+        <section
+          id="knowledge-browser"
+          class="guide-section knowledge-browser"
+          data-testid="panel-knowledge"
+          aria-label="Knowledge browser"
+        >
+          <p class="sr-only" aria-live="polite"></p>
+
+          <nav class="knowledge-crumb" aria-label="Folder path"></nav>
+
+          <div class="knowledge-stage">
+            <div class="knowledge-list-view"></div>
+            <article
+              class="knowledge-article-view guide-section guide-md-body guide-md-body--prose"
+              hidden
+            ></article>
+          </div>
+        </section>
+      </article>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="assets/i18n.js"></script>
+    <script src="assets/mockup.js"></script>
+    <script src="assets/knowledge-spike.js"></script>
+  </body>
+</html>

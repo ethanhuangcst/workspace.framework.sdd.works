@@ -26,4 +26,5 @@
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --max: 760px;
   --guide-max: 56rem;
+  --guide-md-catalog-col1: 11rem;
 }

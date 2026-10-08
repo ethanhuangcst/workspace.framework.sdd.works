@@ -42,7 +42,7 @@ Facts:
 
 ### Implementation gate
 
-Production `public/sdd-logo.png`, `Logo.tsx` dimensions, and any CSS offset tweaks ship **after** the operator approves the mockup. Specs and ADR may land first.
+Operator approved the mockup (2026-10-08). Production may copy `src/618x618.logos.png` to `public/sdd-logo.png`, update `Logo.tsx` to **718×256**, and run [`app-tests.md`](../admin-portal/app-tests.md) §24.
 
 ## Rationale
 

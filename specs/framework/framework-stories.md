@@ -909,6 +909,81 @@ Scenario: Process files stay out of scope
 
 Tests: CE-SKILL-14. User confirmed usable 2026-10-05 ([feature-44](../sprint-backlog.md#sprint-7)).
 
+### sdd-guide-editor
+
+Design: [framework-design § sdd-guide-editor](./framework-design.md#sdd-guide-editor). [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md).
+
+**As the** framework.sdd.works maintainer editing the Scrum in SDD guide
+**I want** a product-repo skill that separates human portal seeds from agent templates and keeps locales aligned
+**So that** portal copy ships standalone and client templates stay link-rich without drift
+
+#### AC1
+
+```gherkin
+Scenario: Skill lives only in the product repo
+  Given the framework.sdd.works workspace
+  When the sdd-guide-editor skill file is read
+  Then the path is .cursor/skills/sdd-guide-editor/SKILL.md
+  And reference.md sits beside SKILL.md
+  And the folder is not under pack.framework.sdd.works/skills/
+  And constants.json has no skills key for sdd-guide-editor
+```
+
+#### AC2
+
+```gherkin
+Scenario: Human seed rules
+  Given the user asks to edit the Scrum in SDD portal guide
+  When sdd-guide-editor applies human variant rules from reference.md
+  Then edits target pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.{locale}.md
+  And the human file includes an Index with h1 and h2 only after rebuild
+  And the human file does not link to specs/adr/ or other product-only paths
+  And npm run check:pack-seeds passes on human seeds before pack push
+```
+
+#### AC3
+
+```gherkin
+Scenario: Agent template rules
+  Given EN human content is updated
+  When sdd-guide-editor syncs the agent variant
+  Then templates/{EN|HanS|HanT}/scrum-in-sdd.md under the pack tree match semantic section order
+  And agent files omit the Index block
+  And agent files may link to install-safe pack paths named in reference.md
+```
+
+#### AC4
+
+```gherkin
+Scenario: Confirm before multi-file write
+  Given the user asked for a structural guide change
+  When sdd-guide-editor is about to write pack content and src/content mirrors
+  Then it shows the draft or file list and waits for confirm
+  And it does not mark a backlog row Done
+```
+
+#### AC5
+
+```gherkin
+Scenario: Portal spec alignment
+  Given the change alters Index anchors part titles appendix title or instructions tab paths
+  When sdd-guide-editor finishes the seed edit
+  Then it loads sdd-update-specs for admin-portal module specs
+  And engineering spec writes wait for the user's confirm on that skill
+```
+
+#### AC6
+
+```gherkin
+Scenario: zh locales
+  Given EN human structure changed
+  When sdd-guide-editor updates zh-Hans and zh-Hant human seeds
+  Then the translation reads as native Simplified or Traditional Chinese
+  And structure and heading ids stay aligned with EN for portal anchors
+```
+
+Tests: CE-SKILL-23. Implement after user confirms readiness from sdd-spec-to-build.
+
 ### improve-prompt
 
 **As the** user refining a task instruction

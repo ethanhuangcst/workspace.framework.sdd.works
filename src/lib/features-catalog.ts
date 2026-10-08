@@ -86,6 +86,14 @@ function createRenderer(
   return renderer;
 }
 
+/** Wrap GFM tables so content-tab CSS scopes cells (ADR-123). */
+export function wrapGuideContentTables(html: string): string {
+  if (!html.includes("<table>")) return html;
+  return html
+    .replaceAll("<table>", '<div class="content-table"><table>')
+    .replaceAll("</table>", "</table></div>");
+}
+
 function renderMarkdown(markdown: string, splitEmDash: boolean): string {
   const headingIds = new Map<string, number>();
   const html = marked.parse(markdown, {
@@ -93,7 +101,8 @@ function renderMarkdown(markdown: string, splitEmDash: boolean): string {
     renderer: createRenderer(splitEmDash, headingIds),
     gfm: true,
   }) as string;
-  return html.replace(/<\/?script\b[^>]*>/gi, "");
+  const safe = html.replace(/<\/?script\b[^>]*>/gi, "");
+  return wrapGuideContentTables(safe);
 }
 
 export function renderFeaturesMarkdown(markdown: string): string {

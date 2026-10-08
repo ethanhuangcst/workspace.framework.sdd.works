@@ -168,6 +168,19 @@ function buildPreamble() {
   ];
 }
 
+function rebuildIndexOnly(md) {
+  const lines = md.split("\n");
+  const indexLine = lines.findIndex((l) => l === "## Index");
+  const firstPart = lines.findIndex((l) => /^# \*\*Part (I|II|III|IV)\*\* /.test(l));
+  if (indexLine < 0) throw new Error("No ## Index section found");
+  if (firstPart < 0) throw new Error("No part headings found");
+  const header = lines.slice(0, indexLine);
+  const bodyLines = lines.slice(firstPart);
+  const headings = collectHeadings(bodyLines);
+  const indexLines = buildIndexTree(headings);
+  return [...header, ...indexLines, ...bodyLines].join("\n");
+}
+
 function rebuild(md) {
   const lines = md.split("\n");
   const firstPart = lines.findIndex((l) => /^# \*\*Part (I|II|III|IV)\*\* /.test(l));
@@ -211,8 +224,11 @@ function validateIndex(md) {
   }
 }
 
+const indexOnly = process.argv.includes("--index-only");
 const source = TARGETS[0];
-const out = rebuild(readFileSync(source, "utf8"));
+const out = indexOnly
+  ? rebuildIndexOnly(readFileSync(source, "utf8"))
+  : rebuild(readFileSync(source, "utf8"));
 validateIndex(out);
 const normalized = out.endsWith("\n") ? out : `${out}\n`;
 for (const path of TARGETS) {

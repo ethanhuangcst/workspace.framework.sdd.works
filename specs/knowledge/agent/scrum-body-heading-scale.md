@@ -27,7 +27,7 @@ Tailwind’s reset sets `h1`–`h6` to `font-size: inherit`. `.features-body` th
 
 ## Lesson / guidance
 
-Do not put a heading document on `.features-body`. That class is the catalog: `h2` is the section, `h3` is the gray group label, and ` — ` splits a row. A guide needs its own class, an explicit `h1` size, and top margin on every part title after the first block.
+Do not render a long-form guide on `.features-body` or `guide-md-body--catalog`. Catalog mode uses `h2` sections, gray `h3` chips, and tables. Scrum and invoke content use `guide-md-body--prose` with explicit `h1` / `h2` scale ([ADR-123](../../adr/ADR-123-unified-guide-markdown-body.md)).
 
 ## Links
 

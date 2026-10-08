@@ -1,11 +1,10 @@
-## What the framework does
+# What the framework does
 
 Scrum in SDD: Defines a Scrum-aligned approach to Spec-Driven Development.
 SDD.works: Installs a framework pack for implementing Scrum in SDD under Harness Engineering governance.
 
-## Features
-
-### Agents
+---
+## Agents
 
 
 | Name  | Role                                                |
@@ -13,7 +12,7 @@ SDD.works: Installs a framework pack for implementing Scrum in SDD under Harness
 | ethan | Local Scrum in SDD coach; does not install the pack |
 
 
-### Skills (Scrum and process)
+## Skills (Scrum and process)
 
 
 | Name                | Role                                                                      |
@@ -34,7 +33,7 @@ SDD.works: Installs a framework pack for implementing Scrum in SDD under Harness
 
 
 
-### Skills (Build helpers)
+## Skills (Build helpers)
 
 
 | Name               | Role                                        |
@@ -49,9 +48,9 @@ SDD.works: Installs a framework pack for implementing Scrum in SDD under Harness
 | improve-prompt     | Rewrite a draft prompt for paste            |
 
 
-Lite HTTP install ships a subset of build helpers and `friendly-language.mdc` only.
 
-### Rules
+
+## Rules
 
 
 | File                         | Role                                     |
@@ -68,7 +67,7 @@ Lite HTTP install ships a subset of build helpers and `friendly-language.mdc` on
 
 
 
-### Framework templates
+### Framework artifacts
 
 
 | File                   | Role                                    |
@@ -81,7 +80,7 @@ Lite HTTP install ships a subset of build helpers and `friendly-language.mdc` on
 
 
 
-### Process (five files)
+### Process artifacts (five files)
 
 
 | File               | Role                                |
@@ -95,7 +94,7 @@ Lite HTTP install ships a subset of build helpers and `friendly-language.mdc` on
 
 
 
-### Engineering (per module)
+### Engineering artifacts (per module)
 
 
 | Pattern             | Role                                       |
@@ -107,5 +106,4 @@ Lite HTTP install ships a subset of build helpers and `friendly-language.mdc` on
 | release.md          | Local start and go-live order              |
 | test-strategy.md    | Product test strategy                      |
 | `.secrets`          | Secret names only; values stay outside git |
-
 

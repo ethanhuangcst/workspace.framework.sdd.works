@@ -105,6 +105,14 @@ describe("renderFeaturesMarkdown", () => {
       'class="feature-desc">The scrum-master agent.</span>',
     );
   });
+
+  it("should_wrap_tables_in_content_table", () => {
+    const html = renderFeaturesMarkdown(
+      "| Role | Notes |\n| --- | --- |\n| ethan | Coach |\n",
+    );
+    expect(html).toContain('<div class="content-table"><table>');
+    expect(html).toContain("</table></div>");
+  });
 });
 
 describe("readFeaturesCatalog", () => {
@@ -150,7 +158,8 @@ describe("readFeaturesCatalog", () => {
     const result = readFeaturesCatalog("en");
     expect(result.source).toBe("package");
     expect(result.sourceLocale).toBe("en");
-    expect(result.html).toContain('class="feature-name">ethan</span>');
+    expect(result.html).toContain("<td>ethan</td>");
+    expect(result.html).toContain("content-table");
   });
 
   it("should_use_package_when_cache_has_no_english_file", () => {
@@ -160,7 +169,7 @@ describe("readFeaturesCatalog", () => {
     });
     const result = readFeaturesCatalog("en");
     expect(result.source).toBe("package");
-    expect(result.html).toContain('class="feature-name">ethan</span>');
+    expect(result.html).toContain("<td>ethan</td>");
   });
 
   it("should_use_package_when_features_only_at_unpack_root", () => {
@@ -193,7 +202,8 @@ describe("readPackageFeaturesCatalog", () => {
     const result = readPackageFeaturesCatalog("en");
     expect(result.source).toBe("package");
     expect(result.sourceLocale).toBe("en");
-    expect(result.html).toContain('class="feature-name">ethan</span>');
+    expect(result.html).toContain("<td>ethan</td>");
+    expect(result.html).toContain("content-table");
   });
 
   it("should_use_english_when_zh_Hant_file_missing", () => {

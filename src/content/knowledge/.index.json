@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "labels": {
+    "en": "Knowledge",
+    "zh-Hans": "知识",
+    "zh-Hant": "知識"
+  },
+  "entries": [
+    {
+      "kind": "file",
+      "id": "invoke-agents",
+      "labels": {
+        "en": "How to invoke custom agents",
+        "zh-Hans": "如何召唤自建智能体",
+        "zh-Hant": "如何叫出自訂智能體"
+      },
+      "paths": {
+        "en": "invoke-agents/invoke-agents.en.md",
+        "zh-Hans": "invoke-agents/invoke-agents.zh-Hans.md",
+        "zh-Hant": "invoke-agents/invoke-agents.zh-Hant.md"
+      },
+      "open": "same_tab"
+    },
+    {
+      "kind": "file",
+      "id": "call-skills",
+      "labels": {
+        "en": "How to call skills",
+        "zh-Hans": "如何调用技能",
+        "zh-Hant": "如何叫出技能"
+      },
+      "paths": {
+        "en": "call-skills/call-skills.en.md",
+        "zh-Hans": "call-skills/call-skills.zh-Hans.md",
+        "zh-Hant": "call-skills/call-skills.zh-Hant.md"
+      },
+      "open": "same_tab"
+    },
+    {
+      "kind": "folder",
+      "id": "archived",
+      "labels": {
+        "en": "Archived",
+        "zh-Hans": "归档",
+        "zh-Hant": "封存"
+      },
+      "path": "archived"
+    }
+  ]
+}

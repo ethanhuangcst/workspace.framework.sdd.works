@@ -65,7 +65,7 @@ describe("CE-TABS-01 — default bundled config", () => {
       "setup",
       "features",
       "scrum-in-sdd",
-      "invoke-agents",
+      "knowledge",
       "learn-scrum-in-sdd",
     ]);
   });

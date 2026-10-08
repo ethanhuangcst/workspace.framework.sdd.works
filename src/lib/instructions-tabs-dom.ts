@@ -1,11 +1,27 @@
+import type { KnowledgeFolderListing } from "@/lib/knowledge-folder-shared";
+
+export type KnowledgeFolderPanelState = {
+  folderSegments: string[];
+  doc: string | null;
+  listing: KnowledgeFolderListing | null;
+  articleHtml: string | null;
+  error: string | null;
+};
+
 export type InstructionsPageTab = {
   id: string;
-  type: "code" | "content" | "embedded_external_page";
+  type:
+    | "code"
+    | "content"
+    | "embedded_external_page"
+    | "internal_page_folder";
   queryParam: string;
   label: string;
   panelTestId: string;
   html?: string;
   embedUrl?: string;
+  rootPath?: string;
+  knowledge?: KnowledgeFolderPanelState;
 };
 
 export function guideTabTestId(tabId: string): string {
@@ -26,7 +42,7 @@ export function contentBodyTestId(tabId: string): string {
 }
 
 export function contentBodyClassName(tabId: string): string {
-  if (tabId === "features") return "guide-section features-body";
-  if (tabId === "scrum-in-sdd") return "guide-section scrum-body";
-  return "guide-section portal-content-body";
+  const base = "guide-section guide-md-body";
+  if (tabId === "features") return `${base} guide-md-body--catalog`;
+  return `${base} guide-md-body--prose`;
 }

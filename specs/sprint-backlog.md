@@ -681,7 +681,7 @@ No open rows.
 
 [Back to the top](#sprint-backlog-frameworksddworks)
 
-Sprint Goal: Visitors use the portal at sdd.works and the WordPress learn course at learn.sdd.works; Get secret sits on the Learn tab under the course embed.
+Sprint Goal: Visitors use the portal at sdd.works and the WordPress learn course at learn.sdd.works; Get secret sits on the Learn tab under the course embed; a pack-driven **Knowledge** tab can browse a folder tree via **`internal_page_folder`** ([Web-portal-36](./product-backlog.md#pb-133)).
 
 Depends on Sprint 8 (Learn embed tab and content tabs).
 
@@ -701,6 +701,7 @@ No open rows.
 | --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | 1   | feature-72 | Hostnames learn.sdd.works and sdd.works    | [Web-portal-30 Hostnames learn.sdd.works and sdd.works](./product-backlog.md#pb-127) | Webapp/Feature | - [Web-portal-20](./product-backlog.md#pb-106)<br>- [Web-portal-09](./product-backlog.md#pb-76)<br>- [Web-portal-22](./product-backlog.md#pb-108)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- DNS, TLS, redirects, embed allowlist, setup copy URLs | **ToDo** |
 | 2   | feature-73 | Get secret on Learn Scrum tab              | [Web-portal-31 Get secret on Learn Scrum tab](./product-backlog.md#pb-128) | Webapp/Feature | - [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- [`LearnScrumEmbedPanel`](../../src/components/features/LearnScrumEmbedPanel.tsx)<br>- AC31 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
+| 3   | feature-74 | Internal page folder tab                   | [Web-portal-36 Internal page folder tab](./product-backlog.md#pb-133) | Webapp/Feature | - [Web-portal-25](./product-backlog.md#pb-112)<br>- [Web-portal-24](./product-backlog.md#pb-111)<br>- [Spec-seeds-16](./product-backlog.md#pb-110)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)<br>- Pack example `content/knowledge/` + `.index.json`<br>- ADR + stories + tests via spec-to-build | **ToDo** |
 
 ### Retrospective
 

@@ -34,13 +34,18 @@ export type InstructionsTabsConfigSource = "cache" | "bundled";
 export type ContentMarkdownSource = "cache" | "package";
 
 export type ResolvedInstructionsTab = {
-  type: "code" | "content" | "embedded_external_page";
+  type:
+    | "code"
+    | "content"
+    | "embedded_external_page"
+    | "internal_page_folder";
   id: string;
   label: string;
   queryParam: string;
   panelTestId: string;
   html?: string;
   embedUrl?: string;
+  rootPath?: string;
   sourceLocale?: Locale;
   contentSource?: ContentMarkdownSource;
 };
@@ -142,10 +147,7 @@ function renderContentMarkdown(markdown: string, relPath: string): string {
   if (relPath.includes("content/features/")) {
     return renderFeaturesMarkdown(markdown);
   }
-  const html = renderPortalMarkdown(markdown);
-  return html
-    .replaceAll("<table>", '<div class="content-table"><table>')
-    .replaceAll("</table>", "</table></div>");
+  return renderPortalMarkdown(markdown);
 }
 
 function resolveContentTab(
@@ -232,6 +234,13 @@ export function resolveInstructionsTabs(locale: Locale): InstructionsTabsResult 
         ...base,
         embedUrl,
         sourceLocale: tab.urls[locale] ? locale : "en",
+      };
+    }
+
+    if (tab.type === "internal_page_folder") {
+      return {
+        ...base,
+        rootPath: tab.rootPath,
       };
     }
 

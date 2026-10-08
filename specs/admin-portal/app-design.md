@@ -410,8 +410,24 @@ The Features tab does not keep a fixed list in the app. It shows a markdown file
 | Reader | One shared reader used by `GET /api/sdd/features?locale=` and by the page. Public. No key values. Response `{ locale, sourceLocale, source, html }` where `source` is `cache` or `package`. |
 | Locale fallback | Inside the chosen source, a missing `zh-Hans` or `zh-Hant` file uses that source’s `features.en.md` and `sourceLocale` `en`. |
 | Failed sync | If sync fails and the previous cache is still on disk, the reader serves that cache. `source` stays `cache`. |
-| Markdown | Add `marked` only. Parse on the server. Escape raw HTML. Drop `javascript:` links. Do not add an admin editor. The mock is a sample, not a schema. Inside `#features-body`, a section title is the large heading. A group label such as Agents is a small ink label on a light gray ground, not a second heading. Each entry is one line: the name, then an em dash, then the description. Lists under a heading use a disc marker and sit inset from the heading (`padding-left: 1.35rem` on the list, `0.25rem` on the item). Headings and gray group labels stay flush left. |
+| Markdown | Add `marked` only. Parse on the server. Escape raw HTML. Drop `javascript:` links. Do not add an admin editor. Catalog entries are GFM two-column tables under gray `h3` group labels ([ADR-123](../adr/ADR-123-unified-guide-markdown-body.md)). Legacy em-dash list lines may still render via `renderFeaturesMarkdown` until seeds drop lists. |
 | Forbidden | A second hardcoded Agents / Skills / Rules / Templates catalog in the component or in locale JSON. |
+
+#### Guide markdown body (ADR-123 / WA-18)
+
+All `type: "content"` tabs share one presentation stack. Setup and Learn embed tabs are out of scope.
+
+| | |
+| --- | --- |
+| Wrapper | `guide-section guide-md-body` plus `guide-md-body--catalog` (Features) or `guide-md-body--prose` (Scrum in SDD, invoke-agents, default for new content tabs) |
+| Test ids | Unchanged: `features-body`, `scrum-body`, `{tabId}-body` on the same `<article>` |
+| HTML | After marked, wrap every `<table>` in `<div class="content-table">` for all content paths |
+| Width | Body uses full `--guide-max` (56rem centered column); no inner `40rem` prose cap |
+| Tables | `table-layout: fixed`; first column `--guide-md-catalog-col1` (11rem); sentence-case headers; mono first column on `--catalog` only |
+| Catalog alignment | `--catalog` tables: `padding-left: 0.45rem` on `.content-table` so cells align with `h3` badge text inset |
+| Retired classes | Do not add new rules on `.features-body`, `.scrum-body`, or `.portal-content-body` after migration |
+
+Mockup: [`13-instructions.html`](./ui-mockup/13-instructions.html), [`14-invoke-agents-review.html`](./ui-mockup/14-invoke-agents-review.html). Verification: [`app-tests.md`](./app-tests.md) §26; AC37.
 
 #### Implementation plan (feature-07 only)
 
@@ -512,7 +528,7 @@ Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scr
 | Resolver | Shared module (for example `src/lib/instructions-tabs.ts`): read cache unpack → validate → else read bundled file only |
 | Tab order | Order of objects in `tabs[]` |
 | Default tab | When URL has no `?tab=`, select Setup (`queryParam` `setup`) even if another row is first in JSON |
-| Tab types | **`code`:** React panel from app registry (`CODE_TAB_REGISTRY`; ship `setup` → `<SetupGuidePanel />` extracted from current `InstructionsPage`). **`content`:** server-rendered markdown from explicit per-locale paths in `paths`. |
+| Tab types | **`code`:** React panel from app registry (`CODE_TAB_REGISTRY`; ship `setup` → `<SetupGuidePanel />` extracted from current `InstructionsPage`). **`content`:** server-rendered markdown from explicit per-locale paths in `paths`. **`embedded_external_page`:** iframe panel ([ADR-110](../adr/ADR-110-learn-tab-embedded-external-page.md)). **`internal_page_folder`:** index tree under **`rootPath`** ([ADR-124](../adr/ADR-124-internal-page-folder-index-json.md), feature-74). |
 | Content paths | `paths.en` required; `zh-Hans` / `zh-Hant` optional. Values are relative to unpack root. Reject `..` and absolute paths. Read cache file first, then package fallback under `src/content/…` for that path (reuse features/scrum reader helpers). |
 | API | `GET /api/sdd/instructions-tabs?locale=` — public; same resolver; response `{ version, source, tabs: [{ type, id, label, queryParam, panelTestId, html?, embedUrl?, sourceLocale?, contentSource? }] }` where `source` is `cache` or `bundled` for the config file |
 | Page | Server components on `/` and `/instructions` call resolver + markdown hydration for content tabs; client keeps WA-06 link tabs and panel `hidden` behavior |
@@ -558,7 +574,7 @@ Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scr
 }
 ```
 
-Validation (fail → bundled file only): JSON parse; `version === 1`; non-empty `tabs`; unique `id` and `queryParam`; every tab has **`labels.en`** (non-empty string); **`labelKey` rejected**; every `code.id` in allowlist; every `content` row has `paths.en`; every `embedded_external_page` row has `urls.en`; paths safe and under allowed roots; at least one `setup` code row recommended for default tab behavior. `validateInstructionsTabsConfig` takes `contentRoot` = sync unpack root; path strings join under that root for checks (see [`framework-design.md`](../framework/framework-design.md#instructions-tabs-config)).
+Validation (fail → bundled file only): JSON parse; `version === 1`; non-empty `tabs`; unique `id` and `queryParam`; every tab has **`labels.en`** (non-empty string); **`labelKey` rejected**; every `code.id` in allowlist; every `content` row has `paths.en`; every `embedded_external_page` row has `urls.en`; every **`internal_page_folder`** row has non-empty **`rootPath`** (pack folder under `content/`, no `..`); **`rootPath`** normalizes under `contentRoot`; root **`rootPath/.index.json`** must parse when `checkFilesExist` is on; at least one `setup` code row recommended for default tab behavior. Per-folder **`.index.json`** validation runs in the folder resolver (duplicate **`id`**, required **`open`** on files, safe **`paths`**, **`.md`** only). `validateInstructionsTabsConfig` takes `contentRoot` = sync unpack root; path strings join under that root for checks (see [`framework-design.md`](../framework/framework-design.md#instructions-tabs-config)).
 
 ```mermaid
 flowchart LR
@@ -601,6 +617,57 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | Code | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx): drop prefix plus split link keys; one external link; compose `GuideSecretLookup` between iframe and fallback. [`messages/*.json`](../../messages/en.json): update intro; replace two fallback keys with one |
 | Embed page | Grid-only view at `https://sdd.works/en/learn-embedded/` (replaces full `/en/learn/` hub in tab `urls`) |
 
+#### Internal page folder (feature-74 / Web-portal-36 / ADR-124)
+
+Mockup confirmed: [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) (spike script [`assets/knowledge-spike.js`](./ui-mockup/assets/knowledge-spike.js)). Spike sample tree: [`assets/samples/knowledge/`](./ui-mockup/assets/samples/knowledge/). Production mirrors pack [`content/knowledge/`](../../src/content/knowledge/). Notes: [`knowledge-folder-tab-spike.md`](../knowledge/agent/knowledge-folder-tab-spike.md).
+
+##### UI
+
+| | |
+| --- | --- |
+| Panel | Client component under **`panelTestId`** (for example `panel-knowledge`). Guide tokens from §9: cream column, underlined list links, disc list, no card browser. |
+| Tab root | Entry list only. Tab bar carries the Knowledge label. No duplicate **`h2`**. |
+| Subfolder | One **`h2`** from that folder **`.index.json`** **`labels`**. **Back** above the list when not at tab root. |
+| Article (**`same_tab`**) | Hide list; show **Back** + article in **`guide-md-body`** **`guide-md-body--prose`**. Tables wrapped in **`content-table`**. |
+| **`new_tab` row** | Same **`href`** as **`same_tab`** (`tab`, **`path`**, **`doc`**). `target="_blank"`, `rel="noopener noreferrer"`. Optional muted **`admin.guide.knowledge_new_tab_hint`**. Primary click does not set **`doc`** on the current tab. |
+| **Back** | i18n **`admin.guide.knowledge_back`**. One level up: clear **`doc`**, or pop last **`path`** segment, or return to tab root. No breadcrumb trail. |
+| Loading / error | Visible loading copy and error message in the panel; other tabs unaffected. |
+| a11y | **Back** is a button or link with accessible name from i18n. List uses **`ul`** / **`li`**. Focus management per [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md). |
+
+CSS: port spike classes **`.knowledge-*`** from [`ui-mockup/assets/mockup.css`](./ui-mockup/assets/mockup.css) into [`portal.css`](../../src/styles/portal.css) under the guide panel scope (same pass as mockup, no second styling system).
+
+##### URL sync
+
+| State | Query |
+| --- | --- |
+| Tab selected, root list | `?tab=<queryParam>` |
+| Subfolder list | `?tab=<queryParam>&path=<id>` or `path=a/b` for nested folders |
+| **`same_tab`** article | add `&doc=<file-id>` |
+
+Sync with `InstructionsClient` tab switching: changing **`tab`** clears **`path`** and **`doc`**. **`pushState`** / **`popstate`** for in-tab navigation. Deep links SSR the correct panel state when **`tab`**, **`path`**, and **`doc`** are present.
+
+##### Technical
+
+| | |
+| --- | --- |
+| Config row | `type` **`internal_page_folder`**, **`id`**, **`labels`**, **`queryParam`**, **`panelTestId`**, **`rootPath`** (for example `content/knowledge`). |
+| Index contract | [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md). |
+| Resolver module | Extend [`instructions-tabs.ts`](../../src/lib/instructions-tabs.ts) or add `knowledge-folder.ts`: load **`rootPath` + path + /.index.json`**, resolve locale labels, validate entries. |
+| Markdown | Reuse **`renderContentMarkdown`** (or shared pipeline) for article HTML. Read cache unpack then **`src/content/`** fallback ([ADR-071](../adr/ADR-071-portal-content-paths.md)). |
+| API | Extend **`GET /api/sdd/instructions-tabs`** with folder index payloads, or add **`GET /api/sdd/instructions-folder?locale=&rootPath=&path=`** for index JSON and **`&doc=`** for article metadata + html. Pick one surface in implementation; tests lock the chosen contract. |
+| SSR | [`InstructionsPage`](../../src/app/instructions/page.tsx) (and home alias) passes initial index or article html for the active locale when query params are set. |
+| Client | **`KnowledgeFolderPanel`** (name flexible): list vs article modes, **Back**, **`new_tab`** rows, **`popstate`**. Register in dynamic tab map beside content and embed panels. |
+| Validator | [`validateInstructionsTabsConfig`](../../src/core/seeds/instructions-tabs-config.ts) accepts **`internal_page_folder`**; CE-TABS tests include a fixture row. |
+| Pack ship | Bundled tab row for Knowledge plus tree under **`src/content/knowledge/`** (may replace standalone **`invoke-agents`** **`content`** tab in a follow-on commit in the same SBI). |
+
+##### Implementation plan (feature-74)
+
+1. Validator + index parser unit tests (ADR-124 fixtures under **`src/content/knowledge/`**).
+2. API + resolver integration tests (cache vs bundled, locale fallback, bad index).
+3. **`KnowledgeFolderPanel`** + **`portal.css`** + i18n keys; wire into **`InstructionsClient`**.
+4. SSR deep link for **`path`** / **`doc`**; browser checks for root → subfolder → **`same_tab`** → **Back** and **`new_tab`** row.
+5. Pack **`content/.instructions-tabs.json`** Knowledge row; run **`npm run check:pack-seeds`** and [`app-tests.md`](./app-tests.md) §27.
+
 #### Mail — `14-email-reset.html` / `15-email-invite.html`
 
 | | |
@@ -633,6 +700,7 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | `11-settings.html` | `/admin/settings` | `SettingsForm` + `AppShell` |
 | `12-framework.html` | `/admin/framework` | Framework tree feature |
 | `13-instructions.html` | `/`, `/instructions` | `InstructionsPage` + `InstructionsClient`; tab bar from `instructions-tabs` resolver (feature-60); Setup code panel + dynamic content panels |
+| `16-knowledge-folder-spike.html` | `/`, `/instructions` (`?tab=knowledge`) | **`KnowledgeFolderPanel`** (feature-74); confirmed UX reference |
 | `14` / `15` email | Resend templates | `email.css` |
 
 Optional confirmation `08-key-created.html` is not a required route — create redirects to list with saved tip.
@@ -726,4 +794,16 @@ Verification: [`app-tests.md`](./app-tests.md) §23; AC34.
 
 **Mockup:** [`ui-mockup/assets/sdd-logo.png`](./ui-mockup/assets/sdd-logo.png). Review on [`13-instructions.html`](./ui-mockup/13-instructions.html), [`01-home.html`](./ui-mockup/01-home.html), [`02-login.html`](./ui-mockup/02-login.html).
 
-Verification: [`app-tests.md`](./app-tests.md) §24; AC35. Production asset swap waits on mockup approval.
+Verification: [`app-tests.md`](./app-tests.md) §24; AC35. Mockup approved 2026-10-08; production asset swap is the remaining build step.
+
+##### Guide hero and Setup tab (ADR-122)
+
+[ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md). [Web-portal-35](../product-backlog.md#pb-132).
+
+**UI:** Hero title key `admin.guide.title`; Antonio on `h1` via `--font-hero` in [`globals.css`](../../src/styles/globals.css) and [`portal.css`](../../src/styles/portal.css). Setup lead `setup_highlight`; update line `setup_update_tool` in `.setup-update-preface`; no Manual setup or Tools table.
+
+**Technical:** [`SetupGuidePanel.tsx`](../../src/components/features/SetupGuidePanel.tsx), [`InstructionsPage.tsx`](../../src/components/features/InstructionsPage.tsx). Stdio sample stays on `GET /setup` only.
+
+**Mockup:** [`01-home.html`](./ui-mockup/01-home.html), [`13-instructions.html`](./ui-mockup/13-instructions.html).
+
+Verification: [`app-tests.md`](./app-tests.md) §25; AC36.

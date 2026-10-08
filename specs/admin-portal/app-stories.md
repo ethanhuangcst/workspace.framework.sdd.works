@@ -751,7 +751,7 @@ Scenario: Force sync refreshes tree from cache
 
 ## `sdd-admin-instructions` — MCP instructions
 
-How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moved the form to Setup; [ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md) moves it to the Learn Scrum tab (**AC31**). AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped on Features before feature-17. AC17 is historical Setup placement only. AC18 is the guide tab before configurable tabs ([Web-portal-25](../product-backlog.md#L400), feature-60). Sprint 8 feature-53 and feature-55–57 cover lite manifest seed, lite file links API, lite client receipt spec ([Spec-seeds-18](../product-backlog.md#L482)), lite install prompt, and lite one-line copy. Sprint 8 feature-58–60 cover pack `.instructions-tabs.json`, the config API, and dynamic tab UI.
+How to connect MCP clients. Public and signed-in entries. Feature-10 owns the page layout. Sprint 3 feature-04 owns the secret form chrome. Feature-05 owns the lookup and showing a value or not-found. Feature-07 owns the catalog body. Feature-17 ([ADR-067](../adr/ADR-067-get-secret-on-setup.md)) moved the form to Setup; [ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md) moves it to the Learn Scrum tab (**AC31**). AC6, AC7, AC8, and the Features placement line in AC14 stay as the record of what shipped on Features before feature-17. AC17 is historical Setup placement only. AC18 is the guide tab before configurable tabs ([Web-portal-25](../product-backlog.md#L400), feature-60). Sprint 8 feature-53 and feature-55–57 cover lite manifest seed, lite file links API, lite client receipt spec ([Spec-seeds-18](../product-backlog.md#L482)), lite install prompt, and lite one-line copy. Sprint 8 feature-58–60 cover pack `.instructions-tabs.json`, the config API, and dynamic tab UI. Sprint 9 **feature-74** / [Web-portal-36](../product-backlog.md#pb-133) adds **`internal_page_folder`** ([ADR-124](../adr/ADR-124-internal-page-folder-index-json.md)); **AC38**.
 
 ### User story 1 — Read instructions
 
@@ -793,7 +793,9 @@ Scenario: Setup copy is the one-line fetch prompt
   And the setup label uses an i18n key
 ```
 
-#### AC4 — feature-12
+#### AC4 — feature-12, superseded by AC36 ([ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md))
+
+Do not assert on-page Manual setup or Tools after Web-portal-35 ships.
 
 ```gherkin
 Scenario: Manual setup shows one mcp.json
@@ -1455,6 +1457,100 @@ Scenario: Auth and home shells show the wordmark at full scale
   Given the visitor opens /login or the home auth layout that uses logo-full
   Then the logo image src is /sdd-logo.png
   And CSS height tokens match app-design for logo-full and logo-home
+```
+
+#### AC36 — Web-portal-35 / ADR-122
+
+[ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md). Guide hero typography and Setup tab content. Mockup approved before production parity check.
+
+```gherkin
+Scenario: Guide hero shows the new title and Antonio headline
+  Given the visitor opens / or /instructions
+  Then the title resolves from key admin.guide.title to Built on Harness. Ready for Scrum in en zh-Hans and zh-Hant
+  And the hero headline uses font family Antonio via --font-hero
+  And guide-hero-title aligns the wordmark and h1 on one row
+
+Scenario: Setup tab shows highlight and install path without manual JSON
+  Given the visitor opens instructions on the Setup tab
+  Then test id setup-highlight shows text from admin.guide.setup_highlight
+  And test id copy-setup-prompt copies Fetch and execute the setup instructions from https://framework.sdd.works/setup
+  And test id copy-install-phrase copies the localized install phrase from admin.guide.setup_install_phrase
+  And test id copy-install-cmd copies sdd_install_framework
+  And the page has no element with id manual-setup
+  And the page has no element with id tools
+  And the page has no test id copy-update-cmd
+
+Scenario: Setup tab shows update hint and agents roster
+  Given the visitor opens instructions on the Setup tab
+  Then test id setup-update-preface shows text from admin.guide.setup_update_tool naming sdd_update_framework
+  And test id guide-agents lists seven agent rows
+  And the Setup tab has no agents intro paragraph keyed admin.guide.agents_intro
+```
+
+#### AC37 — WA-18 / ADR-123
+
+[ADR-123](../adr/ADR-123-unified-guide-markdown-body.md). Unified markdown styling for every `type: "content"` instructions tab. Mockup approval before production.
+
+```gherkin
+Scenario: Content tabs share guide-md-body presentation class
+  Given the instructions guide loads a content tab from content/.instructions-tabs.json
+  When the tab id is features
+  Then the panel article has classes guide-md-body and guide-md-body--catalog
+  When the tab id is scrum-in-sdd or invoke-agents
+  Then the panel article has classes guide-md-body and guide-md-body--prose
+  When the tab id is any other content row added in the pack config
+  Then the panel article has classes guide-md-body and guide-md-body--prose by default
+
+Scenario: Content tab markdown wraps tables for shared catalog CSS
+  Given the server renders HTML for any content tab path under content/
+  Then every table is inside a div with class content-table
+  And table headers use sentence case guide styling not admin uppercase mono headers
+
+Scenario: Catalog tables align across sections on Features
+  Given the visitor opens the Features tab
+  Then each content-table uses a fixed first column width from --guide-md-catalog-col1
+  And catalog tables under h3 badges indent to align with the badge label inset
+  And body copy uses the full guide column width up to --guide-max
+```
+
+#### AC38 — feature-74 / Web-portal-36 / ADR-124
+
+Knowledge folder tab from pack **`rootPath`** and per-folder **`.index.json`**. Mockup [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) confirmed before build.
+
+```gherkin
+Scenario: Knowledge tab lists entries from root index
+  Given content/.instructions-tabs.json includes a tab with type internal_page_folder and rootPath content/knowledge
+  And content/knowledge/.index.json lists folders and files with labels for the active locale
+  When the visitor opens the guide with query tab knowledge and no path or doc
+  Then panel-knowledge shows a disc list of entry labels from the root index
+  And the panel does not show a second heading that repeats the tab label
+
+Scenario: Visitor opens a subfolder in the same tab
+  Given the visitor is on the Knowledge tab root list
+  When the visitor activates a folder row
+  Then the URL includes tab knowledge and path with that folder id segment
+  And panel-knowledge shows an h2 from the subfolder index labels
+  And a Back control keyed admin.guide.knowledge_back returns to the parent list
+
+Scenario: same_tab file replaces the list with prose in the panel
+  Given a file entry in the current folder index has open same_tab
+  When the visitor activates that row without modifier keys
+  Then the URL includes doc set to that entry id
+  And the list is hidden and the article uses guide-md-body and guide-md-body--prose
+  And Back clears doc and shows the folder list again
+
+Scenario: new_tab file opens the full guide in a new browsing context
+  Given a file entry has open new_tab
+  When the visitor activates that row with a primary click
+  Then the current tab URL keeps path without doc
+  And a new tab opens with the same tab path and doc query params as same_tab would use
+  And the new tab shows the guide hero tabs Back and the article prose
+
+Scenario: Invalid index or missing markdown fails visibly
+  Given an internal_page_folder tab points at rootPath with a broken index or missing paths.en file
+  When the visitor selects that tab or navigates to an unknown doc id
+  Then panel-knowledge shows a visible error state
+  And the guide shell and other tabs still work
 ```
 
 ---

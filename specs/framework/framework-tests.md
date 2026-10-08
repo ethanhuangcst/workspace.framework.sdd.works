@@ -356,6 +356,8 @@ The same fixture must yield the same verdict on macOS, Windows, and Linux. Only 
 
 Skills that are only a product-backlog row have no steps here. When a later story writes one, its case must use `{client_root}`, must not assume English, and must name confirm-before-write if it edits a project file.
 
+**Product-repo-only** skills (not in the pack) use the workspace path as the seed in their **CE-SKILL-** case. Example: **CE-SKILL-23** reads `.cursor/skills/sdd-guide-editor/SKILL.md` in the framework.sdd.works repo.
+
 ### Plan
 
 `sdd-audit-artifacts` cases are [Audit fixtures (CodeBuddy CN)](#audit-fixtures-codebuddy-cn): one case per verdict, per stop rule, per locale report, and per path trap. Each other designed skill has one case below that names the seed path and the read-only or confirm-before-write rule. Client and OS are not multiplied on those other ids. CE-ENV covers the root. CE-LOCALE on the agent covers the reply language after the audit reports a locale.
@@ -510,6 +512,13 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Pre-condition:** Seed: `pack.framework.sdd.works/skills/sdd-update-project/SKILL.md`. Design: [framework-design § sdd-update-project](../framework/framework-design.md#sdd-update-project).
 - **Test steps:** Read the description, task 8 bullets, and Limits if present. Read [framework-stories § sdd-update-project](../framework/framework-stories.md#sdd-update-project) AC1 through AC5.
 - **Expected results:** The description or body names database, API, or auth secrets as the recommend trigger. Task 8 includes `{artifacts_root}/.secrets` in the Confirm summary when recommended, copy from `{client_root}/templates/framework.sdd.works/{locale}/.secrets` only when the target is missing, and add the path to `files[]` when the confirmed summary kept that line. The skill asks one secrets question when the workspace is empty or has no stack signal. The skill does not place `.secrets` at workspace root. The skill does not write values into `.secrets` and does not edit `.env`, `.env.local`, or `.env.example`. AC1 through AC5 match the seed behavior after implement.
+
+#### CE-SKILL-23 — sdd-guide-editor
+
+- **Layer:** L1.
+- **Pre-condition:** Framework.sdd.works product workspace. Seed: `.cursor/skills/sdd-guide-editor/SKILL.md` and `reference.md`. Design: [framework-design § sdd-guide-editor](../framework/framework-design.md#sdd-guide-editor), [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md).
+- **Test steps:** Read the seed description, Knowledge table, Limits, and `reference.md` human vs agent tables. Ask to rename an EN part heading in the Scrum guide without confirm.
+- **Expected results:** The description names human portal seeds, agent templates, sync, and zh locales. Knowledge links `reference.md` once. Limits state product-repo-only path, no pack `skills/` ship, no `constants.json` key, no process-file writes, and load **sdd-update-specs** when anchors or tab paths change. **reference.md** names human paths under `content/scrum-in-sdd/`, agent paths under `templates/{EN|HanS|HanT}/`, Index policy, and manual agent sync until derive exists. The skill waits for confirm before multi-file writes. It does not write under `pack.framework.sdd.works/skills/sdd-guide-editor/`. After implement, [framework-stories § sdd-guide-editor](../framework/framework-stories.md#sdd-guide-editor) AC1 through AC6 match the seed behavior.
 
 #### CE-SKILL-08 — get-status in HanS
 

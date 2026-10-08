@@ -137,7 +137,7 @@ describe("renderPortalMarkdown", () => {
       expect(ids.has(href), `missing heading id for index #${href}`).toBe(true);
     }
     expect(hrefs.some((h) => h.startsWith("part-i-"))).toBe(true);
-    expect(hrefs.some((h) => h.startsWith("part-iv-"))).toBe(true);
+    expect(hrefs.some((h) => h.startsWith("appendix-"))).toBe(true);
   });
 
   it("should_add_github_style_id_when_heading_has_bold", () => {

@@ -6,7 +6,7 @@ import { buildInstructionsPageModel } from "@/lib/instructions-tabs-page";
 export default async function HomePageRoute({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string }>;
+  searchParams: Promise<{ tab?: string; path?: string; doc?: string }>;
 }) {
   const cookieStore = await cookies();
   const locale = getLocaleFromCookieValue(cookieStore.get("sdd_locale")?.value);
@@ -14,6 +14,8 @@ export default async function HomePageRoute({
   const { tabs, activeQueryParam } = buildInstructionsPageModel(
     locale,
     params.tab,
+    params.path,
+    params.doc,
   );
 
   return (

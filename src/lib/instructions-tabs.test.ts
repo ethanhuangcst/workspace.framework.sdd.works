@@ -70,10 +70,13 @@ describe("resolveInstructionsTabs", () => {
   it("should_use_valid_cache_config_and_cache_markdown", () => {
     seedCache({
       [INSTRUCTIONS_TABS_PACK_RELATIVE]: defaultTabsConfig,
-      "content/features/features.en.md": "## Features\n\n- ethan — Cache tabs EN.\n",
+      "content/features/features.en.md":
+        "## Features\n\n| Name | Role |\n| --- | --- |\n| ethan | Cache tabs EN. |\n",
       "content/scrum-in-sdd/scrum-in-sdd.en.md": "# Scrum\n\nCache scrum.\n",
-      "content/invoke-agents/invoke-agents.en.md":
-        "# Invoke\n\nCache invoke.\n\n| Pattern | What happens |\n| --- | --- |\n| Same chat | Stay in the thread. |\n",
+      "content/knowledge/.index.json": readFileSync(
+        join(process.cwd(), "src/content/knowledge/.index.json"),
+        "utf8",
+      ),
     });
 
     const result = resolveInstructionsTabs("en");
@@ -82,7 +85,7 @@ describe("resolveInstructionsTabs", () => {
       "setup",
       "features",
       "scrum-in-sdd",
-      "invoke-agents",
+      "knowledge",
       "learn-scrum-in-sdd",
     ]);
     expect(result.tabs.find((t) => t.id === "setup")?.label).toBe("Setup");
@@ -96,10 +99,11 @@ describe("resolveInstructionsTabs", () => {
     expect(learn?.label).toBe("Learn Scrum in SDD");
     expect(learn?.embedUrl).toBe("https://sdd.works/en/learn-embedded/");
     expect(learn).not.toHaveProperty("labelKey");
-    const invoke = result.tabs.find((t) => t.id === "invoke-agents");
-    expect(invoke?.html).toContain('<div class="content-table"><table>');
-    expect(invoke?.html).toContain("</table></div>");
-    expect(features?.html).not.toContain("content-table");
+    const knowledge = result.tabs.find((t) => t.id === "knowledge");
+    expect(knowledge?.type).toBe("internal_page_folder");
+    expect(knowledge?.rootPath).toBe("content/knowledge");
+    expect(knowledge?.html).toBeUndefined();
+    expect(features?.html).toContain('<div class="content-table"><table>');
   });
 
   it("should_fall_back_to_bundled_config_when_cache_config_invalid", () => {
@@ -115,7 +119,10 @@ describe("resolveInstructionsTabs", () => {
       [INSTRUCTIONS_TABS_PACK_RELATIVE]: JSON.stringify(invalid),
       "content/features/features.en.md": "## Features\n\nShould not win.\n",
       "content/scrum-in-sdd/scrum-in-sdd.en.md": "# Scrum\n\nCache scrum.\n",
-      "content/invoke-agents/invoke-agents.en.md": "# Invoke\n\nCache invoke.\n",
+      "content/knowledge/.index.json": readFileSync(
+        join(process.cwd(), "src/content/knowledge/.index.json"),
+        "utf8",
+      ),
     });
 
     const result = resolveInstructionsTabs("en");
@@ -130,7 +137,10 @@ describe("resolveInstructionsTabs", () => {
       [INSTRUCTIONS_TABS_PACK_RELATIVE]: defaultTabsConfig,
       "content/features/features.en.md": "## Features\n\n- ethan — EN fallback.\n",
       "content/scrum-in-sdd/scrum-in-sdd.en.md": "# Scrum\n\nEN scrum.\n",
-      "content/invoke-agents/invoke-agents.en.md": "# Invoke\n\nEN invoke.\n",
+      "content/knowledge/.index.json": readFileSync(
+        join(process.cwd(), "src/content/knowledge/.index.json"),
+        "utf8",
+      ),
     });
 
     const result = resolveInstructionsTabs("zh-Hant");
