@@ -148,10 +148,9 @@ export function resolveKnowledgeFolderListing(
   }
 
   const { document } = loaded;
-  const folderTitle =
-    segments.length > 0 && document.labels
-      ? resolveInstructionsTabLabel(document.labels, locale)
-      : null;
+  const folderTitle = document.labels
+    ? resolveInstructionsTabLabel(document.labels, locale)
+    : null;
 
   const entries: ResolvedKnowledgeListEntry[] = document.entries.map(
     (entry) => {

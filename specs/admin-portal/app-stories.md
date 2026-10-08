@@ -1523,7 +1523,7 @@ Scenario: Knowledge tab lists entries from root index
   And content/knowledge/.index.json lists folders and files with labels for the active locale
   When the visitor opens the guide with query tab knowledge and no path or doc
   Then panel-knowledge shows a disc list of entry labels from the root index
-  And the panel does not show a second heading that repeats the tab label
+  And the panel shows an h2 from the root index labels
 
 Scenario: Visitor opens a subfolder in the same tab
   Given the visitor is on the Knowledge tab root list

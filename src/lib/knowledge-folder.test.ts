@@ -127,46 +127,31 @@ describe("resolveKnowledgeFolderListing", () => {
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.listing.folderTitle).toBeNull();
+    expect(result.listing.folderTitle).toBe("Knowledge");
     expect(result.listing.entries.map((e) => e.id)).toEqual([
       "invoke-agents",
       "call-skills",
-      "archived",
     ]);
-  });
-
-  it("should_list_archived_subfolder_with_title", () => {
-    const result = resolveKnowledgeFolderListing(
-      "content/knowledge",
-      ["archived"],
-      "en",
-    );
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(result.listing.folderTitle).toBe("Archived");
-    expect(result.listing.entries.some((e) => e.id === "invoke-agent-trae")).toBe(
-      true,
-    );
   });
 });
 
 describe("resolveKnowledgeArticle", () => {
-  it("should_render_same_tab_markdown_for_archived_entry", () => {
+  it("should_render_same_tab_markdown_for_root_entry", () => {
     const result = resolveKnowledgeArticle(
       "content/knowledge",
-      ["archived"],
-      "invoke-agent-trae",
+      [],
+      "invoke-agents",
       "en",
     );
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.article.html).toContain("internal_page_folder");
+    expect(result.article.html).toContain("custom agent");
   });
 
   it("should_fail_for_unknown_doc_id", () => {
     const result = resolveKnowledgeArticle(
       "content/knowledge",
-      ["archived"],
+      [],
       "missing-doc",
       "en",
     );

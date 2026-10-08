@@ -432,12 +432,12 @@ Run before [feature-74](../sprint-backlog.md#sprint-9) closes. AC38. Mockup [`16
 | Layer | Check |
 | --- | --- |
 | Validator | `validateInstructionsTabsConfig` accepts `internal_page_folder` with `rootPath`; rejects `..` and missing root `.index.json` when file checks enabled. Index parser rejects duplicate file `id`, missing `open`, and non-`.md` paths. |
-| API / resolver | Resolves `content/knowledge/.index.json` and nested `archived/.index.json` from bundled seeds; locale label fallback to `en`; returns `open` on file entries. |
+| API / resolver | Resolves `content/knowledge/.index.json` from bundled seeds; locale label fallback to `en`; returns `open` on file entries. |
 | Unit / component | `KnowledgeFolderPanel` (or equivalent): root list hides duplicate title; subfolder shows `h2` from index labels; **Back** uses `admin.guide.knowledge_back`; `same_tab` sets `doc` and toggles list vs prose article classes. |
-| URL | `?tab=knowledge`, `?tab=knowledge&path=archived`, `?tab=knowledge&path=archived&doc=invoke-agent-trae` deep-link without client-only blank panel. |
+| URL | `?tab=knowledge`, `?tab=knowledge&doc=invoke-agents` deep-link without client-only blank panel. |
 | new_tab | Row `href` matches same-tab article URL; `target="_blank"`; current tab stays on folder list without `doc`. |
 | CSS | `.knowledge-*` rules live in `portal.css`; list matches guide underline link pattern; no boxed file-manager chrome. |
-| E2E | Playwright: open Knowledge → archived folder → open `same_tab` article → Back → open `new_tab` row → new page has hero tabs and article. |
+| E2E | Playwright: open Knowledge → open `same_tab` article → Back to root list with subject heading. |
 | Seeds | `npm run check:pack-seeds` green after Knowledge tab row in `.instructions-tabs.json`. |
 
 - [ ] User confirmed mockup before production (done 2026-10-08)

@@ -35,16 +35,6 @@
         "zh-Hant": "call-skills/call-skills.zh-Hant.md"
       },
       "open": "same_tab"
-    },
-    {
-      "kind": "folder",
-      "id": "archived",
-      "labels": {
-        "en": "Archived",
-        "zh-Hans": "归档",
-        "zh-Hant": "封存"
-      },
-      "path": "archived"
     }
   ]
 }

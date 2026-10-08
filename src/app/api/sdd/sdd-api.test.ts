@@ -393,7 +393,10 @@ describe("GET /api/sdd/instructions-tabs", () => {
       listing: { entries: { id: string }[] };
     };
     expect(body.ok).toBe(true);
-    expect(body.listing.entries.map((e) => e.id)).toContain("archived");
+    expect(body.listing.entries.map((e) => e.id)).toEqual([
+      "invoke-agents",
+      "call-skills",
+    ]);
   });
 });
 

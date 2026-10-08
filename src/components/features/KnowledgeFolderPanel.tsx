@@ -58,7 +58,6 @@ export function KnowledgeFolderPanel({
   }
 
   const showBack = folderSegments.length > 0 || Boolean(doc);
-  const atRootList = folderSegments.length === 0 && !doc;
 
   function onBack() {
     if (doc) {
@@ -147,8 +146,10 @@ export function KnowledgeFolderPanel({
         </div>
       ) : null}
 
-      {!atRootList && listing?.folderTitle ? (
-        <h2 className="knowledge-list-title">{listing.folderTitle}</h2>
+      {listing?.folderTitle ? (
+        <h2 className="knowledge-list-title" data-testid="knowledge-folder-title">
+          {listing.folderTitle}
+        </h2>
       ) : null}
 
       {listing ? (
