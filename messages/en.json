@@ -183,7 +183,7 @@
   "admin.guide.learn_scrum_iframe_title": "SDD.works learn course",
   "admin.guide.learn_scrum_embed_loading": "Loading course",
   "admin.guide.learn_scrum_open_external": "Open learn.sdd.works in a new tab.",
-  "admin.guide.knowledge_back": "Back",
+  "admin.guide.knowledge_path_label": "Knowledge path",
   "admin.guide.knowledge_new_tab_hint": "new tab",
   "admin.guide.knowledge_loading": "Loading…",
   "admin.guide.knowledge_error": "This folder listing could not be loaded.",

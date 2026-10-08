@@ -3,7 +3,7 @@
 # sprint-backlog, framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-07
+> as_of: 2026-10-08
 > [Definition](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#sprint-backlogmd)
 
 
@@ -11,9 +11,9 @@
 ## Current project progress
 
 - Total sprints: 9
-- Current WIP sprint: [Sprint 8](#sprint-8)
-- Sprint goal: Ethan routes named jobs and guiding proposals; lite HTTP install ships manifest, links, client receipt, prompt, and copy; instructions tabs come from pack JSON including the Learn Scrum in SDD code tab; sdd-retrospective meets the current pack skill bar.
-- Next planned sprint: [Sprint 9](#sprint-9) (ToDo)
+- Current WIP sprint: [Sprint 9](#sprint-9)
+- Sprint goal: Visitors use the portal at sdd.works and the WordPress learn course at learn.sdd.works; Get secret sits on the Learn tab under the course embed; a pack-driven **Knowledge** tab can browse a folder tree via **`internal_page_folder`** ([Web-portal-36](./product-backlog.md#pb-133)).
+- Next planned sprint: none (Sprint 9 in progress)
 
 
 
@@ -685,7 +685,7 @@ Sprint Goal: Visitors use the portal at sdd.works and the WordPress learn course
 
 Depends on Sprint 8 (Learn embed tab and content tabs).
 
-**Status: ToDo**
+**Status: WIP**
 
 ### **Done**
 
@@ -693,15 +693,18 @@ No rows yet.
 
 ### **WIP**
 
-No open rows.
+| #   | Code       | SBI                           | Parent PBI                                                               | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
+| --- | ---------- | ----------------------------- | ------------------------------------------------------------------------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 1   | feature-73 | Get secret on Learn Scrum tab | [Web-portal-31 Get secret on Learn Scrum tab](./product-backlog.md#pb-128) | Webapp/Feature | - [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- [`LearnScrumEmbedPanel`](../../src/components/features/LearnScrumEmbedPanel.tsx)<br>- AC31 [`app-stories.md`](./admin-portal/app-stories.md)<br>- [WA-14](./issues-log.md), [WA-15](./issues-log.md) | **WIP** |
 
 ### **ToDo**
 
 | #   | Code       | SBI                                        | Parent PBI                                                                 | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
 | --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | 1   | feature-72 | Hostnames learn.sdd.works and sdd.works    | [Web-portal-30 Hostnames learn.sdd.works and sdd.works](./product-backlog.md#pb-127) | Webapp/Feature | - [Web-portal-20](./product-backlog.md#pb-106)<br>- [Web-portal-09](./product-backlog.md#pb-76)<br>- [Web-portal-22](./product-backlog.md#pb-108)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- DNS, TLS, redirects, embed allowlist, setup copy URLs | **ToDo** |
-| 2   | feature-73 | Get secret on Learn Scrum tab              | [Web-portal-31 Get secret on Learn Scrum tab](./product-backlog.md#pb-128) | Webapp/Feature | - [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- [`LearnScrumEmbedPanel`](../../src/components/features/LearnScrumEmbedPanel.tsx)<br>- AC31 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
-| 3   | feature-74 | Internal page folder tab                   | [Web-portal-36 Internal page folder tab](./product-backlog.md#pb-133) | Webapp/Feature | - [Web-portal-25](./product-backlog.md#pb-112)<br>- [Web-portal-24](./product-backlog.md#pb-111)<br>- [Spec-seeds-16](./product-backlog.md#pb-110)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)<br>- Pack example `content/knowledge/` + `.index.json`<br>- ADR + stories + tests via spec-to-build | **ToDo** |
+| 2   | feature-74 | Internal page folder tab                   | [Web-portal-36 Internal page folder tab](./product-backlog.md#pb-133) | Webapp/Feature | - [Web-portal-25](./product-backlog.md#pb-112)<br>- [Web-portal-24](./product-backlog.md#pb-111)<br>- [Spec-seeds-16](./product-backlog.md#pb-110)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)<br>- Pack example `content/knowledge/` + `.index.json`<br>- ADR + stories + tests via spec-to-build | **ToDo** |
+| 3   | feature-75 | Learn embed loading skeleton               | [Web-portal-32 Learn embed loading skeleton](./product-backlog.md#pb-129) | Webapp/Feature | - [ADR-118](./adr/ADR-118-learn-embed-loading-skeleton.md)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- AC32 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
+| 4   | feature-76 | Instructions tab labels in pack JSON       | [Web-portal-33 Instructions tab labels in pack JSON](./product-backlog.md#pb-130) | Webapp/Feature | - [ADR-119](./adr/ADR-119-instructions-tab-labels-in-pack-config.md)<br>- [WA-16](./issues-log.md)<br>- [Spec-seeds-16](./product-backlog.md#pb-110)<br>- [Web-portal-25](./product-backlog.md#pb-112)<br>- AC33 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
 
 ### Retrospective
 

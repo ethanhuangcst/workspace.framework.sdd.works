@@ -1540,6 +1540,18 @@ Do not put a verdict flag in the map file.
 
 No standing rule updates this file. A turn updates a stored path when the user asks for that update. `sdd-audit-artifacts` reports a stored path that fails to open and does not repair the map. [ADR-077](../adr/ADR-077-no-artifacts-map-rule.md).
 
+### Locale folders (HanS and HanT)
+
+`sdd-update-project` copies template seeds from `pack.framework.sdd.works/templates/{locale}/` when the map stores `HanS` or `HanT`. The AI-read trio (`pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, `coach-knowledge.md`) and `constants.json` stay beside `templates/` only; they are not duplicated under locale folders ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)).
+
+| Locale | Folder | Process seed basenames | Engineering seed basenames |
+| --- | --- | --- | --- |
+| `EN` | `templates/EN/` | `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, `issues-log.md` | `architecture.md`, `release.md`, `test-strategy.md`, `.secrets` |
+| `HanS` | `templates/HanS/` | same five | same four |
+| `HanT` | `templates/HanT/` | same five | same four |
+
+A HanS or HanT seed translates file titles and section headings into Simplified or Traditional Chinese. It keeps the same backlog and sprint **table column names**, status tokens (`ToDo`, `WIP`, `Done`), and codes (`Sprint 1`, `feature-01`) as the EN seed. Stable HTML ids on Index targets stay English slugs when cross-file links depend on them. Operator guidance and bracket placeholders use the target locale. Pack authoring for [i18n-05](../product-backlog.md#L307) and [i18n-03](../product-backlog.md#L304) covers these files. Generic `{stem}-stories.md`, `{stem}-design.md`, and `{stem}-tests.md` pack starters are not locale folders yet; module specs still follow EN practices sections until a later backlog item adds them.
+
 ### product-backlog.md
 
 Product requirements and acceptance for the project. The seed is a placeholder template a new project copies when the file is missing. It is not this repo's product backlog.
@@ -1547,7 +1559,7 @@ Product requirements and acceptance for the project. The seed is a placeholder t
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/product-backlog.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/product-backlog.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/product-backlog.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
 Columns, in this order: `#`, Component, PBI Code, Description, Size, Related, Sprint, Status.
 
@@ -1560,7 +1572,7 @@ Sprint schedule and the SBI list. The seed is a placeholder template for a new p
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/sprint-backlog.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/sprint-backlog.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/sprint-backlog.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
 #### Sprint item table
 
@@ -1628,7 +1640,7 @@ Current sprint projection. It is not a second sprint backlog. It is not the defe
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/status.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/status.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/status.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
 The title is `The latest status of [product name]`. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). `Definition` links [status.md](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings as a placeholder template. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
 
@@ -1639,7 +1651,7 @@ Conclusion record. An entry is written when a change is done. It states what cha
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/changes-log.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/changes-log.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/changes-log.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
 Section rules for the header and the entry are in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#changes-logmd). The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). The EN seed is a placeholder template with one sample entry block. It does not copy this repo's live change log.
 
@@ -1650,7 +1662,7 @@ Defect record. A row is opened when a defect is found and stays after it is clos
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/issues-log.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/issues-log.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/issues-log.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
 Two tables, in order.
 
@@ -1669,9 +1681,9 @@ Architecture starter for a new project. It is not this repo's architecture spec.
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/architecture.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/architecture.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/architecture.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `#architecturemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-10](../product-backlog.md#L266), [feature-47](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#L304). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `#architecturemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-10](../product-backlog.md#L266), [feature-47](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/HanS/` and `templates/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
 
 ### {stem}-stories.md
 
@@ -1700,9 +1712,9 @@ Release starter for a new project: local startup and go-live order. It is not th
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/release.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/release.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/release.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `#releasemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-11](../product-backlog.md#L268), [feature-48](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#L304). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `#releasemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-11](../product-backlog.md#L268), [feature-48](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/HanS/` and `templates/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
 
 ### test-strategy.md
 
@@ -1711,9 +1723,9 @@ Product-level test strategy starter for a new project. It extends **common-test-
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/test-strategy.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/test-strategy.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/test-strategy.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) test-strategy section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-13](../product-backlog.md#L274), [feature-50](../sprint-backlog.md#sprint-7)). HanS and HanT bodies stay on [i18n-03](../product-backlog.md#L304). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) test-strategy section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-13](../product-backlog.md#L274), [feature-50](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/HanS/` and `templates/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
 
 ### .secrets
 
@@ -1722,9 +1734,9 @@ Dotenv-shaped registry: secret **names**, empty values, `#` comments for rules a
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/.secrets` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/.secrets` |
+| Authoring seed | `pack.framework.sdd.works/templates/EN/.secrets` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `.secrets` section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#L270), [feature-49](../sprint-backlog.md#sprint-7)). The seed includes bracketed sample keys (database, auth, third-party, deploy, bootstrap) and a `{SECRET_NAME}=` placeholder line. HanS and HanT bodies stay on [i18n-03](../product-backlog.md#L304). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `.secrets` section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#L270), [feature-49](../sprint-backlog.md#sprint-7)). The seed includes bracketed sample keys (database, auth, third-party, deploy, bootstrap) and a `{SECRET_NAME}=` placeholder line. HanS and HanT authoring seeds ship under `templates/HanS/` and `templates/HanT/` with Chinese comment lines ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
 
 ### adr/
 

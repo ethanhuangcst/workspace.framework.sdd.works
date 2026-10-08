@@ -427,21 +427,21 @@ Run before [WA-18](../issues-log.md) closes. AC37. Mockup approved before produc
 
 ## 27. Regression after ADR-124 / feature-74 (Knowledge folder tab)
 
-Run before [feature-74](../sprint-backlog.md#sprint-9) closes. AC38. Mockup [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) confirmed 2026-10-08.
+Run before Knowledge path-nav revision closes (feature-74 follow-on). AC38. Mockup path trail confirmed 2026-10-08.
 
 | Layer | Check |
 | --- | --- |
 | Validator | `validateInstructionsTabsConfig` accepts `internal_page_folder` with `rootPath`; rejects `..` and missing root `.index.json` when file checks enabled. Index parser rejects duplicate file `id`, missing `open`, and non-`.md` paths. |
 | API / resolver | Resolves `content/knowledge/.index.json` from bundled seeds; locale label fallback to `en`; returns `open` on file entries. |
-| Unit / component | `KnowledgeFolderPanel` (or equivalent): root list hides duplicate title; subfolder shows `h2` from index labels; **Back** uses `admin.guide.knowledge_back`; `same_tab` sets `doc` and toggles list vs prose article classes. |
-| URL | `?tab=knowledge`, `?tab=knowledge&doc=invoke-agents` deep-link without client-only blank panel. |
+| Unit / component | `KnowledgeFolderPanel`: path trail segments match `queryParam`, `path`, and `doc`; prefix links build correct hrefs; no **Back** control; no folder `h2` on lists; `same_tab` toggles list vs prose. |
+| URL | `?tab=knowledge`, `?tab=knowledge&path=archived`, `?tab=knowledge&path=archived&doc=invoke-agent-trae`, `?tab=knowledge&doc=invoke-agents` deep-link without client-only blank panel. |
 | new_tab | Row `href` matches same-tab article URL; `target="_blank"`; current tab stays on folder list without `doc`. |
-| CSS | `.knowledge-*` rules live in `portal.css`; list matches guide underline link pattern; no boxed file-manager chrome. |
-| E2E | Playwright: open Knowledge → open `same_tab` article → Back to root list with subject heading. |
+| CSS | `.guide-folder-*` under `.guide-section.guide-folder-browser`; articles use `.guide-md-body--prose` like other content tabs; no **`.knowledge-*`** rules in `portal.css`. |
+| E2E | Playwright: Knowledge root path → subfolder via list → `same_tab` article → root via path link on `knowledge`. |
 | Seeds | `npm run check:pack-seeds` green after Knowledge tab row in `.instructions-tabs.json`. |
 
 - [ ] User confirmed mockup before production (done 2026-10-08)
-- [ ] Three locales smoke: root labels and **Back** string resolve
+- [ ] Three locales smoke: `admin.guide.knowledge_path_label` and list entry labels resolve
 - [ ] Broken `doc` id shows panel error, not a blank panel
 - [ ] No regression on content tabs (§26) or Learn embed (§20–§25)
 - [ ] No console or server error on Knowledge happy path

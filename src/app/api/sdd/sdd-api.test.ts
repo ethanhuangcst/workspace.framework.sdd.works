@@ -396,6 +396,7 @@ describe("GET /api/sdd/instructions-tabs", () => {
     expect(body.listing.entries.map((e) => e.id)).toEqual([
       "invoke-agents",
       "call-skills",
+      "archived",
     ]);
   });
 });

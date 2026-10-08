@@ -90,20 +90,23 @@ test.describe("MCP instructions", () => {
     await page.waitForLoadState("networkidle");
 
     await expect(page.getByTestId("panel-knowledge")).toBeVisible();
+    await expect(page.getByTestId("knowledge-path")).toBeVisible();
     await expect(page.getByTestId("knowledge-list")).toBeVisible();
-    await expect(page.getByTestId("knowledge-folder-title")).toHaveText(
-      "Knowledge",
-    );
     await expect(page.getByTestId("knowledge-file-invoke-agents")).toBeVisible();
+
+    await page.getByTestId("knowledge-folder-archived").click();
+    await expect(page).toHaveURL(/tab=knowledge&path=archived/);
+    await expect(page.getByRole("link", { name: "knowledge" })).toBeVisible();
 
     await page.getByTestId("knowledge-file-invoke-agents").click();
     await expect(page).toHaveURL(/tab=knowledge&doc=invoke-agents/);
     await expect(page.getByTestId("knowledge-article-body")).toBeVisible();
     await expect(page.getByTestId("knowledge-list")).toBeHidden();
 
-    await page.getByTestId("knowledge-back").click();
+    await page.getByRole("link", { name: "knowledge" }).click();
     await expect(page).toHaveURL(/tab=knowledge/);
     expect(page.url()).not.toContain("doc=");
+    expect(page.url()).not.toMatch(/path=/);
     await expect(page.getByTestId("knowledge-list")).toBeVisible();
   });
 

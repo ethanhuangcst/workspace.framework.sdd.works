@@ -21,8 +21,9 @@
         <p class="guide-tabs-note">
           Spike for Web-portal-36 <code>internal_page_folder</code>. Run
           <code>npx serve specs/admin-portal/ui-mockup</code> from the product repo, then open
-          <code>/16-knowledge-folder-spike.html</code>. Listing and articles load from
-          <code>assets/samples/knowledge/**/.index.json</code> and locale markdown paths.
+          <code>/16-knowledge-folder-spike.html</code>. Navigation uses a path trail
+          (<code>knowledge/archived/…</code>) with links, not a Back button. Try
+          <code>?path=archived</code> and <code>?path=archived&amp;doc=invoke-agent-trae</code>.
         </p>
         <div class="guide-sticky">
           <header class="guide-hero">
@@ -49,7 +50,7 @@
         >
           <p class="sr-only" aria-live="polite"></p>
 
-          <nav class="knowledge-crumb" aria-label="Folder path"></nav>
+          <nav class="knowledge-path" aria-label="Knowledge path"></nav>
 
           <div class="knowledge-stage">
             <div class="knowledge-list-view"></div>

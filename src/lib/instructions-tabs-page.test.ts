@@ -45,7 +45,6 @@ describe("buildInstructionsPageModel — knowledge folder", () => {
     expect(activeQueryParam).toBe("knowledge");
     const knowledge = tabs.find((t) => t.id === "knowledge");
     expect(knowledge?.type).toBe("internal_page_folder");
-    expect(knowledge?.knowledge?.listing?.folderTitle).toBe("Knowledge");
     expect(knowledge?.knowledge?.listing?.entries.length).toBeGreaterThan(0);
     expect(knowledge?.knowledge?.doc).toBeNull();
   });

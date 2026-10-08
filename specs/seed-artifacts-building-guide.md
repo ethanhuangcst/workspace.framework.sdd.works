@@ -98,6 +98,18 @@ Work one section at a time.
 5. Update the same section in the EN seed under [`pack.framework.sdd.works/templates/EN/`](../pack.framework.sdd.works/templates/EN/). The process seeds `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, and `issues-log.md` stay placeholder templates (`[product name]`, bracket placeholders). Product-backlog has five body sections: Product overview, Definition of Done (additional checks on top of `sdd-dod.mdc`), Requirements, Product Backlog, Change record. Sprint-backlog DoD links to `product-backlog.md#definition-of-done` ([ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md)). Other process or engineering seeds may keep a sample product until those seeds are templated. Read the seed against [`friendly-language.mdc`](../pack.framework.sdd.works/rules/friendly-language.mdc). Edit, then review again, until every line passes.
 6. Stop. The next section starts only after the user confirms the live example and the EN seed.
 
+## HanS and HanT seeds
+
+After the EN seed for a section passes, add or refresh the same section in `pack.framework.sdd.works/templates/HanS/` and `pack.framework.sdd.works/templates/HanT/` when [i18n-05](../product-backlog.md#L307) or [i18n-03](../product-backlog.md#L304) applies.
+
+1. Translate file titles, section headings, and table headers into native Simplified or Traditional Chinese. Keep stable `<a id="…">` anchors (English slug) when the EN seed Index or cross-file links use that id.
+2. Keep contract tokens in English: sprint and backlog table column names (`#`, `Code`, `SBI`, `Parent PBI`, `Component`, `PBI Code`, and the rest of the EN sprint and product tables), status tokens (`ToDo`, `WIP`, `Done`), sprint codes (`Sprint 1`, `feature-01`), named artifacts (`PBI`, `SBI`, `RID`, `OGT`, `MVP`, `Definition of Done`, `Product Backlog`), and Definition links to `sdd-scrum-practices.md`.
+3. Translate operator guidance and bracket placeholders. Keep specialist terms when the practices file uses them (`BFF`, `MCP`, `ADR`, `common-test-strategy`, `acceptance closure`, tool names, env var names). Do not calque English sentence order.
+4. Read each locale seed against [`friendly-language.mdc`](../pack.framework.sdd.works/rules/friendly-language.mdc) before merge.
+5. Run `npm run check:pack-seeds` from the product repo root.
+
+Process seeds link `../sdd-scrum-practices.md` for Definition lines. The practices file stays EN-only beside `constants.json`.
+
 ## Pack link verify (OGT 2)
 
 Run before any pack merge that touches markdown under `pack.framework.sdd.works/`.

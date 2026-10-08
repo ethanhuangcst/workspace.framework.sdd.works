@@ -22,7 +22,7 @@ One pack on the user root already means ethan reads harness lookup from `client_
 
 ## Consequences
 - Ethan, agent specs, MCP ledger examples, and Spec-seeds-01 name `constants.md`.
-- Writing rules for the file live in [`sdd-scrum-practices.md`](../framework/seeds/templates/EN/sdd-scrum-practices.md) under Templates.
+- Writing rules for the file live in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md).
 - Path and no-copy summary live in [`framework-design.md`](../framework/framework-design.md).
 
 ## Date

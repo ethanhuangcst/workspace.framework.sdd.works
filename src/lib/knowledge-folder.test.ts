@@ -131,6 +131,7 @@ describe("resolveKnowledgeFolderListing", () => {
     expect(result.listing.entries.map((e) => e.id)).toEqual([
       "invoke-agents",
       "call-skills",
+      "archived",
     ]);
   });
 });

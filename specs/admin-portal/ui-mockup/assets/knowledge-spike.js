@@ -2,6 +2,7 @@
   "use strict";
 
   var ROOT = "assets/samples/knowledge";
+  var PATH_ROOT = "knowledge";
   var LOCALE_MAP = { EN: "en", CN: "zh-Hans", HANT: "zh-Hant" };
   var STORAGE = window.SDD_I18N_STORAGE || "sdd.locale";
   var LOCALES = window.SDD_LOCALES || ["EN", "CN", "HANT"];
@@ -97,7 +98,7 @@
     els.root = document.getElementById("knowledge-browser");
     if (!els.root) return false;
     els.note = els.root.querySelector("[aria-live]");
-    els.crumb = els.root.querySelector(".knowledge-crumb");
+    els.path = els.root.querySelector(".knowledge-path");
     els.list = els.root.querySelector(".knowledge-list-view");
     els.article = els.root.querySelector(".knowledge-article-view");
     return true;
@@ -107,22 +108,76 @@
     if (els.note) els.note.textContent = msg;
   }
 
-  function renderNav() {
-    if (!els.crumb) return;
-    var atRootList = state.folderSegments.length === 0 && !state.doc;
-    if (atRootList) {
-      els.crumb.hidden = true;
-      els.crumb.innerHTML = "";
+  function renderPath() {
+    if (!els.path) return;
+    var segs = state.folderSegments;
+    var doc = state.doc;
+    var atRoot = segs.length === 0 && !doc;
+
+    if (atRoot) {
+      els.path.hidden = false;
+      els.path.innerHTML =
+        '<span class="knowledge-path-current">' +
+        escapeHtml(PATH_ROOT) +
+        "</span>";
       return;
     }
-    var parent = state.doc
-      ? state.folderSegments.slice()
-      : state.folderSegments.slice(0, -1);
-    els.crumb.hidden = false;
-    els.crumb.innerHTML =
-      '<button type="button" class="knowledge-back">Back</button>';
-    els.crumb.querySelector(".knowledge-back").addEventListener("click", function () {
-      navigate(parent, "");
+
+    var html = "";
+    html +=
+      '<a class="knowledge-path-link" href="' +
+      escapeHtml(buildRoute([], "")) +
+      '" data-path-depth="0">' +
+      escapeHtml(PATH_ROOT) +
+      "</a>";
+
+    for (var i = 0; i < segs.length; i += 1) {
+      html += '<span class="knowledge-path-sep" aria-hidden="true">/</span>';
+      var segment = segs[i];
+      var isCurrentFolder = i === segs.length - 1 && !doc;
+      if (isCurrentFolder) {
+        html +=
+          '<span class="knowledge-path-current">' +
+          escapeHtml(segment) +
+          "</span>";
+      } else {
+        html +=
+          '<a class="knowledge-path-link" href="' +
+          escapeHtml(buildRoute(segs.slice(0, i + 1), "")) +
+          '" data-path-depth="' +
+          String(i + 1) +
+          '">' +
+          escapeHtml(segment) +
+          "</a>";
+      }
+    }
+
+    if (doc) {
+      html += '<span class="knowledge-path-sep" aria-hidden="true">/</span>';
+      html +=
+        '<span class="knowledge-path-current">' +
+        escapeHtml(doc) +
+        "</span>";
+    }
+
+    els.path.hidden = false;
+    els.path.innerHTML = html;
+    bindPathNav();
+  }
+
+  function bindPathNav() {
+    if (!els.path) return;
+    els.path.querySelectorAll(".knowledge-path-link").forEach(function (link) {
+      link.addEventListener("click", function (ev) {
+        if (!plainClick(ev)) return;
+        ev.preventDefault();
+        var depth = Number(link.getAttribute("data-path-depth") || "0");
+        if (depth === 0) {
+          navigate([], "");
+          return;
+        }
+        navigate(state.folderSegments.slice(0, depth), "");
+      });
     });
   }
 
@@ -147,13 +202,7 @@
   }
 
   function renderList(index, locale) {
-    var listTitle =
-      (index.labels && (index.labels[locale] || index.labels.en)) || "";
     var html = "";
-    if (listTitle && state.folderSegments.length > 0) {
-      html +=
-        '<h2 class="knowledge-list-title">' + escapeHtml(listTitle) + "</h2>";
-    }
     html += '<ul class="knowledge-list" role="list">';
     index.entries.forEach(function (entry) {
       html += renderRow(entry, locale);
@@ -276,7 +325,7 @@
       .then(function (index) {
         state.index = index;
         state.loading = false;
-        renderNav();
+        renderPath();
         if (state.doc) {
           var entry = findEntry(index, state.doc);
           if (!entry || entry.kind !== "file") {

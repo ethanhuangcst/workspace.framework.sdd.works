@@ -107,15 +107,11 @@ function attachKnowledgeState(
     };
   }
 
-  const folderTitle =
-    listing.listing.folderTitle ??
-    (segments.length === 0 ? tab.label : null);
-
   return {
     ...tab,
     knowledge: {
       ...state,
-      listing: { ...listing.listing, folderTitle },
+      listing: listing.listing,
       error: null,
     },
   };

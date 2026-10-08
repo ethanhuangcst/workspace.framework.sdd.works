@@ -25,15 +25,28 @@ Pack spike: [`pack.framework.sdd.works/content/knowledge/.index.json`](../../pac
 | `labels` | no | Optional locale map (`en` required when present). See **Folder list headings** below. |
 | `entries` | yes | Ordered list of folders and files shown in the tab body. |
 
-### Folder list headings
+### Path trail (up navigation)
 
-Tab title comes from **`content/.instructions-tabs.json`** **`labels`** on the **`internal_page_folder`** row (for example Knowledge). The portal does not render a second panel title at the tab root.
+Mockup confirmed 2026-10-08 (path revision). Production matches [`16-knowledge-folder-spike.html`](../admin-portal/ui-mockup/16-knowledge-folder-spike.html).
 
-| URL `path` | Index file | Portal uses index **`labels`**? |
+- No **Back** button on list or article views.
+- A **path trail** (`nav`, i18n accessible name) appears above the list or article.
+- First segment is the tab **`queryParam`** literal (for example `knowledge`), not the translated tab label.
+- Further segments are folder **`id`** values from **`path=`** (for example `archived`).
+- When **`doc`** is set, append the file entry **`id`** as the final segment.
+- Every segment except the last is a link to that prefix (clear **`doc`** when linking to a folder list).
+- The last segment is plain text (current location).
+- Tab root list: trail shows only `knowledge` (current). No folder **`h2`** on any list view; the trail is the location title.
+
+Index **`labels`** on a folder (root or subfolder) are optional metadata for authors. They are **not** rendered as a panel **`h2`** when the path trail is shown.
+
+| URL `path` | `doc` | Path trail example |
 | --- | --- | --- |
-| empty (tab root list) | `{rootPath}/.index.json` | **Yes.** One **`h2`** from root **`labels`** (for example Knowledge). **`labels`** are required on the root index. |
-| non-empty (subfolder list) | `{rootPath}/{path}/.index.json` | **Yes.** One **`h2`** from that folder’s **`labels`** (for example Archived). |
-| article (`doc` set) | same folder index as listing | **No** folder **`h2`**. **Back** plus article prose (markdown **`h1`** when present). |
+| empty | empty | `knowledge` |
+| `archived` | empty | `knowledge` / `archived` |
+| `archived` | `invoke-agent-trae` | `knowledge` / `archived` / `invoke-agent-trae` |
+
+Article view: path trail plus **`guide-md-body--prose`** (markdown **`h1`** when present). No folder **`h2`**.
 
 ### Entry: `kind: "folder"`
 
@@ -75,10 +88,10 @@ Confirmed against mockup spike (2026-10-08). Production uses the same guide shel
 | | **`same_tab`** | **`new_tab`** |
 | --- | --- | --- |
 | Listing row | Underlined in-panel link. No external icon. | Same **`href`** as **`same_tab`** for that file plus `target="_blank"` and `rel="noopener noreferrer"`. Optional muted hint (i18n **`admin.guide.knowledge_new_tab_hint`**). Command-click or middle-click opens the same URL in a new tab. |
-| After activate | List hides; article renders in the panel inside **`guide-md-body`** + **`guide-md-body--prose`**. **Back** (i18n **`admin.guide.knowledge_back`**) returns one level: from article to folder list, from subfolder list to parent list or tab root. No breadcrumb trail duplicating **Back**. | Current tab URL stays on the folder **`path=`** (no **`doc`**). New tab loads the full guide with **`doc`** set (hero, tabs, **Back**, article). |
-| URL | Sets **`doc`** on the current guide URL. `history.pushState` / back and forward move between listing and article. | **`href`** includes **`tab`**, **`path`**, and **`doc`**. Listing row does not navigate the current tab when the primary click opens a new tab. |
-| Headings | Every folder list (tab root and subfolders): one **`h2`** from that folder’s **`.index.json`** **`labels`**. Article view: no folder **`h2`**. | Same article chrome in the new tab. |
-| Focus | Moves to **Back** or first heading in the article. | Focus stays on the listing; new tab is user-initiated. |
+| After activate | List hides; article renders in the panel inside **`guide-md-body`** + **`guide-md-body--prose`**. Path trail stays visible; prefix links replace **Back**. | Current tab URL stays on the folder **`path=`** (no **`doc`**). New tab loads the full guide with **`doc`** set (hero, tabs, path trail, article). |
+| URL | Sets **`doc`** on the current guide URL. Browser back and forward move between listing and article. | **`href`** includes **`tab`**, **`path`**, and **`doc`**. Listing row does not navigate the current tab when the primary click opens a new tab. |
+| Headings | No folder **`h2`** on list views. Path trail only. Article: prose headings from markdown. | Same article chrome in the new tab. |
+| Focus | Path link or first heading in the article receives focus when entering article view. | Focus stays on the listing; new tab is user-initiated. |
 
 Implementation maps one **`open`** string to row component variant and click handler. Do not infer **`open`** from file type or path.
 

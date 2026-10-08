@@ -1515,7 +1515,7 @@ Scenario: Catalog tables align across sections on Features
 
 #### AC38 — feature-74 / Web-portal-36 / ADR-124
 
-Knowledge folder tab from pack **`rootPath`** and per-folder **`.index.json`**. Mockup [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) confirmed before build.
+Knowledge folder tab from pack **`rootPath`** and per-folder **`.index.json`**. Mockup [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) confirmed (path trail, no Back, no list h2).
 
 ```gherkin
 Scenario: Knowledge tab lists entries from root index
@@ -1523,28 +1523,31 @@ Scenario: Knowledge tab lists entries from root index
   And content/knowledge/.index.json lists folders and files with labels for the active locale
   When the visitor opens the guide with query tab knowledge and no path or doc
   Then panel-knowledge shows a disc list of entry labels from the root index
-  And the panel shows an h2 from the root index labels
+  And the path trail shows knowledge as the current segment only
+  And panel-knowledge does not show a folder h2
 
 Scenario: Visitor opens a subfolder in the same tab
   Given the visitor is on the Knowledge tab root list
   When the visitor activates a folder row
   Then the URL includes tab knowledge and path with that folder id segment
-  And panel-knowledge shows an h2 from the subfolder index labels
-  And a Back control keyed admin.guide.knowledge_back returns to the parent list
+  And the path trail shows knowledge as a link and the folder id as the current segment
+  And panel-knowledge does not show a folder h2
+  And activating the knowledge path link returns to the root list without path or doc
 
 Scenario: same_tab file replaces the list with prose in the panel
   Given a file entry in the current folder index has open same_tab
   When the visitor activates that row without modifier keys
   Then the URL includes doc set to that entry id
   And the list is hidden and the article uses guide-md-body and guide-md-body--prose
-  And Back clears doc and shows the folder list again
+  And the path trail includes doc as the current segment
+  And activating the parent folder segment in the path trail clears doc and shows the folder list again
 
 Scenario: new_tab file opens the full guide in a new browsing context
   Given a file entry has open new_tab
   When the visitor activates that row with a primary click
   Then the current tab URL keeps path without doc
   And a new tab opens with the same tab path and doc query params as same_tab would use
-  And the new tab shows the guide hero tabs Back and the article prose
+  And the new tab shows the guide hero tabs the path trail and the article prose
 
 Scenario: Invalid index or missing markdown fails visibly
   Given an internal_page_folder tab points at rootPath with a broken index or missing paths.en file

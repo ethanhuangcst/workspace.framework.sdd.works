@@ -523,9 +523,9 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 #### CE-SKILL-08 — get-status in HanS
 
 - **Layer:** L1.
-- **Pre-condition:** Audit reports locale `HanS` and verdict `Usable`. The five process files contain English headings from the EN seed.
+- **Pre-condition:** Audit reports locale `HanS` and verdict `Usable`. The five process files were copied from `templates/HanS/` (Chinese section headings allowed). Sprint and backlog table columns and status tokens match the EN seed.
 - **Test steps:** Ask where the project is.
-- **Expected results:** The spoken answer is Simplified Chinese. The skill does not rewrite the five files into Chinese.
+- **Expected results:** The spoken answer is Simplified Chinese. The skill does not rewrite the five files. `Sprint 1`, `feature-01`, and table column names stay as written.
 
 ## Audit fixtures (CodeBuddy CN)
 
@@ -1064,7 +1064,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** The authoring tree `pack.framework.sdd.works/templates/`.
 - **Test steps:** Look up `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `coach-knowledge.md` beside `constants.json` under `templates/`. Look up process seeds under `HanS/` and `HanT/` when present.
-- **Expected results:** The three AI-read files exist beside `constants.json` under `templates/`. No `scrum-in-sdd.md` under any locale folder. HanS and HanT may hold process templates; they do not hold `pack-scrum-in-sdd.md`.
+- **Expected results:** The three AI-read files exist beside `constants.json` under `templates/`. No `scrum-in-sdd.md` under any locale folder. HanS and HanT do not hold `pack-scrum-in-sdd.md`. When present, each locale folder holds the five process seeds and the four engineering seeds (`architecture.md`, `release.md`, `test-strategy.md`, `.secrets`) with the same basenames as `templates/EN/`.
 
 #### CE-OGT-8 — pack-scrum-in-sdd rename (status OGT #8)
 

@@ -619,22 +619,22 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 
 #### Internal page folder (feature-74 / Web-portal-36 / ADR-124)
 
-Mockup confirmed: [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) (spike script [`assets/knowledge-spike.js`](./ui-mockup/assets/knowledge-spike.js)). Spike sample tree: [`assets/samples/knowledge/`](./ui-mockup/assets/samples/knowledge/). Production mirrors pack [`content/knowledge/`](../../src/content/knowledge/). Notes: [`knowledge-folder-tab-spike.md`](../knowledge/agent/knowledge-folder-tab-spike.md).
+Mockup confirmed: [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) (path trail revision accepted 2026-10-08). Spike script [`assets/knowledge-spike.js`](./ui-mockup/assets/knowledge-spike.js). Sample tree [`assets/samples/knowledge/`](./ui-mockup/assets/samples/knowledge/). Production mirrors pack [`content/knowledge/`](../../src/content/knowledge/). Notes: [`knowledge-folder-tab-spike.md`](../knowledge/agent/knowledge-folder-tab-spike.md).
 
 ##### UI
 
 | | |
 | --- | --- |
 | Panel | Client component under **`panelTestId`** (for example `panel-knowledge`). Guide tokens from §9: cream column, underlined list links, disc list, no card browser. |
-| Tab root | Entry list plus one **`h2`** from `{rootPath}/.index.json` **`labels`**. |
-| Subfolder | One **`h2`** from that folder **`.index.json`** **`labels`**. **Back** above the list when not at tab root. |
-| Article (**`same_tab`**) | Hide list; show **Back** + article in **`guide-md-body`** **`guide-md-body--prose`**. Tables wrapped in **`content-table`**. |
+| Path trail | **`nav.knowledge-path`** above list or article. Segments: tab **`queryParam`**, then each folder **`id`** in **`path=`**, then **`doc`** id when set. Prefix segments are links; last segment is current. i18n **`admin.guide.knowledge_path_label`** on the **`nav`**. No **Back** button. |
+| Tab root list | Path shows only `knowledge` (current). Disc list of entries. No folder **`h2`**. |
+| Subfolder list | Path like `knowledge / archived`. Disc list. No folder **`h2`**. |
+| Article (**`same_tab`**) | Path includes **`doc`** segment. List hidden; article in **`guide-md-body--prose`**. Prefix path links clear **`doc`** or shorten **`path`**. |
 | **`new_tab` row** | Same **`href`** as **`same_tab`** (`tab`, **`path`**, **`doc`**). `target="_blank"`, `rel="noopener noreferrer"`. Optional muted **`admin.guide.knowledge_new_tab_hint`**. Primary click does not set **`doc`** on the current tab. |
-| **Back** | i18n **`admin.guide.knowledge_back`**. One level up: clear **`doc`**, or pop last **`path`** segment, or return to tab root. No breadcrumb trail. |
 | Loading / error | Visible loading copy and error message in the panel; other tabs unaffected. |
-| a11y | **Back** is a button or link with accessible name from i18n. List uses **`ul`** / **`li`**. Focus management per [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md). |
+| a11y | Path links have visible focus. List uses **`ul`** / **`li`**. Focus management per [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md). |
 
-CSS: port spike classes **`.knowledge-*`** from [`ui-mockup/assets/mockup.css`](./ui-mockup/assets/mockup.css) into [`portal.css`](../../src/styles/portal.css) under the guide panel scope (same pass as mockup, no second styling system).
+CSS: shared **`.guide-folder-*`** and **`.guide-inline-link`** under **`.guide-section.guide-folder-browser`** in [`portal.css`](../../src/styles/portal.css) (same tokens as **`.guide-md-body`**). No tab-specific **`.knowledge-*`** presentation rules in production.
 
 ##### URL sync
 
@@ -656,7 +656,7 @@ Sync with `InstructionsClient` tab switching: changing **`tab`** clears **`path`
 | Markdown | Reuse **`renderContentMarkdown`** (or shared pipeline) for article HTML. Read cache unpack then **`src/content/`** fallback ([ADR-071](../adr/ADR-071-portal-content-paths.md)). |
 | API | Extend **`GET /api/sdd/instructions-tabs`** with folder index payloads, or add **`GET /api/sdd/instructions-folder?locale=&rootPath=&path=`** for index JSON and **`&doc=`** for article metadata + html. Pick one surface in implementation; tests lock the chosen contract. |
 | SSR | [`InstructionsPage`](../../src/app/instructions/page.tsx) (and home alias) passes initial index or article html for the active locale when query params are set. |
-| Client | **`KnowledgeFolderPanel`** (name flexible): list vs article modes, **Back**, **`new_tab`** rows, **`popstate`**. Register in dynamic tab map beside content and embed panels. |
+| Client | **`KnowledgeFolderPanel`**: path trail, list vs article modes, **`new_tab`** rows, `router.push` + SSR refresh (no client-only index fetch). Drop **`folderTitle`** **`h2`** and **Back** per mockup. |
 | Validator | [`validateInstructionsTabsConfig`](../../src/core/seeds/instructions-tabs-config.ts) accepts **`internal_page_folder`**; CE-TABS tests include a fixture row. |
 | Pack ship | Bundled tab row for Knowledge plus tree under **`src/content/knowledge/`** (may replace standalone **`invoke-agents`** **`content`** tab in a follow-on commit in the same SBI). |
 
@@ -665,8 +665,16 @@ Sync with `InstructionsClient` tab switching: changing **`tab`** clears **`path`
 1. Validator + index parser unit tests (ADR-124 fixtures under **`src/content/knowledge/`**).
 2. API + resolver integration tests (cache vs bundled, locale fallback, bad index).
 3. **`KnowledgeFolderPanel`** + **`portal.css`** + i18n keys; wire into **`InstructionsClient`**.
-4. SSR deep link for **`path`** / **`doc`**; browser checks for root → subfolder → **`same_tab`** → **Back** and **`new_tab`** row.
+4. SSR deep link for **`path`** / **`doc`**; browser checks for root → subfolder → **`same_tab`** via path links and **`new_tab`** row.
 5. Pack **`content/.instructions-tabs.json`** Knowledge row; run **`npm run check:pack-seeds`** and [`app-tests.md`](./app-tests.md) §27.
+
+##### Path trail revision (mockup accepted 2026-10-08)
+
+1. Add **`KnowledgePathNav`** (or inline in panel): build segments from **`queryParam`**, **`folderSegments`**, **`doc`**; render **`Link`** per prefix; **`data-testid="knowledge-path"`**.
+2. Remove **`knowledge-back`**, list **`h2`** from **`folderTitle`**, and tab-root **`folderTitle`** fallback in **`attachKnowledgeState`** unless reused elsewhere.
+3. Use **`.guide-folder-*`** in **`portal.css`** (shipped); mockup may keep **`.knowledge-*`** until aligned.
+4. i18n: **`admin.guide.knowledge_path_label`** (nav accessible name). **`admin.guide.knowledge_back`** removed (unused after path trail).
+5. Update unit, component, and E2E tests per **§27** and **AC38**.
 
 #### Mail — `14-email-reset.html` / `15-email-invite.html`
 

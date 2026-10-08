@@ -8,6 +8,30 @@
 
 ## 2026-10-08
 
+### Skill-03: sdd-update-project recommends `.secrets` (CE-SKILL-22)
+
+**Why**: Software projects need a map-backed secret name registry under the spec root without values in git.
+
+**What changed**: [`sdd-update-project`](../pack.framework.sdd.works/skills/sdd-update-project/SKILL.md) task 7b and task 8 recommend `{artifacts_root}/.secrets`, copy the locale seed when missing after confirm, and add the path to `artifacts-map.json` when the Confirm summary kept that line. [`framework-design.md`](./framework/framework-design.md) § **sdd-update-project**, [`framework-stories.md`](./framework/framework-stories.md) § **sdd-update-project**, [`framework-tests.md`](./framework/framework-tests.md) **CE-SKILL-22**. Workspace dogfood: [`artifacts-map.json`](../artifacts-map.json) lists `specs/.secrets`; [`specs/.secrets`](./.secrets) holds empty `NAME=` lines only. [Skill-03](./product-backlog.md#pb-24) requirement bullet updated.
+
+**Verification**: Read **CE-SKILL-22** against the pack seed. `rg -v '^#|^\s*$' specs/.secrets` shows only `KEY=` lines with empty values.
+
+### Process sync after status review
+
+**Why**: Sprint 9 board, status, and backlog rows drifted after 2026-10-08 planning and WIP on Get secret.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) header and Sprint 9 rows (**feature-73** **WIP**; **feature-75**, **feature-76** for [Web-portal-32](./product-backlog.md#pb-129) and [Web-portal-33](./product-backlog.md#pb-130)). [`status.md`](./status.md) Sprint 9 note and current SBI.
+
+**Verification**: Sprint 9 **Status: WIP** matches one WIP SBI. Product Backlog Sprint 9 PBIs have matching SBI rows for portal-30 through portal-33 and portal-36.
+
+### Closed OGT 6 and OGT 8 (pack layout and AI-read Scrum templates)
+
+**Why**: Pack seeds belong in a separate git remote. Agent-readable Scrum guides belong beside `constants.json` per ADR-126.
+
+**What changed**: [`pack.framework.sdd.works/`](../pack.framework.sdd.works/) remains the pack authoring tree with remote `framework.sdd.works.git`. AI-read `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `coach-knowledge.md` live under `pack.framework.sdd.works/templates/`; locale `scrum-in-sdd.md` templates removed. HanS and HanT template seeds added. [`status.md`](./status.md) closed OGT rows 6 and 8.
+
+**Verification**: OGT-8 command block in [`ogt-8-pack-scrum-in-sdd.md`](./framework/ogt-8-pack-scrum-in-sdd.md); `npm run check:pack-seeds`; `npm test -- src/lib/scrum-in-sdd-catalog.test.ts` (17 passed).
+
 ### ADR-123 Unified guide markdown body (WA-18)
 
 **Why**: Features, Scrum, and invoke-agents each used a different body class and table CSS path. New pack content tabs would copy a third style.

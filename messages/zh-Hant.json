@@ -183,7 +183,7 @@
   "admin.guide.learn_scrum_iframe_title": "SDD.works 學習課程",
   "admin.guide.learn_scrum_embed_loading": "正在載入課程",
   "admin.guide.learn_scrum_open_external": "在新分頁開啟 learn.sdd.works。",
-  "admin.guide.knowledge_back": "返回",
+  "admin.guide.knowledge_path_label": "知識路徑",
   "admin.guide.knowledge_new_tab_hint": "新分頁",
   "admin.guide.knowledge_loading": "載入中…",
   "admin.guide.knowledge_error": "無法載入此資料夾列表。",

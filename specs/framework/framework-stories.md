@@ -1790,7 +1790,7 @@ Scenario: The file ends with who updated it
   Then it has Last updated, a timestamp, and the agent name
 ```
 
-Tests: CE-TPL-08, CE-TPL-09. A missing HanS or HanT status seed stays on i18n-02.
+Tests: CE-TPL-08, CE-TPL-09. A missing HanS or HanT status seed stays on [i18n-05](../product-backlog.md#L307).
 
 ### issues-log.md starter
 
@@ -1813,7 +1813,7 @@ Scenario: EN issues-log seed has two tables
   And the header has Type, as_of, and a Definition link
 ```
 
-Tests: CE-TPL-10, CE-TPL-11. A missing HanS or HanT issues-log seed stays on i18n-02.
+Tests: CE-TPL-10, CE-TPL-11. A missing HanS or HanT issues-log seed stays on [i18n-05](../product-backlog.md#L307).
 
 ### changes-log.md starter
 
