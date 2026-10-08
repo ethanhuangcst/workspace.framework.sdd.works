@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Normalize scrum-in-sdd.en.md part order (I–IV), regenerate Index (h1 and h2 only).
+ * Regenerate Index (h1 and h2 only) for human-read scrum-in-sdd.en.md.
+ * Does not write AI-read templates/pack-scrum-in-sdd.md (ADR-126 / OGT-8).
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -9,7 +10,6 @@ const ROOT = join(import.meta.dirname, "..");
 const TARGETS = [
   join(ROOT, "pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md"),
   join(ROOT, "src/content/scrum-in-sdd/scrum-in-sdd.en.md"),
-  join(ROOT, "pack.framework.sdd.works/templates/EN/scrum-in-sdd.md"),
 ];
 
 const PART_SIGNATURES = [

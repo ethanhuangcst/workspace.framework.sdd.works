@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (amended 2026-10-08: human-read vs ai-read link policy)
+Accepted (amended 2026-10-08: human-read vs ai-read link policy; amended 2026-10-08: [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) AI filename and EN-only template guide)
 
 ## Context
 
@@ -11,17 +11,15 @@ The Scrum in SDD guide is edited often. It ships as **two synced variants** for 
 | Variant | Reader | Primary use | Link policy | Index |
 | --- | --- | --- | --- | --- |
 | **Human-read** | People | Instructions portal; distributable as stand-alone markdown | **No links to other pack artifacts** (no `./sdd-scrum-practices.md`, `skills/`, `rules/`, or sibling templates). No product-repo URLs ([`sdd-pack-authoring.mdc`](../../pack.framework.sdd.works/rules/sdd-pack-authoring.mdc), `npm run check:pack-seeds`). **Allowed:** in-document `#` heading anchors and the `## Index` block ([ADR-109](./ADR-109-content-tab-heading-anchors.md)). Body text must carry names and meaning without requiring another file. | Yes: h1 and h2 only |
-| **AI-read** | Agents after install | Client template `scrum-in-sdd.md` embedded in the pack install tree | **Internal pack links** to artifacts that exist on `{client_root}` after install (`./sdd-scrum-practices.md`, `{client_root}/skills/`, `{client_root}/rules/`, sibling templates). Same ban on this product repo's `specs/` trees in seeds. | No Index block |
+| **AI-read** | Agents after install | **`pack-scrum-in-sdd.md`** with **`sdd-scrum-practices.md`** and **`coach-knowledge.md`** beside `constants.json` under `templates/` ([ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)) | **Internal pack links** among install templates and `{client_root}/skills/` and `{client_root}/rules/`. Same ban on this product repo's `specs/` trees in seeds. | No Index block |
 
 **Semantic sync:** both variants keep the same section order, heading wording, and terminology. Markdown is not required to be byte-identical.
 
-Product backlog today still names a single guide seed in [Spec-seeds-01](../product-backlog.md#L227) and portal delivery in [Web-portal-12](../product-backlog.md#L383). [i18n-04](../product-backlog.md#L304) covers HanS and HanT **template** bodies with practice links (AI-read). Backlog bullets for the split are deferred; this ADR is the normative split.
-
-Transition: English human and agent bytes are still often copied together (including Index on some template copies). Maintainers move toward this table via **`sdd-guide-editor`**.
+Product backlog: [Spec-seeds-01](../product-backlog.md#L227) (guide role), [Web-portal-12](../product-backlog.md#L383) (human paths). Template guide i18n [i18n-04](../product-backlog.md#L304) is superseded for **`templates/`** by [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md).
 
 Portal English structure: Part I–III, then **Appendix: Short summary of the 2020 Scrum Guide** (not Part IV).
 
-The framework.sdd.works product repo maintains pack seeds. A maintainer skill should own edit workflow, sync checks, and locale follow-up. It must not ship in the pack or appear in `constants.json`.
+The framework.sdd.works product repo maintains pack seeds. Maintainer skill **`sdd-guide-editor`** owns edit workflow and sync checks. It does not ship in the pack.
 
 ## Decision
 
@@ -34,18 +32,18 @@ The framework.sdd.works product repo maintains pack seeds. A maintainer skill sh
 
 Human-read files include an Index, follow friendly-language and pack-authoring rules, and must read complete without opening any other pack artifact. Terms defined in practices or other seeds are restated or summarized in the human body when a reader needs them.
 
-### Agent guide seeds (client template)
+### AI-read guide seed (client template)
 
 | Role | Path |
 | --- | --- |
-| Pack authoring | `pack.framework.sdd.works/templates/{EN\|HanS\|HanT}/scrum-in-sdd.md` |
-| After install | `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md` |
+| Pack authoring | `pack.framework.sdd.works/templates/pack-scrum-in-sdd.md` |
+| After install | `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
 
-Filename stays `scrum-in-sdd.md` ([ADR-068](./ADR-068-scrum-in-sdd-filename.md)). AI-read files omit the Index and use install-safe internal links.
+AI-read file omits the Index, uses install-safe internal links, and is **English only**. See [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) for the trio with practices and coach-knowledge.
 
 ### Semantic sync (maintainer workflow)
 
-After EN human-read edits, maintainers regenerate the Index with `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` in the product repo, then align AI-read templates per [`reference.md`](../../.cursor/skills/sdd-guide-editor/reference.md) until an automated derive step exists.
+After EN human-read edits, maintainers regenerate the Index with `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` in the product repo, then align **`pack-scrum-in-sdd.md`** per [`.cursor/skills/sdd-guide-editor/reference.md`](../../.cursor/skills/sdd-guide-editor/reference.md) until an automated derive step exists.
 
 ### Maintainer skill (product repo only)
 
@@ -67,7 +65,7 @@ English human seed `pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.e
 - [`framework-design.md`](../framework/framework-design.md) documents both seed trees and **`sdd-guide-editor`**.
 - [`framework-stories.md`](../framework/framework-stories.md) and [`framework-tests.md`](../framework/framework-tests.md) add **`sdd-guide-editor`** acceptance and **CE-SKILL-23**.
 - Pack [`content/.admin-note.md`](../../pack.framework.sdd.works/content/.admin-note.md) points maintainers at the skill and Appendix naming.
-- Optional later: `rebuild-scrum-in-sdd-en.mjs --derive-agent` to generate agent templates from human EN.
+- Implementation tracked as OGT **Rewrite pack-scrum-in-sdd.md** on [`status.md`](../status.md).
 
 ## Date
 

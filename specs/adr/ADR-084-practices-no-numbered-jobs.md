@@ -5,7 +5,7 @@ Accepted
 
 ## Context
 
-[`sdd-scrum-practices.md`](../framework/seeds/templates/EN/sdd-scrum-practices.md) held a Jobs block: onboard, update project settings, refine backlog, sprint planning, report status, retrospective, and start a new sprint. Job 3 repeated `sdd-update-project`. Jobs 4, 5, 7, and 8 were empty. Job 6 repeated `sdd-review-status` and was Retired on Sprint 4 feature-30.
+[`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) held a Jobs block: onboard, update project settings, refine backlog, sprint planning, report status, retrospective, and start a new sprint. Job 3 repeated `sdd-update-project`. Jobs 4, 5, 7, and 8 were empty. Job 6 repeated `sdd-review-status` and was Retired on Sprint 4 feature-30.
 
 [ADR-079](./ADR-079-one-job-update-project.md) decision 2 kept job numbers 3 through 8. [ADR-076](./ADR-076-review-status-one-skill.md) decision 10 kept job 6 titled Report status.
 

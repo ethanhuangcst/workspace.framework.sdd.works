@@ -72,7 +72,7 @@ SDD.works: Installs a framework pack for implementing Scrum in SDD under Harness
 
 | File                   | Role                                    |
 | ---------------------- | --------------------------------------- |
-| scrum-in-sdd.md        | Names and meaning for Scrum in SDD      |
+| pack-scrum-in-sdd.md   | Names and meaning for Scrum in SDD      |
 | sdd-scrum-practices.md | What, how, and when for each job        |
 | artifacts-map.json     | Workspace index at the repo root        |
 | constants.json         | Skill keys, rule keys, instructions URL |

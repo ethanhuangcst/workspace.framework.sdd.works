@@ -1,8 +1,8 @@
 # Test strategy — [product name]
 
 > **Purpose**: Product-wide quality bar: baseline extension, pyramid, tools, environments, CI policy, and named critical journeys. Optional / JIT (not a required process artifact).
-> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
-> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
+> **Practices**: [`sdd-scrum-practices.md`](../sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`pack-scrum-in-sdd.md`](../pack-scrum-in-sdd.md) (names and meaning).
 
 This file is the **product-level test strategy** only. It states what the whole product must prove and how layers and CI behave. **Detailed test plans, scenario lists, and case-level mapping** (stories, files, Gherkin, per-layer assertions) live in module **`{stem}-tests.md`** files from `{workspace}/artifacts-map.json`. Do not duplicate those cases here; link the module spec and keep this document at policy depth.
 

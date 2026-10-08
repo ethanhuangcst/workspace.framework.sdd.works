@@ -17,7 +17,7 @@ Do not run this rule instead of [`sdd-dod.mdc`](./sdd-dod.mdc) on close.
 
 Draft tier-1 and tier-2 updates only. Show the draft. Write after the user confirms.
 
-Tier 1: `status.md` per `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` `#statusmd`. When `locale` is missing, use `EN`.
+Tier 1: `status.md` per `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` `#statusmd`.
 
 Tier 2: `issues-log.md` for open defects; `sprint-backlog.md` for WIP rows and Open RIDs only; `product-backlog.md` for PBI WIP only after the user confirmed that PBI is in progress.
 

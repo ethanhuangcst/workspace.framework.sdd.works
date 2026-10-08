@@ -80,6 +80,22 @@ function readMarkdownAt(
   return null;
 }
 
+function readIndexCandidates(
+  relIndex: string,
+  unpackedPath: string | null,
+): unknown[] {
+  const candidates: unknown[] = [];
+  if (unpackedPath) {
+    const fromCache = readJsonFile(join(unpackedPath, relIndex));
+    if (fromCache !== null) candidates.push(fromCache);
+  }
+  for (const root of PACKAGE_CONTENT_ROOTS) {
+    const fromPackage = readJsonFile(join(root, relIndex));
+    if (fromPackage !== null) candidates.push(fromPackage);
+  }
+  return candidates;
+}
+
 function loadIndexDocument(
   rootPath: string,
   segments: string[],
@@ -97,29 +113,25 @@ function loadIndexDocument(
   }
 
   const relIndex = indexRelativePath(rootPath, segments);
-  let raw: unknown | null = null;
+  const candidates = readIndexCandidates(relIndex, unpackedPath);
 
-  if (unpackedPath) {
-    raw = readJsonFile(join(unpackedPath, relIndex));
-  }
-  if (raw === null) {
-    for (const root of PACKAGE_CONTENT_ROOTS) {
-      const candidate = join(root, relIndex);
-      raw = readJsonFile(candidate);
-      if (raw !== null) break;
-    }
-  }
-
-  if (raw === null) {
+  if (candidates.length === 0) {
     return { ok: false, error: "index not found" };
   }
 
-  const validated = validateKnowledgeIndex(raw);
-  if (!validated.ok) {
-    return { ok: false, error: validated.errors.join("; ") };
+  const errors: string[] = [];
+  for (const raw of candidates) {
+    const validated = validateKnowledgeIndex(raw);
+    if (validated.ok) {
+      return { ok: true, document: validated.document };
+    }
+    errors.push(validated.errors.join("; "));
   }
 
-  return { ok: true, document: validated.document };
+  return {
+    ok: false,
+    error: errors[0] ?? "index invalid",
+  };
 }
 
 export function resolveKnowledgeFolderListing(

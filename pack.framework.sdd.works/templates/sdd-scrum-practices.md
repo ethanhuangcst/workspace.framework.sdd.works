@@ -42,7 +42,7 @@
 
 ## Terminology in practice
 
-Harness names, artifact names, and Scrum guide terms stay in [Terminology](./scrum-in-sdd.md#terminology) in `scrum-in-sdd.md`. This table is the store for backlog and sprint work names used in process artifacts.
+Harness names, artifact names, and Scrum guide terms stay in [Terminology](./pack-scrum-in-sdd.md#terminology) in `pack-scrum-in-sdd.md`. This table is the store for backlog and sprint work names used in process artifacts.
 
 
 | #   | Terminology              | Definition                                                                                                                                                                                                                                                                                     |
@@ -70,9 +70,9 @@ Read this before editing an artifact.
 
 **When**: copy or refresh locale seeds during onboard if working copies are missing; on `sdd-update-project` when the map is missing, or when relocating or filling a gap. Do not overwrite filled working copies unless the user confirms. Do not copy `constants.json` into the artifacts root.
 
-**From where**: locale seeds from `.cursor/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy each listed locale seed to the workspace-relative path named in `artifacts-map.json`. Do not place every file under `artifacts_root`. The map file itself stays `{workspace}/artifacts-map.json`. Read `constants.json` from `{client_root}/templates/framework.sdd.works/constants.json` after install; do not copy it into the artifacts root.
+**From where**: locale seeds from `{client_root}/templates/framework.sdd.works/<locale>/` (locale EN, HanS, or HanT), or MCP `sdd_install_framework` / `sdd_update_framework` into the same extract target. Then copy each listed locale seed to the workspace-relative path named in `artifacts-map.json`. Do not place every file under `artifacts_root`. The map file itself stays `{workspace}/artifacts-map.json`. Read `constants.json`, `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `coach-knowledge.md` from `{client_root}/templates/framework.sdd.works/` after install. Do not copy those four files into the workspace or the artifacts root.
 
-**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: `[scrum-in-sdd.md](./scrum-in-sdd.md)` (seeds vs working copies). `constants.json` is pack lookup on the client root, not a working copy under the artifacts root.
+**What they are not**: seeds are not live artifacts. Edit working copies under the artifacts root. Names and meaning of this split: `[pack-scrum-in-sdd.md](./pack-scrum-in-sdd.md)` (seeds vs working copies). The AI-read trio and `constants.json` stay on the client root only.
 
 **Section reads**: A job opens one heading in this file. The read starts at that heading and stops at the next heading of the same level. The skill or agent names the heading.
 
@@ -134,7 +134,7 @@ good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to 
 
 **Role**
 
-- It is an SDD Core artifact with `scrum-in-sdd.md` and `sdd-scrum-practices.md` ([Core Artifacts](./scrum-in-sdd.md#core-artifacts) in `scrum-in-sdd.md`). It is not a Framework process Markdown file with a Type and as_of header.
+- It is an SDD Core artifact with `pack-scrum-in-sdd.md` and `sdd-scrum-practices.md` ([Core Artifacts](./pack-scrum-in-sdd.md#core-artifacts) in `pack-scrum-in-sdd.md`). It is not a Framework process Markdown file with a Type and as_of header.
 - It is not a copied template seed.
 - A new project does not copy a file from this section.
 - `sdd-update-project` writes the file after the user confirms the chat summary.
@@ -504,7 +504,7 @@ The section sits after Product overview. It ends at the next `---`. Standard clo
 
 - Follow [General writing principles](#general-writing-principles).
 - Put `<a id="definition-of-done"></a>` on the line before the `# Definition of Done` heading so `sprint-backlog.md` can link `./product-backlog.md#definition-of-done`.
-- `{intro}` states that this section is additional criteria on top of the standard Definition of Done in `sdd-dod.mdc`, and that a PBI is `Done` only when both pass. Link [Commitment: Definition of Done](./scrum-in-sdd.md#commitment-definition-of-done) when the reader needs the Scrum term.
+- `{intro}` states that this section is additional criteria on top of the standard Definition of Done in `sdd-dod.mdc`, and that a PBI is `Done` only when both pass. Link [Commitment: Definition of Done](./pack-scrum-in-sdd.md#commitment-definition-of-done) when the reader needs the Scrum term.
 - `{additional check}` is project-specific. Do not repeat the default checks from `sdd-dod.mdc` (acceptance criteria, common quality gate, user confirmed usable, retrospective).
 - Additional checks must be executable and observable. They may name test specs or other verification for this product.
 
@@ -734,7 +734,7 @@ The section sits above the first sprint. It ends at the next `---`.
 - `{intro}` is two sentences. Every sprint item uses `sdd-dod.mdc` and the checklist in [product-backlog.md](./product-backlog.md#definition-of-done). Mark the row `Done` only when every check passes. Do not duplicate the product-backlog bullet list here.
 - `{replacement}` names the sprints that use a different checklist, then says those sprints use this checklist instead.
 - `{item acceptance}` is Additional Done Criteria for one row under that sprint. It does not add a table column.
-- The term is [Commitment: Definition of Done](./scrum-in-sdd.md#commitment-definition-of-done).
+- The term is [Commitment: Definition of Done](./pack-scrum-in-sdd.md#commitment-definition-of-done).
 
 
 
@@ -899,7 +899,7 @@ Do not add a second Learnings, Opportunities, or Future actions label.
 The next retrospective uses the next number.
 One retrospective uses the same number under each label that has a point.
 - `{when}` is the date in brackets, such as `[Sep 24, 2026]`.
-- `{trigger}` names the incident that fired this retrospective. Prefer `{SBI code} {SBI name} done` or `{PBI code} {Description noun} done` when DoD or a status-review pick closed one row ([Sprint Retrospective](./scrum-in-sdd.md#sprint-retrospective) **By rule**). Use `Sprint-end` when the whole sprint closes. Use `On demand` only when a human invoked retrospective and no SBI or PBI became **Done** in the same run ([Sprint Retrospective](./scrum-in-sdd.md#sprint-retrospective) **On demand**). Short form `feature-01 done` is allowed when the SBI name adds no disambiguation.
+- `{trigger}` names the incident that fired this retrospective. Prefer `{SBI code} {SBI name} done` or `{PBI code} {Description noun} done` when DoD or a status-review pick closed one row ([Sprint Retrospective](./pack-scrum-in-sdd.md#sprint-retrospective) **By rule**). Use `Sprint-end` when the whole sprint closes. Use `On demand` only when a human invoked retrospective and no SBI or PBI became **Done** in the same run ([Sprint Retrospective](./pack-scrum-in-sdd.md#sprint-retrospective) **On demand**). Short form `feature-01 done` is allowed when the SBI name adds no disambiguation.
 - `{learning}`, `{opportunity}`, and `{action}` are the key points.
 The bullet links the ADR or the knowledge note when one was written.
 - A label with no record uses one sentence.
@@ -1245,7 +1245,7 @@ Follow [General writing principles](#general-writing-principles).
 
 > **Purpose**: Record the stack, boundaries, and a small number of decisions. Product behavior belongs in `[product-backlog.md](./product-backlog.md)`. Optional / JIT (not a required process artifact).
 > **Practices**: `[sdd-scrum-practices.md](./sdd-scrum-practices.md)` (what, how, when).
-> **Framework**: `[scrum-in-sdd.md](./scrum-in-sdd.md)` (names and meaning).
+> **Framework**: `[pack-scrum-in-sdd.md](./pack-scrum-in-sdd.md)` (names and meaning).
 
 {link to tech-spec or sibling lock doc when present}
 
@@ -1778,7 +1778,7 @@ Follow [General writing principles](#general-writing-principles).
 
 > **Purpose**: How to start locally, the order of production release steps, and upgrade or rollback. Do not write real host names, secrets, or customer environment names here. Optional / JIT (not a required process artifact).
 > **Practices**: `[sdd-scrum-practices.md](./sdd-scrum-practices.md)` (what, how, when).
-> **Framework**: `[scrum-in-sdd.md](./scrum-in-sdd.md)` (names and meaning).
+> **Framework**: `[pack-scrum-in-sdd.md](./pack-scrum-in-sdd.md)` (names and meaning).
 
 | Spec | Role |
 | --- | --- |
@@ -1838,7 +1838,7 @@ Follow [General writing principles](#general-writing-principles).
 
 > **Purpose**: Product-wide quality bar: baseline extension, pyramid, tools, environments, CI policy, and named critical journeys. Optional / JIT (not a required process artifact).
 > **Practices**: `[sdd-scrum-practices.md](./sdd-scrum-practices.md)` (what, how, when).
-> **Framework**: `[scrum-in-sdd.md](./scrum-in-sdd.md)` (names and meaning).
+> **Framework**: `[pack-scrum-in-sdd.md](./pack-scrum-in-sdd.md)` (names and meaning).
 
 This file is the **product-level test strategy** only. Detailed test plans, scenario lists, and case-level mapping live in `{stem}-tests.md`.
 ```

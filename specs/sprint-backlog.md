@@ -4,7 +4,7 @@
 
 > Type: Framework (process) artifact of framework.sdd.works
 > as_of: 2026-10-07
-> [Definition](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#sprint-backlogmd)
+> [Definition](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#sprint-backlogmd)
 
 
 

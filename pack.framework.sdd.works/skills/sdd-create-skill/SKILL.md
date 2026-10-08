@@ -45,7 +45,7 @@ The default folder path is `{client_root}/{skills_dir}/<name>/`.
 | Source | Load when |
 | --- | --- |
 | `{client_root}/templates/framework.sdd.works/constants.json` | Before naming the folder path, when the file exists; read `skills_dir` |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, named heading | The new skill uses a pack term and that file exists. When `locale` is missing, use `EN`. Start at that heading. Stop at the next heading of the same level |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, named heading | The new skill uses a pack term and that file exists. When `locale` is missing, use `EN`. Start at that heading. Stop at the next heading of the same level |
 | `{client_root}/rules/friendly-language.mdc` | Wording checks for chat and for the new skill body, when that file exists |
 | An existing skill folder under `{client_root}/{skills_dir}/` | The user names a pattern to follow |
 
@@ -99,7 +99,7 @@ Put long reference text in one sibling file (`reference.md`, `examples.md`) and 
   bad example: `Reply`
   good example: `Summarize the findings`
 - User-facing lines use the user's view: the status, the reason, and the change.
-- When a practices file exists at `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, name the heading for a defined term and leave the definition in that file. When that file does not exist, define the term in the new skill.
+- When a practices file exists at `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, name the heading for a defined term and leave the definition in that file. When that file does not exist, define the term in the new skill.
 - When `friendly-language.mdc` is absent, the instruction craft in this skill is the wording check.
 - Use one term for one concept. Use forward-slash paths. Leave dates off instructions.
 - Match specificity to fragility: prose when several approaches work; a template when the shape is fixed; one script when the operation must repeat the same way. Name one default and one escape hatch.

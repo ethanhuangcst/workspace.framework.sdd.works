@@ -1,8 +1,8 @@
 # Release — [product name]
 
 > **Purpose**: How to start locally, the order of production release steps, and upgrade or rollback. Do not write real host names, secrets, or customer environment names here. Optional / JIT (not a required process artifact).
-> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
-> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
+> **Practices**: [`sdd-scrum-practices.md`](../sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`pack-scrum-in-sdd.md`](../pack-scrum-in-sdd.md) (names and meaning).
 
 Runtime shape lives in [`architecture.md`](./architecture.md). Step-by-step operator detail for a shared platform may live in a separate **`deployment-plan.md`** (for example `specs/deployment-plan.md`). This file states what the product needs; the deployment plan fills host-specific placeholders for release automation or ops.
 

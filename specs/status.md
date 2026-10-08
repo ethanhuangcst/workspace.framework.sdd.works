@@ -2,7 +2,7 @@
 
 > Type: Framework (process) artifact of framework.sdd.works
 > as_of: 2026-10-08 (Sprint 9 ToDo)
-> [Definition](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#statusmd)
+> [Definition](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#statusmd)
 
 ---
 
@@ -42,6 +42,7 @@
 | 5 | Refresh CE-SKILL catalog for shipped skills | - [framework-tests.md](./framework/framework-tests.md) CE-SKILL-07 | Sprint 7 refine | ToDo |
 | 6 | Restructure workspace: seeds in a separate folder with its own Git remote | - [`pack.framework.sdd.works/`](../pack.framework.sdd.works/) pack authoring tree<br>- Admin Settings pack sync and [MCP-07](./product-backlog.md#L325)<br>- [MCP-01](./product-backlog.md#L318) install allow-list copy paths<br>- [Spec-seeds-15](./product-backlog.md#L474), [Spec-seeds-18](./product-backlog.md#L482) | Sprint 8 | ToDo |
 | 7 | Add instructions-tabs rules to Admin Settings pack note | - [`src/content/.admin-note.md`](../src/content/.admin-note.md)<br>- [Web-portal-26](./product-backlog.md#L446) pack note on Settings<br>- [feature-58](sprint-backlog.md#sprint-8)–[feature-60](sprint-backlog.md#sprint-8) | Sprint 8 | WIP |
+| 8 | Rewrite pack-scrum-in-sdd.md | - [ogt-8-pack-scrum-in-sdd.md](./framework/ogt-8-pack-scrum-in-sdd.md)<br>- [ADR-126](./adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)<br>- [framework-stories § OGT-8](./framework/framework-stories.md#ogt-8-pack-scrum-in-sdd-rename) · **CE-OGT-8** | 2026-10-08 | ToDo |
 
 ## Last 15 closed OGTs
 
@@ -63,4 +64,4 @@
 | 14 | Point sdd-refine-backlog and sdd-plan-sprint at feature-break-down | - [feature-38 Pack rule sdd-incremental-delivery.mdc](./sprint-backlog.md#sprint-6) | Sprint 6 | Sprint 6 |
 | 15 | Add practices section feature-break-down | - [feature-38 Pack rule sdd-incremental-delivery.mdc](./sprint-backlog.md#sprint-6) | Sprint 6 | Sprint 6 |
 
-Last updated: 2026-10-08 OGT 2 closed (pack deliverable links)
+Last updated: 2026-10-08 OGT 8 opened (rewrite pack-scrum-in-sdd.md, ADR-126)

@@ -13,7 +13,7 @@ The EN seed `templates/EN/artifacts-map.md` is a starter. It is not the list a l
 ## Decision
 1. The rule name is `artifacts-map`. The file is `artifacts-map.mdc`. No `sdd-` prefix.
 2. When a project artifact is created, renamed, or deleted, the same change updates `{workspace}/artifacts-map.md`.
-3. The rule does not copy `scrum-in-sdd.md` or `sdd-scrum-practices.md` into the project. It does not move the five process files into a module folder.
+3. The rule does not copy **`pack-scrum-in-sdd.md`** or **`sdd-scrum-practices.md`** into the project workspace as live artifacts. It does not move the five process files into a module folder. ([ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md).)
 4. The rule does not list the project files and does not fix gaps by itself. `sdd-audit-artifacts` stays the audit skill.
 5. The English guide lists `artifacts-map.mdc` with the other three rules. The seed file and the remaining spec lists are Sprint 3 feature-22.
 

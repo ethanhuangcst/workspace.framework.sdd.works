@@ -7,7 +7,7 @@ alwaysApply: true
 
 Finish one backlog item before you start the next.
 
-Feature versus task breakdown is in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, section **5. Feature break down**. When `locale` is missing, use `EN`. `sdd-refine-backlog` and `sdd-plan-sprint` follow that section. This rule does not repeat it.
+Feature versus task breakdown is in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, section **5. Feature break down**. `sdd-refine-backlog` and `sdd-plan-sprint` follow that section. This rule does not repeat it.
 
 ## Current item
 

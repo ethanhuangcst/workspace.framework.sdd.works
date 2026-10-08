@@ -43,15 +43,15 @@ From the chosen module `files` list, pick **one** path per job. Do not assume `{
 
 | Job | Match rule (first match in the module `files` list) |
 | --- | --- |
-| 2 Stories | Basename ends with `-stories.md`, or basename is exactly `stories.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-stories.md`](../../templates/EN/sdd-scrum-practices.md#module-name-storiesmd). |
-| 3 Tests | Basename ends with `-tests.md`, or basename is exactly `tests.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-tests.md`](../../templates/EN/sdd-scrum-practices.md#module-name-testsmd). |
-| 4, 5, 6, 7 Design (and UI work) | Basename ends with `-design.md`, or basename is exactly `design.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-design.md`](../../templates/EN/sdd-scrum-practices.md#module-name-designmd) (**UI design**, **Technical design**). |
+| 2 Stories | Basename ends with `-stories.md`, or basename is exactly `stories.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-stories.md`](../../templates/sdd-scrum-practices.md#module-name-storiesmd). |
+| 3 Tests | Basename ends with `-tests.md`, or basename is exactly `tests.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-tests.md`](../../templates/sdd-scrum-practices.md#module-name-testsmd). |
+| 4, 5, 6, 7 Design (and UI work) | Basename ends with `-design.md`, or basename is exactly `design.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-design.md`](../../templates/sdd-scrum-practices.md#module-name-designmd) (**UI design**, **Technical design**). |
 
 Flat layouts without a component subfolder are valid: for example `specs/stories.md`, `specs/tests.md`, `specs/design.md` when the map lists them on a module with no `folder`. Prefixed flat paths such as `specs/app-stories.md` under `{artifacts_root}` without a subfolder use the same suffix rules.
 
 When the job needs a path and the module `files` list has no matching entry, job 1 applies: propose adding the path to the map or name a path with the user.
 
-Optional pack detail: `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, artifacts map **Rules**. When `locale` is missing, use `EN`.
+Optional pack detail: `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, artifacts map **Rules**. When `locale` is missing, use `EN`.
 
 ## Readiness summary
 

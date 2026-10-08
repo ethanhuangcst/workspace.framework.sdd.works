@@ -17,7 +17,7 @@ Write order when more than one process file changes: `changes-log.md`, `issues-l
 
 Update `status.md` when closing a PBI, SBI, OGT, or sprint under the sections below, or when the user explicitly asks for a status refresh. Do not update `status.md` after every internal task while an SBI stays WIP. WIP checkpoints while an item is not Done follow [`sdd-realtime-status.mdc`](./sdd-realtime-status.mdc).
 
-When writing `status.md`, follow the section and OGT rules in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` `#statusmd`.
+When writing `status.md`, follow the section and OGT rules in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` `#statusmd`.
 
 ## Common quality gate
 

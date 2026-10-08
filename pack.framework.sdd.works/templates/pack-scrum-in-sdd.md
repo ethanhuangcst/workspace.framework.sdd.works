@@ -19,36 +19,6 @@ Read **Part I** through **Part III** for SDD and the Scrum in SDD definition. Th
 - **Part III** is the definition: what stays, what is added, and what changes.
 - **Appendix**: short summary of the 2020 Scrum Guide. That summary is the baseline for classic Scrum.
 
-## Index
-
-- [Part I Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices](#part-i-agentic-programming-harness-engineering-and-spec-driven-development-sdd-aligned-with-agile-practices)
-  - [Agentic Programming](#agentic-programming)
-  - [Harness Engineering](#harness-engineering)
-  - [Spec-Driven Development (SDD)](#spec-driven-development-sdd)
-  - [Implementing Harness Engineering Principles with SDD](#implementing-harness-engineering-principles-with-sdd)
-  - [Integrating eXtreme Programming practices with SDD](#integrating-extreme-programming-practices-with-sdd)
-  - [Integrating Scrum with SDD](#integrating-scrum-with-sdd)
-  - [Integrating other Agile practices with SDD](#integrating-other-agile-practices-with-sdd)
-- [Part II The Scrum Gap for SDD](#part-ii-the-scrum-gap-for-sdd)
-  - [SDD concepts that need to be added into scrum implementation](#sdd-concepts-that-need-to-be-added-into-scrum-implementation)
-  - [Scrum concepts that need to be modified in Scrum in SDD](#scrum-concepts-that-need-to-be-modified-in-scrum-in-sdd)
-- [Part III Scrum in SDD Guide](#part-iii-scrum-in-sdd-guide)
-  - [Overview](#overview)
-  - [KEEP - what remains unchanged](#keep---what-remains-unchanged)
-  - [ADD - what is added](#add---what-is-added)
-  - [MODIFY: What changes](#modify-what-changes)
-  - [Minimum Scrum in SDD setup](#minimum-scrum-in-sdd-setup)
-  - [Operating principles](#operating-principles)
-- [Appendix: Short summary of the 2020 Scrum Guide](#appendix-short-summary-of-the-2020-scrum-guide)
-  - [Purpose of the Scrum Guide](#purpose-of-the-scrum-guide)
-  - [Scrum Definition](#scrum-definition)
-  - [Scrum Theory](#scrum-theory-1)
-  - [Scrum Values](#scrum-values-1)
-  - [Scrum Team](#scrum-team)
-  - [Scrum Events](#scrum-events-2)
-  - [Scrum Artifacts](#scrum-artifacts-2)
-  - [End Note](#end-note)
-
 # **Part I** Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices
 
 With **Agentic Programming** and **Spec-Driven Development**, under **Harness Engineering principles**, software delivery is fundamentally reshaped.
@@ -322,7 +292,7 @@ This guide is for both humans and AI agents.
 
 ### Core Artifacts
 These are the SDD core artifacts. They are not the Scrum core artifacts under KEEP (Product Backlog, Sprint Backlog, and Increment).
-- **scrum-in-sdd.md**: names and meaning. Stays on the client root.
+- **pack-scrum-in-sdd.md**: names and meaning. Stays on the client root.
 - **sdd-scrum-practices.md**: what, how, and when. Stays on the client root.
 - **artifacts-map.json**: where this project's artifacts live. Sits at the workspace root.
 

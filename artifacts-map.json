@@ -37,7 +37,8 @@
       "files": [
         "specs/framework/framework-design.md",
         "specs/framework/framework-stories.md",
-        "specs/framework/framework-tests.md"
+        "specs/framework/framework-tests.md",
+        "specs/framework/ogt-8-pack-scrum-in-sdd.md"
       ]
     }
   ]

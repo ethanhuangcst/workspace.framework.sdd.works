@@ -1,6 +1,6 @@
 # Seed artifacts building guide
 
-This guide is the method for writing an artifact seed. An artifact seed is the starter a new project copies. Section rules live only in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md). The live artifact is the example. The live artifact follows the rules and does not restate the rules. `product-backlog.md` item shape and table columns live in that file under [product-backlog.md](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#product-backlogmd).
+This guide is the method for writing an artifact seed. An artifact seed is the starter a new project copies. Section rules live only in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/sdd-scrum-practices.md). The live artifact is the example. The live artifact follows the rules and does not restate the rules. `product-backlog.md` item shape and table columns live in that file under [product-backlog.md](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#product-backlogmd).
 
 ## Tracking
 
@@ -8,16 +8,16 @@ One OGT (on-going task) tracks one section type. A section that repeats, such as
 
 ## Rules for one section
 
-Agree the four groups with the user before the edit. Record them under that artifact in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md).
+Agree the four groups with the user before the edit. Record them under that artifact in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/sdd-scrum-practices.md).
 
 1. Content: what the section documents, and what the section leaves to another section.
 2. Format: the headings, the lines, the tables, and the links.
 3. Writing: [General writing principles](#general-writing-principles).
-4. Terms: each name the section uses. Link the term in [Terminology in practice](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#terminology-in-practice). Do not copy the meaning.
+4. Terms: each name the section uses. Link the term in [Terminology in practice](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#terminology-in-practice). Do not copy the meaning.
 
 ## Section rule shape
 
-A section rule in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) uses `###### Template`.
+A section rule in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/sdd-scrum-practices.md) uses `###### Template`.
 
 - The template is the section shape, with a placeholder for each fact that changes.
 - A placeholder note sits in the template block, as a bullet after the fenced markdown, when the note names only that placeholder.
@@ -25,13 +25,13 @@ A section rule in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templat
   good example: "`{status}` is ToDo, WIP, or Done."
 - Keep a separate `###### How to write` only when a bullet states a rule that is not a placeholder note, such as a sort order or a cross-file sync rule.
 
-Process artifact file headers use [Header (process artifacts)](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#header). Each artifact section adds only its title line in its own Header template.
+Process artifact file headers use [Header (process artifacts)](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). Each artifact section adds only its title line in its own Header template.
 
 Agents and skills open one heading in the practices file per job step. They do not read the whole file.
 
 ## General writing principles
 
-These checks apply to every section. The same list is in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#general-writing-principles).
+These checks apply to every section. The same list is in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#general-writing-principles).
 
 **Wording**
 
@@ -53,7 +53,7 @@ These checks apply to every section. The same list is in [`sdd-scrum-practices.m
 
 **Structure**
 
-- Process artifact headers use [Header (process artifacts)](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#header). One sentence per blockquote line. One link per line. The blockquote ends at the first `---`.
+- Process artifact headers use [Header (process artifacts)](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). One sentence per blockquote line. One link per line. The blockquote ends at the first `---`.
 - A heading level matches the role: file title, section, entry or table, numbered point.
 - Sections stay in the order named for that file.
 - Indent a continuation two spaces under its bullet. Leave no blank line between the bullet and that line.
@@ -75,22 +75,22 @@ These checks apply to every section. The same list is in [`sdd-scrum-practices.m
 
 ## Terminology
 
-The terminology store is [Terminology in practice](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#terminology-in-practice) in `sdd-scrum-practices.md`.
+The terminology store is [Terminology in practice](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#terminology-in-practice) in `sdd-scrum-practices.md`.
 
 - A section uses the Terminology name for that thing, so the file keeps one name.
   bad example: call the same row an item after `SBI` is the Terminology name
   good example: use `SBI` for that row
-- A work name used in an artifact links [Terminology in practice](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#terminology-in-practice).
+- A work name used in an artifact links [Terminology in practice](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#terminology-in-practice).
 - The artifact does not copy the meaning.
 - Add a missing work name to Terminology in practice before the artifact links that name.
-- The artifact header uses [Header (process artifacts)](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#header). After copying, replace the product name and the date in `as_of`.
+- The artifact header uses [Header (process artifacts)](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). After copying, replace the product name and the date in `as_of`.
 
 ## Review and update
 
 Work one section at a time.
 
 1. Agree the four groups with the user. The groups are Content, Format, Writing, and Terms.
-2. Update that section in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md).
+2. Update that section in [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/sdd-scrum-practices.md).
    - Write or replace `Template`. Add placeholder notes after the fence, or add `How to write` when a rule is not a placeholder note.
    - The section matches the agreed groups. Do not add a second copy of the groups as a narrative list.
 3. Follow [General writing principles](#general-writing-principles), update the same section in the live artifact in this workspace. That file is the example. Leave later sections unchanged.

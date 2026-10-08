@@ -1,8 +1,8 @@
 # Test strategy — framework.sdd.works
 
 > **Purpose**: Product-level test strategy. Extends **common-test-strategy**; do not weaken it. Module specs use `{stem}-tests.md`.
-> **Practices**: [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) (what, how, when).
-> **Framework**: [`scrum-in-sdd.md`](../pack.framework.sdd.works/templates/EN/scrum-in-sdd.md) (names and meaning).
+> **Practices**: [`sdd-scrum-practices.md`](../pack.framework.sdd.works/templates/sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`pack-scrum-in-sdd.md`](../pack.framework.sdd.works/templates/pack-scrum-in-sdd.md) (names and meaning).
 
 ## 1. Baseline
 

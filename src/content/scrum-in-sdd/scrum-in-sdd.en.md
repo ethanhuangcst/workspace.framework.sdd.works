@@ -2,17 +2,13 @@
 
 > Type: Core artifact of framework.sdd.works
 > as_of: 2026-10-08
-> [Definition](./sdd-scrum-practices.md#terminology-in-practice)
+> **Author:** © 2026 Ethan Huang
 
-**Author:** Ethan Huang
-
-© 2026 Ethan Huang
+---
 
 This document defines how Scrum is adopted in Spec-Driven Development, with Agentic Programming under Harness Engineering principles.
 
 The Scrum Guide defines Scrum. This document does not replace it.
-
-Read **Part I** through **Part III** for SDD and the Scrum in SDD definition. The **Appendix** is a short summary of the 2020 Scrum Guide for reference.
 
 - **Part I** names Agentic Programming, Harness Engineering, and Spec-Driven Development.
 - **Part II** states what classic Scrum does not cover in that setting.
@@ -261,7 +257,7 @@ This guide is for both humans and AI agents.
 - **Workflow**: a defined sequence of actions and handoffs.
 - **Knowledge**: retained project context used in execution.
 - **Artifact**: a persistent project document used to plan, execute, or inspect work.
-- **PBI**, **SBI**, **Feature**, **Task**, **OGT**, **MVP**: [Terminology in practice](./sdd-scrum-practices.md#terminology-in-practice).
+- **PBI**, **SBI**, **Feature**, **Task**, **OGT**, **MVP**: Terminology in practice (names in `sdd-scrum-practices.md` on the client root).
 - **Increment**: usable output that meets the Definition of Done.
 
 [Back to top](#index)
@@ -322,7 +318,7 @@ This guide is for both humans and AI agents.
 
 ### Core Artifacts
 These are the SDD core artifacts. They are not the Scrum core artifacts under KEEP (Product Backlog, Sprint Backlog, and Increment).
-- **scrum-in-sdd.md**: names and meaning. Stays on the client root.
+- **pack-scrum-in-sdd.md**: names and meaning. Stays on the client root.
 - **sdd-scrum-practices.md**: what, how, and when. Stays on the client root.
 - **artifacts-map.json**: where this project's artifacts live. Sits at the workspace root.
 

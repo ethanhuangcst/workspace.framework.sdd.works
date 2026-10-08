@@ -947,9 +947,10 @@ Scenario: Human seed rules
 Scenario: Agent template rules
   Given EN human content is updated
   When sdd-guide-editor syncs the agent variant
-  Then templates/{EN|HanS|HanT}/scrum-in-sdd.md under the pack tree match semantic section order
-  And agent files omit the Index block
-  And agent files may link to install-safe pack paths named in reference.md
+  Then pack.framework.sdd.works/templates/pack-scrum-in-sdd.md matches semantic section order with human EN
+  And the AI-read file omits the Index block
+  And the AI-read file may link to install-safe pack paths named in reference.md
+  And templates/HanS/scrum-in-sdd.md is absent
 ```
 
 #### AC4
@@ -982,7 +983,56 @@ Scenario: zh locales
   And structure and heading ids stay aligned with EN for portal anchors
 ```
 
-Tests: CE-SKILL-23. Implement after user confirms readiness from sdd-spec-to-build.
+Tests: CE-SKILL-23.
+
+### OGT-8 pack-scrum-in-sdd rename
+
+Design: [ogt-8-pack-scrum-in-sdd.md](./ogt-8-pack-scrum-in-sdd.md). [ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md).
+
+**As the** framework maintainer closing status OGT #8
+**I want** the pack and product repo to use `pack-scrum-in-sdd.md` for the AI-read guide
+**So that** human portal files and install templates stay distinct and the AI-read trio sits beside `constants.json`
+
+#### AC1
+
+```gherkin
+Scenario: AI guide seed path
+  Given the pack authoring tree after OGT-8 implementation
+  When a verifier lists templates/
+  Then pack-scrum-in-sdd.md sdd-scrum-practices.md and coach-knowledge.md sit beside constants.json
+  And scrum-in-sdd.md is absent under templates/EN/ and templates/HanS/
+  And sdd-scrum-practices.md is absent under templates/EN/
+```
+
+#### AC2
+
+```gherkin
+Scenario: Ethan guide path
+  Given pack.framework.sdd.works/agents/ethan.md after implementation
+  When the Guide and practices section is read
+  Then it names pack-scrum-in-sdd.md under templates/framework.sdd.works/ without a locale segment
+  And it does not name scrum-in-sdd.md under templates/
+```
+#### AC3
+
+```gherkin
+Scenario: Index script human-only
+  Given scrum-in-sdd.en.md changed on the human seed
+  When the maintainer runs rebuild-scrum-in-sdd-en.mjs --index-only
+  Then content/scrum-in-sdd/scrum-in-sdd.en.md and src/content mirror update
+  And templates/pack-scrum-in-sdd.md is not overwritten by that script
+```
+
+#### AC4
+
+```gherkin
+Scenario: Human portal unchanged
+  Given OGT-8 is complete
+  When instructions tabs config is read
+  Then scrum-in-sdd content tab paths still point at content/scrum-in-sdd/scrum-in-sdd.{locale}.md
+```
+
+Tests: CE-OGT-8.
 
 ### improve-prompt
 
@@ -1492,7 +1542,7 @@ Scenario Outline: Kickoff does not copy client-root prose into the project
   And the project locale is "<locale>"
   When the copy finishes
   Then constants.json is not in the project
-  And scrum-in-sdd.md is not in the project
+  And pack-scrum-in-sdd.md is not in the project
   And sdd-scrum-practices.md is not in the project
   And those files remain under {client_root}/templates/framework.sdd.works/
   And constants.json is not a row in artifacts-map.json
@@ -1596,9 +1646,9 @@ Tests: CE-TPL-04. AC2 applies when that locale seed exists. A missing translatio
 
 ## core-artifacts
 
-Core artifacts are `scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `artifacts-map.json`.
+Core artifacts are `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `artifacts-map.json`.
 
-`scrum-in-sdd.md` and `sdd-scrum-practices.md` are the client-root files in [templates](#templates). They are not project files.
+`pack-scrum-in-sdd.md` and `sdd-scrum-practices.md` are the client-root template files under `templates/framework.sdd.works/` beside `constants.json`. They are not project files.
 
 `artifacts-map.json` is the project file in [Map paths](#map-paths). Its locale field is `EN`, `HanS`, or `HanT`. An empty locale is [sdd-artifact-locale](#sdd-artifact-locale--reply-language-follows-the-map). The audit verdicts are [sdd-audit-artifacts](#sdd-audit-artifacts).
 
@@ -1653,7 +1703,7 @@ Scenario: EN status seed has the five sections
   When the body is read
   Then the title is The latest status of [product name]
   And the sections are Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), and Last 15 closed OGTs
-  And scrum-in-sdd.md and sdd-scrum-practices.md are not in the related list
+  And pack-scrum-in-sdd.md and sdd-scrum-practices.md are not in the related list
 ```
 
 #### AC4

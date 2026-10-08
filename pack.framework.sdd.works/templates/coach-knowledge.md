@@ -1,6 +1,6 @@
 # Coach knowledge
 
-This file is the pack meaning of harness engineering, XP (Extreme Programming), BDD (Behavior-Driven Development), Lean, and AI (artificial intelligence) in delivery. Scrum in SDD (Spec-Driven Development) names stay in `scrum-in-sdd.md`. Job steps stay in `sdd-scrum-practices.md`.
+This file is the pack meaning of harness engineering, XP (Extreme Programming), BDD (Behavior-Driven Development), Lean, and AI (artificial intelligence) in delivery. Scrum in SDD (Spec-Driven Development) names stay in `pack-scrum-in-sdd.md`. Job steps stay in `sdd-scrum-practices.md`.
 
 Ethan reads one heading when a question or a guiding proposal needs that topic. The read starts at the heading and stops at the next heading of the same level.
 

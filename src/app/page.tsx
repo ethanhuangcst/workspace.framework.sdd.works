@@ -3,6 +3,8 @@ import { InstructionsClient } from "./instructions/InstructionsClient";
 import { getLocaleFromCookieValue } from "@/lib/locale";
 import { buildInstructionsPageModel } from "@/lib/instructions-tabs-page";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePageRoute({
   searchParams,
 }: {

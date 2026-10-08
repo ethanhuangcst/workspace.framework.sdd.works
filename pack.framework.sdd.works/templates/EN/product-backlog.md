@@ -2,7 +2,7 @@
 
 > Type: Framework (process) artifact of [product name]
 > as_of: [YYYY-MM-DD]
-> [Definition](./sdd-scrum-practices.md#product-backlogmd)
+> [Definition](../sdd-scrum-practices.md#product-backlogmd)
 
 ---
 
@@ -40,7 +40,7 @@ This section lists additional product checks on top of the standard Definition o
 
 # Requirements
 
-Each item has a PBI code, one noun for the deliverable, and bullets the user can act on. The table uses the same code and the same noun. Requirements carry one `#pb-N` anchor. The table links the PBI code to `#pb-N` on the same line. Other process files link to `./product-backlog.md#L{line}` for that Requirements line. Bullet wording follows [Requirements — How to write](./sdd-scrum-practices.md#requirements) and [Requirements bullets (product-backlog)](./sdd-scrum-practices.md#general-writing-principles).
+Each item has a PBI code, one noun for the deliverable, and bullets the user can act on. The table uses the same code and the same noun. Requirements carry one `#pb-N` anchor. The table links the PBI code to `#pb-N` on the same line. Other process files link to `./product-backlog.md#L{line}` for that Requirements line. Bullet wording follows [Requirements — How to write](../sdd-scrum-practices.md#requirements) and [Requirements bullets (product-backlog)](../sdd-scrum-practices.md#general-writing-principles).
 
 Replace `[component name]` with your component label. Add one `##` heading per component. Link each heading from the Index.
 

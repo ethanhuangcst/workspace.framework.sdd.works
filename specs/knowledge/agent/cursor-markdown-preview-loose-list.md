@@ -7,7 +7,7 @@ tags:
   - markdown
   - cursor
   - preview
-related_spec: pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md
+related_spec: pack.framework.sdd.works/templates/sdd-scrum-practices.md
 related:
   - knowledge/agent/features-markdown-em-dash.md
 ---
@@ -37,5 +37,5 @@ Spike on 2026-09-30, bisected with small copies of `../../product-backlog.md` in
 
 ## Links
 
-- [`sdd-scrum-practices.md`](../../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md) Writing markdown
+- [`sdd-scrum-practices.md`](../../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) Writing markdown
 - [`product-backlog.md`](../../product-backlog.md)

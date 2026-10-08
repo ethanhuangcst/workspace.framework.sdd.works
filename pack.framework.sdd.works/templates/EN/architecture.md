@@ -1,8 +1,8 @@
 # Architecture — [product name]
 
 > **Purpose**: Record the stack, boundaries, and a small number of decisions. Product behavior belongs in [`product-backlog.md`](./product-backlog.md). Optional / JIT (not a required process artifact).
-> **Practices**: [`sdd-scrum-practices.md`](./sdd-scrum-practices.md) (what, how, when).
-> **Framework**: [`scrum-in-sdd.md`](./scrum-in-sdd.md) (names and meaning).
+> **Practices**: [`sdd-scrum-practices.md`](../sdd-scrum-practices.md) (what, how, when).
+> **Framework**: [`pack-scrum-in-sdd.md`](../pack-scrum-in-sdd.md) (names and meaning).
 
 Product requirements stay on [`product-backlog.md`](./product-backlog.md). Locked stack versions or env conventions may live in a sibling doc such as `tech-spec.md` when the project uses one. Link that file here instead of copying it.
 

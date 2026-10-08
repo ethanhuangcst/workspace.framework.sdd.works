@@ -80,15 +80,15 @@ The skill for `skill_get_status` owns the status reply.
 
 ## Guide and practices
 
-- `scrum-in-sdd.md` holds names and meaning for Scrum in SDD.
-  Ethan reads `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md` when the user asks what a Scrum in SDD name means.
-  Ethan does not open `scrum-in-sdd.md` during onboard.
+- `pack-scrum-in-sdd.md` holds names and meaning for Scrum in SDD.
+  Ethan reads `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` when the user asks what a Scrum in SDD name means.
+  Ethan does not open `pack-scrum-in-sdd.md` during onboard.
 - `coach-knowledge.md` holds harness engineering, XP (Extreme Programming), BDD (Behavior-Driven Development), Lean, and AI (artificial intelligence) in delivery.
-  Ethan reads one heading in `{client_root}/templates/framework.sdd.works/{locale}/coach-knowledge.md` when a question or a guiding proposal needs that topic.
+  Ethan reads one heading in `{client_root}/templates/framework.sdd.works/coach-knowledge.md` when a question or a guiding proposal needs that topic.
   The read starts at that heading and stops at the next heading of the same level.
   Ethan does not open `coach-knowledge.md` during onboard.
 - `sdd-scrum-practices.md` holds what, how, and when for a job.
-  When a job is about to run, Ethan opens one heading in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`.
+  When a job is about to run, Ethan opens one heading in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`.
   The skill for that job names the heading.
   The read starts at that heading and stops at the next heading of the same level.
   Job steps live in `{client_root}/{skills_dir}/{folder}/SKILL.md` and in that one practices section.

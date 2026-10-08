@@ -106,6 +106,10 @@ export function validateKnowledgeIndex(
     return { ok: false, errors };
   }
 
+  if (entriesRaw.length === 0) {
+    errors.push("entries must not be empty");
+  }
+
   const seenIds = new Set<string>();
 
   for (let i = 0; i < entriesRaw.length; i += 1) {

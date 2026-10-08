@@ -25,7 +25,7 @@ A sprint backlog item (SBI) is one row in a sprint table on `sprint-backlog.md`.
 
 `{rules_dir}` is the value in `{client_root}/templates/framework.sdd.works/constants.json`.
 
-The practices file for this run is `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`.
+The practices file for this run is `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`.
 
 The skill reviews and consolidates `product-backlog.md`. User Stories and Acceptance Criteria are written when a feature is designed, with `atdd-expert` or `sdd-spec-to-build`.
 
@@ -46,8 +46,8 @@ The user picks what to do with the findings list.
 | Source | Load when |
 | --- | --- |
 | `{workspace}/artifacts-map.json` | Start of the run; read `locale` when present |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, headings "3. Evaluate Product Backlog Readiness" and "4. Size product backlog" | The review |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, heading "5. Feature break down", subsection "Refine a backlog item" | The user picks a split, tighten, or merge that changes PBIs or requirement bullets |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, headings "3. Evaluate Product Backlog Readiness" and "4. Size product backlog" | The review |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, heading "5. Feature break down", subsection "Refine a backlog item" | The user picks a split, tighten, or merge that changes PBIs or requirement bullets |
 | Term rows under the heading "Terminology in practice" in that practices file | A fail names that term: Feature, Task, on-going task (OGT), Issue, RID, or a PBI Size |
 | `{client_root}/{rules_dir}/friendly-language.mdc` | Wording in the findings table and the confirm choices |
 | [response.md](./response.md) | Composing the findings message |
@@ -97,7 +97,7 @@ When the fail list is empty, follow the empty-set rule in response.md. Then stop
 - Record the new lines for the process files the pick changes.
 - Write the recorded lines in this order: changes-log, issues-log, status, sprint-backlog, product-backlog.
 - When the pick changes no line in a process file, leave that process file unchanged, so the file keeps its current text.
-- When `product-backlog.md` is about to change, read only the heading "product-backlog.md" in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. Start at that heading. Stop at the next `####` heading.
+- When `product-backlog.md` is about to change, read only the heading "product-backlog.md" in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`. Start at that heading. Stop at the next `####` heading.
 - When another process file is about to change, read only that artifact's `####` heading in the same practices file, with the same start-and-stop rule.
 - When the user picks a split or a shrink for an Epic row, apply the Epic row in §3 and remove the sprint rows that section forbids, in the same write pass.
 - When the user picks a split or tighten, set `Size`, requirement bullets, and related rows. Apply the Refine subsection in practices §5. Do not copy §5 examples into this skill.
@@ -120,7 +120,7 @@ When the fail list is empty, follow the empty-set rule in response.md. Then stop
 
 - Update Project progress and "what could be the next" when a PBI status change affects them.
 - When the user picks **Create an OGT to record these findings and I will refine later**, add one OGT row. The task name is `Refine product backlog`. Under that name, one line per finding gives the PBI code and the short name. Leave the backlog unchanged.
-- Load the OGT term row in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` when the pick parks work on `status.md`.
+- Load the OGT term row in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` when the pick parks work on `status.md`.
 
 ### issues-log.md
 

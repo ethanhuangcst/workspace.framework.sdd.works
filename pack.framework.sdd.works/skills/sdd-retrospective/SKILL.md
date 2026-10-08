@@ -20,7 +20,7 @@ The five process files are changes-log, issues-log, status, sprint-backlog, and 
 
 `{locale}` is the value in `{workspace}/artifacts-map.json`. When `locale` is missing, use `EN`.
 
-The practices file for this run is `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`.
+The practices file for this run is `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`.
 
 ADR instance shape: that file, section `#adr-instance-shape`.
 
@@ -67,10 +67,10 @@ The host picks order from the thread.
 | Source | Load when |
 | --- | --- |
 | `{workspace}/artifacts-map.json` | Start; read `adr`, `knowledge`, `locale`, and process file paths |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, Retrospective under sprint-backlog | Before editing `sprint-backlog.md`; for **Learnings**, **Opportunities**, and **Future actions** label scope and `{trigger}` shape |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, `#artifacts-mapjson` | Before ADR or knowledge writes |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, `#adr-instance-shape` | Before creating an ADR instance |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, `#knowledge-instance-shape` | Before creating a knowledge instance |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, Retrospective under sprint-backlog | Before editing `sprint-backlog.md`; for **Learnings**, **Opportunities**, and **Future actions** label scope and `{trigger}` shape |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, `#artifacts-mapjson` | Before ADR or knowledge writes |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, `#adr-instance-shape` | Before creating an ADR instance |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, `#knowledge-instance-shape` | Before creating a knowledge instance |
 | `{client_root}/rules/sdd-dod.mdc` | By-rule gate before Done |
 | Existing files under `{workspace}/{adr}` and `{workspace}/{knowledge}` | Numbering and index updates |
 | Prior **Future actions** blocks in `{workspace}` sprint-backlog for earlier sprints | **Sprint-end**, to score each still-open action as landed, partial, or not landed |
@@ -83,7 +83,7 @@ The host picks order from the thread.
 - **Sprint-end:** before or while closing a sprint (`Sprint-end` trigger).
 - **On demand:** the user asks for retrospective, lessons learned, 回顾, or `/sdd-retrospective`.
 
-`{trigger}` on the sprint record follows practices Retrospective under sprint-backlog in `sdd-scrum-practices.md` and **By rule** / **On demand** in `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md` (Sprint Retrospective).
+`{trigger}` on the sprint record follows practices Retrospective under sprint-backlog in `sdd-scrum-practices.md` and **By rule** / **On demand** in `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` (Sprint Retrospective).
 
 When a write needs `adr` or `knowledge` and the map has no key, stop and name **sdd-update-project**. Do not invent paths.
 

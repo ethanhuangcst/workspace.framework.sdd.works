@@ -12,7 +12,7 @@ Accepted
 1. **Canonical checklist** for both PBI and SBI close: [`sdd-dod.mdc`](../framework/seeds/rules/sdd-dod.mdc) defaults plus [`product-backlog.md`](../product-backlog.md#definition-of-done) **Definition of Done** (product-specific checks).
 2. **`sprint-backlog.md`** keeps a short **Definition of Done** section above the first sprint table. It **links** to `./product-backlog.md#definition-of-done` and does not repeat the generic bullet list.
 3. **Sprint-only content** stays on `sprint-backlog.md`: optional **replacement** checklist for named sprints, and the **Additional Done Criteria** note (per-row checks under a sprint heading).
-4. EN seeds and [`sdd-scrum-practices.md`](../framework/seeds/templates/EN/sdd-scrum-practices.md) sprint-backlog DoD template follow this shape.
+4. EN seeds and [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) sprint-backlog DoD template follow this shape.
 
 ## Consequences
 

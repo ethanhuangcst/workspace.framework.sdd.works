@@ -88,7 +88,7 @@ When every compared row aligns, say so in one sentence and skip the write offer 
 | `{workspace}/artifacts-map.json` | Start |
 | `sprint-backlog.md` and `status.md` under paths from the map | Scope is an SBI or current WIP work |
 | Related paths on the SBI row | Scoped SBI |
-| `{client_root}/templates/framework.sdd.works/{locale}/scrum-in-sdd.md`, Engineering Artifacts | Naming `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md` |
+| `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md`, Engineering Artifacts | Naming `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md` |
 | `{client_root}/rules/friendly-language.mdc` | Wording for the gap report and drafts |
 | [response.md](./response.md) | Composing the gap report |
 | `{client_root}/rules/sdd-incremental-delivery.mdc` | Scope might jump to a second SBI |

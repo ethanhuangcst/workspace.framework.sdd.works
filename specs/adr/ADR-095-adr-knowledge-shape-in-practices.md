@@ -11,7 +11,7 @@ Sprint 6 added pack locale files `adr.md` and `knowledge.md` under `templates/fr
 ## Decision
 
 1. Remove pack locale seed files `adr.md` and `knowledge.md`. MCP install no longer ships them.
-2. Canonical shape for new ADR and knowledge **instances** is in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` under **ADR instance shape** and **Knowledge instance shape** (`#adr-instance-shape`, `#knowledge-instance-shape`).
+2. Canonical shape for new ADR and knowledge **instances** is in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` under **ADR instance shape** and **Knowledge instance shape** (`#adr-instance-shape`, `#knowledge-instance-shape`).
 3. `sdd-retrospective` reads those practice sections for layout. It does not open separate `adr.md` or `knowledge.md` files.
 4. [ADR-090](./ADR-090-adr-knowledge-map-roots.md) is unchanged: optional map keys `adr` and `knowledge` name workspace instance roots. Instance shapes are not copied into `{workspace}` and are not listed in `artifacts-map.json` `files`.
 5. HanS translated shape sections defer to i18n / HanS practices work. Until then, HanS-locale projects use the EN practices sections for shape when HanS sections are absent.

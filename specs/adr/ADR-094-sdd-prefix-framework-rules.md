@@ -9,7 +9,7 @@ Pack rules install at `{client_root}/rules/`. [ADR-072](./ADR-072-rule-artifacts
 
 ## Decision
 
-1. A pack rule file name starts with `sdd-` when the rule depends on framework process semantics: `{workspace}/artifacts-map.json`, the five process files, PBI/SBI/OGT/RID/sprint behavior tied to those files, or `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` for write shape.
+1. A pack rule file name starts with `sdd-` when the rule depends on framework process semantics: `{workspace}/artifacts-map.json`, the five process files, PBI/SBI/OGT/RID/sprint behavior tied to those files, or `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` for write shape.
 2. Portable harness rules that do not read or write those artifacts keep an unprefixed name. Today: `friendly-language.mdc`.
 3. [`constants.json`](../framework/seeds/templates/constants.json) keeps stable keys (`dod`, `incremental-delivery`, `realtime-status`, `friendly-language`). Values for the three framework-bound rules are `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, and `sdd-realtime-status.mdc` ([ADR-096](./ADR-096-sdd-realtime-status-rule-name.md) renames the third rule from `sdd-keep-update.mdc`; key `keep-update` is removed).
 4. [CE-RULE-05](../framework/framework-tests.md) expects the three `sdd-` rule files plus `friendly-language.mdc`. Only `friendly-language.mdc` has no `sdd-` prefix.

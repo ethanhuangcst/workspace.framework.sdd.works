@@ -2,7 +2,7 @@
 
 > Type: Framework (process) artifact of [product name]
 > as_of: [YYYY-MM-DD]
-> [Definition](./sdd-scrum-practices.md#sprint-backlogmd)
+> [Definition](../sdd-scrum-practices.md#sprint-backlogmd)
 
 ## Current project progress
 

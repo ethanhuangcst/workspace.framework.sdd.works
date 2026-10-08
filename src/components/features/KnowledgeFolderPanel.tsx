@@ -52,22 +52,27 @@ export function KnowledgeFolderPanel({
   const pathname = usePathname() || "/";
   const router = useRouter();
 
+  function navigate(href: string) {
+    router.push(href);
+    router.refresh();
+  }
+
   const showBack = folderSegments.length > 0 || Boolean(doc);
   const atRootList = folderSegments.length === 0 && !doc;
 
   function onBack() {
     if (doc) {
-      router.push(buildFolderUrl(pathname, queryParam, folderSegments));
+      navigate(buildFolderUrl(pathname, queryParam, folderSegments));
       return;
     }
-    router.push(
+    navigate(
       buildFolderUrl(pathname, queryParam, parentSegments(folderSegments)),
     );
   }
 
   function onFolder(entry: Extract<ResolvedKnowledgeListEntry, { kind: "folder" }>) {
     const sub = entry.path.split("/").filter(Boolean);
-    router.push(
+    navigate(
       buildFolderUrl(pathname, queryParam, folderSegments.concat(sub)),
     );
   }
@@ -75,7 +80,7 @@ export function KnowledgeFolderPanel({
   function onSameTabFile(
     entry: Extract<ResolvedKnowledgeListEntry, { kind: "file" }>,
   ) {
-    router.push(
+    navigate(
       buildKnowledgeArticlePath(
         pathname,
         queryParam,
@@ -117,9 +122,19 @@ export function KnowledgeFolderPanel({
     );
   }
 
+  if (doc && !articleHtml) {
+    return (
+      <div className="knowledge-browser" data-testid="knowledge-browser">
+        <p className="knowledge-error" role="alert">
+          {t(locale, "admin.guide.knowledge_error")}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="knowledge-browser" data-testid="knowledge-browser">
-      {showBack && !doc ? (
+      {showBack ? (
         <div className="knowledge-article-toolbar">
           <button
             type="button"
@@ -136,9 +151,7 @@ export function KnowledgeFolderPanel({
         <h2 className="knowledge-list-title">{listing.folderTitle}</h2>
       ) : null}
 
-      {!listing ? (
-        <p className="knowledge-loading">{t(locale, "admin.guide.knowledge_loading")}</p>
-      ) : (
+      {listing ? (
         <ul className="knowledge-list" data-testid="knowledge-list">
           {listing.entries.map((entry) => (
             <li key={entry.id} className="knowledge-list-item">
@@ -182,6 +195,8 @@ export function KnowledgeFolderPanel({
             </li>
           ))}
         </ul>
+      ) : (
+        <p className="knowledge-loading">{t(locale, "admin.guide.knowledge_loading")}</p>
       )}
     </div>
   );

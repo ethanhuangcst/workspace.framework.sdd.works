@@ -42,7 +42,7 @@ The five jobs for one feature are strategy, tools, create, run, and report.
 | `{workspace}/artifacts-map.json` | It exists; module test file paths and stems |
 | Project markers: `package.json`, `pyproject.toml`, `go.mod` | Before picking tools |
 | `{client_root}/rules/common-test-strategy.mdc` | Installed; before pyramid split |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, `#module-name-testsmd` | Before drafting or revising a module test plan (`*-tests.md` or `tests.md`). When `locale` is missing, use `EN` |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, `#module-name-testsmd` | Before drafting or revising a module test plan (`*-tests.md` or `tests.md`). When `locale` is missing, use `EN` |
 | This skill folder `browser.md` | The work includes a web UI. Server helper, static HTML, and rendered-page facts live there |
 | This skill folder `templates/test-report.md` | Before writing a report file; fill placeholders from the run |
 | This skill folder `templates/test-report-failures.md` | When any check failed; append or paste failure detail |

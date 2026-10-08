@@ -453,7 +453,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **knowledge**：项目中沉淀的知识，默认路径：**{workspace}/{knowledge}**（来自 `artifacts-map.json`）
 
 ### Artifacts
-- **Core artifacts**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
+- **Core artifacts**：**pack-scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
 - **Framework artifacts**：**product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
 - **Engineering artifacts**：**architecture.md；路径以 artifacts-map.json 的 modules.files 为准（可有子目录或平铺在 artifacts 根下）；release.md；test-strategy.md；.secrets；issues-log.md**
 - **Pack files beside these groups**：**constants.json**；**.sdd-installed.json**
@@ -572,7 +572,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **Workflow**：定义好的动作与交接序列。
 - **Knowledge**：执行中使用并保留的项目上下文。
 - **Artifact**：用于规划、执行或检测工作的持久化项目文档。
-- **PBI**、**SBI**、**Feature**、**Task**、**OGT**、**MVP**：[Terminology in practice](./sdd-scrum-practices.md#terminology-in-practice)（英文 practices 中的工作名称表）。
+- **PBI**、**SBI**、**Feature**、**Task**、**OGT**、**MVP**：Terminology in practice（英文 practices 中的工作名称表）。
 - **Increment**：符合 Definition of Done 的可用产出。
 
 [返回顶部](#index)

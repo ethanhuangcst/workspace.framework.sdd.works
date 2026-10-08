@@ -1,6 +1,4 @@
-v0.0.1
-
-# Scrum in SDD
+# Scrum in SDD2
 
 > 类型: framework.sdd.works 的核心工件
 > as_of: 2026-10-04
@@ -75,10 +73,8 @@ v0.0.1
     - [Harness 各层](#harness-各层)
     - [Rules](#rules)
     - [Skills](#skills)
-    - [SDD 核心工件](#sdd-核心工件)
     - [框架工件](#框架工件)
     - [工程工件](#工程工件)
-    - [包文件](#包文件)
     - [Knowledge](#knowledge)
   - [MODIFY：发生变化的内容](#modify发生变化的内容)
     - [Scrum 团队与 Scrum 职责](#scrum-团队与-scrum-职责)
@@ -433,7 +429,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **friendly-language.mdc**：让用户和后续 agent 可读的 chat 与 Markdown 文案
 
 ### Skills
-- **sdd-atdd**
+- **atdd-expert**
 - **sdd-update-project**
 - **sdd-refine-backlog**
 - **sdd-plan-sprint**
@@ -441,8 +437,10 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
+- **sdd-review-status**
 - **sdd-update-specs**
 - **sdd-spec-to-build**
+- **sdd-create-skill**
 
 ### Agents
 - **scrum-master**，在本服务中为：**ethan**
@@ -455,10 +453,10 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **knowledge**：项目中沉淀的知识，默认路径：**{workspace}/{knowledge}**（来自 `artifacts-map.json`）
 
 ### Artifacts
-- **SDD 核心工件**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
-- **框架工件**：**product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
-- **工程工件**：**architecture.md; {stem}-stories.md; {stem}-design.md; {stem}-tests.md; release.md; test-strategy.md; .secrets; issues-log.md**
-- **这三组之外的包文件**：**constants.json**（客户端根目录上的包查找表）；**.sdd-installed.json**（客户端根目录上的安装账本）
+- **Core artifacts**：**pack-scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
+- **Framework artifacts**：**product-backlog.md; sprint-backlog.md; status.md; changes-log.md**
+- **Engineering artifacts**：**architecture.md；路径以 artifacts-map.json 的 modules.files 为准（可有子目录或平铺在 artifacts 根下）；release.md；test-strategy.md；.secrets；issues-log.md**
+- **Pack files beside these groups**：**constants.json**；**.sdd-installed.json**
 
 [返回顶部](#index)
 
@@ -574,7 +572,7 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **Workflow**：定义好的动作与交接序列。
 - **Knowledge**：执行中使用并保留的项目上下文。
 - **Artifact**：用于规划、执行或检测工作的持久化项目文档。
-- **PBI**、**SBI**、**Feature**、**Task**、**OGT**、**MVP**：[Terminology in practice](./sdd-scrum-practices.md#terminology-in-practice)（英文 practices 中的工作名称表）。
+- **PBI**、**SBI**、**Feature**、**Task**、**OGT**、**MVP**：Terminology in practice（英文 practices 中的工作名称表）。
 - **Increment**：符合 Definition of Done 的可用产出。
 
 [返回顶部](#index)
@@ -617,11 +615,11 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 ### Rules
 - **sdd-dod.mdc**：Definition of Done；关闭时的流程写入。
 - **sdd-incremental-delivery.mdc**：增量交付策略。
-- **sdd-realtime-status.mdc**：WIP 流程同步。
+- **sdd-realtime-status.mdc**：WIP 流程同步；未 Done 时 draft、确认、写入。
 - **friendly-language.mdc**：可读 chat 与 Markdown（用户与后续 agent）。
 
 ### Skills
-- **sdd-atdd**
+- **atdd-expert**
 - **sdd-update-project**
 - **sdd-refine-backlog**
 - **sdd-plan-sprint**
@@ -629,39 +627,31 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 - **sdd-retrospective**
 - **sdd-close-sprint**
 - **sdd-audit-artifacts**
+- **sdd-review-status**
 - **sdd-update-specs**
 - **sdd-spec-to-build**
-
-### SDD 核心工件
-这是 SDD 的核心工件。它们不是 KEEP 下的 Scrum 核心工件（Product Backlog、Sprint Backlog、Increment）。
-- **scrum-in-sdd.md**：名称与含义。留在客户端根目录。
-- **sdd-scrum-practices.md**：做什么、怎么做、何时做。留在客户端根目录。
-- **artifacts-map.json**：本项目工件所在位置。位于工作区根目录。
+- **sdd-create-skill**
 
 ### 框架工件
-- **product-backlog.md**：Product Backlog。
-- **sprint-backlog.md**：Sprint Backlog。
-- **status.md**：实时状态。
+- **status.md**：项目快照；DoD 关闭与 WIP 检查点（`sdd-realtime-status.mdc`）时更新。
 - **changes-log.md**：变更历史。
+- **artifacts-map.json**：工件映射。
+- **product-backlog.md**: Product Backlog
+- **sprint-backlog.md**: Sprint Backlog
 
 ### 工程工件
 - **architecture.md**：架构 spec。
-- **{stem}-stories.md**：用户故事和验收标准。
+- **{stem}-stories.md**：用户故事和验收标准
 - **{stem}-design.md**：设计 spec。
 - **{stem}-tests.md**：测试 spec。
 - **release.md**：本地启动与上线步骤。
 - **test-strategy.md**：产品级测试策略。
-- **.secrets**：机密名称及其值的存放位置。不含机密值。
-- **issues-log.md**：缺陷记录。它也是审计打开的五个过程文件之一。
-
-### 包文件
-这些不是项目工件。它们不属于上面任何一组。
-- **constants.json**：客户端根目录上的包查找表，存放路径名、技能键和规则键。
-- **.sdd-installed.json**：客户端根目录上的安装账本。由安装程序写入。`pack_complete: true` 表示包复制已完成。
+- **.secrets**：用于存放机密信息的文件。
 
 ### Knowledge
 - **ADR**：Architecture Decision Record。
 - **knowledge/**：执行过程中沉淀的项目知识。
+- 当 `artifacts-map.json` 含有 `adr` 或 `knowledge` 键时，其值为对应目录根路径。
 
 [返回顶部](#index)
 
@@ -717,7 +707,6 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 
 #### Sprint Backlog
 - Sprint Backlog 可以维护为一个 Markdown 工件。
-- **Unplanned PBIs（未规划 PBI）** 列出尚未分配 Sprint 的 Product Backlog 条目。该节位于 `sprint-backlog.md` 中最后一个 Sprint 表格之后。详见 `sdd-scrum-practices.md`。
 - 它可以由人和 AI agents 持续更新。
 
 #### Increment

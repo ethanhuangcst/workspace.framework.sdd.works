@@ -28,7 +28,7 @@ Explicit paths in JSON already work for audit. Documenting optional `folder` and
 
 ## Consequences
 
-- Practices, `scrum-in-sdd.md`, and framework design document the three layouts and path-first rules.
+- Practices, **`pack-scrum-in-sdd.md`**, and framework design document the three layouts and path-first rules ([ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)).
 - `sdd-update-project`, `sdd-atdd`, and `sdd-update-specs` read `modules[].files` first.
 - Framework stories and tests add flat-module coverage.
 - Existing foldered maps (including this repo) need no migration.

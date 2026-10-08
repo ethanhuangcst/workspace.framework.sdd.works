@@ -2,7 +2,7 @@
 
 > Type: Framework (process) artifact of framework.sdd.works
 > as_of: 2026-10-08
-> [Definition](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#issues-logmd)
+> [Definition](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#issues-logmd)
 
 ---
 

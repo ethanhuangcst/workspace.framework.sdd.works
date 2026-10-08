@@ -17,7 +17,7 @@ The five process files are changes-log, issues-log, status, sprint-backlog, and 
 
 `{locale}` is the value in `{workspace}/artifacts-map.json`. When `locale` is missing, use `EN`.
 
-The practices file for this run is `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`.
+The practices file for this run is `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`.
 
 The skill compares the five process files with open work in the current sprint and with Open RIDs on `sprint-backlog.md`.
 
@@ -39,7 +39,7 @@ The user picks handling in chat. One reply can cover every mismatch.
 | --- | --- |
 | `{workspace}/artifacts-map.json` | Start of the run |
 | [response.md](./response.md) | Composing the findings message |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, RID Log section and `#term-rid` under Terminology in practice | Open RIDs or a RID write |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, RID Log section and `#term-rid` under Terminology in practice | Open RIDs or a RID write |
 | `{client_root}/rules/sdd-dod.mdc` | Before closing an RID; before an SBI or PBI Done write |
 | `{client_root}/skills/sdd-retrospective/SKILL.md` or pack seed `sdd-retrospective` | Before any pick that sets SBI or PBI to Done |
 | `{client_root}/rules/friendly-language.mdc` | Wording checks for the findings message, when that file exists |
@@ -102,7 +102,7 @@ When the pick is an untracked defect, the OGT row says track the defect in issue
 - Several **Done** picks in one sprint may share one retrospective run. Set `{trigger}` to list each SBI or PBI code, comma-separated.
 - Write order: retrospective outputs first (ADR, knowledge, `changes-log.md` from that skill, `sprint-backlog.md` Retrospective), then the recorded pick lines in this order: changes-log (remaining picks only), issues-log, status, sprint-backlog, product-backlog.
 - When a pick changes no line in a process file, leave that file unchanged.
-- Before a process file write, read only that artifact's `####` heading in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. Start at that heading. Stop at the next `####` heading.
+- Before a process file write, read only that artifact's `####` heading in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`. Start at that heading. Stop at the next `####` heading.
 - Before closing an RID, apply `{client_root}/rules/sdd-dod.mdc` for a RID (Common quality gate and defaults).
 - Before an SBI or PBI **Done** write, apply `{client_root}/rules/sdd-dod.mdc` for that type (defaults include **sdd-retrospective** completed).
 

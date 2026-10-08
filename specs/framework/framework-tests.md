@@ -253,7 +253,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 - **Layer:** CI (automated) or review checklist until scripted.
 - **Pre-condition:** Pack markdown under `content/` and `templates/` describes ADR or Knowledge storage.
 - **Test steps:** Search `pack.framework.sdd.works/` for the literal segments `/specs/adr` and `/specs/knowledge` outside fenced `artifacts-map.json` examples and outside `sdd-pack-authoring.mdc` ban examples.
-- **Expected results:** Portal and template copy names `{workspace}/{adr}` and `{workspace}/{knowledge}` (or `{workspace-folder}/{adr}`) per [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). Plain text may cite an ADR id (for example `ADR-119`) without a link. JSON example values `"adr": "specs/adr"` in the practices map block stay allowed as a default map shape, not as a markdown link.
+- **Expected results:** Portal and template copy names `{workspace}/{adr}` and `{workspace}/{knowledge}` (or `{workspace-folder}/{adr}`) per [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#artifacts-mapjson). Plain text may cite an ADR id (for example `ADR-119`) without a link. JSON example values `"adr": "specs/adr"` in the practices map block stay allowed as a default map shape, not as a markdown link.
 
 #### CE-LOCALE-01 — Empty locale
 
@@ -390,7 +390,7 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 #### CE-SKILL-10 — sdd-retrospective
 
 - **Layer:** L1.
-- **Pre-condition:** Audit verdict is `Usable`. `artifacts-map.json` has `adr` and `knowledge` keys. `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` includes `#adr-instance-shape` and `#knowledge-instance-shape`. Seed: `pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md`.
+- **Pre-condition:** Audit verdict is `Usable`. `artifacts-map.json` has `adr` and `knowledge` keys. `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` includes `#adr-instance-shape` and `#knowledge-instance-shape`. Seed: `pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md`.
 - **Test steps:** Mark a small task done per **sdd-dod.mdc**, or run `/sdd-retrospective` for the current sprint.
 - **Expected results:** The reply includes a **Retrospective Summary** (ADRs created, knowledge added or updated, or an explicit empty retrospective). The skill writes ADR, knowledge, and sprint-backlog **Retrospective** records in the same turn when needed, without a second user confirm. When the sprint has no `### Retrospective` section, the skill creates it per the seed **Ensure Retrospective section** rules, then appends the numbered block. When `adr` or `knowledge` is missing from the map, it stops and names **sdd-update-project** instead of inventing paths.
 
@@ -518,7 +518,7 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Layer:** L1.
 - **Pre-condition:** Framework.sdd.works product workspace. Seed: `.cursor/skills/sdd-guide-editor/SKILL.md` and `reference.md`. Design: [framework-design § sdd-guide-editor](../framework/framework-design.md#sdd-guide-editor), [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md).
 - **Test steps:** Read the seed description, Knowledge table, Limits, and `reference.md` human vs agent tables. Ask to rename an EN part heading in the Scrum guide without confirm.
-- **Expected results:** The description names human portal seeds, agent templates, sync, and zh locales. Knowledge links `reference.md` once. Limits state product-repo-only path, no pack `skills/` ship, no `constants.json` key, no process-file writes, and load **sdd-update-specs** when anchors or tab paths change. **reference.md** names human paths under `content/scrum-in-sdd/`, agent paths under `templates/{EN|HanS|HanT}/`, Index policy, and manual agent sync until derive exists. The skill waits for confirm before multi-file writes. It does not write under `pack.framework.sdd.works/skills/sdd-guide-editor/`. After implement, [framework-stories § sdd-guide-editor](../framework/framework-stories.md#sdd-guide-editor) AC1 through AC6 match the seed behavior.
+- **Expected results:** The description names human portal seeds, AI template `pack-scrum-in-sdd.md`, sync, and zh locales on human seeds only. Knowledge links `reference.md` once. Limits state product-repo-only path, no pack `skills/` ship, no `constants.json` key, no process-file writes, and load **sdd-update-specs** when anchors or tab paths change. **reference.md** names human paths under `content/scrum-in-sdd/` and AI path `templates/pack-scrum-in-sdd.md`, Index policy, and manual AI sync until derive exists. The skill waits for confirm before multi-file writes. It does not write under `pack.framework.sdd.works/skills/sdd-guide-editor/`. After implement, [framework-stories § sdd-guide-editor](../framework/framework-stories.md#sdd-guide-editor) AC1 through AC6 match the seed behavior.
 
 #### CE-SKILL-08 — get-status in HanS
 
@@ -551,7 +551,7 @@ Cases are numbered in one sequence. They are not one scenario repeated. Read thi
 - The client root is `~/.codebuddy`. On Windows it is `%USERPROFILE%\.codebuddy`. The agent file is `~/.codebuddy/agents/ethan.md`. Skills are `~/.codebuddy/skills/<name>/SKILL.md` ([Pack folders](#pack-folders)). Copy the files in [Minimum framework installation](#minimum-framework-installation) into that live home, run the catalog, then delete those paths. Do not copy the skill to `~/.codebuddy/skills-marketplace/` or to `~/.claude/skills/`.
 - One workspace per case, under `specs/framework/fixtures/sdd-audit-artifacts/`. The folder name is the case id plus the case name, for example `CE-AUDIT-01-no-map-and-no-process-files`. Open that folder as the CodeBuddy CN workspace. Do not open this product repo as the workspace.
 - The ledger has `pack_complete` true before the audit runs. A pack-gate stop is not an audit result.
-- A map stores `artifacts_root`, `locale`, and workspace-relative paths in `files` and module `files`, as in the Pokymon example in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). Audit fixtures use JSON `files` lists. A process file that onboard does not read may be a one-line stub. Each `Usable` workspace names `Sprint 1` and `feature-01` in `specs/status.md` and `specs/sprint-backlog.md`, so `sdd-review-status` has a line to return.
+- A map stores `artifacts_root`, `locale`, and workspace-relative paths in `files` and module `files`, as in the Pokymon example in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#artifacts-mapjson). Audit fixtures use JSON `files` lists. A process file that onboard does not read may be a one-line stub. Each `Usable` workspace names `Sprint 1` and `feature-01` in `specs/status.md` and `specs/sprint-backlog.md`, so `sdd-review-status` has a line to return.
 - CE-AUDIT-17 clears the read bit on the checked-in map for the run, then restores it. The file in git stays readable.
 
 ### Minimum framework installation
@@ -1021,7 +1021,7 @@ Check that `artifacts-map.mdc` is absent. One case for the four rule names. One 
 
 A template case reads the seed text and, where the design forbids a copy, checks that a kickoff fixture did not write that file into the project. It does not boot the portal.
 
-Locale seeds are part of the template contract. `EN`, `HanS`, and `HanT` each have a home for `scrum-in-sdd.md` and `sdd-scrum-practices.md` when those bodies exist. A missing HanT body is a seed gap to report, not a reason to copy the EN file into the project under a HanT name.
+Locale seeds are part of the template contract. **AI-read** `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `coach-knowledge.md` live beside `constants.json` under `templates/` only ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)). HanS and HanT folders hold process and engineering template seeds per [i18n-05](../product-backlog.md#L307); they do not ship `pack-scrum-in-sdd.md`. A missing HanT process seed is a gap to report, not a reason to copy EN into the project under a HanT name.
 
 `constants.json` has no locale and is never a project file. Path checks use `{workspace}/<stored path>` on every OS.
 
@@ -1050,7 +1050,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** Kickoff copies missing project seeds. Locale is `EN`, then repeat with `HanS` if that kickoff fixture exists.
 - **Test steps:** Finish the copy.
-- **Expected results:** `constants.json`, `scrum-in-sdd.md`, and `sdd-scrum-practices.md` are not written into the project. They remain under `{client_root}/templates/framework.sdd.works/`.
+- **Expected results:** `constants.json`, `pack-scrum-in-sdd.md`, and `sdd-scrum-practices.md` are not written into the project. They remain under `{client_root}/templates/framework.sdd.works/`.
 
 #### CE-TPL-04 — Sprint item columns
 
@@ -1059,12 +1059,19 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Test steps:** Read the header row.
 - **Expected results:** Columns are `#`, Code, SBI, Parent PBI, Module/Type, Related specs, Status. A Definition of Done section sits above the first sprint table and links to `product-backlog.md#definition-of-done` without duplicating that checklist ([ADR-098](../adr/ADR-098-sprint-backlog-dod-link-product-backlog.md)).
 
-#### CE-TPL-05 — Locale folders for the guide and practices
+#### CE-TPL-05 — AI-read EN trio and locale process seeds
 
 - **Layer:** L1.
 - **Pre-condition:** The authoring tree `pack.framework.sdd.works/templates/`.
-- **Test steps:** Look up `scrum-in-sdd.md` and `sdd-scrum-practices.md` for `EN`, `HanS`, and `HanT`.
-- **Expected results:** Each locale that has a body uses that locale folder. A locale with no body is reported as missing. The EN body is not copied into the project to fill the gap. `constants.json` stays beside the locale folders, not inside one.
+- **Test steps:** Look up `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `coach-knowledge.md` beside `constants.json` under `templates/`. Look up process seeds under `HanS/` and `HanT/` when present.
+- **Expected results:** The three AI-read files exist beside `constants.json` under `templates/`. No `scrum-in-sdd.md` under any locale folder. HanS and HanT may hold process templates; they do not hold `pack-scrum-in-sdd.md`.
+
+#### CE-OGT-8 — pack-scrum-in-sdd rename (status OGT #8)
+
+- **Layer:** L1.
+- **Pre-condition:** [ogt-8-pack-scrum-in-sdd.md](../framework/ogt-8-pack-scrum-in-sdd.md) is the implementation spec. [ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) is accepted.
+- **Test steps:** Run the verification block in ogt-8-pack-scrum-in-sdd.md. Read `ethan.md` Guide and practices. Read `rebuild-scrum-in-sdd-en.mjs` TARGETS for `--index-only`.
+- **Expected results:** Disk matches AC1–AC4 in [framework-stories § OGT-8](../framework/framework-stories.md#ogt-8-pack-scrum-in-sdd-rename). `npm run check:pack-seeds` passes. Human tab paths in `.instructions-tabs.json` still use `content/scrum-in-sdd/`. `--index-only` writes human EN paths only and does not write `templates/pack-scrum-in-sdd.md`.
 
 #### CE-TPL-06 — Windows path join
 

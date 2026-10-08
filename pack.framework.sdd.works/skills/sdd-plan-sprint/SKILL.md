@@ -50,12 +50,12 @@ This skill runs the steps below in order. Within a step, one clarifying question
 | Source | Load when |
 | --- | --- |
 | `{workspace}/artifacts-map.json` | Start of the run; read `locale` when present |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, headings `1. Plan sprints by MVP`, `2. Slice product to MVPs`, and `4. Size product backlog` | Building MVP options. When `locale` is missing, use `EN` |
-| `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`, heading `5. Feature break down`, subsection `Plan a sprint` | Naming Feature SBIs and extra Task SBIs |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, headings `1. Plan sprints by MVP`, `2. Slice product to MVPs`, and `4. Size product backlog` | Building MVP options. When `locale` is missing, use `EN` |
+| `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`, heading `5. Feature break down`, subsection `Plan a sprint` | Naming Feature SBIs and extra Task SBIs |
 | Done `## Sprint` sections in the `sprint-backlog.md` path from step 1 | Match the Done sprint goal and the parent PBIs before you build options |
-| Heading `Sprint goal line` in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | Before each sprint goal line in chat |
-| Headings `Task` and `OGT` in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | When you list an extra task or an on-going task. Read those two rows only |
-| Headings `product-backlog.md` and `sprint-backlog.md` in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` | Write pass when those files change |
+| Heading `Sprint goal line` in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` | Before each sprint goal line in chat |
+| Headings `Task` and `OGT` in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` | When you list an extra task or an on-going task. Read those two rows only |
+| Headings `product-backlog.md` and `sprint-backlog.md` in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` | Write pass when those files change |
 | `{client_root}/rules/friendly-language.mdc` | Wording in chat |
 | [response.md](./response.md) | Composing the MVP proposal |
 
@@ -86,7 +86,7 @@ Default is one sprint: the earliest sprint whose status line in `sprint-backlog.
 
 `{locale}` is the value in `{workspace}/artifacts-map.json`. When `locale` is missing, use `EN`.
 
-Load each Knowledge row when its Load when column matches this step. For a practices heading, start at that heading in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` and stop at the next heading of the same level.
+Load each Knowledge row when its Load when column matches this step. For a practices heading, start at that heading in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` and stop at the next heading of the same level.
 
 Read the Product Backlog table in `product-backlog.md` from step 1. Read the Unplanned PBIs table in `sprint-backlog.md` from step 1.
 
@@ -102,7 +102,7 @@ Scheduled candidates are PBIs whose status is not `Done`, whose `Sprint` cell is
 - For each target sprint from step 2, build at least one candidate MVP. Label the first Option A, the second Option B, the third Option C. When only one set passes the slice rules, send Option A only.
 - Option letters name different MVP slices when several pass the slice rules. They can also name the same PBIs with an extra-task item versus the same PBIs with that item omitted.
 - Name one Feature SBI per Implementable PBI in the candidate set, per practices §5 Plan a sprint. SBI codes and names are for the write pass after you pick. They stay in the numbered list.
-- After the PBI set is named, list any extra tasks that sprint still needs, per practices §5 Plan a sprint. Load the Task row and the OGT row in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` when you list an extra task or an on-going task. Each extra task is one SBI with Type Task. The parent PBI is the PBI that sprint row delivers.
+- After the PBI set is named, list any extra tasks that sprint still needs, per practices §5 Plan a sprint. Load the Task row and the OGT row in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` when you list an extra task or an on-going task. Each extra task is one SBI with Type Task. The parent PBI is the PBI that sprint row delivers.
 - Park side work as an OGT when you name it in the pick.
 - After the Implementable set for an option is chosen, name each Epic or Theme the job needs, using the loaded §1 and §2. Leave off any coarse PBI the job does not need. Those items are not in the numbered list of items this sprint will schedule, and they get no SBI. The Now line and the on-going task name are the ones in [MVP candidates in chat](#mvp-candidates-in-chat). `sdd-refine-backlog` still changes Size, bullets, and splits.
 - A new product outcome stays on `sdd-refine-backlog`.
@@ -165,7 +165,7 @@ After the last sprint has a choice, write the recorded lines in [Write the picks
 Write the recorded lines in this order: changes-log, issues-log, status, sprint-backlog, product-backlog.
 
 - When the pick changes no line in a process file, leave that process file unchanged, so the file keeps its current text.
-- When `product-backlog.md` changes, read the `product-backlog.md` section in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. When `locale` is missing, use `EN`. Start at that `####` heading. Stop at the next `####` heading.
+- When `product-backlog.md` changes, read the `product-backlog.md` section in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`. When `locale` is missing, use `EN`. Start at that `####` heading. Stop at the next `####` heading.
 - When `sprint-backlog.md` changes, read the `sprint-backlog.md` section in that practices file. Start at that `####` heading. Stop at the next `####` heading.
 - Cancel planning writes nothing for that sprint.
 - Stop planning updates specs only for what already accepted in this run.

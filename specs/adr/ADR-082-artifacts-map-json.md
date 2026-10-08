@@ -5,7 +5,7 @@ Accepted
 
 ## Context
 
-`artifacts-map.md` is the path configuration for a project. It is not a Framework process Markdown artifact and not a copied template seed. It is an SDD Core artifact with `scrum-in-sdd.md` and `sdd-scrum-practices.md`. After the simplify, the file stores `artifacts_root`, `locale`, and workspace-relative paths. Settings and paths share one bullet list, so a reader must skip the settings lines.
+`artifacts-map.md` is the path configuration for a project. It is not a Framework process Markdown artifact and not a copied template seed. It is an SDD Core artifact with the installed guide **`pack-scrum-in-sdd.md`**, **`sdd-scrum-practices.md`**, and the map file itself ([ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)). Human portal guides under `content/scrum-in-sdd/` are not core artifacts on the project. After the simplify, the file stores `artifacts_root`, `locale`, and workspace-relative paths. Settings and paths share one bullet list, so a reader must skip the settings lines.
 
 `.sdd-installed.json` stores the same kind of fact under keys.
 

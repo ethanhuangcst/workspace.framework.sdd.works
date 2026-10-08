@@ -72,7 +72,7 @@ SDD.works：可安装的框架包，在 Harness Engineering 治理下实施 Scru
 
 | 文件                   | 角色                                   |
 | ---------------------- | -------------------------------------- |
-| scrum-in-sdd.md        | Scrum in SDD 的名称与含义              |
+| pack-scrum-in-sdd.md   | Scrum in SDD 的名称与含义              |
 | sdd-scrum-practices.md | 每项工作的内容、方式与时机             |
 | artifacts-map.json     | 工作区根目录的索引                     |
 | constants.json         | 技能键、规则键、说明页 URL             |
