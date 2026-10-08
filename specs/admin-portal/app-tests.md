@@ -116,7 +116,7 @@ Portal must stay green while MCP install lands:
 
 Run this after task-04 and task-05, before feature-07 is marked Done. Use `/` and `/instructions`. Desktop and a viewport under 640px for the secret row.
 
-- [x] Setup copy control still copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup`
+- [x] Setup copy control still copies `Fetch and execute the setup instructions from https://sdd.works/setup`
 - [x] ~~Manual setup still shows one `mcp.json` and no `curl`~~ Superseded after [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md): no on-page Manual setup
 - [x] ~~Tools table has `sdd_install_framework` and `sdd_update_framework` and no `sdd_list_versions` row~~ Superseded after ADR-122: no Tools table on Setup
 - [x] Features tab switch still sets `aria-selected` and shows `panel-features` (WA-06)
@@ -157,7 +157,7 @@ Run after feature-56 ships, before the SBI is **Done**. Covers AC20 and AC21. Fi
 - [ ] `GET /setup` still returns stdio-primary markdown (not lite install copy)
 - [ ] `copy-setup-prompt` still copies the `/setup` sentence
 - [ ] Setup has no `copy-lite-setup-prompt`
-- [ ] `GET /setup/install` body documents partner paste: `Fetch and execute the setup instructions from https://framework.sdd.works/setup/install`
+- [ ] `GET /setup/install` body documents partner paste: `Fetch and execute the setup instructions from https://sdd.works/setup/install`
 - [ ] ~~Manual setup still shows one stdio `mcp.json` and no `curl`~~ N/A after ADR-122 (see §25)
 - [ ] Get secret on Learn tab only; Setup and Features unchanged
 - [ ] No admin session required for `GET /setup/install`
@@ -183,9 +183,9 @@ Re-run when Learn Scrum embed or instructions-tabs config changes. **feature-70*
 
 | Layer | Check |
 | --- | --- |
-| Unit | Bundled JSON `learn-scrum-in-sdd` is `embedded_external_page`. All three `urls` values are `https://sdd.works/en/learn-embedded/`. A host outside `sdd.works` fails validation. |
+| Unit | Bundled JSON `learn-scrum-in-sdd` is `embedded_external_page`. All three `urls` values are `https://learn.sdd.works/en/learn-embedded/`. A host outside `learn.sdd.works` fails validation. |
 | Component | `?tab=learn-scrum-in-sdd` shows `learn-scrum-iframe` with that src in `en`, `zh-Hans`, and `zh-Hant`. Fallback link uses the same href. Setup stays default without `?tab=`. |
-| Browser | Open `/?tab=learn-scrum-in-sdd`. Confirm the iframe or the fallback link. A blank frame is a sdd.works framing policy, not a missing tab. |
+| Browser | Open `/?tab=learn-scrum-in-sdd`. Confirm the iframe or the fallback link. A blank frame is a `learn.sdd.works` framing policy, not a missing tab. |
 
 ## 13. Regression after feature-71
 
@@ -230,7 +230,7 @@ Run before the Learn embed frame change ships. AC28 in [`app-stories.md`](./app-
 
 | Layer | Check |
 | --- | --- |
-| Component | `learn-scrum-iframe` is still in `learn-scrum-embed`. `src` is `https://sdd.works/en/learn-embedded/`. The element has class `learn-embed-frame`. |
+| Component | `learn-scrum-iframe` is still in `learn-scrum-embed`. `src` is `https://learn.sdd.works/en/learn-embedded/`. The element has class `learn-embed-frame`. |
 | CSS | `.learn-embed-frame` sets `aspect-ratio: 1 / 1`, `width: 100%`, `height: auto`, `border: 0`. It does not set `min-height: min(72vh, 780px)`. |
 | Browser | On `/?tab=learn-scrum-in-sdd`, the frame is square, has no border, and the open-in-new-tab link still uses the same URL. |
 

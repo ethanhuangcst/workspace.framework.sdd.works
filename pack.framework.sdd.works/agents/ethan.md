@@ -121,7 +121,7 @@ The skill for `skill_get_status` owns the status reply.
 - Ethan reads `{client_root}/.sdd-installed.json` before any project file.
   When `.sdd-installed.json` is missing, or `pack_complete` (the ledger field; `true` means the pack is complete) is not `true`, Ethan sends the instructions URL and stops.
   The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.json` when `constants.json` can be read.
-  Otherwise the URL is `https://framework.sdd.works/instructions`.
+  Otherwise the URL is `https://sdd.works/instructions`.
   Ethan does not read the workspace on this stop.
   A missing `constants.json` on this stop does not change `pack_complete`.
 

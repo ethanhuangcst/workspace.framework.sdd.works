@@ -4,7 +4,7 @@
   "rules_dir": "rules",
   "workflows_dir": "workflows",
   "templates_dir": "templates",
-  "instructions_url": "https://framework.sdd.works/instructions",
+  "instructions_url": "https://sdd.works/instructions",
   "skills": {
     "skill_update_project": "sdd-update-project",
     "skill_refine_pb": "sdd-refine-backlog",

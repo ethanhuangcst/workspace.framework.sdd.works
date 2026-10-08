@@ -60,7 +60,8 @@ One marketing and install host (**`sdd.works`**) matches the product brand. Lear
 ## Consequences
 
 - **feature-72** implements app and pack JSON changes; **Web-portal-20** / **Web-portal-22** operator policy rows remain separate SBIs but share this cutover.
-- Vitest and component tests that assert **`https://sdd.works/en/learn-embedded/`** or **`https://framework.sdd.works/setup`** update in the same change set ([`app-tests.md`](../admin-portal/app-tests.md) §29, **AC44**).
+- Vitest and component tests that assert **`https://learn.sdd.works/en/learn-embedded/`** or **`https://sdd.works/setup`** update in the same change set ([`app-tests.md`](../admin-portal/app-tests.md) §29, **AC44**).
+- Host redirect from **`framework.sdd.works`** skips **`/api/*`** so GitHub webhook POST and package GETs on the legacy host are not 301'd.
 - [ADR-110](./ADR-110-embedded-external-page-tab.md) allowlist example and historical **`sdd.works`** embed URL are pre-cutover; **ADR-127** governs after **feature-72** ships.
 - WordPress team must deploy embed page and **`frame-ancestors`** on **`learn.sdd.works`** before production iframe works.
 

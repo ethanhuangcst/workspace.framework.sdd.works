@@ -217,7 +217,7 @@ Scenario: Missing constants uses the fallback URL
   Given the client-root ledger does not exist
   And constants.json cannot be read
   When the user starts ethan
-  Then ethan sends https://framework.sdd.works/instructions
+  Then ethan sends https://sdd.works/instructions
   And ethan does not create the ledger
   And pack_complete is not written
 ```

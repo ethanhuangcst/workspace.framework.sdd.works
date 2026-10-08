@@ -24,7 +24,7 @@ import {
   unpackedDir,
 } from "@/core/sync/paths";
 import { parseToolJson } from "@/core/tools/errors";
-import { installFramework } from "@/core/tools/install";
+import { installFrameworkHttp } from "@/core/tools/install-http";
 
 const originalCacheDir = process.env.SDD_PACKAGE_CACHE_DIR;
 
@@ -163,7 +163,7 @@ describe("package tarball content", () => {
       commitSha: string;
       manifest?: { files: { skills: string[] } };
     }>(
-      await installFramework(
+      await installFrameworkHttp(
         {
           client: "cursor",
           os: "darwin",

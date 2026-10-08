@@ -18,20 +18,20 @@
 | Sprint 1 - 6 | Done | - Sprint 1 closed 2026-09-25.<br>- Sprint 2 closed 2026-09-26.<br>- Sprint 3 closed the web portal and MCP for R2.<br>- Sprint 4 closed 2026-10-03.<br>- [Sprint 5](./sprint-backlog.md#sprint-5) closed 2026-10-05.<br>- [Sprint 6](./sprint-backlog.md#sprint-6) closed 2026-10-05. |
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Thirteen SBIs **Done** (includes [feature-81](./sprint-backlog.md#sprint-8) sticky guide header for [Web-portal-29](./product-backlog.md#pb-126)). |
-| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Seven SBIs **Done**: [feature-73](./sprint-backlog.md#sprint-9), [feature-75](./sprint-backlog.md#sprint-9)–[feature-76](./sprint-backlog.md#sprint-9), [feature-78](./sprint-backlog.md#sprint-9)–[feature-79](./sprint-backlog.md#sprint-9), [feature-86](./sprint-backlog.md#sprint-9)–[feature-87](./sprint-backlog.md#sprint-9). Nine SBIs **ToDo**: [feature-72](./sprint-backlog.md#sprint-9), [feature-74](./sprint-backlog.md#sprint-9), [feature-77](./sprint-backlog.md#sprint-9), [feature-80](./sprint-backlog.md#sprint-9), [feature-82](./sprint-backlog.md#sprint-9)–[feature-85](./sprint-backlog.md#sprint-9), [feature-88](./sprint-backlog.md#sprint-9). |
+| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Eleven SBIs **Done**: [feature-72](./sprint-backlog.md#sprint-9)–[feature-79](./sprint-backlog.md#sprint-9), [feature-86](./sprint-backlog.md#sprint-9)–[feature-88](./sprint-backlog.md#sprint-9). Five SBIs **ToDo**: [feature-80](./sprint-backlog.md#sprint-9), [feature-82](./sprint-backlog.md#sprint-9)–[feature-85](./sprint-backlog.md#sprint-9). |
 | Unplanned PBIs | — | - No open rows. Seven Implementable PBIs moved to [Sprint 9](./sprint-backlog.md#sprint-9). |
 
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: No **WIP** SBI. Last closed: [feature-87 Admin note on Framework page](./sprint-backlog.md#sprint-9) ([Web-portal-26](./product-backlog.md#pb-123)). Next **ToDo** is [feature-72 Hostnames learn.sdd.works and sdd.works](./sprint-backlog.md#sprint-9). [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open after [feature-73](./sprint-backlog.md#sprint-9) **Done**.
+- What SBI are we working on now: No **WIP** SBI. Last closed: [feature-72](./sprint-backlog.md#sprint-9), [feature-74](./sprint-backlog.md#sprint-9), [feature-77](./sprint-backlog.md#sprint-9), [feature-88](./sprint-backlog.md#sprint-9). Next **ToDo** is [feature-80 sdd-mcp GitHub Releases](./sprint-backlog.md#sprint-9). [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open. [WA-18](./issues-log.md) closed with [feature-77](./sprint-backlog.md#sprint-9).
 
 ## what could be the next
 
-- Start [Sprint 9](./sprint-backlog.md#sprint-9) [feature-72](./sprint-backlog.md#sprint-9) hostname cutover ([Web-portal-30](./product-backlog.md#pb-127)).
+- Start [Sprint 9](./sprint-backlog.md#sprint-9) [feature-80](./sprint-backlog.md#sprint-9) ([MCP-06](./product-backlog.md#pb-104)) or [feature-82](./sprint-backlog.md#sprint-9) ([MCP-07](./product-backlog.md#pb-105)).
 - [Spec-seeds-15](./product-backlog.md#pb-97) stays **ToDo** on Sprint 8 until [MCP-07](./product-backlog.md#pb-105) ([feature-82](./sprint-backlog.md#sprint-9)) puts the lite allow-list in production sync cache and the install tarball.
 - [Web-portal-21](./product-backlog.md#pb-107) is on Sprint 9 as [feature-83](./sprint-backlog.md#sprint-9) (partner workspace, not this portal `/`).
-- [Web-portal-38](./product-backlog.md#pb-135) is on Sprint 9 as [feature-88](./sprint-backlog.md#sprint-9) (Node.js-only agent setup path; Git and Xcode out of scope).
+- [feature-84](./sprint-backlog.md#sprint-9) and [feature-85](./sprint-backlog.md#sprint-9) remain for public-URL policy and admin host separation after the cutover.
 
 ## Current OGT(On-going Tasks)
 
@@ -60,4 +60,4 @@
 | 14 | Review EN seed sprint-backlog.md with [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md) | - [task-01 Cross-review five process file seeds](./sprint-backlog.md#sprint-6) | Sprint 5 | Sprint 6 |
 | 15 | Add pack seed templates adr.md and knowledge.md | - [feature-40 Skill sdd-retrospective](./sprint-backlog.md#sprint-6) | Sprint 6 | Sprint 6 |
 
-Last updated: 2026-10-08 Close confirm feature-87 (Web-portal-26) Done
+Last updated: 2026-10-08 Close confirm feature-72, 74, 77, 88 Done

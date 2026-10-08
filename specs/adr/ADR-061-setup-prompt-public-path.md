@@ -27,5 +27,9 @@ One sentence on the page and one markdown file on the server avoid two copies of
 - Living specs name `GET /setup`. Closed Phase 1 snapshots that still say `GET /agent-setup` stay as history.
 - Lite install uses a separate public path (for example `GET /setup/install`) for markdown that fetches allow-listed pack file links. That path does not replace `GET /setup` for full MCP stdio setup ([Web-portal-18](../product-backlog.md#L488)).
 
+## Supersession (host only)
+
+[ADR-127](./ADR-127-public-hostnames-sdd-and-learn.md) replaces the public host in the paste sentence and in the HTTP fallback URL with **`https://sdd.works`**. The path **`/setup`**, the redirect from **`/agent-setup`**, and the stdio-primary body stay.
+
 ## Date
 2026-09-25

@@ -265,7 +265,7 @@ Admin portal（Keys / Settings / Framework 缓存树 / 账户）+ **Streamable H
 | 网络 | `portainer_network`（external） |
 | 主机 debug | **`3008`**（web）、**`3204`**（mcp）。NPM Forward 用容器 **`3000`** / **`3041`**，禁止 Forward 主机 `3008`/`3204` |
 | NPM | Host `framework.sdd.works` → **`framework-sdd-web:3000`**；Custom Location **`/mcp`** → **`framework-sdd-mcp:3041`** |
-| 公网 | `https://framework.sdd.works` · MCP `https://framework.sdd.works/mcp`（Bearer）· 说明 `https://framework.sdd.works/setup` |
+| 公网 | `https://sdd.works` · MCP `https://sdd.works/mcp`（Bearer）· 说明 `https://sdd.works/setup` · 旧主机 `framework.sdd.works` 页面 301，`/api/*` 不重定向 |
 | 本机数据卷 | **`framework_sdd_packages`** → 两容器 **`/data/sdd-packages`**（SYNK-01 解压缓存 + manifest） |
 | 主库（外部） | Postgres `101.132.156.250:5432` / **`framework_sdd`**（专用；勿复用 `places_agent` / `kb_agent` / `mypoke_trade_prod` 等） |
 | stdio MCP | **不在本节点** — GitHub Releases 二进制为端用户主路径（ADR-058）；HTTP `/mcp` 为回退（ADR-054） |

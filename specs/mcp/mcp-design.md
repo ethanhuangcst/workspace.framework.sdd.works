@@ -43,7 +43,7 @@ That URL is a **pack-only** tree. Observed top-level names on `main` (2026-09-24
 | Audience | Transport | MCP config | Install executor |
 | --- | --- | --- | --- |
 | **End user** (primary, ADR-058) | stdio via local program | `"command": "${userHome}/.sdd/sdd-mcp"` + `SDD_SERVER_URL` | Local program writes the client folder |
-| **End user** (fallback, ADR-054) | Streamable HTTP `POST/GET /mcp` | `"url": "https://framework.sdd.works/mcp"` | AI agent: `curl \| tar` + write `.sdd-installed.json` |
+| **End user** (fallback, ADR-054) | Streamable HTTP `POST/GET /mcp` | `"url": "https://sdd.works/mcp"` | AI agent: `curl \| tar` + write `.sdd-installed.json` |
 | **Dev contributor** | stdio (`npm run mcp:stdio` or the same binary) | `"command"` at repo `tsx` or `~/.sdd/sdd-mcp` | Same local write path |
 | **Terminal fallback** | stdio via curl installer | written by `scripts/install.sh` | stdio binary |
 
@@ -89,7 +89,7 @@ The client machine does not need Node, npm, or Bun to run that file. `npm run mc
 ```json
 "framework.sdd.works": {
   "command": "${userHome}/.sdd/sdd-mcp",
-  "env": { "SDD_SERVER_URL": "https://framework.sdd.works" }
+  "env": { "SDD_SERVER_URL": "https://sdd.works" }
 }
 ```
 
@@ -100,7 +100,7 @@ The client machine does not need Node, npm, or Bun to run that file. `npm run mc
 User pastes in Cursor (or other agent):
 
 ```text
-Fetch and execute the setup instructions from https://framework.sdd.works/setup
+Fetch and execute the setup instructions from https://sdd.works/setup
 ```
 
 | Endpoint | Serves |
@@ -109,7 +109,7 @@ Fetch and execute the setup instructions from https://framework.sdd.works/setup
 | `GET /agent-setup` | Redirect to `GET /setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
 | Source file | `public/agent-setup/prompt.md` |
 
-That source file is the body `GET /setup` returns in production. It must match the **Server prompt** below. Production pack base and fallback stay `https://framework.sdd.works` and `https://framework.sdd.works/mcp`. When `PUBLIC_BASE_URL` is localhost or `127.0.0.1`, the handler rewrites those two hosts to `getMcpWebsiteUrl()` and `getMcpHttpUrl()` (default local MCP HTTP `http://127.0.0.1:3041/mcp`). The setup body does not name a GitHub release download URL for the binary.
+That source file is the body `GET /setup` returns in production. It must match the **Server prompt** below. Production pack base and fallback stay `https://sdd.works` and `https://sdd.works/mcp`. When `PUBLIC_BASE_URL` is localhost or `127.0.0.1`, the handler rewrites those two hosts to `getMcpWebsiteUrl()` and `getMcpHttpUrl()` (default local MCP HTTP `http://127.0.0.1:3041/mcp`). The setup body does not name a GitHub release download URL for the binary.
 
 #### Server prompt (`public/agent-setup/prompt.md`)
 
@@ -128,8 +128,8 @@ Complete the setup yourself with the native MCP configuration mechanism for the 
 
 The user's setup prompt authorizes only these changes:
 
-- If `~/.sdd/sdd-mcp` already exists (Windows: under the user profile), add or keep exactly one MCP entry named `framework.sdd.works` that starts that binary (`command`) with `SDD_SERVER_URL` set to `https://framework.sdd.works`.
-- If that file is missing, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://framework.sdd.works/mcp"` instead.
+- If `~/.sdd/sdd-mcp` already exists (Windows: under the user profile), add or keep exactly one MCP entry named `framework.sdd.works` that starts that binary (`command`) with `SDD_SERVER_URL` set to `https://sdd.works`.
+- If that file is missing, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://sdd.works/mcp"` instead.
 - Do not download an executable from the network. Do not fetch a GitHub release asset for this setup.
 
 It does not authorize you to:
@@ -144,8 +144,8 @@ It does not authorize you to:
 1. Detect the current agent and its native MCP configuration mechanism.
 2. Detect whether `~/.sdd/sdd-mcp` exists (Windows: under the user profile). Supported OS and CPU when a binary is built: `darwin-arm64`, `darwin-x64`, `linux-arm64`, `linux-x64`, `windows-x64`.
 3. Inspect whether an entry named `framework.sdd.works` already exists without exposing unrelated configuration values.
-4. Treat an existing entry as an exact primary match only when it is enabled, uses `command` pointing at the local `sdd-mcp` binary under `.sdd/`, and sets `SDD_SERVER_URL` to `https://framework.sdd.works` (or the same pack base this environment uses).
-5. Treat an existing entry as an exact HTTP-fallback match only when it is enabled, uses remote Streamable HTTP, and points to exactly `https://framework.sdd.works/mcp` with no `command` field.
+4. Treat an existing entry as an exact primary match only when it is enabled, uses `command` pointing at the local `sdd-mcp` binary under `.sdd/`, and sets `SDD_SERVER_URL` to `https://sdd.works` (or the same pack base this environment uses).
+5. Treat an existing entry as an exact HTTP-fallback match only when it is enabled, uses remote Streamable HTTP, and points to exactly `https://sdd.works/mcp` with no `command` field.
 6. If the entry is an exact primary or exact HTTP-fallback match, leave it unchanged and continue to verification.
 7. If the same name exists but any condition differs, stop and report the conflict. Do not overwrite without user consent.
 
@@ -167,18 +167,18 @@ Merge under `mcpServers` in `~/.cursor/mcp.json` and preserve all other entries:
 "framework.sdd.works": {
   "command": "${userHome}/.sdd/sdd-mcp",
   "env": {
-    "SDD_SERVER_URL": "https://framework.sdd.works"
+    "SDD_SERVER_URL": "https://sdd.works"
   }
 }
 ```
 
 ### Claude Code
 
-Add a user-scoped stdio MCP server named `framework.sdd.works` whose command is the absolute path to `~/.sdd/sdd-mcp` and whose environment includes `SDD_SERVER_URL=https://framework.sdd.works`. Prefer the client's native stdio registration command when it supports `command` and `env`.
+Add a user-scoped stdio MCP server named `framework.sdd.works` whose command is the absolute path to `~/.sdd/sdd-mcp` and whose environment includes `SDD_SERVER_URL=https://sdd.works`. Prefer the client's native stdio registration command when it supports `command` and `env`.
 
 ### Codex
 
-Add an MCP server named `framework.sdd.works` with `command` set to the absolute path of `~/.sdd/sdd-mcp` and `SDD_SERVER_URL=https://framework.sdd.works` in the environment.
+Add an MCP server named `framework.sdd.works` with `command` set to the absolute path of `~/.sdd/sdd-mcp` and `SDD_SERVER_URL=https://sdd.works` in the environment.
 
 ### GitHub Copilot in VS Code
 
@@ -187,7 +187,7 @@ Add an MCP server named `framework.sdd.works` with `command` set to the absolute
   "type": "stdio",
   "command": "${userHome}/.sdd/sdd-mcp",
   "env": {
-    "SDD_SERVER_URL": "https://framework.sdd.works"
+    "SDD_SERVER_URL": "https://sdd.works"
   }
 }
 ```
@@ -200,7 +200,7 @@ Merge under `mcpServers` in `~/Library/Application Support/Trae CN/User/mcp.json
 "framework.sdd.works": {
   "command": "${userHome}/.sdd/sdd-mcp",
   "env": {
-    "SDD_SERVER_URL": "https://framework.sdd.works"
+    "SDD_SERVER_URL": "https://sdd.works"
   }
 }
 ```
@@ -219,20 +219,20 @@ Use this path when `~/.sdd/sdd-mcp` is missing, or the client accepts only a URL
 
 ```json
 "framework.sdd.works": {
-  "url": "https://framework.sdd.works/mcp"
+  "url": "https://sdd.works/mcp"
 }
 ```
 
 ### Claude Code
 
 ```bash
-claude mcp add --transport http --scope user framework.sdd.works https://framework.sdd.works/mcp
+claude mcp add --transport http --scope user framework.sdd.works https://sdd.works/mcp
 ```
 
 ### Codex
 
 ```bash
-codex mcp add framework.sdd.works --url https://framework.sdd.works/mcp
+codex mcp add framework.sdd.works --url https://sdd.works/mcp
 ```
 
 ### GitHub Copilot in VS Code
@@ -240,7 +240,7 @@ codex mcp add framework.sdd.works --url https://framework.sdd.works/mcp
 ```json
 "framework.sdd.works": {
   "type": "http",
-  "url": "https://framework.sdd.works/mcp"
+  "url": "https://sdd.works/mcp"
 }
 ```
 
@@ -250,7 +250,7 @@ Merge under `mcpServers` in `~/Library/Application Support/Trae CN/User/mcp.json
 
 ```json
 "framework.sdd.works": {
-  "url": "https://framework.sdd.works/mcp"
+  "url": "https://sdd.works/mcp"
 }
 ```
 
@@ -292,7 +292,7 @@ If `~/.sdd/sdd-mcp` is missing, or the agent cannot start a local program, use t
 The public instructions page copies one sentence:
 
 ```text
-Fetch and execute the setup instructions from https://framework.sdd.works/setup
+Fetch and execute the setup instructions from https://sdd.works/setup
 ```
 
 It does not paste the stdio contract onto the page. The agent fetches `GET /setup` and follows that markdown.
@@ -314,7 +314,7 @@ Manual setup on the same page shows **one** `mcp.json` sample: the Primary MCP c
 **MCP config:**
 
 ```json
-"framework.sdd.works": { "url": "https://framework.sdd.works/mcp" }
+"framework.sdd.works": { "url": "https://sdd.works/mcp" }
 ```
 
 **Behavior:** HTTP MCP returns `packageUrl`, paths, manifest, and instructions. The server does not write the caller disk. The AI agent downloads and extracts, then writes `.sdd-installed.json` last with `pack_complete: true`. Do not write `framework.sdd.works.json`.
@@ -425,7 +425,7 @@ Shared steps (both transports):
 
 ```json
 {
-  "packageUrl": "https://framework.sdd.works/api/sdd/package?version=latest",
+  "packageUrl": "https://sdd.works/api/sdd/package?version=latest",
   "version": "v1.0.0",
   "commitSha": "abc123…",
   "client": "cursor",
@@ -543,7 +543,7 @@ Manifest shape (`~/.<client>/.sdd-installed.json`):
 
 #### Client-root scenarios (Sprint 2 feature-01)
 
-Cursor’s folder is `~/.cursor`. **Expected** is the local-program writer (ADR-058) with the install ledger in [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). **Current** is production HTTP at `https://framework.sdd.works/mcp` until ADR-058 ships: that tool returns a download link, paths, a manifest, and instructions. It does not write the user’s disk. The agent in the IDE follows the instructions and writes the files.
+Cursor’s folder is `~/.cursor`. **Expected** is the local-program writer (ADR-058) with the install ledger in [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). **Current** is production HTTP at `https://sdd.works/mcp` until ADR-058 ships: that tool returns a download link, paths, a manifest, and instructions. It does not write the user’s disk. The agent in the IDE follows the instructions and writes the files.
 
 Observed production instructions (25 Sep 2026): the server cannot write the disk; read `.sdd-installed.json` if it exists; remove paths listed under `files.*`; run `curl | tar` into the client folder; write the returned manifest to `.sdd-installed.json`. The returned manifest has version, commit, and folder names. It has no `pack_complete`. The response has no receipt. `extract_recommended` is true. The tool does not report already up to date.
 

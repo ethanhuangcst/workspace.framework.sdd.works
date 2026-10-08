@@ -31,6 +31,7 @@ import {
 } from "@/core/sync/scheduled-sync";
 import { parseToolJson } from "@/core/tools/errors";
 import { installFramework } from "@/core/tools/install";
+import { installFrameworkHttp } from "@/core/tools/install-http";
 import { ensurePackageCacheFresh } from "./ensure-cache-fresh";
 import { setSyncJobDepsForTests } from "./sync-job";
 
@@ -120,7 +121,7 @@ function httpInstall(
     force?: boolean;
   } = {},
 ): Promise<HttpInstallBody> {
-  return installFramework(
+  return installFrameworkHttp(
     { client: "cursor", os: "darwin", ...args },
     {
       channel: "http",

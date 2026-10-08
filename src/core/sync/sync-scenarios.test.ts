@@ -13,7 +13,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseToolJson } from "@/core/tools/errors";
-import { installFramework } from "@/core/tools/install";
+import { installFrameworkHttp } from "@/core/tools/install-http";
 import {
   setEnsureCacheFreshDepsForTests,
 } from "@/core/sync/ensure-cache-fresh";
@@ -259,7 +259,7 @@ describe("sync scenarios (fixture S2–S5, M1)", () => {
       });
 
       const home = mkdtempSync(join(tmpdir(), "sdd-m1-home-"));
-      const result = await installFramework(
+      const result = await installFrameworkHttp(
         { client: "cursor", os: "darwin" },
         {
           channel: "http",

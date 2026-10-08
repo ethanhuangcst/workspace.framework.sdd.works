@@ -97,7 +97,11 @@ export function KeyEditForm({
       : null;
 
   async function onDelete() {
-    const res = await fetch(`/api/admin/keys/${keyId}`, { method: "DELETE" });
+    const res = await fetch("/api/admin/keys/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: [keyId] }),
+    });
     if (!res.ok) {
       const data = (await res.json()) as { error?: { key: string } };
       setErrorKey(data.error?.key ?? "errors.invalid_input");

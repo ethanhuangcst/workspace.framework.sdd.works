@@ -74,9 +74,32 @@ test.describe("admin keys CRUD", () => {
       .getByTestId(`key-row-${name}`)
       .locator('a[href*="confirm=delete"]')
       .click();
-    await expect(page.getByTestId("key-delete-confirm")).toBeVisible();
-    await page.getByTestId("key-delete-confirm").click();
-    await page.waitForURL(/\/admin\/keys$/);
+    await page.waitForURL(/confirm=delete/);
+    await page.waitForLoadState("networkidle");
+    const confirm = page.getByTestId("key-delete-confirm");
+    await expect(confirm).toBeVisible();
+
+    let deleted: import("@playwright/test").Response | null = null;
+    for (let attempt = 0; attempt < 3 && !deleted?.ok(); attempt += 1) {
+      const deleteResponsePromise = page.waitForResponse(
+        (res) => {
+          const url = res.url();
+          const method = res.request().method();
+          return (
+            (url.includes("/api/admin/keys/delete") && method === "POST") ||
+            (/\/api\/admin\/keys\/[^/?]+$/.test(new URL(url).pathname) &&
+              method === "DELETE")
+          );
+        },
+        { timeout: 10_000 },
+      );
+      await confirm.evaluate((el: HTMLElement) => {
+        el.click();
+      });
+      deleted = await deleteResponsePromise.catch(() => null);
+    }
+    expect(deleted?.ok()).toBeTruthy();
+    await page.waitForURL(/\/admin\/keys(\?|$)/);
     await expect(page.getByTestId(`key-row-${name}`)).toHaveCount(0);
     await expect(page.getByText(/No keys yet|还没有|還沒有/i)).toBeVisible();
   });

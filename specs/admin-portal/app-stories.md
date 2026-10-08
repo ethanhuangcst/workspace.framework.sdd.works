@@ -856,7 +856,7 @@ Shipped the one-line fetch for `GET /setup`. After [feature-56](../sprint-backlo
 Scenario: Setup copy is the one-line fetch prompt
   Given the visitor opens instructions
   When the visitor uses the setup copy control
-  Then the copied text is Fetch and execute the setup instructions from https://framework.sdd.works/setup
+  Then the copied text is Fetch and execute the setup instructions from https://sdd.works/setup
   And the setup label uses an i18n key
 ```
 
@@ -869,9 +869,9 @@ Scenario: Manual setup shows one mcp.json
   Given the visitor opens instructions
   Then manual setup shows one mcp.json
   And that sample uses command ${userHome}/.sdd/sdd-mcp
-  And that sample sets SDD_SERVER_URL to https://framework.sdd.works
+  And that sample sets SDD_SERVER_URL to https://sdd.works
   And the page does not show a second mcp.json
-  And the page does not show curl -fsSL https://framework.sdd.works/install
+  And the page does not show curl -fsSL https://sdd.works/install
 ```
 
 #### AC5 — feature-10, superseded by AC12 (feature-07)
@@ -1352,11 +1352,11 @@ Scenario: A later duplicate heading does not steal the first fragment
 ```gherkin
 Scenario: Learn Scrum tab embeds the shared learn URL
   Given content/.instructions-tabs.json lists learn-scrum-in-sdd with type embedded_external_page
-  And urls.en, urls.zh-Hans, and urls.zh-Hant are https://sdd.works/en/learn-embedded/
+  And urls.en, urls.zh-Hans, and urls.zh-Hant are https://learn.sdd.works/en/learn-embedded/
   When the visitor opens / or /instructions with tab=learn-scrum-in-sdd in locale en, zh-Hans, or zh-Hant
   Then guide-tab-learn-scrum has aria-selected true
   And the tab label resolves from admin.guide.tab_learn_scrum
-  And learn-scrum-iframe src is https://sdd.works/en/learn-embedded/
+  And learn-scrum-iframe src is https://learn.sdd.works/en/learn-embedded/
   And a link with the same href opens in a new tab
   And panel-setup is hidden
 
@@ -1412,7 +1412,7 @@ Scenario: Learn embed frame has no border and fills column width
   Then learn-scrum-iframe has no border
   And the iframe width fills the guide column
   And the iframe does not use a viewport min-height
-  And learn-scrum-iframe src is still https://sdd.works/en/learn-embedded/
+  And learn-scrum-iframe src is still https://learn.sdd.works/en/learn-embedded/
 ```
 
 #### AC29 — Web-portal-27 / ADR-113
@@ -1423,7 +1423,7 @@ Scenario: Learn embed frame has no border and fills column width
 Scenario: Learn fallback uses learn.sdd.works below iframe
   Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
   When the Learn Scrum panel is shown
-  Then learn-scrum-iframe src is https://sdd.works/en/learn-embedded/
+  Then learn-scrum-iframe src is https://learn.sdd.works/en/learn-embedded/
   And a link directly below the iframe opens https://learn.sdd.works in a new tab
   And the link visible text resolves from admin.guide.learn_scrum_open_external
   And the panel does not render admin.guide.learn_scrum_intro
@@ -1540,7 +1540,7 @@ Scenario: Guide hero shows the new title and Antonio headline
 Scenario: Setup tab shows highlight and install path without manual JSON
   Given the visitor opens instructions on the Setup tab
   Then test id setup-highlight shows text from admin.guide.setup_highlight
-  And test id copy-setup-prompt copies Fetch and execute the setup instructions from https://framework.sdd.works/setup
+  And test id copy-setup-prompt copies Fetch and execute the setup instructions from https://sdd.works/setup
   And test id copy-install-phrase copies the localized install phrase from admin.guide.setup_install_phrase
   And test id copy-install-cmd copies sdd_install_framework
   And the page has no element with id manual-setup

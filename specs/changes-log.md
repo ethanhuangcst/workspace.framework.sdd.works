@@ -8,6 +8,14 @@
 
 ## 2026-10-08
 
+### Close confirm: feature-72, 74, 77, 88
+
+**Why**: User confirmed hostname cutover, Knowledge tab, unified markdown tabs, and Node.js setup usable.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) moves **feature-72**, **feature-74**, **feature-77**, and **feature-88** to Sprint 9 **Done**. [`product-backlog.md`](./product-backlog.md) sets [Web-portal-30](./product-backlog.md#pb-127), [Web-portal-36](./product-backlog.md#pb-133), [Web-portal-37](./product-backlog.md#pb-134), and [Web-portal-38](./product-backlog.md#pb-135) **Done**. [`issues-log.md`](./issues-log.md) closes [WA-18](./issues-log.md). [`status.md`](./status.md) Sprint 9 SBI counts.
+
+**Verification**: `npx vitest run` on instructions tabs, Learn embed hosts, KnowledgeFolderPanel, paste-sentences, setup-paths, and sdd-api (46 passed). Knowledge E2E in [`e2e/instructions.spec.ts`](../e2e/instructions.spec.ts). Hostname inventory [`go-live/20261008/hostname-cutover-inventory.md`](./go-live/20261008/hostname-cutover-inventory.md). [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open. [feature-84](./sprint-backlog.md#sprint-9) and [feature-85](./sprint-backlog.md#sprint-9) stay **ToDo** (policy after cutover).
+
 ### Plain-language rewrite: feature-74, 77, 83–85, 72
 
 **Why**: Sprint ToDo items (Knowledge tab, unified markdown, hostname split, partner landing) were hard to read in backlog and portal specs.

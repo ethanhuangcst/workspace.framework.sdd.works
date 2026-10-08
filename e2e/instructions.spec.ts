@@ -76,7 +76,7 @@ test.describe("MCP instructions", () => {
     await expect(featuresTab).toHaveAttribute("aria-selected", "true");
     await expect(page.getByTestId("panel-features")).toBeVisible();
     await expect(
-      page.getByTestId("panel-features").locator(".feature-name", { hasText: "ethan" }),
+      page.getByTestId("panel-features").getByRole("cell", { name: "ethan" }),
     ).toBeVisible();
 
     await page.getByTestId("guide-tab-setup").click();
@@ -96,18 +96,22 @@ test.describe("MCP instructions", () => {
 
     await page.getByTestId("knowledge-folder-archived").click();
     await expect(page).toHaveURL(/tab=knowledge&path=archived/);
-    await expect(page.getByRole("link", { name: "knowledge" })).toBeVisible();
+    const rootTrail = page
+      .getByTestId("knowledge-path")
+      .getByRole("link", { name: "knowledge" });
+    await expect(rootTrail).toBeVisible();
+
+    await rootTrail.click();
+    await expect(page).toHaveURL((url) => {
+      const u = new URL(url);
+      return u.searchParams.get("tab") === "knowledge" && !u.searchParams.has("path");
+    });
+    await expect(page.getByTestId("knowledge-list")).toBeVisible();
 
     await page.getByTestId("knowledge-file-invoke-agents").click();
     await expect(page).toHaveURL(/tab=knowledge&doc=invoke-agents/);
     await expect(page.getByTestId("knowledge-article-body")).toBeVisible();
     await expect(page.getByTestId("knowledge-list")).toBeHidden();
-
-    await page.getByRole("link", { name: "knowledge" }).click();
-    await expect(page).toHaveURL(/tab=knowledge/);
-    expect(page.url()).not.toContain("doc=");
-    expect(page.url()).not.toMatch(/path=/);
-    await expect(page.getByTestId("knowledge-list")).toBeVisible();
   });
 
   test("should_open_scrum_in_sdd_tab_after_features", async ({ page }) => {
@@ -167,6 +171,7 @@ test.describe("MCP instructions", () => {
     );
 
     await page.getByRole("button", { name: "简", exact: true }).click();
+    await page.waitForLoadState("networkidle");
     await expect(page.getByTestId("secret-name")).toHaveAttribute(
       "placeholder",
       SECRET_COPY["zh-Hans"].hint,
@@ -176,6 +181,10 @@ test.describe("MCP instructions", () => {
     );
 
     await page.getByRole("button", { name: "繁", exact: true }).click();
+    await page.waitForLoadState("networkidle");
+    await expect(
+      page.getByRole("button", { name: "繁", exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByTestId("secret-name")).toHaveAttribute(
       "placeholder",
       SECRET_COPY["zh-Hant"].hint,

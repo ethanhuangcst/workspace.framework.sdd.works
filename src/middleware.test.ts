@@ -52,4 +52,29 @@ describe("middleware", () => {
       "https://sdd.works/instructions?x=1",
     );
   });
+
+  it("should_pass_through_api_on_framework_host", () => {
+    const request = new NextRequest(
+      "https://framework.sdd.works/api/github/webhook",
+      {
+        method: "POST",
+        headers: { host: "framework.sdd.works" },
+      },
+    );
+    const response = middleware(request);
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+  });
+
+  it("should_pass_through_api_package_get_on_framework_host", () => {
+    const request = new NextRequest(
+      "https://framework.sdd.works/api/sdd/package?version=latest",
+      {
+        headers: { host: "framework.sdd.works" },
+      },
+    );
+    const response = middleware(request);
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+  });
 });

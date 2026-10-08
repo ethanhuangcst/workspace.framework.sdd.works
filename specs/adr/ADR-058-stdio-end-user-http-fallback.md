@@ -27,5 +27,9 @@ ADR-051 already defines a zero-dependency binary (`~/.sdd/sdd-mcp`) for stdio. C
 - `public/agent-setup/prompt.md` must change from “add the HTTP URL only” to “download the binary and write `command`,” with the URL as the documented fallback. **Sprint 2 feature-05** owns that markdown rewrite. Building and publishing the binary for all targets is [MCP-02](../product-backlog.md#L328) (Sprint 2 feature-14, ADR-051). The public URL in the paste sentence is `https://framework.sdd.works/setup` ([ADR-061](./ADR-061-setup-prompt-public-path.md)).
 - Pack updates do not require a new binary. Installer-rule changes do.
 
+## Supersession (host only)
+
+[ADR-127](./ADR-127-public-hostnames-sdd-and-learn.md) replaces the public pack base and HTTP MCP fallback host with **`https://sdd.works`**. The MCP entry name **`framework.sdd.works`**, the stdio-primary path, and the HTTP fallback behavior stay.
+
 ## Date
 2026-09-25

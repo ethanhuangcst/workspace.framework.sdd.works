@@ -1125,7 +1125,7 @@ Scenario: Agent setup endpoint serves stdio instructions
   Then the response Content-Type is text/markdown
   And the body names ~/.sdd/sdd-mcp as the local program path
   And the body tells the agent not to download an executable from the network
-  And the body shows a command MCP entry with SDD_SERVER_URL https://framework.sdd.works when that file is present
+  And the body shows a command MCP entry with SDD_SERVER_URL https://sdd.works when that file is present
   And the body does not ask the person to edit the MCP file by hand
   And the body does not authorize installing the framework pack in the same step
   And the later install step says the local program writes files
@@ -1138,7 +1138,7 @@ Scenario: Agent setup endpoint serves stdio instructions
 ```gherkin
 Scenario: Agent setup documents HTTP fallback
   When GET /setup is requested
-  Then the body includes https://framework.sdd.works/mcp as the fallback when ~/.sdd/sdd-mcp is missing or the client accepts only a URL
+  Then the body includes https://sdd.works/mcp as the fallback when ~/.sdd/sdd-mcp is missing or the client accepts only a URL
 ```
 
 #### AC3 — backend-01
@@ -1157,7 +1157,7 @@ Scenario: Local portal rewrites pack base and HTTP fallback
   When GET /setup is requested
   Then the body sets SDD_SERVER_URL to http://127.0.0.1:3040
   And the body uses the local MCP HTTP URL as the fallback
-  And the body does not use https://framework.sdd.works/mcp as the fallback
+  And the body does not use https://sdd.works/mcp as the fallback
 ```
 
 #### AC5 — OGT-2 / TRAE CN user MCP path

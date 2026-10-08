@@ -29,7 +29,7 @@ Each case has three parts:
 
 **Pack-gate stop** means all of the following: ethan sends the instructions URL, stops, shows no job list, does not read project files, does not call `sdd_install_framework` or `sdd_update_framework`, and does not copy files.
 
-**Instructions URL** is `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.json` when that file can be read. Otherwise it is `https://framework.sdd.works/instructions`. A missing `constants.json` on a pack-gate stop does not change `pack_complete`.
+**Instructions URL** is `instructions_url` from `{client_root}/templates/framework.sdd.works/constants.json` when that file can be read. Otherwise it is `https://sdd.works/instructions`. A missing `constants.json` on a pack-gate stop does not change `pack_complete`.
 
 ## Environments
 
@@ -160,7 +160,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 #### CE-GATE-05 — Instructions URL from constants
 
 - **Layer:** L1.
-- **Pre-condition:** The ledger is missing. `{client_root}/templates/framework.sdd.works/constants.json` can be read and its `instructions_url` is `https://framework.sdd.works/instructions`.
+- **Pre-condition:** The ledger is missing. `{client_root}/templates/framework.sdd.works/constants.json` can be read and its `instructions_url` is `https://sdd.works/instructions`.
 - **Test steps:** Start ethan.
 - **Expected results:** The reply contains that URL. `pack_complete` is not written.
 
@@ -169,7 +169,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 - **Layer:** L1.
 - **Pre-condition:** The ledger is missing. `constants.json` cannot be read.
 - **Test steps:** Start ethan.
-- **Expected results:** The reply contains `https://framework.sdd.works/instructions`. The ledger is not created. `pack_complete` is not set.
+- **Expected results:** The reply contains `https://sdd.works/instructions`. The ledger is not created. `pack_complete` is not set.
 
 #### CE-VERDICT-01 — Uninitialized
 

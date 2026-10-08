@@ -5,11 +5,12 @@ import { describe, expect, it } from "vitest";
 const portalCss = readFileSync(join(process.cwd(), "src/styles/portal.css"), "utf8");
 
 function ruleBlock(css: string, selector: string): string {
-  const start = css.indexOf(`${selector} {`);
-  expect(start).toBeGreaterThanOrEqual(0);
-  const open = css.indexOf("{", start);
-  const close = css.indexOf("}", open);
-  return css.slice(open + 1, close);
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = css.match(
+    new RegExp(`${escaped}\\s*(?:,[^{]+)?\\{([\\s\\S]*?)\\}`),
+  );
+  expect(match).not.toBeNull();
+  return match![1];
 }
 
 describe("guide horizontal overflow (WA-14 / AC27)", () => {
@@ -28,7 +29,7 @@ describe("guide horizontal overflow (WA-14 / AC27)", () => {
   });
 
   it("should_allow_secret_input_to_shrink_below_32rem", () => {
-    const input = ruleBlock(portalCss, ".secret-lookup .input-box");
+    const input = ruleBlock(portalCss, ".secret-row-grid .input-box");
     expect(input).toMatch(/min-width:\s*0/);
     expect(input).toMatch(/max-width:\s*32rem/);
     expect(input).not.toMatch(/min-width:\s*32rem/);

@@ -154,7 +154,7 @@ This product repo may ship **maintainer-only** skills under `<workspace>/.cursor
 
 §14 and the seed file `agents/ethan.md` are the same prompt. Keep them identical. The prompt names this step onboard. It runs once per chat. Capabilities, knowledge, and limits are the prompt. The `skills` object in `constants.json` is the job index. The prompt does not copy that object. Shared facts sit under Knowledge. Limits are the stops. The steps below are the same behavior, written for this design.
 
-1. Read only `{client_root}/.sdd-installed.json`. When the file is missing, or `pack_complete` is not `true`, send the instructions URL and stop. The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.json` when that file can be read. Otherwise it is `https://framework.sdd.works/instructions`. Do not read the workspace. Do not call the MCP tools `sdd_install_framework` or `sdd_update_framework`.
+1. Read only `{client_root}/.sdd-installed.json`. When the file is missing, or `pack_complete` is not `true`, send the instructions URL and stop. The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.json` when that file can be read. Otherwise it is `https://sdd.works/instructions`. Do not read the workspace. Do not call the MCP tools `sdd_install_framework` or `sdd_update_framework`.
 2. Follow the skill `sdd-audit-artifacts`. It returns one verdict — `Uninitialized`, `Index broken`, or `Usable` — the paths it opened, the paths that failed, and whether `locale` is empty. It reports `locale` empty only when it opened the map and the field is missing. An empty `locale` does not change the verdict. It does not create or edit a project file. Read the labels `verdict`, `locale`, `opened`, and `failed` in that reply. Do not reshape them. `locale` is present only after the map opened. Do not decide the verdict or the locale yourself.
 3. Act on the verdict.
    - **Uninitialized.** Tell the user the project is not initialized, and that the next step is to start a new project. When the user confirms, follow the skill `sdd-update-project`.
@@ -291,7 +291,7 @@ The MCP tools `sdd_install_framework` and `sdd_update_framework` copy the pack. 
 
 `constants.json` is read from `{client_root}/templates/framework.sdd.works/constants.json` ([ADR-060](../adr/ADR-060-constants-on-client-root.md), [ADR-056](../adr/ADR-056-single-user-root-framework-pack.md)). On Cursor, `client_root` is `~/.cursor`. It is not copied into the workspace or into `specs/`.
 
-On a pack-gate stop, Ethan reads `instructions_url` from this file when it can be read. When it cannot, he sends `https://framework.sdd.works/instructions`. A missing `constants.json` on that stop does not change `pack_complete`.
+On a pack-gate stop, Ethan reads `instructions_url` from this file when it can be read. When it cannot, he sends `https://sdd.works/instructions`. A missing `constants.json` on that stop does not change `pack_complete`.
 
 ### 6. Missing files
 
@@ -560,7 +560,7 @@ The skill for `skill_get_status` owns the status reply.
 - Ethan reads `{client_root}/.sdd-installed.json` before any project file.
   When `.sdd-installed.json` is missing, or `pack_complete` (the ledger field; `true` means the pack is complete) is not `true`, Ethan sends the instructions URL and stops.
   The URL is `instructions_url` in `{client_root}/templates/framework.sdd.works/constants.json` when `constants.json` can be read.
-  Otherwise the URL is `https://framework.sdd.works/instructions`.
+  Otherwise the URL is `https://sdd.works/instructions`.
   Ethan does not read the workspace on this stop.
   A missing `constants.json` on this stop does not change `pack_complete`.
 

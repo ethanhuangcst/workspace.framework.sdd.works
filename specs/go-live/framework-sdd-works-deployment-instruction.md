@@ -2,7 +2,7 @@
 
 Guided release for stack **`framework-sdd-works`**. Follow in order. Do **not** skip GHCR before Portainer pull.
 
-**Capability (Sprint 7, MVP-7):** Admin portal (Keys, Settings, Framework cache tree, accounts) plus **Streamable HTTP MCP** at `/mcp` (fallback). End users connect primarily via a local stdio binary (`~/.sdd/sdd-mcp`) configured by `https://framework.sdd.works/setup` (ADR-058, ADR-061). HTTP URL `https://framework.sdd.works/mcp` remains the fallback (ADR-054). Package API and stdio binaries ship via **GitHub Releases** — binaries are not built on this node.
+**Capability (Sprint 7, MVP-7):** Admin portal (Keys, Settings, Framework cache tree, accounts) plus **Streamable HTTP MCP** at `/mcp` (fallback). End users connect primarily via a local stdio binary (`~/.sdd/sdd-mcp`) configured by `https://sdd.works/setup` (ADR-058, ADR-061). HTTP URL `https://sdd.works/mcp` remains the fallback (ADR-054). Package API and stdio binaries ship via **GitHub Releases** — binaries are not built on this node.
 
 **Unlike `places-agent`:** **two** containers in one stack — Next portal (`framework-sdd-web`) and sibling MCP HTTP (`framework-sdd-mcp`). NPM uses **one** Proxy Host for the domain plus a **Custom Location** for `/mcp` (kb-agent pattern). **Do not** route the whole hostname to the MCP container.
 
@@ -21,7 +21,7 @@ Guided release for stack **`framework-sdd-works`**. Follow in order. Do **not** 
 | Portainer | https://portainer.agent-mate.ai/ |
 | NPM | https://nginx.agent-mate.ai/ |
 | Cloudflare | zone **`sdd.works`** → DNS |
-| App (after go-live) | https://framework.sdd.works |
+| App (after go-live) | https://sdd.works (legacy https://framework.sdd.works redirects; `/api/*` stays on request host) |
 
 ---
 
@@ -33,7 +33,7 @@ Guided release for stack **`framework-sdd-works`**. Follow in order. Do **not** 
 | Stack name | **`framework-sdd-works`** (exact) |
 | Web container | **`framework-sdd-web`** |
 | MCP container | **`framework-sdd-mcp`** |
-| Public domain | **`framework.sdd.works`** (exact spelling — SNI breaks on typos) |
+| Public domain | **`sdd.works`** (canonical). Legacy **`framework.sdd.works`** redirects pages; **`/api/*`** is not redirected. |
 | Image (proposed) | `ghcr.io/ethanhuangcst/workspace.framework.sdd.works/web:<IMAGE_TAG>` |
 | Web process | **`next start -p 3000`** (Next.js 16 App Router) |
 | MCP process | **`node` / `tsx` `src/mcp/http-server.ts`** — Streamable HTTP on **`3041`**, path **`/mcp`** |
@@ -52,9 +52,9 @@ Guided release for stack **`framework-sdd-works`**. Follow in order. Do **not** 
 
 | Client | URL | Auth |
 | --- | --- | --- |
-| Cursor (Streamable HTTP) | `https://framework.sdd.works/mcp` | `Authorization: Bearer <MCP_AUTH_TOKEN>` |
-| Instructions / setup prompt | `https://framework.sdd.works/setup` | none (public markdown). `GET /agent-setup` redirects here. |
-| Package API (stdio clients) | `https://framework.sdd.works/api/sdd/versions` · `/api/sdd/package` | none (public read) |
+| Cursor (Streamable HTTP) | `https://sdd.works/mcp` | `Authorization: Bearer <MCP_AUTH_TOKEN>` |
+| Instructions / setup prompt | `https://sdd.works/setup` | none (public markdown). `GET /agent-setup` redirects here. |
+| Package API (stdio clients) | `https://sdd.works/api/sdd/versions` · `/api/sdd/package` | none (public read) |
 
 **Do not** expose MCP on port `3204` to Cloudflare. Public MCP is **only** via NPM → Custom Location `/mcp`.
 
@@ -167,7 +167,7 @@ These are **not** pasted into this file. Prepare them in your secret store befor
 | **Aliyun Postgres DSN** | `DATABASE_URL` | Aliyun console → user + password for `framework_sdd` | Shape: `postgresql://USER:PASSWORD@101.132.156.250:5432/framework_sdd` — **never** reuse `places_agent` / `kb_agent` credentials |
 | **GHCR read PAT** | Portainer → Registries → `ghcr.io` | GitHub → Settings → Developer settings → PAT with **`read:packages`** | SSO authorize if org packages are private |
 | **GitHub API token** | `GITHUB_TOKEN` | Fine-grained or classic PAT with **`contents:read`** on the **framework package source repo** (Settings URL target) | Server-side sync only; never in browser |
-| **GitHub webhook secret** | `GITHUB_WEBHOOK_SECRET` | Generate random string; register in GitHub repo → Webhooks → `https://framework.sdd.works/api/github/webhook` | Optional until webhook configured |
+| **GitHub webhook secret** | `GITHUB_WEBHOOK_SECRET` | Generate random string; register in GitHub repo → Webhooks → `https://sdd.works/api/github/webhook` | Optional until webhook configured |
 | **Cron bearer secret** | `CRON_SECRET` | Generate random string; use as `Authorization: Bearer …` on `POST /api/sync/cron` | Optional backup sync trigger |
 | **Session signing secret** | `SESSION_SECRET` | `openssl rand -base64 32` (or equivalent) | Rotating invalidates all admin sessions |
 | **Keys encryption key** | `KEYS_ENCRYPTION_KEY` | `openssl rand -hex 32` (64 hex chars) | **Immutable after first Keys write** — changing it breaks existing encrypted rows (ADR-048) |
@@ -186,7 +186,7 @@ Set in stack **`framework-sdd-works`** (both containers unless noted). Values **
 | `IMAGE_TAG` | both | GHCR tag (git **sha** preferred) | Pull fails or wrong image |
 | `NODE_ENV` | both | `production` | Wrong cookie/security behavior |
 | `DATABASE_URL` | both | Aliyun `framework_sdd` DSN | App / MCP cannot start |
-| `PUBLIC_BASE_URL` | both | `https://framework.sdd.works` | Wrong links in mail / MCP responses |
+| `PUBLIC_BASE_URL` | both | `https://sdd.works` | Wrong links in mail / MCP responses |
 | `SESSION_SECRET` | web | Random secret | Admin login broken |
 | `ADMIN_SEED_EMAIL` | web | e.g. `me@ethanhuang.com` | Seed uses default email |
 | `ADMIN_SEED_USERNAME` | web | `admin` | Seed uses default username |
@@ -198,7 +198,7 @@ Set in stack **`framework-sdd-works`** (both containers unless noted). Values **
 | `MCP_HTTP_PORT` | mcp | `3041` | NPM Custom Location mismatch |
 | `MCP_HTTP_PATH` | mcp | `/mcp` | Client URL mismatch |
 | `SDD_PACKAGE_CACHE_DIR` | both | `/data/sdd-packages` | Install / Framework page cache broken |
-| `SDD_SERVER_URL` | mcp | `https://framework.sdd.works` | HTTP install returns wrong package URLs |
+| `SDD_SERVER_URL` | mcp | `https://sdd.works` | HTTP install returns wrong package URLs |
 | `PORT` | web | `3000` | Next listen mismatch |
 | `HOSTNAME` | web | `0.0.0.0` | Container not reachable from NPM |
 | `APP_NAME` | both | `framework.sdd.works` | Branding / logs |
@@ -466,7 +466,7 @@ Apply the same streaming-friendly settings on the **`/mcp` Custom Location** if 
 
 **Save** this Proxy Host again even if fields unchanged. Homepage `200` ≠ MCP healthy.
 
-**Done when:** `https://framework.sdd.works/` is not Default Site / not 502; `/mcp` reaches MCP container (not Next 404).
+**Done when:** `https://sdd.works/` is not Default Site / not 502; `/mcp` reaches MCP container (not Next 404).
 
 ---
 
@@ -476,11 +476,11 @@ Run in order. Both surfaces must pass.
 
 ### H1 — Public portal (no admin session)
 
-- [ ] `GET https://framework.sdd.works/` → home with instructions link + sign-in
-- [ ] `GET https://framework.sdd.works/instructions` → MCP guide (hero, agents roster, setup prompt)
-- [ ] `GET https://framework.sdd.works/setup` → markdown: download `~/.sdd/sdd-mcp`, write `command` MCP entry; HTTP URL as fallback (ADR-058, ADR-061). `GET /agent-setup` redirects to `/setup`.
-- [ ] `GET https://framework.sdd.works/login` → sign-in form
-- [ ] `GET https://framework.sdd.works/api/sdd/versions` → `200` with versions **or** `409` `sync_pending` (before first sync — acceptable)
+- [ ] `GET https://sdd.works/` → home with instructions link + sign-in
+- [ ] `GET https://sdd.works/instructions` → MCP guide (hero, agents roster, setup prompt)
+- [ ] `GET https://sdd.works/setup` → markdown: download `~/.sdd/sdd-mcp`, write `command` MCP entry; HTTP URL as fallback (ADR-058, ADR-061). `GET /agent-setup` redirects to `/setup`.
+- [ ] `GET https://sdd.works/login` → sign-in form
+- [ ] `GET https://sdd.works/api/sdd/versions` → `200` with versions **or** `409` `sync_pending` (before first sync — acceptable)
 
 ### H2 — Operator admin webapp
 
@@ -494,15 +494,15 @@ Run in order. Both surfaces must pass.
 ### H3 — Package API + sync (after Settings URL saved)
 
 - [ ] `POST /api/admin/sync` with `{ "force": true }` (via Framework page button) completes
-- [ ] `GET https://framework.sdd.works/api/sdd/versions` → `200` with `latestCommit`, `inventory`
-- [ ] `GET https://framework.sdd.works/api/sdd/package?version=latest` → `200` tarball stream; headers `X-SDD-Commit`, `X-SDD-Version`
+- [ ] `GET https://sdd.works/api/sdd/versions` → `200` with `latestCommit`, `inventory`
+- [ ] `GET https://sdd.works/api/sdd/package?version=latest` → `200` tarball stream; headers `X-SDD-Commit`, `X-SDD-Version`
 - [ ] Framework page tree lists skills/rules/agents from cache; directories before files
 
 ### H4 — MCP (Streamable HTTP)
 
 Use a strong **`MCP_AUTH_TOKEN`** from Portainer (not chat).
 
-- [ ] **Cursor:** `.cursor/mcp.json` → `url` `https://framework.sdd.works/mcp`, header `Authorization: Bearer …` → **initialize** succeeds
+- [ ] **Cursor:** `.cursor/mcp.json` → `url` `https://sdd.works/mcp`, header `Authorization: Bearer …` → **initialize** succeeds
 - [ ] **tools/list** includes: `sdd_get_key`, `sdd_install_framework`, `sdd_update_framework` ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). `sdd_list_versions` is absent.
 - [ ] After sync, `GET /api/sdd/versions` returns versions (not an MCP tool)
 - [ ] **sdd_install_framework** over HTTP (fallback) returns `packageUrl` + extraction instructions — **no** server-side writes to user home (ADR-054)
@@ -512,7 +512,7 @@ Optional HTTP smoke:
 
 ```bash
 export MCP_TOKEN='…'
-curl -sS -X POST https://framework.sdd.works/mcp \
+curl -sS -X POST https://sdd.works/mcp \
   -H "Authorization: Bearer $MCP_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"1.0"}},"id":1}'
@@ -584,7 +584,7 @@ services:
       PORT: "3000"
       HOSTNAME: "0.0.0.0"
       DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
-      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-https://framework.sdd.works}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-https://sdd.works}
       SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET}
       ADMIN_SEED_EMAIL: ${ADMIN_SEED_EMAIL:-me@ethanhuang.com}
       ADMIN_SEED_USERNAME: ${ADMIN_SEED_USERNAME:-admin}
@@ -618,8 +618,8 @@ services:
       NODE_ENV: production
       APP_NAME: framework.sdd.works
       DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
-      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-https://framework.sdd.works}
-      SDD_SERVER_URL: ${SDD_SERVER_URL:-https://framework.sdd.works}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-https://sdd.works}
+      SDD_SERVER_URL: ${SDD_SERVER_URL:-https://sdd.works}
       KEYS_ENCRYPTION_KEY: ${KEYS_ENCRYPTION_KEY:?set KEYS_ENCRYPTION_KEY}
       GITHUB_TOKEN: ${GITHUB_TOKEN:?set GITHUB_TOKEN}
       GITHUB_API_HOST: ${GITHUB_API_HOST:-api.github.com}

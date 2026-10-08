@@ -30,6 +30,10 @@ One generic panel covers later embeds. Per-locale URLs match the content-tab pat
 - A blank frame is a host policy on sdd.works (`frame-ancestors`), not a portal bug. The fallback link remains.
 - A reverse proxy is out of scope.
 
+## Supersession (host only)
+
+[ADR-127](./ADR-127-public-hostnames-sdd-and-learn.md) moves the Learn embed and WordPress course to **`learn.sdd.works`**. After cutover, tab **`urls`** are **`https://learn.sdd.works/en/learn-embedded/`**, and the embed allowlist is **`learn.sdd.works`** (and **`www.learn.sdd.works`**). The tab type and **`urls`** schema stay.
+
 ## Date
 
 2026-10-07
