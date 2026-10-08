@@ -1209,13 +1209,13 @@ Scenario: Lite prompt references synced manifest paths
 
 #### AC21 — feature-56 / Web-portal-18 Part 2 (partner one-line)
 
-Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** — [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts); not on framework.sdd.works Setup UI.
+Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** and **Agent paste sentences file (feature-88)** — key **`lite_install`** in [`public/agent-setup/paste-sentences.json`](../../public/agent-setup/paste-sentences.json); not on framework.sdd.works Setup UI. After feature-88, [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) must match the loader output.
 
 ```gherkin
 Scenario: Partner paste uses production lite URL
   Given a partner site (not framework.sdd.works Setup)
   When the visitor pastes the lite install one-line prompt into an agent
-  Then the pasted text is Fetch and execute the setup instructions from https://framework.sdd.works/setup/install
+  Then the pasted text matches key lite_install in public/agent-setup/paste-sentences.json with origin https://sdd.works
   And that protocol sentence is the same in every locale
 
 Scenario: framework.sdd.works Setup is full pack only
@@ -1554,9 +1554,9 @@ Scenario: Setup tab shows update hint and agents roster
   And the Setup tab has no agents intro paragraph keyed admin.guide.agents_intro
 ```
 
-#### AC37 — WA-18 / ADR-123
+#### AC37 — feature-77 / Web-portal-37 / WA-18 / ADR-123
 
-[ADR-123](../adr/ADR-123-unified-guide-markdown-body.md). Unified markdown styling for every `type: "content"` instructions tab. Mockup approval before production.
+**Plain summary:** Features, Scrum, invoke/help articles, and any future markdown tab should look like one family: same heading rhythm, same table borders, same column widths on catalog tables. Features keeps its badge + two-column catalog shape; everything else uses prose shape. Technical detail: [ADR-123](../adr/ADR-123-unified-guide-markdown-body.md). Mockup approval before [WA-18](../issues-log.md) closes.
 
 ```gherkin
 Scenario: Content tabs share guide-md-body presentation class
@@ -1582,7 +1582,7 @@ Scenario: Catalog tables align across sections on Features
 
 #### AC38 — feature-74 / Web-portal-36 / ADR-124
 
-Knowledge folder tab from pack **`rootPath`** and per-folder **`.index.json`**. Mockup [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) confirmed (path trail, no Back, no list h2).
+**Plain summary:** The **Knowledge** tab is an in-guide mini browser over pack markdown. The pack ships a folder (for example `content/knowledge/`) and index files that list subfolders and articles. Visitors follow a path trail (not a Back button), open articles in the tab or in a new window, and share URLs with `?tab=`, `path=`, and `doc=`. Contract: [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md). Mockup [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) confirmed (path trail, no Back, no list h2).
 
 ```gherkin
 Scenario: Knowledge tab lists entries from root index
@@ -1625,7 +1625,7 @@ Scenario: Invalid index or missing markdown fails visibly
 
 #### AC44 — feature-72 / Web-portal-30 / ADR-127
 
-[ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md). Hostname cutover and pack Learn embed URLs. Amends embed **`src`** expectations in **AC26**, **AC28**, **AC29**, and **AC30** after **feature-72** ships. Amends setup host in **AC36** scenario copy-setup-prompt.
+**Plain summary:** After cutover, visitors use **`sdd.works`** for the guide and setup, and **`learn.sdd.works`** for the WordPress course embedded in the Learn tab. App code, pack JSON, setup paste, and embed security rules all use those hosts; **`framework.sdd.works`** redirects to **`sdd.works`**. Detail: [ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md). Amends embed **`src`** in **AC26**, **AC28**, **AC29**, and **AC30** after **feature-72** ships. Amends setup host in **AC36** scenario copy-setup-prompt.
 
 ```gherkin
 Scenario: Learn tab embeds WordPress on learn.sdd.works
@@ -1658,6 +1658,120 @@ Scenario: Setup copy uses sdd.works
 Scenario: framework.sdd.works redirects to sdd.works
   Given an HTTP client follows redirects for https://framework.sdd.works/
   Then the final URL host is sdd.works
+```
+
+#### AC48 — feature-84 / Web-portal-20
+
+**Plain summary:** Operators and docs agree on **one** public hostname for the guide and install story (**`sdd.works`** after cutover). Alternate hostnames redirect there; setup and marketing copy do not point at two different “official” URLs.
+
+```gherkin
+Scenario: Public hostname policy is documented for operators
+  Given the release or go-live notes for hostname cutover
+  Then they name sdd.works as the canonical visitor entry for the instructions guide and GET /setup
+  And they name learn.sdd.works as the canonical WordPress learn site
+  And they state that framework.sdd.works redirects to sdd.works
+
+Scenario: User-facing copy does not fork hosts after cutover
+  Given feature-72 hostname work is Done
+  When a visitor copies the Setup one-line prompt from the guide
+  Then the URL host in that sentence is sdd.works only
+```
+
+#### AC49 — feature-85 / Web-portal-22
+
+**Plain summary:** The URL visitors bookmark for the guide (**`sdd.works`**) is not the primary entry for Admin sign-in or operator tools. Login, reset, and Admin Framework stay reachable on a separate hostname or routing rule documented for operators.
+
+```gherkin
+Scenario: Public guide hostname is not the documented admin entry
+  Given the operator routing doc for post-cutover hosts
+  Then admin login and Admin Framework are documented on a host or path separate from the public instructions guide on sdd.works
+  And the public guide footer may link to admin in a new tab without making sdd.works/login the only admin URL forever
+
+Scenario: Unauthenticated admin paths still reject access
+  Given a visitor opens /login or /admin without a session
+  Then the app shows login or rejects access as today
+  And no secret or operator-only data appears on the public guide tabs
+```
+
+#### AC50 — feature-83 / Web-portal-21
+
+**Plain summary:** A **partner** marketing site (for example 2study.ai) is not this repo’s **`/`** page. That partner site should foreground install (lite or full MCP), link to **`https://sdd.works/setup`** (or lite install markdown), and link to the instructions guide. Framework portal **`/`** remains the guide ([Web-portal-09](../product-backlog.md#pb-76)).
+
+```gherkin
+Scenario: Partner landing leads with install
+  Given the partner public landing for the SDD framework offer
+  Then the primary call to action tells the visitor to install via agent setup markdown or the lite install one-line sentence
+  And the page links to the framework instructions guide on sdd.works after cutover
+
+Scenario: Framework portal home is unchanged
+  Given a visitor opens / on the framework portal deployment
+  Then they see the instructions guide with Setup as default tab
+  And the page is not replaced by a partner-only marketing hero
+```
+
+#### AC45 — feature-88 / Web-portal-38 Part 1 (Node agent markdown)
+
+Engineering detail: [`app-design.md`](./app-design.md) **Node.js setup prompt (feature-88)** — `public/agent-setup/node.md`, rewrite `GET /setup/node`.
+
+```gherkin
+Scenario: Node setup markdown is public
+  When GET /setup/node is called
+  Then the response status is 200
+  And the Content-Type includes text/markdown
+  And the body includes instructions to detect OS and CPU architecture
+  And the body instructs GET /api/setup/node/catalog on the same origin
+  And the body instructs a short npm registry probe and catalog fallback cn_hk
+  And the body instructs node -e hello verification
+  And the body documents the node_prerequisite paste sentence from paste-sentences.json
+  And the body does not instruct sdd_install_framework
+  And the body does not instruct lite file copy or .sdd-lite-installed.json
+
+Scenario: Node setup markdown matches the source file after origin rewrite
+  Given isLocalMcpDev is true
+  When GET /setup/node is called
+  Then production host strings in node.md are rewritten to the local portal origin
+```
+
+#### AC46 — feature-88 / Web-portal-38 Part 3 (Node catalog API)
+
+Engineering detail: [`app-design.md`](./app-design.md) **Node.js setup prompt (feature-88)** — catalog JSON and `GET /api/setup/node/catalog`.
+
+```gherkin
+Scenario: Node catalog returns LTS and platform downloads
+  When GET /api/setup/node/catalog is called
+  Then the response status is 200
+  And the JSON includes node_lts
+  And downloads includes darwin-arm64 darwin-x64 and win32-x64 with https URLs
+  And npm_registries includes default and cn_hk with https URLs
+  And the response includes no secrets
+
+Scenario: Node catalog is public
+  When GET /api/setup/node/catalog is called without an admin session
+  Then the response status is 200
+```
+
+#### AC47 — feature-88 / Web-portal-38 Part 2 (paste sentences file and Setup copy)
+
+Engineering detail: [`app-design.md`](./app-design.md) **Agent paste sentences file (feature-88)** and Setup **`copy-node-setup-prompt`**.
+
+```gherkin
+Scenario: Paste sentences file defines lite and node agent prompts
+  Given public/agent-setup/paste-sentences.json version is 1
+  Then sentences includes lite_install and node_prerequisite
+  And each value contains exactly one origin placeholder
+  And resolvePasteSentence lite_install with origin https://sdd.works equals Fetch and execute the setup instructions from https://sdd.works/setup/install
+  And resolvePasteSentence node_prerequisite with origin https://sdd.works equals Fetch and execute the setup instructions from https://sdd.works/setup/node
+
+Scenario: Setup tab copies node prerequisite sentence
+  Given the visitor opens / or /instructions on the Setup tab
+  When the visitor activates copy-node-setup-prompt
+  Then the copied text equals resolvePasteSentence node_prerequisite for the portal public origin
+  And admin.guide.setup_node_section_title and setup_node_section_lead resolve in en zh-Hans and zh-Hant
+
+Scenario: Lite partner sentence stays out of Setup UI
+  Given the visitor opens the Setup tab on the public guide
+  Then there is no copy-lite-setup-prompt control
+  And copy-setup-prompt for GET /setup remains
 ```
 
 ---

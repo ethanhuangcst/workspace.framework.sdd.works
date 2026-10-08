@@ -5,7 +5,7 @@ import { InstructionsPage } from "./InstructionsPage";
 import type { Locale } from "@/i18n/t";
 import type { InstructionsPageTab } from "@/lib/instructions-tabs-page";
 
-const LEARN_EMBED_URL = "https://sdd.works/en/learn-embedded/";
+const LEARN_EMBED_URL = "https://learn.sdd.works/en/learn-embedded/";
 const LEARN_SITE_URL = "https://learn.sdd.works";
 
 const LEARN_TAB_LABEL: Record<Locale, string> = {
@@ -85,19 +85,40 @@ function defaultGuideTabs(options?: {
   return tabs;
 }
 
+const SETUP_SENTENCE =
+  "Fetch and execute the setup instructions from https://sdd.works/setup";
+const NODE_SETUP_SENTENCE =
+  "Fetch and execute the setup instructions from https://sdd.works/setup/node";
+const DEFAULT_PASTE = {
+  setupPromptSentence: SETUP_SENTENCE,
+  nodePrerequisiteSentence: NODE_SETUP_SENTENCE,
+} as const;
+
 function renderGuide(
   props: Omit<
     ComponentProps<typeof InstructionsPage>,
-    "tabs" | "onLocaleChange"
+    | "tabs"
+    | "onLocaleChange"
+    | "setupPromptSentence"
+    | "nodePrerequisiteSentence"
   > & {
     featuresHtml?: string;
     scrumHtml?: string;
     includeLearn?: boolean;
     onLocaleChange?: () => void;
+    setupPromptSentence?: string;
+    nodePrerequisiteSentence?: string;
   },
 ) {
-  const { featuresHtml, scrumHtml, includeLearn, onLocaleChange, ...rest } =
-    props;
+  const {
+    featuresHtml,
+    scrumHtml,
+    includeLearn,
+    onLocaleChange,
+    setupPromptSentence = DEFAULT_PASTE.setupPromptSentence,
+    nodePrerequisiteSentence = DEFAULT_PASTE.nodePrerequisiteSentence,
+    ...rest
+  } = props;
   return render(
     <InstructionsPage
       onLocaleChange={onLocaleChange ?? (() => undefined)}
@@ -107,6 +128,8 @@ function renderGuide(
         includeLearn,
         locale: rest.locale,
       })}
+      setupPromptSentence={setupPromptSentence}
+      nodePrerequisiteSentence={nodePrerequisiteSentence}
       {...rest}
     />,
   );
@@ -160,9 +183,6 @@ vi.mock("next/image", () => ({
     />
   ),
 }));
-
-const SETUP_SENTENCE =
-  "Fetch and execute the setup instructions from https://framework.sdd.works/setup";
 
 const SECRET_COPY: Record<
   Locale,
@@ -229,6 +249,20 @@ describe("InstructionsPage", () => {
   it("should_not_show_lite_copy_on_setup_tab", () => {
     renderGuide({ locale: "en" });
     expect(screen.queryByTestId("copy-lite-setup-prompt")).toBeNull();
+  });
+
+  it("should_copy_node_setup_sentence_when_copy_node_setup_prompt_clicked", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    renderGuide({ locale: "en" });
+
+    fireEvent.click(screen.getByTestId("copy-node-setup-prompt"));
+
+    expect(writeText).toHaveBeenCalledWith(NODE_SETUP_SENTENCE);
   });
 
   it("should_not_show_manual_mcp_block_on_setup_tab", () => {

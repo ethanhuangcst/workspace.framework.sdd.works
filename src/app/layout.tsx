@@ -5,7 +5,7 @@ import { getLocaleFromCookieValue } from "@/lib/locale";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "framework.sdd.works",
+  title: "sdd.works",
   description: "SDD framework MCP service and admin portal",
   icons: {
     icon: "/favicon.png",

@@ -698,6 +698,7 @@ Depends on Sprint 8 (Learn embed tab and content tabs).
 | 4   | feature-78 | SDD WORKS wordmark logo                    | [Web-portal-34 SDD WORKS wordmark logo](./product-backlog.md#pb-131) | Webapp/Feature | - [ADR-121](./adr/ADR-121-sdd-works-wordmark-logo.md)<br>- AC35 [`app-stories.md`](./admin-portal/app-stories.md) | **Done** |
 | 5   | feature-79 | Instructions guide hero and Setup tab      | [Web-portal-35 Instructions guide hero and Setup tab](./product-backlog.md#pb-132) | Webapp/Feature | - [ADR-122](./adr/ADR-122-instructions-guide-hero-and-setup-tab.md)<br>- AC36 [`app-stories.md`](./admin-portal/app-stories.md) | **Done** |
 | 6   | feature-86 | Reviewed full pack seeds manifest          | [Spec-seeds-17 Reviewed full pack seeds file](./product-backlog.md#pb-121) | Framework/Feature | - `npm run check:pack-seeds`<br>- [`.sdd-installed.example.json`](../pack.framework.sdd.works/.sdd-installed.example.json) | **Done** |
+| 7   | feature-87 | Admin note on Framework page               | [Web-portal-26 Pack repo file note on Admin Framework](./product-backlog.md#pb-123) | Webapp/Feature | - [`src/content/.admin-note.md`](../src/content/.admin-note.md)<br>- [`12-framework.html`](./admin-portal/ui-mockup/12-framework.html)<br>- [`app-tests.md`](./admin-portal/app-tests.md) §28 | **Done** |
 
 ### **WIP**
 
@@ -707,15 +708,15 @@ No open rows.
 
 | #   | Code       | SBI                                        | Parent PBI                                                                 | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
 | --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | feature-72 | Hostnames learn.sdd.works and sdd.works    | [Web-portal-30 Hostnames learn.sdd.works and sdd.works](./product-backlog.md#pb-127) | Webapp/Feature | - [ADR-127](./adr/ADR-127-public-hostnames-sdd-and-learn.md)<br>- **AC44** [`app-stories.md`](./admin-portal/app-stories.md)<br>- [`app-tests.md`](./admin-portal/app-tests.md) §29<br>- Pack [`content/.instructions-tabs.json`](../pack.framework.sdd.works/content/.instructions-tabs.json)<br>- [Web-portal-20](./product-backlog.md#pb-106), [Web-portal-22](./product-backlog.md#pb-108) (operator policy) | **ToDo** |
-| 2   | feature-74 | Internal page folder tab                   | [Web-portal-36 Internal page folder tab](./product-backlog.md#pb-133) | Webapp/Feature | - [ADR-124](./adr/ADR-124-internal-page-folder-index-json.md)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)<br>- Pack `content/knowledge/` + `.index.json`<br>- [`KnowledgeFolderPanel`](../../src/components/features/KnowledgeFolderPanel.tsx)<br>- Close: E2E, DoD, spec sync | **ToDo** |
-| 3   | feature-77 | Unified guide markdown body                | [Web-portal-37 Unified guide markdown body](./product-backlog.md#pb-134) | Webapp/Feature | - [ADR-123](./adr/ADR-123-unified-guide-markdown-body.md)<br>- [WA-18](./issues-log.md)<br>- [`instructions-tabs-dom.ts`](../../src/lib/instructions-tabs-dom.ts)<br>- AC37 [`app-stories.md`](./admin-portal/app-stories.md)<br>- Close: WA-18, DoD | **ToDo** |
+| 1   | feature-72 | Move portal to sdd.works and course to learn.sdd.works | [Web-portal-30 Move portal to sdd.works and learn course to learn.sdd.works](./product-backlog.md#pb-127) | Webapp/Feature | - [ADR-127](./adr/ADR-127-public-hostnames-sdd-and-learn.md)<br>- **AC44** [`app-stories.md`](./admin-portal/app-stories.md)<br>- [`app-tests.md`](./admin-portal/app-tests.md) §29<br>- Pack [`content/.instructions-tabs.json`](../pack.framework.sdd.works/content/.instructions-tabs.json)<br>- [feature-84](./sprint-backlog.md#sprint-9), [feature-85](./sprint-backlog.md#sprint-9) (policy) | **ToDo** |
+| 2   | feature-74 | Knowledge tab — browse pack articles in folders | [Web-portal-36 Knowledge tab — browse pack articles in folders](./product-backlog.md#pb-133) | Webapp/Feature | - [ADR-124](./adr/ADR-124-internal-page-folder-index-json.md)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)<br>- Pack `content/knowledge/` + `.index.json`<br>- [`KnowledgeFolderPanel`](../../src/components/features/KnowledgeFolderPanel.tsx)<br>- AC38 [`app-stories.md`](./admin-portal/app-stories.md)<br>- Close: E2E, DoD, spec sync | **ToDo** |
+| 3   | feature-77 | Same typography for all markdown tabs      | [Web-portal-37 Same look for every markdown tab](./product-backlog.md#pb-134) | Webapp/Feature | - [ADR-123](./adr/ADR-123-unified-guide-markdown-body.md)<br>- [WA-18](./issues-log.md)<br>- [`instructions-tabs-dom.ts`](../../src/lib/instructions-tabs-dom.ts)<br>- AC37 [`app-stories.md`](./admin-portal/app-stories.md)<br>- Close: WA-18, DoD | **ToDo** |
 | 4   | feature-80 | sdd-mcp GitHub Releases                    | [MCP-06 sdd-mcp GitHub Releases](./product-backlog.md#pb-104) | MCP/Feature | - [MCP-02](./product-backlog.md#pb-75)<br>- [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md)<br>- [`.github/workflows/release.yml`](../.github/workflows/release.yml) | **ToDo** |
 | 5   | feature-82 | Production pack sync for install           | [MCP-07 Production pack sync for install](./product-backlog.md#pb-105) | MCP/Feature | - [MCP-01](./product-backlog.md#pb-16)<br>- [Spec-seeds-15](./product-backlog.md#pb-97)<br>- [lite-pack.allowlist.json](../pack.framework.sdd.works/lite-pack.allowlist.json) | **ToDo** |
-| 6   | feature-83 | Install-first public landing               | [Web-portal-21 Install-first public landing](./product-backlog.md#pb-107) | Webapp/Feature | - [Web-portal-06](./product-backlog.md#pb-72)<br>- [Web-portal-18](./product-backlog.md#pb-99) | **ToDo** |
-| 7   | feature-84 | Canonical public hostname                  | [Web-portal-20 Canonical public hostname](./product-backlog.md#pb-106) | Webapp/Feature | - [Web-portal-30](./product-backlog.md#pb-127)<br>- [feature-72](./sprint-backlog.md#sprint-9) cutover | **ToDo** |
-| 8   | feature-85 | Admin routes off public hostname           | [Web-portal-22 Admin routes off public hostname](./product-backlog.md#pb-108) | Webapp/Feature | - [Web-portal-30](./product-backlog.md#pb-127)<br>- [feature-72](./sprint-backlog.md#sprint-9) | **ToDo** |
-| 9   | feature-87 | Admin note on Framework page               | [Web-portal-26 Pack repo file note on Admin Framework](./product-backlog.md#pb-123) | Webapp/Feature | - [`src/content/.admin-note.md`](../src/content/.admin-note.md)<br>- [`12-framework.html`](./admin-portal/ui-mockup/12-framework.html) | **ToDo** |
+| 6   | feature-83 | Partner site — install-first landing page    | [Web-portal-21 Partner site — install-first landing (not this portal)](./product-backlog.md#pb-107) | Webapp/Feature | - [Web-portal-06](./product-backlog.md#pb-72)<br>- [Web-portal-18](./product-backlog.md#pb-99)<br>- AC50 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
+| 7   | feature-84 | Document official public URL and redirects   | [Web-portal-20 One official public URL for visitors](./product-backlog.md#pb-106) | Webapp/Feature | - [Web-portal-30](./product-backlog.md#pb-127)<br>- [ADR-127](./adr/ADR-127-public-hostnames-sdd-and-learn.md)<br>- AC48 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
+| 8   | feature-85 | Keep admin login off the public guide URL    | [Web-portal-22 Admin and login stay off the public guide URL](./product-backlog.md#pb-108) | Webapp/Feature | - [Web-portal-30](./product-backlog.md#pb-127)<br>- [Web-portal-09](./product-backlog.md#pb-76)<br>- AC49 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
+| 9   | feature-88 | Node.js setup prompt and instructions      | [Web-portal-38 Node.js setup prompt and agent instructions](./product-backlog.md#pb-135) | Webapp/Feature | - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md)<br>- [`app-design.md`](./admin-portal/app-design.md) Node.js setup + paste sentences<br>- [`paste-sentences.json`](../public/agent-setup/paste-sentences.json) (**lite_install**, **node_prerequisite**)<br>- **AC45**–**AC47** [`app-stories.md`](./admin-portal/app-stories.md)<br>- [`app-tests.md`](./admin-portal/app-tests.md) §30 | **ToDo** |
 
 ### Retrospective
 
@@ -724,15 +725,24 @@ No open rows.
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
 - User **close confirm** after Vitest on Learn embed, instructions tabs, and pack-seed link check. [feature-73](./sprint-backlog.md#sprint-9) closed while [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open; one §19 CSS unit test still targets a removed selector ([`guide-horizontal-overflow.test.ts`](../src/styles/guide-horizontal-overflow.test.ts)).
 
+#### 2. [Oct 8, 2026], feature-87 done
+- User **close confirm** after Admin note modal on Framework. Vitest on resolver, API, and `FrameworkView`; Playwright row in [`settings-framework.spec.ts`](../e2e/settings-framework.spec.ts) was not run in the close session.
+
 **Opportunities**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
 - Close or refresh open defects before the next multi-SBI batch so SBI **Done** rows do not list open WA ids.
 
+#### 2. [Oct 8, 2026], feature-87 done
+- Run the admin-note E2E in CI when the fixture sync job is stable so modal regressions surface before release.
+
 **Future actions**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
 - At the next touch on Learn secret CSS, align §19 tests with ADR-117 markup and re-check [WA-14](./issues-log.md) / [WA-15](./issues-log.md) in a real browser.
+
+#### 2. [Oct 8, 2026], feature-87 done
+- On the next edit to [`content/.admin-note.md`](../src/content/.admin-note.md), run `npx tsx scripts/sync-admin-note-mockup.mjs` so mockup sample HTML stays aligned.
 
 ---
 

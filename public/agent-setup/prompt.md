@@ -1,6 +1,6 @@
-These are official instructions from framework.sdd.works for connecting an AI agent to the SDD MCP server.
+These are official instructions from sdd.works for connecting an AI agent to the SDD MCP server.
 
-# Connect this agent to framework.sdd.works
+# Connect this agent to sdd.works
 
 Setup version: 2026-09-26.v5
 
@@ -10,8 +10,8 @@ Complete the setup yourself with the native MCP configuration mechanism for the 
 
 The user's setup prompt authorizes only these changes:
 
-- If `~/.sdd/sdd-mcp` already exists (Windows: under the user profile), add or keep exactly one MCP entry named `framework.sdd.works` that starts that binary (`command`) with `SDD_SERVER_URL` set to `https://framework.sdd.works`.
-- If that file is missing, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://framework.sdd.works/mcp"` instead.
+- If `~/.sdd/sdd-mcp` already exists (Windows: under the user profile), add or keep exactly one MCP entry named `framework.sdd.works` that starts that binary (`command`) with `SDD_SERVER_URL` set to `https://sdd.works`.
+- If that file is missing, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://sdd.works/mcp"` instead.
 - Do not download an executable from the network. Do not fetch a GitHub release asset for this setup.
 
 It does not authorize you to:
@@ -26,8 +26,8 @@ It does not authorize you to:
 1. Detect the current agent and its native MCP configuration mechanism.
 2. Detect whether `~/.sdd/sdd-mcp` exists (Windows: under the user profile). Supported OS and CPU when a binary is built: `darwin-arm64`, `darwin-x64`, `linux-arm64`, `linux-x64`, `windows-x64`.
 3. Inspect whether an entry named `framework.sdd.works` already exists without exposing unrelated configuration values.
-4. Treat an existing entry as an exact primary match only when it is enabled, uses `command` pointing at the local `sdd-mcp` binary under `.sdd/`, and sets `SDD_SERVER_URL` to `https://framework.sdd.works` (or the same pack base this environment uses).
-5. Treat an existing entry as an exact HTTP-fallback match only when it is enabled, uses remote Streamable HTTP, and points to exactly `https://framework.sdd.works/mcp` with no `command` field.
+4. Treat an existing entry as an exact primary match only when it is enabled, uses `command` pointing at the local `sdd-mcp` binary under `.sdd/`, and sets `SDD_SERVER_URL` to `https://sdd.works` (or the same pack base this environment uses).
+5. Treat an existing entry as an exact HTTP-fallback match only when it is enabled, uses remote Streamable HTTP, and points to exactly `https://sdd.works/mcp` with no `command` field.
 6. If the entry is an exact primary or exact HTTP-fallback match, leave it unchanged and continue to verification.
 7. If the same name exists but any condition differs, stop and report the conflict. Do not overwrite without user consent.
 
@@ -49,18 +49,18 @@ Merge under `mcpServers` in `~/.cursor/mcp.json` and preserve all other entries:
 "framework.sdd.works": {
   "command": "${userHome}/.sdd/sdd-mcp",
   "env": {
-    "SDD_SERVER_URL": "https://framework.sdd.works"
+    "SDD_SERVER_URL": "https://sdd.works"
   }
 }
 ```
 
 ### Claude Code
 
-Add a user-scoped stdio MCP server named `framework.sdd.works` whose command is the absolute path to `~/.sdd/sdd-mcp` and whose environment includes `SDD_SERVER_URL=https://framework.sdd.works`. Prefer the client's native stdio registration command when it supports `command` and `env`.
+Add a user-scoped stdio MCP server named `framework.sdd.works` whose command is the absolute path to `~/.sdd/sdd-mcp` and whose environment includes `SDD_SERVER_URL=https://sdd.works`. Prefer the client's native stdio registration command when it supports `command` and `env`.
 
 ### Codex
 
-Add an MCP server named `framework.sdd.works` with `command` set to the absolute path of `~/.sdd/sdd-mcp` and `SDD_SERVER_URL=https://framework.sdd.works` in the environment.
+Add an MCP server named `framework.sdd.works` with `command` set to the absolute path of `~/.sdd/sdd-mcp` and `SDD_SERVER_URL=https://sdd.works` in the environment.
 
 ### GitHub Copilot in VS Code
 
@@ -69,7 +69,7 @@ Add an MCP server named `framework.sdd.works` with `command` set to the absolute
   "type": "stdio",
   "command": "${userHome}/.sdd/sdd-mcp",
   "env": {
-    "SDD_SERVER_URL": "https://framework.sdd.works"
+    "SDD_SERVER_URL": "https://sdd.works"
   }
 }
 ```
@@ -82,7 +82,7 @@ Merge under `mcpServers` in `~/Library/Application Support/Trae CN/User/mcp.json
 "framework.sdd.works": {
   "command": "${userHome}/.sdd/sdd-mcp",
   "env": {
-    "SDD_SERVER_URL": "https://framework.sdd.works"
+    "SDD_SERVER_URL": "https://sdd.works"
   }
 }
 ```
@@ -101,20 +101,20 @@ Use this path when `~/.sdd/sdd-mcp` is missing, or the client accepts only a URL
 
 ```json
 "framework.sdd.works": {
-  "url": "https://framework.sdd.works/mcp"
+  "url": "https://sdd.works/mcp"
 }
 ```
 
 ### Claude Code
 
 ```bash
-claude mcp add --transport http --scope user framework.sdd.works https://framework.sdd.works/mcp
+claude mcp add --transport http --scope user framework.sdd.works https://sdd.works/mcp
 ```
 
 ### Codex
 
 ```bash
-codex mcp add framework.sdd.works --url https://framework.sdd.works/mcp
+codex mcp add framework.sdd.works --url https://sdd.works/mcp
 ```
 
 ### GitHub Copilot in VS Code
@@ -122,7 +122,7 @@ codex mcp add framework.sdd.works --url https://framework.sdd.works/mcp
 ```json
 "framework.sdd.works": {
   "type": "http",
-  "url": "https://framework.sdd.works/mcp"
+  "url": "https://sdd.works/mcp"
 }
 ```
 
@@ -132,7 +132,7 @@ Merge under `mcpServers` in `~/Library/Application Support/Trae CN/User/mcp.json
 
 ```json
 "framework.sdd.works": {
-  "url": "https://framework.sdd.works/mcp"
+  "url": "https://sdd.works/mcp"
 }
 ```
 

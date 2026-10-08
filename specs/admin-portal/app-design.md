@@ -440,7 +440,9 @@ The Features tab does not keep a fixed list in the app. It shows a markdown file
 | Markdown | Add `marked` only. Parse on the server. Escape raw HTML. Drop `javascript:` links. Do not add an admin editor. Catalog entries are GFM two-column tables under gray `h3` group labels ([ADR-123](../adr/ADR-123-unified-guide-markdown-body.md)). Legacy em-dash list lines may still render via `renderFeaturesMarkdown` until seeds drop lists. |
 | Forbidden | A second hardcoded Agents / Skills / Rules / Templates catalog in the component or in locale JSON. |
 
-#### Guide markdown body (ADR-123 / WA-18)
+#### Guide markdown body (feature-77 / Web-portal-37 / ADR-123 / WA-18)
+
+**Reader summary:** Every markdown tab (Features, Scrum, help articles, Knowledge articles) shares one visual system so tables and headings do not drift per tab. Features keeps catalog styling; other tabs use prose styling. Setup and the Learn iframe are unchanged.
 
 All `type: "content"` tabs share one presentation stack. Setup and Learn embed tabs are out of scope.
 
@@ -533,7 +535,7 @@ The served body must match `public/agent-setup/install.md` after rewrite. Integr
 | Forbidden | Must not instruct `sdd_install_framework`, `sdd_update_framework`, or writing `.sdd-installed.json` |
 | Scope | Copy only paths from the manifest (`skills/`, `rules/`). No agents, workflows, or templates from lite allow-list |
 
-Shared helpers: `getLiteInstallSetupUrl()` and `LITE_PARTNER_SETUP_SENTENCE` in [`src/mcp/brand.ts`](../../src/mcp/brand.ts).
+Shared helpers: `getLiteInstallSetupUrl()` and lite paste text from [`public/agent-setup/paste-sentences.json`](../../public/agent-setup/paste-sentences.json) via `resolvePasteSentence('lite_install')` ([feature-88](#nodejs-setup-prompt-feature-88--web-portal-38)). Until feature-88 ships, [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) remains the runtime source; tests assert parity with the JSON file once the loader lands.
 
 ##### Implementation plan (feature-56 only)
 
@@ -543,6 +545,87 @@ Do these in order. Write the failing test for a step before the code for that st
 2. **task-02.** Add rewrite + `GET /api/agent-setup/install` handler + `setup-paths` test update. Integration tests in [`sdd-api.test.ts`](../../src/app/api/sdd/sdd-api.test.ts): 200 body contains required phrases and `LITE_PARTNER_SETUP_SENTENCE`; `GET /setup` rewrite still serves stdio `prompt.md` (not lite body).
 3. **task-03.** Keep Setup UI full-pack only (`SetupGuidePanel`). Unit test: no `copy-lite-setup-prompt` on Setup.
 4. **task-04.** Mockups without lite pill. Run [`app-tests.md`](./app-tests.md) §10 before marking feature-56 Done.
+
+#### Agent paste sentences file (feature-88 / shared with Web-portal-18)
+
+| | |
+| --- | --- |
+| Authoring | [`public/agent-setup/paste-sentences.json`](../../public/agent-setup/paste-sentences.json) |
+| Schema | `version` (`1`). `sentences` object with keys **`lite_install`** and **`node_prerequisite`**. Each value is one string template containing `{origin}` once (no secrets). |
+| Loader | `src/mcp/paste-sentences.ts` (recommended): read JSON from disk, validate keys, `resolvePasteSentence(key, origin?)` where `origin` defaults to `getMcpWebsiteUrl()` without trailing slash. Export typed keys. |
+| Consumers | Setup **`copy-node-setup-prompt`** ([AC47](./app-stories.md)); partner lite paste ([AC21](./app-stories.md) amended); [`install.md`](../../public/agent-setup/install.md) **Partner site one-line prompt** section quotes **`lite_install`** from the file; integration tests import the loader instead of duplicating strings. |
+| Full MCP setup | Stays on **`GET /setup`** / `prompt.md` and **`copy-setup-prompt`** ([AC36](./app-stories.md)). Optional later key **`mcp_full_setup`** in the same JSON is out of scope for feature-88. |
+
+**Example file (authoring; `{origin}` replaced at runtime):**
+
+```json
+{
+  "version": 1,
+  "sentences": {
+    "lite_install": "Fetch and execute the setup instructions from {origin}/setup/install",
+    "node_prerequisite": "Fetch and execute the setup instructions from {origin}/setup/node"
+  }
+}
+```
+
+**Resolved prompts for agents (production origin `https://sdd.works` after [ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md)):**
+
+| Key | Agent paste sentence |
+| --- | --- |
+| `lite_install` | `Fetch and execute the setup instructions from https://sdd.works/setup/install` |
+| `node_prerequisite` | `Fetch and execute the setup instructions from https://sdd.works/setup/node` |
+
+#### Node.js setup prompt (feature-88 / Web-portal-38)
+
+Part 1 is public agent markdown at `GET /setup/node`. Part 2 is a Setup tab copy control for **`node_prerequisite`**. Part 3 is a public JSON catalog. This path is **not** lite install, **not** MCP install, **not** Git or Xcode.
+
+##### Setup tab UI (Part 2)
+
+| | |
+| --- | --- |
+| Placement | Setup panel below the existing MCP highlight / full-setup copy block ([ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md)). Second subsection with i18n **`admin.guide.setup_node_section_title`** and **`admin.guide.setup_node_section_lead`**. |
+| Copy control | `data-testid="copy-node-setup-prompt"`. Copies `resolvePasteSentence('node_prerequisite')`. Same pill pattern as **`copy-setup-prompt`**. |
+| Lite | No **`copy-lite-setup-prompt`** on framework.sdd.works. Lite sentence stays partner-only via the shared JSON file. |
+
+##### Technical design (Part 1 — agent markdown)
+
+| | |
+| --- | --- |
+| Public URL | `GET /setup/node` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
+| Rewrite | [`SETUP_REWRITES`](../../src/mcp/setup-paths.ts): `source` `/setup/node`, `destination` `/api/agent-setup/node` |
+| Handler | [`src/app/api/agent-setup/node/route.ts`](../../src/app/api/agent-setup/node/route.ts) — read [`public/agent-setup/node.md`](../../public/agent-setup/node.md), local origin rewrite when `isLocalMcpDev()`, `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
+| Source file | `public/agent-setup/node.md` with version line (for example `Node setup version: YYYY-MM-DD.vN`) |
+| Auth | None |
+
+**Markdown contract (AC45)**
+
+| Requirement | In body |
+| --- | --- |
+| Environment | Instruct detecting OS and CPU (`darwin` / `win32`, `arm64` / `x64`) and reading `node` / `npm` on PATH |
+| Catalog | Instruct `GET /api/setup/node/catalog` (same origin after rewrite) |
+| Registry probe | Short timeout against default npm registry; use catalog **`cn_hk`** when probe fails |
+| Install | Node LTS from catalog **`downloads`** for the detected platform only when missing or below pinned LTS; ask before admin or sudo |
+| Verify | `node -e "console.log('hello')"` and report Node and npm versions |
+| Forbidden | No `sdd_install_framework`, no lite file copy, no `.sdd-lite-installed.json`, no unrelated project edits |
+| Paste line | Document **`node_prerequisite`** sentence from [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) |
+
+##### Technical design (Part 3 — catalog API)
+
+| | |
+| --- | --- |
+| Route | `GET /api/setup/node/catalog` |
+| Source | [`public/agent-setup/node-catalog.json`](../../public/agent-setup/node-catalog.json) (or `src/content/node-catalog.json` bundled mirror; pick one path in implementation and document in handler) |
+| Shape | `version`, `node_lts` (semver string), `downloads` map (`darwin-arm64`, `darwin-x64`, `win32-x64` → HTTPS URL strings), `npm_registries` (`default`, `cn_hk` → registry base URLs) |
+| Auth | None |
+| Tests | Vitest: schema validation; 200 JSON; URLs are HTTPS; no secrets |
+
+##### Implementation plan (feature-88)
+
+1. **task-01.** Add `paste-sentences.json`, loader, and unit tests. Wire **`LITE_PARTNER_SETUP_SENTENCE`** to **`lite_install`**. Update `install.md` partner section to reference the file.
+2. **task-02.** Add `node-catalog.json`, catalog route, and tests (**AC46** API half).
+3. **task-03.** Add `node.md`, rewrite, `GET /api/agent-setup/node`, integration tests (**AC45**).
+4. **task-04.** Setup UI **`copy-node-setup-prompt`**, i18n keys, component test (**AC47**). Update mockup [`13-instructions.html`](./ui-mockup/13-instructions.html) if layout changes.
+5. **task-05.** Run [`app-tests.md`](./app-tests.md) §30 before marking feature-88 **Done**.
 
 #### Instructions tabs (feature-58 / feature-59 / feature-60)
 
@@ -646,6 +729,8 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 
 #### Hostname cutover (feature-72 / Web-portal-30 / ADR-127)
 
+**Reader summary:** Move the public guide to **`sdd.works`**, move the WordPress course to **`learn.sdd.works`**, and update every user-visible URL and embed rule to match. Old **`framework.sdd.works`** bookmarks should redirect. Operator DNS and WordPress **`frame-ancestors`** are required for the Learn iframe to work in production.
+
 **Technical design**
 
 | Area | Change |
@@ -662,7 +747,40 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 
 **Build readiness:** **AC44**, **ADR-127**, and §29 define the contract. Mockup target state in [`13-instructions.html`](./ui-mockup/13-instructions.html). Next step: **`fullstack-engineer`** (app + pack JSON + tests), then operator cutover.
 
-#### Internal page folder (feature-74 / Web-portal-36 / ADR-124)
+#### One official public URL (feature-84 / Web-portal-20)
+
+**Reader summary:** Document which hostname is “the real one” for visitors (**`sdd.works`** after cutover) and which redirects apply. This row is operator-facing policy and release notes, not app code by itself. Pairs with **feature-72** engineering and **AC48**.
+
+| Deliverable | Content |
+| --- | --- |
+| Go-live / release doc | Canonical hosts: **`sdd.works`** (guide, `/setup`, `/mcp`), **`learn.sdd.works`** (course + embed page), **`framework.sdd.works`** → redirect |
+| Copy audit | No permanent second hostname in setup paste, lite partner sentence, or Learn fallback after cutover |
+| Verification | **AC48**; checklist in [`app-tests.md`](./app-tests.md) §31 |
+
+#### Admin off the public guide URL (feature-85 / Web-portal-22)
+
+**Reader summary:** Visitors on **`sdd.works`** get the guide, not the operator console. Sign-in and Admin Framework stay on a documented admin entry (separate host or path). Footer “Admin portal” may open login in a new tab; routing docs state the long-term split.
+
+| Deliverable | Content |
+| --- | --- |
+| Routing doc | Where `/login`, `/reset-password`, and `/admin/*` live relative to **`sdd.works`** after cutover |
+| Security posture | Public guide responses never include admin session or secrets |
+| Verification | **AC49**; [`app-tests.md`](./app-tests.md) §32 |
+
+#### Partner install-first landing (feature-83 / Web-portal-21)
+
+**Reader summary:** Build or specify a **partner** site (for example 2study.ai) whose hero action is “install SDD,” linking to setup markdown on **`sdd.works`** and the instructions guide. Do not replace framework portal **`/`**, which already is the guide.
+
+| Deliverable | Content |
+| --- | --- |
+| Partner page | Primary CTA: full MCP setup sentence or lite install sentence ([Web-portal-18](./product-backlog.md#pb-99)) |
+| Links | Instructions guide URL on **`sdd.works`**; optional link to learn course on **`learn.sdd.works`** |
+| Out of scope | This repo’s Next.js **`/`** route and [`InstructionsPage`](../../src/components/features/InstructionsPage.tsx) layout |
+| Verification | **AC50**; [`app-tests.md`](./app-tests.md) §33 (manual or partner-repo checklist) |
+
+#### Knowledge tab — internal page folder (feature-74 / Web-portal-36 / ADR-124)
+
+**Reader summary:** The Knowledge tab lists folders and markdown files from the pack. Index files drive the list; a path trail shows where you are; articles render with the same markdown styling as other tabs. Pack operators add content under `content/knowledge/` without new portal CSS per article.
 
 Mockup confirmed: [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) (path trail revision accepted 2026-10-08). Spike script [`assets/knowledge-spike.js`](./ui-mockup/assets/knowledge-spike.js). Sample tree [`assets/samples/knowledge/`](./ui-mockup/assets/samples/knowledge/). Production mirrors pack [`content/knowledge/`](../../src/content/knowledge/). Notes: [`knowledge-folder-tab-spike.md`](../knowledge/agent/knowledge-folder-tab-spike.md).
 

@@ -196,6 +196,26 @@ describe("CE-TABS-02 — reject invalid config", () => {
     }
   });
 
+  it("should_fail_when_embed_host_is_pre_cutover_sdd_works", () => {
+    const doc = baseValidDoc();
+    (doc.tabs as unknown[]).push({
+      type: "embedded_external_page",
+      id: "learn-scrum-in-sdd",
+      labels: { en: "Learn Scrum in SDD" },
+      queryParam: "learn-scrum-in-sdd",
+      panelTestId: "panel-learn-scrum",
+      urls: { en: "https://sdd.works/en/learn-embedded/" },
+    });
+    const result = validateInstructionsTabsConfig(doc, {
+      contentRoot: packRoot,
+      checkFilesExist: false,
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.some((e) => e.includes("sdd.works"))).toBe(true);
+    }
+  });
+
   it("should_fail_when_labelKey_is_present", () => {
     const doc = baseValidDoc();
     const tabs = doc.tabs as Record<string, unknown>[];

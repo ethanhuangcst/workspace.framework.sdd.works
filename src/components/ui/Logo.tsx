@@ -9,6 +9,9 @@ export type LogoProps = {
   className?: string;
 };
 
+const LOGO_INTRINSIC_WIDTH = 718;
+const LOGO_INTRINSIC_HEIGHT = 256;
+
 const SIZE_CONFIG: Record<
   LogoSize,
   { wrapClass: string; imgClass: string; width: number; height: number }
@@ -16,20 +19,20 @@ const SIZE_CONFIG: Record<
   home: {
     wrapClass: "logo logo-home",
     imgClass: "logo-full",
-    width: 360,
-    height: 200,
+    width: LOGO_INTRINSIC_WIDTH,
+    height: LOGO_INTRINSIC_HEIGHT,
   },
   header: {
     wrapClass: "logo",
     imgClass: "logo-header-mark",
-    width: 234,
-    height: 130,
+    width: LOGO_INTRINSIC_WIDTH,
+    height: LOGO_INTRINSIC_HEIGHT,
   },
   auth: {
     wrapClass: "logo logo-auth",
     imgClass: "logo-full",
-    width: 360,
-    height: 200,
+    width: LOGO_INTRINSIC_WIDTH,
+    height: LOGO_INTRINSIC_HEIGHT,
   },
 };
 

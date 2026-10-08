@@ -6,6 +6,8 @@ Accepted
 
 ## Context
 
+**Plain terms:** Visitors should not see Features tables styled differently from Scrum or help articles. One shared “guide markdown” look fixes that and stops every new tab from inventing new CSS ([Web-portal-37](../product-backlog.md#pb-134), [feature-77](../sprint-backlog.md#sprint-9)).
+
 Instructions **content** tabs render pack markdown in the portal ([ADR-071](./ADR-071-portal-content-paths.md), [Web-portal-25](../product-backlog.md#pb-112)). Today each tab uses a different wrapper class and CSS path:
 
 | Tab (examples) | Wrapper class | Table markup | Table CSS |

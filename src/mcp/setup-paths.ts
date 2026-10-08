@@ -14,6 +14,10 @@ export const SETUP_REWRITES = [
     destination: "/api/agent-setup/install",
   },
   {
+    source: "/setup/node",
+    destination: "/api/agent-setup/node",
+  },
+  {
     source: "/setup",
     destination: "/api/agent-setup",
   },

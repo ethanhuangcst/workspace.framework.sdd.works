@@ -39,11 +39,11 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     const iframe = screen.getByTestId("learn-scrum-iframe");
-    expect(iframe).toHaveAttribute("src", "https://sdd.works/en/learn-embedded/");
+    expect(iframe).toHaveAttribute("src", "https://learn.sdd.works/en/learn-embedded/");
     expect(iframe).toHaveClass("learn-embed-frame");
     expect(screen.getByTestId("learn-scrum-embed")).toBeInTheDocument();
     const fallback = screen.getByRole("link", {
@@ -57,7 +57,7 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     expect(screen.queryByText(/Complete these nine modules/i)).toBeNull();
@@ -67,7 +67,7 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     const embed = screen.getByTestId("learn-scrum-embed");
@@ -96,14 +96,14 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     const iframe = iframeInLatestPanel();
     act(() => {
       window.dispatchEvent(
         new MessageEvent("message", {
-          origin: "https://sdd.works",
+          origin: "https://learn.sdd.works",
           data: { type: LEARN_EMBED_HEIGHT_MESSAGE_TYPE, height: 640 },
         }),
       );
@@ -129,14 +129,14 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     const iframe = iframeInLatestPanel();
     act(() => {
       window.dispatchEvent(
         new MessageEvent("message", {
-          origin: "https://sdd.works",
+          origin: "https://learn.sdd.works",
           data: { type: LEARN_EMBED_HEIGHT_MESSAGE_TYPE, height: 2400 },
         }),
       );
@@ -151,7 +151,7 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     const iframe = iframeInLatestPanel();
@@ -172,7 +172,7 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     const host = screen.getByTestId("learn-scrum-iframe").parentElement;
@@ -199,7 +199,7 @@ describe("LearnScrumEmbedPanel", () => {
     const { rerender } = render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     fireEvent.load(screen.getByTestId("learn-scrum-iframe"));
@@ -208,7 +208,7 @@ describe("LearnScrumEmbedPanel", () => {
     rerender(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/?v=2"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/?v=2"
       />,
     );
     expect(screen.getByTestId("learn-embed-loading")).toBeInTheDocument();
@@ -218,7 +218,7 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     expect(screen.getByTestId("learn-embed-loading")).toBeInTheDocument();
@@ -248,7 +248,7 @@ describe("LearnScrumEmbedPanel", () => {
     render(
       <LearnScrumEmbedPanel
         locale="en"
-        embedUrl="https://sdd.works/en/learn-embedded/"
+        embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
     );
     const iframe = iframeInLatestPanel();

@@ -31,7 +31,7 @@ export function getSddServerUrl(): string {
   return (
     process.env.SDD_SERVER_URL?.trim() ||
     process.env.PUBLIC_BASE_URL?.trim() ||
-    "https://framework.sdd.works"
+    "https://sdd.works"
   );
 }
 

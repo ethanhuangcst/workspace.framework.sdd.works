@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "node_lts": "22.14.0",
+  "downloads": {
+    "darwin-arm64": "https://nodejs.org/dist/v22.14.0/node-v22.14.0.pkg",
+    "darwin-x64": "https://nodejs.org/dist/v22.14.0/node-v22.14.0.pkg",
+    "win32-x64": "https://nodejs.org/dist/v22.14.0/node-v22.14.0-x64.msi"
+  },
+  "npm_registries": {
+    "default": "https://registry.npmjs.org",
+    "cn_hk": "https://registry.npmmirror.com"
+  }
+}

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Evaluate **Web-portal-36** **`internal_page_folder`** UX before production: index-driven listing, subfolders, **`same_tab`** vs **`new_tab`** rows.
+Human-readable preview of the **Knowledge** tab ([Web-portal-36](../../product-backlog.md#pb-133), **feature-74**): browse pack folders and articles, path trail navigation, open in tab vs new window.
 
 **Status:** Mockup confirmed 2026-10-08 (path trail revision). Engineering specs: [ADR-124](../../adr/ADR-124-internal-page-folder-index-json.md), admin-portal **AC38**, **app-design** Internal page folder, **app-tests** §27.
 

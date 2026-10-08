@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "sentences": {
+    "lite_install": "Fetch and execute the setup instructions from {origin}/setup/install",
+    "node_prerequisite": "Fetch and execute the setup instructions from {origin}/setup/node"
+  }
+}

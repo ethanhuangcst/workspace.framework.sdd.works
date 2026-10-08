@@ -6,7 +6,9 @@ Accepted (2026-10-08). Mockup [`16-knowledge-folder-spike.html`](../admin-portal
 
 ## Context
 
-Instructions tabs already support `content` rows with per-locale `paths` ([ADR-071](./ADR-071-portal-content-paths.md)). [Web-portal-36](../product-backlog.md#pb-133) adds tab type **`internal_page_folder`**: a **`rootPath`** (for example `content/knowledge/`) and a browsable tree. Each folder may ship **`.index.json`** that lists subfolders and markdown articles and how each entry opens.
+**Plain terms:** The Knowledge tab is a small file browser inside the instructions page. The pack lists folders and articles in JSON index files; the portal renders lists, a path trail, and markdown articles ([Web-portal-36](../product-backlog.md#pb-133), [feature-74](../sprint-backlog.md#sprint-9)).
+
+Instructions tabs already support `content` rows with per-locale `paths` ([ADR-071](./ADR-071-portal-content-paths.md)). Tab type **`internal_page_folder`** uses a **`rootPath`** (for example `content/knowledge/`) and a browsable tree. Each folder may ship **`.index.json`** that lists subfolders and markdown articles and how each entry opens.
 
 Pack spike: [`pack.framework.sdd.works/content/knowledge/.index.json`](../../pack.framework.sdd.works/content/knowledge/.index.json).
 

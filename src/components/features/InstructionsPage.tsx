@@ -22,11 +22,15 @@ export function InstructionsPage({
   onLocaleChange,
   tabs,
   activeQueryParam: activeFromServer = "setup",
+  setupPromptSentence,
+  nodePrerequisiteSentence,
 }: {
   locale: Locale;
   onLocaleChange: (locale: Locale) => void;
   tabs: InstructionsPageTab[];
   activeQueryParam?: string;
+  setupPromptSentence: string;
+  nodePrerequisiteSentence: string;
 }) {
   const pathname = usePathname() || "/";
   const setupQueryParam =
@@ -105,7 +109,11 @@ export function InstructionsPage({
             data-testid={tab.panelTestId}
           >
             {tab.type === "code" && tab.id === "setup" ? (
-              <SetupGuidePanel locale={locale} />
+              <SetupGuidePanel
+                locale={locale}
+                setupPromptSentence={setupPromptSentence}
+                nodePrerequisiteSentence={nodePrerequisiteSentence}
+              />
             ) : null}
             {tab.type === "embedded_external_page" && tab.embedUrl ? (
               <LearnScrumEmbedPanel locale={locale} embedUrl={tab.embedUrl} />

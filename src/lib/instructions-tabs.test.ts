@@ -97,7 +97,7 @@ describe("resolveInstructionsTabs", () => {
     const learn = result.tabs.find((t) => t.id === "learn-scrum-in-sdd");
     expect(learn?.type).toBe("embedded_external_page");
     expect(learn?.label).toBe("Learn Scrum in SDD");
-    expect(learn?.embedUrl).toBe("https://sdd.works/en/learn-embedded/");
+    expect(learn?.embedUrl).toBe("https://learn.sdd.works/en/learn-embedded/");
     expect(learn).not.toHaveProperty("labelKey");
     const knowledge = result.tabs.find((t) => t.id === "knowledge");
     expect(knowledge?.type).toBe("internal_page_folder");

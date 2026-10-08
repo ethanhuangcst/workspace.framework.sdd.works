@@ -2,7 +2,7 @@ import { messages } from "./messages";
 
 export type Locale = "en" | "zh-Hans" | "zh-Hant";
 
-export const HOST = "framework.sdd.works";
+export const HOST = "sdd.works";
 
 export const LOCALE_HTML_LANG: Record<Locale, string> = {
   en: "en",

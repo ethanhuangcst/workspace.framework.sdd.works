@@ -5,24 +5,31 @@ import {
   isLocalMcpDev,
 } from "@/mcp/brand";
 
-const PROD_MCP = "https://framework.sdd.works/mcp";
-const PROD_ORIGIN = "https://framework.sdd.works";
+const PROD_MCP = "https://sdd.works/mcp";
+const PROD_ORIGIN = "https://sdd.works";
+const LEGACY_ORIGIN = "https://framework.sdd.works";
+const LEGACY_MCP = `${LEGACY_ORIGIN}/mcp`;
 
 /** Substitute production MCP URL and site origin for local / alternate bases. */
 export function rewriteSetupMarkdownOrigins(template: string): string {
   const mcpUrl = getMcpHttpUrl();
   const setupUrl = getAgentSetupUrl();
   const website = getMcpWebsiteUrl().replace(/\/$/, "");
-  let body = template.replaceAll(PROD_MCP, mcpUrl);
+  let body = template
+    .replaceAll(PROD_MCP, mcpUrl)
+    .replaceAll(LEGACY_MCP, mcpUrl);
 
   if (isLocalMcpDev()) {
     // Pack base and leftover production origin only — do not touch GitHub release hosts.
-    body = body.replaceAll(PROD_ORIGIN, website);
+    body = body
+      .replaceAll(PROD_ORIGIN, website)
+      .replaceAll(LEGACY_ORIGIN, website);
   } else {
-    body = body.replaceAll(
-      "https://framework.sdd.works/agent-setup",
-      setupUrl,
-    );
+    body = body
+      .replaceAll("https://sdd.works/agent-setup", setupUrl)
+      .replaceAll(`${LEGACY_ORIGIN}/agent-setup`, setupUrl)
+      .replaceAll(PROD_ORIGIN, website)
+      .replaceAll(LEGACY_ORIGIN, website);
   }
 
   return body;

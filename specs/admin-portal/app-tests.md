@@ -57,7 +57,11 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | `GET /api/sdd/features` (feature-07) | Cache `en` returns that file’s HTML with `source` `cache`; cache `zh-Hans` returns the Chinese file when present; missing cache `zh-Hant` returns cache English HTML, `source` `cache`, and `sourceLocale` `en`; no cache English file returns the package file with `source` `package`; response has no key values; raw HTML in the file is escaped |
 | `GET /api/sdd/lite/files` (feature-55) | With fixture unpack + valid `lite-pack.allowlist.json` at pack root: 200; body has `package_version`, `package_commit`, sorted `files`, and `downloads` with same-origin `url` per path; no GitHub fetch. Empty cache manifest → 409 `sync_pending`. Unpack without allow-list file → `lite_manifest_missing`. Bad allow-list (unsorted skills, missing file on disk, disallowed path) → `lite_manifest_invalid`; no `downloads`. |
 | `GET /api/sdd/lite/file` (feature-55) | Allow-listed path → 200 and bytes match unpack file. Path not in allow-list → `path_not_allowed`. `../` or absolute path → `path_invalid`. |
-| `GET /setup/install` (feature-56) | Public rewrite → install handler: 200, `Content-Type` includes `text/markdown`. Body matches `public/agent-setup/install.md` after local origin rewrite. Body includes `LITE_PARTNER_SETUP_SENTENCE`, lite file list route, per-file download route, `{client_root}`, `.sdd-lite-installed.json` / receipt merge, and excludes `sdd_install_framework` and `.sdd-installed.json`. With fixture cache, body references `GET /api/sdd/lite/files`. No admin session. |
+| `GET /setup/install` (feature-56) | Public rewrite → install handler: 200, `Content-Type` includes `text/markdown`. Body matches `public/agent-setup/install.md` after local origin rewrite. Body includes **`lite_install`** paste text from [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) (or legacy `LITE_PARTNER_SETUP_SENTENCE` until feature-88), lite file list route, per-file download route, `{client_root}`, `.sdd-lite-installed.json` / receipt merge, and excludes `sdd_install_framework` and `.sdd-installed.json`. With fixture cache, body references `GET /api/sdd/lite/files`. No admin session. |
+| `paste-sentences.json` (feature-88) | File exists with `version` 1 and keys `lite_install`, `node_prerequisite`. Loader substitutes `{origin}`. Unit: resolved strings match **AC47**. `LITE_PARTNER_SETUP_SENTENCE` equals `lite_install` for production origin after refactor. |
+| `GET /setup/node` (feature-88) | Public rewrite → node handler: 200 markdown; body matches `public/agent-setup/node.md` after origin rewrite; includes catalog route, registry probe, hello check, authorization boundary; excludes MCP and lite copy. **AC45**. |
+| `GET /api/setup/node/catalog` (feature-88) | 200 JSON with `node_lts`, platform `downloads`, `npm_registries.default` and `cn_hk`; HTTPS URLs only; no admin session. **AC46**. |
+| Setup `copy-node-setup-prompt` (feature-88) | Component or E2E: copies `node_prerequisite` for active public origin; i18n section title and lead present. **AC47**. |
 | `GET /setup` (feature-56 regression) | Still 200 stdio-primary markdown from `prompt.md`; body is not `install.md`. |
 | `GET /api/sdd/instructions-tabs` (feature-59) | Cache `content/.instructions-tabs.json` valid → 200; `tabs` order matches file; `setup` code tab present; each `content` tab has `html` for `locale=en` from cache path; top-level `source` `cache`. Missing or invalid cache file → 200 from bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) only; top-level `source` `bundled`. Duplicate `queryParam` or unknown `code.id` → bundled fallback. Content path `../` → bundled fallback. Missing zh path → `sourceLocale` `en` for that tab. Per-tab markdown uses `contentSource` `cache` or `package` like Features. No GitHub fetch; no key values |
 | Instructions tabs resolver (feature-58 / feature-59) | Unit: parse and validate schema v1; reject empty `tabs`, duplicate `id` / `queryParam`, disallowed `code.id`, content row without `paths.en`, unsafe paths. Path values are relative to sync unpack root (`content/features/…`). File-existence checks use that root (fixture unpack or `pack.framework.sdd.works/`). Runtime package fallback maps those paths under `src/content/` (same as Features) |
@@ -412,9 +416,9 @@ Run before **Web-portal-35** is **Done**. [ADR-122](../adr/ADR-122-instructions-
 - [ ] No regression on ADR-111 sticky header or ADR-115 secret on Learn only
 - [ ] No console or server error on `/instructions`
 
-## 26. Regression after ADR-123 / WA-18 (unified guide markdown body)
+## 26. Regression after ADR-123 / feature-77 (same look for every markdown tab)
 
-Run before [WA-18](../issues-log.md) closes. AC37. Mockup approved before production. [ADR-123](../adr/ADR-123-unified-guide-markdown-body.md).
+**What this proves:** Features, Scrum, help, and future markdown tabs share one table and heading style ([WA-18](../issues-log.md)). Run before [WA-18](../issues-log.md) closes. AC37. Mockup approved before production. [ADR-123](../adr/ADR-123-unified-guide-markdown-body.md).
 
 | Layer | Check |
 | --- | --- |
@@ -429,9 +433,9 @@ Run before [WA-18](../issues-log.md) closes. AC37. Mockup approved before produc
 - [ ] `instructions-tabs.test.ts` expects Features HTML to include `content-table`
 - [ ] No horizontal scroll regression (AC27 / §19)
 
-## 27. Regression after ADR-124 / feature-74 (Knowledge folder tab)
+## 27. Regression after ADR-124 / feature-74 (Knowledge tab — folder browser)
 
-Run before Knowledge path-nav revision closes (feature-74 follow-on). AC38. Mockup path trail confirmed 2026-10-08.
+**What this proves:** The Knowledge tab lists pack folders and articles, path links work, and articles use the shared markdown body. Run before **feature-74** / [Web-portal-36](../product-backlog.md#pb-133) is **Done**. AC38. Mockup path trail confirmed 2026-10-08.
 
 | Layer | Check |
 | --- | --- |
@@ -469,9 +473,9 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 - [ ] No regression on Framework tree (§3–§4) or Settings save
 - [ ] No console or server error on Admin note happy path
 
-## 29. Regression after ADR-127 / feature-72 (public hostnames)
+## 29. Regression after ADR-127 / feature-72 (portal on sdd.works, course on learn.sdd.works)
 
-Run before **Web-portal-30** / **feature-72** is **Done**. **AC44** in [`app-stories.md`](./app-stories.md). [ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md). Operator DNS and WordPress **`frame-ancestors`** are prerequisites for browser iframe checks in production.
+**What this proves:** After cutover, the guide and setup live on **`sdd.works`**, the Learn iframe loads **`learn.sdd.works`**, and old **`framework.sdd.works`** URLs redirect. Run before **Web-portal-30** / **feature-72** is **Done**. **AC44** in [`app-stories.md`](./app-stories.md). [ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md). Operator DNS and WordPress **`frame-ancestors`** are prerequisites for browser iframe checks in production.
 
 | Layer | Check |
 | --- | --- |
@@ -492,3 +496,55 @@ Run before **Web-portal-30** / **feature-72** is **Done**. **AC44** in [`app-sto
 - [ ] Redirect **`framework.sdd.works`** → **`sdd.works`** verified in staging or production
 - [ ] WordPress **`learn-embedded`** allows portal **`frame-ancestors`**
 - [ ] No regression on Learn loading (§21–§23) or secret on Learn (§18)
+
+## 31. Checklist for feature-84 / Web-portal-20 (one official public URL)
+
+**What this proves:** Operators and copy agree on **`sdd.works`** as the visitor entry after cutover. Mostly documentation; re-run after **feature-72** ships.
+
+| Check | Method |
+| --- | --- |
+| Go-live doc names canonical hosts | Read release / go-live notes |
+| Setup paste uses **`sdd.works`** only | **AC48**; §29 component checks |
+| No durable second hostname in lite partner sentence | [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) after cutover |
+
+- [ ] **AC48** scenarios reviewed with operator
+- [ ] Redirect **`framework.sdd.works`** → **`sdd.works`** documented and verified in staging or production
+
+## 32. Checklist for feature-85 / Web-portal-22 (admin off public guide URL)
+
+**What this proves:** The public guide URL is not the only documented path to operator tools. Routing matches **AC49**.
+
+| Check | Method |
+| --- | --- |
+| Routing doc separates **`sdd.works`** guide from admin entry | Operator doc review |
+| `/login` and `/admin` still require auth | Existing auth tests / manual |
+| Guide tabs expose no admin secrets | §18 and public API smoke |
+
+- [ ] **AC49** scenarios reviewed with operator
+- [ ] Footer admin link behavior documented (new tab vs same host)
+
+## 33. Checklist for feature-83 / Web-portal-21 (partner install-first landing)
+
+**What this proves:** Partner marketing site foregrounds install; framework portal **`/`** stays the instructions guide.
+
+| Check | Method |
+| --- | --- |
+| Partner landing CTA points at setup markdown or lite sentence | Partner site review (out of this repo) |
+| Partner links to **`sdd.works`** instructions guide | Manual link check |
+| Framework **`/`** still renders instructions guide | **AC50**; existing `/` tests |
+
+- [ ] **AC50** scenarios accepted for partner property
+- [ ] No regression on framework portal home (§25 hero / Setup)
+
+## 30. Regression after feature-88 (Node setup and paste sentences)
+
+Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** in [`app-stories.md`](./app-stories.md).
+
+- [ ] `public/agent-setup/paste-sentences.json` validates; loader resolves **lite_install** and **node_prerequisite**
+- [ ] `GET /setup/node` returns 200 markdown per **AC45**; no MCP or lite instructions in body
+- [ ] `GET /api/setup/node/catalog` returns 200 JSON per **AC46**
+- [ ] `GET /setup/install` and `GET /setup` unchanged except lite paste text may come from JSON (**AC21** parity)
+- [ ] Setup has **`copy-node-setup-prompt`** and still has no **`copy-lite-setup-prompt`**
+- [ ] **`copy-setup-prompt`** still copies full MCP `/setup` sentence
+- [ ] No admin session required for node markdown or catalog routes
+- [ ] No console or server error on these paths

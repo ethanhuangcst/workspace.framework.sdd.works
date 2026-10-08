@@ -10,9 +10,11 @@ import {
 } from "./learn-embed-messaging";
 
 describe("learn-embed-messaging", () => {
-  it("should_accept_sdd_works_origins", () => {
-    expect(isAllowedLearnEmbedMessageOrigin("https://sdd.works")).toBe(true);
-    expect(isAllowedLearnEmbedMessageOrigin("https://www.sdd.works")).toBe(true);
+  it("should_accept_learn_sdd_works_origins", () => {
+    expect(isAllowedLearnEmbedMessageOrigin("https://learn.sdd.works")).toBe(true);
+    expect(isAllowedLearnEmbedMessageOrigin("https://www.learn.sdd.works")).toBe(
+      true,
+    );
   });
 
   it("should_reject_other_origins", () => {

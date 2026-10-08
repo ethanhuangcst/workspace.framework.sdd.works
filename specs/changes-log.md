@@ -8,6 +8,22 @@
 
 ## 2026-10-08
 
+### Plain-language rewrite: feature-74, 77, 83–85, 72
+
+**Why**: Sprint ToDo items (Knowledge tab, unified markdown, hostname split, partner landing) were hard to read in backlog and portal specs.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) Requirements and table descriptions for [Web-portal-36](./product-backlog.md#pb-133) through [Web-portal-22](./product-backlog.md#pb-108). [`sprint-backlog.md`](./sprint-backlog.md) SBI titles. [`admin-portal/app-stories.md`](./admin-portal/app-stories.md) **AC37**, **AC38**, **AC44** summaries plus **AC48**–**AC50**. [`admin-portal/app-design.md`](./admin-portal/app-design.md) reader summaries and public-site subsections. [`admin-portal/app-tests.md`](./admin-portal/app-tests.md) §26–§27, §29, new §31–§33. [ADR-123](./adr/ADR-123-unified-guide-markdown-body.md), [ADR-124](./adr/ADR-124-internal-page-folder-index-json.md), [ADR-127](./adr/ADR-127-public-hostnames-sdd-and-learn.md) plain-term intros.
+
+**Verification**: Grep `Plain summary` / `Reader summary` under `specs/admin-portal/`; product table rows 74–76, 85, 91–92 use human descriptions.
+
+### Close confirm: feature-87 (Web-portal-26)
+
+**Why**: User confirmed Admin note on Framework usable after implementation.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) moves **feature-87** to Sprint 9 **Done**. [`product-backlog.md`](./product-backlog.md) sets [Web-portal-26](./product-backlog.md#pb-123) **Done**. [`status.md`](./status.md) Sprint 9 SBI counts. Code: [`admin-note.ts`](../src/lib/admin-note.ts), `GET /api/admin/admin-note`, [`FrameworkView.tsx`](../src/components/features/FrameworkView.tsx), `.floating-frame` in [`portal.css`](../src/styles/portal.css).
+
+**Verification**: `npx vitest run src/lib/admin-note.test.ts src/app/api/admin/admin-note/route.test.ts src/components/features/FrameworkView.test.tsx` (11 passed). Browser confirm by user.
+
 ### feature-72 spec-to-build (Web-portal-30 / ADR-127)
 
 **Why**: Hostname cutover and Learn embed on `learn.sdd.works` need one ADR and testable AC before implementation.

@@ -9,10 +9,14 @@ export function InstructionsClient({
   initialLocale,
   tabs,
   activeQueryParam = "setup",
+  setupPromptSentence,
+  nodePrerequisiteSentence,
 }: {
   initialLocale: Locale;
   tabs: InstructionsPageTab[];
   activeQueryParam?: string;
+  setupPromptSentence: string;
+  nodePrerequisiteSentence: string;
 }) {
   const [, startTransition] = useTransition();
 
@@ -34,6 +38,8 @@ export function InstructionsClient({
       onLocaleChange={onLocaleChange}
       tabs={tabs}
       activeQueryParam={activeQueryParam}
+      setupPromptSentence={setupPromptSentence}
+      nodePrerequisiteSentence={nodePrerequisiteSentence}
     />
   );
 }

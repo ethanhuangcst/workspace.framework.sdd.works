@@ -67,9 +67,9 @@
       "queryParam": "learn-scrum-in-sdd",
       "panelTestId": "panel-learn-scrum",
       "urls": {
-        "en": "https://sdd.works/en/learn-embedded/",
-        "zh-Hans": "https://sdd.works/en/learn-embedded/",
-        "zh-Hant": "https://sdd.works/en/learn-embedded/"
+        "en": "https://learn.sdd.works/en/learn-embedded/",
+        "zh-Hans": "https://learn.sdd.works/en/learn-embedded/",
+        "zh-Hant": "https://learn.sdd.works/en/learn-embedded/"
       }
     }
   ]

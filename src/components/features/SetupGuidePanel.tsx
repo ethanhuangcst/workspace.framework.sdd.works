@@ -3,9 +3,6 @@
 import { t, type Locale } from "@/i18n/t";
 import { CopyButton } from "@/components/ui/CopyButton";
 
-const SETUP_SENTENCE =
-  "Fetch and execute the setup instructions from https://framework.sdd.works/setup";
-
 const INSTALL_CMD = "sdd_install_framework";
 const AGENT_LOGOS = [
   { src: "/guide/claude.png", alt: "Claude" },
@@ -65,7 +62,15 @@ function CmdBlock({
   );
 }
 
-export function SetupGuidePanel({ locale }: { locale: Locale }) {
+export function SetupGuidePanel({
+  locale,
+  setupPromptSentence,
+  nodePrerequisiteSentence,
+}: {
+  locale: Locale;
+  setupPromptSentence: string;
+  nodePrerequisiteSentence: string;
+}) {
   return (
     <>
       <section className="guide-section" id="setup">
@@ -75,7 +80,7 @@ export function SetupGuidePanel({ locale }: { locale: Locale }) {
           </p>
           <CopyButton
             className="setup-pill"
-            value={SETUP_SENTENCE}
+            value={setupPromptSentence}
             label={
               <>
                 <span className="setup-pill-text">
@@ -111,6 +116,38 @@ export function SetupGuidePanel({ locale }: { locale: Locale }) {
               testid="copy-install-cmd"
             />
           </div>
+        </div>
+
+        <div className="setup-card setup-node-card">
+          <h2 className="section-subtitle">
+            {t(locale, "admin.guide.setup_node_section_title")}
+          </h2>
+          <p className="setup-node-lead">
+            {t(locale, "admin.guide.setup_node_section_lead")}
+          </p>
+          <CopyButton
+            className="setup-pill"
+            value={nodePrerequisiteSentence}
+            label={
+              <>
+                <span className="setup-pill-text">
+                  {t(locale, "admin.guide.copy_node_prompt")}
+                </span>
+                <span className="setup-pill-divider" aria-hidden="true" />
+                <AgentToolIcons />
+              </>
+            }
+            copiedLabel={
+              <>
+                <span className="setup-pill-text">
+                  {t(locale, "admin.common.copied")}
+                </span>
+                <span className="setup-pill-divider" aria-hidden="true" />
+                <AgentToolIcons />
+              </>
+            }
+            data-testid="copy-node-setup-prompt"
+          />
         </div>
       </section>
 

@@ -1,6 +1,6 @@
 import { EMBED_PAGE_HOST_ALLOWLIST } from "@/lib/embed-page-host-allowlist";
 
-/** postMessage payload type from sdd.works learn-embedded (ADR-114). */
+/** postMessage payload type from learn.sdd.works learn-embedded (ADR-114, ADR-127). */
 export const LEARN_EMBED_HEIGHT_MESSAGE_TYPE = "sdd-learn-embed-height";
 
 export const LEARN_EMBED_FALLBACK_TIMEOUT_MS = 2000;
@@ -53,7 +53,7 @@ export function computeLearnEmbedFallbackHeightPx(viewportHeight: number): numbe
   );
 }
 
-/** sdd.works learn-embedded portfolio tiles (500×375 PNGs, 3×3 grid). */
+/** learn.sdd.works learn-embedded portfolio tiles (500×375 PNGs, 3×3 grid). */
 export const LEARN_EMBED_GRID_ROWS = 3;
 export const LEARN_EMBED_GRID_COLS = 3;
 export const LEARN_EMBED_TILE_WIDTH_PX = 500;

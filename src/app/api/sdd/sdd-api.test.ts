@@ -17,7 +17,9 @@ import { GET as getLiteFiles } from "./lite/files/route";
 import { GET as getLiteFile } from "./lite/file/route";
 import { GET as getAgentSetup } from "../agent-setup/route";
 import { GET as getLiteInstallSetup } from "../agent-setup/install/route";
-import { LITE_PARTNER_SETUP_SENTENCE } from "@/mcp/brand";
+import { getLitePartnerSetupSentence } from "@/mcp/brand";
+import { GET as getNodeSetup } from "../agent-setup/node/route";
+import { GET as getNodeCatalog } from "../setup/node/catalog/route";
 import { LITE_PACK_ALLOWLIST_FILENAME } from "@/core/seeds/lite-install-manifest";
 import {
   MANIFEST_FILENAME,
@@ -104,7 +106,7 @@ describe("SDD package API", () => {
       expect(body).toContain("~/.sdd/sdd-mcp");
       expect(body).toContain("command");
       expect(body).toContain("SDD_SERVER_URL");
-      expect(body).toContain("https://framework.sdd.works/mcp");
+      expect(body).toContain("https://sdd.works/mcp");
       expect(body).toContain("sdd_install_framework");
       expect(body).toContain("2026-09-26.v5");
       expect(body).toContain(
@@ -134,10 +136,10 @@ describe("SDD package API", () => {
       expect(res.headers.get("Content-Type")).toContain("text/markdown");
       const body = await res.text();
       expect(body).toContain("Lite install version: 2026-10-07.v1");
-      expect(body).toContain(LITE_PARTNER_SETUP_SENTENCE);
+      expect(body).toContain(getLitePartnerSetupSentence());
       expect(body).toContain("Partner site one-line prompt");
-      expect(body).toContain("GET https://framework.sdd.works/api/sdd/lite/files");
-      expect(body).toContain("GET https://framework.sdd.works/api/sdd/lite/file?path=");
+      expect(body).toContain("GET https://sdd.works/api/sdd/lite/files");
+      expect(body).toContain("GET https://sdd.works/api/sdd/lite/file?path=");
       expect(body).toContain("{client_root}");
       expect(body).toContain(".sdd-lite-installed.json");
       expect(body).toContain("skills/");
@@ -151,6 +153,40 @@ describe("SDD package API", () => {
     }
   });
 
+  it("should_return_node_setup_markdown", async () => {
+    const prevBase = process.env.PUBLIC_BASE_URL;
+    delete process.env.PUBLIC_BASE_URL;
+    try {
+      const res = await getNodeSetup();
+      expect(res.status).toBe(200);
+      expect(res.headers.get("Content-Type")).toContain("text/markdown");
+      const body = await res.text();
+      expect(body).toContain("Node setup version: 2026-10-08.v1");
+      expect(body).toContain("GET https://sdd.works/api/setup/node/catalog");
+      expect(body).toContain("node_prerequisite");
+      expect(body).toContain('node -e "console.log(\'hello\')"');
+      expect(body).toContain("It does not authorize you to:");
+      expect(body).not.toContain("GET /api/sdd/lite/files");
+    } finally {
+      if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
+      else process.env.PUBLIC_BASE_URL = prevBase;
+    }
+  });
+
+  it("should_return_node_setup_catalog_json", async () => {
+    const res = await getNodeCatalog();
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      node_lts: string;
+      downloads: Record<string, string>;
+      npm_registries: { default: string; cn_hk: string };
+    };
+    expect(body.node_lts).toBeTruthy();
+    expect(body.downloads["darwin-arm64"]).toMatch(/^https:\/\//);
+    expect(body.npm_registries.default).toBe("https://registry.npmjs.org");
+    expect(body.npm_registries.cn_hk).toBe("https://registry.npmmirror.com");
+  });
+
   it("should_rewrite_lite_install_origin_when_public_base_is_local", async () => {
     const prevBase = process.env.PUBLIC_BASE_URL;
     process.env.PUBLIC_BASE_URL = "http://127.0.0.1:3040";
@@ -160,7 +196,7 @@ describe("SDD package API", () => {
       const body = await res.text();
       expect(body).toContain("GET http://127.0.0.1:3040/api/sdd/lite/files");
       expect(body).toContain("GET http://127.0.0.1:3040/api/sdd/lite/file?path=");
-      expect(body).not.toContain("https://framework.sdd.works/api/sdd/lite/files");
+      expect(body).not.toContain("https://sdd.works/api/sdd/lite/files");
     } finally {
       if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
       else process.env.PUBLIC_BASE_URL = prevBase;
@@ -281,7 +317,8 @@ describe("GET /api/sdd/features", () => {
       html: string;
     };
     expect(body.source).toBe("package");
-    expect(body.html).toContain('class="feature-name">ethan</span>');
+    expect(body.html).toContain("ethan");
+    expect(body.html).toContain("Local Scrum in SDD coach");
   });
 
   it("should_escape_raw_html_in_response", async () => {
