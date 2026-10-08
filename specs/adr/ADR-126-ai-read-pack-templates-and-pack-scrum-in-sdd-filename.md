@@ -46,6 +46,18 @@ Portal and Features copy may still say “Scrum in SDD guide” in prose. The **
 
 `artifacts-map.json` on a project remains a core artifact alongside the **guide** and **practices** roles. The installed guide file is **`pack-scrum-in-sdd.md`**, not `scrum-in-sdd.md`. Update living references in pack seeds, `ethan.md`, skills, and specs in the OGT that implements this ADR.
 
+### Living files still on the old path
+
+These files still describe the trio as under `templates/EN/` or still link `specs/framework/seeds/templates/EN/sdd-scrum-practices.md`. Retarget them before OGT #8 closes. Closed rows in `specs/sprint-backlog.md` and dated entries in `specs/changes-log.md` stay as written.
+
+| File | What is stale |
+| --- | --- |
+| `src/content/.admin-note.md` | Pack install tree lists `constants.json` then `templates/EN/` only. It omits `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `coach-knowledge.md`. |
+| `pack.framework.sdd.works/content/.admin-note.md` | Same pack install tree. `.pack-repo-scope-readme.md` already lists the trio. |
+| `specs/admin-portal/app-design.md` | Guide tab row says the AI-read file is `templates/EN/pack-scrum-in-sdd.md`. |
+| `specs/adr/ADR-060-constants-on-client-root.md` | Practices link points at `specs/framework/seeds/templates/EN/sdd-scrum-practices.md`. |
+| `specs/adr/ADR-088-mvp-plan-names-coarse-pbi.md` | Practices links point at `specs/framework/seeds/templates/EN/sdd-scrum-practices.md`. |
+
 ### Semantic sync
 
 Human EN and `pack-scrum-in-sdd.md` stay semantically aligned (section order, terms). They are not byte-identical. Maintainers use **`sdd-guide-editor`** ([ADR-125](./ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md)).
@@ -57,7 +69,7 @@ Human EN and `pack-scrum-in-sdd.md` stay semantically aligned (section order, te
 
 ## Consequences
 
-- OGT on `status.md`: rewrite **`pack-scrum-in-sdd.md`**, move practices and coach beside constants, retarget links, update install and ledger paths, and adjust `rebuild-scrum-in-sdd-en.mjs` so `--index-only` writes human paths only.
+- OGT on `status.md`: rewrite **`pack-scrum-in-sdd.md`**, move practices and coach beside constants, retarget links, update install and ledger paths, and adjust `rebuild-scrum-in-sdd-en.mjs` so `--index-only` writes human paths only. The five files in **Living files still on the old path** stay open until those rows match the trio beside `constants.json`.
 - [ADR-125](./ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md), [ADR-106](./ADR-106-coach-knowledge-file.md), [ADR-109](./ADR-109-content-tab-heading-anchors.md), and [ADR-082](./ADR-082-artifacts-map-json.md) carry amendment notes or text updates for this filename split.
 
 ## Date
