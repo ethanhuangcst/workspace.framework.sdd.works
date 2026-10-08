@@ -262,6 +262,8 @@
   "admin.framework.sync_repo": "与 Git 仓库同步",
   "admin.framework.syncing": "同步中…",
   "admin.framework.cache_missing": "尚无已同步的包缓存。请与 Git 仓库同步以加载框架树。",
+  "admin.framework.admin_note_loading": "正在加载管理员说明…",
+  "admin.framework.admin_note_error": "无法加载管理员说明。",
   "admin.framework.tree_expand": "展开 {name}",
   "admin.framework.tree_collapse": "折叠 {name}",
   "admin.framework.artifacts": "framework.sdd.works 产物：",

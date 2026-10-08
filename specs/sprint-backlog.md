@@ -631,6 +631,7 @@ Depends on Sprint 7 (engineering skills and seeds).
 | 10  | feature-71 | Content tab heading anchors | [Web-portal-28 Content tab heading anchors](./product-backlog.md#L413) | Webapp/Feature | - [ADR-109](./adr/ADR-109-content-tab-heading-anchors.md)<br>- GitHub-style heading ids in content-tab renderers | **Done** |
 | 11  | feature-51 | Agent guiding proposals | [Agent-03 Guiding proposals from framework knowledge](./product-backlog.md#L73) | Agent/Feature | - [coach-knowledge.md](../pack.framework.sdd.works/templates/EN/coach-knowledge.md)<br>- [ADR-106](./adr/ADR-106-coach-knowledge-file.md)<br>- [`ethan.md`](../pack.framework.sdd.works/agents/ethan.md) Guiding proposals | **Done** |
 | 12  | task-01 | Complete Agent-02 job index in ethan.md | [Agent-02 Skill call for a named job](./product-backlog.md#L68) | Agent/Task | - [`ethan.md`](../pack.framework.sdd.works/agents/ethan.md) Jobs<br>- [`constants.json`](../pack.framework.sdd.works/templates/constants.json) `skills` keys | **Done** |
+| 13  | feature-81 | Sticky guide header | [Web-portal-29 Sticky guide header](./product-backlog.md#pb-126) | Webapp/Feature | - [ADR-111](./adr/ADR-111-guide-header-sticky.md)<br>- [`InstructionsPage.tsx`](../src/components/features/InstructionsPage.tsx)<br>- [`portal.css`](../src/styles/portal.css) `guide-sticky` | **Done** |
 
 ### **WIP**
 
@@ -681,7 +682,7 @@ No open rows.
 
 [Back to the top](#sprint-backlog-frameworksddworks)
 
-Sprint Goal: Visitors use the portal at sdd.works and the WordPress learn course at learn.sdd.works; Get secret sits on the Learn tab under the course embed; a pack-driven **Knowledge** tab can browse a folder tree via **`internal_page_folder`** ([Web-portal-36](./product-backlog.md#pb-133)).
+Sprint Goal: Visitors use the portal at sdd.works and the WordPress learn course at learn.sdd.works; Get secret sits on the Learn tab under the course embed; a pack-driven **Knowledge** tab browses a folder tree via **`internal_page_folder`** ([Web-portal-36](./product-backlog.md#pb-133)); unified **`guide-md-body`** styling ([Web-portal-37](./product-backlog.md#pb-134)); approved wordmark and guide hero land in production ([Web-portal-34](./product-backlog.md#pb-131), [Web-portal-35](./product-backlog.md#pb-132)).
 
 Depends on Sprint 8 (Learn embed tab and content tabs).
 
@@ -689,26 +690,49 @@ Depends on Sprint 8 (Learn embed tab and content tabs).
 
 ### **Done**
 
-No rows yet.
+| #   | Code       | SBI                                        | Parent PBI                                                                 | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
+| --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 1   | feature-73 | Get secret on Learn Scrum tab              | [Web-portal-31 Get secret on Learn Scrum tab](./product-backlog.md#pb-128) | Webapp/Feature | - [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md)<br>- AC31 [`app-stories.md`](./admin-portal/app-stories.md)<br>- [WA-14](./issues-log.md), [WA-15](./issues-log.md) still open | **Done** |
+| 2   | feature-75 | Learn embed loading skeleton               | [Web-portal-32 Learn embed loading skeleton](./product-backlog.md#pb-129) | Webapp/Feature | - [ADR-118](./adr/ADR-118-learn-embed-loading-skeleton.md)<br>- AC32 [`app-stories.md`](./admin-portal/app-stories.md) | **Done** |
+| 3   | feature-76 | Instructions tab labels in pack JSON       | [Web-portal-33 Instructions tab labels in pack JSON](./product-backlog.md#pb-130) | Webapp/Feature | - [ADR-119](./adr/ADR-119-instructions-tab-labels-in-pack-config.md)<br>- AC33 [`app-stories.md`](./admin-portal/app-stories.md) | **Done** |
+| 4   | feature-78 | SDD WORKS wordmark logo                    | [Web-portal-34 SDD WORKS wordmark logo](./product-backlog.md#pb-131) | Webapp/Feature | - [ADR-121](./adr/ADR-121-sdd-works-wordmark-logo.md)<br>- AC35 [`app-stories.md`](./admin-portal/app-stories.md) | **Done** |
+| 5   | feature-79 | Instructions guide hero and Setup tab      | [Web-portal-35 Instructions guide hero and Setup tab](./product-backlog.md#pb-132) | Webapp/Feature | - [ADR-122](./adr/ADR-122-instructions-guide-hero-and-setup-tab.md)<br>- AC36 [`app-stories.md`](./admin-portal/app-stories.md) | **Done** |
+| 6   | feature-86 | Reviewed full pack seeds manifest          | [Spec-seeds-17 Reviewed full pack seeds file](./product-backlog.md#pb-121) | Framework/Feature | - `npm run check:pack-seeds`<br>- [`.sdd-installed.example.json`](../pack.framework.sdd.works/.sdd-installed.example.json) | **Done** |
 
 ### **WIP**
 
-| #   | Code       | SBI                           | Parent PBI                                                               | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
-| --- | ---------- | ----------------------------- | ------------------------------------------------------------------------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | feature-73 | Get secret on Learn Scrum tab | [Web-portal-31 Get secret on Learn Scrum tab](./product-backlog.md#pb-128) | Webapp/Feature | - [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- [`LearnScrumEmbedPanel`](../../src/components/features/LearnScrumEmbedPanel.tsx)<br>- AC31 [`app-stories.md`](./admin-portal/app-stories.md)<br>- [WA-14](./issues-log.md), [WA-15](./issues-log.md) | **WIP** |
+No open rows.
 
 ### **ToDo**
 
 | #   | Code       | SBI                                        | Parent PBI                                                                 | Module/Type    | Related specs                                                                                                                                                                                                                                                          | Status   |
 | --- | ---------- | ------------------------------------------ | -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 1   | feature-72 | Hostnames learn.sdd.works and sdd.works    | [Web-portal-30 Hostnames learn.sdd.works and sdd.works](./product-backlog.md#pb-127) | Webapp/Feature | - [Web-portal-20](./product-backlog.md#pb-106)<br>- [Web-portal-09](./product-backlog.md#pb-76)<br>- [Web-portal-22](./product-backlog.md#pb-108)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- DNS, TLS, redirects, embed allowlist, setup copy URLs | **ToDo** |
-| 2   | feature-74 | Internal page folder tab                   | [Web-portal-36 Internal page folder tab](./product-backlog.md#pb-133) | Webapp/Feature | - [Web-portal-25](./product-backlog.md#pb-112)<br>- [Web-portal-24](./product-backlog.md#pb-111)<br>- [Spec-seeds-16](./product-backlog.md#pb-110)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)<br>- Pack example `content/knowledge/` + `.index.json`<br>- ADR + stories + tests via spec-to-build | **ToDo** |
-| 3   | feature-75 | Learn embed loading skeleton               | [Web-portal-32 Learn embed loading skeleton](./product-backlog.md#pb-129) | Webapp/Feature | - [ADR-118](./adr/ADR-118-learn-embed-loading-skeleton.md)<br>- [Web-portal-27](./product-backlog.md#pb-124)<br>- AC32 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
-| 4   | feature-76 | Instructions tab labels in pack JSON       | [Web-portal-33 Instructions tab labels in pack JSON](./product-backlog.md#pb-130) | Webapp/Feature | - [ADR-119](./adr/ADR-119-instructions-tab-labels-in-pack-config.md)<br>- [WA-16](./issues-log.md)<br>- [Spec-seeds-16](./product-backlog.md#pb-110)<br>- [Web-portal-25](./product-backlog.md#pb-112)<br>- AC33 [`app-stories.md`](./admin-portal/app-stories.md) | **ToDo** |
+| 1   | feature-72 | Hostnames learn.sdd.works and sdd.works    | [Web-portal-30 Hostnames learn.sdd.works and sdd.works](./product-backlog.md#pb-127) | Webapp/Feature | - [ADR-127](./adr/ADR-127-public-hostnames-sdd-and-learn.md)<br>- **AC44** [`app-stories.md`](./admin-portal/app-stories.md)<br>- [`app-tests.md`](./admin-portal/app-tests.md) §29<br>- Pack [`content/.instructions-tabs.json`](../pack.framework.sdd.works/content/.instructions-tabs.json)<br>- [Web-portal-20](./product-backlog.md#pb-106), [Web-portal-22](./product-backlog.md#pb-108) (operator policy) | **ToDo** |
+| 2   | feature-74 | Internal page folder tab                   | [Web-portal-36 Internal page folder tab](./product-backlog.md#pb-133) | Webapp/Feature | - [ADR-124](./adr/ADR-124-internal-page-folder-index-json.md)<br>- [ADR-071](./adr/ADR-071-portal-content-paths.md)<br>- Pack `content/knowledge/` + `.index.json`<br>- [`KnowledgeFolderPanel`](../../src/components/features/KnowledgeFolderPanel.tsx)<br>- Close: E2E, DoD, spec sync | **ToDo** |
+| 3   | feature-77 | Unified guide markdown body                | [Web-portal-37 Unified guide markdown body](./product-backlog.md#pb-134) | Webapp/Feature | - [ADR-123](./adr/ADR-123-unified-guide-markdown-body.md)<br>- [WA-18](./issues-log.md)<br>- [`instructions-tabs-dom.ts`](../../src/lib/instructions-tabs-dom.ts)<br>- AC37 [`app-stories.md`](./admin-portal/app-stories.md)<br>- Close: WA-18, DoD | **ToDo** |
+| 4   | feature-80 | sdd-mcp GitHub Releases                    | [MCP-06 sdd-mcp GitHub Releases](./product-backlog.md#pb-104) | MCP/Feature | - [MCP-02](./product-backlog.md#pb-75)<br>- [ADR-058](./adr/ADR-058-stdio-end-user-http-fallback.md)<br>- [`.github/workflows/release.yml`](../.github/workflows/release.yml) | **ToDo** |
+| 5   | feature-82 | Production pack sync for install           | [MCP-07 Production pack sync for install](./product-backlog.md#pb-105) | MCP/Feature | - [MCP-01](./product-backlog.md#pb-16)<br>- [Spec-seeds-15](./product-backlog.md#pb-97)<br>- [lite-pack.allowlist.json](../pack.framework.sdd.works/lite-pack.allowlist.json) | **ToDo** |
+| 6   | feature-83 | Install-first public landing               | [Web-portal-21 Install-first public landing](./product-backlog.md#pb-107) | Webapp/Feature | - [Web-portal-06](./product-backlog.md#pb-72)<br>- [Web-portal-18](./product-backlog.md#pb-99) | **ToDo** |
+| 7   | feature-84 | Canonical public hostname                  | [Web-portal-20 Canonical public hostname](./product-backlog.md#pb-106) | Webapp/Feature | - [Web-portal-30](./product-backlog.md#pb-127)<br>- [feature-72](./sprint-backlog.md#sprint-9) cutover | **ToDo** |
+| 8   | feature-85 | Admin routes off public hostname           | [Web-portal-22 Admin routes off public hostname](./product-backlog.md#pb-108) | Webapp/Feature | - [Web-portal-30](./product-backlog.md#pb-127)<br>- [feature-72](./sprint-backlog.md#sprint-9) | **ToDo** |
+| 9   | feature-87 | Admin note on Framework page               | [Web-portal-26 Pack repo file note on Admin Framework](./product-backlog.md#pb-123) | Webapp/Feature | - [`src/content/.admin-note.md`](../src/content/.admin-note.md)<br>- [`12-framework.html`](./admin-portal/ui-mockup/12-framework.html) | **ToDo** |
 
 ### Retrospective
 
-No entries yet.
+**Learnings**
+
+#### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
+- User **close confirm** after Vitest on Learn embed, instructions tabs, and pack-seed link check. [feature-73](./sprint-backlog.md#sprint-9) closed while [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open; one §19 CSS unit test still targets a removed selector ([`guide-horizontal-overflow.test.ts`](../src/styles/guide-horizontal-overflow.test.ts)).
+
+**Opportunities**
+
+#### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
+- Close or refresh open defects before the next multi-SBI batch so SBI **Done** rows do not list open WA ids.
+
+**Future actions**
+
+#### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
+- At the next touch on Learn secret CSS, align §19 tests with ADR-117 markup and re-check [WA-14](./issues-log.md) / [WA-15](./issues-log.md) in a real browser.
 
 ---
 
@@ -723,15 +747,3 @@ No entries yet.
 
 | # | Component | PBI Code | Description | Size | Related | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | framework | [i18n-03](./product-backlog.md#L304) | HanS and HanT engineering artifacts | Implementable | - [Spec-seeds-10](./product-backlog.md#L266)<br>- [Spec-seeds-11](./product-backlog.md#L268)<br>- [Spec-seeds-12](./product-backlog.md#L270)<br>- [Spec-seeds-13](./product-backlog.md#L274) | ToDo |
-| 2 | framework | [i18n-04](./product-backlog.md#L301) | HanS and HanT scrum-in-sdd.md | Implementable | - [Spec-seeds-01](./product-backlog.md#L227) | ToDo |
-| 3 | framework | [i18n-05](./product-backlog.md#L301) | HanS and HanT process template seeds | Implementable | - [Spec-seeds-05](./product-backlog.md#L247)–[Spec-seeds-08](./product-backlog.md#L255) | ToDo |
-| 4 | mcp | [MCP-06](./product-backlog.md#L325) | sdd-mcp GitHub Releases | Implementable | - [MCP-02](./product-backlog.md#L328) | ToDo |
-| 5 | mcp | [MCP-07](./product-backlog.md#L325) | Production pack sync for install | Implementable | - [MCP-01](./product-backlog.md#L318)<br>- [Spec-seeds-14](./product-backlog.md#L425) | ToDo |
-| 6 | webapp | [Spec-seeds-14](./product-backlog.md#L425) | Seed features.md under content/features | Implementable | - [Web-portal-07](./product-backlog.md#L377)<br>- [MCP-07](./product-backlog.md#L325) | ToDo |
-| 7 | webapp | [Web-portal-01](./product-backlog.md#L357) | Invoking agents, skills, and rules tab | Implementable | - [ADR-071](./adr/ADR-071-portal-content-paths.md)<br>- [Web-portal-07](./product-backlog.md#L377) | ToDo |
-| 8 | webapp | [Web-portal-21](./product-backlog.md#L438) | Install-first public landing | Implementable | - [Web-portal-06](./product-backlog.md#L372)<br>- [Web-portal-18](./product-backlog.md#L488) | ToDo |
-| 9 | webapp | [Web-portal-20](./product-backlog.md#L435) | Canonical public hostname | Implementable | - [Web-portal-09](./product-backlog.md#L430)<br>- [Web-portal-21](./product-backlog.md#L438)<br>- [Web-portal-22](./product-backlog.md#L441) | ToDo |
-| 10 | webapp | [Web-portal-22](./product-backlog.md#L441) | Admin routes off public hostname | Implementable | - [Web-portal-09](./product-backlog.md#L430)<br>- [Web-portal-20](./product-backlog.md#L435) | ToDo |
-| 11 | framework | [Spec-seeds-17](./product-backlog.md#L285) | Reviewed full pack seeds file | Implementable | - [MCP-01](./product-backlog.md#L318)<br>- [Agent-04](./product-backlog.md#L76)<br>- [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md)<br>- [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md)<br>- [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md) | ToDo |
-| 12 | webapp | [Web-portal-26](./product-backlog.md#L419) | Pack repo file note on Admin Settings | Implementable | - [ADR-107](./adr/ADR-107-lite-pack-allowlist-filename.md)<br>- [Spec-seeds-15](./product-backlog.md#L474)<br>- [Spec-seeds-18](./product-backlog.md#L482)<br>- [MCP-07](./product-backlog.md#L325) | ToDo |

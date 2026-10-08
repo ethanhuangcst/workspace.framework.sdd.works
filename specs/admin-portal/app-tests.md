@@ -40,8 +40,10 @@
 | ResetPasswordPage | After sent, link uses `admin.common.back_login` and href `/login` (WA-03). Failed request keeps the form and shows `reset-error` with a keyed message; no navigation (WA-05). Success callout uses the previous `admin.reset.sent` sentence with no `{email}`; request lead is hidden; URL has no `?email=` (WA-08 / WA-10 / Web-portal-11) |
 | Password set gate | No token + existing hash → redirect away from empty-account form; empty hash still allows set (WA-04) |
 | InstructionsPage | Tab switch Setup / Features; Features `aria-selected` and `panel-features` visibility (WA-06); copy value is the `/setup` sentence; one stdio `mcp.json`. **feature-56:** no `copy-lite-setup-prompt` on Setup; full `copy-setup-prompt` unchanged. **feature-07:** `features-body` shows fixture markdown for the active locale; a missing zh file in the cache shows the English cache file; a missing cache shows the file from `src/content/features/`; a `<script>` in the fixture is not executed; the fixed Agents / Skills / Rules / Templates lists are absent. **feature-04 / ADR-115:** `secret-lookup` is on Learn Scrum (`#learn-secret`) between iframe and fallback; Setup and Features have no `secret-lookup`; hint and button keys resolve in three locales per AC7 catalog. **feature-05 / WA-09 / WA-11 / ADR-115:** Get secret on `tab=learn-scrum-in-sdd` does not change tab; scroll into view for result or error; known, unknown, and empty cases match feature-05. **feature-60:** Tab bar order follows resolved config; load without `?tab=` selects Setup; `?tab=features` opens the content panel; each tab label uses its `labelKey`; unknown `?tab=` falls back to Setup; Setup has copy prompt only (no Get secret) |
+| **Web-portal-26** `admin-note.ts` | Cache file wins over package; missing cache reads `src/content/.admin-note.md`; HTML includes `content-table` for tables; fenced json becomes `codeblock--file`; `<script>` stripped; json pre preserves two-space indent from fixture markdown |
+| **Web-portal-26** `FrameworkView` | `framework-admin-note` visible when repo block shown; open adds `is-open` on backdrop; body has `guide-section` + `guide-md-body--prose`; Close and Escape hide modal; optional fetch error shows keyed callout |
 
-Commands: `npx vitest run src/auth src/lib src/components/features/InstructionsPage.test.ts`
+Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/components/features/FrameworkView.test.ts src/components/features/InstructionsPage.test.ts`
 
 ---
 
@@ -63,6 +65,7 @@ Commands: `npx vitest run src/auth src/lib src/components/features/InstructionsP
 | Users invite | Rate-limit invite; cannot delete self / last admin |
 | Settings | Dirty-only Save; unreachable URL does not persist |
 | Framework | Tree from SYNK cache; top-level one-level expand + indented child rows; force sync; sync error keeps shell |
+| `GET /api/admin/admin-note` (**Web-portal-26**) | No session → 401. With session + fixture unpack containing `content/.admin-note.md` → 200, `source` `cache`, `html` contains `Notes to the admin` and `content-table`. Empty/missing cache file → 200, `source` `package`, body matches bundled seed substring. Response has no session secrets |
 
 **feature-04 / feature-05:** Feature-04 is the form. Feature-05 owns the public exact-name lookup and the value / not-found / empty UI. The old feature-06 row is merged into feature-05. Those cases still describe the form on Features, which is what shipped.
 
@@ -86,6 +89,7 @@ Commands: `npx vitest run src/auth src/lib src/components/features/InstructionsP
 | Admins | Invite list; delete confirm; self/last-admin blocked |
 | Settings | Save valid URL; unreachable rejected |
 | Framework | Cache-backed tree; one-level default expand; indented child entries; dirs before files then name sort at each level; sync button; change-repo navigates; collapse/expand top-level folder; empty → Settings CTA |
+| Framework admin note (**Web-portal-26**) | Signed-in on `/admin/framework`: **Admin note** opens dialog; `framework-admin-note-body` shows pack-file table row (for example `lite-pack.allowlist.json`); json fence shows `codeblock--file` with Copy; Close returns to tree without navigation |
 | i18n | Locale switch updates chrome copy |
 
 Config: `playwright.config.ts` injects fixture `KEYS_ENCRYPTION_KEY` and `GITHUB_FIXTURE=1`.
@@ -445,3 +449,46 @@ Run before Knowledge path-nav revision closes (feature-74 follow-on). AC38. Mock
 - [ ] Broken `doc` id shows panel error, not a blank panel
 - [ ] No regression on content tabs (§26) or Learn embed (§20–§25)
 - [ ] No console or server error on Knowledge happy path
+
+## 28. Regression after Web-portal-26 (Admin note on Framework)
+
+Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories.md).
+
+| Layer | Check |
+| --- | --- |
+| Resolver | `readAdminNote`: cache `content/.admin-note.md` first; bundled `src/content/.admin-note.md` second; `source` `cache` or `package`; prose via `renderPortalMarkdown`; fences → `codeblock--file` with preserved pre indent. |
+| API | `GET /api/admin/admin-note`: 401 without session; 200 with `{ html, source }`; no locale param; no secrets in body. |
+| UI | `framework-admin-note` after sync button; `.floating-frame` inside `framework-admin-note-dialog`; `framework-admin-note-body` uses `guide-section` + `guide-md-body--prose`; literal **Admin note** and **Close**; Escape and backdrop dismiss; Copy on file fences. |
+| CSS | Copy `.floating-frame*` from mockup to `portal.css`; ADR-123 prose + ADR-117 codeblock tokens. |
+| E2E | Open note → table row from seed → json Copy does not navigate away → Close → tree present. |
+| Settings | Settings page has no inline pack note block. |
+| Mockup | [`12-framework.html`](./ui-mockup/12-framework.html), `?admin-note=1` — confirmed 2026-10-08. |
+
+- [x] User confirmed mockup before production (2026-10-08)
+- [ ] Sync then re-open shows updated markdown when cache file changes
+- [ ] No regression on Framework tree (§3–§4) or Settings save
+- [ ] No console or server error on Admin note happy path
+
+## 29. Regression after ADR-127 / feature-72 (public hostnames)
+
+Run before **Web-portal-30** / **feature-72** is **Done**. **AC44** in [`app-stories.md`](./app-stories.md). [ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md). Operator DNS and WordPress **`frame-ancestors`** are prerequisites for browser iframe checks in production.
+
+| Layer | Check |
+| --- | --- |
+| Pack JSON | `pack.framework.sdd.works/content/.instructions-tabs.json` and `src/content/.instructions-tabs.json` **`learn-scrum-in-sdd.urls.*`** are **`https://learn.sdd.works/en/learn-embedded/`**. |
+| Allowlist | `EMBED_PAGE_HOST_ALLOWLIST` includes **`learn.sdd.works`** and **`www.learn.sdd.works`**. **`sdd.works`** is not an embed host after cutover. |
+| Constants | `SDD_WORKS_LEARN_URL` (or successor) resolves to **`https://learn.sdd.works/en/learn-embedded/`**. `SDD_LEARN_SITE_URL` stays **`https://learn.sdd.works`**. |
+| Setup / MCP | `SetupGuidePanel` and **`GET /setup`** markdown use production origin **`https://sdd.works`** (`/setup`, `/mcp`, lite `/setup/install`). Default **`PUBLIC_BASE_URL`** is **`https://sdd.works`**. |
+| UI host | `layout` title and logo **`aria-label`** use **`sdd.works`**. |
+| Unit | `instructions-tabs.test.ts`, `instructions-tabs-config.test.ts`, `learn-embed-messaging.test.ts`, `sdd-works-learn-url.test.ts`, `InstructionsPage.test.tsx`, `LearnScrumEmbedPanel.test.tsx` assert new URLs and allowlist. |
+| Component | Learn iframe **`src`** and fallback **`href`** match **AC44**. Setup copy sentence uses **`sdd.works`**. |
+| Browser | On production **`https://sdd.works/?tab=learn-scrum-in-sdd`**, iframe loads **`learn.sdd.works`** embed or fallback link works. **`https://framework.sdd.works/`** redirects to **`sdd.works`**. |
+| Mockup | [`13-instructions.html`](./ui-mockup/13-instructions.html) shows post-cutover embed **`src`** and setup copy host. |
+
+- [ ] Pack and bundled instructions-tabs JSON match **AC44**
+- [ ] Validator rejects pre-cutover embed host **`sdd.works`**
+- [ ] postMessage origin gate uses **`learn.sdd.works`**
+- [ ] Setup paste and `/setup` markdown URLs use **`sdd.works`**
+- [ ] Redirect **`framework.sdd.works`** → **`sdd.works`** verified in staging or production
+- [ ] WordPress **`learn-embedded`** allows portal **`frame-ancestors`**
+- [ ] No regression on Learn loading (§21–§23) or secret on Learn (§18)

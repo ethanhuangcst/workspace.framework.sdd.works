@@ -44,6 +44,14 @@
             <div class="framework-repo-actions">
               <a class="btn btn-page" href="11-settings.html" data-i18n="admin.framework.change_repo">Change git repository in Settings</a>
               <button type="button" class="btn btn-page" data-i18n="admin.framework.sync_repo">Sync with git repository</button>
+              <button
+                type="button"
+                class="btn-text"
+                data-testid="framework-admin-note"
+                data-open-dialog="dialog-admin-note"
+              >
+                Admin note
+              </button>
             </div>
           </div>
         </div>
@@ -84,6 +92,282 @@
           </li>
         </ul>
       </main>
+    </div>
+    <div
+      class="dialog-backdrop"
+      id="dialog-admin-note"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Admin note"
+      data-testid="framework-admin-note-dialog"
+    >
+      <div class="floating-frame">
+        <div class="floating-frame__scroll">
+          <article
+            class="guide-section guide-md-body guide-md-body--prose"
+            data-testid="framework-admin-note-body"
+          >
+          <h1 id="notes-to-the-admin">Notes to the admin</h1>
+          <p>Read this note before you update framework.sdd.works</p>
+          <h2 id="how-to-update-frameworksddworks-artifacts"><strong>How to update framework.sdd.works artifacts</strong></h2>
+          <ul>
+          <li>Copy the newest framework artifacts to local framework workspace folder</li>
+          <li>Sync with Git repo (default: &quot;<a href="https://github.com/ethanhuangcst/framework.sdd.works.git">https://github.com/ethanhuangcst/framework.sdd.works.git</a>&quot;)</li>
+          <li>sdd.works web app will auto sync every 30 minutes, or manual sync on Admin portal - Framework - Sync with git repository</li>
+          </ul>
+          <h3 id="include-in-this-repository">Include in this repository</h3>
+          <h4 id="repo-root">Repo root</h4>
+          <div class="content-table"><table>
+          <thead>
+          <tr>
+          <th>#</th>
+          <th>Path</th>
+          <th>Purpose</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>1</td>
+          <td><code>lite-pack.allowlist.json</code></td>
+          <td>Lite HTTP install allow-list at pack root (ADR-107).</td>
+          </tr>
+          <tr>
+          <td>2</td>
+          <td><code>.pack-repo-scope-readme.md</code></td>
+          <td>This scope readme for pack maintainers.</td>
+          </tr>
+          <tr>
+          <td>3</td>
+          <td><code>.sdd-installed.example.json</code></td>
+          <td>Field example only. <code>pack_complete</code> is false. Not a client receipt.</td>
+          </tr>
+          <tr>
+          <td>4</td>
+          <td><code>.sdd-lite-installed.example.json</code></td>
+          <td>Field example for lite receipt shape. Not written on <code>{client_root}</code> from this repo.</td>
+          </tr>
+          </tbody></table></div>
+          <h4 id="pack-install-tree">Pack install tree</h4>
+          <div class="content-table"><table>
+          <thead>
+          <tr>
+          <th>#</th>
+          <th>Path</th>
+          <th>Purpose</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>1</td>
+          <td><code>agents/</code></td>
+          <td>Agent files copied on full MCP install.</td>
+          </tr>
+          <tr>
+          <td>2</td>
+          <td><code>skills/</code></td>
+          <td>Skill files copied on full MCP install and listed for lite install.</td>
+          </tr>
+          <tr>
+          <td>3</td>
+          <td><code>rules/</code></td>
+          <td>Rule files copied on full MCP install and listed for lite install.</td>
+          </tr>
+          <tr>
+          <td>4</td>
+          <td><code>templates/constants.json</code></td>
+          <td>Pack constants template. Not copied into the workspace.</td>
+          </tr>
+          <tr>
+          <td>5</td>
+          <td><code>templates/pack-scrum-in-sdd.md</code></td>
+          <td>AI-read Scrum in SDD guide. Beside constants; not copied into the workspace.</td>
+          </tr>
+          <tr>
+          <td>6</td>
+          <td><code>templates/sdd-scrum-practices.md</code></td>
+          <td>AI-read practices. Beside constants; not copied into the workspace.</td>
+          </tr>
+          <tr>
+          <td>7</td>
+          <td><code>templates/coach-knowledge.md</code></td>
+          <td>AI-read coach essay. Beside constants; not copied into the workspace.</td>
+          </tr>
+          <tr>
+          <td>8</td>
+          <td><code>templates/EN/</code></td>
+          <td>English process and engineering artifact templates.</td>
+          </tr>
+          <tr>
+          <td>9</td>
+          <td><code>templates/HanS/</code></td>
+          <td>Simplified Chinese process artifact templates.</td>
+          </tr>
+          <tr>
+          <td>10</td>
+          <td><code>templates/HanT/</code></td>
+          <td>Traditional Chinese process artifact templates.</td>
+          </tr>
+          </tbody></table></div>
+          <h4 id="portal-content-web-app">Portal content (web app)</h4>
+          <div class="content-table"><table>
+          <thead>
+          <tr>
+          <th>#</th>
+          <th>Path</th>
+          <th>Purpose</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>1</td>
+          <td><code>content/features/</code></td>
+          <td>Features tab markdown (ADR-071).</td>
+          </tr>
+          <tr>
+          <td>2</td>
+          <td><code>content/scrum-in-sdd/</code></td>
+          <td>Scrum in SDD tab markdown.</td>
+          </tr>
+          <tr>
+          <td>3</td>
+          <td><code>content/knowledge/</code></td>
+          <td>Spike tree for <strong><code>internal_page_folder</code></strong> (<a href="https://github.com/ethanhuangcst/framework.sdd.works/blob/main/specs/product-backlog.md#pb-133">Web-portal-36</a>): <code>.index.json</code> plus locale markdown.</td>
+          </tr>
+          <tr>
+          <td>4</td>
+          <td><code>.instructions-tabs.json</code></td>
+          <td>Instructions tab config for the portal (Spec-seeds-16).</td>
+          </tr>
+          <tr>
+          <td>5</td>
+          <td><code>.admin-note.md</code></td>
+          <td>Admin Settings note body (Web-portal-26).</td>
+          </tr>
+          </tbody></table></div>
+          <h3 id="exclude-from-this-repository">Exclude from this repository</h3>
+          <div class="content-table"><table>
+          <thead>
+          <tr>
+          <th>#</th>
+          <th>Path or pattern</th>
+          <th>Purpose</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>1</td>
+          <td>Client install ledgers</td>
+          <td>Real <code>{client_root}/.sdd-installed.json</code> or <code>.sdd-lite-installed.json</code> from a machine install.</td>
+          </tr>
+          <tr>
+          <td>2</td>
+          <td><code>pack_complete: true</code> in any committed file</td>
+          <td>Receipts are written on the client after install, not shipped in Git.</td>
+          </tr>
+          <tr>
+          <td>3</td>
+          <td>Product app tree</td>
+          <td><code>src/</code>, <code>specs/</code>, and other framework.sdd.works product repo code.</td>
+          </tr>
+          <tr>
+          <td>4</td>
+          <td>Live secrets</td>
+          <td>Real API keys in <code>.secrets</code>.</td>
+          </tr>
+          <tr>
+          <td>5</td>
+          <td>OS junk</td>
+          <td><code>.DS_Store</code> and similar.</td>
+          </tr>
+          </tbody></table></div>
+          <p>Before push: <code>npm run check:pack-seeds</code> in the product repo.</p>
+          <h2 id="how-to-customize-content-tabs-on-instructions-page"><strong>How to customize content tabs on instructions page</strong></h2>
+          <h3 id="1-prepare-content">1. Prepare content</h3>
+          <ul>
+          <li>Put markdown under <code>content/&lt;topic&gt;/</code> (for example <code>content/features/</code>, <code>content/scrum-in-sdd/</code>).</li>
+          <li>One file per locale: <code>&lt;topic&gt;.en.md</code>, <code>&lt;topic&gt;.zh-Hans.md</code>, <code>&lt;topic&gt;.zh-Hant.md</code>.</li>
+          <li>English is required. Other locales fall back to English when a file is missing.</li>
+          <li><strong>Scrum in SDD (human, this folder)</strong> files under <code>content/scrum-in-sdd/</code> are for the portal. They include an Index, must not link to product-only paths, and must read standalone. English order: Part I–III, then <strong>Appendix: Short summary of the 2020 Scrum Guide</strong>. After part, appendix, or h2 title changes, run <code>node scripts/rebuild-scrum-in-sdd-en.mjs --index-only</code> in the <strong>framework.sdd.works</strong> product repo. Index lists h1 and h2 only (<a href="https://github.com/ethanhuangcst/framework.sdd.works/blob/main/specs/adr/ADR-109-content-tab-heading-anchors.md">ADR-109</a> in the product repo).</li>
+          <li><strong>Scrum in SDD (AI-read)</strong> lives beside <code>constants.json</code> under <code>templates/</code> as <code>pack-scrum-in-sdd.md</code>, <code>sdd-scrum-practices.md</code>, and <code>coach-knowledge.md</code> (EN only; not copied into a project workspace). No Index on the guide; install-safe links only. Keep semantics aligned with human seeds (<a href="https://github.com/ethanhuangcst/framework.sdd.works/blob/main/specs/adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md">ADR-125</a>, <a href="https://github.com/ethanhuangcst/framework.sdd.works/blob/main/specs/adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md">ADR-126</a>). Use <code>.cursor/skills/sdd-guide-editor/</code> in the product repo when editing both variants.</li>
+          <li>Keep every list <strong>tight</strong> (no blank line between a bullet and its continuation) so Cursor preview renders the full file.</li>
+          </ul>
+          <h3 id="2-configure-json">2. Configure JSON</h3>
+          <ul>
+          <li>Edit <code>content/.instructions-tabs.json</code> in this repo.</li>
+          <li>Tab order is the <code>tabs</code> array. Tab titles are <code>labels</code> per locale, not portal message keys.</li>
+          <li>Types: <code>code</code> (built-in panel), <code>content</code> (<code>paths</code> from step 1), <code>embedded_external_page</code> (<code>urls</code> per locale), <strong><code>internal_page_folder</code></strong> (<code>rootPath</code> plus per-folder <code>.index.json</code>; contract <a href="https://github.com/ethanhuangcst/framework.sdd.works/blob/main/specs/adr/ADR-124-internal-page-folder-index-json.md">ADR-124</a> in the product repo).</li>
+          </ul>
+          <h3 id="internal-page-folder-spike">Internal page folder (spike)</h3>
+          <ul>
+          <li>Put a folder tree under <code>content/&lt;tree&gt;/</code> (example: <code>content/knowledge/</code>).</li>
+          <li>Each folder that appears in the UI ships <strong><code>.index.json</code></strong> (<code>version</code>, optional <code>labels</code>, <code>entries[]</code>).</li>
+          <li><strong>List headings:</strong> Every folder listing shows one panel <strong><code>h2</code></strong> from that folder’s <strong><code>.index.json</code></strong> <strong><code>labels</code></strong> (tab root and every subfolder). Put <strong><code>labels</code></strong> on the root index and on each subfolder index. Article view (<code>doc=</code>) does not show the folder <strong><code>h2</code></strong>.</li>
+          <li><strong><code>file</code></strong> entries use <strong><code>paths</code></strong> like a <code>content</code> tab (locale → <code>.md</code> relative to that folder).</li>
+          <li><strong><code>folder</code></strong> entries use <strong><code>path</code></strong> to a subfolder (relative to the current folder).</li>
+          <li>Required <strong><code>open</code></strong> on each <strong><code>file</code></strong> row: <strong><code>same_tab</code></strong> (article in the guide panel, Back button) or <strong><code>new_tab</code></strong> (listing stays; row uses external-link UI; article in a new browser tab). Folders always drill in on the same tab.</li>
+          <li>Mirror the tree to <code>src/content/</code> in the product repo when you want bundled fallback before Git sync.</li>
+          </ul>
+          <div class="codeblock codeblock--file">
+          <div class="codeblock-head">
+          <span class="codeblock-tag">json</span>
+          <button type="button" class="codeblock-copy" data-copy-from-pre="true" data-i18n="admin.keys.copy">Copy</button>
+          </div>
+          <pre class="codeblock-text mono">{
+  &quot;version&quot;: 1,
+  &quot;tabs&quot;: [
+    {
+      &quot;type&quot;: &quot;code&quot;,
+      &quot;id&quot;: &quot;setup&quot;,
+      &quot;labels&quot;: { &quot;en&quot;: &quot;Setup&quot;, &quot;zh-Hans&quot;: &quot;安装&quot;, &quot;zh-Hant&quot;: &quot;安裝&quot; },
+      &quot;queryParam&quot;: &quot;setup&quot;,
+      &quot;panelTestId&quot;: &quot;panel-setup&quot;
+    },
+    {
+      &quot;type&quot;: &quot;content&quot;,
+      &quot;id&quot;: &quot;features&quot;,
+      &quot;labels&quot;: { &quot;en&quot;: &quot;Features&quot;, &quot;zh-Hans&quot;: &quot;功能&quot;, &quot;zh-Hant&quot;: &quot;功能&quot; },
+      &quot;queryParam&quot;: &quot;features&quot;,
+      &quot;panelTestId&quot;: &quot;panel-features&quot;,
+      &quot;paths&quot;: {
+        &quot;en&quot;: &quot;content/features/features.en.md&quot;,
+        &quot;zh-Hans&quot;: &quot;content/features/features.zh-Hans.md&quot;,
+        &quot;zh-Hant&quot;: &quot;content/features/features.zh-Hant.md&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;embedded_external_page&quot;,
+      &quot;id&quot;: &quot;learn-scrum-in-sdd&quot;,
+      &quot;labels&quot;: {
+        &quot;en&quot;: &quot;Learn Scrum in SDD&quot;,
+        &quot;zh-Hans&quot;: &quot;学习 Scrum in SDD&quot;,
+        &quot;zh-Hant&quot;: &quot;學習 Scrum in SDD&quot;
+      },
+      &quot;queryParam&quot;: &quot;learn-scrum-in-sdd&quot;,
+      &quot;panelTestId&quot;: &quot;panel-learn-scrum&quot;,
+      &quot;urls&quot;: {
+        &quot;en&quot;: &quot;https://sdd.works/en/learn-embedded/&quot;,
+        &quot;zh-Hans&quot;: &quot;https://sdd.works/en/learn-embedded/&quot;,
+        &quot;zh-Hant&quot;: &quot;https://sdd.works/en/learn-embedded/&quot;
+      }
+    }
+  ]
+}
+          </pre>
+          </div>
+          <h3 id="3-optional-sync-to-product-repo">3. Optional: sync to product repo</h3>
+          <ul>
+          <li>Copy the same markdown and <code>content/.instructions-tabs.json</code> to <code>src/content/</code> in the framework.sdd.works product repo.</li>
+          <li>If you skip this step, Admin → Sync still serves tabs from this pack after push.</li>
+          <li>The portal uses the bundled <code>src/content/</code> copy only when sync cache is missing or invalid (local dev, first boot, bad cache). Then tabs and markdown can stay stale until you sync <code>src/content/</code> or fix cache.</li>
+          </ul>
+          <h3 id="4-commit-and-push">4. Commit and push</h3>
+          <ul>
+          <li>Commit in this pack repo and push to Git.</li>
+          <li>On the portal: Admin → Framework → Sync with git repository.</li>
+          <li>In the product repo, run <code>npm run check:pack-seeds</code> before you push mirrored seeds.</li>
+          </ul>
+          </article>
+        </div>
+        <div class="floating-frame__actions">
+          <button type="button" class="btn btn-page" data-close-dialog data-testid="framework-admin-note-close">Close</button>
+        </div>
+      </div>
     </div>
     <footer class="site-footer"><p data-i18n="admin.footer.copyright">copyright © Ethan Huang</p></footer>
     <script src="assets/i18n.js"></script>

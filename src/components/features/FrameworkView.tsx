@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { t, type Locale } from "@/i18n/t";
 import { Button } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Callout";
@@ -10,6 +16,7 @@ import {
   formatTopLevelDirLabel,
   topLevelDirPaths,
 } from "./framework-tree-utils";
+import { FrameworkAdminNoteDialog } from "./FrameworkAdminNoteDialog";
 
 const POLL_MS = 30_000;
 
@@ -167,12 +174,16 @@ function FrameworkPageHead({
   showRepo,
   onSync,
   syncing,
+  onOpenAdminNote,
+  adminNoteRef,
 }: {
   locale: Locale;
   source?: string;
   showRepo: boolean;
   onSync?: () => void;
   syncing?: boolean;
+  onOpenAdminNote?: () => void;
+  adminNoteRef?: RefObject<HTMLButtonElement | null>;
 }) {
   return (
     <div className="page-head">
@@ -203,6 +214,17 @@ function FrameworkPageHead({
                   : t(locale, "admin.framework.sync_repo")}
               </Button>
             ) : null}
+            {onOpenAdminNote ? (
+              <button
+                type="button"
+                ref={adminNoteRef}
+                className="btn-text"
+                data-testid="framework-admin-note"
+                onClick={onOpenAdminNote}
+              >
+                Admin note
+              </button>
+            ) : null}
           </div>
         </div>
       ) : null}
@@ -215,6 +237,13 @@ export function FrameworkView({ locale }: { locale: Locale }) {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+  const [adminNoteOpen, setAdminNoteOpen] = useState(false);
+  const [adminNoteHtml, setAdminNoteHtml] = useState<string | null>(null);
+  const [adminNoteLoading, setAdminNoteLoading] = useState(false);
+  const [adminNoteErrorKey, setAdminNoteErrorKey] = useState<string | null>(
+    null,
+  );
+  const adminNoteTriggerRef = useRef<HTMLButtonElement>(null);
 
   const load = useCallback(async (options?: { resetTreeExpansion?: boolean }) => {
     try {
@@ -276,6 +305,33 @@ export function FrameworkView({ locale }: { locale: Locale }) {
     }
   }, [load]);
 
+  const openAdminNote = useCallback(async () => {
+    setAdminNoteOpen(true);
+    if (adminNoteHtml) {
+      setAdminNoteErrorKey(null);
+      return;
+    }
+    setAdminNoteLoading(true);
+    setAdminNoteErrorKey(null);
+    try {
+      const res = await fetch("/api/admin/admin-note");
+      if (!res.ok) {
+        setAdminNoteErrorKey("admin.framework.admin_note_error");
+        return;
+      }
+      const json = (await res.json()) as { html: string };
+      setAdminNoteHtml(json.html);
+    } catch {
+      setAdminNoteErrorKey("admin.framework.admin_note_error");
+    } finally {
+      setAdminNoteLoading(false);
+    }
+  }, [adminNoteHtml]);
+
+  const closeAdminNote = useCallback(() => {
+    setAdminNoteOpen(false);
+  }, []);
+
   const toggleDir = useCallback((path: string) => {
     setExpanded((prev) => {
       const next = new Set(prev);
@@ -330,6 +386,17 @@ export function FrameworkView({ locale }: { locale: Locale }) {
         showRepo={Boolean(data.source)}
         onSync={syncRepo}
         syncing={syncing}
+        onOpenAdminNote={() => void openAdminNote()}
+        adminNoteRef={adminNoteTriggerRef}
+      />
+      <FrameworkAdminNoteDialog
+        open={adminNoteOpen}
+        locale={locale}
+        loading={adminNoteLoading}
+        errorKey={adminNoteErrorKey}
+        html={adminNoteHtml}
+        onClose={closeAdminNote}
+        returnFocusRef={adminNoteTriggerRef}
       />
       {data.error ? (
         <div data-testid="framework-error">

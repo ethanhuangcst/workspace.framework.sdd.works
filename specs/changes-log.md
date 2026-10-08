@@ -8,6 +8,46 @@
 
 ## 2026-10-08
 
+### feature-72 spec-to-build (Web-portal-30 / ADR-127)
+
+**Why**: Hostname cutover and Learn embed on `learn.sdd.works` need one ADR and testable AC before implementation.
+
+**What changed**: [ADR-127](./adr/ADR-127-public-hostnames-sdd-and-learn.md). [`app-stories.md`](./admin-portal/app-stories.md) **AC44**. [`app-tests.md`](./admin-portal/app-tests.md) §29. [`app-design.md`](./admin-portal/app-design.md) hostname and embed sections plus **feature-72** technical design. [`sprint-backlog.md`](./sprint-backlog.md) **feature-72** related specs. Mockup [`13-instructions.html`](./admin-portal/ui-mockup/13-instructions.html) post-cutover URLs.
+
+**Verification**: Read **AC44** against target pack `content/.instructions-tabs.json` URLs (`https://learn.sdd.works/en/learn-embedded/`).
+
+### Close confirm: feature-73, 75, 76, 78, 79, 86
+
+**Why**: User confirmed those six SBIs usable after Sprint 9 portal and pack-seed delivery.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) moves six rows to Sprint 9 **Done**. [`product-backlog.md`](./product-backlog.md) sets [Web-portal-31](./product-backlog.md#pb-128) through [Web-portal-35](./product-backlog.md#pb-132) and [Spec-seeds-17](./product-backlog.md#pb-121) **Done**. [`issues-log.md`](./issues-log.md) closes [WA-16](./issues-log.md). [`status.md`](./status.md) current SBI note.
+
+**Verification**: Vitest on Learn embed, instructions tabs, InstructionsPage (44 tests). `npm run check:pack-seeds` green. [WA-14](./issues-log.md) and [WA-15](./issues-log.md) remain open; one §19 CSS unit test fails on a removed selector.
+
+### Sprint 9: schedule all Unplanned PBIs
+
+**Why**: Every Implementable PBI with no sprint row should sit on the active sprint.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) sets **Sprint 9** for [MCP-06](./product-backlog.md#pb-104), [MCP-07](./product-backlog.md#pb-105), [Web-portal-20](./product-backlog.md#pb-106)–[Web-portal-22](./product-backlog.md#pb-108), [Spec-seeds-17](./product-backlog.md#pb-121), and [Web-portal-26](./product-backlog.md#pb-123). [`sprint-backlog.md`](./sprint-backlog.md) adds **feature-80**, **feature-82**–**feature-87** under [Sprint 9](./sprint-backlog.md#sprint-9). [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis) table is empty. [`status.md`](./status.md) notes zero unplanned rows.
+
+**Verification**: Product Backlog Sprint column matches Sprint 9 ToDo SBIs. Unplanned table has header only.
+
+### Unplanned PBI review (real status + table rewrite)
+
+**Why**: Unplanned PBIs still listed shipped i18n and Features seeds as open. Row text was vague on scope and dependencies.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) sets [i18n-03](./product-backlog.md#pb-69), [i18n-05](./product-backlog.md#pb-103), and [Spec-seeds-14](./product-backlog.md#pb-82) to **Done**. Requirement bullets name pack paths only (no module `{stem}-*` template seeds). [`sprint-backlog.md`](./sprint-backlog.md) [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis) is seven **ToDo** rows with clearer descriptions. [`status.md`](./status.md) unplanned count is 7.
+
+**Verification**: `pack.framework.sdd.works/templates/HanS/` and `HanT/` hold engineering and process starters. Pack and `src/content/features/` each ship three Features locale files. `rg admin-note src/app src/components` shows no Web-portal-26 UI yet.
+
+### Backlog refine accept all (eight findings)
+
+**Why**: Product table, Requirements, Unplanned PBIs, and Sprint 9 SBIs drifted after Knowledge tab layout, ADR-123 implementation, and sticky header ship.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) retires [Web-portal-01](./product-backlog.md#pb-15) in favor of [Web-portal-36](./product-backlog.md#pb-133); marks [Web-portal-29](./product-backlog.md#pb-126) **Done** on Sprint 8 with [feature-81](./sprint-backlog.md#sprint-8); adds [Web-portal-37](./product-backlog.md#pb-134) and table row 92; schedules [Web-portal-34](./product-backlog.md#pb-131) and [Web-portal-35](./product-backlog.md#pb-132) on Sprint 9. [`sprint-backlog.md`](./sprint-backlog.md) adds **feature-77**–**feature-79**, **feature-81** on Sprint 8 **Done**, drops retired rows from Unplanned PBIs (10 rows). [`status.md`](./status.md) Sprint 8/9 notes and unplanned count.
+
+**Verification**: Every Sprint 9 PBI with `Sprint 9` has a matching SBI row. No **ToDo** [Web-portal-01](./product-backlog.md#pb-15) or [i18n-04](./product-backlog.md#pb-102) in Unplanned PBIs.
+
 ### Skill-03: sdd-update-project recommends `.secrets` (CE-SKILL-22)
 
 **Why**: Software projects need a map-backed secret name registry under the spec root without values in git.
@@ -22,7 +62,23 @@
 
 **What changed**: [`sprint-backlog.md`](./sprint-backlog.md) header and Sprint 9 rows (**feature-73** **WIP**; **feature-75**, **feature-76** for [Web-portal-32](./product-backlog.md#pb-129) and [Web-portal-33](./product-backlog.md#pb-130)). [`status.md`](./status.md) Sprint 9 note and current SBI.
 
-**Verification**: Sprint 9 **Status: WIP** matches one WIP SBI. Product Backlog Sprint 9 PBIs have matching SBI rows for portal-30 through portal-33 and portal-36.
+**Verification**: Sprint 9 **Status: WIP** matches one WIP SBI. Product Backlog Sprint 9 PBIs have matching SBI rows for portal-30 through portal-37 and portal-36.
+
+### Closed OGT instructions-tabs pack note (Admin Settings)
+
+**Why**: Pack maintainers need one note for `.instructions-tabs.json`, content tabs, and sync to the product repo ([Web-portal-26](./product-backlog.md#pb-123)).
+
+**What changed**: [`pack.framework.sdd.works/content/.admin-note.md`](../pack.framework.sdd.works/content/.admin-note.md) § **How to customize content tabs on instructions page** (prepare markdown, JSON config, `internal_page_folder`, optional mirror to `src/content/`). Same bytes in [`src/content/.admin-note.md`](../src/content/.admin-note.md). [`status.md`](./status.md) closed the open OGT row.
+
+**Verification**: `diff` pack vs `src/content/.admin-note.md` empty; section covers tab types, labels, Knowledge spike, and commit/sync steps.
+
+### Closed OGT 2–4 (i18n-03 seeds, numbered skill replies, CE-SKILL catalog)
+
+**Why**: HanS and HanT engineering templates, compare/planning reply shape, and L1 skill tests should match shipped pack skills.
+
+**What changed**: `templates/HanS/` and `templates/HanT/` engineering seeds. Pack skills use numbered tables via `response.md` or readiness blocks. [`framework-tests.md`](./framework/framework-tests.md) **CE-SKILL-14** cites gaps table format. [`status.md`](./status.md) closed open OGT rows 2–4.
+
+**Verification**: Pack folders on disk; skill `response.md` files; CE-SKILL-14 text matches `sdd-update-specs/response.md`.
 
 ### Closed OGT 6 and OGT 8 (pack layout and AI-read Scrum templates)
 
@@ -36,7 +92,7 @@
 
 **Why**: Features, Scrum, and invoke-agents each used a different body class and table CSS path. New pack content tabs would copy a third style.
 
-**What changed**: [ADR-123](./adr/ADR-123-unified-guide-markdown-body.md). [WA-18](./issues-log.md) open. AC37, [`app-design.md`](./admin-portal/app-design.md) Guide markdown body, [`app-tests.md`](./admin-portal/app-tests.md) §26. Mockup CSS and HTML use `guide-md-body` (+ `--catalog` / `--prose`). **Production not changed** until mockup confirm and build.
+**What changed**: [ADR-123](./adr/ADR-123-unified-guide-markdown-body.md). [WA-18](./issues-log.md) open until close confirm. AC37, [`app-design.md`](./admin-portal/app-design.md) Guide markdown body, [`app-tests.md`](./admin-portal/app-tests.md) §26. Mockup and production use `guide-md-body` (+ `--catalog` / `--prose`) via [`instructions-tabs-dom.ts`](../src/lib/instructions-tabs-dom.ts) and [`portal.css`](../src/styles/portal.css). PBI [Web-portal-37](./product-backlog.md#pb-134) tracks DoD and WA-18 closure.
 
 **Verification**: Open mockup Features and `14-invoke-agents-review.html`. §26 after implementation.
 

@@ -14,7 +14,7 @@ Operator web app. Stories: [`app-stories.md`](./app-stories.md). Mockups: [`ui-m
 | Read-only live GitHub tree/file view | `next-intl` `[locale]` routes |
 | i18n `en` / `zh-Hans` / `zh-Hant` | Map vendor keys in this UI |
 
-Host: `framework.sdd.works`. Protocol id is not localized.
+Host: **`sdd.works`** after [feature-72 / ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md) (**Web-portal-30**). Until cutover ships, production may still be **`framework.sdd.works`**. Protocol id is not localized.
 
 ## 2. Stack
 
@@ -25,11 +25,12 @@ Next.js **16.3** App Router, React **19.2**, TypeScript **7.0**, Tailwind **4.3*
 Prefer one Next.js process for portal HTML + `/api/admin/*`. MCP Streamable HTTP may be the same process on `/mcp` or a sibling Node process (see [`mcp-design.md`](../mcp/mcp-design.md)). Session middleware **must not** attach to `/mcp`.
 
 ```text
-framework.sdd.works
+sdd.works                     canonical after ADR-127 (framework.sdd.works → redirect)
   /  /login  /reset-password  /set-password  /accept-invite  /instructions
   /admin/*                    session HTML
   /api/admin/*                session + CSRF BFF
   /mcp                        MCP HTTP (bearer) — not cookie
+learn.sdd.works               WordPress + /en/learn-embedded/ (iframe only)
 ```
 
 Local: portal `3040`, Postgres `5435` db `framework_sdd`. Makefile: `dev` / `up` / `down`.
@@ -113,13 +114,13 @@ Near-real-time: poll or webhook (`GITHUB_WEBHOOK_SECRET`) + short cache. Target:
 
 Catalogs `messages/en.json`, `zh-Hans.json`, `zh-Hant.json`. Helper `t(locale, key, vars)`. Locale cookie `sdd_locale`. Switcher labels: **EN / 简 / 繁** (locale ids remain `en` / `zh-Hans` / `zh-Hant`). Missing key → `en` → key name. Dates/numbers: `Intl`. `html lang`: `en` / `zh-CN` / `zh-Hant`.
 
-Brand mark: `public/sdd-logo.png` (SDD WORKS wordmark, **transparent** background) in headers and public shells; favicon / apple-touch from the same brand family. Authoring source: [`src/618x618.logos.png`](../../src/618x618.logos.png) (718×256 RGBA) per [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). Host string `framework.sdd.works` remains the aria-label / protocol id — not duplicated as text beside the logo.
+Brand mark: `public/sdd-logo.png` (SDD WORKS wordmark, **transparent** background) in headers and public shells; favicon / apple-touch from the same brand family. Authoring source: [`src/618x618.logos.png`](../../src/618x618.logos.png) (718×256 RGBA) per [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). Host string **`sdd.works`** is the aria-label / protocol id after **ADR-127** — not duplicated as text beside the logo.
 
 Display sizes (CSS, 200% of original tokens): home / auth wordmark height `144px` / `112px`; header mark height `72px`. Offsets: home logo `margin-left: -30px`; header logo `margin-left: -22px`. Do not paint an opaque background behind the logo image. `Logo.tsx` intrinsic dimensions: **718×256**. Guide hero (`.guide-hero-title`): logo **5.625rem** tall, **`margin-left: -23px`**, headline Antonio **clamp(1.45rem, 2.65vw, 2.125rem)** weight **700**, flex **align-items: center**. **`admin.guide.title`** is the same English line in **en**, **zh-Hans**, and **zh-Hant**.
 
 MCP instructions links on the public home and the signed-in header, and the guide footer Admin portal link, open in a **new tab** (`target="_blank"` + `rel="noopener noreferrer"`).
 
-Do not localize: `framework.sdd.works`, tool names, locale ids, default admin email.
+Do not localize: **`sdd.works`** (host id), tool names, locale ids, default admin email.
 
 zh-Hant TW vs HK remains an open question; one `zh-Hant` catalog is enough until decided.
 
@@ -260,6 +261,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | i18n helper | `src/i18n/t.ts` | `t(locale, key, vars?)` + locale labels |
 | Brand | `src/618x618.logos.png` → `public/sdd-logo.png` (718×256 wordmark, [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md)); `sdd-mark.png` (square mail/icon); `favicon.png`; `apple-icon.png`; `EthanWeChat.png` | Logo / mail / tab / QR |
 | UI primitives | `src/components/ui/*` | Button, Callout, Field, LocaleSwitch, Logo, Dialog, PasswordField, CopyButton |
+| Floating frame | `portal.css` `.floating-frame`, `.floating-frame__scroll`, `.floating-frame__actions` | Reusable modal shell for guide-style markdown on admin chrome (Admin note, future overlays). Mockup source: [`mockup.css`](./ui-mockup/assets/mockup.css). |
 | Shells | `src/components/layout/*` | AuthShell, AppShell, SkipLink, SiteFooter |
 | Feature views | `src/components/features/*` | HomePage, LoginPage, KeysList, SettingsForm |
 
@@ -365,22 +367,47 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | | |
 | --- | --- |
-| Job | One GitHub URL; dirty Save; validate then persist; pack repo file note for operators ([Web-portal-26](../product-backlog.md#L446)) |
-| Layout | Title + lead; success/error callouts; **Repository URL** as `.section-subtitle` (no rule under label); underline `input[type=url]` (mono); hint; Save disabled until dirty; **Admin note** block renders markdown from synced `content/.admin-note.md` (authoring seed [`src/content/.admin-note.md`](../../src/content/.admin-note.md)) |
-| Flow | Unchanged → Save disabled; success → tip + DB; fail → tip, no DB write. Note body updates after pack sync only. |
+| Job | One GitHub URL; dirty Save; validate then persist |
+| Layout | Title + lead; success/error callouts; **Repository URL** as `.section-subtitle` (no rule under label); underline `input[type=url]` (mono); hint; Save disabled until dirty |
+| Flow | Unchanged → Save disabled; success → tip + DB; fail → tip, no DB write |
 | Keys | `admin.settings.*`, `errors.settings_url_*` |
-| Test ids | `settings-url`, `settings-save`, `settings-pack-note` |
+| Test ids | `settings-url`, `settings-save` |
 
 #### `/admin/framework` — Framework · `12-framework.html`
 
 | | |
 | --- | --- |
-| Job | Cache-backed read-only view of synced package artifacts (SYNK-01 unpacked tree) |
-| Layout | Eyebrow “Live sync with” + title “framework.sdd.works GitHub repository”; **repo path** (mono) + `btn-page` **Change git repository in Settings** + **Sync with git repository**; `h2.section-subtitle` “framework.sdd.works artifacts:” above tree; empty → CTA Settings; `cache_missing` → sync CTA; sync error callout keeps shell |
+| Job | Cache-backed read-only view of synced package artifacts (SYNK-01 unpacked tree); operator pack-file note ([Web-portal-26](../product-backlog.md#pb-123)) |
+| Layout | Eyebrow “Live sync with” + title “framework.sdd.works GitHub repository”; **repo path** (mono) + `framework-repo-actions`: `btn-page` **Change git repository in Settings**, **Sync with git repository**, then **Admin note** (`btn-text`, literal English); `h2.section-subtitle` “framework.sdd.works artifacts:” above tree; empty → CTA Settings; `cache_missing` → sync CTA; sync error callout keeps shell |
+| Admin note ([Web-portal-26](../product-backlog.md#pb-123)) | **Admin note** opens a **floating frame** (`.dialog-backdrop` + `.floating-frame`) with `role="dialog"`. Scroll region wraps `article.guide-section.guide-md-body.guide-md-body--prose` (same typography and tables as instructions content tabs). Body HTML from `content/.admin-note.md` (cache) or [`src/content/.admin-note.md`](../../src/content/.admin-note.md) (bundled). Fenced code maps to `.codeblock.codeblock--file` with **Copy** ([ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)). **Close** (literal English, `btn-page`) in `.floating-frame__actions` only; backdrop and Escape dismiss. |
+| Mockup | [`12-framework.html`](./ui-mockup/12-framework.html) — `.floating-frame` + full note (regen: `npx tsx scripts/sync-admin-note-mockup.mjs`). Open: `?admin-note=1`. **Confirmed 2026-10-08** (Ethan). |
 | Tree | Top-level dirs (`agents/`, `rules/`, `skills/`, …) render as title-case labels (**Agents**, **Rules**, **Skills**) and **expand one level by default**. Immediate children are indented under each folder (files and subfolders). Deeper nesting uses `+`/`−` toggles, collapsed by default. Files never get toggles. At every level, **directories sort before files**, then entries sort **by name** (locale-aware `localeCompare`). |
-| Keys | `admin.framework.*` (`change_repo`, `sync_repo`, `tree_expand`, `tree_collapse`, `artifacts`; display URL is data, not `lead` prose) |
-| Forbidden | Edit / push |
-| Test ids | `framework-source`, `framework-change-repo`, `framework-sync-repo`, `framework-cache-missing`, `framework-artifacts`, `framework-tree`, `framework-tree-toggle-*`, `framework-empty`, `framework-to-settings` |
+| Keys | `admin.framework.*` (`change_repo`, `sync_repo`, `tree_expand`, `tree_collapse`, `artifacts`, optional `admin_note_loading` / `admin_note_error`; display URL is data, not `lead` prose). **Admin note** and **Close** labels are literal English (Web-portal-26 exception). |
+| Forbidden | Edit / push; public or unauthenticated access to the note HTML |
+| Test ids | `framework-source`, `framework-change-repo`, `framework-sync-repo`, `framework-admin-note`, `framework-admin-note-dialog`, `framework-admin-note-body`, `framework-admin-note-close`, `framework-cache-missing`, `framework-artifacts`, `framework-tree`, `framework-tree-toggle-*`, `framework-empty`, `framework-to-settings` |
+
+##### Technical design — Admin note (Web-portal-26)
+
+| | |
+| --- | --- |
+| Pack path | `<unpacked>/content/.admin-note.md` |
+| Bundled fallback | [`src/content/.admin-note.md`](../../src/content/.admin-note.md) |
+| Resolver | [`src/lib/admin-note.ts`](../../src/lib/admin-note.ts): `readAdminNote()` — `resolveCachedVersion()` → read `<unpacked>/content/.admin-note.md`; else [`src/content/.admin-note.md`](../../src/content/.admin-note.md). Return `{ html, source: "cache" \| "package" }`. Prose via `renderPortalMarkdown` / `renderContentMarkdown` with rel path `content/.admin-note.md`. After markdown HTML, map `<pre><code class="language-*">` to `.codeblock.codeblock--file` markup (lang tag + copy affordance); preserve `<pre>` inner whitespace for indent. |
+| API | [`src/app/api/admin/admin-note/route.ts`](../../src/app/api/admin/admin-note/route.ts) — admin session required; 401 when unsigned; 404 or keyed error when both paths missing; JSON `{ html, source }`. No locale query param. |
+| UI | [`FrameworkView.tsx`](../../src/components/features/FrameworkView.tsx): literal **Admin note** `btn-text` after sync; opens `.dialog-backdrop` + `.floating-frame`; fetch on first open (loading/error callouts); inject API `html` into `article.guide-section.guide-md-body.guide-md-body--prose`; wire fenced blocks with [`CopyButton`](../../src/components/ui/CopyButton.tsx) (`codeblock-copy`, label **Copy** literal or `admin.keys.copy` for copy feedback only). **Close** literal in `.floating-frame__actions`. Copy [`.floating-frame`](./ui-mockup/assets/mockup.css) block into [`portal.css`](../../src/styles/portal.css) (mockup sync per §15.4). |
+| Sync | After **Sync with git repository**, the next open reads the new cache file without redeploy (same as Features). |
+| CSS | Shared `.floating-frame` tokens; prose via existing ADR-123 rules; code blocks via global `.codeblock` / `.codeblock--file`. |
+
+**Implementation plan (Web-portal-26)**
+
+1. **task-01.** Unit tests in `src/lib/admin-note.test.ts`: cache preferred; package fallback; script stripped; fenced JSON → `codeblock--file`; inner pre keeps source indent.
+2. **task-02.** `GET /api/admin/admin-note` route tests: 401 unsigned; 200 `{ html, source }` with fixture unpack; no locale param.
+3. **task-03.** Mockup confirm — **done 2026-10-08** ([`12-framework.html`](./ui-mockup/12-framework.html), `?admin-note=1`).
+4. **task-04.** Framework floating frame + `portal.css` sync; `FrameworkView` component test (open, Close, Escape, `guide-section` on body).
+5. **task-05.** E2E in `e2e/admin-framework.spec.ts` or extend framework spec: open note → seed table visible → JSON codeblock Copy → Close → tree present.
+6. **task-06.** Run [`app-tests.md`](./app-tests.md) §28 before Done.
+
+**Build readiness:** Mockup and AC39–AC43 are aligned. Next step is implementation (`/fullstack-engineer`), not further spec edits unless scope changes.
 
 #### `/instructions` — MCP guide · `13-instructions.html`
 
@@ -604,18 +631,36 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | | |
 | --- | --- |
 | Type | `embedded_external_page` in `content/.instructions-tabs.json` |
-| Last tab | `learn-scrum-in-sdd`. `labels` per locale (for example en `Learn Scrum in SDD`). `urls.en`, `urls.zh-Hans`, and `urls.zh-Hant` are all `https://sdd.works/en/learn-embedded/` |
+| Last tab | `learn-scrum-in-sdd`. `labels` per locale (for example en `Learn Scrum in SDD`). `urls.en`, `urls.zh-Hans`, and `urls.zh-Hant` are all **`https://learn.sdd.works/en/learn-embedded/`** after **ADR-127** |
 | Panel | One iframe (`learn-scrum-iframe`) plus an open-in-new-tab link. Guide tokens only. No border on the iframe ([ADR-112](../adr/ADR-112-learn-embed-frame.md)) |
-| Allowlist | `https` and host `sdd.works` or `www.sdd.works` |
+| Allowlist | `https` and host **`learn.sdd.works`** or **`www.learn.sdd.works`** ([ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md)) |
 | Default tab | Setup when `?tab=` is absent |
 | Frame | `.learn-embed-frame`: `width: 100%`, `border: 0`. No fixed `aspect-ratio` ([ADR-114](../adr/ADR-114-learn-embed-auto-height.md)). Height set inline from postMessage. Fallback height until first valid message. No crop via `transform` or `overflow` |
 | Loading ([ADR-118](../adr/ADR-118-learn-embed-loading-skeleton.md), centered indicator [ADR-120](../adr/ADR-120-learn-embed-centered-loading-indicator.md) / [WA-17](../issues-log.md)) | Host `.learn-embed-frame-host` wraps iframe plus overlay `.learn-embed-skeleton` (`data-testid="learn-embed-loading"`) and `.learn-embed-loading-indicator` (`data-testid="learn-embed-loading-indicator"`, `aria-hidden="true"`). Indicator centered in the host above the grid; ink/line ring ~1.25rem; rotate only when motion allowed. Iframe not painted until `load` (`visibility: hidden` while loading). Skeleton cells stay opaque; pulse background only. Overlay: 3×3 grid; `pointer-events: none`. Shown until iframe `load`; reset on `embedUrl` change. Host `aria-busy` and `admin.guide.learn_scrum_embed_loading` unchanged. Fallback and `#learn-secret` outside host. |
 | Resize | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx) (client): listen for `{ type: "sdd-learn-embed-height", height: number }` from embed host origins. Shared constant in [`src/lib/learn-embed-messaging.ts`](../../src/lib/learn-embed-messaging.ts) (new). |
-| sdd.works dependency | `learn-embedded` page: full-width grid CSS and script that posts height to the portal origin. Not built in this repo. |
+| learn.sdd.works dependency | `learn-embedded` page: full-width grid CSS and script that posts height to portal origin **`https://sdd.works`**. Not built in this repo. |
 | Copy ([ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md), spacing [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)) | No intro. Fallback link **15px** below iframe. Iframe `src` from resolver |
 | Get secret ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md), [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)) | Order: iframe → fallback → `#learn-secret` (**45px** below fallback). Found value: compact `.codeblock` with visible **1.5px** border; value and Copy share **2.125rem** row height. **§20** [`app-tests.md`](./app-tests.md); CSS contract [`learn-embed-spacing.test.ts`](../../src/styles/learn-embed-spacing.test.ts) |
 | Code | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx): drop prefix plus split link keys; one external link; compose `GuideSecretLookup` between iframe and fallback. [`messages/*.json`](../../messages/en.json): update intro; replace two fallback keys with one |
-| Embed page | Grid-only view at `https://sdd.works/en/learn-embedded/` (replaces full `/en/learn/` hub in tab `urls`) |
+| Embed page | Grid-only view at **`https://learn.sdd.works/en/learn-embedded/`** (replaces pre-cutover `sdd.works` embed URL) |
+
+#### Hostname cutover (feature-72 / Web-portal-30 / ADR-127)
+
+**Technical design**
+
+| Area | Change |
+| --- | --- |
+| Pack + bundled JSON | [`pack.framework.sdd.works/content/.instructions-tabs.json`](../../pack.framework.sdd.works/content/.instructions-tabs.json) and [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json): **`learn-scrum-in-sdd.urls.*`** → **`https://learn.sdd.works/en/learn-embedded/`** |
+| Embed allowlist | [`src/lib/embed-page-host-allowlist.ts`](../../src/lib/embed-page-host-allowlist.ts): **`learn.sdd.works`**, **`www.learn.sdd.works`** |
+| Learn URL helper | [`src/lib/sdd-works-learn-url.ts`](../../src/lib/sdd-works-learn-url.ts): constant matches pack JSON (rename optional) |
+| postMessage | [`src/lib/learn-embed-messaging.ts`](../../src/lib/learn-embed-messaging.ts): allow **`learn.sdd.works`** message origin; parent is **`sdd.works`** |
+| Production origin | [`src/mcp/brand.ts`](../../src/mcp/brand.ts), [`src/mcp/setup-markdown.ts`](../../src/mcp/setup-markdown.ts), [`src/core/tools/package-fetch.ts`](../../src/core/tools/package-fetch.ts): default **`https://sdd.works`** |
+| Setup UI | [`SetupGuidePanel.tsx`](../../src/components/features/SetupGuidePanel.tsx): paste sentence **`https://sdd.works/setup`** |
+| Host literals | [`src/i18n/t.ts`](../../src/i18n/t.ts) **`HOST`**, [`src/app/layout.tsx`](../../src/app/layout.tsx) **title** → **`sdd.works`** |
+| Tests | Vitest files listed in [`app-tests.md`](./app-tests.md) §29 |
+| Operator | DNS, TLS, NPM, **`framework.sdd.works`** redirect, WordPress **`frame-ancestors`** ([`go-live/`](../go-live/); delta recorded when ops steps land) |
+
+**Build readiness:** **AC44**, **ADR-127**, and §29 define the contract. Mockup target state in [`13-instructions.html`](./ui-mockup/13-instructions.html). Next step: **`fullstack-engineer`** (app + pack JSON + tests), then operator cutover.
 
 #### Internal page folder (feature-74 / Web-portal-36 / ADR-124)
 

@@ -262,6 +262,8 @@
   "admin.framework.sync_repo": "Sync with git repository",
   "admin.framework.syncing": "Syncing…",
   "admin.framework.cache_missing": "No synced package cache yet. Sync with the git repository to load the framework tree.",
+  "admin.framework.admin_note_loading": "Loading admin note…",
+  "admin.framework.admin_note_error": "Admin note could not be loaded.",
   "admin.framework.tree_expand": "Expand {name}",
   "admin.framework.tree_collapse": "Collapse {name}",
   "admin.framework.artifacts": "framework.sdd.works artifacts:",

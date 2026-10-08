@@ -130,4 +130,31 @@ test.describe("settings and framework", () => {
     await toggle.click();
     await expect(toggle).toHaveAttribute("aria-expanded", "true");
   });
+
+  test("should_open_admin_note_modal_with_codeblock_copy", async ({ page }) => {
+    test.setTimeout(90_000);
+    await loginAsSeedAdmin(page);
+    await page.goto("/admin/settings");
+    await page
+      .getByTestId("settings-url")
+      .fill("https://github.com/fixture/sdd-framework");
+    await page.getByTestId("settings-save").click();
+    await expect(page.getByText(/verified and saved|已验证|已驗證/i)).toBeVisible();
+
+    await page.goto("/admin/framework");
+    await page.getByTestId("framework-sync-repo").click();
+    await expect(page.getByTestId("framework-tree")).toBeVisible({ timeout: 60_000 });
+
+    await page.getByTestId("framework-admin-note").click();
+    const dialog = page.getByTestId("framework-admin-note-dialog");
+    await expect(dialog).toHaveClass(/is-open/);
+    const body = page.getByTestId("framework-admin-note-body");
+    await expect(body).toBeVisible();
+    await expect(body).toContainText("lite-pack.allowlist.json");
+    await expect(body.locator(".codeblock--file .codeblock-copy")).toBeVisible();
+
+    await page.getByTestId("framework-admin-note-close").click();
+    await expect(dialog).not.toHaveClass(/is-open/);
+    await expect(page.getByTestId("framework-tree")).toBeVisible();
+  });
 });

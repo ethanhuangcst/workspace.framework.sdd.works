@@ -1364,6 +1364,44 @@ td.table-check {
   display: flex;
 }
 
+.floating-frame {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  width: 100%;
+  max-width: min(var(--guide-max), 92vw);
+  max-height: min(88vh, 52rem);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.floating-frame__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 1.25rem 1.5rem 0.75rem;
+}
+
+.floating-frame__scroll .guide-section.guide-md-body {
+  max-width: none;
+  margin: 0;
+}
+
+.floating-frame .guide-section.guide-md-body--prose .codeblock--file {
+  margin: 1.25rem 0 1.5rem;
+}
+
+.floating-frame__actions {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 0.85rem 1.5rem 1.15rem;
+  border-top: 1px solid var(--line);
+  background: var(--bg-elevated);
+}
+
 .dialog {
   background: var(--bg-elevated);
   border: 1px solid var(--line);
@@ -2769,6 +2807,11 @@ td.table-check {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 0.75rem;
+}
+
+.framework-repo-actions .btn-text {
+  align-self: center;
+  margin-left: 0.25rem;
 }
 
 .tree-toggle {

@@ -504,7 +504,7 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Layer:** L1.
 - **Pre-condition:** Seed: `pack.framework.sdd.works/skills/sdd-update-specs/SKILL.md`.
 - **Test steps:** Read the description and Limits section.
-- **Expected results:** The description states engineering specs and names adjacent skills. Limits ban writes to the five process files. The skill waits for chat confirm before a project write.
+- **Expected results:** The description states engineering specs and names adjacent skills. Limits ban writes to the five process files. The skill waits for chat confirm before a project write. The gap report follows [response.md](../../pack.framework.sdd.works/skills/sdd-update-specs/response.md) with a numbered **Gaps** table (`#`, Key, Problem, Fix).
 
 #### CE-SKILL-22 — sdd-update-project secret registry
 

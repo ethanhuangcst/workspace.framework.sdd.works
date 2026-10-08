@@ -747,6 +747,73 @@ Scenario: Force sync refreshes tree from cache
   And the artifact tree reloads from the unpacked cache
 ```
 
+### User story 3 — Pack file operator note (Web-portal-26)
+
+**As an** admin maintaining the synced pack repository
+**I want** to read the operator markdown from the Framework page
+**So that** I know which files belong in the pack without opening Settings or the repo blindly
+
+#### AC39 — Web-portal-26
+
+```gherkin
+Scenario: Admin note opens beside sync control
+  Given a signed-in admin on the framework page
+  And the repo block is visible
+  When the admin activates Admin note next to Sync with git repository
+  Then a modal with test id framework-admin-note-dialog is shown
+  And the modal contains an element with class floating-frame
+  And the body with test id framework-admin-note-body has classes guide-section, guide-md-body, and guide-md-body--prose
+  And the body renders HTML from content/.admin-note.md when the sync cache has that file
+  And a Close control with test id framework-admin-note-close is the only modal action
+  And no edit or push control appears in the modal
+```
+
+#### AC40 — Web-portal-26
+
+```gherkin
+Scenario: Admin note uses bundled seed when cache file is absent
+  Given a signed-in admin
+  And the unpacked cache has no content/.admin-note.md
+  When the admin opens Admin note
+  Then the modal body matches src/content/.admin-note.md rendered as HTML
+  And the API or resolver reports source package
+```
+
+#### AC41 — Web-portal-26
+
+```gherkin
+Scenario: Admin note is admin-only
+  Given a visitor without an admin session
+  When GET /api/admin/admin-note is requested
+  Then the response is unauthorized
+  And public instructions pages do not show Admin note
+```
+
+#### AC42 — Web-portal-26
+
+```gherkin
+Scenario: Close dismisses admin note
+  Given a signed-in admin
+  And the admin note modal is open
+  When the admin activates Close or presses Escape
+  Then the modal is hidden
+  And focus returns to the Admin note control
+```
+
+#### AC43 — Web-portal-26
+
+```gherkin
+Scenario: Admin note file fences use codeblock with copy
+  Given a signed-in admin
+  And the admin note modal is open
+  And the note markdown includes a fenced json block
+  Then framework-admin-note-body contains an element with classes codeblock and codeblock--file
+  And that block exposes a copy control for the fence contents
+  And the rendered pre text keeps the same line indent as the markdown source fence
+```
+
+**Engineering:** [`app-design.md`](./app-design.md) Framework **Admin note** and **Technical design — Admin note**. Mockup [`12-framework.html`](./ui-mockup/12-framework.html) confirmed 2026-10-08 (`?admin-note=1`). Literal English **Admin note** and **Close** (no i18n keys for those labels).
+
 ---
 
 ## `sdd-admin-instructions` — MCP instructions
@@ -1554,6 +1621,43 @@ Scenario: Invalid index or missing markdown fails visibly
   When the visitor selects that tab or navigates to an unknown doc id
   Then panel-knowledge shows a visible error state
   And the guide shell and other tabs still work
+```
+
+#### AC44 — feature-72 / Web-portal-30 / ADR-127
+
+[ADR-127](../adr/ADR-127-public-hostnames-sdd-and-learn.md). Hostname cutover and pack Learn embed URLs. Amends embed **`src`** expectations in **AC26**, **AC28**, **AC29**, and **AC30** after **feature-72** ships. Amends setup host in **AC36** scenario copy-setup-prompt.
+
+```gherkin
+Scenario: Learn tab embeds WordPress on learn.sdd.works
+  Given pack content/.instructions-tabs.json and bundled src/content/.instructions-tabs.json list learn-scrum-in-sdd with type embedded_external_page
+  And urls.en urls.zh-Hans and urls.zh-Hant are https://learn.sdd.works/en/learn-embedded/
+  When the visitor opens / or /instructions with tab=learn-scrum-in-sdd
+  Then learn-scrum-iframe src is https://learn.sdd.works/en/learn-embedded/
+  And a fallback link below the iframe opens https://learn.sdd.works in a new tab
+
+Scenario: Embed host allowlist accepts learn.sdd.works only
+  Given a tab type is embedded_external_page
+  And urls.en is https://learn.sdd.works/en/learn-embedded/
+  When validateInstructionsTabsConfig runs
+  Then the result is ok
+  When urls.en is https://sdd.works/en/learn-embedded/
+  Then the result is not ok
+
+Scenario: Learn postMessage accepts learn.sdd.works origin
+  Given the visitor is on tab=learn-scrum-in-sdd on https://sdd.works
+  When the portal receives sdd-learn-embed-height from origin https://learn.sdd.works
+  Then learn-scrum-iframe height updates
+  When the same message comes from https://example.com
+  Then the portal ignores it
+
+Scenario: Setup copy uses sdd.works
+  Given the visitor opens the Setup tab on the public guide
+  When the visitor activates copy-setup-prompt
+  Then the copied text is Fetch and execute the setup instructions from https://sdd.works/setup
+
+Scenario: framework.sdd.works redirects to sdd.works
+  Given an HTTP client follows redirects for https://framework.sdd.works/
+  Then the final URL host is sdd.works
 ```
 
 ---
