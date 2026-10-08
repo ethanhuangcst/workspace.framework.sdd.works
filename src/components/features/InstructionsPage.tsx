@@ -84,7 +84,7 @@ export function InstructionsPage({
                 data-testid={guideTabTestId(tab.id)}
                 onClick={() => setActiveQueryParam(tab.queryParam)}
               >
-                {t(locale, tab.labelKey)}
+                {tab.label}
               </Link>
             ))}
           </div>

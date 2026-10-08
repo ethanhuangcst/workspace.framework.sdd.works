@@ -111,7 +111,7 @@ Write in this order when more than one file changes: new ADR instances, new or u
 
 ### ADR instances
 
-- When `artifacts-map.json` has no `adr` key, stop and name `sdd-update-project`. Do not assume `specs/adr`.
+- When `artifacts-map.json` has no `adr` key, stop and name `sdd-update-project`. Do not assume `{workspace}/{adr}`.
 - Join `{workspace}` and the `adr` root. Create the next `ADR-{NNN}-{short-title}.md` using the practices ADR instance shape.
 - Do not edit an accepted ADR to reverse a decision. Supersede with a new ADR.
 - Do not create an ADR when an accepted ADR already records the same decision.

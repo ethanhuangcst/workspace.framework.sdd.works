@@ -18,7 +18,7 @@ export function mapResolvedTab(tab: ResolvedInstructionsTab): InstructionsPageTa
     id: tab.id,
     type: tab.type,
     queryParam: tab.queryParam,
-    labelKey: tab.labelKey,
+    label: tab.label,
     panelTestId: tab.panelTestId,
     html: tab.html,
     embedUrl: tab.embedUrl,

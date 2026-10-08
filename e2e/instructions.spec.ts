@@ -31,7 +31,7 @@ test.describe("MCP instructions", () => {
 
     await expect(page.getByTestId("instructions-guide")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      /Install framework\.sdd\.works|MCP instructions/i,
+      /Built on Harness\. Ready for Scrum|MCP instructions/i,
     );
     await expect(page.getByTestId("guide-back-home")).toHaveCount(0);
 

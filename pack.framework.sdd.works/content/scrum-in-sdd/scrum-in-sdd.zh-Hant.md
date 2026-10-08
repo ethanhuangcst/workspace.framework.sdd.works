@@ -343,8 +343,8 @@ Ken Schwaber 和 Jeff Sutherland 於 1995 年首次公開介紹 Scrum。《Scrum
 由於現階段對 **workflows** 尚無實際需求，這個資料夾暫時只作為**佔位**。
 
 ### Knowledge
-- **ADR**：Architecture Decision Record，預設路徑：**{workspace-folder}/specs/ADR**
-- **knowledge**：專案中沉澱的知識，預設路徑：**{workspace-folder}/specs/knowledge**
+- **ADR**：Architecture Decision Record，預設路徑：**{workspace}/{adr}**（來自 `artifacts-map.json`）
+- **knowledge**：專案中沉澱的知識，預設路徑：**{workspace}/{knowledge}**（來自 `artifacts-map.json`）
 
 ### Artifacts
 - **Product Backlog**：**product-backlog.md**

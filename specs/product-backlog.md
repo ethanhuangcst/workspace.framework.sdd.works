@@ -89,6 +89,7 @@ This section lists additional product checks on top of the standard Definition o
 - <a id="pb-24"></a>[Skill-03](#pb-24) Pack skill sdd-update-project
   - The pack includes the update-project skill (`skill_update_project`).
   - The job is Update project settings. [ADR-079](./adr/ADR-079-one-job-update-project.md).
+  - Task 8 recommends `{artifacts_root}/.secrets` for products that use database, API, or auth secrets; copies the locale seed when missing after confirm; adds the path to `artifacts-map.json` when the Confirm summary kept that line. Empty workspace: one yes-or-no question. Spec: [framework-stories § sdd-update-project](./framework/framework-stories.md#sdd-update-project), **CE-SKILL-22**.
 - <a id="pb-25"></a>[Skill-04](#pb-25) Pack skill sdd-refine-backlog
   - The pack includes the refine-product-backlog skill (`skill_refine_pb`).
 - <a id="pb-26"></a>[Skill-05](#pb-26) Pack skill sdd-plan-sprint
@@ -277,7 +278,7 @@ This section lists additional product checks on top of the standard Definition o
 - <a id="pb-110"></a>[Spec-seeds-16](#pb-110) Pack instructions tabs JSON
   - The pack repo ships `content/.instructions-tabs.json`. The bundled fallback is [`src/content/.instructions-tabs.json`](../src/content/.instructions-tabs.json) in the web app repo.
   - The file has `version` and a `tabs` array. **Tab order on the instructions page is array order.**
-  - Each row has `type` (`code` or `content`), `id`, `labelKey`, `queryParam`, and `panelTestId`.
+  - Each row has `type` (`code`, `content`, or `embedded_external_page`), `id`, **`labels`** (locale map, `en` required), `queryParam`, and `panelTestId`. **`labelKey` is not used** ([ADR-119](./adr/ADR-119-instructions-tab-labels-in-pack-config.md)).
   - **`code`:** built-in portal panel; `id` must match an app allowlist (today `setup` only). See [`app-design.md`](./admin-portal/app-design.md) instructions tabs section.
   - **`content`:** `paths` maps locale to a relative markdown path under the sync unpack (at least `en`; zh locales optional with en fallback). Same read order as Features ([ADR-071](./adr/ADR-071-portal-content-paths.md)).
   - The default seed reproduces Setup (`code`), Features, and Scrum in SDD (`content`) ([Web-portal-07](#pb-73), [Web-portal-12](#pb-81)).
@@ -286,6 +287,7 @@ This section lists additional product checks on top of the standard Definition o
   - The pack ships one reviewed manifest of the full seed tree under `pack.framework.sdd.works/` (path named in [framework-design](./framework/framework-design.md)).
   - The manifest lists every installable pack path: agents, skills, rules, workflows, and templates, grouped the same way as [MCP-01](#pb-16) allow-list and [ADR-059](./adr/ADR-059-ledger-lists-pack-files.md).
   - The manifest matches the authoring tree at delivery time. A person can confirm each row against disk and against installer copy rules in [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md).
+  - Pack markdown links follow [pack-deliverable-links](./framework/framework-design.md#pack-deliverable-links) (OGT 2): no link into this repo's `specs/adr/` or `specs/knowledge/`; `npm run check:pack-seeds` passes; AC1–AC4 in [`framework-stories.md`](./framework/framework-stories.md#sdd-pack-deliverable-links--ogt-2-pack-link-placeholders).
   - The pack includes an authoring seed [`pack.framework.sdd.works/.sdd-installed.example.json`](../pack.framework.sdd.works/.sdd-installed.example.json). It shows ledger shape for Ethan and audit fixtures ([Agent-04](#pb-17), [ADR-057](./adr/ADR-057-install-ledger-pack-complete.md)). The live client receipt stays `{client_root}/.sdd-installed.json`.
   - The git seed keeps `pack_complete` false and empty or placeholder version fields. Install and stdio copy set `pack_complete` true on `{client_root}`; the git tree does not commit a true ledger.
   - The manifest documents how `files.skills`, `files.rules`, `files.agents`, `files.workflows`, and `files.templates` relate to that seed example.
@@ -398,7 +400,7 @@ This section lists additional product checks on top of the standard Definition o
 - <a id="pb-112"></a>[Web-portal-25](#pb-112) Dynamic instructions tab UI
   - `/` and `/instructions` render the tab list and panels from the same resolver as the API ([Web-portal-24](#pb-111)), not hard-coded Features and Scrum rows ([Web-portal-07](#pb-73), [Web-portal-12](#pb-81)).
   - **Default selected tab** when the URL has no `?tab=` is always **Setup** (`queryParam` `setup`), regardless of array order.
-  - Tab **display order** follows the resolved config array. Tab labels use `labelKey` from config. Setup copy stays on the `setup` code panel ([Web-portal-06](#pb-72)). Get secret stays on the Learn tab ([Web-portal-31](#pb-128)).
+  - Tab **display order** follows the resolved config array. Tab labels use **`labels`** from config ([ADR-119](./adr/ADR-119-instructions-tab-labels-in-pack-config.md)). Setup copy stays on the `setup` code panel ([Web-portal-06](#pb-72)). Get secret stays on the Learn tab ([Web-portal-31](#pb-128)).
 - <a id="pb-124"></a>[Web-portal-27](#pb-124) Learn Scrum in SDD tab
   - The instructions page adds a tab with type **`embedded_external_page`** ([ADR-110](./adr/ADR-110-embedded-external-page-tab.md)), id **`learn-scrum-in-sdd`**, query param **`learn-scrum-in-sdd`**, and label key **`admin.guide.tab_learn_scrum`**. It is not a **`code`** tab and not the **`scrum-in-sdd`** markdown tab ([Web-portal-12](#pb-81)).
   - Bundled and pack [`content/.instructions-tabs.json`](../pack.framework.sdd.works/content/.instructions-tabs.json) include the row. **`urls.en`**, **`urls.zh-Hans`**, and **`urls.zh-Hant`** are all `https://sdd.works/en/learn-embedded/` until separate locale pages exist. A missing locale URL uses `urls.en`.
@@ -428,6 +430,13 @@ This section lists additional product checks on top of the standard Definition o
 - <a id="pb-129"></a>[Web-portal-32](#pb-129) Learn embed loading skeleton
   - While `learn-scrum-iframe` loads the sdd.works embed, show a 3×3 skeleton overlay in the frame host ([ADR-118](./adr/ADR-118-learn-embed-loading-skeleton.md)).
   - Fallback link and Get secret stay visible below the host. Label key `admin.guide.learn_scrum_embed_loading` in three locales. AC32 in [`app-stories.md`](./admin-portal/app-stories.md).
+- <a id="pb-130"></a>[Web-portal-33](#pb-130) Instructions tab labels in pack JSON
+  - Tab titles live in `labels` on each row in `content/.instructions-tabs.json` for all tab types. Remove `labelKey` from schema, validator, API, and UI ([ADR-119](./adr/ADR-119-instructions-tab-labels-in-pack-config.md), [WA-16](./issues-log.md)).
+  - Rename or add a tab by editing the pack file and syncing; no portal `messages/*.json` edit for tab bar text. AC33 in [`app-stories.md`](./admin-portal/app-stories.md).
+- <a id="pb-131"></a>[Web-portal-34](#pb-131) SDD WORKS wordmark logo
+  - Replace the portal wordmark with art from [`src/618x618.logos.png`](../src/618x618.logos.png) (718×256 RGBA) per [ADR-121](./adr/ADR-121-sdd-works-wordmark-logo.md).
+  - Copy to `public/sdd-logo.png`; keep URL `/sdd-logo.png`. Update `Logo.tsx` intrinsic size and sync mockup asset. Mockup approval before production deploy.
+  - `sdd-mark.png`, favicon, and apple-touch stay unchanged in this PBI. AC35 in [`app-stories.md`](./admin-portal/app-stories.md).
 - <a id="pb-82"></a>[Spec-seeds-14](#pb-82) Seed features.md under content/features
   - You finalize the three Features catalog seeds under `content/features/` in the pack repo.
 
@@ -603,6 +612,8 @@ The **lite.sdd.works HTTP installer** is a shorter path for partner sites (for e
 | 85  | webapp    | [Web-portal-30](#pb-127) | Hostnames learn.sdd.works and sdd.works          | Implementable | - [Web-portal-20](#pb-106) - [Web-portal-09](#pb-76) - [Web-portal-22](#pb-108) - [Web-portal-27](#pb-124)                                                                                                                                                                                                                            | Sprint 9 | ToDo    |
 | 86  | webapp    | [Web-portal-31](#pb-128) | Get secret on Learn Scrum tab                    | Implementable | - [ADR-115](./adr/ADR-115-get-secret-on-learn-tab.md) - [Web-portal-27](#pb-124) - [Web-portal-13](#pb-83) - [ADR-113](./adr/ADR-113-learn-embed-copy-and-fallback.md)                                                                                                                                                               | Sprint 9 | ToDo    |
 | 87  | webapp    | [Web-portal-32](#pb-129) | Learn embed loading skeleton                     | Implementable | - [ADR-118](./adr/ADR-118-learn-embed-loading-skeleton.md) - [Web-portal-27](#pb-124) - AC32 [`app-stories.md`](./admin-portal/app-stories.md)                                                                                                                                                                                         | Sprint 9 | ToDo    |
+| 88  | webapp / pack | [Web-portal-33](#pb-130) | Instructions tab labels in pack JSON           | Implementable | - [ADR-119](./adr/ADR-119-instructions-tab-labels-in-pack-config.md) - [WA-16](./issues-log.md) - [Spec-seeds-16](#pb-110) - [Web-portal-25](#pb-112) - AC33 [`app-stories.md`](./admin-portal/app-stories.md)                                                                                                                        | Sprint 9 | ToDo    |
+| 89  | webapp    | [Web-portal-34](#pb-131) | SDD WORKS wordmark logo                          | Implementable | - [ADR-121](./adr/ADR-121-sdd-works-wordmark-logo.md) - [`src/618x618.logos.png`](../src/618x618.logos.png) - AC35 [`app-stories.md`](./admin-portal/app-stories.md) - mockup `assets/sdd-logo.png`                                                                                                                                    | —        | ToDo    |
 
 
 

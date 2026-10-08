@@ -21,7 +21,7 @@ Tailwind’s reset sets `h1`–`h6` to `font-size: inherit`. `.features-body` th
 
 ## Evidence
 
-- On 2026-09-27 the Scrum in SDD tab used `class="features-body"`. Measured `h1` was 17px and `h2` was 21.25px. The gap above “Part I” was about 7px.
+- On 2026-09-27 the Scrum in SDD tab used `class="features-body"`. Measured `h1` was 17px and `h2` was 21.25px. The gap above the first part title was about 7px. English content runs Part I through Part IV in order. Part IV is the 2020 Scrum Guide summary.
 - Moving the panel to `.scrum-body` set `h1` to 1.65rem with 2.75rem above later part titles, and `h2` to 1.2rem. Ethan confirmed that layout the same day.
 - The Features list renderer also escaped list-item text, so `**Part I**` stayed as asterisks. The guide renderer parses inline markdown inside list items. The Features em-dash split stays on the Features path only.
 

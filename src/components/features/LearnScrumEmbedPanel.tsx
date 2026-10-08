@@ -98,22 +98,33 @@ export function LearnScrumEmbedPanel({
         style={frameHeightStyle}
       >
         {!iframeLoaded ? (
-          <div
-            className="learn-embed-skeleton"
-            data-testid="learn-embed-loading"
-            aria-hidden="true"
-          >
-            {Array.from({ length: LEARN_EMBED_SKELETON_CELL_COUNT }, (_, index) => (
-              <span
-                key={index}
-                className="learn-embed-skeleton-cell"
-              />
-            ))}
-          </div>
+          <>
+            <div
+              className="learn-embed-skeleton"
+              data-testid="learn-embed-loading"
+              aria-hidden="true"
+            >
+              {Array.from(
+                { length: LEARN_EMBED_SKELETON_CELL_COUNT },
+                (_, index) => (
+                  <span key={index} className="learn-embed-skeleton-cell" />
+                ),
+              )}
+            </div>
+            <span
+              className="learn-embed-loading-indicator"
+              data-testid="learn-embed-loading-indicator"
+              aria-hidden="true"
+            />
+          </>
         ) : null}
         <iframe
           ref={iframeRef}
-          className="learn-embed-frame"
+          className={
+            iframeLoaded
+              ? "learn-embed-frame"
+              : "learn-embed-frame learn-embed-frame--loading"
+          }
           data-testid="learn-scrum-iframe"
           src={embedUrl}
           title={t(locale, "admin.guide.learn_scrum_iframe_title")}

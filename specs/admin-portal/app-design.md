@@ -113,9 +113,9 @@ Near-real-time: poll or webhook (`GITHUB_WEBHOOK_SECRET`) + short cache. Target:
 
 Catalogs `messages/en.json`, `zh-Hans.json`, `zh-Hant.json`. Helper `t(locale, key, vars)`. Locale cookie `sdd_locale`. Switcher labels: **EN / 简 / 繁** (locale ids remain `en` / `zh-Hans` / `zh-Hant`). Missing key → `en` → key name. Dates/numbers: `Intl`. `html lang`: `en` / `zh-CN` / `zh-Hant`.
 
-Brand mark: `public/sdd-logo.png` (full wordmark, **transparent** background) in headers and public shells; favicon / apple-touch from the same brand family. Host string `framework.sdd.works` remains the aria-label / protocol id — not duplicated as text beside the logo.
+Brand mark: `public/sdd-logo.png` (SDD WORKS wordmark, **transparent** background) in headers and public shells; favicon / apple-touch from the same brand family. Authoring source: [`src/618x618.logos.png`](../../src/618x618.logos.png) (718×256 RGBA) per [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). Host string `framework.sdd.works` remains the aria-label / protocol id — not duplicated as text beside the logo.
 
-Display sizes (CSS, 200% of original tokens): home / auth wordmark height `144px` / `112px`; header mark height `72px`. Offsets: home logo `margin-left: -30px`; header logo `margin-left: -22px`. Do not paint an opaque background behind the logo image.
+Display sizes (CSS, 200% of original tokens): home / auth wordmark height `144px` / `112px`; header mark height `72px`. Offsets: home logo `margin-left: -30px`; header logo `margin-left: -22px`. Do not paint an opaque background behind the logo image. `Logo.tsx` intrinsic dimensions: **718×256**. Guide hero (`.guide-hero-title`): logo **5.625rem** tall, **`margin-left: -23px`**, headline Antonio **clamp(1.45rem, 2.65vw, 2.125rem)** weight **700**, flex **align-items: center**. **`admin.guide.title`** is the same English line in **en**, **zh-Hans**, and **zh-Hant**.
 
 MCP instructions links on the public home and the signed-in header, and the guide footer Admin portal link, open in a **new tab** (`target="_blank"` + `rel="noopener noreferrer"`).
 
@@ -125,7 +125,7 @@ zh-Hant TW vs HK remains an open question; one `zh-Hant` catalog is enough until
 
 ## 9. Visual style
 
-Reuse the existing mockup tokens: cream `#fafafa`, ink `#0a0a0a`, thin lines, radius 0, Outfit + Noto Sans SC/TC + JetBrains Mono. Signature: brand wordmark `public/sdd-logo.png` (cyan / orange on **transparent**). No shadows, gradients, or color status pills. Weight and underline show state.
+Reuse the existing mockup tokens: cream `#fafafa`, ink `#0a0a0a`, thin lines, radius 0, Outfit + Noto Sans SC/TC + JetBrains Mono. Signature: SDD WORKS wordmark from [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md) (cyan / orange on **transparent**). Mockup asset: `ui-mockup/assets/sdd-logo.png`. No shadows, gradients, or color status pills. Weight and underline show state.
 
 Public/auth first paint: one 12px / 700ms rise; honor `prefers-reduced-motion`.
 
@@ -258,7 +258,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | Globals entry | `src/styles/globals.css` | `@import "./portal.css"` |
 | Message catalogs | `messages/{en,zh-Hans,zh-Hant}.json` | All UI strings |
 | i18n helper | `src/i18n/t.ts` | `t(locale, key, vars?)` + locale labels |
-| Brand | `public/sdd-logo.png` (wordmark), `sdd-mark.png` (square mail/icon), `favicon.png`, `apple-icon.png`, `EthanWeChat.png` | Logo / mail / tab / QR |
+| Brand | `src/618x618.logos.png` → `public/sdd-logo.png` (718×256 wordmark, [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md)); `sdd-mark.png` (square mail/icon); `favicon.png`; `apple-icon.png`; `EthanWeChat.png` | Logo / mail / tab / QR |
 | UI primitives | `src/components/ui/*` | Button, Callout, Field, LocaleSwitch, Logo, Dialog, PasswordField, CopyButton |
 | Shells | `src/components/layout/*` | AuthShell, AppShell, SkipLink, SiteFooter |
 | Feature views | `src/components/features/*` | HomePage, LoginPage, KeysList, SettingsForm |
@@ -386,12 +386,12 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | | |
 | --- | --- |
-| Job | Install framework.sdd.works to AI tools |
-| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#L419)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /setup/install`); install phrase + `sdd_install_framework` after MCP connect; Manual setup one `mcp.json` with `command` `${userHome}/.sdd/sdd-mcp` and `SDD_SERVER_URL` `https://framework.sdd.works` (no second `mcp.json`, no `curl`), agents roster (7 names), tools table **Tool** + **Description** only (no Channel); **no** secret form on Setup ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Learn Scrum: embed panel with secret form under the iframe ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); footer Admin portal link then copyright |
+| Job | Present SDD.works: Built on Harness. Ready for Scrum (title key `admin.guide.title`); install steps on Setup tab |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#L419)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://framework.sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /setup/install`); install phrase + `sdd_install_framework` after MCP connect; **no** on-page Manual setup `mcp.json` block (stdio sample stays in fetched `/setup` markdown only); agents roster (7 names) without intro paragraph; **no** Tools table; update hint (`setup_update_tool`, one muted line naming `sdd_update_framework`) above agents heading; **no** secret form on Setup ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Learn Scrum: embed panel with secret form under the iframe ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); footer Admin portal link then copyright |
 | Tabs (WA-06) | Setup, Features, and Scrum in SDD are links (`?tab=features` / `?tab=scrum-in-sdd` on the current path). Click updates client state and the URL, so a full load still opens the selected tab. The tab list sits inside `.guide-sticky` (`z-index: 20`). Inactive panel uses `hidden` with `display: none !important`. Same on `/` and `/instructions`. |
-| Guide tab (Web-portal-12 / feature-16) | Third tab after Features (`?tab=scrum-in-sdd`, `#panel-scrum`). Label key `admin.guide.tab_scrum` is `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant` (not translated). Cache path is `<unpacked>/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Fallback is `src/content/scrum-in-sdd/`. The panel uses `.scrum-body`: `h1` is 1.65rem with 2.75rem above later part titles; `h2` is 1.2rem. List items keep inline markdown. No Features em-dash split. Template seeds stay `templates/{locale}/scrum-in-sdd.md`. Get secret is not on this tab. |
+| Guide tab (Web-portal-12 / feature-16) | Third tab after Features (`?tab=scrum-in-sdd`, `#panel-scrum`). Label key `admin.guide.tab_scrum` is `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant` (not translated). Cache path is `<unpacked>/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Fallback is `src/content/scrum-in-sdd/`. English body order: **Part I** through **Part IV** in sequence. **Part IV** is the 2020 Scrum Guide summary last. The **Index** lists every heading with GitHub-style `#` fragments ([ADR-109](../adr/ADR-109-content-tab-heading-anchors.md)); regenerate with `node scripts/rebuild-scrum-in-sdd-en.mjs` after part or heading edits. Keep lists **tight** in the markdown ([knowledge](../knowledge/agent/cursor-markdown-preview-loose-list.md)). The panel uses `.scrum-body`: `h1` is 1.65rem with 2.75rem above later part titles; `h2` is 1.2rem. List items keep inline markdown. No Features em-dash split. Template seeds stay `templates/{locale}/scrum-in-sdd.md`. Get secret is not on this tab. |
 | Secret form (feature-04 / feature-05, [ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md), [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md) / feature-73) | Learn panel only, after `.learn-embed-fallback`. No intro. Spacing: **15px** iframe→fallback, **45px** fallback→`#learn-secret`. `.secret-stack` with `.secret-lookup` (`.input-box` + `.btn.secret-action-btn`) then **found row** `.codeblock.secret-result-block` with `.codeblock-text` + `.codeblock-copy.secret-action-btn` (Copy width = Get secret). Global `.codeblock`: square corners, `1.5px` border, `var(--fill)` background. Secret-stack codeblock row height **2.125rem**. Mock confirm: [`13-instructions.html`](./ui-mockup/13-instructions.html). |
-| Test ids | `instructions-guide`, `guide-sticky`, `guide-tab-setup`, `guide-tab-features`, `guide-tab-scrum`, `panel-features`, `features-body`, `panel-scrum`, `scrum-body`, `guide-agents`, `copy-setup-prompt`, `copy-mcp-config`, `learn-embed-loading`, `secret-lookup`, `secret-name`, `secret-get`, `secret-result`, `secret-error` |
+| Test ids | `instructions-guide`, `guide-sticky`, `guide-tab-setup`, `guide-tab-features`, `guide-tab-scrum`, `panel-features`, `features-body`, `panel-scrum`, `scrum-body`, `guide-agents`, `setup-highlight`, `setup-update-preface`, `copy-setup-prompt`, `copy-install-phrase`, `copy-install-cmd`, `learn-embed-loading`, `learn-embed-loading-indicator`, `secret-lookup`, `secret-name`, `secret-get`, `secret-result`, `secret-error` |
 | Entry | Home + header open **new tab** |
 | Keys | `admin.guide.*` (secret form: `secret_hint`, `secret_button`, `secret_empty`, `secret_missing`) |
 
@@ -514,9 +514,9 @@ Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scr
 | Default tab | When URL has no `?tab=`, select Setup (`queryParam` `setup`) even if another row is first in JSON |
 | Tab types | **`code`:** React panel from app registry (`CODE_TAB_REGISTRY`; ship `setup` → `<SetupGuidePanel />` extracted from current `InstructionsPage`). **`content`:** server-rendered markdown from explicit per-locale paths in `paths`. |
 | Content paths | `paths.en` required; `zh-Hans` / `zh-Hant` optional. Values are relative to unpack root. Reject `..` and absolute paths. Read cache file first, then package fallback under `src/content/…` for that path (reuse features/scrum reader helpers). |
-| API | `GET /api/sdd/instructions-tabs?locale=` — public; same resolver; response `{ version, source, tabs: [{ type, id, labelKey, queryParam, panelTestId, html?, sourceLocale?, contentSource? }] }` where `source` is `cache` or `bundled` for the config file |
+| API | `GET /api/sdd/instructions-tabs?locale=` — public; same resolver; response `{ version, source, tabs: [{ type, id, label, queryParam, panelTestId, html?, embedUrl?, sourceLocale?, contentSource? }] }` where `source` is `cache` or `bundled` for the config file |
 | Page | Server components on `/` and `/instructions` call resolver + markdown hydration for content tabs; client keeps WA-06 link tabs and panel `hidden` behavior |
-| i18n | Tab labels from `labelKey`; new keys need en / zh-Hans / zh-Hant catalogs |
+| Tab labels ([ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md)) | **`labels`** map on each tab row (`en` required; zh locales optional, fallback `en`). Resolver sets **`label`** for active locale. UI renders `tab.label` only. **`labelKey` removed.** Other guide strings stay in portal `messages/*.json`. |
 | Install | Config and content markdown paths are not on MCP install allow-list |
 | Mockup | [`13-instructions.html`](./ui-mockup/13-instructions.html) shows dynamic tab row; sample **Knowledge** tab is illustrative only |
 | Heading anchors | [ADR-109](../adr/ADR-109-content-tab-heading-anchors.md). See **Content tab heading anchors** below. |
@@ -530,14 +530,22 @@ Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scr
     {
       "type": "code",
       "id": "setup",
-      "labelKey": "admin.guide.tab_setup",
+      "labels": {
+        "en": "Setup",
+        "zh-Hans": "设置",
+        "zh-Hant": "設定"
+      },
       "queryParam": "setup",
       "panelTestId": "panel-setup"
     },
     {
       "type": "content",
       "id": "features",
-      "labelKey": "admin.guide.tab_features",
+      "labels": {
+        "en": "Features",
+        "zh-Hans": "功能",
+        "zh-Hant": "功能"
+      },
       "queryParam": "features",
       "panelTestId": "panel-features",
       "paths": {
@@ -550,7 +558,7 @@ Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scr
 }
 ```
 
-Validation (fail → bundled file only): JSON parse; `version === 1`; non-empty `tabs`; unique `id` and `queryParam`; every `code.id` in allowlist; every `content` row has `paths.en`; paths safe and under allowed roots; at least one `setup` code row recommended for default tab behavior. `validateInstructionsTabsConfig` takes `contentRoot` = sync unpack root; path strings join under that root for checks (see [`framework-design.md`](../framework/framework-design.md#instructions-tabs-config)).
+Validation (fail → bundled file only): JSON parse; `version === 1`; non-empty `tabs`; unique `id` and `queryParam`; every tab has **`labels.en`** (non-empty string); **`labelKey` rejected**; every `code.id` in allowlist; every `content` row has `paths.en`; every `embedded_external_page` row has `urls.en`; paths safe and under allowed roots; at least one `setup` code row recommended for default tab behavior. `validateInstructionsTabsConfig` takes `contentRoot` = sync unpack root; path strings join under that root for checks (see [`framework-design.md`](../framework/framework-design.md#instructions-tabs-config)).
 
 ```mermaid
 flowchart LR
@@ -580,12 +588,12 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | | |
 | --- | --- |
 | Type | `embedded_external_page` in `content/.instructions-tabs.json` |
-| Last tab | `learn-scrum-in-sdd`. `labelKey` `admin.guide.tab_learn_scrum`. `urls.en`, `urls.zh-Hans`, and `urls.zh-Hant` are all `https://sdd.works/en/learn-embedded/` |
+| Last tab | `learn-scrum-in-sdd`. `labels` per locale (for example en `Learn Scrum in SDD`). `urls.en`, `urls.zh-Hans`, and `urls.zh-Hant` are all `https://sdd.works/en/learn-embedded/` |
 | Panel | One iframe (`learn-scrum-iframe`) plus an open-in-new-tab link. Guide tokens only. No border on the iframe ([ADR-112](../adr/ADR-112-learn-embed-frame.md)) |
 | Allowlist | `https` and host `sdd.works` or `www.sdd.works` |
 | Default tab | Setup when `?tab=` is absent |
 | Frame | `.learn-embed-frame`: `width: 100%`, `border: 0`. No fixed `aspect-ratio` ([ADR-114](../adr/ADR-114-learn-embed-auto-height.md)). Height set inline from postMessage. Fallback height until first valid message. No crop via `transform` or `overflow` |
-| Loading ([ADR-118](../adr/ADR-118-learn-embed-loading-skeleton.md)) | Host `.learn-embed-frame-host` wraps iframe plus overlay `.learn-embed-skeleton` (`data-testid="learn-embed-loading"`). Overlay: 3×3 grid aligned to tile aspect ratio; `pointer-events: none`. Shown until iframe `load`; reset on `embedUrl` change. Host `aria-busy` toggles with loading. Label key `admin.guide.learn_scrum_embed_loading`. Pulse animation only when `prefers-reduced-motion: no-preference`. Fallback link and `#learn-secret` stay outside the host and remain visible while loading. |
+| Loading ([ADR-118](../adr/ADR-118-learn-embed-loading-skeleton.md), centered indicator [ADR-120](../adr/ADR-120-learn-embed-centered-loading-indicator.md) / [WA-17](../issues-log.md)) | Host `.learn-embed-frame-host` wraps iframe plus overlay `.learn-embed-skeleton` (`data-testid="learn-embed-loading"`) and `.learn-embed-loading-indicator` (`data-testid="learn-embed-loading-indicator"`, `aria-hidden="true"`). Indicator centered in the host above the grid; ink/line ring ~1.25rem; rotate only when motion allowed. Iframe not painted until `load` (`visibility: hidden` while loading). Skeleton cells stay opaque; pulse background only. Overlay: 3×3 grid; `pointer-events: none`. Shown until iframe `load`; reset on `embedUrl` change. Host `aria-busy` and `admin.guide.learn_scrum_embed_loading` unchanged. Fallback and `#learn-secret` outside host. |
 | Resize | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx) (client): listen for `{ type: "sdd-learn-embed-height", height: number }` from embed host origins. Shared constant in [`src/lib/learn-embed-messaging.ts`](../../src/lib/learn-embed-messaging.ts) (new). |
 | sdd.works dependency | `learn-embedded` page: full-width grid CSS and script that posts height to the portal origin. Not built in this repo. |
 | Copy ([ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md), spacing [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)) | No intro. Fallback link **15px** below iframe. Iframe `src` from resolver |
@@ -695,3 +703,27 @@ Containment targets in [`src/styles/portal.css`](../../src/styles/portal.css):
 - `.secret-stack` / `.secret-lookup`: `max-width: 100%` on the Learn tab at all viewport widths. The lookup input must shrink below a fixed `32rem` before the `@media (max-width: 640px)` stack rule, or that breakpoint moves up, so viewports between ~520px and 640px do not overflow.
 
 Verification: [`app-tests.md`](./app-tests.md) §19. Acceptance remains AC27; no new label keys.
+
+##### Learn embed centered loader (WA-17 / ADR-120)
+
+[ADR-120](../adr/ADR-120-learn-embed-centered-loading-indicator.md). [WA-17](../issues-log.md).
+
+**UI:** One ring centered in the frame host over the 3×3 skeleton. Guide ink and line tokens only. The skeleton grid stays; the ring is the primary motion cue.
+
+**Technical:** [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx) renders `learn-embed-loading-indicator` while `!iframeLoaded`. [`portal.css`](../../src/styles/portal.css) matches [`mockup.css`](./ui-mockup/assets/mockup.css) for indicator placement and skeleton background pulse (not whole-cell opacity). Iframe gets a loading class with `visibility: hidden` until `load`.
+
+**Mockup:** [`13-instructions.html`](./ui-mockup/13-instructions.html) `data-mockup-state="loading"`.
+
+Verification: [`app-tests.md`](./app-tests.md) §23; AC34.
+
+##### Brand wordmark (ADR-121)
+
+[ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). [Web-portal-34](../product-backlog.md#pb-131).
+
+**UI:** Cyan **SDD**, splatter, orange **WORKS** on transparent PNG. Same height tokens as today; `object-fit: contain` preserves the 718×256 aspect in header, auth, and guide hero.
+
+**Technical:** Authoring file [`src/618x618.logos.png`](../../src/618x618.logos.png). Implementation copies to [`public/sdd-logo.png`](../../public/sdd-logo.png). [`Logo.tsx`](../../src/components/ui/Logo.tsx) sets `width={718}` and `height={256}` on `next/image`. No URL change. Optional CSS offset tweaks only after mockup sign-off.
+
+**Mockup:** [`ui-mockup/assets/sdd-logo.png`](./ui-mockup/assets/sdd-logo.png). Review on [`13-instructions.html`](./ui-mockup/13-instructions.html), [`01-home.html`](./ui-mockup/01-home.html), [`02-login.html`](./ui-mockup/02-login.html).
+
+Verification: [`app-tests.md`](./app-tests.md) §24; AC35. Production asset swap waits on mockup approval.

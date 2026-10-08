@@ -4,14 +4,22 @@
     {
       "type": "code",
       "id": "setup",
-      "labelKey": "admin.guide.tab_setup",
+      "labels": {
+        "en": "Setup",
+        "zh-Hans": "安装",
+        "zh-Hant": "安裝"
+      },
       "queryParam": "setup",
       "panelTestId": "panel-setup"
     },
     {
       "type": "content",
       "id": "features",
-      "labelKey": "admin.guide.tab_features",
+      "labels": {
+        "en": "Features",
+        "zh-Hans": "功能",
+        "zh-Hant": "功能"
+      },
       "queryParam": "features",
       "panelTestId": "panel-features",
       "paths": {
@@ -23,7 +31,11 @@
     {
       "type": "content",
       "id": "scrum-in-sdd",
-      "labelKey": "admin.guide.tab_scrum",
+      "labels": {
+        "en": "Scrum in SDD",
+        "zh-Hans": "Scrum in SDD",
+        "zh-Hant": "Scrum in SDD"
+      },
       "queryParam": "scrum-in-sdd",
       "panelTestId": "panel-scrum",
       "paths": {
@@ -35,7 +47,11 @@
     {
       "type": "content",
       "id": "invoke-agents",
-      "labelKey": "admin.guide.tab_invoke_agents",
+      "labels": {
+        "en": "How to invoke custom agents",
+        "zh-Hans": "如何召唤自建智能体",
+        "zh-Hant": "如何叫出自訂智能體"
+      },
       "queryParam": "invoke-agents",
       "panelTestId": "panel-invoke-agents",
       "paths": {
@@ -47,7 +63,11 @@
     {
       "type": "embedded_external_page",
       "id": "learn-scrum-in-sdd",
-      "labelKey": "admin.guide.tab_learn_scrum",
+      "labels": {
+        "en": "Learn Scrum in SDD",
+        "zh-Hans": "学习 Scrum in SDD",
+        "zh-Hant": "學習 Scrum in SDD"
+      },
       "queryParam": "learn-scrum-in-sdd",
       "panelTestId": "panel-learn-scrum",
       "urls": {

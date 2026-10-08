@@ -23,9 +23,9 @@
         <header class="guide-hero">
           <div class="guide-hero-title">
             <a class="logo" href="01-home.html" aria-label="framework.sdd.works">
-              <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="234" height="130" />
+              <img class="logo-header-mark" src="assets/sdd-logo.png" alt="" width="718" height="256" />
             </a>
-            <h1 data-i18n="admin.guide.title">Install framework.sdd.works to your AI tools</h1>
+            <h1 data-i18n="admin.guide.title">Built on Harness. Ready for Scrum</h1>
           </div>
           <p class="guide-hero-tag" data-i18n="admin.guide.lead">SKILLS.RULES.AGENTS.TEMPLATES</p>
         </header>
@@ -126,49 +126,17 @@
                 </div>
               </div>
             </div>
-
-            <div class="setup-manual">
-              <h3 class="section-subtitle" data-i18n="admin.guide.manual_title">Manual setup</h3>
-              <p class="field-note" data-i18n="admin.guide.manual_body">Prefer not to use the setup prompt? Add this MCP entry. Leave every other server unchanged.</p>
-              <div class="codeblock codeblock--file">
-                <div class="codeblock-head">
-                  <span class="codeblock-tag">mcp.json</span>
-                  <button
-                    class="codeblock-copy"
-                    type="button"
-                    data-copy='{
-  "mcpServers": {
-    "framework.sdd.works": {
-      "command": "${userHome}/.sdd/sdd-mcp",
-      "env": {
-        "SDD_SERVER_URL": "https://framework.sdd.works"
-      }
-    }
-  }
-}'
-                    data-i18n="admin.keys.copy"
-                    data-testid="copy-mcp-config"
-                  >
-                    Copy
-                  </button>
-                </div>
-                <pre class="codeblock-text mono">{
-  "mcpServers": {
-    "framework.sdd.works": {
-      "command": "${userHome}/.sdd/sdd-mcp",
-      "env": {
-        "SDD_SERVER_URL": "https://framework.sdd.works"
-      }
-    }
-  }
-}</pre>
-              </div>
-            </div>
           </section>
 
           <section class="guide-section" id="agents">
+            <p
+              class="setup-after setup-update-preface"
+              data-testid="setup-update-preface"
+              data-i18n="admin.guide.setup_update_tool"
+            >
+              To pull the latest pack, call the MCP tool: sdd_update_framework
+            </p>
             <h2 class="section-subtitle" data-i18n="admin.guide.h_agents">Supported AI agents</h2>
-            <p data-i18n="admin.guide.agents_intro">Paste the setup prompt into any of these agents. One MCP server; install writes to that agent’s local paths.</p>
             <ol class="agent-roster" data-testid="guide-agents">
               <li class="agent-roster-row">
                 <span class="agent-roster-mark" aria-hidden="true">
@@ -213,34 +181,6 @@
                 <span class="agent-roster-name">AWS Kiro</span>
               </li>
             </ol>
-          </section>
-
-          <section class="guide-section" id="tools">
-            <h2 class="section-subtitle" data-i18n="admin.guide.h_tools">Tools</h2>
-            <div class="table-wrap">
-              <table class="guide-caps-table">
-                <thead>
-                  <tr>
-                    <th data-i18n="admin.guide.cap_col_tool">Tool</th>
-                    <th data-i18n="admin.guide.cap_col_body">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><code>sdd_list_versions</code></td>
-                    <td data-i18n="admin.guide.tool_list_versions">List package versions and inventory. Read-only.</td>
-                  </tr>
-                  <tr>
-                    <td><code>sdd_install_framework</code></td>
-                    <td data-i18n="admin.guide.tool_install">Install agents, skills, rules, and other capabilities from framework.sdd.works</td>
-                  </tr>
-                  <tr>
-                    <td><code>sdd_update_framework</code></td>
-                    <td data-i18n="admin.guide.tool_update">Update the framework.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
           </section>
         </div>
 

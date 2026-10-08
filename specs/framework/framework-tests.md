@@ -246,7 +246,14 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 - **Layer:** CI (automated).
 - **Pre-condition:** `pack.framework.sdd.works/` is the pack authoring tree.
 - **Test steps:** Run `npm run check:pack-seeds`.
-- **Expected results:** Exit 0. No parent-relative markdown link targets this product repo's `specs/adr/`, `framework-design.md`, `seed-artifacts-building-guide.md`, or root `product-backlog.md`. Rule: `sdd-pack-authoring.mdc`.
+- **Expected results:** Exit 0. No markdown link `href` under the pack tree contains `specs/adr/` or `specs/knowledge/` (product-repo ADR and Knowledge trees are not in the install tarball). No parent-relative markdown link targets this product repo's `framework-design.md`, `seed-artifacts-building-guide.md`, or root `product-backlog.md`. Rule: [`sdd-pack-authoring.mdc`](../../pack.framework.sdd.works/rules/sdd-pack-authoring.mdc). OGT 2 in [`status.md`](../status.md).
+
+#### CE-PACK-07 — Pack path prose uses map placeholders
+
+- **Layer:** CI (automated) or review checklist until scripted.
+- **Pre-condition:** Pack markdown under `content/` and `templates/` describes ADR or Knowledge storage.
+- **Test steps:** Search `pack.framework.sdd.works/` for the literal segments `/specs/adr` and `/specs/knowledge` outside fenced `artifacts-map.json` examples and outside `sdd-pack-authoring.mdc` ban examples.
+- **Expected results:** Portal and template copy names `{workspace}/{adr}` and `{workspace}/{knowledge}` (or `{workspace-folder}/{adr}`) per [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#artifacts-mapjson). Plain text may cite an ADR id (for example `ADR-119`) without a link. JSON example values `"adr": "specs/adr"` in the practices map block stay allowed as a default map shape, not as a markdown link.
 
 #### CE-LOCALE-01 — Empty locale
 
@@ -496,6 +503,13 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Pre-condition:** Seed: `pack.framework.sdd.works/skills/sdd-update-specs/SKILL.md`.
 - **Test steps:** Read the description and Limits section.
 - **Expected results:** The description states engineering specs and names adjacent skills. Limits ban writes to the five process files. The skill waits for chat confirm before a project write.
+
+#### CE-SKILL-22 — sdd-update-project secret registry
+
+- **Layer:** L1.
+- **Pre-condition:** Seed: `pack.framework.sdd.works/skills/sdd-update-project/SKILL.md`. Design: [framework-design § sdd-update-project](../framework/framework-design.md#sdd-update-project).
+- **Test steps:** Read the description, task 8 bullets, and Limits if present. Read [framework-stories § sdd-update-project](../framework/framework-stories.md#sdd-update-project) AC1 through AC5.
+- **Expected results:** The description or body names database, API, or auth secrets as the recommend trigger. Task 8 includes `{artifacts_root}/.secrets` in the Confirm summary when recommended, copy from `{client_root}/templates/framework.sdd.works/{locale}/.secrets` only when the target is missing, and add the path to `files[]` when the confirmed summary kept that line. The skill asks one secrets question when the workspace is empty or has no stack signal. The skill does not place `.secrets` at workspace root. The skill does not write values into `.secrets` and does not edit `.env`, `.env.local`, or `.env.example`. AC1 through AC5 match the seed behavior after implement.
 
 #### CE-SKILL-08 — get-status in HanS
 
@@ -1163,7 +1177,7 @@ Run: `npm test -- src/core/seeds/instructions-tabs-config.test.ts`
 | Case | Vitest describe / behavior |
 | --- | --- |
 | CE-TABS-01 | Bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) passes validation when `contentRoot` is pack-shaped (`pack.framework.sdd.works/`) |
-| CE-TABS-02 | Invalid documents fail: wrong `version`, duplicate `queryParam`, unknown `code.id`, missing `paths.en`, path traversal |
+| CE-TABS-02 | Invalid documents fail: wrong `version`, duplicate `queryParam`, unknown `code.id`, missing `paths.en`, path traversal, missing or empty `labels.en`, presence of `labelKey` ([ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md)) |
 
 ### Cases
 

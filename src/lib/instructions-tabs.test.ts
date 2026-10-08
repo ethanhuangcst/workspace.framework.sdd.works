@@ -85,13 +85,17 @@ describe("resolveInstructionsTabs", () => {
       "invoke-agents",
       "learn-scrum-in-sdd",
     ]);
+    expect(result.tabs.find((t) => t.id === "setup")?.label).toBe("Setup");
+    expect(result.tabs.find((t) => t.id === "features")?.label).toBe("Features");
     const features = result.tabs.find((t) => t.id === "features");
     expect(features?.html).toContain("Cache tabs EN");
     expect(features?.contentSource).toBe("cache");
     expect(result.tabs.find((t) => t.id === "setup")?.html).toBeUndefined();
     const learn = result.tabs.find((t) => t.id === "learn-scrum-in-sdd");
     expect(learn?.type).toBe("embedded_external_page");
+    expect(learn?.label).toBe("Learn Scrum in SDD");
     expect(learn?.embedUrl).toBe("https://sdd.works/en/learn-embedded/");
+    expect(learn).not.toHaveProperty("labelKey");
     const invoke = result.tabs.find((t) => t.id === "invoke-agents");
     expect(invoke?.html).toContain('<div class="content-table"><table>');
     expect(invoke?.html).toContain("</table></div>");
@@ -133,5 +137,7 @@ describe("resolveInstructionsTabs", () => {
     const features = result.tabs.find((t) => t.id === "features");
     expect(features?.sourceLocale).toBe("en");
     expect(features?.html).toContain("EN fallback");
+    expect(features?.label).toBe("功能");
+    expect(result.tabs.find((t) => t.id === "setup")?.label).toBe("安裝");
   });
 });

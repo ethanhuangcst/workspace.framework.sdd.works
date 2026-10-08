@@ -9,14 +9,14 @@ const tabs: InstructionsPageTab[] = [
     type: "code",
     id: "setup",
     queryParam: "setup",
-    labelKey: "admin.guide.tab_setup",
+    label: "Setup",
     panelTestId: "panel-setup",
   },
   {
     type: "content",
     id: "features",
     queryParam: "features",
-    labelKey: "admin.guide.tab_features",
+    label: "Features",
     panelTestId: "panel-features",
   },
 ];

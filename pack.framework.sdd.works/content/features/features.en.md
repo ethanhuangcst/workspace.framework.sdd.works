@@ -1,10 +1,8 @@
-v.0.1.0
+## What does sdd.works framework do
 
-## What the framework does
-
-- Provide a guide and practice book for SDD-Scrum: Spec-Driven Development with Scrum for agentic programming under Harness Engineering.
-- Install framework artifacts that set boundaries for AI agents — rules, skills, and related assets — in your agent tools.
-- On-board an AI agent coach: ethan.
+- Scrum in SDD: Defines a Spec-Driven Development approach aligned with Scrum
+- SDD.works: Install a framework pack to implement Scrum in SDD framework  
+- SDD-Scrum Practices: Provides a practice book to govern AI agents to follow Harness Engineering principles
 
 ## Features
 

@@ -6,19 +6,7 @@ import { CopyButton } from "@/components/ui/CopyButton";
 const SETUP_SENTENCE =
   "Fetch and execute the setup instructions from https://framework.sdd.works/setup";
 
-const MCP_CONFIG = `{
-  "mcpServers": {
-    "framework.sdd.works": {
-      "command": "\${userHome}/.sdd/sdd-mcp",
-      "env": {
-        "SDD_SERVER_URL": "https://framework.sdd.works"
-      }
-    }
-  }
-}`;
-
 const INSTALL_CMD = "sdd_install_framework";
-
 const AGENT_LOGOS = [
   { src: "/guide/claude.png", alt: "Claude" },
   { src: "/guide/cursor.png", alt: "Cursor" },
@@ -34,17 +22,6 @@ const AGENT_ROSTER = [
   { icon: "/guide/trae.png", name: "TraeCode CN / TRAE" },
   { icon: "/guide/copilot.png", name: "GitHub Copilot" },
   { icon: "/guide/kiro.png", name: "AWS Kiro" },
-] as const;
-
-const TOOLS = [
-  {
-    name: "sdd_install_framework",
-    bodyKey: "admin.guide.tool_install",
-  },
-  {
-    name: "sdd_update_framework",
-    bodyKey: "admin.guide.tool_update",
-  },
 ] as const;
 
 function AgentToolIcons() {
@@ -93,6 +70,9 @@ export function SetupGuidePanel({ locale }: { locale: Locale }) {
     <>
       <section className="guide-section" id="setup">
         <div className="setup-card">
+          <p className="setup-highlight" data-testid="setup-highlight">
+            {t(locale, "admin.guide.setup_highlight")}
+          </p>
           <CopyButton
             className="setup-pill"
             value={SETUP_SENTENCE}
@@ -132,31 +112,16 @@ export function SetupGuidePanel({ locale }: { locale: Locale }) {
             />
           </div>
         </div>
-
-        <div className="setup-manual">
-          <h3 className="section-subtitle">
-            {t(locale, "admin.guide.manual_title")}
-          </h3>
-          <p className="field-note">{t(locale, "admin.guide.manual_body")}</p>
-          <div className="codeblock codeblock--file">
-            <div className="codeblock-head">
-              <span className="codeblock-tag">mcp.json</span>
-              <CopyButton
-                className="codeblock-copy"
-                value={MCP_CONFIG}
-                label={t(locale, "admin.keys.copy")}
-                copiedLabel={t(locale, "admin.common.copied")}
-                data-testid="copy-mcp-config"
-              />
-            </div>
-            <pre className="codeblock-text mono">{MCP_CONFIG}</pre>
-          </div>
-        </div>
       </section>
 
       <section className="guide-section" id="agents">
+        <p
+          className="setup-after setup-update-preface"
+          data-testid="setup-update-preface"
+        >
+          {t(locale, "admin.guide.setup_update_tool")}
+        </p>
         <h2 className="section-subtitle">{t(locale, "admin.guide.h_agents")}</h2>
-        <p>{t(locale, "admin.guide.agents_intro")}</p>
         <ol className="agent-roster" data-testid="guide-agents">
           {AGENT_ROSTER.map((agent) => (
             <li key={agent.name} className="agent-roster-row">
@@ -174,30 +139,6 @@ export function SetupGuidePanel({ locale }: { locale: Locale }) {
             </li>
           ))}
         </ol>
-      </section>
-
-      <section className="guide-section" id="tools">
-        <h2 className="section-subtitle">{t(locale, "admin.guide.h_tools")}</h2>
-        <div className="table-wrap">
-          <table className="guide-caps-table">
-            <thead>
-              <tr>
-                <th>{t(locale, "admin.guide.cap_col_tool")}</th>
-                <th>{t(locale, "admin.guide.cap_col_body")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {TOOLS.map((tool) => (
-                <tr key={tool.name}>
-                  <td>
-                    <code>{tool.name}</code>
-                  </td>
-                  <td>{t(locale, tool.bodyKey)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </section>
     </>
   );

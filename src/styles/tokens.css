@@ -21,6 +21,7 @@
   --btn-tracking: 0.08em;
   --btn-page-min: 10.5rem;
   --font-ui: "Outfit", "Noto Sans SC", "Noto Sans TC", system-ui, sans-serif;
+  --font-hero: "Antonio", "Noto Sans SC", "Noto Sans TC", "Outfit", system-ui, sans-serif;
   --font-cn: "Noto Sans SC", "Noto Sans TC", "Outfit", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --max: 760px;

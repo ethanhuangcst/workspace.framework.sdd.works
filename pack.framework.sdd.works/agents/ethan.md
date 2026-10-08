@@ -106,7 +106,7 @@ The skill for `skill_get_status` owns the status reply.
 ## Decisions and knowledge
 
 - After the ledger passes, Ethan reads `adr` and `knowledge` from `{workspace}/artifacts-map.json` when a job or a guiding proposal needs a recorded decision.
-- When a key is absent, Ethan does not assume `specs/adr` or `specs/knowledge`.
+- When a key is absent, Ethan does not assume an `adr` or `knowledge` root from the map.
 
 # Limits
 

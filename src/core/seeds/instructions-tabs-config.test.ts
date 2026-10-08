@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   INSTRUCTIONS_TABS_PACK_RELATIVE,
+  resolveInstructionsTabLabel,
   validateInstructionsTabsConfig,
 } from "./instructions-tabs-config";
 
@@ -20,14 +21,22 @@ function baseValidDoc(): Record<string, unknown> {
       {
         type: "code",
         id: "setup",
-        labelKey: "admin.guide.tab_setup",
+        labels: {
+          en: "Setup",
+          "zh-Hans": "安装",
+          "zh-Hant": "安裝",
+        },
         queryParam: "setup",
         panelTestId: "panel-setup",
       },
       {
         type: "content",
         id: "features",
-        labelKey: "admin.guide.tab_features",
+        labels: {
+          en: "Features",
+          "zh-Hans": "功能",
+          "zh-Hant": "功能",
+        },
         queryParam: "features",
         panelTestId: "panel-features",
         paths: {
@@ -172,7 +181,7 @@ describe("CE-TABS-02 — reject invalid config", () => {
     (doc.tabs as unknown[]).push({
       type: "embedded_external_page",
       id: "learn-scrum-in-sdd",
-      labelKey: "admin.guide.tab_learn_scrum",
+      labels: { en: "Learn Scrum in SDD" },
       queryParam: "learn-scrum-in-sdd",
       panelTestId: "panel-learn-scrum",
       urls: { en: "https://example.com/learn/" },
@@ -185,5 +194,70 @@ describe("CE-TABS-02 — reject invalid config", () => {
     if (!result.ok) {
       expect(result.errors.some((e) => e.includes("example.com"))).toBe(true);
     }
+  });
+
+  it("should_fail_when_labelKey_is_present", () => {
+    const doc = baseValidDoc();
+    const tabs = doc.tabs as Record<string, unknown>[];
+    tabs[0] = { ...tabs[0], labelKey: "admin.guide.tab_setup" };
+    const result = validateInstructionsTabsConfig(doc, {
+      contentRoot: packRoot,
+      checkFilesExist: false,
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.some((e) => e.includes("labelKey"))).toBe(true);
+    }
+  });
+
+  it("should_fail_when_labels_en_is_missing", () => {
+    const doc = baseValidDoc();
+    const tabs = doc.tabs as Record<string, unknown>[];
+    tabs[0] = {
+      ...tabs[0],
+      labels: { "zh-Hans": "安装" },
+    };
+    const result = validateInstructionsTabsConfig(doc, {
+      contentRoot: packRoot,
+      checkFilesExist: false,
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.some((e) => e.includes("labels.en"))).toBe(true);
+    }
+  });
+
+  it("should_fail_when_labels_en_is_empty", () => {
+    const doc = baseValidDoc();
+    const tabs = doc.tabs as Record<string, unknown>[];
+    tabs[0] = {
+      ...tabs[0],
+      labels: { en: "   " },
+    };
+    const result = validateInstructionsTabsConfig(doc, {
+      contentRoot: packRoot,
+      checkFilesExist: false,
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.some((e) => e.includes("labels.en"))).toBe(true);
+    }
+  });
+});
+
+describe("resolveInstructionsTabLabel", () => {
+  it("should_use_locale_label_when_present", () => {
+    expect(
+      resolveInstructionsTabLabel(
+        { en: "Setup", "zh-Hans": "安装", "zh-Hant": "安裝" },
+        "zh-Hans",
+      ),
+    ).toBe("安装");
+  });
+
+  it("should_fall_back_to_en_when_locale_absent", () => {
+    expect(
+      resolveInstructionsTabLabel({ en: "Setup", "zh-Hans": "安装" }, "zh-Hant"),
+    ).toBe("Setup");
   });
 });

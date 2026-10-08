@@ -183,8 +183,15 @@ describe("LearnScrumEmbedPanel", () => {
     expect(skeleton.querySelectorAll(".learn-embed-skeleton-cell")).toHaveLength(
       9,
     );
-    fireEvent.load(screen.getByTestId("learn-scrum-iframe"));
+    expect(screen.getByTestId("learn-embed-loading-indicator")).toBeInTheDocument();
+    const iframe = screen.getByTestId("learn-scrum-iframe");
+    expect(iframe).toHaveClass("learn-embed-frame--loading");
+    fireEvent.load(iframe);
     expect(screen.queryByTestId("learn-embed-loading")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("learn-embed-loading-indicator"),
+    ).not.toBeInTheDocument();
+    expect(iframe).not.toHaveClass("learn-embed-frame--loading");
     expect(host).toHaveAttribute("aria-busy", "false");
   });
 

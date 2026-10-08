@@ -11,7 +11,8 @@
     "specs/changes-log.md",
     "specs/architecture.md",
     "specs/release.md",
-    "specs/test-strategy.md"
+    "specs/test-strategy.md",
+    "specs/.secrets"
   ],
   "modules": [
     {

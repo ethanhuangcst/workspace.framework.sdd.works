@@ -37,6 +37,10 @@ A grid skeleton reserves the same mental model as the course tiles, fits the exi
 - [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx) gains loading state and markup; [`portal.css`](../../src/styles/portal.css) gains skeleton rules.
 - AC32 in [`app-stories.md`](../admin-portal/app-stories.md); §21 in [`app-tests.md`](../admin-portal/app-tests.md).
 
+## Amendments
+
+- [ADR-120](./ADR-120-learn-embed-centered-loading-indicator.md) (2026-10-08): centered portal loading indicator, hide iframe paint until `load`, opaque skeleton pulse. [WA-17](../issues-log.md).
+
 ## Date
 
 2026-10-07

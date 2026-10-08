@@ -22,10 +22,11 @@ Blank-password first-login bootstrap for the **default** admin is retired. Empty
 
 ## Brand logo rendering
 
-- Asset `public/sdd-logo.png` is RGBA with transparent background.
-- Do **not** set `.logo img { background: #000 }`.
+- Authoring source: `src/618x618.logos.png` (718×256 RGBA). Deployed URL: `public/sdd-logo.png` → `/sdd-logo.png` ([ADR-121](../../adr/ADR-121-sdd-works-wordmark-logo.md)).
+- Do **not** set `.logo img { background: #000 }` or any opaque plate behind the wordmark.
 - Display sizes (200% of original tokens): home `144px`, auth `112px`, header `72px`.
 - Offsets: home `margin-left: -30px`; header `margin-left: -22px`.
+- Square `sdd-mark.png` for mail and MCP is unchanged by ADR-121.
 
 ## CI / E2E
 

@@ -2,7 +2,7 @@ export type InstructionsPageTab = {
   id: string;
   type: "code" | "content" | "embedded_external_page";
   queryParam: string;
-  labelKey: string;
+  label: string;
   panelTestId: string;
   html?: string;
   embedUrl?: string;

@@ -121,6 +121,25 @@ describe("renderPortalMarkdown", () => {
     expect(renderPortalMarkdown(md)).toContain("Scrum in SDD");
   });
 
+  it("should_match_index_hrefs_to_rendered_heading_ids", () => {
+    const md = readFileSync(
+      join(
+        process.cwd(),
+        "pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md",
+      ),
+      "utf8",
+    );
+    const html = renderPortalMarkdown(md);
+    const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+    const indexSection = md.split("## Index")[1]?.split(/^# \*\*Part /m)[0] ?? "";
+    const hrefs = [...indexSection.matchAll(/\]\(#([^)]+)\)/g)].map((m) => m[1]);
+    for (const href of hrefs) {
+      expect(ids.has(href), `missing heading id for index #${href}`).toBe(true);
+    }
+    expect(hrefs.some((h) => h.startsWith("part-i-"))).toBe(true);
+    expect(hrefs.some((h) => h.startsWith("part-iv-"))).toBe(true);
+  });
+
   it("should_add_github_style_id_when_heading_has_bold", () => {
     const html = renderPortalMarkdown(
       "# **Part I** The 2020 Scrum Guide Summary\n",

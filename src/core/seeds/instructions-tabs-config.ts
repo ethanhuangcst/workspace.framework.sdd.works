@@ -103,18 +103,42 @@ export function validateInstructionsTabsConfig(
     const type = tab.type;
 
     if (typeof type !== "string" || !TAB_TYPES.has(type)) {
-      errors.push(`${prefix}.type must be code or content`);
+      errors.push(
+        `${prefix}.type must be code, content, or embedded_external_page`,
+      );
       continue;
     }
 
-    for (const field of [
-      "id",
-      "labelKey",
-      "queryParam",
-      "panelTestId",
-    ] as const) {
+    if (tab.labelKey !== undefined) {
+      errors.push(`${prefix}.labelKey is not allowed; use labels`);
+    }
+
+    for (const field of ["id", "queryParam", "panelTestId"] as const) {
       if (!isNonEmptyString(tab[field])) {
         errors.push(`${prefix}.${field} must be a non-empty string`);
+      }
+    }
+
+    const labelsRaw = tab.labels;
+    if (
+      labelsRaw === null ||
+      typeof labelsRaw !== "object" ||
+      Array.isArray(labelsRaw)
+    ) {
+      errors.push(`${prefix}.labels must be an object`);
+    } else {
+      const labels = labelsRaw as Record<string, unknown>;
+      if (!isNonEmptyString(labels.en)) {
+        errors.push(`${prefix}.labels.en is required`);
+      }
+      for (const [locale, value] of Object.entries(labels)) {
+        if (!KNOWN_PATH_LOCALES.has(locale)) {
+          errors.push(`${prefix}.labels unknown locale key: ${locale}`);
+          continue;
+        }
+        if (!isNonEmptyString(value)) {
+          errors.push(`${prefix}.labels.${locale} must be a non-empty string`);
+        }
       }
     }
 
@@ -227,10 +251,16 @@ export function validateInstructionsTabsConfig(
   return { ok: true };
 }
 
+export type InstructionsTabLabels = {
+  en: string;
+  "zh-Hans"?: string;
+  "zh-Hant"?: string;
+};
+
 export type InstructionsTabCode = {
   type: "code";
   id: string;
-  labelKey: string;
+  labels: InstructionsTabLabels;
   queryParam: string;
   panelTestId: string;
 };
@@ -238,7 +268,7 @@ export type InstructionsTabCode = {
 export type InstructionsTabContent = {
   type: "content";
   id: string;
-  labelKey: string;
+  labels: InstructionsTabLabels;
   queryParam: string;
   panelTestId: string;
   paths: Record<string, string>;
@@ -247,11 +277,21 @@ export type InstructionsTabContent = {
 export type InstructionsTabEmbed = {
   type: "embedded_external_page";
   id: string;
-  labelKey: string;
+  labels: InstructionsTabLabels;
   queryParam: string;
   panelTestId: string;
   urls: Record<string, string>;
 };
+
+/** Resolve tab bar text for a locale; missing locales use labels.en. */
+export function resolveInstructionsTabLabel(
+  labels: InstructionsTabLabels,
+  locale: string,
+): string {
+  const value = (labels as Record<string, string | undefined>)[locale];
+  if (typeof value === "string" && value.trim().length > 0) return value;
+  return labels.en;
+}
 
 export type InstructionsTab =
   | InstructionsTabCode

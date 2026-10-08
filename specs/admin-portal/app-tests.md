@@ -185,16 +185,17 @@ Re-run when content-tab markdown renderers or heading slug rules change. **featu
 
 | Case | Expect |
 | --- | --- |
-| `# **Part I** The 2020 Scrum Guide Summary` through `renderPortalMarkdown` | `<h1 id="part-i-the-2020-scrum-guide-summary">` |
+| `# **Part IV** The 2020 Scrum Guide Summary` through `renderPortalMarkdown` | `<h1 id="part-iv-the-2020-scrum-guide-summary">` |
 | Two headings with plain text `Rules` in one document | ids `rules` and `rules-1` |
 | A second `renderPortalMarkdown` call | slug counter starts again at the bare id |
 | Features markdown with an `h2` and an em-dash list row | heading has an `id`; the row still uses `feature-name` and `feature-desc` |
-| Browser | On `/instructions?tab=scrum-in-sdd`, activate the Part I index link. The heading is in view and not under the tab bar. |
+| Browser | On `/instructions?tab=scrum-in-sdd`, activate the Part I index link and the Part IV index link (Scrum Guide summary). Each heading is in view and not under the tab bar. |
 
-- [ ] Bold Part I heading id matches the Index fragment
+- [ ] Bold Part IV heading id matches the Index fragment
 - [ ] Duplicate heading ids use `slug` then `slug-1`
 - [ ] Features em-dash split still works and the heading has an id
-- [ ] Part I index link on the Scrum tab scrolls to that heading
+- [ ] Index `#` fragments on the pack English file match rendered heading ids (Vitest `should_match_index_hrefs_to_rendered_heading_ids`)
+- [ ] Part I and Part IV index links on the Scrum tab scroll to those headings
 - [ ] No console or server error on that path
 
 ## 14. Regression after Web-portal-29
@@ -332,3 +333,57 @@ Run before AC32 is **Done**. [ADR-118](../adr/ADR-118-learn-embed-loading-skelet
 - [ ] Skeleton 3×3 visible until iframe load
 - [ ] Fallback and Get secret not covered by overlay
 - [ ] Reduced motion disables skeleton pulse
+
+## 22. Regression after ADR-119 (Instructions tab labels)
+
+Run before **WA-16** closes and **Web-portal-33** is **Done**. [ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md). AC33.
+
+| Layer | Check |
+| --- | --- |
+| Schema | Pack and bundled `content/.instructions-tabs.json` use **`labels`** on every tab row. No `labelKey`. |
+| Validator | `validateInstructionsTabsConfig` fails when `labelKey` is present or `labels.en` is missing or empty. |
+| Resolver / API | `GET /api/sdd/instructions-tabs?locale=` returns **`label`** per tab from `labels[locale]` with en fallback. Response tabs omit `labelKey`. |
+| UI | `InstructionsPage` tab buttons show resolved **`label`**; no `t(locale, labelKey)` for tabs. |
+| Pack | Operator doc [`content/.admin-note.md`](../../src/content/.admin-note.md) and pack copy describe **`labels` only**. |
+| Unit | `instructions-tabs-config.test.ts`, `instructions-tabs.test.ts`, `InstructionsPage.test.tsx` use `labels` fixtures. |
+| Browser | Change `labels.en` for one tab in cache config, sync, reload guide: tab bar shows new text without editing `messages/*.json`. |
+
+- [ ] All tab types (`code`, `content`, `embedded_external_page`) use labels only
+- [ ] zh-Hant missing uses en label
+- [ ] Invalid labelKey config falls back to bundled JSON when bundled file is valid
+- [ ] Obsolete `admin.guide.tab_*` message keys removed or unused
+
+## 23. Regression after WA-17 / ADR-120 (Learn embed centered loader)
+
+Run before [WA-17](../issues-log.md) closes. AC34 in [`app-stories.md`](./app-stories.md). [ADR-120](../adr/ADR-120-learn-embed-centered-loading-indicator.md). No new API route and no new message keys.
+
+| Layer | Check |
+| --- | --- |
+| Component | While `!iframeLoaded`, `learn-embed-loading-indicator` is in `.learn-embed-frame-host` above the skeleton grid. After `fireEvent.load` on the iframe, indicator and skeleton are gone. `learn-scrum-iframe` uses a loading class or attribute that hides paint until load. |
+| CSS | `.learn-embed-loading-indicator` is centered in the host (`inset: 0` + flex center, or equivalent). Spinner uses guide tokens only (no sdd.works blue). Skeleton pulse does not set whole-cell opacity below 1. `@media (prefers-reduced-motion: reduce)` disables indicator rotation. Loading iframe rule: `visibility: hidden` or documented equivalent. |
+| Unit | `LearnScrumEmbedPanel.test.tsx`: indicator present before load; absent after load. Optional CSS contract in `learn-embed-loading.test.ts` for centered indicator and hidden iframe rules. |
+| Browser | On `/?tab=learn-scrum-in-sdd`, throttle network or disable cache and hard refresh: one ring centered in the embed host; no misaligned spinner in a single tile; tiles appear after load. Fallback link and Get secret stay usable. Mockup `13-instructions.html` matches indicator placement. |
+
+- [ ] Centered `learn-embed-loading-indicator` during load
+- [ ] Iframe hidden from view until load
+- [ ] No embed-origin spinner visible through overlay
+- [ ] Reduced motion: no rotation on indicator
+- [ ] AC32 skeleton and aria-busy behavior unchanged after load
+
+## 24. Regression after ADR-121 (SDD WORKS wordmark)
+
+Run before **Web-portal-34** is **Done**. [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). AC35. Mockup approved before production asset swap.
+
+| Layer | Check |
+| --- | --- |
+| Asset | `src/618x618.logos.png` is 718×256 RGBA. `public/sdd-logo.png` matches the source byte-for-byte after copy. |
+| Component | `Logo.tsx` uses `/sdd-logo.png` with width **718** and height **256** for all sizes. Classes `logo-full`, `logo-header-mark`, and size wrappers unchanged unless mockup adjusts offsets. |
+| CSS | `.logo img` keeps transparent background and `object-fit: contain`. Heights: header **72px**, auth **112px**, home **144px** unless mockup review changes tokens. |
+| Mockup | `specs/admin-portal/ui-mockup/assets/sdd-logo.png` matches source. `13-instructions.html`, `01-home.html`, `02-login.html` use width **718** height **256** on wordmark imgs. |
+| Browser | `/instructions` header, `/login`, and `/` hero: wordmark sharp, no clipped splatter, no layout jump on load. Link `aria-label` still uses host string only. |
+| Out of scope | `sdd-mark.png`, favicon, apple-icon unchanged. |
+
+- [ ] Operator approved mockup before `public/` update
+- [ ] `/sdd-logo.png` serves new art in dev and CI
+- [ ] No regression on sticky guide header (ADR-111)
+- [ ] No console or server error on `/`, `/instructions`, `/login`

@@ -6,6 +6,7 @@ import {
   DEFAULT_CODE_TAB_ALLOWLIST,
   INSTRUCTIONS_TABS_PACK_RELATIVE,
   asInstructionsTabsDocument,
+  resolveInstructionsTabLabel,
   validateInstructionsTabsConfig,
   type InstructionsTab,
   type InstructionsTabsDocument,
@@ -35,7 +36,7 @@ export type ContentMarkdownSource = "cache" | "package";
 export type ResolvedInstructionsTab = {
   type: "code" | "content" | "embedded_external_page";
   id: string;
-  labelKey: string;
+  label: string;
   queryParam: string;
   panelTestId: string;
   html?: string;
@@ -216,7 +217,7 @@ export function resolveInstructionsTabs(locale: Locale): InstructionsTabsResult 
     const base = {
       type: tab.type,
       id: tab.id,
-      labelKey: tab.labelKey,
+      label: resolveInstructionsTabLabel(tab.labels, locale),
       queryParam: tab.queryParam,
       panelTestId: tab.panelTestId,
     };

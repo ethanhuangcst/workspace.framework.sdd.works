@@ -3,11 +3,12 @@ name: sdd-update-project
 description: >
   Set the language, the specs folder, ADR and Knowledge roots, and the module
   folders for a project, then write artifacts-map.json after the user confirms
-  the tree. Use when the user starts a project, updates project settings, sets
-  the specs folder, or changes the language of future specs.
-  sdd-audit-artifacts checks whether artifacts-map.json matches the files and
-  does not write them. sdd-review-status compares the plan with the work and
-  does not set the map.
+  the tree. Recommends copying the .secrets seed to {artifacts_root}/.secrets
+  when the product uses database, API, or auth secrets. Use when the user
+  starts a project, updates project settings, sets the specs folder, or changes
+  the language of future specs. sdd-audit-artifacts checks whether
+  artifacts-map.json matches the files and does not write them.
+  sdd-review-status compares the plan with the work and does not set the map.
 ---
 
 # Update project settings
@@ -17,6 +18,8 @@ The skill sets `locale`, `artifacts_root`, optional `adr` and `knowledge` roots,
 `artifacts_root` is one folder name relative to the workspace. `specs` is the default.
 
 Each module has a `files` list (required). `folder` and `stem` are optional. Rules and examples in `sdd-scrum-practices.md`, section **artifacts-map.json**, cover foldered, flat + stem, and singleton layouts.
+
+The secret name registry lives at `{workspace}/{artifacts_root}/.secrets`, not at workspace root. Practices `#secrets` defines the dotenv-shaped body. This skill does not duplicate that shape.
 
 Finish one task before the next task starts.
 
@@ -106,6 +109,16 @@ List the candidate parts of the product, so the user can pick the modules.
 - Read the Confirm summary in [artifacts-map.json](../../templates/EN/sdd-scrum-practices.md#artifacts-mapjson), so module paths match the chosen layout.
 - Keep each module for task 8.
 
+### 7b. Decide whether to recommend `.secrets`
+
+Pick whether task 8 includes `{artifacts_root}/.secrets` in the Confirm summary.
+
+- When the workspace has a typical software stack manifest, such as `package.json`, a lock file, `pyproject.toml`, `go.mod`, or `docker-compose.yml`, recommend `.secrets` for task 8.
+- When the workspace is empty or has no stack manifest to infer a software product, ask one question before task 8 Confirm.
+  The user reads: "Will this product use secrets, for example a database URL, API keys, or auth? "
+- When the user says yes, include `{artifacts_root}/.secrets` in the Confirm summary.
+- When the user says no, omit `{artifacts_root}/.secrets` from the Confirm summary.
+
 ### 8. Confirm, then write
 
 Read only [artifacts-map.json](../../templates/EN/sdd-scrum-practices.md#artifacts-mapjson) in `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md`. When `locale` is missing, use `EN`. Start at that heading. Stop at the next heading of the same level. Do not read the rest of that file.
@@ -114,13 +127,30 @@ Read only [artifacts-map.json](../../templates/EN/sdd-scrum-practices.md#artifac
 - In that summary, write Language and the language name, so the user does not read `locale`. The file still stores `locale`.
 - In that summary, name each spec root. A folder you skip stays in the project. Nothing is deleted.
 - Include `adr:` and `knowledge:` lines only when the user included those roots in tasks 5 and 6.
+- When task 7b recommends `.secrets`, include `{artifacts_root}/.secrets` under `files:` in the Confirm summary.
+- When task 7b recommends `.secrets`, tell the user that line lists secret **names** only and is recommended when the product uses a database, API keys, or auth. The user opts out by removing that line before yes.
 - The Pokymon Card Collection block in that section is an example. Leave that product name out of this project, so the map uses the name the user gave.
 - Wait for a yes before replacing `{workspace}/artifacts-map.json` with the confirmed tree.
 - Write the JSON from the Shape and Rules in that section, so the map matches the configuration.
 - Store each file as a workspace-relative path, such as `specs/mcp/mcp-design.md`.
+- When the confirmed summary included `{artifacts_root}/.secrets`, add that path to `files[]`.
+- When the confirmed summary omitted `{artifacts_root}/.secrets`, do not add that path to `files[]` unless it was already on the map.
 - Copy a seed only where the target file is missing, so a file that already has content stays as it is.
 - Copy `test-strategy.md` only when that seed exists and the target is missing, so the skill does not invent the body.
+- Copy `.secrets` from `{client_root}/templates/framework.sdd.works/{locale}/.secrets` to `{workspace}/{artifacts_root}/.secrets` only when the confirmed summary included that path and the target file is missing.
 - Leave `{client_root}/.sdd-installed.json` unchanged, so the install ledger keeps its current text.
 - Leave `sdd_install_framework` and `sdd_update_framework` uncalled, so install stays outside this skill.
 
 When the user does not confirm the tree, leave the task 1 file in place, so the starter map stays. A folder the user already asked to create stays created.
+
+## Limits
+
+- Do not place `.secrets` at workspace root. Use `{artifacts_root}/.secrets` only.
+- Do not write secret values into `.secrets`. Do not create, edit, or overwrite `.env`, `.env.local`, or `.env.example`.
+- Do not overwrite an existing `.secrets` file that already has content.
+
+## Anti-patterns
+
+- A `.secrets` file at the repo root while the map points at `{artifacts_root}/.secrets`.
+- Copying `.secrets` when the user removed that line from the Confirm summary.
+- Pasting API keys or passwords into `.secrets` during onboarding.

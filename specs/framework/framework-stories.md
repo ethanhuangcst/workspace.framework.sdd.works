@@ -1171,6 +1171,72 @@ Scenario: Private documents and an external provider
 
 Tests: CE-SKILL-19. Close with [feature-68](../sprint-backlog.md#sprint-7) when the user confirms.
 
+### sdd-update-project
+
+**As the** operator starting or repairing project path settings
+**I want** the update-project skill to recommend a committed secret name registry under the spec root
+**So that** agents and release docs share one map-backed list of secret names without values in git
+
+Design: [framework-design § sdd-update-project](./framework-design.md#sdd-update-project). Scope is the pack seed only; practices `#secrets` stays the shape authority.
+
+#### AC1
+
+```gherkin
+Scenario: Confirm summary recommends spec-root registry
+  Given artifacts_root is specs
+  And the workspace shows a typical software stack such as package.json or docker-compose.yml
+  When sdd-update-project reaches task 8 Confirm
+  Then the summary includes specs/.secrets
+  And the reply states that line is recommended for secret names when the product uses database, API, or auth secrets
+  And the user may remove that line before yes to opt out
+```
+
+#### AC2
+
+```gherkin
+Scenario: Empty workspace asks once
+  Given the workspace has no stack manifest to infer a software product
+  When sdd-update-project runs before task 8 Confirm
+  Then the skill asks whether the product will use secrets such as database URL, API keys, or auth
+  And when the user says yes the Confirm summary includes {artifacts_root}/.secrets
+  And when the user says no the Confirm summary omits {artifacts_root}/.secrets
+```
+
+#### AC3
+
+```gherkin
+Scenario: Copy seed and map row after confirm
+  Given the user confirmed a tree whose summary included specs/.secrets
+  And specs/.secrets is missing
+  When task 8 writes
+  Then artifacts-map.json files lists specs/.secrets
+  And specs/.secrets is copied from the locale EN HanS or HanT seed under templates/framework.sdd.works
+  And each line is NAME= with an empty value
+  And the file contains no secret value
+```
+
+#### AC4
+
+```gherkin
+Scenario: Missing file only
+  Given specs/.secrets already exists with content
+  When the user confirms a tree that includes specs/.secrets
+  Then the skill does not overwrite specs/.secrets
+  And artifacts-map.json includes specs/.secrets in files when the summary kept that line
+```
+
+#### AC5
+
+```gherkin
+Scenario: Opt-out skips copy and map row
+  Given the user removed {artifacts_root}/.secrets from the Confirm summary before yes
+  When task 8 writes
+  Then artifacts-map.json files does not list {artifacts_root}/.secrets unless it was already present
+  And the skill does not create {artifacts_root}/.secrets
+```
+
+Tests: CE-SKILL-22.
+
 ### sdd-retrospective
 
 **As the** agent closing work under **sdd-dod.mdc**
@@ -1817,3 +1883,57 @@ Scenario: A failed copy keeps the previous receipt
 ```
 
 User confirmed usable 2026-10-07 ([feature-57](../sprint-backlog.md#sprint-8)). Authoring example, [`validateLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), and **CE-LITE-03** / **CE-LITE-04** ship in this repo. [Web-portal-18](../product-backlog.md#L488) Part 1 and the local agent apply these rules at runtime.
+
+---
+
+## `sdd-pack-deliverable-links` — OGT 2 pack link placeholders
+
+**As a** pack author or reviewer
+**I want** every link under `pack.framework.sdd.works/` to use `{client_root}`, `{workspace}`, or in-pack relative paths
+**So that** installed clients never point at framework.sdd.works product-only trees
+
+Design: [`framework-design.md`](./framework-design.md#pack-deliverable-links). Tests: [`framework-tests.md`](./framework-tests.md#ce-pack-06--pack-seed-links-stay-in-the-deliverable), **CE-PACK-07**. Rule: [`sdd-pack-authoring.mdc`](../../pack.framework.sdd.works/rules/sdd-pack-authoring.mdc). Process: OGT 2 on [`status.md`](../status.md). No UI.
+
+### User story 1 — No product ADR or Knowledge links in the pack
+
+#### AC1 — OGT 2
+
+```gherkin
+Scenario: Pack markdown has no link into product specs/adr or specs/knowledge
+  Given a file under pack.framework.sdd.works/
+  When every markdown link target is inspected
+  Then no href contains specs/adr/ or specs/knowledge/
+  And npm run check:pack-seeds exits 0
+```
+
+#### AC2 — OGT 2
+
+```gherkin
+Scenario: Admin pack note cites decisions without product ADR URLs
+  Given content/.admin-note.md in the pack tree
+  When an operator reads tab label and Get secret placement rules
+  Then ADR-119 and ADR-115 appear as plain ids or copied normative text
+  And no markdown link targets ../../specs/adr/
+```
+
+### User story 2 — Workspace path prose uses map placeholders
+
+#### AC3 — OGT 2
+
+```gherkin
+Scenario: Scrum guide seeds name knowledge with map placeholders
+  Given scrum-in-sdd markdown under pack content/ and templates/
+  When the default knowledge location is described
+  Then the text uses {workspace}/{knowledge} or equivalent map placeholder
+  And the text does not hard-code a markdown link to specs/knowledge/
+```
+
+#### AC4 — OGT 2
+
+```gherkin
+Scenario: In-pack skill links stay on the deliverable tree
+  Given a skill under pack.framework.sdd.works/skills/
+  When the skill links to practices or a rule
+  Then the link resolves under templates/ or rules/ relative to the pack
+  And the link does not escape to framework-design.md or seed-artifacts-building-guide.md in the product repo
+```

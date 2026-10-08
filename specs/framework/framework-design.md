@@ -881,7 +881,7 @@ Authoring tree: `pack.framework.sdd.works/skills/<folder>/`. Install copies each
 | --- | --- | --- | --- |
 | `sdd-audit-artifacts` | [Skill-08](../product-backlog.md#L101) | — | CE-AUDIT-01–19 |
 | `sdd-review-status` | [Skill-12](../product-backlog.md#L113) | — | CE-SKILL-01, 02, 09, 11 |
-| `sdd-update-project` | [Skill-03](../product-backlog.md#L89) | — | Onboard CE-ENV / practices |
+| `sdd-update-project` | [Skill-03](../product-backlog.md#L89) | — | CE-SKILL-22, onboard CE-ENV |
 | `sdd-refine-backlog` | [Skill-04](../product-backlog.md#L92) | — | Onboard CE-ENV / practices |
 | `sdd-plan-sprint` | [Skill-05](../product-backlog.md#L94) | — | Onboard CE-ENV / practices |
 | `sdd-retrospective` | [Skill-06](../product-backlog.md#L96) | — | CE-SKILL-10 |
@@ -1091,7 +1091,24 @@ Project settings and map skill. [Skill-03](../product-backlog.md#L89). Constants
 | Authoring seed | `pack.framework.sdd.works/skills/sdd-update-project/SKILL.md` |
 | After install | `{client_root}/skills/sdd-update-project/SKILL.md` |
 
-The skill sets language, specs folder, ADR and knowledge roots, module folders, and writes `artifacts-map.json` after the user confirms. It copies template seeds only where the target file is missing. L1 coverage stays onboard CE-ENV cases and audit-driven update flows until a dedicated **CE-SKILL-** case exists.
+The skill sets language, specs folder, ADR and knowledge roots, module folders, and writes `artifacts-map.json` after the user confirms. It copies template seeds only where the target file is missing.
+
+**Secret name registry (`.secrets`)**
+
+| Topic | Rule |
+| --- | --- |
+| Path | `{workspace}/{artifacts_root}/.secrets` (spec-root). Not workspace root. |
+| When to recommend | Typical software products that use database URLs, API keys, or auth secrets. |
+| Empty or no stack signal | Ask once: whether the product will use secrets. Default the Confirm summary to include the path when the user says yes. |
+| Stack visible | Include `{artifacts_root}/.secrets` in the task 8 Confirm summary without a separate task. State that the line is recommended for this product. The user opts out by dropping that line before yes. |
+| After confirm | When the confirmed summary kept the path: add `{artifacts_root}/.secrets` to `files[]`, copy the locale `.secrets` seed from `{client_root}/templates/framework.sdd.works/{locale}/.secrets` only when the target is missing, same rule as other engineering seeds. |
+| Limits | Names and empty values only. Do not write secret values. Do not create or edit `.env`, `.env.local`, or `.env.example`. |
+
+Practices `#secrets` defines the dotenv-shaped file body. This skill does not duplicate that shape.
+
+Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-22**. Stories: [`framework-stories.md`](./framework-stories.md) § **sdd-update-project**.
+
+**Dogfood (framework.sdd.works implement pass):** add `specs/.secrets` to the workspace [`artifacts-map.json`](../artifacts-map.json) `files` list and copy the EN seed when missing.
 
 ### sdd-retrospective
 
@@ -1360,7 +1377,7 @@ Instructions page tab order and types ([Spec-seeds-16](../product-backlog.md#L27
 | Resolver + API (feature-59) | [`resolveInstructionsTabs`](../../src/lib/instructions-tabs.ts), [`GET /api/sdd/instructions-tabs`](../../src/app/api/sdd/instructions-tabs/route.ts) |
 | UI (feature-60) | `InstructionsPage` dynamic tab list; `CODE_TAB_REGISTRY` with `setup` panel |
 
-**Validator contract (feature-58):** `validateInstructionsTabsConfig(document, { contentRoot, codeAllowlist })`. `contentRoot` is the sync unpack root (the directory that contains `content/`). Each `paths.{locale}` value joins to `contentRoot` for safety and optional file-existence checks. CE-TABS-01 uses `pack.framework.sdd.works` as `contentRoot` because the bundled JSON lives at `src/content/.instructions-tabs.json` but path strings stay pack-shaped (`content/features/…`). At runtime the resolver reads markdown from cache under `contentRoot`, then package fallback under `src/content/` with the same path mapping as Features ([ADR-071](../adr/ADR-071-portal-content-paths.md)).
+**Validator contract (feature-58, amended [ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md)):** `validateInstructionsTabsConfig(document, { contentRoot, codeAllowlist })`. Each tab requires **`labels.en`**; **`labelKey` is invalid**. `contentRoot` is the sync unpack root (the directory that contains `content/`). Each `paths.{locale}` value joins to `contentRoot` for safety and optional file-existence checks. CE-TABS-01 uses `pack.framework.sdd.works` as `contentRoot` because the bundled JSON lives at `src/content/.instructions-tabs.json` but path strings stay pack-shaped (`content/features/…`). At runtime the resolver reads markdown from cache under `contentRoot`, then package fallback under `src/content/` with the same path mapping as Features ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Resolver exposes **`label`** per tab for the requested locale.
 
 **API contract (feature-59):** Top-level `source` is `cache` or `bundled` for which config file validated. Do not use `configSource`. Each content tab may set `contentSource` `cache` or `package` for its markdown body, plus `sourceLocale` when locale fallback applies.
 
@@ -1697,4 +1714,42 @@ Reusable research and ops notes. A project may have this tree under `artifacts_r
 | --- | --- |
 | On a project | `{workspace}/{knowledge root from map}/…` |
 | Instance shape (not workspace copy) | `{client_root}/templates/framework.sdd.works/{locale}/sdd-scrum-practices.md` `#knowledge-instance-shape` ([ADR-095](../adr/ADR-095-adr-knowledge-shape-in-practices.md)) |
+
+## pack-deliverable-links
+
+OGT 2 in [`status.md`](../status.md): pack files must not link into this product repo's `specs/adr/` or `specs/knowledge/` trees. Links in shipped pack markdown use placeholders that resolve after install or inside the customer's workspace.
+
+### Placeholders
+
+| Token | Meaning |
+| --- | --- |
+| `{client_root}` | Parent of the loaded agent file; pack installs agents, skills, rules, and templates here |
+| `{workspace}` | Project folder the user opened in the IDE |
+| `{workspace}/{adr}` | ADR instance directory when `artifacts-map.json` names an `adr` key |
+| `{workspace}/{knowledge}` | Knowledge directory when the map names a `knowledge` key |
+| `{artifacts_root}` | Specs folder path from the map (often `{workspace}/specs`) |
+
+Process and engineering specs in the **customer** workspace link sibling files with workspace-relative paths (for example `{artifacts_root}/admin-portal/app-design.md`). Pack seeds link **in-pack** targets with relative paths that still work after install (`../../templates/EN/sdd-scrum-practices.md#…`, `../../rules/friendly-language.mdc`).
+
+### Ban (markdown links)
+
+Under `pack.framework.sdd.works/`, no markdown link target contains:
+
+- `specs/adr/` or `specs/knowledge/` (including `../../specs/adr/ADR-….md`)
+- `framework-design.md`, `seed-artifacts-building-guide.md`, or this repo's `product-backlog.md` via a parent-relative escape
+
+Normative text for a product decision lives in `{client_root}/templates/…/sdd-scrum-practices.md` or the skill body. The full ADR file stays in this product repo only.
+
+### Allow
+
+- Plain text ADR ids without a link (for example `ADR-119`).
+- Links that resolve on `{client_root}` after install (templates, rules, skills, workflows in the same pack).
+- Links to `{workspace}/{adr}/ADR-NNN-slug.md` in **project** template seeds (customer workspace), not upward into framework.sdd.works.
+- The sample `artifacts-map.json` block in practices that shows `"adr": "specs/adr"` and `"knowledge": "specs/knowledge"` as default map values (not markdown links).
+
+### Verify
+
+- CI: `npm run check:pack-seeds` ([CE-PACK-06](./framework-tests.md#ce-pack-06--pack-seed-links-stay-in-the-deliverable)).
+- Path prose: [CE-PACK-07](./framework-tests.md#ce-pack-07--pack-path-prose-uses-map-placeholders).
+- Rule: [`sdd-pack-authoring.mdc`](../../pack.framework.sdd.works/rules/sdd-pack-authoring.mdc).
 

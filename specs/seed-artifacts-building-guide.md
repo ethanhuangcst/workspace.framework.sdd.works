@@ -98,6 +98,16 @@ Work one section at a time.
 5. Update the same section in the EN seed under [`pack.framework.sdd.works/templates/EN/`](../pack.framework.sdd.works/templates/EN/). The process seeds `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, and `issues-log.md` stay placeholder templates (`[product name]`, bracket placeholders). Product-backlog has five body sections: Product overview, Definition of Done (additional checks on top of `sdd-dod.mdc`), Requirements, Product Backlog, Change record. Sprint-backlog DoD links to `product-backlog.md#definition-of-done` ([ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md)). Other process or engineering seeds may keep a sample product until those seeds are templated. Read the seed against [`friendly-language.mdc`](../pack.framework.sdd.works/rules/friendly-language.mdc). Edit, then review again, until every line passes.
 6. Stop. The next section starts only after the user confirms the live example and the EN seed.
 
+## Pack link verify (OGT 2)
+
+Run before any pack merge that touches markdown under `pack.framework.sdd.works/`.
+
+1. Run `npm run check:pack-seeds`. Exit must be 0 ([CE-PACK-06](./framework/framework-tests.md#ce-pack-06--pack-seed-links-stay-in-the-deliverable)).
+2. Confirm no markdown link in the pack tree contains `specs/adr/` or `specs/knowledge/` ([`sdd-pack-authoring.mdc`](../pack.framework.sdd.works/rules/sdd-pack-authoring.mdc)).
+3. Confirm ADR and Knowledge location prose in portal content and templates uses `{workspace}/{adr}` and `{workspace}/{knowledge}` where the map applies ([CE-PACK-07](./framework/framework-tests.md#ce-pack-07--pack-path-prose-uses-map-placeholders)).
+
+A product-only ADR file stays in `{workspace}/specs/adr/` in this repo. Copy the minimum rule into practices or the pack note. Do not link pack seeds to that file.
+
 ## Pass
 
 A section passes when all four checks are true.

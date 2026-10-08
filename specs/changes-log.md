@@ -1,10 +1,44 @@
 # Changes log (framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-07
+> as_of: 2026-10-08
 > [Definition](../pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md#changes-logmd)
 
 ---
+
+## 2026-10-08
+
+### ADR-121 SDD WORKS wordmark logo (Web-portal-34)
+
+**Why**: The portal wordmark PNG was stale. The operator supplied `src/618x618.logos.png` (718×256 SDD WORKS art).
+
+**What changed**: [ADR-121](./adr/ADR-121-sdd-works-wordmark-logo.md). [Web-portal-34](./product-backlog.md#pb-131) **ToDo**. AC35, [`app-tests.md`](./admin-portal/app-tests.md) §24, [`app-design.md`](./admin-portal/app-design.md) brand rows, [knowledge](./knowledge/agent/admin-portal-seed-and-logo.md). Mockup `assets/sdd-logo.png` updated for review. **Production `public/sdd-logo.png` and `Logo.tsx` wait on mockup approval.**
+
+**Verification**: Open `specs/admin-portal/ui-mockup/13-instructions.html` in a browser. §24 after implementation.
+
+### WA-17 Learn embed centered loading indicator
+
+**Why**: While the Learn tab skeleton showed, the sdd.works iframe spinner appeared in one grid cell instead of the center of the embed host.
+
+**What changed**: [ADR-120](./adr/ADR-120-learn-embed-centered-loading-indicator.md). [`LearnScrumEmbedPanel.tsx`](../src/components/features/LearnScrumEmbedPanel.tsx) adds `learn-embed-loading-indicator` and hides the iframe until `load`. [`portal.css`](../src/styles/portal.css) centers the ring, pulses skeleton background only, and uses `learn-embed-frame--loading`. AC34, [`app-tests.md`](./admin-portal/app-tests.md) §23, mockup `13-instructions.html`. Closed [WA-17](./issues-log.md).
+
+**Verification**: `npm run test -- src/styles/learn-embed-loading.test.ts src/components/features/LearnScrumEmbedPanel.test.tsx` (19 passed with spacing tests). User confirmed usable 08/Oct/2026.
+
+### OGT 2 closed: pack deliverable links
+
+**Why**: Pack files linked into this product repo's `specs/adr/` and used literal `specs/knowledge` paths. Those trees are not in the install tarball.
+
+**What changed**: [`check-pack-seed-links.sh`](../scripts/check-pack-seed-links.sh) fails markdown links to `specs/adr/` or `specs/knowledge/`. Pack [`content/.admin-note.md`](../pack.framework.sdd.works/content/.admin-note.md), scrum-in-sdd seeds, [`ethan.md`](../pack.framework.sdd.works/agents/ethan.md), and [`sdd-retrospective`](../pack.framework.sdd.works/skills/sdd-retrospective/SKILL.md) use placeholders. Mirrored [`src/content/.admin-note.md`](../src/content/.admin-note.md). Specs: [`framework-design.md`](./framework/framework-design.md#pack-deliverable-links), [`framework-stories.md`](./framework/framework-stories.md#sdd-pack-deliverable-links--ogt-2-pack-link-placeholders), CE-PACK-06/07.
+
+**Verification**: `npm run check:pack-seeds`. Cross-review: no `](…specs/adr/` or `](…specs/knowledge/` under `pack.framework.sdd.works/`.
+
+### ADR-119 Instructions tab labels in pack config (WA-16)
+
+**Why**: Tab titles used `labelKey` plus portal `messages/*.json`, so operators could not configure tab names from `content/.instructions-tabs.json` alone.
+
+**What changed**: [ADR-119](./adr/ADR-119-instructions-tab-labels-in-pack-config.md). [WA-16](./issues-log.md) open. [Web-portal-33](./product-backlog.md#pb-130) **ToDo**. AC33, [`app-tests.md`](./admin-portal/app-tests.md) §22. Amended AC22/AC24, [`app-design.md`](./admin-portal/app-design.md), [`framework-design.md`](./framework/framework-design.md), operator [`.admin-note.md`](../src/content/.admin-note.md). **Implementation not started:** JSON files and code still use `labelKey` until Web-portal-33 ships.
+
+**Verification**: Spec review. Build gate: §22 after implementation.
 
 ## 2026-10-07
 

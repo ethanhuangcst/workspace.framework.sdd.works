@@ -1174,7 +1174,7 @@ Scenario: Synced pack includes default instructions tabs config
   And the file has version 1 and a tabs array
   And the tabs array includes a code tab with id setup
   And the tabs array includes content tabs for features and scrum-in-sdd
-  And each tab includes type, id, labelKey, queryParam, and panelTestId
+  And each tab includes type, id, labels with en, queryParam, and panelTestId
   And each content tab includes paths with at least en under the pack tree
 ```
 
@@ -1204,7 +1204,7 @@ Scenario: Guide default tab is Setup with dynamic tab order from config
   Then guide-tab-setup has aria-selected true
   And panel-setup is shown
   And tab buttons appear in config array order
-  And each tab label resolves from its labelKey
+  And each tab button shows the label from config labels for the active locale
   And selecting a tab sets the URL query param from config queryParam
 
 Scenario: Dynamic content tab loads markdown with locale fallback
@@ -1225,17 +1225,49 @@ Scenario: Tab switching preserves Setup surface and Learn secret placement
   Then secret-lookup is in panel-learn-scrum per AC31
 ```
 
+#### AC33 — Web-portal-33 / ADR-119 / WA-16
+
+[ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md). Amends feature-58 validator and feature-60 UI. **`labelKey` is removed** from tab rows.
+
+```gherkin
+Scenario: Tab labels come from pack config labels map
+  Given content/.instructions-tabs.json in the sync cache lists a tab with labels.en "Features"
+  When GET /api/sdd/instructions-tabs?locale=en is called
+  Then that tab in the response includes label "Features"
+  And the response tab object does not include labelKey
+
+Scenario: Tab label follows locale with en fallback
+  Given a tab labels map has en "Setup" and zh-Hans "设置"
+  When the visitor opens the guide in locale zh-Hans
+  Then the Setup tab button shows "设置"
+  When the visitor opens the guide in locale zh-Hant and labels.zh-Hant is absent
+  Then that tab button shows the en label
+
+Scenario: Config with labelKey fails validation
+  Given content/.instructions-tabs.json uses labelKey instead of labels on a tab row
+  When the instructions tabs config is validated
+  Then validation fails
+  And the portal serves tabs from bundled src/content/.instructions-tabs.json only when that bundled file is valid
+
+Scenario: Operator renames a tab from the pack file only
+  Given an operator changes labels.en for tab id features in the pack repo
+  And sync completes
+  When the visitor opens the guide in locale en
+  Then the features tab button shows the new en string
+  And portal messages catalogs were not required for that rename
+```
+
 #### AC25 — feature-71 / Web-portal-28
 
 [ADR-109](../adr/ADR-109-content-tab-heading-anchors.md). Applies to every `content` tab. Pack markdown is not edited.
 
 ```gherkin
 Scenario: Index link scrolls to the matching heading
-  Given a content tab renders markdown that contains a heading "Part I The 2020 Scrum Guide Summary"
-  And the same markdown contains a link to #part-i-the-2020-scrum-guide-summary
+  Given a content tab renders markdown that contains a heading "Part IV The 2020 Scrum Guide Summary"
+  And the same markdown contains a link to #part-iv-the-2020-scrum-guide-summary
   When the visitor opens that tab and activates the link
   Then the page scrolls to that heading
-  And the heading element id is part-i-the-2020-scrum-guide-summary
+  And the heading element id is part-iv-the-2020-scrum-guide-summary
 
 Scenario: A later duplicate heading does not steal the first fragment
   Given a content tab renders two headings with the same plain text "Rules"
@@ -1378,6 +1410,51 @@ Scenario: Learn embed hides the skeleton after iframe load
   And learn-scrum-iframe has fired load
   Then test id learn-embed-loading is not visible
   And the iframe host uses aria-busy false
+```
+
+#### AC34 — Learn embed centered loading indicator / ADR-120 / WA-17
+
+[ADR-120](../adr/ADR-120-learn-embed-centered-loading-indicator.md). Amends [ADR-118](../adr/ADR-118-learn-embed-loading-skeleton.md) overlay behavior. No new message keys. Open defect [WA-17](../issues-log.md).
+
+```gherkin
+Scenario: Learn embed shows a centered indicator while the iframe loads
+  Given the visitor opens / or /instructions with tab=learn-scrum-in-sdd
+  When the Learn Scrum panel is shown
+  And learn-scrum-iframe has not yet fired load
+  Then test id learn-embed-loading is visible
+  And test id learn-embed-loading-indicator is visible
+  And the indicator is centered in learn-embed-frame-host
+  And learn-scrum-iframe is not visible until load
+  And no loading spinner from the embed document is visible through the overlay
+
+Scenario: Learn embed hides the indicator with the skeleton after load
+  Given the visitor is on tab=learn-scrum-in-sdd
+  And learn-scrum-iframe has fired load
+  Then test id learn-embed-loading-indicator is not visible
+  And learn-scrum-iframe is visible
+```
+
+#### AC35 — Web-portal-34 / ADR-121
+
+[ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). Wordmark only; `sdd-mark.png` unchanged.
+
+```gherkin
+Scenario: Logo component loads the deployed wordmark
+  Given public/sdd-logo.png is a copy of src/618x618.logos.png
+  When Logo renders for size header on any shell
+  Then the image src is /sdd-logo.png
+  And the image intrinsic width is 718 and height is 256
+
+Scenario: Guide header shows the new wordmark at header scale
+  Given the visitor opens / or /instructions
+  Then the guide hero logo uses class logo-header-mark
+  And the visible wordmark matches the SDD WORKS art from ADR-121
+  And no opaque background is painted behind the logo image
+
+Scenario: Auth and home shells show the wordmark at full scale
+  Given the visitor opens /login or the home auth layout that uses logo-full
+  Then the logo image src is /sdd-logo.png
+  And CSS height tokens match app-design for logo-full and logo-home
 ```
 
 ---

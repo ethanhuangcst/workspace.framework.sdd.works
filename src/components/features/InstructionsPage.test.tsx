@@ -14,17 +14,43 @@ const LEARN_TAB_LABEL: Record<Locale, string> = {
   "zh-Hant": "學習 Scrum in SDD",
 };
 
+const TAB_LABELS: Record<
+  Locale,
+  { setup: string; features: string; scrum: string; learn: string }
+> = {
+  en: {
+    setup: "Setup",
+    features: "Features",
+    scrum: "Scrum in SDD",
+    learn: "Learn Scrum in SDD",
+  },
+  "zh-Hans": {
+    setup: "安装",
+    features: "功能",
+    scrum: "Scrum in SDD",
+    learn: "学习 Scrum in SDD",
+  },
+  "zh-Hant": {
+    setup: "安裝",
+    features: "功能",
+    scrum: "Scrum in SDD",
+    learn: "學習 Scrum in SDD",
+  },
+};
+
 function defaultGuideTabs(options?: {
   featuresHtml?: string;
   scrumHtml?: string;
   includeLearn?: boolean;
+  locale?: Locale;
 }): InstructionsPageTab[] {
+  const labels = TAB_LABELS[options?.locale ?? "en"];
   const tabs: InstructionsPageTab[] = [
     {
       type: "code",
       id: "setup",
       queryParam: "setup",
-      labelKey: "admin.guide.tab_setup",
+      label: labels.setup,
       panelTestId: "panel-setup",
     },
   ];
@@ -33,7 +59,7 @@ function defaultGuideTabs(options?: {
       type: "embedded_external_page",
       id: "learn-scrum-in-sdd",
       queryParam: "learn-scrum-in-sdd",
-      labelKey: "admin.guide.tab_learn_scrum",
+      label: labels.learn,
       panelTestId: "panel-learn-scrum",
       embedUrl: LEARN_EMBED_URL,
     });
@@ -43,7 +69,7 @@ function defaultGuideTabs(options?: {
       type: "content",
       id: "features",
       queryParam: "features",
-      labelKey: "admin.guide.tab_features",
+      label: labels.features,
       panelTestId: "panel-features",
       html: options?.featuresHtml ?? "",
     },
@@ -51,7 +77,7 @@ function defaultGuideTabs(options?: {
       type: "content",
       id: "scrum-in-sdd",
       queryParam: "scrum-in-sdd",
-      labelKey: "admin.guide.tab_scrum",
+      label: labels.scrum,
       panelTestId: "panel-scrum",
       html: options?.scrumHtml ?? "",
     },
@@ -75,7 +101,12 @@ function renderGuide(
   return render(
     <InstructionsPage
       onLocaleChange={onLocaleChange ?? (() => undefined)}
-      tabs={defaultGuideTabs({ featuresHtml, scrumHtml, includeLearn })}
+      tabs={defaultGuideTabs({
+        featuresHtml,
+        scrumHtml,
+        includeLearn,
+        locale: rest.locale,
+      })}
       {...rest}
     />,
   );
@@ -132,8 +163,6 @@ vi.mock("next/image", () => ({
 
 const SETUP_SENTENCE =
   "Fetch and execute the setup instructions from https://framework.sdd.works/setup";
-
-const STDIO_FRAGMENT = '"command": "${userHome}/.sdd/sdd-mcp"';
 
 const SECRET_COPY: Record<
   Locale,
@@ -202,26 +231,26 @@ describe("InstructionsPage", () => {
     expect(screen.queryByTestId("copy-lite-setup-prompt")).toBeNull();
   });
 
-  it("should_show_stdio_mcp_sample_on_setup_tab", () => {
+  it("should_not_show_manual_mcp_block_on_setup_tab", () => {
     renderGuide({ locale: "en" });
 
-    const mcp = screen.getByTestId("copy-mcp-config");
-    expect(mcp.closest(".codeblock")?.textContent).toContain(STDIO_FRAGMENT);
-    expect(mcp.closest(".codeblock")?.textContent).toContain(
-      "SDD_SERVER_URL",
-    );
+    expect(screen.queryByTestId("copy-mcp-config")).toBeNull();
+    expect(screen.queryByText(/Manual setup/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/curl/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Back to home/i)).not.toBeInTheDocument();
   });
 
-  it("should_list_install_and_update_tools_without_list_versions", () => {
+  it("should_show_update_command_above_agents_without_tools_table", () => {
     renderGuide({ locale: "en" });
 
-    const tools = document.getElementById("tools");
-    expect(tools).toBeTruthy();
-    expect(tools!.textContent).toContain("sdd_install_framework");
-    expect(tools!.textContent).toContain("sdd_update_framework");
-    expect(tools!.textContent).not.toContain("sdd_list_versions");
+    expect(document.getElementById("tools")).toBeNull();
+    expect(screen.getByTestId("setup-update-preface")).toBeTruthy();
+    expect(screen.queryByTestId("copy-update-cmd")).toBeNull();
+    const agents = document.getElementById("agents");
+    expect(agents!.textContent).toContain("sdd_update_framework");
+    expect(agents!.textContent).not.toContain("sdd_list_versions");
+    const setup = document.getElementById("setup");
+    expect(setup!.textContent).toContain("sdd_install_framework");
   });
 
   it("should_switch_to_features_tab_and_list_ethan", () => {

@@ -451,8 +451,8 @@ Ken Schwaber 和 Jeff Sutherland 于 1995 年首次公开介绍 Scrum。《Scrum
 由于现阶段对 **workflows** 尚无实际需求，这个文件夹暂时只作为**占位**。
 
 ### Knowledge
-- **ADR**：Architecture Decision Record，默认路径：**{workspace-folder}/specs/ADR**
-- **knowledge**：项目中沉淀的知识，默认路径：**{workspace-folder}/specs/knowledge**
+- **ADR**：Architecture Decision Record，默认路径：**{workspace}/{adr}**（来自 `artifacts-map.json`）
+- **knowledge**：项目中沉淀的知识，默认路径：**{workspace}/{knowledge}**（来自 `artifacts-map.json`）
 
 ### Artifacts
 - **SDD 核心工件**：**scrum-in-sdd.md; sdd-scrum-practices.md; artifacts-map.json**
