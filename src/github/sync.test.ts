@@ -5,6 +5,7 @@ import {
   fetchRepoTreeCached,
   flatPathsToTree,
   getGitHubPort,
+  getGitHubPortForRepo,
   setGitHubPortForTests,
 } from "./sync";
 
@@ -29,24 +30,20 @@ describe("fixture GitHub port", () => {
     delete process.env.GITHUB_FIXTURE;
   });
 
-  it("should_use_fixture_when_GITHUB_FIXTURE_set", async () => {
+  it("should_ignore_GITHUB_FIXTURE_and_a_fixture_owner", () => {
+    const nodeEnv = process.env.NODE_ENV;
+    const token = process.env.GITHUB_TOKEN;
     process.env.GITHUB_FIXTURE = "1";
-    const port = getGitHubPort();
-    expect(await port.checkRepoAccessible("fixture", "sdd-framework")).toBe(
-      true,
-    );
-    expect(await port.checkRepoAccessible("fixture", "missing")).toBe(false);
-    const tree = await port.fetchRepoTree("fixture", "sdd-framework");
-    expect(tree.some((n) => n.name === "skills/")).toBe(true);
-  });
-
-  it("should_route_fixture_owner_to_fixture_port_without_env", async () => {
-    delete process.env.GITHUB_FIXTURE;
-    const { getGitHubPortForRepo } = await import("./sync");
-    const port = getGitHubPortForRepo("fixture");
-    expect(await port.checkRepoAccessible("fixture", "sdd-framework")).toBe(
-      true,
-    );
+    process.env.NODE_ENV = "production";
+    delete process.env.GITHUB_TOKEN;
+    try {
+      expect(() => getGitHubPortForRepo("fixture")).toThrow(/GITHUB_TOKEN/);
+    } finally {
+      if (nodeEnv === undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = nodeEnv;
+      if (token === undefined) delete process.env.GITHUB_TOKEN;
+      else process.env.GITHUB_TOKEN = token;
+    }
   });
 
   it("should_cache_tree_for_ttl", async () => {

@@ -36,6 +36,8 @@ export type InstallArgs = {
     ledger: InstallLedger | null;
     missing: string[];
   };
+  /** Recorded on HTTP plan requests. The server does not choose the write folder from this field. */
+  accepted_root?: string;
 };
 
 export type InstallContext = PathDetectOptions & {

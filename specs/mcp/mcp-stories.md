@@ -229,7 +229,7 @@ Scenario: Versions REST still returns the sync cache
 
 ## `sdd-mcp-get-key` — `sdd_get_key`
 
-Caller passes `key_name`. MCP reads `key_value` from the store and returns it in plaintext when authorized. (MCPK-01)
+Caller passes `key_name`. When authorized and the name exists, the result text is only the plaintext secret. A missing name returns the text `not_found` and is not a tool error ([MC-09](../issues-log.md)). (MCPK-01)
 
 ### User story 1 — Resolve a named key
 
@@ -244,7 +244,9 @@ Scenario: Authorized get of an existing key
   Given a key named "cursor-prod" exists in the store with a key_value
   And the client is authorized for sdd_get_key
   When the client calls sdd_get_key with key_name "cursor-prod"
-  Then the plaintext key_value for that name is returned
+  Then the call is not a tool error
+  And the result text is only the plaintext secret
+  And the result text does not include key_name, key_description, or created_at
 ```
 
 #### AC2
@@ -254,7 +256,9 @@ Scenario: Missing key
   Given the client is authorized for sdd_get_key
   And no key named "missing-key" exists
   When the client calls sdd_get_key with key_name "missing-key"
-  Then the result code is not_found
+  Then the call is not a tool error
+  And the result text is exactly not_found
+  And the result text has no error object
   And no other key names or values are returned
 ```
 
@@ -265,8 +269,20 @@ Scenario: Unauthorized get_key
   Given a key named "cursor-prod" exists
   And the client is not authorized for sdd_get_key
   When the client calls sdd_get_key with key_name "cursor-prod"
-  Then the result code is unauthorized
+  Then the call is a tool error
+  And the result code is unauthorized
+  And the result text has no message
   And the key value is not returned
+```
+
+#### AC4
+
+```gherkin
+Scenario: Empty key name
+  Given the client is authorized for sdd_get_key
+  When the client calls sdd_get_key with an empty key_name
+  Then the call is a tool error
+  And the result code is invalid_input
 ```
 
 ---
@@ -398,22 +414,24 @@ Scenario: Update rewrites the ledger after a successful merge
   And files matches the new pack contents
 ```
 
-### User story 2 — HTTP fallback returns the ledger for the AI to write last
+### User story 2 — HTTP returns a plan and the ledger is written last
 
-**As a** developer using HTTP MCP as fallback
-**I want** the tool response to include the ledger payload and path
-**So that** the AI writes `.sdd-installed.json` only after a successful extract
+**As a** developer using HTTP MCP
+**I want** the tool response to name the plan and the ledger path
+**So that** the ledger is written only after the planned files are copied
 
 #### AC4
 
 ```gherkin
-Scenario: HTTP install includes ledger in the tool result
+Scenario: HTTP install with inventory includes the ledger in the plan
   Given the client calls sdd_install_framework over Streamable HTTP
+  And the caller sends inventory
   And the operator sync cache contains the requested version
   When the tool runs
-  Then the result includes manifestPath {client_root}/.sdd-installed.json
-  And the result includes a manifest object with pack_complete true, installed_at, package_version, package_commit, and files
-  And instructions tell the AI to write that ledger only after extract succeeds
+  Then the result is noop, rewrite_ledger, or apply
+  And an apply result names the ledger path {client_root}/.sdd-installed.json
+  And the instruction says to write that ledger last
+  And the instruction does not say to extract an archive into the client root
   And the operator server is not written as a user config root
   And the result does not require framework.sdd.works.json
 ```
@@ -421,11 +439,12 @@ Scenario: HTTP install includes ledger in the tool result
 #### AC5
 
 ```gherkin
-Scenario: HTTP already_up_to_date is still not returned
-  Given the AI passes installed_commit matching the cache
+Scenario: HTTP does not report already up to date when a recorded file is missing
+  Given the caller sends inventory
+  And a recorded path is missing
   When sdd_install_framework runs over HTTP
-  Then the result still includes packageUrl and extract_recommended true
-  And the result still includes the manifest object for a successful extract
+  Then the result is apply
+  And the result does not include extract_recommended
 ```
 
 ---
@@ -991,14 +1010,15 @@ Scenario: Repo moved ahead of cache on HTTP install
   And already_up_to_date is not returned when installed_commit is SHA-OLD
 ```
 
-#### AC10 — Cache staleness observability (ADR-055)
+#### AC10 — Cache older than 30 minutes is refused
 
 ```gherkin
-Scenario: HTTP install exposes cache age
+Scenario: A cache older than 30 minutes is refused
   Given cache syncedAt is older than 30 minutes
-  When sdd_install_framework runs on HTTP channel
-  Then the response includes cache_synced_at, cache_age_minutes, and cache_stale true
-  And instructions mention stale cache advisory
+  When sdd_install_framework runs
+  Then the result code is cache_stale
+  And the result has no write plan
+  And the result has no packageUrl
 ```
 
 ### E2E test plan (freshness regression)
@@ -1073,13 +1093,13 @@ Scenario: Admin manual sync trigger
 
 ## `sdd-mcp-http-install-policy` — HTTP install policy (fallback, ADR-054 / ADR-058)
 
-HTTP MCP must not write Server 2 disk as if it were the user’s home. When the client uses the HTTP fallback, install/update return tarball URL + metadata for AI extraction.
+HTTP MCP must not write the caller disk. The current install contract is [URL MCP and server write plan](#sdd-mcp-url-plan). The server returns `writer_required` or a plan. The agent does not extract an archive into the client root.
 
-### User story 1 — Remote install returns tarball URL for AI extraction
+### User story 1 — Remote install returns a plan
 
-**As a** developer calling MCP over HTTP because stdio could not be set up
-**I want** install and update to return a package URL and extraction instructions
-**So that** the AI agent extracts files locally and the hosted server never writes another user’s client folder
+**As a** developer calling MCP over HTTP
+**I want** install and update to return a plan and the pack URL on this server
+**So that** the hosted server never writes another user’s client folder
 
 #### AC1
 
@@ -1088,9 +1108,9 @@ Scenario: HTTP install returns package URL and instructions
   Given the client calls sdd_install_framework over Streamable HTTP
   And the operator sync cache contains the requested version
   When the tool runs
-  Then the result includes packageUrl pointing at GET /api/sdd/package
-  And the result includes paths, manifest, manifestPath, and instructions
-  And the manifest includes pack_complete true for the AI to write last
+  Then a call with no inventory returns writer_required and packageUrl on this server
+  And a call with inventory returns noop, rewrite_ledger, or apply
+  And the result does not name a git host
   And the server disk is not written as a user config root
   And a temp client home on the server process is unchanged
 ```
@@ -1109,7 +1129,7 @@ Scenario: HTTP update follows the same policy
 
 ## `sdd-mcp-prompt-setup` — Prompt-based MCP setup (SETUP-01, ADR-058)
 
-End users paste one prompt. The AI starts the local program at `~/.sdd/sdd-mcp` when that file is already on the machine and writes a `command` MCP entry. If the file is missing, or the client accepts only a URL, the AI writes the HTTP URL. The person does not edit the MCP file by hand. The agent does not download an executable.
+End users paste one prompt. The agent writes one URL entry. The person does not edit the MCP file by hand. The agent does not download an executable and does not name a git host. The current contract is [URL MCP and server write plan](#sdd-mcp-url-plan).
 
 ### User story 1 — One-prompt stdio setup
 
@@ -1123,22 +1143,21 @@ End users paste one prompt. The AI starts the local program at `~/.sdd/sdd-mcp` 
 Scenario: Agent setup endpoint serves stdio instructions
   When GET /setup is requested
   Then the response Content-Type is text/markdown
-  And the body names ~/.sdd/sdd-mcp as the local program path
-  And the body tells the agent not to download an executable from the network
-  And the body shows a command MCP entry with SDD_SERVER_URL https://sdd.works when that file is present
+  And the body shows one URL entry for https://sdd.works/mcp
+  And the body has no command entry
   And the body does not ask the person to edit the MCP file by hand
   And the body does not authorize installing the framework pack in the same step
-  And the later install step says the local program writes files
-  And packageUrl is only for the HTTP fallback path
-  And the body does not name a GitHub releases/latest/download URL for the binary
+  And the body does not name a git host or a repository
 ```
 
 #### AC2 — feature-05
 
 ```gherkin
-Scenario: Agent setup documents HTTP fallback
+Scenario: A missing local program still uses the URL entry
   When GET /setup is requested
-  Then the body includes https://sdd.works/mcp as the fallback when ~/.sdd/sdd-mcp is missing or the client accepts only a URL
+  And ~/.sdd/sdd-mcp is missing
+  Then the body still shows only the url https://sdd.works/mcp
+  And the body does not switch to a command entry
 ```
 
 #### AC3 — backend-01
@@ -1152,12 +1171,12 @@ Scenario: Old setup path redirects
 #### AC4 — backend-01
 
 ```gherkin
-Scenario: Local portal rewrites pack base and HTTP fallback
+Scenario: Local portal rewrites the MCP URL
   Given PUBLIC_BASE_URL is http://127.0.0.1:3040
   When GET /setup is requested
-  Then the body sets SDD_SERVER_URL to http://127.0.0.1:3040
-  And the body uses the local MCP HTTP URL as the fallback
-  And the body does not use https://sdd.works/mcp as the fallback
+  Then the body uses the local MCP HTTP URL
+  And the body does not use https://sdd.works/mcp
+  And the body has no command entry
 ```
 
 #### AC5 — OGT-2 / TRAE CN user MCP path
@@ -1167,6 +1186,38 @@ Scenario: Agent setup names the TRAE CN user MCP file
   When GET /setup is requested
   Then the body names ~/Library/Application Support/Trae CN/User/mcp.json as the TRAE CN user MCP file
   And the body tells the agent not to write ~/.trae-cn/mcp.json or ~/.trae/mcp.json for TRAE CN
+```
+
+#### AC6 — MC-10 / CodeBuddy and TRAE editions, current client only
+
+```gherkin
+Scenario: Agent setup names CodeBuddy and TRAE editions and limits scope to the running agent
+  When GET /setup is requested
+  Then the body setup version is 2026-10-09.v10
+  And the body names CodeBuddy (international) for CodeBuddy or WorkBuddy
+  And the body names CodeBuddy CN for CodeBuddy CN or WorkBuddy CN
+  And both CodeBuddy sections name ~/.codebuddy/mcp.json
+  And both CodeBuddy sections use .codebuddy/mcp.json only when the user asked to configure this project
+  And the body names TRAE (international) and ~/.trae/mcp.json
+  And the TRAE (international) section does not use the Trae CN Application Support path or ~/.trae-cn/mcp.json for that user MCP list
+  And the body names the TRAE CN user MCP file under Library/Application Support/Trae CN/User/mcp.json
+  And the TRAE CN section does not write ~/.trae-cn/mcp.json or ~/.trae/mcp.json for the TRAE CN user list
+  And the body tells the agent to change MCP configuration only for the agent running this session
+  And the body tells the agent not to read or write another IDE's mcp.json unless the user names that IDE
+```
+
+#### AC7 — MC-11 / install flags on the setup page
+
+```gherkin
+Scenario: Agent setup tells the agent how to run the local program
+  When GET /setup is requested
+  Then the body tells the agent to run the local program with --write, --client, --os, and --client-root when it has a candidate folder
+  And the body tells the agent to set SDD_SERVER_URL to https://sdd.works
+  And the body tells the agent to pass --client as codebuddy for both CodeBuddy editions
+  And the body tells the agent to pass --client as trae for TRAE (international) and trae-cn for TRAE CN
+  And the body tells the agent to pass --os as darwin, linux, or win32
+  And when the program cannot run, the body tells the agent to set accepted_root to that candidate folder
+  And the body does not name a git host
 ```
 
 ---
@@ -1238,7 +1289,7 @@ Scenario: Source does not embed operator secrets
 
 ## `mcp-github-release` — Tagged release ships sdd-mcp (feature-80 / MCP-06)
 
-**Plain summary:** When you cut a new MCP version, you push a Git tag and GitHub publishes the five installer files. Setup tells the agent to save the matching file as `~/.sdd/sdd-mcp` from that release only. A failed download uses the HTTP MCP URL.
+**Plain summary:** A version tag can publish the five program files for operators. Setup and `sdd_install_framework` do not name that release. The agent download link is the pack on this server. The MCP entry stays a URL.
 
 **Parent PBI:** [MCP-06](../product-backlog.md#L332). **Design:** [ADR-058](../adr/ADR-058-stdio-end-user-http-fallback.md), [`mcp-design.md`](./mcp-design.md) §2.1. **Tests:** [`mcp-tests.md`](./mcp-tests.md#9-sprint-9-mcp-06-and-mcp-07) §9.1.
 
@@ -1261,29 +1312,28 @@ Scenario: Version tag publishes the five installer files
 ### User story — Visitor gets the local program from that release
 
 **As a** visitor connecting an agent
-**I want** setup to save the matching official installer as the local program
-**So that** my agent starts stdio without a one-off download link
+**I want** setup to register the MCP URL and to name the pack on this server
+**So that** the agent does not download from a git host
 
 #### AC2 — feature-80
 
 ```gherkin
-Scenario: Setup names only the official release assets
+Scenario: Setup does not name a git host
   Given a visitor fetches GET /setup
-  Then the instructions name the five assets sdd-mcp-darwin-arm64, sdd-mcp-darwin-x64, sdd-mcp-linux-arm64, sdd-mcp-linux-x64, and sdd-mcp-windows-x64.exe
-  And the instructions name releases/download and releases/latest/download on github.com/ethanhuangcst/workspace.framework.sdd.works
-  And the instructions tell the agent to save the matching asset as ~/.sdd/sdd-mcp
+  Then the instructions do not name a git host or a repository
+  And sdd_install_framework download link is the pack on this server
+  And the instructions do not tell the agent to save a GitHub release asset as ~/.sdd/sdd-mcp
   And the instructions do not name any other download host
 ```
 
 #### AC3 — feature-80
 
 ```gherkin
-Scenario: Failed official download uses the HTTP MCP URL
+Scenario: A missing local program still uses the URL
   Given ~/.sdd/sdd-mcp is missing
-  And the matching official release asset cannot be saved
   When the agent follows GET /setup
   Then the agent writes an MCP entry whose url is https://sdd.works/mcp
-  And the agent does not save an executable from any other host
+  And the agent does not save an executable from a git host
 ```
 
 ---
@@ -1414,6 +1464,7 @@ Scenario: Fallback sends the ledger and writes planned paths
   And the agent writes only the paths in the plan
   And the agent writes the ledger last
   And the agent does not extract the archive into the client root
+  And the call sets accepted_root to the candidate folder when the agent has one
 ```
 
 #### AC7
@@ -1425,4 +1476,102 @@ Scenario: No ledger is a first install
   When the agent sends ledger absent and an empty missing list
   Then the server plan is apply for the pack allow-list
   And the agent writes those paths and the ledger last
+```
+
+#### AC8 — MC-02
+
+```gherkin
+Scenario: Install with no inventory names the pack on this server
+  Given the caller sends no inventory
+  And the pack cache is younger than 30 minutes
+  When sdd_install_framework runs
+  Then the result code is writer_required
+  And packageUrl is the pack on this server
+  And the result does not name a git host or a repository
+```
+
+#### AC9 — MC-04
+
+```gherkin
+Scenario: A known client keeps the path-table root
+  Given the client is codebuddy
+  And the candidate root is a different folder inside the home directory
+  When the local program checks the root
+  Then the accepted root is the path-table root for codebuddy
+  And the candidate folder is not written
+```
+
+#### AC10 — MC-04
+
+```gherkin
+Scenario: A parent segment or a system path is rejected
+  Given the candidate root contains .. or is /etc, /usr, /bin, or /sbin
+  When the local program checks the root
+  Then the result code is path_rejected
+  And no pack file is written
+```
+
+#### AC11 — MC-05
+
+```gherkin
+Scenario: The plan request records the accepted root
+  Given the local program accepted a client root
+  When it posts the install plan
+  Then the body includes that accepted root, the ledger, the client, the operating system, and missing
+  And the body does not include file contents
+```
+
+#### AC12 — MC-03
+
+```gherkin
+Scenario: The latest pack is a git commit from the pack repository
+  Given the server cache latest pointer is the fixture commit sha-v1.0.0
+  When an operator syncs the pack repository
+  Then latestCommit is a git commit from that repository
+  And GET /api/sdd/package?version=latest is not the six-file fixture set
+  And the portal process ignores GITHUB_FIXTURE
+  And a practice GitHub port does not replace latestCommit in the portal process
+```
+
+#### AC13 — MC-06
+
+```gherkin
+Scenario: A fixture pack is not written
+  Given the cached commit is sha-v1.0.0 or the cached tarball is the fixture file set
+  When sdd_install_framework runs
+  Then the result code is fixture_pack
+  And no client file is written
+```
+
+#### AC14 — MC-01
+
+```gherkin
+Scenario: The built program refuses a stale cache
+  Given each dist sdd-mcp file and the home .sdd/sdd-mcp file are built from the current source
+  When a cache older than 30 minutes is offered to --write
+  Then the program exits without copying files
+  And the program output names cache_stale
+```
+
+#### AC15 — MC-11
+
+```gherkin
+Scenario: The install tool result names the writer flags
+  Given the caller sends no inventory
+  And the pack cache is younger than 30 minutes
+  When sdd_install_framework runs
+  Then the instructions name --write, --client, --os, and --client-root
+  And the instructions name SDD_SERVER_URL
+  And the instructions tell the agent to set accepted_root to the candidate folder when the program cannot run
+  And the instructions do not name a git host
+```
+
+#### AC16 — MC-07
+
+```gherkin
+Scenario: HTTP keeps get secret and a missing name is not a tool error
+  Given an authorized client lists tools on HTTP
+  Then the tool list includes sdd_install_framework, sdd_update_framework, and sdd_get_key
+  And a call for a missing secret name returns the text not_found
+  And that call is not a tool error
 ```

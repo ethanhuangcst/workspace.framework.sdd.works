@@ -1,7 +1,9 @@
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   checkCandidateRoot,
   composeInstallPlan,
+  resolveAcceptedClientRoot,
   type LedgerFiles,
 } from "./install-plan";
 
@@ -109,5 +111,34 @@ describe("checkCandidateRoot", () => {
 
   it("should_accept_a_path_under_the_home_directory", () => {
     expect(checkCandidateRoot("/Users/me/.cursor", "/Users/me", "/Users/me")).toBeNull();
+  });
+});
+
+describe("resolveAcceptedClientRoot", () => {
+  const home = "/Users/me";
+
+  it("should_keep_the_path_table_root_for_a_known_client", () => {
+    const table = join(home, ".codebuddy");
+    const other = join(home, "other-agent");
+    const result = resolveAcceptedClientRoot(
+      table,
+      other,
+      "seed",
+      home,
+      home,
+    );
+    expect(result).toEqual({ acceptedRoot: table });
+  });
+
+  it("should_reject_a_candidate_outside_the_home_directory", () => {
+    const table = join(home, ".cursor");
+    const result = resolveAcceptedClientRoot(
+      table,
+      "/etc/evil",
+      "seed",
+      home,
+      home,
+    );
+    expect(result).toMatchObject({ error: { code: "path_rejected" } });
   });
 });

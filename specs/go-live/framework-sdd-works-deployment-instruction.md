@@ -228,7 +228,7 @@ Set in stack **`framework-sdd-works`** (both containers unless noted). Values **
 | --- | --- |
 | `QWEN_*` | Stdio path-discovery LLM only (ADR-047); HTTP MCP does not call Qwen |
 | `MCP_HTTP_PORT` on **web** | MCP runs in sibling container |
-| `GITHUB_FIXTURE` | CI fixture only |
+| `GITHUB_FIXTURE` | Ignored. The server does not select a fixture port from this variable. Do not set it. |
 | `E2E_*` / `PLAYWRIGHT_*` | Test harness only |
 
 #### Optional overrides

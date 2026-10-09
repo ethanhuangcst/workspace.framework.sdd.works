@@ -35,4 +35,4 @@ TRAE CN’s Manage-page user MCP list is not under `~/.trae-cn/`. On macOS it is
 
 - [`specs/mcp/client.paths.md`](../../mcp/client.paths.md) — TRAE / TRAE CN MCP table
 - [`specs/mcp/read-client-config-results.md`](../../mcp/read-client-config-results.md) — TRAE CN row
-- `public/agent-setup/prompt.md` — setup version `2026-09-26.v4`
+- `public/agent-setup/prompt.md` — setup version `2026-10-09.v10`, headings **TRAE (international)** and **TRAE CN**

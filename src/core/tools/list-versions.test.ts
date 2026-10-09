@@ -26,7 +26,7 @@ describe("listVersions", () => {
     clearListVersionsCache();
     const dir = mkdtempSync(join(tmpdir(), "sdd-lv-cache-"));
     process.env.SDD_PACKAGE_CACHE_DIR = dir;
-    const sha = "sha-v1";
+    const sha = "0123456789abcdef0123456789abcdef01234567";
     mkdirSync(unpackedDir(sha), { recursive: true });
     writeFileSync(packageTarPath(sha), "tar");
     writeFileSync(join(dir, MANIFEST_FILENAME), JSON.stringify({

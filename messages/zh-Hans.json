@@ -271,7 +271,7 @@
   "admin.framework.tree_collapse": "折叠 {name}",
   "admin.framework.artifacts": "framework.sdd.works 产物：",
   "mcp.tools.sdd_list_versions": "framework.sdd.works：列出设置中 GitHub 源的可用框架包版本及概要清单（skills/rules/other）。只读。不返回密钥值。失败：package_unavailable。",
-  "mcp.tools.sdd_get_key": "framework.sdd.works：根据 key_name 从管理密钥库返回明文 key_value。HTTP 需认证（与传输层相同的 bearer）。失败：not_found、unauthorized。不泄露其他密钥名称。",
-  "mcp.tools.sdd_install_framework": "framework.sdd.works：安装框架包。stdio 直接写入本地路径；HTTP 始终返回 packageUrl、paths、manifest 及 AI 解压说明（不会 already_up_to_date — 跳过 curl|tar 前请验证本地文件）。可选 force=true。失败：path_rejected、client_unknown、package_unavailable、sync_pending。",
+  "mcp.tools.sdd_get_key": "只返回 key_name 对应的密钥字符串。到此停止。不要描述该值、密钥库或其他密钥。名称不存在时返回文本 not_found，这不是失败。错误码只有：unauthorized、invalid_input。",
+  "mcp.tools.sdd_install_framework": "framework.sdd.works：安装框架包。不传 inventory 时返回 writer_required。传入 inventory.ledger 和 inventory.missing 时返回 plan（noop、rewrite_ledger 或 apply）、instructions 和 packageUrl。不要把归档解压到客户端根目录。包缓存过期时返回 cache_stale，不返回写入计划。可选 force=true。失败：path_rejected、client_unknown、package_unavailable、sync_pending、cache_stale、fixture_pack。",
   "mcp.tools.sdd_update_framework": "framework.sdd.works：更新现有安装。sdd_install_framework 的别名。stdio 本地写入；HTTP 返回 packageUrl 及 AI 解压说明（不会 already_up_to_date）。可选 force=true。失败：path_rejected、package_unavailable、sync_pending。"
 }

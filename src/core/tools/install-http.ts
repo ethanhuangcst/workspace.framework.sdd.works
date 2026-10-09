@@ -4,6 +4,7 @@ import {
   resolveCachedVersion,
 } from "@/core/sync/cache";
 import { ensurePackageCacheFresh } from "@/core/sync/ensure-cache-fresh";
+import { isRefusedFixturePack } from "@/core/sync/fixture-pack";
 import {
   type InstallArgs,
   type InstallContext,
@@ -13,17 +14,6 @@ import {
 import { composeInstallPlan, type InstallLedger } from "./install-plan";
 import { getSddServerUrl } from "./package-fetch";
 import { toolError, toolOk } from "./errors";
-
-export const WRITER_ASSETS = [
-  "sdd-mcp-darwin-arm64",
-  "sdd-mcp-darwin-x64",
-  "sdd-mcp-linux-arm64",
-  "sdd-mcp-linux-x64",
-  "sdd-mcp-windows-x64.exe",
-] as const;
-
-const RELEASE_REPO =
-  "https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases";
 
 function asLedger(value: unknown): InstallLedger | null {
   if (!value || typeof value !== "object") return null;
@@ -54,21 +44,16 @@ function planInstruction(
   ].join("\n");
 }
 
-function writerInstruction(serverUrl: string, cacheStale: boolean, cacheAgeMinutes: number): string {
+function writerInstruction(serverUrl: string, packageUrl: string): string {
   const lines = [
     "The local program must write the pack. Do not extract an archive into the client root.",
-    `Download one matching asset from ${RELEASE_REPO}/latest/download/<asset>.`,
-    `Assets: ${WRITER_ASSETS.join(", ")}.`,
-    "Save it as the home directory plus .sdd/sdd-mcp. Expand the home directory first. Do not leave a tilde in the path. On Windows the file name is sdd-mcp.exe.",
-    `Run that file once with --write, --client, and --os. Set SDD_SERVER_URL to ${serverUrl}.`,
+    `Download the pack from ${packageUrl}. That file is the pack on this server.`,
+    "Do not use a git host or a repository name.",
+    "When the local program is already on this machine, save it as the home directory plus .sdd/sdd-mcp. Expand the home directory first. Do not leave a tilde in the path. On Windows the file name is sdd-mcp.exe.",
+    `Run that file once with --write, --client, --os, and --client-root when you have a candidate folder. Set SDD_SERVER_URL to ${serverUrl}.`,
+    "When the local program cannot run, call sdd_install_framework again with inventory and set accepted_root to that same candidate folder when you have one.",
     "Do not put that path in mcp.json. mcp.json stays a url entry only.",
   ];
-  if (cacheStale) {
-    const age = Math.round(cacheAgeMinutes);
-    lines.push(
-      `Note: package cache may be stale (last synced ${age} min ago). Ask the operator to run sync, or retry shortly.`,
-    );
-  }
   return lines.join("\n");
 }
 
@@ -111,6 +96,20 @@ export async function installFrameworkHttp(
     cache_refresh: "code" in fresh ? undefined : fresh.status,
   };
 
+  if (cacheStale) {
+    return toolError(
+      "cache_stale",
+      `Package cache is ${Math.round(cacheAgeMinutes)} minutes old. Sync the pack before install. The writer must not copy this cache.`,
+    );
+  }
+
+  if (isRefusedFixturePack(cached.commitSha, cached.unpackedPath)) {
+    return toolError(
+      "fixture_pack",
+      "The cached pack is a test fixture. Sync the real pack from git before install.",
+    );
+  }
+
   if (!args.inventory) {
     return toolOk({
       code: "writer_required",
@@ -118,11 +117,9 @@ export async function installFrameworkHttp(
       version: cached.version,
       commitSha: cached.commitSha,
       client: detected,
-      assets: [...WRITER_ASSETS],
-      release_repo: RELEASE_REPO,
       resolution_source: resolved.source,
       ...cache,
-      instructions: writerInstruction(serverUrl, cacheStale, cacheAgeMinutes),
+      instructions: writerInstruction(serverUrl, packageUrl),
     });
   }
 
@@ -153,6 +150,9 @@ export async function installFrameworkHttp(
     plan,
     manifest,
     resolution_source: resolved.source,
+    ...(args.accepted_root?.trim()
+      ? { accepted_root: args.accepted_root.trim() }
+      : {}),
     ...cache,
     instructions: planInstruction(plan.action, packageUrl, plan.delete, plan.write),
   });

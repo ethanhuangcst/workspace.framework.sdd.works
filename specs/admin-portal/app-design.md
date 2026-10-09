@@ -588,7 +588,8 @@ Do these in order. Write the failing test for a step before the code for that st
 | Authoring | [`public/agent-setup/paste-sentences.json`](../../public/agent-setup/paste-sentences.json) |
 | Schema | `version` (`1`). `sentences` object with keys **`lite_install`** and **`node_prerequisite`**. Each value is one string template containing `{origin}` once (no secrets). |
 | Loader | `src/mcp/paste-sentences.ts` (recommended): read JSON from disk, validate keys, `resolvePasteSentence(key, origin?)` where `origin` defaults to `getMcpWebsiteUrl()` without trailing slash. Export typed keys. |
-| Consumers | Setup **`copy-node-setup-prompt`** ([AC47](./app-stories.md)); partner lite paste ([AC21](./app-stories.md) amended); [`install.md`](../../public/agent-setup/install.md) **Partner site one-line prompt** section quotes **`lite_install`** from the file; integration tests import the loader instead of duplicating strings. |
+| Consumers | Partner lite paste ([AC21](./app-stories.md)); [`install.md`](../../public/agent-setup/install.md) **Partner site one-line prompt** section quotes **`lite_install`**; node markdown quotes **`node_prerequisite`**. Framework Setup UI no longer shows a Node copy pill ([WA-20](../issues-log.md)). Production paste origin uses [`getVisitorPasteOrigin`](../../src/mcp/public-origin.ts) ([WA-19](../issues-log.md)). |
+
 | Full MCP setup | Stays on **`GET /setup`** / `prompt.md` and **`copy-setup-prompt`** ([AC36](./app-stories.md)). Optional later key **`mcp_full_setup`** in the same JSON is out of scope for feature-88. |
 
 **Example file (authoring; `{origin}` replaced at runtime):**
@@ -612,15 +613,16 @@ Do these in order. Write the failing test for a step before the code for that st
 
 #### Node.js setup prompt (feature-88 / Web-portal-38)
 
-Part 1 is public agent markdown at `GET /setup/node`. Part 2 is a Setup tab copy control for **`node_prerequisite`**. Part 3 is a public JSON catalog. This path is **not** lite install, **not** MCP install, **not** Git or Xcode.
+Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy UI was **removed at go-live** ([WA-20](../issues-log.md)); **`node_prerequisite`** stays in [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) for markdown and partners. Part 3 is a public JSON catalog. This path is **not** lite install, **not** MCP install, **not** Git or Xcode.
 
-##### Setup tab UI (Part 2)
+##### Setup tab UI (Part 2 — retired on framework portal)
 
 | | |
 | --- | --- |
-| Placement | Setup panel below the existing MCP highlight / full-setup copy block ([ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md)). Second subsection with i18n **`admin.guide.setup_node_section_title`** and **`admin.guide.setup_node_section_lead`**. |
-| Copy control | `data-testid="copy-node-setup-prompt"`. Copies `resolvePasteSentence('node_prerequisite')`. Same pill pattern as **`copy-setup-prompt`**. |
+| Status | **Removed** from [`SetupGuidePanel`](../../src/components/features/SetupGuidePanel.tsx). No **`copy-node-setup-prompt`**, no **Install Node.js first** card. |
+| Kept | `GET /setup/node`, catalog API, paste key **`node_prerequisite`**. i18n keys `admin.guide.setup_node_*` / `copy_node_prompt` remain unused until a later cleanup story. |
 | Lite | No **`copy-lite-setup-prompt`** on framework.sdd.works. Lite sentence stays partner-only via the shared JSON file. |
+| Visitor paste origin | Setup **`copy-setup-prompt`** uses [`getVisitorPasteOrigin`](../../src/mcp/public-origin.ts): production always **`https://sdd.works`**; local keeps `PUBLIC_BASE_URL` ([WA-19](../issues-log.md)). |
 
 ##### Technical design (Part 1 — agent markdown)
 
@@ -659,7 +661,7 @@ Part 1 is public agent markdown at `GET /setup/node`. Part 2 is a Setup tab copy
 1. **task-01.** Add `paste-sentences.json`, loader, and unit tests. Wire **`LITE_PARTNER_SETUP_SENTENCE`** to **`lite_install`**. Update `install.md` partner section to reference the file.
 2. **task-02.** Add `node-catalog.json`, catalog route, and tests (**AC46** API half).
 3. **task-03.** Add `node.md`, rewrite, `GET /api/agent-setup/node`, integration tests (**AC45**).
-4. **task-04.** Setup UI **`copy-node-setup-prompt`**, i18n keys, component test (**AC47**). Update mockup [`13-instructions.html`](./ui-mockup/13-instructions.html) if layout changes.
+4. **task-04.** Historical: Setup UI **`copy-node-setup-prompt`** shipped then **retired** ([WA-20](../issues-log.md)). AC47 now covers the paste file and absence of the Node Setup card.
 5. **task-05.** Run [`app-tests.md`](./app-tests.md) §30 before marking feature-88 **Done**.
 
 #### Instructions tabs (feature-58 / feature-59 / feature-60)

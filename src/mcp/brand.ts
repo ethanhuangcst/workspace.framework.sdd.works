@@ -3,12 +3,22 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MCP_MARK_BASE64 } from "./generated/mcp-mark-base64";
 import {
+  CANONICAL_PUBLIC_ORIGIN,
+  getVisitorPasteOrigin,
+} from "./public-origin";
+import {
   getLitePartnerSetupSentence,
   getNodePrerequisiteSetupSentence,
   resolvePasteSentence,
 } from "./paste-sentences";
 
-export { getLitePartnerSetupSentence, getNodePrerequisiteSetupSentence, resolvePasteSentence };
+export {
+  CANONICAL_PUBLIC_ORIGIN,
+  getVisitorPasteOrigin,
+  getLitePartnerSetupSentence,
+  getNodePrerequisiteSetupSentence,
+  resolvePasteSentence,
+};
 
 export type McpIcon = {
   src: string;
@@ -78,7 +88,7 @@ export function getMcpBrandIcons(): McpIcon[] {
 
 export function getMcpWebsiteUrl(): string {
   return (
-    process.env.PUBLIC_BASE_URL?.trim() || "https://sdd.works"
+    process.env.PUBLIC_BASE_URL?.trim() || CANONICAL_PUBLIC_ORIGIN
   );
 }
 

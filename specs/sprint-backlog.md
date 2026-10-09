@@ -729,6 +729,9 @@ No open rows.
 #### 3. [Oct 8, 2026], feature-72, feature-74, feature-77, feature-88 done
 - Hostname cutover, Knowledge folder browser, unified `guide-md-body`, and Node setup closed together after user **close confirm**; [WA-18](./issues-log.md) closed with [feature-77](./sprint-backlog.md#sprint-9) while [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open.
 
+#### 4. [Oct 9, 2026], On demand
+- The CodeBuddy install copied the GitHub fixture pack because the writer result named a GitHub release and the dev cache `latestCommit` was `sha-v1.0.0`. [install-writer-fixture-cache.md](./knowledge/agent/install-writer-fixture-cache.md)
+
 **Opportunities**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
@@ -740,6 +743,9 @@ No open rows.
 #### 3. [Oct 8, 2026], feature-72, feature-74, feature-77, feature-88 done
 - Operator URL runbook ([feature-84](./sprint-backlog.md#sprint-9)) stays one SBI after refine; [Web-portal-22](./product-backlog.md#pb-108) retired as duplicate policy row.
 
+#### 4. [Oct 9, 2026], On demand
+- Treat a green temp-cache unit run as short of an install check, because that run never reads the portal `manifest.json` the writer will copy.
+
 **Future actions**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
@@ -750,6 +756,9 @@ No open rows.
 
 #### 3. [Oct 8, 2026], feature-72, feature-74, feature-77, feature-88 done
 - On the next Learn iframe check in production, confirm WordPress `frame-ancestors` allows `https://sdd.works` per [`hostname-cutover-inventory.md`](./go-live/20261008/hostname-cutover-inventory.md).
+
+#### 4. [Oct 9, 2026], On demand
+- On the next install-path change, rebuild `dist/sdd-mcp-*` and confirm the portal cache `latestCommit` is not `sha-v1.0.0` before any `--write`. Inspect at feature-80 or feature-82.
 
 ---
 

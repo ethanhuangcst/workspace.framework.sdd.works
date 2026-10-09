@@ -1,7 +1,7 @@
 import { dirname } from "node:path";
 import { homedir } from "node:os";
 import { resolveClientPaths } from "@/core/path-detect";
-import { checkCandidateRoot } from "@/core/tools/install-plan";
+import { resolveAcceptedClientRoot } from "@/core/tools/install-plan";
 import type { InstallPlan } from "@/core/tools/install-plan";
 import type { LedgerFiles } from "@/core/tools/install-plan";
 import { fetchPackage, getSddServerUrl } from "@/core/tools/package-fetch";
@@ -17,6 +17,7 @@ import {
 export type PlanResponse = {
   code?: string;
   error?: { code: string; message?: string };
+  cache_stale?: boolean;
   plan?: InstallPlan;
   version?: string;
   commitSha?: string;
@@ -68,12 +69,20 @@ export async function runWriteMode(
     process.stdout.write(`${JSON.stringify({ error: resolved })}\n`);
     return 1;
   }
-  const clientRoot = clientRootFromSkills(resolved.primary.skills);
-  const rejected = checkCandidateRoot(clientRoot, home, userProfile);
-  if (rejected) {
-    process.stdout.write(`${JSON.stringify({ error: rejected })}\n`);
+  const tableRoot = clientRootFromSkills(resolved.primary.skills);
+  const candidateRoot = flag(argv, "--client-root");
+  const accepted = resolveAcceptedClientRoot(
+    tableRoot,
+    candidateRoot,
+    resolved.source,
+    home,
+    userProfile,
+  );
+  if ("error" in accepted) {
+    process.stdout.write(`${JSON.stringify({ error: accepted.error })}\n`);
     return 1;
   }
+  const clientRoot = accepted.acceptedRoot;
 
   const ledger = readLedgerFile(clientRoot);
   const missing = missingRecorded(clientRoot, ledger);
@@ -83,6 +92,7 @@ export async function runWriteMode(
     client,
     os,
     force: argv.includes("--force"),
+    accepted_root: clientRoot,
     inventory: { ledger, missing },
   };
   const postPlan =
@@ -96,8 +106,19 @@ export async function runWriteMode(
       return (await res.json()) as PlanResponse;
     });
   const planBody = await postPlan(`${server}/api/sdd/install-plan`, body);
-  if (planBody.error) {
-    process.stdout.write(`${JSON.stringify(planBody)}\n`);
+  if (planBody.error || planBody.cache_stale) {
+    process.stdout.write(
+      `${JSON.stringify(
+        planBody.error
+          ? planBody
+          : {
+              error: {
+                code: "cache_stale",
+                message: "Package cache is stale. Sync the pack before install.",
+              },
+            },
+      )}\n`,
+    );
     return 1;
   }
   if (!planBody.plan || planBody.plan.action === "noop") {

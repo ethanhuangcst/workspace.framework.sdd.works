@@ -1,5 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { getVisitorPasteOrigin } from "@/mcp/public-origin";
+
 export const PASTE_SENTENCE_KEYS = [
   "lite_install",
   "node_prerequisite",
@@ -49,9 +51,7 @@ export function resetPasteSentencesCacheForTests(): void {
 }
 
 function defaultPublicOrigin(): string {
-  return (
-    process.env.PUBLIC_BASE_URL?.trim() || "https://sdd.works"
-  ).replace(/\/$/, "");
+  return getVisitorPasteOrigin();
 }
 
 export function resolvePasteSentence(

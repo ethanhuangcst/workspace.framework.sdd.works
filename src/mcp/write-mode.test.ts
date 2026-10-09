@@ -66,4 +66,51 @@ describe("runWriteMode", () => {
     expect(code).toBe(0);
     expect(readFileSync(join(home, ".cursor/notes.txt"), "utf8")).toBe("keep");
   });
+
+  it("should_post_the_table_root_when_a_known_client_names_another_candidate", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-write-candidate-"));
+    homes.push(home);
+    process.env.HOME = home;
+    process.env.USERPROFILE = home;
+    mkdirSync(join(home, ".cursor"), { recursive: true });
+    const wrong = join(home, "other-folder");
+    mkdirSync(wrong, { recursive: true });
+    let posted: Record<string, unknown> | undefined;
+    const code = await runWriteMode(
+      [
+        "--client",
+        "cursor",
+        "--os",
+        "darwin",
+        "--client-root",
+        wrong,
+      ],
+      {
+        postPlan: async (_url, body) => {
+          posted = body as Record<string, unknown>;
+          return { plan: { action: "noop", delete: [], write: [] } };
+        },
+      },
+    );
+    expect(code).toBe(0);
+    expect(posted?.accepted_root).toBe(join(home, ".cursor"));
+  });
+
+  it("should_stop_without_writes_when_the_cache_is_stale", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-write-stale-"));
+    homes.push(home);
+    process.env.HOME = home;
+    process.env.USERPROFILE = home;
+    mkdirSync(join(home, ".cursor"), { recursive: true });
+    writeFileSync(join(home, ".cursor/notes.txt"), "keep");
+    const code = await runWriteMode(["--client", "cursor", "--os", "darwin"], {
+      postPlan: async () => ({
+        cache_stale: true,
+        plan: { action: "apply", delete: [], write: ["skills/tdd/SKILL.md"] },
+      }),
+    });
+    expect(code).toBe(1);
+    expect(readFileSync(join(home, ".cursor/notes.txt"), "utf8")).toBe("keep");
+    expect(existsSync(join(home, ".cursor/.sdd-installed.json"))).toBe(false);
+  });
 });

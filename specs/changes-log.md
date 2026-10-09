@@ -8,6 +8,32 @@
 
 ## 2026-10-09
 
+### Close MC-09: `sdd_get_key` missing name is not a tool error
+
+**Why**: A missing key name is an expected lookup result. Returning it with `isError: true` led callers to inspect the store and invent next steps.
+
+**What changed**: [`get-key.ts`](../src/core/tools/get-key.ts) returns the text `not_found` with no `isError` when the name is missing or decrypt fails. Success stays the secret string only. `unauthorized` and `invalid_input` stay tool errors with a code and no message. Tool descriptions in `messages/*.json`. Specs: [`mcp-design.md`](./mcp/mcp-design.md), [`mcp-stories.md`](./mcp/mcp-stories.md) AC1–AC4, [`mcp-tests.md`](./mcp/mcp-tests.md) §11. Lesson: [`mcp-expected-result-not-iserror.md`](./knowledge/agent/mcp-expected-result-not-iserror.md). [`issues-log.md`](./issues-log.md) closes [MC-09](./issues-log.md).
+
+**Verification**: `npx vitest run src/mcp/create-server.test.ts src/mcp/tool-descriptions.test.ts` (13 passed). User confirmed MC-09 usable 09/Oct/2026.
+
+**Boundary**: [MC-07](./issues-log.md) stays open (HTTP still lists `sdd_get_key`). Status OGT **Review `sdd_get_key` so the return is clean** waits for a separate close confirm.
+
+### MCP design: TBD1–TBD5 and the current install steps
+
+**Why**: The twelve-step list did not match the five install decisions, and it left the binary download on a GitHub release URL.
+
+**What changed**: [`mcp-design.md`](./mcp/mcp-design.md) records TBD1–TBD5 and rewrites the steps. The agent downloads the writer from this server. A GitHub repository URL stays out of the tool result. Lesson: [`install-writer-fixture-cache.md`](./knowledge/agent/install-writer-fixture-cache.md).
+
+**Verification**: Design text only. The code still returns `release_repo`. The on-disk writer binary is the 10:46 build and does not contain `cache_stale`.
+
+### Go-live: Setup paste origin and Node UI (WA-19, WA-20)
+
+**Why**: Local and mis-set `PUBLIC_BASE_URL` made the Setup copy pill show `localhost:3040`. Go-live also drops the Install Node.js block from the Setup tab.
+
+**What changed**: [`getVisitorPasteOrigin`](../src/mcp/public-origin.ts) forces **`https://sdd.works`** in production. Setup paste and paste-sentences use it. Removed Node card from [`SetupGuidePanel.tsx`](../src/components/features/SetupGuidePanel.tsx). Logged [WA-19](./issues-log.md) and [WA-20](./issues-log.md) (stay **Open** until the next GHCR image is live). Specs: design § Node UI retired, AC47, app-tests §30, [`release.md`](./release.md) §7.2. **`GET /setup/node`** and catalog unchanged.
+
+**Verification**: Hostname regression + InstructionsPage Vitest (48 passed). Production smoke: portal **200**; live **`/`** is still the old logo-card home on the current image; **`GET /setup` returns 404** (see [WA-21](./issues-log.md)); **`GET /api/agent-setup`** still serves markdown with `https://sdd.works/mcp`.
+
 ### Web-portal-39 implementation (visitor locale)
 
 **Why**: First visits always rendered English until the visitor used the locale switcher.

@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-08 (Sprint 9 WIP)
+> as_of: 2026-10-09 (Sprint 9 WIP)
 > [Definition](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#statusmd)
 
 ---
@@ -24,7 +24,7 @@
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: No **WIP** SBI. Last closed: [feature-72](./sprint-backlog.md#sprint-9), [feature-74](./sprint-backlog.md#sprint-9), [feature-77](./sprint-backlog.md#sprint-9), [feature-88](./sprint-backlog.md#sprint-9). Next **ToDo** is [feature-80 Tagged release ships sdd-mcp on GitHub](./sprint-backlog.md#sprint-9). [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open. [WA-18](./issues-log.md) closed with [feature-77](./sprint-backlog.md#sprint-9).
+- What SBI are we working on now: No **WIP** SBI. Last closed: [feature-72](./sprint-backlog.md#sprint-9), [feature-74](./sprint-backlog.md#sprint-9), [feature-77](./sprint-backlog.md#sprint-9), [feature-88](./sprint-backlog.md#sprint-9). Next **ToDo** is [feature-80 Tagged release ships sdd-mcp on GitHub](./sprint-backlog.md#sprint-9). [MC-09](./issues-log.md) closed 09/Oct/2026 (`sdd_get_key` missing name is not a tool error). [MC-07](./issues-log.md), [WA-14](./issues-log.md), and [WA-15](./issues-log.md) stay open. [WA-18](./issues-log.md) closed with [feature-77](./sprint-backlog.md#sprint-9).
 
 ## what could be the next
 
@@ -37,8 +37,9 @@
 
 | # | Task Name | Affected SBIs | Created | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Fix stale `product-backlog.md#L` links in specs | - [`scripts/check-spec-links.sh`](../scripts/check-spec-links.sh)<br>- [`sprint-backlog.md`](./sprint-backlog.md#sprint-8) Parent PBI and Unplanned PBIs<br>- [`changes-log.md`](./changes-log.md) | Sprint 8 | ToDo |
-| 2 | Add instructions-tabs rules to Admin Settings pack note | - [`src/content/.admin-note.md`](../src/content/.admin-note.md)<br>- [Web-portal-26](./product-backlog.md#pb-123)<br>- [feature-87](./sprint-backlog.md#sprint-9) | Sprint 8 | WIP |
+| 1 | Review `sdd_get_key` so the return is clean | - [MC-09](./issues-log.md) closed<br>- [MC-07](./issues-log.md) still open (HTTP still lists `sdd_get_key`)<br>- [`get-key.ts`](../src/core/tools/get-key.ts) | Sprint 9 | ToDo |
+| 2 | Fix stale `product-backlog.md#L` links in specs | - [`scripts/check-spec-links.sh`](../scripts/check-spec-links.sh)<br>- [`sprint-backlog.md`](./sprint-backlog.md#sprint-8) Parent PBI and Unplanned PBIs<br>- [`changes-log.md`](./changes-log.md) | Sprint 8 | ToDo |
+| 3 | Add instructions-tabs rules to Admin Settings pack note | - [`src/content/.admin-note.md`](../src/content/.admin-note.md)<br>- [Web-portal-26](./product-backlog.md#pb-123)<br>- [feature-87](./sprint-backlog.md#sprint-9) | Sprint 8 | WIP |
 
 ## Last 15 closed OGTs
 
@@ -60,4 +61,4 @@
 | 14 | Review EN seed sprint-backlog.md with [seed-artifacts-building-guide.md](./seed-artifacts-building-guide.md) | - [task-01 Cross-review five process file seeds](./sprint-backlog.md#sprint-6) | Sprint 5 | Sprint 6 |
 | 15 | Add pack seed templates adr.md and knowledge.md | - [feature-40 Skill sdd-retrospective](./sprint-backlog.md#sprint-6) | Sprint 6 | Sprint 6 |
 
-Last updated: 2026-10-08 Close confirm feature-72, 74, 77, 88 Done
+Last updated: 2026-10-09 Close confirm MC-09 (`sdd_get_key` not_found without isError)

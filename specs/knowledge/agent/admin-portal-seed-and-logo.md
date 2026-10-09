@@ -76,9 +76,8 @@ Playwright’s `webServer` sets `E2E_SKIP_MAIL=1` plus both capture paths and do
 ## GitHub settings + framework sync (SETT-01 / FRMW-01 / FRMW-02)
 
 - Env: `GITHUB_TOKEN` (contents:read) + optional `GITHUB_API_BASE_URL`; **never** expose to the browser.
-- CI / Playwright: set `GITHUB_FIXTURE=1` so `src/github/sync.ts` uses an in-process fixture port (reachable: `fixture/sdd-framework`; unreachable: `fixture/missing`).
-- Tests may also call `setGitHubPortForTests(...)`.
-- Owner `fixture` always uses the fixture port (even with a real token) so E2E leftover Settings URLs do not 404 against api.github.com.
+- CI and Playwright do not set `GITHUB_FIXTURE`. The server ignores that variable. Unit tests inject a double with `setGitHubPortForTests` and clear it after the test.
+- Owner `fixture` does not select a fixture port. A Settings URL for a real repository uses the real GitHub port.
 - Framework tree: `GET /api/admin/framework` reads SYNK-01 unpacked cache (`.data/sdd-packages/<sha>/unpacked/`); no live Octokit on page load. UI polls every 30s; **Sync with git repository** calls `POST /api/admin/sync { force: true }`.
 - Tree UX: top-level dirs (Agents, Rules, Skills, …) expand one level by default; children indented under each folder; deeper dirs use `+`/`−`.
 - For live demos, save a real `https://github.com/{owner}/{repo}` the token can read — not the fixture URL.
@@ -89,6 +88,6 @@ Playwright’s `webServer` sets `E2E_SKIP_MAIL=1` plus both capture paths and do
 - Build binaries: `npm run mcp:build`. Release workflow uploads on `v*` tags.
 - HTTP: `npm run mcp:http` / `make mcp-http` on `http://127.0.0.1:3041/mcp`.
 - Auth: `MCP_AUTH_TOKEN` when set for HTTP (ADR-049/050). Open local mode when unset.
-- CI: `MCP_AUTH_TOKEN=ci-mcp-auth-token`, `GITHUB_FIXTURE=1`.
+- CI: `MCP_AUTH_TOKEN=ci-mcp-auth-token`. Do not set `GITHUB_FIXTURE`.
 - Tools: list_versions + get_key + install/update. **HTTP:** returns `packageUrl` + portable paths + instructions (ADR-054); AI extracts locally. **stdio:** writes directly.
 - Guide: `/instructions`.

@@ -23,14 +23,12 @@ export function InstructionsPage({
   tabs,
   activeQueryParam: activeFromServer = "setup",
   setupPromptSentence,
-  nodePrerequisiteSentence,
 }: {
   locale: Locale;
   onLocaleChange: (locale: Locale) => void;
   tabs: InstructionsPageTab[];
   activeQueryParam?: string;
   setupPromptSentence: string;
-  nodePrerequisiteSentence: string;
 }) {
   const pathname = usePathname() || "/";
   const setupQueryParam =
@@ -112,7 +110,6 @@ export function InstructionsPage({
               <SetupGuidePanel
                 locale={locale}
                 setupPromptSentence={setupPromptSentence}
-                nodePrerequisiteSentence={nodePrerequisiteSentence}
               />
             ) : null}
             {tab.type === "embedded_external_page" && tab.embedUrl ? (

@@ -33,7 +33,7 @@ const originalCacheDir = process.env.SDD_PACKAGE_CACHE_DIR;
 function seedCache(): { dir: string; sha: string } {
   const dir = mkdtempSync(join(tmpdir(), "sdd-api-cache-"));
   process.env.SDD_PACKAGE_CACHE_DIR = dir;
-  const sha = "sha-v1";
+  const sha = "0123456789abcdef0123456789abcdef01234567";
   mkdirSync(unpackedDir(sha), { recursive: true });
   writeFileSync(packageTarPath(sha), "fake-tarball-bytes");
   writeFileSync(join(dir, MANIFEST_FILENAME), JSON.stringify({
@@ -62,14 +62,14 @@ afterEach(() => {
 
 describe("SDD package API", () => {
   it("should_return_versions_after_sync", async () => {
-    seedCache();
+    const { sha } = seedCache();
     const res = await getVersions();
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
       latestCommit: string;
       inventory: { skills: string[] };
     };
-    expect(body.latestCommit).toBe("sha-v1");
+    expect(body.latestCommit).toBe(sha);
     expect(body.inventory.skills).toContain("tdd");
   });
 
@@ -82,13 +82,13 @@ describe("SDD package API", () => {
   });
 
   it("should_stream_package_tarball", async () => {
-    seedCache();
+    const { sha } = seedCache();
     const req = {
       url: "http://localhost/api/sdd/package?version=latest",
     } as import("next/server").NextRequest;
     const res = await getPackage(req);
     expect(res.status).toBe(200);
-    expect(res.headers.get("X-SDD-Commit")).toBe("sha-v1");
+    expect(res.headers.get("X-SDD-Commit")).toBe(sha);
     expect(res.headers.get("X-SDD-Version")).toBe("v1.0.0");
     expect(res.headers.get("Content-Type")).toBe("application/gzip");
   });
@@ -106,7 +106,20 @@ describe("SDD package API", () => {
       expect(body).toContain('"url": "https://sdd.works/mcp"');
       expect(body).toContain("https://sdd.works/mcp");
       expect(body).toContain("sdd_install_framework");
-      expect(body).toContain("2026-10-09.v7");
+      expect(body).toContain("2026-10-09.v10");
+      expect(body).toContain("cache_stale");
+      expect(body).toContain("fixture_pack");
+      expect(body).toContain("path-table folder");
+      expect(body).toContain("Follow the `instructions` field");
+      expect(body).toContain("Change MCP configuration only for the agent that is running this session");
+      expect(body).toContain(
+        "When CodeBuddy or CodeBuddy CN is running, do not edit Cursor, TRAE, or TRAE CN MCP files.",
+      );
+      expect(body).toContain("### CodeBuddy (international)");
+      expect(body).toContain("### CodeBuddy CN");
+      expect(body).toContain("~/.codebuddy/mcp.json");
+      expect(body).toContain("### TRAE (international)");
+      expect(body).toContain("~/.trae/mcp.json");
       expect(body).toContain(
         "Confirm the server exposes `sdd_install_framework` and `sdd_update_framework`. On HTTP, it also exposes `sdd_get_key`.",
       );
@@ -115,6 +128,26 @@ describe("SDD package API", () => {
       expect(body).toContain("When an entry with that name already exists, check it and change it so it is this URL");
       expect(body).toContain("It has no `command`");
       expect(body).not.toContain("sdd-mcp-darwin-arm64");
+      expect(body).not.toContain("github.com");
+      expect(body).not.toContain("releases/latest/download");
+      expect(body).toContain("the pack on this server");
+      expect(body).toContain("WorkBuddy");
+      expect(body).toContain("WorkBuddy CN");
+      expect(body).toContain(
+        "Use `.codebuddy/mcp.json` in the current workspace only when the user asked to configure this project.",
+      );
+      expect(body).toContain(
+        "Do not use `~/Library/Application Support/Trae CN/User/mcp.json` or `~/.trae-cn/mcp.json` for this user MCP list.",
+      );
+      expect(body).toContain("--write");
+      expect(body).toContain("--client");
+      expect(body).toContain("--os");
+      expect(body).toContain("--client-root");
+      expect(body).toContain("SDD_SERVER_URL");
+      expect(body).toContain("accepted_root");
+      expect(body).toContain("Pass `codebuddy` for CodeBuddy (international), WorkBuddy, CodeBuddy CN, and WorkBuddy CN.");
+      expect(body).toContain("Pass `trae` for TRAE (international). Pass `trae-cn` for TRAE CN.");
+      expect(body).toContain("Pass `--os` as `darwin`, `linux`, or `win32`.");
       expect(body).toContain("Library/Application Support/Trae CN/User/mcp.json");
       expect(body).toContain("Do not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for TRAE CN");
       expect(body).not.toContain("Lite install version:");
@@ -485,7 +518,7 @@ describe("GET /api/sdd/lite/files", () => {
   }
 
   it("should_return_file_list_and_same_origin_download_links", async () => {
-    seedLiteCache();
+    const { sha } = seedLiteCache();
     const res = await getLiteFiles(liteFilesRequest());
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
@@ -496,7 +529,7 @@ describe("GET /api/sdd/lite/files", () => {
       downloads: { path: string; url: string }[];
     };
     expect(body.package_version).toBe("v1.0.0");
-    expect(body.package_commit).toBe("sha-v1");
+    expect(body.package_commit).toBe(sha);
     expect(body.cache_synced_at).toBe("2026-01-01T00:00:00.000Z");
     expect(body.files).toEqual([
       "rules/friendly-language.mdc",

@@ -29,7 +29,7 @@ describe("package cache", () => {
   it("should_resolve_latest_version", () => {
     const dir = mkdtempSync(join(tmpdir(), "sdd-cache-"));
     process.env.SDD_PACKAGE_CACHE_DIR = dir;
-    const sha = "sha-v1";
+    const sha = "0123456789abcdef0123456789abcdef01234567";
     mkdirSync(unpackedDir(sha), { recursive: true });
     writeFileSync(packageTarPath(sha), "tarball");
     writeFileSync(join(dir, MANIFEST_FILENAME), JSON.stringify({
@@ -53,7 +53,7 @@ describe("package cache", () => {
   it("should_return_version_not_found_for_unknown_version", () => {
     const dir = mkdtempSync(join(tmpdir(), "sdd-cache-"));
     process.env.SDD_PACKAGE_CACHE_DIR = dir;
-    const sha = "sha-v1";
+    const sha = "0123456789abcdef0123456789abcdef01234567";
     writeFileSync(join(dir, MANIFEST_FILENAME), JSON.stringify({
       latestCommit: sha,
       latestVersion: "v1.0.0",
@@ -68,7 +68,7 @@ describe("package cache", () => {
   it("should_open_tar_stream_for_cached_package", () => {
     const dir = mkdtempSync(join(tmpdir(), "sdd-cache-"));
     process.env.SDD_PACKAGE_CACHE_DIR = dir;
-    const sha = "sha-v1";
+    const sha = "0123456789abcdef0123456789abcdef01234567";
     mkdirSync(unpackedDir(sha), { recursive: true });
     writeFileSync(packageTarPath(sha), "tarball");
     writeFileSync(join(dir, MANIFEST_FILENAME), JSON.stringify({

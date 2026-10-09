@@ -1750,9 +1750,9 @@ Scenario: Node catalog is public
   Then the response status is 200
 ```
 
-#### AC47 — feature-88 / Web-portal-38 Part 2 (paste sentences file and Setup copy)
+#### AC47 — feature-88 / Web-portal-38 Part 2 (paste sentences file; Setup Node UI retired)
 
-Engineering detail: [`app-design.md`](./app-design.md) **Agent paste sentences file (feature-88)** and Setup **`copy-node-setup-prompt`**.
+Engineering detail: [`app-design.md`](./app-design.md) **Agent paste sentences file (feature-88)**. Framework Setup **`copy-node-setup-prompt`** was removed at go-live ([WA-20](../issues-log.md)). Node install stays on **`GET /setup/node`**.
 
 ```gherkin
 Scenario: Paste sentences file defines lite and node agent prompts
@@ -1762,11 +1762,10 @@ Scenario: Paste sentences file defines lite and node agent prompts
   And resolvePasteSentence lite_install with origin https://sdd.works equals Fetch and execute the setup instructions from https://sdd.works/setup/install
   And resolvePasteSentence node_prerequisite with origin https://sdd.works equals Fetch and execute the setup instructions from https://sdd.works/setup/node
 
-Scenario: Setup tab copies node prerequisite sentence
+Scenario: Setup tab has no Node install copy control
   Given the visitor opens / or /instructions on the Setup tab
-  When the visitor activates copy-node-setup-prompt
-  Then the copied text equals resolvePasteSentence node_prerequisite for the portal public origin
-  And admin.guide.setup_node_section_title and setup_node_section_lead resolve in en zh-Hans and zh-Hant
+  Then there is no copy-node-setup-prompt control
+  And there is no Install Node.js first section
 
 Scenario: Lite partner sentence stays out of Setup UI
   Given the visitor opens the Setup tab on the public guide

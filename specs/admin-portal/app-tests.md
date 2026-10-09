@@ -13,16 +13,16 @@
 | Layer | Scope | Default CI | Live opt-in |
 | --- | --- | --- | --- |
 | **Unit** | Auth helpers (session, CSRF, password, rate-limit for reset/invite), keys crypto, locale, Zod schemas | Always | — |
-| **Integration** | Admin API routes with test DB; injectable GitHub port | Always (`GITHUB_FIXTURE=1`) | Live GitHub / Resend |
-| **E2E** | Playwright against Next on `:3040` | Always (fixture GitHub) | Live mail / GitHub |
+| **Integration** | Admin API routes with test DB; injectable GitHub port | Always (in-process double) | Live GitHub / Resend |
+| **E2E** | Playwright against Next on `:3040` | The server uses the real GitHub port | Live mail / GitHub |
 
 **Principles**
 
 - Critical path: login, session cookie, CSRF mutations, keys CRUD encrypt/decrypt, settings save reachability, framework tree error shell.
-- Never commit secrets; CI uses fixture `KEYS_ENCRYPTION_KEY` and `GITHUB_FIXTURE=1`.
+- Never commit secrets; CI uses a fixture `KEYS_ENCRYPTION_KEY`. The server ignores `GITHUB_FIXTURE`. Production has no fixture port.
 - Prefer role / text / `data-testid` selectors over brittle CSS.
 - Isolated test DB; never production data.
-- When a suite switches from live GitHub / live Setting rows to fixture (`GITHUB_FIXTURE=1`, `fixture/*` URL), restore env vars and `Setting.githubUrl` in `afterEach` / `afterAll` so `npm run dev` is not left on fixture data.
+- When a suite injects an in-process GitHub double, clear it in `afterEach` / `afterAll`. Do not point `npm run dev` at fixture pack data.
 - Fixture-green CI is not DoD. Marking SETT/FRMW Done requires a live save + Framework view against a real reachable repo.
 
 ---
@@ -61,7 +61,8 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | `paste-sentences.json` (feature-88) | File exists with `version` 1 and keys `lite_install`, `node_prerequisite`. Loader substitutes `{origin}`. Unit: resolved strings match **AC47**. `LITE_PARTNER_SETUP_SENTENCE` equals `lite_install` for production origin after refactor. |
 | `GET /setup/node` (feature-88) | Public rewrite → node handler: 200 markdown; body matches `public/agent-setup/node.md` after origin rewrite; includes catalog route, registry probe, hello check, authorization boundary; excludes MCP and lite copy. **AC45**. |
 | `GET /api/setup/node/catalog` (feature-88) | 200 JSON with `node_lts`, platform `downloads`, `npm_registries.default` and `cn_hk`; HTTPS URLs only; no admin session. **AC46**. |
-| Setup `copy-node-setup-prompt` (feature-88) | Component or E2E: copies `node_prerequisite` for active public origin; i18n section title and lead present. **AC47**. |
+| Setup Node UI retired (WA-20 / AC47) | Component: Setup has no `copy-node-setup-prompt` and no Install Node.js first section. Paste file and `/setup/node` still covered above. |
+| Visitor paste origin (WA-19) | Unit: `getVisitorPasteOrigin` in production forces `https://sdd.works` even when `PUBLIC_BASE_URL` is localhost; setup paste sentence uses that origin. |
 | `GET /setup` (feature-56 regression) | Still 200 stdio-primary markdown from `prompt.md`; body is not `install.md`. |
 | `GET /api/sdd/instructions-tabs` (feature-59) | Cache `content/.instructions-tabs.json` valid → 200; `tabs` order matches file; `setup` code tab present; each `content` tab has `html` for `locale=en` from cache path; top-level `source` `cache`. Missing or invalid cache file → 200 from bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) only; top-level `source` `bundled`. Duplicate `queryParam` or unknown `code.id` → bundled fallback. Content path `../` → bundled fallback. Missing zh path → `sourceLocale` `en` for that tab. Per-tab markdown uses `contentSource` `cache` or `package` like Features. No GitHub fetch; no key values |
 | Instructions tabs resolver (feature-58 / feature-59) | Unit: parse and validate schema v1; reject empty `tabs`, duplicate `id` / `queryParam`, disallowed `code.id`, content row without `paths.en`, unsafe paths. Path values are relative to sync unpack root (`content/features/…`). File-existence checks use that root (fixture unpack or `pack.framework.sdd.works/`). Runtime package fallback maps those paths under `src/content/` (same as Features) |
@@ -97,7 +98,7 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | Framework admin note (**Web-portal-26**) | Signed-in on `/admin/framework`: **Admin note** opens dialog; `framework-admin-note-body` shows pack-file table row (for example `lite-pack.allowlist.json`); json fence shows `codeblock--file` with Copy; Close returns to tree without navigation |
 | i18n | Locale switch updates chrome copy. **Web-portal-39:** one browser check with no `sdd_locale` and `Accept-Language: zh-TW` loads `/` with `html lang` `zh-Hant` and stores `sdd_locale=zh-Hant` (**AC52**) |
 
-Config: `playwright.config.ts` injects fixture `KEYS_ENCRYPTION_KEY` and `GITHUB_FIXTURE=1`.
+Config: `playwright.config.ts` injects a fixture `KEYS_ENCRYPTION_KEY`. It does not set `GITHUB_FIXTURE`. The server ignores that variable.
 
 **Operator pitfall (this Mac):** Playwright’s fixture encryption key can differ from `.env.local`. Prefer a separate E2E database, or re-encrypt / delete rows encrypted under the fixture key before opening the Keys page in `npm run dev`.
 
@@ -108,7 +109,7 @@ Config: `playwright.config.ts` injects fixture `KEYS_ENCRYPTION_KEY` and `GITHUB
 Portal must stay green while MCP install lands:
 
 - [ ] Login + keys list still load after MCP changes
-- [ ] Settings + Framework still work with `GITHUB_FIXTURE=1`
+- [ ] Settings + Framework still work against the real GitHub port
 - [ ] No new portal routes required for MCPI-05
 
 ---
@@ -140,7 +141,7 @@ Run this after task-04 and task-05, before feature-07 is marked Done. Use `/` an
 
 ## 9. Regression after feature-55
 
-Run after feature-55 routes ship, before the SBI is **Done**. Fixture cache only (`SDD_PACKAGE_CACHE_DIR`, `GITHUB_FIXTURE=1`).
+Run after feature-55 routes ship, before the SBI is **Done**. Use `SDD_PACKAGE_CACHE_DIR` for an isolated cache. Do not set `GITHUB_FIXTURE`.
 
 - [ ] `GET /api/sdd/package?version=latest` still returns 200 with tarball headers when cache is seeded
 - [ ] `GET /api/sdd/features?locale=en` still returns 200
@@ -168,7 +169,7 @@ Run after feature-56 ships, before the SBI is **Done**. Covers AC20 and AC21. Fi
 
 ## 11. Regression after feature-58–feature-60
 
-Run after dynamic tabs ship, before **feature-60** is **Done**. Fixture cache (`SDD_PACKAGE_CACHE_DIR`, `GITHUB_FIXTURE=1`) plus bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json).
+Run after dynamic tabs ship, before **feature-60** is **Done**. Isolated cache (`SDD_PACKAGE_CACHE_DIR`) plus bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json). Do not set `GITHUB_FIXTURE`.
 
 - [ ] `GET /api/sdd/instructions-tabs?locale=en` returns 200 with `setup`, `features`, and `scrum-in-sdd` tabs
 - [ ] `/` and `/instructions` without `?tab=` show Setup selected and `panel-setup` visible
@@ -545,8 +546,8 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 - [ ] `GET /setup/node` returns 200 markdown per **AC45**; no MCP or lite instructions in body
 - [ ] `GET /api/setup/node/catalog` returns 200 JSON per **AC46**
 - [ ] `GET /setup/install` and `GET /setup` unchanged except lite paste text may come from JSON (**AC21** parity)
-- [ ] Setup has **`copy-node-setup-prompt`** and still has no **`copy-lite-setup-prompt`**
-- [ ] **`copy-setup-prompt`** still copies full MCP `/setup` sentence
+- [ ] Setup has **no** **`copy-node-setup-prompt`** and still has no **`copy-lite-setup-prompt`** ([WA-20](../issues-log.md))
+- [ ] **`copy-setup-prompt`** still copies full MCP `/setup` sentence; in production origin is **`https://sdd.works`** ([WA-19](../issues-log.md))
 - [ ] No admin session required for node markdown or catalog routes
 - [ ] No console or server error on these paths
 

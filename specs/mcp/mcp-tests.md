@@ -17,7 +17,7 @@
 
 **Principles**
 
-- Prefer fixture LLM and fixture GitHub in default CI (no network secrets required). After a suite sets `GITHUB_FIXTURE` or overwrites `Setting.githubUrl`, restore the previous live values when tests finish.
+- Unit tests may inject an in-process GitHub double and must clear it after the test. The running server ignores `GITHUB_FIXTURE`. Production has no fixture port. After a suite overwrites `Setting.githubUrl`, restore the previous value when tests finish.
 - Fixture-green CI is not DoD. Marking MCP features Done requires an operator-verified live client path (stdio/HTTP against real keys and a real repo), not fixture-only contracts.
 - Never assert on plaintext key values in logs; assert structured error codes and shape.
 - Path allow-list and escape rejection are critical-path: 100% coverage.
@@ -33,7 +33,7 @@
 | `path-policy` | Accept allow-listed roots; reject `/`, `/etc`, `..`, escape after expand |
 | `path-detect` (MCPI-05) | `detectClient` maps cursor / claude-code / aliases; unrecognized → `client_unknown`; env var overrides seed; config probe when present; missing env+config → seed; cache key stability |
 | `path-resolve-llm` | Valid JSON schema accepted; low confidence → seed; escape path → `path_rejected`; fixture Qwen responses |
-| `get-key` | Found → plaintext; missing → `not_found`; unauthorized → `unauthorized`; no other-key leakage |
+| `get-key` | Found → plaintext string only, not a tool error; missing or decrypt failure → text `not_found`, not a tool error ([MC-09](../issues-log.md)); unauthorized and empty name → tool error with code only; no other-key leakage |
 | install / update | Uses `package-fetch` mock (not `package-resolve`); idempotent when `package_version` + `package_commit` match and files intact → `already_up_to_date`; same ref label + new commit SHA → reinstall; manifest files deleted → self-heal; missing `package_commit` → reinstall; `force: true` → reinstall; summary includes `resolution_source`; **ADR-057 / ADR-058 / ADR-059:** stdio writes `.sdd-installed.json` once with `pack_complete: true` and `files` entries that are pack file paths, not folder names; failed install does not set `pack_complete` true; no `framework.sdd.works.json`; `src`/`prisma` in the unpacked tree are not copied; `templates/` copies to `{client_root}/templates`; client-root scenarios C1–C8 and C2b |
 | sync job | Initial sync stores files + manifest; same commit → unchanged; GitHub error preserves cache; new commit updates manifest |
 | package cache | resolveCachedVersion: sync_pending, latest, version_not_found; openCachedPackageTar streams tarball |
@@ -52,13 +52,13 @@ Commands: `npx vitest run packages/sdd-paths src/core src/app/api/sdd src/auth s
 | HTTP open mode (ADR-050) | Unset `MCP_AUTH_TOKEN` → tools callable on loopback |
 | HTTP tool list | Three tools: install, update, `sdd_get_key`; `sdd_list_versions` absent ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)) |
 | Versions REST (not MCP tool) | `GET /api/sdd/versions` reads sync cache; no key values; `paths_version` present; 409 when sync_pending |
-| `sdd_get_key` | HTTP only; authorized plaintext for known `key_name` |
+| `sdd_get_key` | HTTP only. Known name: text is the secret only and `isError` is absent. Missing name: text is `not_found` and `isError` is absent. Unauthorized: `isError` true and code `unauthorized` |
 | Package API | `GET /api/sdd/versions` 200 after sync, 409 sync_pending; `GET /api/sdd/package` tarball + headers, 404 unknown version |
 | Admin sync | `POST /api/admin/sync` triggers sync job (admin auth) |
-| HTTP install (ADR-054) | Returns `packageUrl`, paths, manifest, instructions; no server disk writes |
-| HTTP install receipt (MCP-01) | Result includes `receipt` + `receiptPath`; instructions require writing the receipt after extract; `pack_complete` is true in the payload |
-| Agent setup (SETUP-01) | `GET /setup` returns markdown with the stdio contract; `GET /agent-setup` redirects |
-| Install/update (stdio) | Writes local paths; fetches from REST API |
+| HTTP install | No inventory returns `writer_required` and `packageUrl` on this server. Inventory returns a plan. No server disk writes. No git host in the result |
+| HTTP install receipt (MCP-01) | An `apply` plan names the ledger path. The instruction writes the ledger last. The result does not say to extract an archive into the client root |
+| Agent setup (SETUP-01) | `GET /setup` returns markdown with one URL entry and no `command`. `GET /agent-setup` redirects |
+| Install/update (local program) | Posts the ledger and the accepted root. Copies planned paths from the pack on this server. Writes the ledger last |
 | Install with injected env (Sprint 6+) | `CLAUDE_CONFIG_DIR` / `CODEX_HOME` → `resolution_source: "env"` |
 
 ---
@@ -70,7 +70,7 @@ Prerequisites: `npm run mcp:stdio` or `mcp:http` with Settings GitHub configured
 | Scenario | Client | Assert |
 | --- | --- | --- |
 | Versions API (not MCP tool) | HTTP `GET /api/sdd/versions` | Returns versions/inventory after sync; out of scope as a model tool call ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)) |
-| Get key | Cursor HTTP MCP | Returns `key_value` for a seeded key |
+| Get key | Cursor HTTP MCP | Seeded key: result text is the secret only. Missing name: result text is `not_found` and the call is not a tool error |
 | Install (Sprint 6+) | Cursor stdio | Files under allow-listed Cursor roots; summary has paths + `resolution_source` |
 | Pack + ledger (Sprint 2 Feature-01) | Cursor stdio (temp home) | Pack folders only; `.sdd-installed.json` has `pack_complete: true` |
 | Update same version | Cursor stdio | `already_up_to_date` |
@@ -201,9 +201,9 @@ Implementation: `src/core/sync/freshness-regression.test.ts` (+ route/unit compa
 
 | ID | Scenario | Given | When | Then |
 | --- | --- | --- | --- | --- |
-| **F1** | Local files deleted, same repo commit | Cache SHA-A; local manifest says SHA-A; skill dirs deleted | HTTP `sdd_install_framework` with `installed_commit` | **Not** `already_up_to_date`; `packageUrl` + `extract_recommended: true`; `local_commit_matches: true` |
+| **F1** | Local files deleted, same repo commit | Cache SHA-A; ledger says SHA-A; a recorded file is in `missing` | HTTP `sdd_install_framework` with that inventory | Plan is `apply` and includes that path. The result is not `already_up_to_date` and does not say to extract an archive into the client root |
 | **F2** | Repo updated → auto sync on install | Cache SHA-OLD; live tip SHA-NEW | HTTP install | `ensurePackageCacheFresh` syncs; response `commitSha` = SHA-NEW; inventory reflects rename (e.g. `a-tdd`) |
-| **F3a** | Auto sync failed, cache exists | Live ahead; sync returns `sync_error`; stale cache on disk | HTTP install | Still returns cached `packageUrl` (better stale than nothing) |
+| **F3a** | Auto sync failed, cache exists | Live ahead; sync returns `sync_error`; cache age is 30 minutes or less | HTTP install | The young cache may still be returned. A cache older than 30 minutes returns `cache_stale` and no `packageUrl` |
 | **F3b** | Auto sync failed, no cache | Empty cache; GitHub unreachable | HTTP install | `sync_pending` |
 | **F4a** | Scheduled sync interval | `GITHUB_TOKEN` set; server started | Advance clock 30 min × 2 | `runScheduledSync` called twice |
 | **F4b** | Scheduled sync disabled | `GITHUB_TOKEN` unset | `startScheduledSyncInterval()` | No timer; no sync calls |
@@ -211,7 +211,7 @@ Implementation: `src/core/sync/freshness-regression.test.ts` (+ route/unit compa
 | **F6** | Webhook push trigger | Valid HMAC; `push` event | `POST /api/github/webhook` | `syncFrameworkRepo` + `clearListVersionsCache` |
 | **F7** | Cron backup trigger | Valid `CRON_SECRET` bearer | `POST /api/sync/cron` | `runScheduledSync` |
 | **F8** | Live tip lookup fails | Cache exists; `resolveLatestLiveCommit` errors | `ensurePackageCacheFresh` | Falls back to full `syncFrameworkRepo` |
-| **F9** | Stale cache advisory | `syncedAt` > 30 min ago | HTTP install | `cache_stale: true`; instructions mention stale cache |
+| **F9** | Stale cache refused | `syncedAt` older than 30 minutes | HTTP install | Result code `cache_stale`. No write plan. No `packageUrl` |
 | **F10** | Stdio self-heal (contrast) | stdio install; delete skill files; manifest intact | stdio `sdd_install_framework` | Reinstalls files; **not** `already_up_to_date` |
 | **F11a** | Tarball bytes match unpacked | Real `pkg.tar.gz` built from cache | `GET /api/sdd/package` → extract | `skills/a-tdd/SKILL.md` in tarball = unpacked file |
 | **F11b** | Content-only update (rename done) | Cache SHA-OLD `a-tdd`=`# atdd`; live SHA-NEW `# a-tdd` | HTTP install + package download | Extracted SKILL.md is `# a-tdd\n`, not `# atdd\n` |
@@ -264,7 +264,7 @@ Implementation: `src/core/sync/sync-e2e.test.ts`.
 | **LE1** | Initial sync + idempotent re-sync | `status: synced` then `unchanged`; skills include `tdd`, `a-tdd` |
 | **LE2** | Live tip matches cache after sync | `resolveLatestLiveCommit` SHA = manifest `latestCommit`; `ensurePackageCacheFresh` → `fresh` |
 | **LE3** | Stale manifest SHA forced on disk | After `ensurePackageCacheFresh`, manifest restored to live SHA (`refreshed`) |
-| **LE4** | HTTP install against live cache | Never `already_up_to_date`; always `packageUrl` + `extract_recommended` |
+| **LE4** | HTTP install against live cache | With inventory, the result is a plan. It does not tell the agent to extract an archive into the client root. A cache older than 30 minutes returns `cache_stale` |
 | **LE5** | **Content parity** with GitHub main | After sync, `unpacked/.../a-tdd/SKILL.md` bytes = raw GitHub `main` file |
 
 **Run (operator machine with token):**
@@ -344,9 +344,9 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#mcp-github-release) **AC1–AC3**. 
 | Check | Layer | Method |
 | --- | --- | --- |
 | Workflow uploads the five assets | unit | Assert [`.github/workflows/release.yml`](../../.github/workflows/release.yml) lists `dist/sdd-mcp-darwin-arm64`, `dist/sdd-mcp-darwin-x64`, `dist/sdd-mcp-linux-arm64`, `dist/sdd-mcp-linux-x64`, and `dist/sdd-mcp-windows-x64.exe`, and triggers on tag `v*` |
-| Setup names the official assets | API | `GET /setup` body contains each of the five asset names, `releases/download`, `releases/latest/download`, and `github.com/ethanhuangcst/workspace.framework.sdd.works` |
+| Setup does not name a git host | API | `GET /setup` body does not contain `github.com` or `releases/latest/download`. `writer_required` `packageUrl` is `/api/sdd/package` on this server |
 | Setup rejects any other host | API | The same body does not contain `Do not fetch a GitHub release asset` and does not name `github.com/ethanhuangcst/framework.sdd.works/releases` as the visitor download |
-| Download failure path | API | The same body tells the agent to write `https://sdd.works/mcp` when the official save fails |
+| Download failure path | API | The same body tells the agent to write the URL entry when the local program is missing. It does not name a git release asset |
 | Real tag | operator | Push a `v*` tag or inspect the latest GitHub Release and confirm the five asset names |
 
 Build updates `public/agent-setup/prompt.md` from the design server prompt, and replaces the assertion in `src/app/api/sdd/sdd-api.test.ts` that the body contains `Do not download an executable`.
@@ -373,20 +373,57 @@ Build updates `public/agent-setup/prompt.md` from the design server prompt, and 
 
 ## 10. ADR-129 — URL plan and local writer
 
-Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-url-plan) **AC1–AC7**. Design: [`mcp-design.md`](./mcp-design.md) **Target (ADR-129)**. Not implemented. Sections 2–9 stay the running ADR-058 checks until this section is green.
+Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-url-plan) **AC1–AC16** and [`sdd-mcp-prompt-setup`](./mcp-stories.md#sdd-mcp-prompt-setup) **AC6–AC7**. Design: [`mcp-design.md`](./mcp-design.md) Current steps. These rows are the install contract for MC-01 through MC-12. Prompt-setup AC numbers and url-plan AC numbers are separate.
 
 | Check | Layer | Method |
 | --- | --- | --- |
 | First paste writes the URL only | API | `GET /setup` body tells the agent to write `"url": "https://sdd.works/mcp"` and no `command` (**AC1**) |
 | Existing entry is replaced | API | The same body tells the agent to replace a `framework.sdd.works` entry that has `command` (**AC2**) |
+| CodeBuddy and TRAE editions, current client scope | API | `GET /setup` is setup version `2026-10-09.v10`. The body names `CodeBuddy (international)` (CodeBuddy or WorkBuddy) and `CodeBuddy CN` (CodeBuddy CN or WorkBuddy CN), both with `~/.codebuddy/mcp.json`, and `.codebuddy/mcp.json` only when the user asked to configure this project. It names `TRAE (international)` with `~/.trae/mcp.json` and forbids the Trae CN Application Support path for that list. It names TRAE CN `Library/Application Support/Trae CN/User/mcp.json` and forbids `~/.trae-cn/mcp.json` and `~/.trae/mcp.json` for that user list. It tells the agent to change MCP config only for the agent running this session ([`sdd-mcp-prompt-setup`](./mcp-stories.md#sdd-mcp-prompt-setup) **AC6**, MC-10). Assert in [`sdd-api.test.ts`](../../src/app/api/sdd/sdd-api.test.ts) `should_return_agent_setup_markdown` |
+| Install flags on the setup page | API | The same body names `--write`, `--client`, `--os`, `--client-root`, `SDD_SERVER_URL`, and `accepted_root`. `--client` is `codebuddy` for both CodeBuddy editions, `trae` for TRAE (international), and `trae-cn` for TRAE CN ([`sdd-mcp-prompt-setup`](./mcp-stories.md#sdd-mcp-prompt-setup) **AC7**, MC-11). |
+| Setup sentences the test must assert | API | The same test asserts `WorkBuddy`, `WorkBuddy CN`, the project-file sentence for `.codebuddy/mcp.json`, and both Trae sentences that forbid the other path (prompt-setup **AC6**, MC-12). |
 | Plan function | unit | Same ledger, same `missing`, same commit returns `noop`, `rewrite_ledger`, or `apply`. Matching version, commit, and no missing paths returns `noop` and does not list file writes (**AC3**) |
 | Repair | unit | A path in `missing` returns `apply` and includes that path (**AC4**) |
-| Root check | unit | A candidate outside the home directory returns `path_rejected` and writes nothing (**AC5**) |
-| Fallback contract | API | When the writer cannot run, the tool result has the plan, the instruction, and the pack URL. The instruction names planned paths and forbids extracting the archive into the client root (**AC6**, **AC7**) |
+| Root check | unit | A candidate outside the home directory, a path with `..`, or `/etc`, `/usr`, `/bin`, or `/sbin` returns `path_rejected` and writes nothing. A known client keeps the path-table root when the candidate differs (**AC5**, **AC9**, **AC10**) |
+| Accepted root | API | `POST /api/sdd/install-plan` body includes the accepted root, the ledger, the client, the operating system, and `missing`. The body has no file contents (**AC11**) |
+| Pack URL | API | No inventory and a cache younger than 30 minutes returns `writer_required`. `packageUrl` is on this server. The instructions name `--write`, `--client`, `--os`, `--client-root`, `SDD_SERVER_URL`, and `accepted_root`. The body has no git host (url-plan **AC8**, **AC15**) |
+| Fixture pointer | operator | After a pack sync, `latestCommit` is a git commit from the pack repository. `GET /api/sdd/package?version=latest` is not the six-file fixture set. The portal process ignores `GITHUB_FIXTURE` (url-plan **AC12**) |
+| Fixture pack | unit | Cached commit `sha-v1.0.0`, or the fixture file set, returns `fixture_pack` and writes no client file (url-plan **AC13**) |
+| Built program | operator | `strings` on each `dist/sdd-mcp-*` and on `~/.sdd/sdd-mcp` shows `cache_stale`. `--write` against a cache older than 30 minutes copies no file (**AC14**) |
+| Fallback contract | API | When the writer cannot run, the tool result has the plan, the instruction, and the pack URL. The instruction names planned paths and forbids extracting the archive into the client root. The call may include `accepted_root` (url-plan **AC6**, **AC7**) |
+| Get secret stays on HTTP | integration | HTTP `tools/list` includes `sdd_get_key`. A missing name returns the text `not_found` and is not a tool error (url-plan **AC16**, MC-07). Section 11 covers the same return shape |
+| Retired setup block | review | [`mcp-design.md`](./mcp-design.md) does not tell the agent to download a GitHub release file. The setup body is `public/agent-setup/prompt.md` only (MC-08) |
 | Ledger input | unit | The plan function reads the ledger JSON and `missing`. It does not read file bodies |
 
 Commands when this section is implemented: `npx vitest run src/core/tools src/app/api/sdd`.
 
-- [ ] **AC1–AC2** setup markdown matches the URL contract
-- [ ] **AC3–AC5** plan and root checks green in Vitest
-- [ ] **AC6–AC7** fallback result shape green in Vitest
+- [ ] url-plan **AC1–AC2** setup markdown matches the URL contract
+- [ ] prompt-setup **AC6** (MC-10, MC-12) setup markdown is version `2026-10-09.v10` and the test asserts WorkBuddy, WorkBuddy CN, the project-file rule, both Trae path bans, and the current-client scope sentence
+- [ ] prompt-setup **AC7** (MC-11) setup markdown names `--write`, `--client`, `--os`, `--client-root`, `SDD_SERVER_URL`, and `accepted_root`
+- [ ] url-plan **AC3–AC5** and **AC9–AC11** plan, root, and accepted-root checks green in Vitest
+- [ ] url-plan **AC6–AC8** and **AC15** fallback and `writer_required` instructions green in Vitest
+- [ ] url-plan **AC12–AC14** real pack pointer, `fixture_pack`, and built program checked before `--write`
+- [ ] url-plan **AC16** (MC-07) HTTP tool list includes `sdd_get_key` and a missing name is `not_found` without a tool error
+- [ ] MC-08 review: `mcp-design.md` does not tell the agent to download a GitHub release file
+
+---
+
+<a id="11-mc-09-get-key-not-found"></a>
+
+## 11. MC-09 — `sdd_get_key` missing name
+
+Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-get-key) **AC1–AC4**. Design: [`mcp-design.md`](./mcp-design.md) **`sdd_get_key`**. Issue: [MC-09](../issues-log.md). Implemented in `get-key.ts` and `create-server.test.ts`. Sections 2–4 name the same checks in the running tables. MC-09 stays open until close confirm.
+
+| Check | Layer | Method |
+| --- | --- | --- |
+| Existing key | integration | Authorized HTTP `sdd_get_key` for a seeded name. `isError` is absent. Text equals the secret and nothing else (**AC1**) |
+| Missing name | integration | Authorized call for an unknown name. `isError` is absent. Text is `not_found`. The payload has no `error` object and no other key name or value (**AC2**) |
+| Decrypt failure | unit | Stored ciphertext that does not decrypt returns the same result as a missing name (**AC2**) |
+| Unauthorized | integration | `isError` is true. Text is `{"error":{"code":"unauthorized"}}`. The secret is absent (**AC3**) |
+| Empty name | unit | `isError` is true. Code is `invalid_input` (**AC4**) |
+
+Command: `npx vitest run src/mcp/create-server.test.ts src/mcp/tool-descriptions.test.ts` (13 passed, 09/Oct/2026).
+
+- [x] **AC1** success text is the secret only
+- [x] **AC2** missing name and decrypt failure are not tool errors
+- [x] **AC3–AC4** unauthorized and empty name stay tool errors with a code and no message

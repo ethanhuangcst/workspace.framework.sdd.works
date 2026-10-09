@@ -22,3 +22,5 @@ Product requirements live under `specs/`. Architecture decisions live under `spe
 | [`ops/destructive-command-home-deletion-incident.md`](./ops/destructive-command-home-deletion-incident.md) | `rm -rf "$HOME"` incident, recovery runbook, prevention rules | 2026-09-26 |
 | [`ops/trae-cn-user-mcp-path.md`](./ops/trae-cn-user-mcp-path.md) | TRAE CN Manage-page MCP file vs `~/.trae-cn/` | 2026-09-26 |
 | [`ops/mcp-stdio-source-vs-binary.md`](./ops/mcp-stdio-source-vs-binary.md) | Cursor `tsx` stdio vs placed `~/.sdd/sdd-mcp` | 2026-09-26 |
+| [`agent/install-writer-fixture-cache.md`](./agent/install-writer-fixture-cache.md) | Fixture cache and a GitHub URL in the install writer | 2026-10-09 |
+| [`agent/mcp-expected-result-not-iserror.md`](./agent/mcp-expected-result-not-iserror.md) | Expected MCP lookup results must not set `isError` | 2026-10-09 |

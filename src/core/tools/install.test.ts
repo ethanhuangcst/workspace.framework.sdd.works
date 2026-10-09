@@ -66,16 +66,18 @@ function seedHttpCache(sha: string, version: string): string {
       latestVersion: version,
       versions: [{ id: version, commitSha: sha }],
       inventory: { skills: ["tdd"], rules: ["dod"], agents: [], workflows: [], other: [] },
-      syncedAt: "2026-01-01T00:00:00.000Z",
+      syncedAt: new Date().toISOString(),
     }),
   );
   return dir;
 }
 
+const TEST_PACK_COMMIT = "0123456789abcdef0123456789abcdef01234567";
+
 function resolved(
   version: string,
   tempDir: string,
-  commitSha = `sha-${version}`,
+  commitSha = TEST_PACK_COMMIT,
 ) {
   return { version, tempDir, commitSha };
 }
@@ -288,7 +290,7 @@ describe("install", () => {
       env: { HOME: home },
       skipLlm: true,
     };
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg, "sha-v1"));
+    setPackageFetchForTests(async () => resolved("v1.0.0", pkg, TEST_PACK_COMMIT));
     await install({ client: "cursor", os: "darwin" }, ctx);
 
     const manifestPath = join(home, ".cursor/.sdd-installed.json");
@@ -305,7 +307,7 @@ describe("install", () => {
     const saved = JSON.parse(readFileSync(manifestPath, "utf8")) as {
       package_commit?: string;
     };
-    expect(saved.package_commit).toBe("sha-v1");
+    expect(saved.package_commit).toBe(TEST_PACK_COMMIT);
   });
 
   it("should_return_already_up_to_date_on_same_version", async () => {
@@ -380,7 +382,37 @@ describe("install", () => {
     expect(body.code).toBe("writer_required");
     expect(body.resolution_source).toBe("seed");
     expect(body.instructions).toContain("Do not extract an archive into the client root");
+    expect(body.instructions).toContain("/api/sdd/package");
+    expect(body.instructions).not.toContain("github.com");
     expect(body.instructions).not.toContain("tar xz");
+    expect(body.instructions).toContain("--write");
+    expect(body.instructions).toContain("--client");
+    expect(body.instructions).toContain("--os");
+    expect(body.instructions).toContain("--client-root");
+    expect(body.instructions).toContain("SDD_SERVER_URL");
+    expect(body.instructions).toContain("accepted_root");
+  });
+
+  it("should_echo_accepted_root_on_http_plan", async () => {
+    seedHttpCache("sha-http-accepted", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-accepted-"));
+    const accepted = join(home, ".cursor");
+    const result = await installFrameworkHttp(
+      {
+        client: "cursor",
+        os: "darwin",
+        inventory: { ledger: null, missing: [] },
+        accepted_root: accepted,
+      },
+      { channel: "http", skipLlm: true },
+    );
+    const body = parseToolJson<{ accepted_root?: string; plan: { action: string } }>(
+      result,
+    );
+    expect(body.accepted_root).toBe(accepted);
+    expect(body.plan.action).toBe("apply");
+    rmSync(home, { recursive: true, force: true });
   });
 
   it("should_return_expanded_paths_on_http_with_install_home", async () => {
@@ -477,31 +509,48 @@ describe("install", () => {
     expect(existsSync(join(claudeHome, "skills/tdd/SKILL.md"))).toBe(true);
   });
 
-  it("should_include_cache_freshness_fields_on_http", async () => {
-    seedHttpCache("sha-http-v1", "v1.0.0");
+  it("should_refuse_a_fixture_port_commit", async () => {
+    const dir = seedHttpCache("sha-v1.0.0", "v1.0.0");
+    const unpacked = unpackedDir("sha-v1.0.0");
+    mkdirSync(join(unpacked, "skills/atdd"), { recursive: true });
+    mkdirSync(join(unpacked, "agents"), { recursive: true });
+    mkdirSync(join(unpacked, "workflows"), { recursive: true });
+    writeFileSync(join(unpacked, "skills/tdd/SKILL.md"), "# tdd v1.0.0\n");
+    writeFileSync(join(unpacked, "skills/atdd/SKILL.md"), "# atdd v1.0.0\n");
+    writeFileSync(join(unpacked, "rules/sdd-dod.mdc"), "# dod\n");
+    writeFileSync(join(unpacked, "agents/code-reviewer.md"), "# reviewer\n");
+    writeFileSync(join(unpacked, "workflows/new-feature.md"), "# workflow\n");
     mockCacheFreshAsMatchingCache();
-    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const result = await install(
-      { client: "cursor", os: "darwin" },
-      {
-        channel: "http",
-        home,
-        userProfile: home,
-        env: { HOME: home },
-        skipLlm: true,
-      },
+      { client: "cursor", os: "darwin", inventory: { ledger: null, missing: [] } },
+      { channel: "http", skipLlm: true },
     );
-    const body = parseToolJson<{
-      cache_synced_at: string;
-      cache_age_minutes: number;
-      cache_stale: boolean;
-      instructions: string;
-    }>(result);
-    expect(body.cache_synced_at).toBe("2026-01-01T00:00:00.000Z");
-    expect(body.cache_age_minutes).toBeGreaterThan(30);
-    expect(body.cache_stale).toBe(true);
-    expect(body.instructions).toContain("package cache may be stale");
-    expect(body.instructions).toContain("local program");
+    const body = parseToolJson<{ error: { code: string }; plan?: unknown }>(result);
+    expect(body.error.code).toBe("fixture_pack");
+    expect(body.plan).toBeUndefined();
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("should_refuse_a_stale_package_cache", async () => {
+    const dir = seedHttpCache("sha-http-v1", "v1.0.0");
+    writeFileSync(
+      join(dir, MANIFEST_FILENAME),
+      JSON.stringify({
+        latestCommit: "sha-http-v1",
+        latestVersion: "v1.0.0",
+        versions: [{ id: "v1.0.0", commitSha: "sha-http-v1" }],
+        inventory: { skills: ["tdd"], rules: ["dod"], agents: [], workflows: [], other: [] },
+        syncedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    mockCacheFreshAsMatchingCache();
+    const result = await install(
+      { client: "cursor", os: "darwin", inventory: { ledger: null, missing: [] } },
+      { channel: "http", skipLlm: true },
+    );
+    const body = parseToolJson<{ error: { code: string }; plan?: { action: string } }>(result);
+    expect(body.error.code).toBe("cache_stale");
+    expect(body.plan).toBeUndefined();
   });
 
   it("should_never_return_already_up_to_date_on_http_even_when_commit_matches", async () => {

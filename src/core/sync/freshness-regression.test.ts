@@ -304,12 +304,12 @@ describe("freshness regression — HTTP install (F1, F5, F9)", () => {
     expect(body.manifest?.files.skills).toContain("skills/a-tdd/SKILL.md");
   });
 
-  it("F9: stale syncedAt surfaces cache_stale advisory", async () => {
+  it("F9: stale syncedAt refuses install", async () => {
     seedCache("sha-stale", "main", ["tdd"], "2020-01-01T00:00:00.000Z");
     const home = mkdtempSync(join(tmpdir(), "sdd-home-f9-"));
     const body = await httpInstall(home);
-    expect(body.cache_stale).toBe(true);
-    expect(body.packageUrl).toBeDefined();
+    expect(body.error?.code).toBe("cache_stale");
+    expect(body.plan).toBeUndefined();
   });
 });
 

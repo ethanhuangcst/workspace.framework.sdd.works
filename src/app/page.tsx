@@ -26,7 +26,6 @@ export default async function HomePageRoute({
       tabs={tabs}
       activeQueryParam={activeQueryParam}
       setupPromptSentence={paste.setupPromptSentence}
-      nodePrerequisiteSentence={paste.nodePrerequisiteSentence}
     />
   );
 }

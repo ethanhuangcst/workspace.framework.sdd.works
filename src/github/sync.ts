@@ -297,21 +297,16 @@ export function setGitHubPortForTests(port: GitHubPort | null): void {
 
 export function getGitHubPort(): GitHubPort {
   if (overridePort) return overridePort;
-  if (process.env.GITHUB_FIXTURE === "1") {
-    return createFixtureGitHubPort();
-  }
   return createOctokitPort();
 }
 
 /**
- * Prefer the in-process fixture for `fixture/*` repos so E2E leftover URLs
- * do not hit api.github.com when a real token is configured.
+ * Prefer an in-process double only when a test called setGitHubPortForTests.
+ * GITHUB_FIXTURE is ignored. Production never selects the fixture port.
  */
 export function getGitHubPortForRepo(owner: string): GitHubPort {
   if (overridePort) return overridePort;
-  if (process.env.GITHUB_FIXTURE === "1" || owner === "fixture") {
-    return createFixtureGitHubPort();
-  }
+  void owner;
   return createOctokitPort();
 }
 

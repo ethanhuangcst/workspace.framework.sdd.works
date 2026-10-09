@@ -103,4 +103,33 @@ export function checkCandidateRoot(
   return error;
 }
 
+/** Known clients use the path table. Other clients may use an accepted candidate. */
+export function resolveAcceptedClientRoot(
+  tableRoot: string,
+  candidate: string | undefined,
+  resolutionSource: string,
+  home: string,
+  userProfile: string,
+):
+  | { acceptedRoot: string }
+  | { error: NonNullable<ReturnType<typeof checkCandidateRoot>> } {
+  const tableCheck = checkCandidateRoot(tableRoot, home, userProfile);
+  if (tableCheck) return { error: tableCheck };
+
+  const trimmed = candidate?.trim();
+  if (!trimmed || trimmed === tableRoot) {
+    return { acceptedRoot: tableRoot };
+  }
+
+  const candidateCheck = checkCandidateRoot(trimmed, home, userProfile);
+  if (candidateCheck) return { error: candidateCheck };
+
+  const known =
+    resolutionSource === "seed" ||
+    resolutionSource === "env" ||
+    resolutionSource === "config";
+
+  return { acceptedRoot: known ? tableRoot : trimmed };
+}
+
 export { EMPTY_FILES };

@@ -1,7 +1,11 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { db } from "@/lib/db";
 import { decryptKeyValue } from "@/lib/keys-crypto";
-import { toolError, toolOk } from "./errors";
+import { toolError } from "./errors";
+
+function toolSecret(text: string): CallToolResult {
+  return { content: [{ type: "text", text }] };
+}
 
 export type GetKeyAuth = {
   /** False → unauthorized (HTTP without bearer should never reach here). */
@@ -13,22 +17,21 @@ export async function getKey(
   auth: GetKeyAuth,
 ): Promise<CallToolResult> {
   if (!auth.authorized) {
-    return toolError("unauthorized", "MCP authorization required for sdd_get_key.");
+    return toolError("unauthorized");
   }
   const name = keyName.trim();
   if (!name) {
-    return toolError("invalid_input", "key_name is required.");
+    return toolError("invalid_input");
   }
 
   const row = await db.key.findUnique({ where: { keyName: name } });
   if (!row) {
-    return toolError("not_found", "No key exists for that key_name.");
+    return toolSecret("not_found");
   }
 
   try {
-    const key_value = decryptKeyValue(row.keyValue);
-    return toolOk({ key_name: row.keyName, key_value });
+    return toolSecret(decryptKeyValue(row.keyValue));
   } catch {
-    return toolError("not_found", "No key exists for that key_name.");
+    return toolSecret("not_found");
   }
 }

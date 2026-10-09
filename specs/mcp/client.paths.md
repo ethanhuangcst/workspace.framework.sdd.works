@@ -190,6 +190,8 @@ Agent file: YAML frontmatter (`name`, `description`, `model`, `tools`) + Markdow
 
 Memory: `~/.codebuddy/CODEBUDDY.md` (user), `./CODEBUDDY.md` or `./.codebuddy/CODEBUDDY.md` (project), `./CODEBUDDY.local.md` (local). MCP: `~/.codebuddy/mcp.json` (global), `.codebuddy/mcp.json` (project). Settings: `~/.codebuddy/settings.json` + `settings.local.json`.
 
+`GET /setup` (setup version `2026-10-09.v10`) uses two headings for this same user MCP file: **CodeBuddy (international)** for CodeBuddy or WorkBuddy, and **CodeBuddy CN** for CodeBuddy CN or WorkBuddy CN. Project MCP is `.codebuddy/mcp.json` only when the user asked to configure the current workspace.
+
 **Read customized paths**
 
 - No documented env var for relocating `~/.codebuddy` in the public docs reviewed. Discovery is filesystem-only.
@@ -222,6 +224,8 @@ MCP:
 | TRAE (international) | `~/.trae/mcp.json` | `<workspace>/.trae/mcp.json` |
 
 `~/.trae-cn/mcp.json` is not the Manage-page user MCP list for TRAE CN. Settings: `.trae/settings.json` + `.trae/settings.local.json` (gitignored). Compatible: `AGENTS.md`, `CLAUDE.md`, `CLAUDE.local.md` at project root.
+
+`GET /setup` (setup version `2026-10-09.v10`) uses **TRAE (international)** for `~/.trae/mcp.json` and **TRAE CN** for the Application Support user file above. The international section does not use the TRAE CN path. The TRAE CN section does not use `~/.trae/mcp.json` or `~/.trae-cn/mcp.json` for the user list.
 
 **Read customized paths**
 

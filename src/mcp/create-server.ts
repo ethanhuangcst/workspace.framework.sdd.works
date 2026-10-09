@@ -99,7 +99,7 @@ export function createSddMcpServer(
     {
       description: mcpToolDescription("sdd_get_key"),
       inputSchema: {
-        key_name: z.string().min(1).describe("Unique English key name"),
+        key_name: z.string(),
       },
     },
     async ({ key_name }) => getKey(key_name, { authorized }),

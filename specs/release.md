@@ -220,11 +220,14 @@ Browser: open **`https://sdd.works/`** (private window if the old WordPress path
 
 ### 7.2 Full setup, lite installer, Node installer
 
+> **Live note (2026-10-09):** On the currently deployed image, **`GET /setup` returns 404** ([WA-21](./issues-log.md)). Until the next GHCR Recreate, smoke **`GET /api/agent-setup`** (and `/agent-setup` if it still maps) for markdown. After deploy, prefer **`/setup`**.
+
 ```bash
-curl -sS https://sdd.works/setup | head -40
-# Expect: markdown; SDD_SERVER_URL / mcp URLs use https://sdd.works
+curl -sS -H 'Accept: text/markdown' https://sdd.works/setup | head -40
+# Expect after next image: markdown; mcp URLs use https://sdd.works
 # Expect: MCP entry name still framework.sdd.works
 # Expect: no https://framework.sdd.works as pack/MCP origin
+# Fallback until WA-21 closed: curl -sS https://sdd.works/api/agent-setup | head -40
 
 curl -sS -o /dev/null -w '%{http_code}\n' https://sdd.works/agent-setup
 # Expect: 3xx to /setup
@@ -242,8 +245,8 @@ curl -sS https://sdd.works/api/setup/node/catalog | head -c 400; echo
 
 Browser Setup tab:
 
-- Copy full setup sentence → `Fetch and execute the setup instructions from https://sdd.works/setup`
-- If Node copy control is shipped: copies `… from https://sdd.works/setup/node`
+- Copy full setup sentence → `Fetch and execute the setup instructions from https://sdd.works/setup` (not `localhost`, not `framework.sdd.works`)
+- No **Install Node.js first** section and no **`copy-node-setup-prompt`** ([WA-20](./issues-log.md)); Node install stays on **`GET /setup/node`** markdown only
 
 ### 7.3 Package API and admin sync
 

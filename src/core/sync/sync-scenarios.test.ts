@@ -240,7 +240,7 @@ describe("sync scenarios (fixture S2–S5, M1)", () => {
           latestVersion: "main",
           versions: [{ id: "main", commitSha: sha }],
           inventory: { skills: ["a-tdd"], rules: [], agents: [], workflows: [], other: [] },
-          syncedAt: "2026-01-01T00:00:00.000Z",
+          syncedAt: new Date().toISOString(),
         }),
       );
 

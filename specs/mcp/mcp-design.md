@@ -2,23 +2,37 @@
 
 MCP server for install, update, list, and get-key. Stories: [`mcp-stories.md`](./mcp-stories.md). Portal: [`app-design.md`](../admin-portal/app-design.md). Stack: [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) (Phase 1 archive).
 
-**Status:** the running path is ADR-058 (local program as the MCP `command`, HTTP unpack as fallback). The target path is [ADR-129](../adr/ADR-129-url-mcp-server-plan-local-writer.md), below. Stories: [`mcp-stories.md`](./mcp-stories.md). Tests: [`mcp-tests.md`](./mcp-tests.md). ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md), [055](../adr/ADR-055-layered-sync-freshness.md), [056](../adr/ADR-056-single-user-root-framework-pack.md), [057](../adr/ADR-057-install-ledger-pack-complete.md), [058](../adr/ADR-058-stdio-end-user-http-fallback.md), [061](../adr/ADR-061-setup-prompt-public-path.md), [128](../adr/ADR-128-install-root-and-writer.md), [129](../adr/ADR-129-url-mcp-server-plan-local-writer.md).
+**Status:** the current steps are [ADR-129](../adr/ADR-129-url-mcp-server-plan-local-writer.md), in the next section. Sections from §2 downward still describe ADR-058. Stories: [`mcp-stories.md`](./mcp-stories.md). Tests: [`mcp-tests.md`](./mcp-tests.md). ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md), [055](../adr/ADR-055-layered-sync-freshness.md), [056](../adr/ADR-056-single-user-root-framework-pack.md), [057](../adr/ADR-057-install-ledger-pack-complete.md), [058](../adr/ADR-058-stdio-end-user-http-fallback.md), [061](../adr/ADR-061-setup-prompt-public-path.md), [128](../adr/ADR-128-install-root-and-writer.md), [129](../adr/ADR-129-url-mcp-server-plan-local-writer.md).
 
-## Target (ADR-129)
+## Decisions (TBD1–TBD5)
 
-Not implemented. Sections from §2 downward describe the running ADR-058 path until a story changes the code.
+These five decisions are the install contract. Sections from §2 downward still describe the older ADR-058 path. The code does not meet every decision yet.
 
-1. The person pastes one sentence. The agent fetches `GET /setup` on `https://sdd.works`.
-2. The agent registers one MCP entry named `framework.sdd.works`. The entry is only `"url": "https://sdd.works/mcp"`.
-3. When that entry already exists, the agent checks it and changes it so it is this URL. A previous `command` or a previous host is replaced.
-4. Install and update run on that URL. The local program `sdd-mcp` is the writer. It is not the MCP process. It sends `.sdd-installed.json` plus the accepted root, the client, the operating system, `force` when asked, and `missing`. The server returns the plan. The program writes the plan and writes the ledger last.
-5. When that program cannot be downloaded or cannot run, the agent sends the whole `.sdd-installed.json` when that file exists, plus `missing`, the candidate root, the client, the operating system, and `force` when asked. The server returns the plan, the instruction, and the pack URL. The agent copies only the planned paths and writes the ledger last.
+- **TBD1.** The program file is the home directory plus `.sdd/sdd-mcp`. On Windows the file name is `sdd-mcp.exe`. Home comes from the operating system (`$HOME` or `USERPROFILE`). A literal `~` is not written into `mcp.json`. The agent expands home before it saves or starts the file. The download link in the tool result is the pack on this server. The server syncs that pack from git. A git host or a repository name is not in the tool result.
+- **TBD2.** The agent may name a candidate client root. The program accepts or rejects that path. For a known client, the program's path wins. The program rejects a path outside home, a path that contains `..`, and `/etc`, `/usr`, `/bin`, or `/sbin`.
+- **TBD3.** The program sends the whole `.sdd-installed.json`, the accepted root, the client, the operating system, `force` when asked, and `missing`. It does not send file bodies. The server composes `noop`, `rewrite_ledger`, or `apply`. The program writes that plan.
+- **TBD4.** The local program is the only writer on the primary path. It checks the plan, copies the listed files, and writes `.sdd-installed.json` last. That program is not the MCP process.
+- **TBD5.** When the program cannot be downloaded or cannot run, the agent writes. The server returns the same plan, the instruction, and the pack URL on this server. The agent copies only the planned paths and does not extract the archive into the client root.
+
+## Current steps
+
+1. The person pastes one sentence. The agent fetches `GET /setup`.
+2. The agent detects the agent that is running this session. It changes MCP configuration only for that agent. It does not read or write another IDE's `mcp.json` unless the user names that IDE in the chat (MC-10). It writes one MCP entry named `framework.sdd.works`. The value is only a URL. On the public host that URL is `https://sdd.works/mcp`. On a local portal the setup page rewrites it to `http://127.0.0.1:3041/mcp`. A previous `command` or a previous host is replaced. The entry has no path and no `~` in the URL value (TBD1). Setup version is `2026-10-09.v10`. **CodeBuddy (international)** is CodeBuddy or WorkBuddy. **CodeBuddy CN** is CodeBuddy CN or WorkBuddy CN. Both use `~/.codebuddy/mcp.json` under `mcpServers`. Project MCP is `.codebuddy/mcp.json` only when the user asked to configure the current workspace. **TRAE (international)** uses `~/.trae/mcp.json` and does not use the TRAE CN Application Support path or `~/.trae-cn/mcp.json` for that user list. **TRAE CN** uses `~/Library/Application Support/Trae CN/User/mcp.json` and does not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for that user list.
+3. The agent reloads MCP and checks `tools/list`. The names are `sdd_install_framework` and `sdd_update_framework`. HTTP also lists `sdd_get_key`. Setup stops here.
+4. The person asks to install. The agent calls `sdd_install_framework` with no inventory.
+5. The server returns `writer_required` when the caller sends no inventory. The download link is the pack on this server. A cache older than 30 minutes returns `cache_stale` and no write plan. The result does not name a git host or a repository (MC-02).
+6. When the local program is already on the machine, the agent runs it with `--write`, `--client`, `--os`, and `--client-root` when it has a candidate folder. It sets `SDD_SERVER_URL` to the portal (`https://sdd.works` on the public host). `GET /setup` section 4 names those flags. `--client` is `cursor`, `claude`, `codex`, or `copilot` for those agents. `--client` is `codebuddy` for CodeBuddy (international), WorkBuddy, CodeBuddy CN, and WorkBuddy CN. `--client` is `trae` for TRAE (international) and `trae-cn` for TRAE CN. `--os` is `darwin`, `linux`, or `win32`. The install tool result names the same flags and does not send the agent to git for that program (TBD1, TBD4, MC-11).
+7. The program accepts or rejects the candidate root. For a known client, the program's path wins. A path outside home, a path with `..`, or `/etc`, `/usr`, `/bin`, or `/sbin` is rejected (TBD2).
+8. The program reads `.sdd-installed.json` and posts that whole file, the accepted root, the client, the operating system, `force` when asked, and `missing`. It does not post file bodies (TBD3, MC-05).
+9. The server returns `noop`, `rewrite_ledger`, or `apply`. A stale cache returns `cache_stale`. The program then exits and does not copy files (TBD3).
+10. On `apply`, the program checks the plan, copies only the listed files, and writes `.sdd-installed.json` last (TBD4).
+11. When the program cannot run, the agent sends the same inventory, and sets `accepted_root` to the candidate folder when it has one. `GET /setup` section 4 says that. The server returns the plan, the instruction, and the pack URL on this server. The agent copies only the planned paths and does not extract the archive into the client root (TBD5). HTTP `tools/list` keeps `sdd_get_key` (MC-07).
 
 ## 1. Goals and non-goals
 
 | Goals | Non-goals |
 | --- | --- |
-| End-user MCP is a URL. The target is ADR-129. The running path is still a local `command` (ADR-058) | Portal chat LLM / image generation |
+| End-user MCP is a URL. The current steps are ADR-129 | Portal chat LLM / image generation |
 | Prompt-based setup: one paste; the agent writes the URL, or replaces an existing entry with that URL | Asking the person to edit `mcp.json` by hand |
 | Local program writes the server plan. It is not the MCP process (ADR-129) | Writing Server 2 disk as `~/.cursor` |
 | When the program cannot run, the agent writes the same plan from the pack URL (ADR-129) | Third-party skill marketplace |
@@ -52,8 +66,7 @@ That URL is a **pack-only** tree. Observed top-level names on `main` (2026-09-24
 
 | Audience | Transport | MCP config | Install executor |
 | --- | --- | --- | --- |
-| **End user** (primary, ADR-058) | stdio via local program | `"command": "${userHome}/.sdd/sdd-mcp"` + `SDD_SERVER_URL` | Local program writes the client folder |
-| **End user** (fallback, ADR-054) | Streamable HTTP `POST/GET /mcp` | `"url": "https://sdd.works/mcp"` | AI agent: `curl \| tar` + write `.sdd-installed.json` |
+| **End user** | Streamable HTTP `POST/GET /mcp` | `"url": "https://sdd.works/mcp"` only | Local program writes the server plan. It is not the MCP process. The tool download link is the pack on this server. |
 | **Dev contributor** | stdio (`npm run mcp:stdio` or the same binary) | `"command"` at repo `tsx` or `~/.sdd/sdd-mcp` | Same local write path |
 | **Terminal fallback** | stdio via curl installer | written by `scripts/install.sh` | stdio binary |
 
@@ -67,7 +80,7 @@ Prefer a **sibling Node process** for `/mcp` if the pinned SDK Streamable HTTP t
 
 ### 2.1 End-user stdio (ADR-058) — primary
 
-**Decision:** The person pastes one website prompt. The agent writes a `command` entry for `~/.sdd/sdd-mcp`. When that file is missing, the agent downloads one matching asset from the GitHub Release of this workspace repo and saves it as `~/.sdd/sdd-mcp`. When that download fails, or the client accepts only a URL, the agent writes the HTTP fallback. The person does not edit MCP config by hand. After reload, `sdd_install_framework` and `sdd_update_framework` run inside that program and write the client folder. File outcomes are the Expected column of the client-root scenarios below (ADR-057).
+**Decision:** The person pastes one website prompt. The agent writes one URL entry named `framework.sdd.works`. Install calls that URL. The local program, when it is already on the machine, writes the pack. The tool result's download link is the pack on this server. The result does not name a git host. Sections below that still show a `command` entry or a git release URL are the older ADR-058 path. They are not the current setup.
 
 ```mermaid
 flowchart LR
@@ -112,26 +125,18 @@ The visitor download is a GitHub Release on the repo that contains [`.github/wor
 | Linux x64 | `sdd-mcp-linux-x64` | `~/.sdd/sdd-mcp` |
 | Windows x64 | `sdd-mcp-windows-x64.exe` | `~/.sdd/sdd-mcp` under the user profile |
 
-3. Allowed URL shapes, with `<tag>` equal to the pushed tag and `<asset>` one row above:
-
-```text
-https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases/download/<tag>/<asset>
-https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases/latest/download/<asset>
-```
-
-4. `GET /setup` names those five assets and those two URL shapes. It does not name any other host, a raw file URL, or a one-off binary link.
-5. `scripts/install.sh` still points at `framework.sdd.works` releases. That script is outside this setup contract. The build does not treat it as the visitor download.
+3. Those release URLs are not an agent download. `GET /setup` and `sdd_install_framework` do not name a git host (MC-02).
+4. `scripts/install.sh` is outside this setup contract.
 
 #### Primary MCP config
 
 ```json
 "framework.sdd.works": {
-  "command": "${userHome}/.sdd/sdd-mcp",
-  "env": { "SDD_SERVER_URL": "https://sdd.works" }
+  "url": "https://sdd.works/mcp"
 }
 ```
 
-`command` is the MCP connection. `SDD_SERVER_URL` is only the pack download base. It is not an MCP URL.
+The entry has no `command`. The pack download base is the server that serves `/api/sdd/package`. It is not a git URL.
 
 #### Prompt-based setup (SETUP-01)
 
@@ -147,187 +152,21 @@ Fetch and execute the setup instructions from https://sdd.works/setup
 | `GET /agent-setup` | Redirect to `GET /setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
 | Source file | `public/agent-setup/prompt.md` |
 
-That source file is the body `GET /setup` returns in production. It must match the **Server prompt** below. Production pack base and fallback stay `https://sdd.works` and `https://sdd.works/mcp`. When `PUBLIC_BASE_URL` is localhost or `127.0.0.1`, the handler rewrites those two hosts to `getMcpWebsiteUrl()` and `getMcpHttpUrl()` (default local MCP HTTP `http://127.0.0.1:3041/mcp`). The setup body names the five release assets and the two URL shapes in **Publish the local program**. It does not name any other download host.
+That source file is the body `GET /setup` returns in production. It must match `public/agent-setup/prompt.md`. Setup version **2026-10-09.v10** (MC-02, MC-04, MC-06, MC-10, MC-11) adds **Current client only**, `cache_stale` and `fixture_pack` stop rules, candidate-folder rejection, and names `--write`, `--client`, `--os`, `--client-root`, `SDD_SERVER_URL`, and `accepted_root` in section 4. Headings: **CodeBuddy (international)** (CodeBuddy or WorkBuddy) and **CodeBuddy CN** (CodeBuddy CN or WorkBuddy CN), both `~/.codebuddy/mcp.json`, with `.codebuddy/mcp.json` only when the user asked to configure this project; **TRAE (international)** (`~/.trae/mcp.json`, not the TRAE CN user path); **TRAE CN** (`~/Library/Application Support/Trae CN/User/mcp.json`, not `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for that user list). The body is a URL entry. It does not name a git host. The pasted prompt that used to follow this paragraph is retired (MC-08).
 
 #### Server prompt (`public/agent-setup/prompt.md`)
 
-Canonical body of `GET /setup`. Keep this section and `public/agent-setup/prompt.md` the same.
+The body of `GET /setup` is `public/agent-setup/prompt.md` only. This design file does not copy that body. Setup version is `2026-10-09.v10`.
 
-````text
-These are official instructions from sdd.works for connecting an AI agent to the SDD MCP server.
-
-# Connect this agent to sdd.works
-
-Setup version: 2026-10-08.v6
-
-Complete the setup yourself with the native MCP configuration mechanism for the current agent. Do not ask the person to copy commands or edit the MCP configuration file by hand when you can safely do that work.
-
-## Authorization boundary
-
-The user's setup prompt authorizes only these changes:
-
-- If `~/.sdd/sdd-mcp` already exists (Windows: under the user profile), add or keep exactly one MCP entry named `framework.sdd.works` that starts that binary (`command`) with `SDD_SERVER_URL` set to `https://sdd.works`.
-- If that file is missing, download exactly one matching asset from `https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases` (`sdd-mcp-darwin-arm64`, `sdd-mcp-darwin-x64`, `sdd-mcp-linux-arm64`, `sdd-mcp-linux-x64`, or `sdd-mcp-windows-x64.exe`) and save it as `~/.sdd/sdd-mcp`.
-- If that download fails, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://sdd.works/mcp"` instead.
-- Do not download an executable from any other host. Do not invent a binary URL.
-
-It does not authorize you to:
-
-- install framework skills, rules, agents, or workflows (that is a separate step after MCP is connected);
-- request, create, read, print, or store credentials unless the user explicitly asks;
-- change approval, sandbox, trust, or execution permissions;
-- replace another MCP server, alter unrelated configuration, or edit unrelated project files.
-
-## 1. Inspect before changing configuration
-
-1. Detect the current agent and its native MCP configuration mechanism.
-2. Detect whether `~/.sdd/sdd-mcp` exists (Windows: under the user profile). Supported OS and CPU when a binary is built: `darwin-arm64`, `darwin-x64`, `linux-arm64`, `linux-x64`, `windows-x64`.
-3. Inspect whether an entry named `framework.sdd.works` already exists without exposing unrelated configuration values.
-4. Treat an existing entry as an exact primary match only when it is enabled, uses `command` pointing at the local `sdd-mcp` binary under `.sdd/`, and sets `SDD_SERVER_URL` to `https://sdd.works` (or the same pack base this environment uses).
-5. Treat an existing entry as an exact HTTP-fallback match only when it is enabled, uses remote Streamable HTTP, and points to exactly `https://sdd.works/mcp` with no `command` field.
-6. If the entry is an exact primary or exact HTTP-fallback match, leave it unchanged and continue to verification.
-7. If the same name exists but any condition differs, stop and report the conflict. Do not overwrite without user consent.
-
-## 2. Local program (primary path)
-
-1. If `~/.sdd/sdd-mcp` exists (Windows: under the user profile) and the agent can start a local program, continue to **Add the MCP entry** below.
-2. If the client accepts only a URL, skip to **HTTP fallback** below.
-3. If the file is missing, download one asset from `https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases/latest/download/<asset>` or from `releases/download/<tag>/<asset>` on that same repo. `<asset>` is `sdd-mcp-darwin-arm64`, `sdd-mcp-darwin-x64`, `sdd-mcp-linux-arm64`, `sdd-mcp-linux-x64`, or `sdd-mcp-windows-x64.exe` for this machine. Save the bytes as `~/.sdd/sdd-mcp`. On macOS and Linux, mark that file executable.
-4. If the download or save fails, skip to **HTTP fallback** below. Do not try another host.
-5. If the agent cannot start the saved program, skip to **HTTP fallback** below.
-
-## 3. Add the MCP entry for the current agent (primary)
-
-Use the expanded home path for `command` when the client does not expand `${userHome}`. Prefer writing the config yourself. Do not ask the person to edit the MCP file by hand.
-
-### Cursor
-
-Merge under `mcpServers` in `~/.cursor/mcp.json` and preserve all other entries:
-
-```json
-"framework.sdd.works": {
-  "command": "${userHome}/.sdd/sdd-mcp",
-  "env": {
-    "SDD_SERVER_URL": "https://sdd.works"
-  }
-}
-```
-
-### Claude Code
-
-Add a user-scoped stdio MCP server named `framework.sdd.works` whose command is the absolute path to `~/.sdd/sdd-mcp` and whose environment includes `SDD_SERVER_URL=https://sdd.works`. Prefer the client's native stdio registration command when it supports `command` and `env`.
-
-### Codex
-
-Add an MCP server named `framework.sdd.works` with `command` set to the absolute path of `~/.sdd/sdd-mcp` and `SDD_SERVER_URL=https://sdd.works` in the environment.
-
-### GitHub Copilot in VS Code
-
-```json
-"framework.sdd.works": {
-  "type": "stdio",
-  "command": "${userHome}/.sdd/sdd-mcp",
-  "env": {
-    "SDD_SERVER_URL": "https://sdd.works"
-  }
-}
-```
-
-### TRAE CN
-
-Merge under `mcpServers` in `~/Library/Application Support/Trae CN/User/mcp.json` (same directory as that app's `settings.json`) and preserve all other entries. Do not set `disabled`. Do not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for TRAE CN. Those files are not the Manage-page user MCP list.
-
-```json
-"framework.sdd.works": {
-  "command": "${userHome}/.sdd/sdd-mcp",
-  "env": {
-    "SDD_SERVER_URL": "https://sdd.works"
-  }
-}
-```
-
-### Other agents
-
-Use the agent's native local-program (stdio) MCP configuration. Add only the name, `command`, and `SDD_SERVER_URL` above.
-
-`command` is the MCP connection. `SDD_SERVER_URL` is only the pack download base. It is not an MCP URL.
-
-## 4. HTTP fallback
-
-Use this path when the official release download failed, the saved program cannot start, or the client accepts only a URL.
-
-### Cursor
-
-```json
-"framework.sdd.works": {
-  "url": "https://sdd.works/mcp"
-}
-```
-
-### Claude Code
-
-```bash
-claude mcp add --transport http --scope user framework.sdd.works https://sdd.works/mcp
-```
-
-### Codex
-
-```bash
-codex mcp add framework.sdd.works --url https://sdd.works/mcp
-```
-
-### GitHub Copilot in VS Code
-
-```json
-"framework.sdd.works": {
-  "type": "http",
-  "url": "https://sdd.works/mcp"
-}
-```
-
-### TRAE CN
-
-Merge under `mcpServers` in `~/Library/Application Support/Trae CN/User/mcp.json` and preserve all other entries. Do not set `disabled`. Do not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for TRAE CN.
-
-```json
-"framework.sdd.works": {
-  "url": "https://sdd.works/mcp"
-}
-```
-
-### Other agents
-
-Use the agent's native remote Streamable HTTP MCP configuration. Add only the name and URL above.
-
-## 5. Verify the connection
-
-After saving configuration, reload MCP if the client requires it. Confirm the server exposes `sdd_install_framework` and `sdd_update_framework`. On HTTP, it also exposes `sdd_get_key`.
-
-## 6. Install framework (separate step)
-
-After MCP is connected, the user can ask you to install the SDD framework.
-
-- **Primary (local program):** call `sdd_install_framework`. The local program downloads the pack and writes the client folder and `.sdd-installed.json` with `pack_complete: true`. Do not run `curl | tar` yourself. Do not write `framework.sdd.works.json`.
-- **HTTP fallback:** call `sdd_install_framework`. The tool returns a `packageUrl` and instructions. Follow those instructions: download and extract the allow-list, then write `.sdd-installed.json` last with `pack_complete: true`. Do not write `framework.sdd.works.json`.
-
-## Rollback
-
-Remove only the `framework.sdd.works` entry from the MCP configuration file you modified. Optionally delete `~/.sdd/sdd-mcp`. Do not remove other entries.
-
-````
+Retired. Do not follow an older setup that tells the agent to download a program from a git host or to put a `command` in the MCP file. The current setup is the Current steps section. The MCP entry is a URL only. The download link is the pack on this server (MC-08).
 
 The instructions authorize only:
 
-- Detect whether `~/.sdd/sdd-mcp` already exists (Windows: under the user profile).
-- When that file exists, add or keep one MCP entry named `framework.sdd.works` with the `command` shape above.
-- When that file is missing, download one matching asset from the workspace GitHub Release and save it as `~/.sdd/sdd-mcp`.
-- When that download fails, or the client accepts only a URL, use the HTTP fallback.
+- Add or replace one MCP entry named `framework.sdd.works` so it is only `"url": "https://sdd.works/mcp"`.
 - Leave every other MCP entry unchanged.
-- Do not download an executable from any host other than `github.com/ethanhuangcst/workspace.framework.sdd.works`.
+- Do not name a git host or a repository.
 
-They do not authorize installing the framework pack. Pack install stays a later call to `sdd_install_framework` after MCP reload. The person must not be asked to edit the MCP file by hand.
-
-If the official download fails, or the agent cannot start a local program, use the HTTP fallback below.
+They do not authorize installing the framework pack during setup. Pack install is a later call to `sdd_install_framework`. The download link in that result is the pack on this server.
 
 #### Instructions page paste and Manual setup (ADR-061)
 
@@ -339,19 +178,19 @@ Fetch and execute the setup instructions from https://sdd.works/setup
 
 It does not paste the stdio contract onto the page. The agent fetches `GET /setup` and follows that markdown.
 
-Manual setup on the same page shows **one** `mcp.json` sample: the Primary MCP config above (`command` + `SDD_SERVER_URL`). It does not show a second `mcp.json` for the HTTP URL. It does not show `curl | sh`. HTTP fallback stays in the fetched markdown. The terminal installer stays in go-live.
+Manual setup on the same page shows **one** `mcp.json` sample: the URL entry above. It does not show a `command` entry.
 
 #### Install on the primary path
 
 1. The person asks the agent to install or update the framework.
-2. The agent calls `sdd_install_framework` or `sdd_update_framework` on the local program.
-3. The program downloads the pack from `SDD_SERVER_URL`.
-4. The program copies the pack allow-list into the client folder and writes `.sdd-installed.json` with `pack_complete: true` in the same write (ADR-057).
-5. The tool result reports what was written. The agent does not run `curl | tar`.
+2. The agent calls `sdd_install_framework` or `sdd_update_framework` on the URL entry.
+3. The program posts the ledger and the accepted root. The server returns the plan. The pack bytes come from this server.
+4. The program copies the planned files and writes `.sdd-installed.json` last (MC-05).
+5. The tool result does not name a git host. The agent does not run `curl | tar` into the client root.
 
 ### 2.1b HTTP fallback (ADR-054)
 
-**When:** The client accepts only a URL, or the binary download failed during setup.
+**When:** The MCP entry is the URL. The local program is not the MCP process. When that program cannot run, the agent writes the same plan.
 
 **MCP config:**
 
@@ -359,14 +198,14 @@ Manual setup on the same page shows **one** `mcp.json` sample: the Primary MCP c
 "framework.sdd.works": { "url": "https://sdd.works/mcp" }
 ```
 
-**Behavior:** HTTP MCP returns `packageUrl`, paths, manifest, and instructions. The server does not write the caller disk. The AI agent downloads and extracts, then writes `.sdd-installed.json` last with `pack_complete: true`. Do not write `framework.sdd.works.json`.
+**Behavior:** HTTP MCP returns `writer_required` when the caller sends no inventory, or a plan when the caller sends inventory. The pack URL is on this server. The server does not write the caller disk. The local program, or the agent when that program cannot run, copies only the planned paths. Do not extract an archive into the client root. Do not write `framework.sdd.works.json`.
 
 | Step | Who | Where |
 | --- | --- | --- |
 | Sync GitHub → cache | Operator server | `.data/sdd-packages/<commit-sha>/` |
 | List versions, resolve package | HTTP MCP tool | Sync cache |
-| Return `packageUrl` + manifest + instructions | HTTP MCP tool | Response JSON |
-| Extract and write ledger | AI agent | User machine |
+| Return `writer_required` or a plan, plus the pack URL on this server | HTTP MCP tool | Response JSON |
+| Copy planned paths and write the ledger last | Local program, or the agent when that program cannot run | User machine |
 
 Dev stdio uses `SDD_SERVER_URL=http://localhost:3040` when testing against the local portal. `npm run mcp:stdio` and `scripts/install.sh` remain available for contributors and terminal install.
 
@@ -386,7 +225,7 @@ HTTP install never reaches `FS` on the operator server. Stdio reaches `FS` on th
 | Public install markdown | `GET /setup/install` ([Web-portal-18](../product-backlog.md#L488) Part 1, [ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) | Tells the agent to fetch links, resolve `{client_root}`, copy listed paths |
 | Copy listed skills and rules | Local agent | Client folder; **no** `.sdd-installed.json` write |
 
-Full framework install remains: paste `GET /setup`, register stdio, then MCP install or update.
+Full framework install remains: paste `GET /setup`, register the URL entry, then MCP install or update.
 
 ### 2.2 Cache freshness (ADR-055)
 
@@ -396,27 +235,27 @@ Three layers keep the sync cache aligned with GitHub:
 | --- | --- | --- |
 | 1 Webhook | `push`, `release` → `POST /api/github/webhook` | HMAC verify → `syncFrameworkRepo` |
 | 2 Scheduled | `instrumentation.ts` every 30 min; backup `POST /api/sync/cron` | Same sync job; skips when `GITHUB_TOKEN` unset |
-| 3 Install check | HTTP `sdd_install_framework` | Compare cache `latestCommit` to live GitHub tip; sync if different |
+| 3 Install check | HTTP `sdd_install_framework` | Compare cache `latestCommit` to the live git tip; sync when they differ. A cache older than 30 minutes returns `cache_stale` and no write plan. A cached commit matching `sha-v*.*.*`, or the fixture file set, returns `fixture_pack` and writes no client file |
 
-HTTP install response includes `cache_synced_at`, `cache_age_minutes`, `cache_stale` (advisory when age > 30 min). Install does **not** block on staleness.
+A cache older than 30 minutes is not an advisory flag. The result code is `cache_stale`. The result has no write plan and no `packageUrl`.
 
-**HTTP extraction contract:** The server always returns `packageUrl` and `extract_recommended: true`. The AI must confirm every file in the local manifest still exists before skipping extraction. `installed_commit` / `installed_version` are hints only (`local_commit_matches` in the response); they do not suppress the package response.
+The pack the server serves is the copy synced from the git repository in Settings. `latestCommit` is a git commit from that repository. It is not a fixture commit. The portal process ignores `GITHUB_FIXTURE`. A practice GitHub port is selected only when a test calls `setGitHubPortForTests`. That call does not run in the portal process (MC-03).
 
 ## 3. Tools
 
 Register with Zod input schemas. Descriptions state parameters, success shape, and failure modes.
 
-**Failure codes:** `not_found`, `unauthorized`, `path_rejected`, `already_up_to_date`, `package_unavailable`, `client_config_unresolved`, `llm_unavailable`, `client_unknown`, `os_unsupported`, `sync_pending`, `version_not_found`. `local_install_required` is **deprecated** on HTTP (ADR-054); retained in error enum for legacy references only.
+**Failure codes:** `cache_stale`, `not_found`, `unauthorized`, `path_rejected`, `already_up_to_date`, `package_unavailable`, `client_config_unresolved`, `llm_unavailable`, `client_unknown`, `os_unsupported`, `sync_pending`, `version_not_found`. `local_install_required` is **deprecated** on HTTP (ADR-054); retained in error enum for legacy references only.
 
 | Tool | Side effects | Transport |
 | --- | --- | --- |
-| `sdd_get_key` | None (returns plaintext `key_value`) | **HTTP only**; auth required |
-| `sdd_install_framework` | **stdio:** writes client paths. **HTTP:** returns tarball URL + metadata; AI extracts locally | stdio + HTTP |
-| `sdd_update_framework` | Alias of install; idempotent on same version + commit | stdio + HTTP |
+| `sdd_get_key` | None. Success text is the plaintext secret only. A missing name returns the text `not_found` and is not a tool error | **HTTP only**; auth required |
+| `sdd_install_framework` | **Local program:** copies the planned files. **HTTP:** returns `writer_required` or a plan. The server does not write the caller disk | stdio + HTTP |
+| `sdd_update_framework` | Alias of install; idempotent on the same version and commit | stdio + HTTP |
 
 `sdd_list_versions` is **not** registered on either transport ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md), [MCP-03](../product-backlog.md#L339)). Version listing is server-only: `listVersions()` in `src/core/tools/list-versions.ts` and `GET /api/sdd/versions`. Do not expose the same payload as an MCP resource.
 
-Setup confirm sentence: the agent confirms `sdd_install_framework` and `sdd_update_framework` (HTTP also has `sdd_get_key`). It does not name `sdd_list_versions`. The embedded prompt body in §2.1 matches `public/agent-setup/prompt.md`.
+Setup confirm sentence: the agent confirms `sdd_install_framework` and `sdd_update_framework` (HTTP also has `sdd_get_key`). It does not name `sdd_list_versions`. The setup body is `public/agent-setup/prompt.md`. This design file does not copy it.
 
 ### Server-only version listing
 
@@ -424,11 +263,24 @@ Setup confirm sentence: the agent confirms `sdd_install_framework` and `sdd_upda
 
 ### `sdd_get_key`
 
-Input: `{ key_name: string }`. Lookup by unique `key_name` in the admin key store. Output on success: `{ key_name, key_value }` with **plaintext** `key_value` (decrypt at rest if encrypted).
+Input: `{ key_name: string }`. Lookup by unique `key_name` in the admin key store. HTTP only. Stdio does not register this tool.
 
-Auth model is an open question (MCP bearer, per-key token, or admin-issued API key). Until decided: HTTP requires the same caller bearer as other tools; stdio still must not leak other keys.
+[MC-09](../issues-log.md) replaces the old success body `{ key_name, key_value }` and the old `not_found` error.
 
-Missing → `not_found`. Unauthorized → `unauthorized`. Do not list other key names or return other values.
+| Result | `isError` | Text |
+| --- | --- | --- |
+| Name exists and the value decrypts | absent | The plaintext secret only. No JSON. No `key_name`, `key_description`, or `created_at`. |
+| Name is missing, or the stored value does not decrypt | absent | `not_found` |
+| Caller is not authorized | true | `{"error":{"code":"unauthorized"}}` |
+| `key_name` is empty | true | `{"error":{"code":"invalid_input"}}` |
+
+A missing name is an expected lookup result. It is not a tool error. The text has no `error` object and no other key names or values.
+
+`unauthorized` and `invalid_input` stay errors. Their text has a code and no message.
+
+The tool description tells the caller to stop. It does not name the store, other keys, or a next action.
+
+Auth: HTTP uses the same caller bearer as the other HTTP tools.
 
 ### `sdd_install_framework`
 
@@ -450,57 +302,26 @@ Shared steps (both transports):
 2. Resolve target roots via **MCPI-05** → seed map → Qwen (stdio only, ADR-047).
 3. Reject escaped paths → `path_rejected`. Unresolved → `client_config_unresolved` / `llm_unavailable` / `client_unknown`.
 
-#### stdio behavior (end users primary + dev contributors, ADR-058)
+#### Local program
 
-4. Fetch package: `GET ${SDD_SERVER_URL}/api/sdd/package?version=<v>` → unpack to temp.
-5. Manifest-tracked merge (§ Write policy): delete old package-owned paths, write **pack allow-list** folders only.
-6. After a successful copy, write `{client_root}/.sdd-installed.json` once with `pack_complete: true`, version, commit, and `files` (ADR-057). Do not write `framework.sdd.works.json`. Do not write the ledger when the copy failed.
-7. Return `{ version, paths, asset_counts, resolution_source, manifestPath }`.
-8. Apply the Expected outcomes of the client-root scenarios below.
+4. Read `.sdd-installed.json`. Post the accepted root, the client, the operating system, `force` when asked, `missing`, and the ledger. Do not post file bodies.
+5. On `cache_stale`, or when the cached commit is `sha-v1.0.0` or the tarball is the fixture file set, exit and copy nothing.
+6. On `noop`, exit without copying files.
+7. On `apply` or `rewrite_ledger`, copy only the listed files from the pack on this server, then write `.sdd-installed.json` last.
+8. A known client uses the path-table root. Reject a path outside home, a path that contains `..`, and `/etc`, `/usr`, `/bin`, or `/sbin`.
 
-#### HTTP behavior (fallback, ADR-054)
+The program file the agent runs is built from this source. Each `dist/sdd-mcp-*` file and `~/.sdd/sdd-mcp` include the `cache_stale` refusal.
 
-4. Resolve package from **sync cache** (`resolveCachedVersion`); build `packageUrl = ${SDD_SERVER_URL}/api/sdd/package?version=<v>`.
-5. Build proposed manifest from cached unpacked inventory (file list only — no server-side write), including `pack_complete: true` for the model to write last.
-6. **Never** return `already_up_to_date` on HTTP — the server cannot verify the caller's disk. Always return `packageUrl` + `extract_recommended: true`. AI must verify local files before skipping `curl|tar`.
-7. Return:
+#### HTTP behavior
 
-```json
-{
-  "packageUrl": "https://sdd.works/api/sdd/package?version=latest",
-  "version": "v1.0.0",
-  "commitSha": "abc123…",
-  "client": "cursor",
-  "paths": { "skills": "…", "rules": "…", "agents": "…", "workflows": "…", "templates": "…" },
-  "manifestPath": "~/.cursor/.sdd-installed.json",
-  "manifest": {
-    "version": 1,
-    "package_version": "…",
-    "package_commit": "…",
-    "installed_at": "…",
-    "pack_complete": true,
-    "files": { "skills": ["…"], "rules": ["…"], "agents": ["…"], "workflows": ["…"], "templates": ["…"] }
-  },
-  "previousManifest": null,
-  "extractTarget": "~/.cursor",
-  "instructions": "…",
-  "resolution_source": "seed"
-}
-```
+4. When the caller sends no inventory and the cache is younger than 30 minutes, return `writer_required` and `packageUrl` on this server. The instructions name `--write`, `--client`, `--os`, `--client-root`, and `SDD_SERVER_URL`. They tell the agent to set `accepted_root` when the program cannot run. The result does not name a git host. A cached commit matching `sha-v*.*.*`, or the fixture file set, returns `fixture_pack` and writes no client file (MC-06, MC-11).
+5. When the caller sends inventory, return `noop`, `rewrite_ledger`, or `apply`. Include the pack URL on this server with `apply`.
+6. Do not return `already_up_to_date` when a recorded path is missing. Do not tell the caller to extract an archive into the client root.
+7. The server records the accepted root. It does not use that field to choose a different folder. The program still rejects a path outside the client root before it writes.
 
-The model writes `manifest` to `manifestPath` last. Do not return or write `framework.sdd.works.json`.
-`previousManifest` is populated when the HTTP handler can read an existing manifest (e.g. tests with `installHome`; production relies on the AI reading `manifestPath` locally).
+The old response that told the agent to run `curl | tar` into the client root is retired. The agent copies only the planned paths. The ledger is written last and is not baked into the pack archive.
 
-**AI executor steps** (from `instructions`):
-1. Read `manifestPath`; if present, delete files listed in `previousManifest.files.*`.
-2. `curl -fsSL "<packageUrl>" | tar xz -C "<extractTarget>" --strip-components 1`
-3. Keep only pack allow-list folders under `extractTarget` if the tarball still contains extra top-level names (or extract into a temp dir and copy allow-list folders). Feature-01 implementation should prefer a tarball that already contains only pack folders.
-4. Verify pack artifacts exist under `paths`.
-5. Write `manifest` JSON to `manifestPath` **last**, with `pack_complete: true`. Do not write that flag if extract or verify failed. Do not write `framework.sdd.works.json`.
-
-Do **not** commit a finished `.sdd-installed.json` with `pack_complete: true` inside the pack git tree. Generate it at install time. Baking it into the tarball before extract would mark an incomplete extract as complete.
-
-HTTP never writes operator server disk as user config. The operator server does not verify the caller’s local filesystem after the tool returns.
+HTTP never writes operator server disk as user config.
 
 #### Pack allow-list (MCP-01)
 
@@ -585,9 +406,9 @@ Manifest shape (`~/.<client>/.sdd-installed.json`):
 
 #### Client-root scenarios (Sprint 2 feature-01)
 
-Cursor’s folder is `~/.cursor`. **Expected** is the local-program writer (ADR-058) with the install ledger in [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). **Current** is production HTTP at `https://sdd.works/mcp` until ADR-058 ships: that tool returns a download link, paths, a manifest, and instructions. It does not write the user’s disk. The agent in the IDE follows the instructions and writes the files.
+Cursor’s folder is `~/.cursor`. **Expected** is the local program writing the server plan. The ledger rules are in [ADR-057](../adr/ADR-057-install-ledger-pack-complete.md). The current contract is the Current steps section. The server does not write the user’s disk.
 
-Observed production instructions (25 Sep 2026): the server cannot write the disk; read `.sdd-installed.json` if it exists; remove paths listed under `files.*`; run `curl | tar` into the client folder; write the returned manifest to `.sdd-installed.json`. The returned manifest has version, commit, and folder names. It has no `pack_complete`. The response has no receipt. `extract_recommended` is true. The tool does not report already up to date.
+The 25 Sep 2026 production instructions told the agent to run `curl | tar` into the client folder. That observation is not the current contract.
 
 **Scenario 1. User skills, rules, agents, workflows, and templates exist. The framework pack is not installed.**
 
@@ -653,9 +474,8 @@ Expected:
 
 Current:
 
-- The tool still returns a download link. `extract_recommended` is true. It does not report already up to date.
-- The instructions tell the agent to remove listed paths and unpack. If the agent does that, `skills/tdd/SKILL.md` becomes “pack tdd” again.
-- If the agent reads the local record, sees the same version and commit, and skips the unpack, the edit can stay. The server does not make that decision.
+- The server returns a plan. It does not tell the agent to unpack the archive into the client folder.
+- The local program copies only the planned paths. A user edit in a file the plan does not list stays.
 
 **Scenario 4. The user has a notes folder that is not part of the pack.**
 
@@ -1159,7 +979,7 @@ Test plan: [`mcp-tests.md`](./mcp-tests.md). Follow **common-test-strategy** + [
 
 ## 10. Anti-patterns
 
-- HTTP MCP writing Server 2 `~/.cursor` (use Hybrid: return URL, AI extracts locally)
+- HTTP MCP writing the caller disk (return a plan; the local program or the agent copies planned paths)
 - Requiring end users to configure a stdio `command` path when HTTP URL suffices (ADR-054)
 - Using AI Write tool to recreate skill trees instead of `tar` extraction
 - Expecting HTTP install to verify local filesystem state without AI passing `installed_commit` / `installed_version`

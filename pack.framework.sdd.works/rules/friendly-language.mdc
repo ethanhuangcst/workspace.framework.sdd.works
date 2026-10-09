@@ -34,6 +34,7 @@ Applies to every chat reply and every Markdown file.
 19. A heading names what the reader gets. A single verb fails.
 20. An example the user reads states what the user understands. An example that only states what the agent saw in the files fails.
 21. A line the user reads is written from the user's view: the status, the reason, and the change.
+22. A line the reader reads uses the words that reader would say for that job. A line fails when the reader must translate it to their own words.
 
 ## Principles
 
@@ -80,6 +81,9 @@ Then:
   good example: "the actual status is WIP because the card list page is already in the web app"
 - A line the user reads is written from the user's view: the status, the reason, and the change.
   good example: "In sprint-backlog.md, set feature-03 Card list view from ToDo to WIP."
+- A line the reader reads uses the words that reader would say for that job, so the reader does not translate it.
+  bad example: "The operator runbook documents the canonical hostname after cutover."
+  good example: "The guide tells you to send visitors to sdd.works for the instructions."
 - Default language is English, unless the user asks for another language.
 - On a bilingual term, give the industry term and the plain English in the same sentence.
 

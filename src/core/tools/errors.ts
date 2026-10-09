@@ -14,6 +14,8 @@ export type McpErrorCode =
   | "llm_unavailable"
   | "already_up_to_date"
   | "sync_pending"
+  | "cache_stale"
+  | "fixture_pack"
   | "version_not_found";
 
 export function toolOk(data: unknown): CallToolResult {
@@ -24,13 +26,14 @@ export function toolOk(data: unknown): CallToolResult {
 
 export function toolError(
   code: McpErrorCode,
-  message: string,
+  message?: string,
 ): CallToolResult {
+  const error = message === undefined ? { code } : { code, message };
   return {
     content: [
       {
         type: "text",
-        text: JSON.stringify({ error: { code, message } }),
+        text: JSON.stringify({ error }),
       },
     ],
     isError: true,

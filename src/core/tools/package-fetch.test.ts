@@ -15,7 +15,7 @@ describe("fetchPackage", () => {
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "# tdd\n");
     setPackageFetchForTests(async () => ({
       version: "v1.0.0",
-      commitSha: "sha-v1",
+      commitSha: "0123456789abcdef0123456789abcdef01234567",
       tempDir: pkg,
     }));
 
@@ -23,7 +23,7 @@ describe("fetchPackage", () => {
     expect("code" in result).toBe(false);
     if (!("code" in result)) {
       expect(result.version).toBe("v1.0.0");
-      expect(result.commitSha).toBe("sha-v1");
+      expect(result.commitSha).toBe("0123456789abcdef0123456789abcdef01234567");
     }
   });
 

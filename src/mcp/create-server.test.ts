@@ -97,10 +97,13 @@ describe("createSddMcpServer tool contracts", () => {
       name: "sdd_get_key",
       arguments: { key_name: "any" },
     });
-    const body = parseToolJson<{ error: { code: string } }>(
+    const raw = JSON.stringify(result);
+    expect(raw).not.toMatch(/bearer|store|key_name|token/i);
+    const body = parseToolJson<{ error: { code: string; message?: string } }>(
       result as never,
     );
     expect(body.error.code).toBe("unauthorized");
+    expect(body.error.message).toBeUndefined();
     await client.close();
     await server.close();
   });
@@ -121,7 +124,7 @@ function seedHttpCache(sha: string, version: string): void {
       latestVersion: version,
       versions: [{ id: version, commitSha: sha }],
       inventory: { skills: ["tdd"], rules: [], agents: [], workflows: [], other: [] },
-      syncedAt: "2026-01-01T00:00:00.000Z",
+      syncedAt: new Date().toISOString(),
     }),
   );
 }
@@ -270,11 +273,14 @@ describe.skipIf(!hasDb)("MCP get_key with DB", () => {
       name: "sdd_get_key",
       arguments: { key_name: keyName },
     });
-    const body = parseToolJson<{ key_name: string; key_value: string }>(
-      result as never,
+    expect(result.isError).toBeFalsy();
+    const text = (result as { content: { type: string; text: string }[] }).content.find(
+      (c) => c.type === "text",
     );
-    expect(body.key_name).toBe(keyName);
-    expect(body.key_value).toBe("sk-mcp-secret");
+    expect(text?.text).toBe("sk-mcp-secret");
+    const raw = JSON.stringify(result);
+    expect(raw).not.toContain(keyName);
+    expect(raw).not.toMatch(/key_description|created_at|key_name|key_value/);
     await client.close();
     await server.close();
   });
@@ -290,11 +296,63 @@ describe.skipIf(!hasDb)("MCP get_key with DB", () => {
       name: "sdd_get_key",
       arguments: { key_name: "does_not_exist_xyz" },
     });
+    expect(result.isError).toBeFalsy();
+    const text = (result as { content: { type: string; text: string }[] }).content.find(
+      (c) => c.type === "text",
+    );
+    expect(text?.text).toBe("not_found");
     const raw = JSON.stringify(result);
     expect(raw).not.toContain(keyName);
     expect(raw).not.toContain("sk-mcp-secret");
-    const body = parseToolJson<{ error: { code: string } }>(result as never);
-    expect(body.error.code).toBe("not_found");
+    expect(raw).not.toMatch(/"error"|key_description|created_at/);
+    await client.close();
+    await server.close();
+  });
+
+  it("should_return_not_found_when_ciphertext_does_not_decrypt", async () => {
+    await db.key.update({
+      where: { keyName },
+      data: { keyValue: "v1:not-valid-ciphertext" },
+    });
+    const server = createSddMcpServer({ channel: "http", authorized: true });
+    const [clientTransport, serverTransport] =
+      InMemoryTransport.createLinkedPair();
+    const client = new Client({ name: "test", version: "0.0.0" });
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+    const result = await client.callTool({
+      name: "sdd_get_key",
+      arguments: { key_name: keyName },
+    });
+    expect(result.isError).toBeFalsy();
+    const text = (result as { content: { type: string; text: string }[] }).content.find(
+      (c) => c.type === "text",
+    );
+    expect(text?.text).toBe("not_found");
+    const raw = JSON.stringify(result);
+    expect(raw).not.toContain("sk-mcp-secret");
+    expect(raw).not.toMatch(/"error"/);
+    await client.close();
+    await server.close();
+  });
+
+  it("should_return_invalid_input_for_empty_key_name", async () => {
+    const server = createSddMcpServer({ channel: "http", authorized: true });
+    const [clientTransport, serverTransport] =
+      InMemoryTransport.createLinkedPair();
+    const client = new Client({ name: "test", version: "0.0.0" });
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+    const result = await client.callTool({
+      name: "sdd_get_key",
+      arguments: { key_name: "" },
+    });
+    expect(result.isError).toBe(true);
+    const body = parseToolJson<{ error: { code: string; message?: string } }>(
+      result as never,
+    );
+    expect(body.error.code).toBe("invalid_input");
+    expect(body.error.message).toBeUndefined();
     await client.close();
     await server.close();
   });

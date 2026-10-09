@@ -1,14 +1,9 @@
-import {
-  getAgentSetupUrl,
-  getNodePrerequisiteSetupSentence,
-} from "@/mcp/brand";
+import { getVisitorPasteOrigin } from "@/mcp/public-origin";
 
 export function getSetupGuidePasteSentences(): {
   setupPromptSentence: string;
-  nodePrerequisiteSentence: string;
 } {
   return {
-    setupPromptSentence: `Fetch and execute the setup instructions from ${getAgentSetupUrl()}`,
-    nodePrerequisiteSentence: getNodePrerequisiteSetupSentence(),
+    setupPromptSentence: `Fetch and execute the setup instructions from ${getVisitorPasteOrigin()}/setup`,
   };
 }

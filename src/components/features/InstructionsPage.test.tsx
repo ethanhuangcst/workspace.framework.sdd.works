@@ -87,11 +87,8 @@ function defaultGuideTabs(options?: {
 
 const SETUP_SENTENCE =
   "Fetch and execute the setup instructions from https://sdd.works/setup";
-const NODE_SETUP_SENTENCE =
-  "Fetch and execute the setup instructions from https://sdd.works/setup/node";
 const DEFAULT_PASTE = {
   setupPromptSentence: SETUP_SENTENCE,
-  nodePrerequisiteSentence: NODE_SETUP_SENTENCE,
 } as const;
 
 function renderGuide(
@@ -100,14 +97,12 @@ function renderGuide(
     | "tabs"
     | "onLocaleChange"
     | "setupPromptSentence"
-    | "nodePrerequisiteSentence"
   > & {
     featuresHtml?: string;
     scrumHtml?: string;
     includeLearn?: boolean;
     onLocaleChange?: () => void;
     setupPromptSentence?: string;
-    nodePrerequisiteSentence?: string;
   },
 ) {
   const {
@@ -116,7 +111,6 @@ function renderGuide(
     includeLearn,
     onLocaleChange,
     setupPromptSentence = DEFAULT_PASTE.setupPromptSentence,
-    nodePrerequisiteSentence = DEFAULT_PASTE.nodePrerequisiteSentence,
     ...rest
   } = props;
   return render(
@@ -129,7 +123,6 @@ function renderGuide(
         locale: rest.locale,
       })}
       setupPromptSentence={setupPromptSentence}
-      nodePrerequisiteSentence={nodePrerequisiteSentence}
       {...rest}
     />,
   );
@@ -251,18 +244,10 @@ describe("InstructionsPage", () => {
     expect(screen.queryByTestId("copy-lite-setup-prompt")).toBeNull();
   });
 
-  it("should_copy_node_setup_sentence_when_copy_node_setup_prompt_clicked", async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, "clipboard", {
-      configurable: true,
-      value: { writeText },
-    });
-
+  it("should_not_show_node_setup_block_on_setup_tab", () => {
     renderGuide({ locale: "en" });
-
-    fireEvent.click(screen.getByTestId("copy-node-setup-prompt"));
-
-    expect(writeText).toHaveBeenCalledWith(NODE_SETUP_SENTENCE);
+    expect(screen.queryByTestId("copy-node-setup-prompt")).toBeNull();
+    expect(screen.queryByText(/Install Node\.js first/i)).not.toBeInTheDocument();
   });
 
   it("should_not_show_manual_mcp_block_on_setup_tab", () => {
