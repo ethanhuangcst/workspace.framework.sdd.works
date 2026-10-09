@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import { LOCALE_HTML_LANG, type Locale } from "@/i18n/t";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { LOCALE_HTML_LANG } from "@/i18n/t";
+import { getRequestLocale } from "@/lib/request-locale";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -18,10 +17,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const locale: Locale = getLocaleFromCookieValue(
-    cookieStore.get("sdd_locale")?.value,
-  );
+  const locale = await getRequestLocale();
 
   return (
     <html lang={LOCALE_HTML_LANG[locale]}>

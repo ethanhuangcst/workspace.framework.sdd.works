@@ -318,7 +318,7 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] S1 local (`backend-01`) — with local `PUBLIC_BASE_URL`, body rewrites pack base and MCP fallback URL
 - [x] B1 feature-14 — compiled host binary handshake (install, update; no get_key). After [MCP-03](../product-backlog.md#L339) feature-08: no `sdd_list_versions` on tools/list either.
 - [x] B2 feature-14 — five OS/arch build outputs
-- [x] B3 feature-14 — `GET /setup` has no release-download instruction for the binary
+- [x] B3 feature-14 — `GET /setup` has no release-download instruction for the binary. Feature-80 replaces this rule: setup names the five GitHub Release assets. Do not treat B3 as the feature-80 contract.
 - [x] B4 feature-14 — compiled host binary writes pack ledger via fixture package server (cursor + trae-cn)
 
 ---
@@ -328,3 +328,65 @@ Run after pushing to **test.sdd** when validating a release:
 - Admin portal UI (see [`../admin-portal/app-tests.md`](../admin-portal/app-tests.md))
 - Live Bailian Qwen spend in default CI
 - Writing Server 2 disk from HTTP install (must assert packageUrl response, no local writes on server)
+
+---
+
+<a id="9-sprint-9-mcp-06-and-mcp-07"></a>
+
+## 9. Sprint 9 — MCP-06 and MCP-07 (feature-80, feature-82)
+
+Human-readable SBIs: [`sprint-backlog.md`](../sprint-backlog.md#sprint-9) **ToDo** table. Stories: [`mcp-stories.md`](./mcp-stories.md#mcp-github-release), [`mcp-stories.md`](./mcp-stories.md#mcp-production-pack-sync).
+
+### 9.1 feature-80 — Tagged release ships sdd-mcp on GitHub
+
+Stories: [`mcp-stories.md`](./mcp-stories.md#mcp-github-release) **AC1–AC3**. Design: [`mcp-design.md`](./mcp-design.md) §2.1 **Publish the local program**.
+
+| Check | Layer | Method |
+| --- | --- | --- |
+| Workflow uploads the five assets | unit | Assert [`.github/workflows/release.yml`](../../.github/workflows/release.yml) lists `dist/sdd-mcp-darwin-arm64`, `dist/sdd-mcp-darwin-x64`, `dist/sdd-mcp-linux-arm64`, `dist/sdd-mcp-linux-x64`, and `dist/sdd-mcp-windows-x64.exe`, and triggers on tag `v*` |
+| Setup names the official assets | API | `GET /setup` body contains each of the five asset names, `releases/download`, `releases/latest/download`, and `github.com/ethanhuangcst/workspace.framework.sdd.works` |
+| Setup rejects any other host | API | The same body does not contain `Do not fetch a GitHub release asset` and does not name `github.com/ethanhuangcst/framework.sdd.works/releases` as the visitor download |
+| Download failure path | API | The same body tells the agent to write `https://sdd.works/mcp` when the official save fails |
+| Real tag | operator | Push a `v*` tag or inspect the latest GitHub Release and confirm the five asset names |
+
+Build updates `public/agent-setup/prompt.md` from the design server prompt, and replaces the assertion in `src/app/api/sdd/sdd-api.test.ts` that the body contains `Do not download an executable`.
+
+- [x] **AC1** workflow file check green in Vitest (`src/mcp/github-release-workflow.test.ts`)
+- [x] **AC2** and **AC3** `GET /setup` checks green in Vitest (`src/app/api/sdd/sdd-api.test.ts`)
+- [ ] **AC1** confirmed on one real GitHub Release, with the five filenames listed above
+
+### 9.2 feature-82 — Production serves the synced pack for install
+
+| Check | Method |
+| --- | --- |
+| Sync populates cache | Admin Framework sync on staging or production; inspect `/data/sdd-packages` or equivalent |
+| Lite allow-list in cache | File `lite-pack.allowlist.json` at pack root after sync |
+| Lite APIs use cache | `GET /api/sdd/lite/files` after sync; **CE-LITE** unit tests green |
+| Package GET uses cache | Existing sync job and package-fetch integration tests |
+
+- [ ] **AC1–AC2** (feature-82) verified after production sync
+- [ ] [Spec-seeds-15](../product-backlog.md#pb-97) marked **Done** when allow-list is confirmed in production tarball or cache
+
+---
+
+<a id="10-adr-129-url-plan"></a>
+
+## 10. ADR-129 — URL plan and local writer
+
+Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-url-plan) **AC1–AC7**. Design: [`mcp-design.md`](./mcp-design.md) **Target (ADR-129)**. Not implemented. Sections 2–9 stay the running ADR-058 checks until this section is green.
+
+| Check | Layer | Method |
+| --- | --- | --- |
+| First paste writes the URL only | API | `GET /setup` body tells the agent to write `"url": "https://sdd.works/mcp"` and no `command` (**AC1**) |
+| Existing entry is replaced | API | The same body tells the agent to replace a `framework.sdd.works` entry that has `command` (**AC2**) |
+| Plan function | unit | Same ledger, same `missing`, same commit returns `noop`, `rewrite_ledger`, or `apply`. Matching version, commit, and no missing paths returns `noop` and does not list file writes (**AC3**) |
+| Repair | unit | A path in `missing` returns `apply` and includes that path (**AC4**) |
+| Root check | unit | A candidate outside the home directory returns `path_rejected` and writes nothing (**AC5**) |
+| Fallback contract | API | When the writer cannot run, the tool result has the plan, the instruction, and the pack URL. The instruction names planned paths and forbids extracting the archive into the client root (**AC6**, **AC7**) |
+| Ledger input | unit | The plan function reads the ledger JSON and `missing`. It does not read file bodies |
+
+Commands when this section is implemented: `npx vitest run src/core/tools src/app/api/sdd`.
+
+- [ ] **AC1–AC2** setup markdown matches the URL contract
+- [ ] **AC3–AC5** plan and root checks green in Vitest
+- [ ] **AC6–AC7** fallback result shape green in Vitest

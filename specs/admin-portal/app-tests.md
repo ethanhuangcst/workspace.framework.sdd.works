@@ -35,7 +35,7 @@
 | Password | Hash verify; empty hash → set-password path |
 | Rate limit | Helper still used by reset/invite (login not rate-limited) |
 | Keys crypto | Round-trip encrypt/decrypt; missing key; wrong key / tampered ciphertext → clear error |
-| Locale | Cookie → locale; missing-key fallback |
+| Locale | Cookie wins; missing or invalid cookie negotiates `Accept-Language` per **AC51–AC56** and §34; missing message key falls back to `en` then the key name |
 | Keys / settings Zod | Valid names; reject CJK in `key_value`; invalid GitHub URL |
 | ResetPasswordPage | After sent, link uses `admin.common.back_login` and href `/login` (WA-03). Failed request keeps the form and shows `reset-error` with a keyed message; no navigation (WA-05). Success callout uses the previous `admin.reset.sent` sentence with no `{email}`; request lead is hidden; URL has no `?email=` (WA-08 / WA-10 / Web-portal-11) |
 | Password set gate | No token + existing hash → redirect away from empty-account form; empty hash still allows set (WA-04) |
@@ -54,7 +54,7 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | `POST /api/admin/login` | Success; wrong password → `errors.login_failed`; no rate-limit 429 |
 | Password reset | Request creates token; set-password consumes token; expired → error |
 | Public secret lookup (feature-05) | Exact known `key_name` returns only that plaintext; unknown name → keyed not found; response lists no other names; empty name rejected |
-| `GET /api/sdd/features` (feature-07) | Cache `en` returns that file’s HTML with `source` `cache`; cache `zh-Hans` returns the Chinese file when present; missing cache `zh-Hant` returns cache English HTML, `source` `cache`, and `sourceLocale` `en`; no cache English file returns the package file with `source` `package`; response has no key values; raw HTML in the file is escaped |
+| `GET /api/sdd/features` (feature-07) | Cache `en` returns that file’s HTML with `source` `cache`; cache `zh-Hans` returns the Chinese file when present; missing cache `zh-Hant` returns cache English HTML, `source` `cache`, and `sourceLocale` `en`; no cache English file returns the package file with `source` `package`; response has no key values; raw HTML in the file is escaped. **AC59:** no `locale` query and `Accept-Language: zh-CN` still returns `locale` `en` |
 | `GET /api/sdd/lite/files` (feature-55) | With fixture unpack + valid `lite-pack.allowlist.json` at pack root: 200; body has `package_version`, `package_commit`, sorted `files`, and `downloads` with same-origin `url` per path; no GitHub fetch. Empty cache manifest → 409 `sync_pending`. Unpack without allow-list file → `lite_manifest_missing`. Bad allow-list (unsorted skills, missing file on disk, disallowed path) → `lite_manifest_invalid`; no `downloads`. |
 | `GET /api/sdd/lite/file` (feature-55) | Allow-listed path → 200 and bytes match unpack file. Path not in allow-list → `path_not_allowed`. `../` or absolute path → `path_invalid`. |
 | `GET /setup/install` (feature-56) | Public rewrite → install handler: 200, `Content-Type` includes `text/markdown`. Body matches `public/agent-setup/install.md` after local origin rewrite. Body includes **`lite_install`** paste text from [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) (or legacy `LITE_PARTNER_SETUP_SENTENCE` until feature-88), lite file list route, per-file download route, `{client_root}`, `.sdd-lite-installed.json` / receipt merge, and excludes `sdd_install_framework` and `.sdd-installed.json`. With fixture cache, body references `GET /api/sdd/lite/files`. No admin session. |
@@ -66,7 +66,8 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | `GET /api/sdd/instructions-tabs` (feature-59) | Cache `content/.instructions-tabs.json` valid → 200; `tabs` order matches file; `setup` code tab present; each `content` tab has `html` for `locale=en` from cache path; top-level `source` `cache`. Missing or invalid cache file → 200 from bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) only; top-level `source` `bundled`. Duplicate `queryParam` or unknown `code.id` → bundled fallback. Content path `../` → bundled fallback. Missing zh path → `sourceLocale` `en` for that tab. Per-tab markdown uses `contentSource` `cache` or `package` like Features. No GitHub fetch; no key values |
 | Instructions tabs resolver (feature-58 / feature-59) | Unit: parse and validate schema v1; reject empty `tabs`, duplicate `id` / `queryParam`, disallowed `code.id`, content row without `paths.en`, unsafe paths. Path values are relative to sync unpack root (`content/features/…`). File-existence checks use that root (fixture unpack or `pack.framework.sdd.works/`). Runtime package fallback maps those paths under `src/content/` (same as Features) |
 | Keys CRUD | Create / list / update / delete; decrypt with current `KEYS_ENCRYPTION_KEY` |
-| Users invite | Rate-limit invite; cannot delete self / last admin |
+| Users invite | Rate-limit invite; cannot delete self / last admin. **AC57:** invite mail keys resolve for the request `resolveLocale` (`zh-Hans` when cookie or `Accept-Language` says so) |
+| Password reset mail | **AC58:** reset mail keys resolve for the request `resolveLocale` |
 | Settings | Dirty-only Save; unreachable URL does not persist |
 | Framework | Tree from SYNK cache; top-level one-level expand + indented child rows; force sync; sync error keeps shell |
 | `GET /api/admin/admin-note` (**Web-portal-26**) | No session → 401. With session + fixture unpack containing `content/.admin-note.md` → 200, `source` `cache`, `html` contains `Notes to the admin` and `content-table`. Empty/missing cache file → 200, `source` `package`, body matches bundled seed substring. Response has no session secrets |
@@ -94,7 +95,7 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | Settings | Save valid URL; unreachable rejected |
 | Framework | Cache-backed tree; one-level default expand; indented child entries; dirs before files then name sort at each level; sync button; change-repo navigates; collapse/expand top-level folder; empty → Settings CTA |
 | Framework admin note (**Web-portal-26**) | Signed-in on `/admin/framework`: **Admin note** opens dialog; `framework-admin-note-body` shows pack-file table row (for example `lite-pack.allowlist.json`); json fence shows `codeblock--file` with Copy; Close returns to tree without navigation |
-| i18n | Locale switch updates chrome copy |
+| i18n | Locale switch updates chrome copy. **Web-portal-39:** one browser check with no `sdd_locale` and `Accept-Language: zh-TW` loads `/` with `html lang` `zh-Hant` and stores `sdd_locale=zh-Hant` (**AC52**) |
 
 Config: `playwright.config.ts` injects fixture `KEYS_ENCRYPTION_KEY` and `GITHUB_FIXTURE=1`.
 
@@ -497,9 +498,9 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 - [ ] WordPress **`learn-embedded`** allows portal **`frame-ancestors`**
 - [ ] No regression on Learn loading (§21–§23) or secret on Learn (§18)
 
-## 31. Checklist for feature-84 / Web-portal-20 (one official public URL)
+## 31. Checklist for feature-84 — visitor URLs (Web-portal-20)
 
-**What this proves:** Operators and copy agree on **`sdd.works`** as the visitor entry after cutover. Mostly documentation; re-run after **feature-72** ships.
+**What this proves:** Your operator guide names **`sdd.works`** as the visitor bookmark and **`learn.sdd.works`** as the course host. Documentation only; app cutover is **feature-72** **Done**.
 
 | Check | Method |
 | --- | --- |
@@ -510,9 +511,9 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 - [ ] **AC48** scenarios reviewed with operator
 - [ ] Redirect **`framework.sdd.works`** → **`sdd.works`** documented and verified in staging or production
 
-## 32. Checklist for feature-85 / Web-portal-22 (admin off public guide URL)
+## 32. Checklist for feature-84 — admin URLs (Web-portal-20)
 
-**What this proves:** The public guide URL is not the only documented path to operator tools. Routing matches **AC49**.
+**What this proves:** The same operator guide documents where sign-in and Admin Framework live compared with the public guide on **`sdd.works`**. Matches **AC49**.
 
 | Check | Method |
 | --- | --- |
@@ -523,7 +524,7 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 - [ ] **AC49** scenarios reviewed with operator
 - [ ] Footer admin link behavior documented (new tab vs same host)
 
-## 33. Checklist for feature-83 / Web-portal-21 (partner install-first landing)
+## 33. Checklist for Web-portal-21 (partner install-first landing; unplanned here)
 
 **What this proves:** Partner marketing site foregrounds install; framework portal **`/`** stays the instructions guide.
 
@@ -548,3 +549,34 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 - [ ] **`copy-setup-prompt`** still copies full MCP `/setup` sentence
 - [ ] No admin session required for node markdown or catalog routes
 - [ ] No console or server error on these paths
+
+## 34. Checklist for Web-portal-39 (visitor locale)
+
+**What this proves:** A first visit follows the browser language, stores `sdd_locale`, and later visits keep that choice. The switcher still wins. Public content APIs do not guess from `Accept-Language`. Invite and reset mail use the same resolver as the page. Matches **AC51–AC59** and [`app-design.md`](./app-design.md) §8.
+
+**Tools:** Vitest for `src/lib/locale.ts` and route tests. Playwright for one first-visit check. No new browser matrix beyond that one path plus the existing locale-switch check.
+
+**Pyramid:** unit cases carry the tag map (about 70%). Route tests cover cookie write, mail locale, and `GET /api/sdd/features` without `locale` (about 20%). One browser check covers first paint (about 10%).
+
+| Check | Layer | Method |
+| --- | --- | --- |
+| `zh-CN`, `zh-SG`, `zh-Hans`, bare `zh` → `zh-Hans` | Unit | `negotiateLocale` / `resolveLocale` |
+| `zh-TW`, `zh-HK`, `zh-MO`, `zh-Hant` → `zh-Hant` | Unit | same |
+| `en` and `en-US` → `en`; `ja` alone → `en` | Unit | same |
+| Higher q-value wins when two supported tags are listed | Unit | same |
+| Valid cookie ignores `Accept-Language` | Unit | **AC54** |
+| Invalid cookie negotiates and the helper result is the negotiated locale | Unit | **AC56** |
+| Missing cookie and empty header → `en` | Unit | failure / empty |
+| Middleware sets `sdd_locale` when the cookie is missing | API | request to `/` with `Accept-Language: zh-CN` and no cookie; `Set-Cookie` is `zh-Hans` |
+| Middleware does not overwrite a valid cookie | API | `sdd_locale=en` plus `Accept-Language: zh-CN` stays `en` |
+| Invite mail catalog follows `resolveLocale` | API | **AC57** |
+| Reset mail catalog follows `resolveLocale` | API | **AC58** |
+| `GET /api/sdd/features` without `locale` stays `en` | API | **AC59** |
+| First visit `zh-TW` shows Traditional and stores the cookie | Browser | **AC52**; `html lang` is `zh-Hant` |
+| Switcher still reloads into the chosen locale | Browser | existing i18n row; **AC55** |
+
+- [ ] Unit tag map and q-value cases pass
+- [ ] Invalid cookie is replaced, not left in place
+- [ ] Public features call with no `locale` query stays `en` even when `Accept-Language` is `zh-CN`
+- [ ] One browser load with no cookie and `Accept-Language: zh-TW` shows `lang=zh-Hant` and sets `sdd_locale`
+- [ ] Locale switch still updates chrome copy

@@ -1,12 +1,10 @@
-import { cookies } from "next/headers";
 import { AdminFrameworkClient } from "./AdminFrameworkClient";
 import { requireAdmin } from "@/auth/require-admin";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { getRequestLocale } from "@/lib/request-locale";
 
 export default async function AdminFrameworkRoute() {
   const admin = await requireAdmin();
-  const cookieStore = await cookies();
-  const locale = getLocaleFromCookieValue(cookieStore.get("sdd_locale")?.value);
+  const locale = await getRequestLocale();
 
   return (
     <AdminFrameworkClient

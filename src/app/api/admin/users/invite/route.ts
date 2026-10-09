@@ -5,7 +5,7 @@ import { assertCsrf } from "@/auth/csrf";
 import { requireAdminApi } from "@/auth/require-admin-api";
 import { checkRateLimit } from "@/auth/rate-limit";
 import { generateRawToken, hashToken } from "@/auth/token";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { resolveLocale } from "@/lib/locale";
 import { db } from "@/lib/db";
 import { sendInviteMail } from "@/mail/resend";
 
@@ -83,9 +83,10 @@ export async function POST(request: NextRequest) {
 
   const base = process.env.PUBLIC_BASE_URL ?? "http://localhost:3040";
   const inviteUrl = `${base.replace(/\/$/, "")}/accept-invite?token=${encodeURIComponent(raw)}`;
-  const locale = getLocaleFromCookieValue(
-    request.cookies.get("sdd_locale")?.value,
-  );
+  const locale = resolveLocale({
+    cookie: request.cookies.get("sdd_locale")?.value,
+    acceptLanguage: request.headers.get("accept-language"),
+  });
 
   // Playwright sets E2E_SKIP_MAIL=1; interactive `npm run dev` must not.
   const e2eSkipMail = process.env.E2E_SKIP_MAIL === "1";

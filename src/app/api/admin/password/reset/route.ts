@@ -4,7 +4,7 @@ import { z } from "zod";
 import { assertCsrf } from "@/auth/csrf";
 import { checkRateLimit } from "@/auth/rate-limit";
 import { generateRawToken, hashToken } from "@/auth/token";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { resolveLocale } from "@/lib/locale";
 import { db } from "@/lib/db";
 import { sendResetMail } from "@/mail/resend";
 
@@ -66,9 +66,10 @@ export async function POST(request: NextRequest) {
 
     const base = process.env.PUBLIC_BASE_URL ?? "http://localhost:3040";
     const setUrl = `${base.replace(/\/$/, "")}/set-password?token=${encodeURIComponent(raw)}`;
-    const locale = getLocaleFromCookieValue(
-      request.cookies.get("sdd_locale")?.value,
-    );
+    const locale = resolveLocale({
+      cookie: request.cookies.get("sdd_locale")?.value,
+      acceptLanguage: request.headers.get("accept-language"),
+    });
 
     if (e2eSkipMail) {
       const capture = process.env.E2E_RESET_FILE;

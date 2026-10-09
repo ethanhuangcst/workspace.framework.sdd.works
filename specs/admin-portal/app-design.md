@@ -114,6 +114,41 @@ Near-real-time: poll or webhook (`GITHUB_WEBHOOK_SECRET`) + short cache. Target:
 
 Catalogs `messages/en.json`, `zh-Hans.json`, `zh-Hant.json`. Helper `t(locale, key, vars)`. Locale cookie `sdd_locale`. Switcher labels: **EN / 简 / 繁** (locale ids remain `en` / `zh-Hans` / `zh-Hant`). Missing key → `en` → key name. Dates/numbers: `Intl`. `html lang`: `en` / `zh-CN` / `zh-Hant`.
 
+### Visitor locale (Web-portal-39)
+
+The switcher stays EN / 简 / 繁. No new screen, no locale in the URL, no geo lookup.
+
+| Step | Rule |
+| --- | --- |
+| 1 | A valid `sdd_locale` (`en`, `zh-Hans`, `zh-Hant`) is the page locale. |
+| 2 | Otherwise negotiate `Accept-Language`, then set `sdd_locale` to that result (same cookie flags as `POST /api/admin/locale`). |
+| 3 | Otherwise `en`, and store `en`. |
+
+An invalid cookie is step 2, not a sticky fallback.
+
+| Browser tag | Portal locale |
+| --- | --- |
+| `zh-CN`, `zh-SG`, `zh-Hans`, bare `zh` | `zh-Hans` |
+| `zh-TW`, `zh-HK`, `zh-MO`, `zh-Hant` | `zh-Hant` |
+| `en`, `en-*` | `en` |
+| any other tag | skip, then `en` if nothing matched |
+
+Walk tags in q-value order. The first tag that maps wins.
+
+| Piece | Role |
+| --- | --- |
+| `resolveLocale` / `negotiateLocale` in `src/lib/locale.ts` | Cookie plus header. The only tag table. |
+| `getRequestLocale` in `src/lib/request-locale.ts` | App Router helper: reads `cookies()` and `Accept-Language`, then calls `resolveLocale`. |
+| `src/middleware.ts` | When the cookie is missing or invalid, set `sdd_locale` from `resolveLocale`. Do not duplicate the tag table. Skip locale writes on paths that only redirect (legacy host, old WordPress home). |
+| Server pages and `src/app/layout.tsx` | Call `getRequestLocale` so the first HTML matches the cookie that middleware sets. |
+| `POST /api/admin/locale` | Unchanged. Switcher overwrites the cookie. |
+| Invite and reset mail | Routes call `resolveLocale` on the request; `sendInviteMail` / `sendResetMail` already use `t(locale, …)`. |
+| `GET /api/sdd/features`, instructions-tabs, instructions-folder, scrum-in-sdd | Keep `?locale=`. Missing or invalid query stays `en`. Do not read `Accept-Language`. |
+| MCP tool text | Stays `MCP_TOOL_LOCALE`. Not the visitor cookie. |
+| HTML cache | These pages stay dynamic because they read cookies. A shared cache in front must send `Vary: Cookie, Accept-Language` or cache the HTML as private. |
+
+Switcher `aria-pressed` marks the active locale. `html lang` follows the resolved locale (`zh-Hans` → `zh-CN`). No new message keys.
+
 Brand mark: `public/sdd-logo.png` (SDD WORKS wordmark, **transparent** background) in headers and public shells; favicon / apple-touch from the same brand family. Authoring source: [`src/618x618.logos.png`](../../src/618x618.logos.png) (718×256 RGBA) per [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). Host string **`sdd.works`** is the aria-label / protocol id after **ADR-127** — not duplicated as text beside the logo.
 
 Display sizes (CSS, 200% of original tokens): home / auth wordmark height `144px` / `112px`; header mark height `72px`. Offsets: home logo `margin-left: -30px`; header logo `margin-left: -22px`. Do not paint an opaque background behind the logo image. `Logo.tsx` intrinsic dimensions: **718×256**. Guide hero (`.guide-hero-title`): logo **5.625rem** tall, **`margin-left: -23px`**, headline Antonio **clamp(1.45rem, 2.65vw, 2.125rem)** weight **700**, flex **align-items: center**. **`admin.guide.title`** is the same English line in **en**, **zh-Hans**, and **zh-Hant**.
@@ -747,27 +782,17 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 
 **Build readiness:** **AC44**, **ADR-127**, and §29 define the contract. Mockup target state in [`13-instructions.html`](./ui-mockup/13-instructions.html). Next step: **`fullstack-engineer`** (app + pack JSON + tests), then operator cutover.
 
-#### One official public URL (feature-84 / Web-portal-20)
+#### Operator guide to public URLs (feature-84 / Web-portal-20)
 
-**Reader summary:** Document which hostname is “the real one” for visitors (**`sdd.works`** after cutover) and which redirects apply. This row is operator-facing policy and release notes, not app code by itself. Pairs with **feature-72** engineering and **AC48**.
+**Reader summary:** One operator-facing doc set ([`release.md`](../release.md), [`go-live/`](../go-live/)) answers three questions after hostname cutover: where visitors bookmark the guide, where the WordPress course lives, and where admin sign-in lives versus the public guide. Mostly documentation; **feature-72** already shipped app behavior.
 
-| Deliverable | Content |
+| Section | Content |
 | --- | --- |
-| Go-live / release doc | Canonical hosts: **`sdd.works`** (guide, `/setup`, `/mcp`), **`learn.sdd.works`** (course + embed page), **`framework.sdd.works`** → redirect |
-| Copy audit | No permanent second hostname in setup paste, lite partner sentence, or Learn fallback after cutover |
-| Verification | **AC48**; checklist in [`app-tests.md`](./app-tests.md) §31 |
+| Visitor URLs (**AC48**) | **`sdd.works`** = guide, `/setup`, `/mcp`; **`learn.sdd.works`** = course; **`framework.sdd.works`** redirects; copy audit on setup paste and lite sentence |
+| Admin URLs (**AC49**) | Document `/login`, `/reset-password`, `/admin/*` relative to the public guide; footer admin link behavior; no secrets on public tabs |
+| Verification | [`app-tests.md`](./app-tests.md) §31–§32 |
 
-#### Admin off the public guide URL (feature-85 / Web-portal-22)
-
-**Reader summary:** Visitors on **`sdd.works`** get the guide, not the operator console. Sign-in and Admin Framework stay on a documented admin entry (separate host or path). Footer “Admin portal” may open login in a new tab; routing docs state the long-term split.
-
-| Deliverable | Content |
-| --- | --- |
-| Routing doc | Where `/login`, `/reset-password`, and `/admin/*` live relative to **`sdd.works`** after cutover |
-| Security posture | Public guide responses never include admin session or secrets |
-| Verification | **AC49**; [`app-tests.md`](./app-tests.md) §32 |
-
-#### Partner install-first landing (feature-83 / Web-portal-21)
+#### Partner install-first landing (Web-portal-21; partner repo)
 
 **Reader summary:** Build or specify a **partner** site (for example 2study.ai) whose hero action is “install SDD,” linking to setup markdown on **`sdd.works`** and the instructions guide. Do not replace framework portal **`/`**, which already is the guide.
 
@@ -850,7 +875,7 @@ Sync with `InstructionsClient` tab switching: changing **`tab`** clears **`path`
 ### 15.4 Wire-up notes for implementers
 
 1. Import `src/styles/globals.css` once in root layout; set `<link rel="icon" href="/favicon.png" />` and apple-touch.
-2. Persist locale in cookie `sdd_locale`; on switch POST `/api/admin/locale` and update `html lang`.
+2. Persist locale in cookie `sdd_locale`. First visit with no valid cookie negotiates `Accept-Language` and sets the cookie ([§8](#8-i18n), Web-portal-39). On switch, POST `/api/admin/locale` and update `html lang`.
 3. Wrap admin routes in `AppShell` with `activeNav` and optional `contentClassName="content--keys"`.
 4. Do not restyle buttons/inputs with Tailwind utilities that fight `portal.css` — prefer mockup classes.
 5. When adding a string, add keys to all three message files in the same PR as the component.

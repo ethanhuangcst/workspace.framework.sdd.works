@@ -260,7 +260,11 @@ describe("sync scenarios (fixture S2–S5, M1)", () => {
 
       const home = mkdtempSync(join(tmpdir(), "sdd-m1-home-"));
       const result = await installFrameworkHttp(
-        { client: "cursor", os: "darwin" },
+        {
+          client: "cursor",
+          os: "darwin",
+          inventory: { ledger: null, missing: [] },
+        },
         {
           channel: "http",
           home,

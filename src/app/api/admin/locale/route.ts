@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { isLocale } from "@/lib/locale";
+import {
+  isLocale,
+  SDD_LOCALE_COOKIE,
+  SDD_LOCALE_COOKIE_MAX_AGE,
+} from "@/lib/locale";
 import { assertCsrf } from "@/auth/csrf";
 
 const bodySchema = z.object({
@@ -33,12 +37,12 @@ export async function POST(request: NextRequest) {
   }
 
   const response = NextResponse.json({ ok: true, locale: parsed.data.locale });
-  response.cookies.set("sdd_locale", parsed.data.locale, {
+  response.cookies.set(SDD_LOCALE_COOKIE, parsed.data.locale, {
     httpOnly: false,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 365,
+    maxAge: SDD_LOCALE_COOKIE_MAX_AGE,
   });
   return response;
 }

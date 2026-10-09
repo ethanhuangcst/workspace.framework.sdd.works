@@ -2,16 +2,26 @@
 
 MCP server for install, update, list, and get-key. Stories: [`mcp-stories.md`](./mcp-stories.md). Portal: [`app-design.md`](../admin-portal/app-design.md). Stack: [`r1-tech-spec.md`](../phase1-process-specs/r1-tech-spec.md) (Phase 1 archive).
 
-**Status:** implemented (Sprint 6 + ADR-054 HTTP + ADR-055 sync freshness). **Sprint 2 Feature-01 (MCP-01) is designed, not fully implemented:** pack allow-list + `templates/` + install ledger with `pack_complete` (ADR-057) + end-user stdio primary path (ADR-058). Stories: [`mcp-stories.md`](./mcp-stories.md). Tests: [`mcp-tests.md`](./mcp-tests.md). ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md) (HTTP fallback), [055](../adr/ADR-055-layered-sync-freshness.md), [056](../adr/ADR-056-single-user-root-framework-pack.md), [057](../adr/ADR-057-install-ledger-pack-complete.md), [058](../adr/ADR-058-stdio-end-user-http-fallback.md), [061](../adr/ADR-061-setup-prompt-public-path.md).
+**Status:** the running path is ADR-058 (local program as the MCP `command`, HTTP unpack as fallback). The target path is [ADR-129](../adr/ADR-129-url-mcp-server-plan-local-writer.md), below. Stories: [`mcp-stories.md`](./mcp-stories.md). Tests: [`mcp-tests.md`](./mcp-tests.md). ADRs: [047](../adr/ADR-047-qwen-install-path-discovery.md), [051](../adr/ADR-051-zero-dep-stdio-binary.md), [052](../adr/ADR-052-commit-sha-identity.md), [053](../adr/ADR-053-server-side-sync-thin-stdio.md), [054](../adr/ADR-054-hybrid-http-ai-tarball.md), [055](../adr/ADR-055-layered-sync-freshness.md), [056](../adr/ADR-056-single-user-root-framework-pack.md), [057](../adr/ADR-057-install-ledger-pack-complete.md), [058](../adr/ADR-058-stdio-end-user-http-fallback.md), [061](../adr/ADR-061-setup-prompt-public-path.md), [128](../adr/ADR-128-install-root-and-writer.md), [129](../adr/ADR-129-url-mcp-server-plan-local-writer.md).
+
+## Target (ADR-129)
+
+Not implemented. Sections from §2 downward describe the running ADR-058 path until a story changes the code.
+
+1. The person pastes one sentence. The agent fetches `GET /setup` on `https://sdd.works`.
+2. The agent registers one MCP entry named `framework.sdd.works`. The entry is only `"url": "https://sdd.works/mcp"`.
+3. When that entry already exists, the agent checks it and changes it so it is this URL. A previous `command` or a previous host is replaced.
+4. Install and update run on that URL. The local program `sdd-mcp` is the writer. It is not the MCP process. It sends `.sdd-installed.json` plus the accepted root, the client, the operating system, `force` when asked, and `missing`. The server returns the plan. The program writes the plan and writes the ledger last.
+5. When that program cannot be downloaded or cannot run, the agent sends the whole `.sdd-installed.json` when that file exists, plus `missing`, the candidate root, the client, the operating system, and `force` when asked. The server returns the plan, the instruction, and the pack URL. The agent copies only the planned paths and writes the ledger last.
 
 ## 1. Goals and non-goals
 
 | Goals | Non-goals |
 | --- | --- |
-| End-user MCP via a local program (`command`), with HTTP as fallback (ADR-058) | Portal chat LLM / image generation |
-| Prompt-based setup: one paste; agent downloads the binary and writes MCP config | Asking the person to edit `mcp.json` by hand |
-| Local program writes pack files on `sdd_install_framework` / `sdd_update_framework` | Writing Server 2 disk as `~/.cursor` |
-| HTTP fallback returns tarball URL; AI extracts when stdio cannot be used (ADR-054) | Third-party skill marketplace |
+| End-user MCP is a URL. The target is ADR-129. The running path is still a local `command` (ADR-058) | Portal chat LLM / image generation |
+| Prompt-based setup: one paste; the agent writes the URL, or replaces an existing entry with that URL | Asking the person to edit `mcp.json` by hand |
+| Local program writes the server plan. It is not the MCP process (ADR-129) | Writing Server 2 disk as `~/.cursor` |
+| When the program cannot run, the agent writes the same plan from the pack URL (ADR-129) | Third-party skill marketplace |
 | `listVersions` / `GET /api/sdd/versions` from operator sync cache | MCP transport session as business state |
 | `sdd_get_key` from the admin key store (HTTP only) | Editing skills/rules inside an MCP session |
 | Path allow-list; structured errors | Hard-coding a GitHub owner/repo for the pack |
@@ -57,7 +67,7 @@ Prefer a **sibling Node process** for `/mcp` if the pinned SDK Streamable HTTP t
 
 ### 2.1 End-user stdio (ADR-058) — primary
 
-**Decision:** The person pastes one website prompt. The agent uses `~/.sdd/sdd-mcp` when that file is already on the machine and writes a `command` entry. The agent does not download an executable. If the file is missing, or the client accepts only a URL, the agent writes the HTTP fallback. The person does not edit MCP config by hand. After reload, `sdd_install_framework` and `sdd_update_framework` run inside that program and write the client folder. File outcomes are the Expected column of the client-root scenarios below (ADR-057).
+**Decision:** The person pastes one website prompt. The agent writes a `command` entry for `~/.sdd/sdd-mcp`. When that file is missing, the agent downloads one matching asset from the GitHub Release of this workspace repo and saves it as `~/.sdd/sdd-mcp`. When that download fails, or the client accepts only a URL, the agent writes the HTTP fallback. The person does not edit MCP config by hand. After reload, `sdd_install_framework` and `sdd_update_framework` run inside that program and write the client folder. File outcomes are the Expected column of the client-root scenarios below (ADR-057).
 
 ```mermaid
 flowchart LR
@@ -65,7 +75,9 @@ flowchart LR
     User[User pastes prompt] --> AI1[AI fetches GET /setup]
     AI1 --> AI2{Local ~/.sdd/sdd-mcp exists}
     AI2 -->|yes| AI3[AI writes command entry in MCP config]
-    AI2 -->|no| AI4[AI writes HTTP url fallback]
+    AI2 -->|no| AI5[AI downloads one official release asset]
+    AI5 -->|saved| AI3
+    AI5 -->|failed or URL-only client| AI4[AI writes HTTP url fallback]
   end
 
   subgraph install [Install — local program]
@@ -84,6 +96,32 @@ Bun is a **build-machine** dependency only ([ADR-051](../adr/ADR-051-zero-dep-st
 2. Run `npm run mcp:place` (or `scripts/place-mcp-binary.sh`) to copy the matching host binary to `~/.sdd/sdd-mcp` and mark it executable on macOS and Linux.
 
 The client machine does not need Node, npm, or Bun to run that file. `npm run mcp:stdio` remains the TypeScript contributor entry.
+
+#### Publish the local program (feature-80 / MCP-06)
+
+The visitor download is a GitHub Release on the repo that contains [`.github/workflows/release.yml`](../../.github/workflows/release.yml): `ethanhuangcst/workspace.framework.sdd.works`. It is not the portal container image and not the pack repo `ethanhuangcst/framework.sdd.works`.
+
+1. An operator pushes a git tag that matches `v*` on the default branch history.
+2. The workflow runs `npm run mcp:build` and attaches these assets:
+
+| OS and CPU | Release asset | Saved local path |
+| --- | --- | --- |
+| macOS Apple silicon | `sdd-mcp-darwin-arm64` | `~/.sdd/sdd-mcp` |
+| macOS Intel | `sdd-mcp-darwin-x64` | `~/.sdd/sdd-mcp` |
+| Linux arm64 | `sdd-mcp-linux-arm64` | `~/.sdd/sdd-mcp` |
+| Linux x64 | `sdd-mcp-linux-x64` | `~/.sdd/sdd-mcp` |
+| Windows x64 | `sdd-mcp-windows-x64.exe` | `~/.sdd/sdd-mcp` under the user profile |
+
+3. Allowed URL shapes, with `<tag>` equal to the pushed tag and `<asset>` one row above:
+
+```text
+https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases/download/<tag>/<asset>
+https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases/latest/download/<asset>
+```
+
+4. `GET /setup` names those five assets and those two URL shapes. It does not name any other host, a raw file URL, or a one-off binary link.
+5. `scripts/install.sh` still points at `framework.sdd.works` releases. That script is outside this setup contract. The build does not treat it as the visitor download.
+
 #### Primary MCP config
 
 ```json
@@ -109,18 +147,18 @@ Fetch and execute the setup instructions from https://sdd.works/setup
 | `GET /agent-setup` | Redirect to `GET /setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
 | Source file | `public/agent-setup/prompt.md` |
 
-That source file is the body `GET /setup` returns in production. It must match the **Server prompt** below. Production pack base and fallback stay `https://sdd.works` and `https://sdd.works/mcp`. When `PUBLIC_BASE_URL` is localhost or `127.0.0.1`, the handler rewrites those two hosts to `getMcpWebsiteUrl()` and `getMcpHttpUrl()` (default local MCP HTTP `http://127.0.0.1:3041/mcp`). The setup body does not name a GitHub release download URL for the binary.
+That source file is the body `GET /setup` returns in production. It must match the **Server prompt** below. Production pack base and fallback stay `https://sdd.works` and `https://sdd.works/mcp`. When `PUBLIC_BASE_URL` is localhost or `127.0.0.1`, the handler rewrites those two hosts to `getMcpWebsiteUrl()` and `getMcpHttpUrl()` (default local MCP HTTP `http://127.0.0.1:3041/mcp`). The setup body names the five release assets and the two URL shapes in **Publish the local program**. It does not name any other download host.
 
 #### Server prompt (`public/agent-setup/prompt.md`)
 
 Canonical body of `GET /setup`. Keep this section and `public/agent-setup/prompt.md` the same.
 
 ````text
-These are official instructions from framework.sdd.works for connecting an AI agent to the SDD MCP server.
+These are official instructions from sdd.works for connecting an AI agent to the SDD MCP server.
 
-# Connect this agent to framework.sdd.works
+# Connect this agent to sdd.works
 
-Setup version: 2026-09-26.v5
+Setup version: 2026-10-08.v6
 
 Complete the setup yourself with the native MCP configuration mechanism for the current agent. Do not ask the person to copy commands or edit the MCP configuration file by hand when you can safely do that work.
 
@@ -129,8 +167,9 @@ Complete the setup yourself with the native MCP configuration mechanism for the 
 The user's setup prompt authorizes only these changes:
 
 - If `~/.sdd/sdd-mcp` already exists (Windows: under the user profile), add or keep exactly one MCP entry named `framework.sdd.works` that starts that binary (`command`) with `SDD_SERVER_URL` set to `https://sdd.works`.
-- If that file is missing, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://sdd.works/mcp"` instead.
-- Do not download an executable from the network. Do not fetch a GitHub release asset for this setup.
+- If that file is missing, download exactly one matching asset from `https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases` (`sdd-mcp-darwin-arm64`, `sdd-mcp-darwin-x64`, `sdd-mcp-linux-arm64`, `sdd-mcp-linux-x64`, or `sdd-mcp-windows-x64.exe`) and save it as `~/.sdd/sdd-mcp`.
+- If that download fails, or the client accepts only a URL, use the HTTP fallback entry with `"url": "https://sdd.works/mcp"` instead.
+- Do not download an executable from any other host. Do not invent a binary URL.
 
 It does not authorize you to:
 
@@ -151,9 +190,11 @@ It does not authorize you to:
 
 ## 2. Local program (primary path)
 
-1. If `~/.sdd/sdd-mcp` does not exist (Windows: under the user profile), skip to **HTTP fallback** below. Do not download an executable. Do not curl a release URL. Do not chmod a downloaded file.
-2. If the file exists and the agent can start a local program, continue to **Add the MCP entry** below.
-3. If the agent cannot start a local program, skip to **HTTP fallback** below.
+1. If `~/.sdd/sdd-mcp` exists (Windows: under the user profile) and the agent can start a local program, continue to **Add the MCP entry** below.
+2. If the client accepts only a URL, skip to **HTTP fallback** below.
+3. If the file is missing, download one asset from `https://github.com/ethanhuangcst/workspace.framework.sdd.works/releases/latest/download/<asset>` or from `releases/download/<tag>/<asset>` on that same repo. `<asset>` is `sdd-mcp-darwin-arm64`, `sdd-mcp-darwin-x64`, `sdd-mcp-linux-arm64`, `sdd-mcp-linux-x64`, or `sdd-mcp-windows-x64.exe` for this machine. Save the bytes as `~/.sdd/sdd-mcp`. On macOS and Linux, mark that file executable.
+4. If the download or save fails, skip to **HTTP fallback** below. Do not try another host.
+5. If the agent cannot start the saved program, skip to **HTTP fallback** below.
 
 ## 3. Add the MCP entry for the current agent (primary)
 
@@ -213,7 +254,7 @@ Use the agent's native local-program (stdio) MCP configuration. Add only the nam
 
 ## 4. HTTP fallback
 
-Use this path when `~/.sdd/sdd-mcp` is missing, or the client accepts only a URL.
+Use this path when the official release download failed, the saved program cannot start, or the client accepts only a URL.
 
 ### Cursor
 
@@ -279,13 +320,14 @@ The instructions authorize only:
 
 - Detect whether `~/.sdd/sdd-mcp` already exists (Windows: under the user profile).
 - When that file exists, add or keep one MCP entry named `framework.sdd.works` with the `command` shape above.
-- When that file is missing, or the client accepts only a URL, use the HTTP fallback.
+- When that file is missing, download one matching asset from the workspace GitHub Release and save it as `~/.sdd/sdd-mcp`.
+- When that download fails, or the client accepts only a URL, use the HTTP fallback.
 - Leave every other MCP entry unchanged.
-- Do not download an executable from the network.
+- Do not download an executable from any host other than `github.com/ethanhuangcst/workspace.framework.sdd.works`.
 
 They do not authorize installing the framework pack. Pack install stays a later call to `sdd_install_framework` after MCP reload. The person must not be asked to edit the MCP file by hand.
 
-If `~/.sdd/sdd-mcp` is missing, or the agent cannot start a local program, use the HTTP fallback below.
+If the official download fails, or the agent cannot start a local program, use the HTTP fallback below.
 
 #### Instructions page paste and Manual setup (ADR-061)
 
@@ -339,7 +381,7 @@ HTTP install never reaches `FS` on the operator server. Stdio reaches `FS` on th
 | Step | Who | Where |
 | --- | --- | --- |
 | Pack ships `lite-pack.allowlist.json` | Pack repo | Repo root ([ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md), [Spec-seeds-15](../product-backlog.md#L474)) |
-| Operator sync | Admin server | Same cache as full install ([MCP-07](../product-backlog.md#L325)) |
+| Operator sync | Admin server | Same cache as full install ([MCP-07](../product-backlog.md#L335) **feature-82**: production serves the synced pack) |
 | Return same-origin file links | `GET /api/sdd/lite/files` and `GET /api/sdd/lite/file` ([Web-portal-17](../product-backlog.md#L446), [`app-design.md`](../admin-portal/app-design.md) Lite install file links) | Sync cache only; no live GitHub at request time |
 | Public install markdown | `GET /setup/install` ([Web-portal-18](../product-backlog.md#L488) Part 1, [ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) | Tells the agent to fetch links, resolve `{client_root}`, copy listed paths |
 | Copy listed skills and rules | Local agent | Client folder; **no** `.sdd-installed.json` write |

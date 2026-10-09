@@ -103,20 +103,18 @@ describe("SDD package API", () => {
       expect(res.headers.get("Content-Type")).toContain("text/markdown");
       const body = await res.text();
       expect(body).toContain("framework.sdd.works");
-      expect(body).toContain("~/.sdd/sdd-mcp");
-      expect(body).toContain("command");
-      expect(body).toContain("SDD_SERVER_URL");
+      expect(body).toContain('"url": "https://sdd.works/mcp"');
       expect(body).toContain("https://sdd.works/mcp");
       expect(body).toContain("sdd_install_framework");
-      expect(body).toContain("2026-09-26.v5");
+      expect(body).toContain("2026-10-09.v7");
       expect(body).toContain(
         "Confirm the server exposes `sdd_install_framework` and `sdd_update_framework`. On HTTP, it also exposes `sdd_get_key`.",
       );
       expect(body).not.toContain("sdd_list_versions");
       expect(body).toContain("Do not ask the person to copy commands or edit the MCP configuration file by hand");
-      expect(body).toContain("Do not ask the person to edit the MCP file by hand");
-      expect(body).toContain("Do not download an executable");
-      expect(body).not.toContain("releases/latest/download");
+      expect(body).toContain("When an entry with that name already exists, check it and change it so it is this URL");
+      expect(body).toContain("It has no `command`");
+      expect(body).not.toContain("sdd-mcp-darwin-arm64");
       expect(body).toContain("Library/Application Support/Trae CN/User/mcp.json");
       expect(body).toContain("Do not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for TRAE CN");
       expect(body).not.toContain("Lite install version:");
@@ -212,10 +210,9 @@ describe("SDD package API", () => {
       const res = await getAgentSetup();
       expect(res.status).toBe(200);
       const body = await res.text();
-      expect(body).toContain('SDD_SERVER_URL": "http://127.0.0.1:3040"');
       expect(body).toContain("http://127.0.0.1:3041/mcp");
       expect(body).not.toContain("https://framework.sdd.works/mcp");
-      expect(body).not.toContain("releases/latest/download");
+      expect(body).not.toContain('"command"');
     } finally {
       if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
       else process.env.PUBLIC_BASE_URL = prevBase;
@@ -304,6 +301,22 @@ describe("GET /api/sdd/features", () => {
     expect(body.source).toBe("cache");
     expect(body.sourceLocale).toBe("en");
     expect(body.html).toContain("Fallback EN");
+  });
+
+  it("should_default_to_en_when_locale_query_absent_even_with_accept_language", async () => {
+    seedFeaturesCache({
+      "features.en.md": "## Features\n\n- ethan — Default EN.\n",
+      "features.zh-Hans.md": "## 功能\n\n- ethan — 简体。\n",
+    });
+    const res = await getFeatures(
+      new NextRequest("http://localhost/api/sdd/features", {
+        headers: { "accept-language": "zh-CN" },
+      }),
+    );
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { locale: string; sourceLocale: string };
+    expect(body.locale).toBe("en");
+    expect(body.sourceLocale).toBe("en");
   });
 
   it("should_return_package_when_cache_missing", async () => {

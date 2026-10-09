@@ -2,7 +2,7 @@
 
 MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). **Sprint 2 feature-14 (MCP-02):** local program at `~/.sdd/sdd-mcp` ([`sdd-mcp-local-binary`](#sdd-mcp-local-binary)). **Sprint 3 (MCP-03):** model-facing tools omit `sdd_list_versions` ([`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface), [ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). **Sprint 8 feature-54 (MCP-05):** **Retired** — partial install ledger withdrawn; lite HTTP copy is portal stories ([`app-stories.md`](../admin-portal/app-stories.md) AC19–21) and [`mcp-design.md`](./mcp-design.md) §2.1c. Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09, feature-14; Sprint 3 feature-08–09. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy), [`sdd-mcp-local-binary`](#sdd-mcp-local-binary), [`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-tests.md`](./mcp-tests.md) §7.6.
+**Target install (ADR-129):** URL-only `mcp.json`, server write plan, local program writes, agent writes only when that program cannot run ([`sdd-mcp-url-plan`](#sdd-mcp-url-plan)). **Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). **Sprint 2 feature-14 (MCP-02):** local program at `~/.sdd/sdd-mcp` ([`sdd-mcp-local-binary`](#sdd-mcp-local-binary)). **Sprint 3 (MCP-03):** model-facing tools omit `sdd_list_versions` ([`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface), [ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). **Sprint 8 feature-54 (MCP-05):** **Retired** — partial install ledger withdrawn; lite HTTP copy is portal stories ([`app-stories.md`](../admin-portal/app-stories.md) AC19–21) and [`mcp-design.md`](./mcp-design.md) §2.1c. Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09, feature-14; Sprint 3 feature-08–09. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy), [`sdd-mcp-local-binary`](#sdd-mcp-local-binary), [`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-tests.md`](./mcp-tests.md) §7.6.
 
 **Tools:** `sdd_install_framework`, `sdd_update_framework`, and on HTTP only `sdd_get_key`. Protocol ids are not localized. `sdd_list_versions` is not registered ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)).
 
@@ -1230,4 +1230,199 @@ Scenario: Source does not embed operator secrets
   Given the stdio entry and the tools it imports for channel stdio
   Then the application source does not embed DATABASE_URL, GITHUB_TOKEN, or KEYS_ENCRYPTION_KEY as string literals for operator config
   And the stdio channel does not statically import the Prisma sync job
+```
+
+---
+
+<a id="mcp-github-release"></a>
+
+## `mcp-github-release` — Tagged release ships sdd-mcp (feature-80 / MCP-06)
+
+**Plain summary:** When you cut a new MCP version, you push a Git tag and GitHub publishes the five installer files. Setup tells the agent to save the matching file as `~/.sdd/sdd-mcp` from that release only. A failed download uses the HTTP MCP URL.
+
+**Parent PBI:** [MCP-06](../product-backlog.md#L332). **Design:** [ADR-058](../adr/ADR-058-stdio-end-user-http-fallback.md), [`mcp-design.md`](./mcp-design.md) §2.1. **Tests:** [`mcp-tests.md`](./mcp-tests.md#9-sprint-9-mcp-06-and-mcp-07) §9.1.
+
+### User story — Operator publishes installers on GitHub
+
+**As an** operator shipping a new MCP build
+**I want** a tagged GitHub Release to attach all platform binaries
+**So that** visitors install `~/.sdd/sdd-mcp` from one official download page
+
+#### AC1 — feature-80
+
+```gherkin
+Scenario: Version tag publishes the five installer files
+  Given .github/workflows/release.yml is on the default branch
+  When an operator pushes a git tag matching v* on ethanhuangcst/workspace.framework.sdd.works
+  Then GitHub Actions runs the release job successfully
+  And the release assets are sdd-mcp-darwin-arm64, sdd-mcp-darwin-x64, sdd-mcp-linux-arm64, sdd-mcp-linux-x64, and sdd-mcp-windows-x64.exe
+```
+
+### User story — Visitor gets the local program from that release
+
+**As a** visitor connecting an agent
+**I want** setup to save the matching official installer as the local program
+**So that** my agent starts stdio without a one-off download link
+
+#### AC2 — feature-80
+
+```gherkin
+Scenario: Setup names only the official release assets
+  Given a visitor fetches GET /setup
+  Then the instructions name the five assets sdd-mcp-darwin-arm64, sdd-mcp-darwin-x64, sdd-mcp-linux-arm64, sdd-mcp-linux-x64, and sdd-mcp-windows-x64.exe
+  And the instructions name releases/download and releases/latest/download on github.com/ethanhuangcst/workspace.framework.sdd.works
+  And the instructions tell the agent to save the matching asset as ~/.sdd/sdd-mcp
+  And the instructions do not name any other download host
+```
+
+#### AC3 — feature-80
+
+```gherkin
+Scenario: Failed official download uses the HTTP MCP URL
+  Given ~/.sdd/sdd-mcp is missing
+  And the matching official release asset cannot be saved
+  When the agent follows GET /setup
+  Then the agent writes an MCP entry whose url is https://sdd.works/mcp
+  And the agent does not save an executable from any other host
+```
+
+---
+
+<a id="mcp-production-pack-sync"></a>
+
+## `mcp-production-pack-sync` — Production serves the synced pack (feature-82 / MCP-07)
+
+**Plain summary:** On the live portal, Admin → Framework → Sync with git repository must refresh the pack tree that MCP install, lite file links, and package APIs read. That includes `lite-pack.allowlist.json` at the pack root.
+
+**Parent PBI:** [MCP-07](../product-backlog.md#L335). **Portal:** Admin Framework sync ([Web-portal-26](../product-backlog.md#pb-123) **Done**). **Tests:** [`mcp-tests.md`](./mcp-tests.md#9-sprint-9-mcp-06-and-mcp-07) §9.2; closes [Spec-seeds-15](../product-backlog.md#pb-97) when verified in production.
+
+### User story — Live install uses the synced pack commit
+
+**As an** operator who synced the pack repo on production
+**I want** full MCP install and lite install to read that commit from server cache
+**So that** end users never install a stale or partial pack tree
+
+#### AC1 — feature-82
+
+```gherkin
+Scenario: Sync materializes pack files in production cache
+  Given a signed-in admin on Admin Framework
+  When they run Sync with git repository against the pack GitHub repo
+  Then the server cache for the latest commit includes agents, skills, rules, templates, and content paths from that commit
+  And lite-pack.allowlist.json is present at the pack root in that cache
+```
+
+#### AC2 — feature-82
+
+```gherkin
+Scenario: Install APIs read sync cache not live GitHub per request
+  Given production finished a successful Framework sync
+  When a client calls package resolution or lite file list APIs
+  Then responses are built from the synced cache volume
+  And a missing sync does not silently serve an empty allow-list
+```
+
+---
+
+<a id="sdd-mcp-url-plan"></a>
+
+## `sdd-mcp-url-plan` — URL MCP and server write plan (ADR-129)
+
+**Plain summary:** The person pastes one sentence. The agent registers `https://sdd.works/mcp` and replaces an older `framework.sdd.works` entry with that URL. Install asks the server for a plan. The local program writes the plan. When that program cannot run, the agent sends the ledger and writes the same plan.
+
+Design: [`mcp-design.md`](./mcp-design.md) **Target (ADR-129)**. Tests: [`mcp-tests.md`](./mcp-tests.md#10-adr-129-url-plan).
+
+### User story — Paste registers the URL
+
+**As a** person setting up the framework
+**I want** one paste to register the MCP URL
+**So that** I do not edit `mcp.json` by hand
+
+#### AC1
+
+```gherkin
+Scenario: First paste writes the URL entry
+  Given mcp.json has no framework.sdd.works entry
+  When the agent follows GET /setup
+  Then mcp.json has one entry named framework.sdd.works
+  And that entry is only the url https://sdd.works/mcp
+  And that entry has no command
+```
+
+#### AC2
+
+```gherkin
+Scenario: An existing entry becomes the URL
+  Given mcp.json has a framework.sdd.works entry with a command path
+  When the agent follows GET /setup
+  Then that entry is only the url https://sdd.works/mcp
+  And the command path is gone
+```
+
+### User story — The program writes the server plan
+
+**As a** person installing the framework
+**I want** the local program to write the files the server names
+**So that** my own files stay when the pack is already current
+
+#### AC3
+
+```gherkin
+Scenario: Matching ledger and present files skip the copy
+  Given .sdd-installed.json has the same version and commit as the pack
+  And every recorded path exists
+  When the local program sends that ledger and an empty missing list
+  Then the server plan is noop
+  And the program does not change pack files
+```
+
+#### AC4
+
+```gherkin
+Scenario: A missing recorded file is repaired
+  Given .sdd-installed.json lists skills/tdd/SKILL.md
+  And that file is absent
+  When the local program sends the ledger and missing includes skills/tdd/SKILL.md
+  Then the server plan is apply
+  And the program writes that file and writes the ledger last with pack_complete true
+```
+
+#### AC5
+
+```gherkin
+Scenario: A path outside the home is rejected
+  Given the candidate client root is outside the home directory
+  When the local program checks the root
+  Then the result code is path_rejected
+  And no pack file is written
+```
+
+### User story — The agent writes only when the program cannot run
+
+**As a** person whose machine cannot run the local program
+**I want** the agent to install from the same plan
+**So that** the file set matches a program install
+
+#### AC6
+
+```gherkin
+Scenario: Fallback sends the ledger and writes planned paths
+  Given the local program cannot be downloaded or cannot run
+  And .sdd-installed.json exists
+  When the agent sends that ledger and the missing list
+  Then the server returns the plan, the instruction, and the pack URL
+  And the agent writes only the paths in the plan
+  And the agent writes the ledger last
+  And the agent does not extract the archive into the client root
+```
+
+#### AC7
+
+```gherkin
+Scenario: No ledger is a first install
+  Given the local program cannot run
+  And .sdd-installed.json is absent
+  When the agent sends ledger absent and an empty missing list
+  Then the server plan is apply for the pack allow-list
+  And the agent writes those paths and the ledger last
 ```

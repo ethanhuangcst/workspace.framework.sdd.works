@@ -18,20 +18,20 @@
 | Sprint 1 - 6 | Done | - Sprint 1 closed 2026-09-25.<br>- Sprint 2 closed 2026-09-26.<br>- Sprint 3 closed the web portal and MCP for R2.<br>- Sprint 4 closed 2026-10-03.<br>- [Sprint 5](./sprint-backlog.md#sprint-5) closed 2026-10-05.<br>- [Sprint 6](./sprint-backlog.md#sprint-6) closed 2026-10-05. |
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Thirteen SBIs **Done** (includes [feature-81](./sprint-backlog.md#sprint-8) sticky guide header for [Web-portal-29](./product-backlog.md#pb-126)). |
-| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Eleven SBIs **Done**: [feature-72](./sprint-backlog.md#sprint-9)–[feature-79](./sprint-backlog.md#sprint-9), [feature-86](./sprint-backlog.md#sprint-9)–[feature-88](./sprint-backlog.md#sprint-9). Five SBIs **ToDo**: [feature-80](./sprint-backlog.md#sprint-9), [feature-82](./sprint-backlog.md#sprint-9)–[feature-85](./sprint-backlog.md#sprint-9). |
-| Unplanned PBIs | — | - No open rows. Seven Implementable PBIs moved to [Sprint 9](./sprint-backlog.md#sprint-9). |
+| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Eleven SBIs **Done**: [feature-72](./sprint-backlog.md#sprint-9)–[feature-79](./sprint-backlog.md#sprint-9), [feature-86](./sprint-backlog.md#sprint-9)–[feature-88](./sprint-backlog.md#sprint-9). Three SBIs **ToDo**: [feature-80](./sprint-backlog.md#sprint-9), [feature-82](./sprint-backlog.md#sprint-9), [feature-84](./sprint-backlog.md#sprint-9). |
+| Unplanned PBIs | — | - One row: [Web-portal-21](./product-backlog.md#pb-107) partner site (not this repo). |
 
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: No **WIP** SBI. Last closed: [feature-72](./sprint-backlog.md#sprint-9), [feature-74](./sprint-backlog.md#sprint-9), [feature-77](./sprint-backlog.md#sprint-9), [feature-88](./sprint-backlog.md#sprint-9). Next **ToDo** is [feature-80 sdd-mcp GitHub Releases](./sprint-backlog.md#sprint-9). [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open. [WA-18](./issues-log.md) closed with [feature-77](./sprint-backlog.md#sprint-9).
+- What SBI are we working on now: No **WIP** SBI. Last closed: [feature-72](./sprint-backlog.md#sprint-9), [feature-74](./sprint-backlog.md#sprint-9), [feature-77](./sprint-backlog.md#sprint-9), [feature-88](./sprint-backlog.md#sprint-9). Next **ToDo** is [feature-80 Tagged release ships sdd-mcp on GitHub](./sprint-backlog.md#sprint-9). [WA-14](./issues-log.md) and [WA-15](./issues-log.md) stay open. [WA-18](./issues-log.md) closed with [feature-77](./sprint-backlog.md#sprint-9).
 
 ## what could be the next
 
 - Start [Sprint 9](./sprint-backlog.md#sprint-9) [feature-80](./sprint-backlog.md#sprint-9) ([MCP-06](./product-backlog.md#pb-104)) or [feature-82](./sprint-backlog.md#sprint-9) ([MCP-07](./product-backlog.md#pb-105)).
-- [Spec-seeds-15](./product-backlog.md#pb-97) stays **ToDo** on Sprint 8 until [MCP-07](./product-backlog.md#pb-105) ([feature-82](./sprint-backlog.md#sprint-9)) puts the lite allow-list in production sync cache and the install tarball.
-- [Web-portal-21](./product-backlog.md#pb-107) is on Sprint 9 as [feature-83](./sprint-backlog.md#sprint-9) (partner workspace, not this portal `/`).
-- [feature-84](./sprint-backlog.md#sprint-9) and [feature-85](./sprint-backlog.md#sprint-9) remain for public-URL policy and admin host separation after the cutover.
+- [Spec-seeds-15](./product-backlog.md#pb-97) stays **ToDo** until [feature-82](./sprint-backlog.md#sprint-9) puts the lite allow-list in production sync cache and the install tarball.
+- [feature-84](./sprint-backlog.md#sprint-9) finishes the operator guide to public URLs (visitor bookmark host plus where admin sign-in lives) after [feature-72](./sprint-backlog.md#sprint-9).
+- [Web-portal-21](./product-backlog.md#pb-107) is **unplanned** here (partner property such as 2study.ai).
 
 ## Current OGT(On-going Tasks)
 

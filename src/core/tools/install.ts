@@ -17,6 +17,7 @@ import {
   type PathDetectOptions,
   type ResolvedClientPaths,
 } from "@/core/path-detect";
+import type { InstallLedger } from "./install-plan";
 import { fetchPackage } from "./package-fetch";
 import { toolError, toolOk } from "./errors";
 
@@ -30,6 +31,11 @@ export type InstallArgs = {
   /** HTTP hint only — AI read from local manifest; never used for already_up_to_date. */
   installed_commit?: string;
   installed_version?: string;
+  /** Present when the caller read the disk. Omitted means the writer has not run. */
+  inventory?: {
+    ledger: InstallLedger | null;
+    missing: string[];
+  };
 };
 
 export type InstallContext = PathDetectOptions & {

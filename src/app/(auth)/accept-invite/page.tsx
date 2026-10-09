@@ -1,8 +1,7 @@
-import { cookies } from "next/headers";
 import { AcceptInvitePageClient } from "@/components/features/AcceptInvitePageClient";
 import { isInviteTokenLive } from "@/auth/invite-token";
 import { hashToken } from "@/auth/token";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { getRequestLocale } from "@/lib/request-locale";
 import { db } from "@/lib/db";
 
 export default async function AcceptInviteRoute({
@@ -11,8 +10,7 @@ export default async function AcceptInviteRoute({
   searchParams: Promise<{ token?: string }>;
 }) {
   const params = await searchParams;
-  const cookieStore = await cookies();
-  const locale = getLocaleFromCookieValue(cookieStore.get("sdd_locale")?.value);
+  const locale = await getRequestLocale();
   const token = params.token ?? null;
 
   let tokenValid = false;

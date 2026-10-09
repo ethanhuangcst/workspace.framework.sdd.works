@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-**Plain terms:** **`sdd.works`** becomes the public home for the guide and install; **`learn.sdd.works`** hosts the WordPress course shown in the Learn tab; **`framework.sdd.works`** redirects so old links keep working ([feature-72](../sprint-backlog.md#sprint-9)). Related policy rows: [Web-portal-20](../product-backlog.md#pb-106) (**feature-84**), [Web-portal-22](../product-backlog.md#pb-108) (**feature-85**).
+**Plain terms:** **`sdd.works`** becomes the public home for the guide and install; **`learn.sdd.works`** hosts the WordPress course shown in the Learn tab; **`framework.sdd.works`** redirects so old links keep working ([feature-72](../sprint-backlog.md#sprint-9)). Operator guide to visitor and admin URLs: [Web-portal-20](../product-backlog.md#pb-106) (**feature-84**); [Web-portal-22](../product-backlog.md#pb-108) **Retired** (merged into Web-portal-20).
 
 Before this change:
 

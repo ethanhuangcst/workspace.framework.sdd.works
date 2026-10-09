@@ -1,13 +1,11 @@
-import { cookies } from "next/headers";
 import { AdminAccountsClient } from "@/components/features/AdminAccountsClient";
 import { requireAdmin } from "@/auth/require-admin";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { getRequestLocale } from "@/lib/request-locale";
 import { db } from "@/lib/db";
 
 export default async function AdminAccountsRoute() {
   const admin = await requireAdmin();
-  const cookieStore = await cookies();
-  const locale = getLocaleFromCookieValue(cookieStore.get("sdd_locale")?.value);
+  const locale = await getRequestLocale();
 
   const [admins, invites] = await Promise.all([
     db.admin.findMany({

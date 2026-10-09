@@ -169,6 +169,7 @@ describe("package tarball content", () => {
           os: "darwin",
           installed_commit: "sha-old-content",
           installed_version: "main",
+          inventory: { ledger: null, missing: [] },
         },
         {
           channel: "http",

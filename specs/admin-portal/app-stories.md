@@ -1660,9 +1660,9 @@ Scenario: framework.sdd.works redirects to sdd.works
   Then the final URL host is sdd.works
 ```
 
-#### AC48 — feature-84 / Web-portal-20
+#### AC48 — feature-84 / Web-portal-20 (visitor URLs)
 
-**Plain summary:** Operators and docs agree on **one** public hostname for the guide and install story (**`sdd.works`** after cutover). Alternate hostnames redirect there; setup and marketing copy do not point at two different “official” URLs.
+**Plain summary:** Your operator guide states which hostname visitors should bookmark (**`sdd.works`** for the guide and setup) and which host serves the course (**`learn.sdd.works`**). Old names redirect; setup copy does not mention two “official” hosts.
 
 ```gherkin
 Scenario: Public hostname policy is documented for operators
@@ -1677,9 +1677,9 @@ Scenario: User-facing copy does not fork hosts after cutover
   Then the URL host in that sentence is sdd.works only
 ```
 
-#### AC49 — feature-85 / Web-portal-22
+#### AC49 — feature-84 / Web-portal-20 (admin URLs)
 
-**Plain summary:** The URL visitors bookmark for the guide (**`sdd.works`**) is not the primary entry for Admin sign-in or operator tools. Login, reset, and Admin Framework stay reachable on a separate hostname or routing rule documented for operators.
+**Plain summary:** The same operator guide explains where sign-in and Admin Framework live compared with the public guide on **`sdd.works`** (today’s paths and any planned split). Visitors are not told that the guide URL is the only way operators reach admin tools forever.
 
 ```gherkin
 Scenario: Public guide hostname is not the documented admin entry
@@ -1693,7 +1693,7 @@ Scenario: Unauthenticated admin paths still reject access
   And no secret or operator-only data appears on the public guide tabs
 ```
 
-#### AC50 — feature-83 / Web-portal-21
+#### AC50 — Web-portal-21 (partner site; unplanned in framework repo)
 
 **Plain summary:** A **partner** marketing site (for example 2study.ai) is not this repo’s **`/`** page. That partner site should foreground install (lite or full MCP), link to **`https://sdd.works/setup`** (or lite install markdown), and link to the instructions guide. Framework portal **`/`** remains the guide ([Web-portal-09](../product-backlog.md#pb-76)).
 
@@ -1808,4 +1808,123 @@ Scenario: Dates and numbers follow the active locale
   Then the date is formatted with the en locale
   When the locale is zh-Hans
   Then the date is formatted with the zh-Hans locale
+```
+
+---
+
+## `visitor-locale` — Web-portal-39
+
+First visit uses the browser language list, then stores that choice. A later visit uses the stored choice. The EN / 简 / 繁 switcher still wins after the visitor picks one. Locales stay `en`, `zh-Hans`, and `zh-Hant`. Copy stays on i18n keys. No geo lookup. No locale prefix in the URL.
+
+**Default Given:** unless stated, the visitor has no `sdd_locale` cookie, and the page is `/` or `/instructions`.
+
+### User story 1 — First visit matches browser language
+
+**As a** visitor
+**I want** the guide in the language my browser asks for
+**So that** I do not land on English when my browser is set to Chinese
+
+#### AC51
+
+```gherkin
+Scenario: Simplified Chinese browser opens the guide in zh-Hans
+  Given Accept-Language lists zh-CN or zh-SG or zh-Hans or zh ahead of other tags
+  When the visitor opens the guide
+  Then html lang is zh-CN
+  And the active locale switch control is zh-Hans
+  And the response stores sdd_locale as zh-Hans
+```
+
+#### AC52
+
+```gherkin
+Scenario: Traditional Chinese browser opens the guide in zh-Hant
+  Given Accept-Language lists zh-TW or zh-HK or zh-MO or zh-Hant ahead of other supported tags
+  When the visitor opens the guide
+  Then html lang is zh-Hant
+  And the active locale switch control is zh-Hant
+  And the response stores sdd_locale as zh-Hant
+```
+
+#### AC53
+
+```gherkin
+Scenario: English or an unsupported language opens the guide in en
+  Given Accept-Language lists only en or en-US or a tag that is not en or zh
+  When the visitor opens the guide
+  Then html lang is en
+  And the active locale switch control is en
+  And the response stores sdd_locale as en
+```
+
+#### AC54
+
+```gherkin
+Scenario: A saved locale wins over the browser language
+  Given sdd_locale is zh-Hant
+  And Accept-Language lists zh-CN first
+  When the visitor opens the guide
+  Then the active locale switch control is zh-Hant
+  And sdd_locale stays zh-Hant
+```
+
+#### AC55
+
+```gherkin
+Scenario: The switcher replaces the saved locale
+  Given sdd_locale is en
+  When the visitor selects locale zh-Hans on the switcher
+  Then the next guide load uses zh-Hans
+  And sdd_locale is zh-Hans
+```
+
+#### AC56
+
+```gherkin
+Scenario: An invalid saved locale is replaced from the browser language
+  Given sdd_locale is not en or zh-Hans or zh-Hant
+  And Accept-Language lists zh-HK first
+  When the visitor opens the guide
+  Then the active locale switch control is zh-Hant
+  And the response stores sdd_locale as zh-Hant
+```
+
+### User story 2 — Mail uses the same locale as the portal
+
+**As an** admin
+**I want** invite and reset mail in the language of the portal I am using
+**So that** the mail matches the screen that sent it
+
+#### AC57
+
+```gherkin
+Scenario: Invite mail uses the admin portal locale
+  Given a signed-in admin whose resolved locale is zh-Hans
+  When the admin sends an invite
+  Then the invite subject and body resolve from the zh-Hans catalog keys admin.mail.invite.*
+```
+
+#### AC58
+
+```gherkin
+Scenario: Reset mail uses the requester portal locale
+  Given the reset form resolved locale is zh-Hant
+  When the visitor submits a reset for an admin email
+  Then the reset subject and body resolve from the zh-Hant catalog keys admin.mail.reset.*
+```
+
+### User story 3 — Public content APIs stay explicit
+
+**As a** client of the public content API
+**I want** a call without a locale parameter to stay English
+**So that** a script does not change language when the caller’s browser language changes
+
+#### AC59
+
+```gherkin
+Scenario: Features API without a locale query stays en
+  Given the request has no locale query parameter
+  And Accept-Language lists zh-CN
+  When the client calls GET /api/sdd/features
+  Then the JSON locale field is en
 ```

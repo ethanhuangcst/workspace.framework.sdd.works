@@ -229,12 +229,8 @@ describe("MCP install/update contracts", () => {
       name: "sdd_install_framework",
       arguments: { client: "cursor", os: "darwin" },
     });
-    const prodBody = parseToolJson<{
-      extractTarget: string;
-      previousManifest: unknown;
-    }>(prodInstall as never);
-    expect(prodBody.extractTarget).toBe("~/.cursor");
-    expect(prodBody.previousManifest).toBeNull();
+    const prodBody = parseToolJson<{ code: string }>(prodInstall as never);
+    expect(prodBody.code).toBe("writer_required");
     await prodClient.close();
     await httpProd.close();
   });

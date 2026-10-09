@@ -5,7 +5,8 @@ import {
   installFrameworkHttp,
   updateFrameworkHttp,
 } from "@/core/tools/install-http";
-import type { InstallContext } from "@/core/tools/install";
+import type { InstallArgs, InstallContext } from "@/core/tools/install";
+import type { InstallLedger } from "@/core/tools/install-plan";
 import { getMcpBrandIcons, getMcpWebsiteUrl } from "./brand";
 import { mcpToolDescription } from "./tool-descriptions";
 import type { CreateSddMcpServerOptions } from "./server-options";
@@ -24,6 +25,31 @@ export const SDD_STDIO_TOOL_NAMES = [
   "sdd_install_framework",
   "sdd_update_framework",
 ] as const;
+
+function withInventory(args: {
+  version?: string;
+  client?: string;
+  os?: string;
+  force?: boolean;
+  installed_commit?: string;
+  installed_version?: string;
+  inventory?: { ledger: unknown; missing: string[] } | undefined;
+}): InstallArgs {
+  return {
+    version: args.version,
+    client: args.client,
+    os: args.os,
+    force: args.force,
+    installed_commit: args.installed_commit,
+    installed_version: args.installed_version,
+    inventory: args.inventory
+      ? {
+          ledger: (args.inventory.ledger ?? null) as InstallLedger | null,
+          missing: args.inventory.missing,
+        }
+      : undefined,
+  };
+}
 
 /**
  * Shared MCP server for framework.sdd.works (transport-agnostic tool core).
@@ -90,9 +116,18 @@ export function createSddMcpServer(
         force: z.boolean().optional(),
         installed_commit: z.string().optional(),
         installed_version: z.string().optional(),
+        inventory: z
+          .object({
+            ledger: z.unknown().nullable(),
+            missing: z.array(z.string()),
+          })
+          .optional()
+          .describe(
+            "Disk inventory. Omit it to get writer_required. Send ledger null when the file is absent.",
+          ),
       },
     },
-    async (args) => installFrameworkHttp(args, installCtx()),
+    async (args) => installFrameworkHttp(withInventory(args), installCtx()),
   );
 
   server.registerTool(
@@ -106,9 +141,15 @@ export function createSddMcpServer(
         force: z.boolean().optional(),
         installed_commit: z.string().optional(),
         installed_version: z.string().optional(),
+        inventory: z
+          .object({
+            ledger: z.unknown().nullable(),
+            missing: z.array(z.string()),
+          })
+          .optional(),
       },
     },
-    async (args) => updateFrameworkHttp(args, installCtx()),
+    async (args) => updateFrameworkHttp(withInventory(args), installCtx()),
   );
 
   return server;

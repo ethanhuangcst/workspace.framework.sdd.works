@@ -1,12 +1,54 @@
 # Changes log (framework.sdd.works)
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-08
+> as_of: 2026-10-09
 > [Definition](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#changes-logmd)
 
 ---
 
+## 2026-10-09
+
+### Web-portal-39 implementation (visitor locale)
+
+**Why**: First visits always rendered English until the visitor used the locale switcher.
+
+**What changed**: `negotiateLocale` / `resolveLocale` in [`src/lib/locale.ts`](../src/lib/locale.ts); `getRequestLocale` in [`src/lib/request-locale.ts`](../src/lib/request-locale.ts); middleware sets `sdd_locale` when missing or invalid; pages and invite/reset mail use the same resolver. Public `GET /api/sdd/features` without `locale` stays `en`. Specs: [`app-design.md`](./admin-portal/app-design.md) §8 names the helpers; AC51–AC59 and §34 unchanged as the contract.
+
+**Verification**: Vitest for locale, middleware, and features AC59. Browser: clear cookie, open `/` with Traditional Chinese `Accept-Language`, confirm `html lang` and switcher.
+
+### Web-portal-39 engineering readiness
+
+**Why**: First-visit language was specified as cookie-only English until the visitor used the switcher. The accepted rules use browser language, then store that choice.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md#pb-136) records persist-cookie, the tag map, mail, public API, and cache rules. [`app-stories.md`](./admin-portal/app-stories.md) AC51–AC59. [`app-design.md`](./admin-portal/app-design.md) §8. [`app-tests.md`](./admin-portal/app-tests.md) §34. [`sprint-backlog.md`](./sprint-backlog.md#unplanned-pbis) row 2 links those specs. No new mockup.
+
+**Verification**: AC51–AC59 exist. §8 names `resolveLocale` and the cookie write. §34 names unit, mail, API, and one browser check.
+
 ## 2026-10-08
+
+### Sprint 9 ToDo SBI titles and specs (human-readable)
+
+**Why**: The three open Sprint 9 SBIs still read like internal codenames.
+
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) and matching [`product-backlog.md`](./product-backlog.md) nouns for **feature-80**, **feature-82**, **feature-84**. New [`mcp-stories.md`](./mcp/mcp-stories.md#mcp-github-release) and [`mcp-tests.md`](./mcp/mcp-tests.md#9-sprint-9-mcp-06-and-mcp-07) §9. Portal **AC48–AC49**, [`app-design.md`](./admin-portal/app-design.md), [`app-tests.md`](./admin-portal/app-tests.md) §31–§32, [`release.md`](./release.md) scope row.
+
+**Verification**: Sprint 9 **ToDo** SBI column matches Product Backlog **Description** for MCP-06, MCP-07, Web-portal-20.
+
+### New PBI Web-portal-39 (visitor locale)
+
+**Why**: First-time visitors always saw English until they used the locale switcher.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) adds [Web-portal-39](./product-backlog.md#pb-136) **Visitor locale from browser language** (row 94, **`Sprint`** `—`). [`sprint-backlog.md`](./sprint-backlog.md#unplanned-pbis) Unplanned row 2. Fixed [Web-portal-21](./product-backlog.md#pb-107) Requirements link to `#L479`.
+
+**Verification**: Product table row 94 **ToDo** with no sprint. Unplanned table lists **Web-portal-39**.
+
+### Sprint 9 ToDo SBIs refine (plain language, dedupe)
+
+**Why**: Five **ToDo** SBIs overlapped [Web-portal-30](./product-backlog.md#pb-127) cutover work or a partner repo; titles were hard to read.
+
+**What changed**: [`product-backlog.md`](./product-backlog.md) renames [MCP-06](./product-backlog.md#pb-104) and [MCP-07](./product-backlog.md#pb-105); merges URL policy into [Web-portal-20](./product-backlog.md#pb-106); retires [Web-portal-22](./product-backlog.md#pb-108); unschedules [Web-portal-21](./product-backlog.md#pb-107). [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) drops **feature-83** and **feature-85**; rewrites **feature-80**, **feature-82**, **feature-84**; adds [Web-portal-21](./product-backlog.md#pb-107) to [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis). [`status.md`](./status.md) Sprint 9 note (three **ToDo** SBIs).
+
+**Verification**: Sprint 9 **ToDo** table has three rows. Product table Sprint 9 **ToDo** matches three PBIs. [Web-portal-22](./product-backlog.md#pb-108) **Retired**.
 
 ### Close confirm: feature-72, 74, 77, 88
 

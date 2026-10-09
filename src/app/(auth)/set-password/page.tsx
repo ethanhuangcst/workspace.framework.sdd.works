@@ -7,7 +7,7 @@ import {
   SESSION_COOKIE,
 } from "@/auth/session";
 import { hashToken } from "@/auth/token";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { getRequestLocale } from "@/lib/request-locale";
 import { db } from "@/lib/db";
 
 export default async function SetPasswordRoute({
@@ -16,8 +16,8 @@ export default async function SetPasswordRoute({
   searchParams: Promise<{ token?: string; reason?: string }>;
 }) {
   const params = await searchParams;
+  const locale = await getRequestLocale();
   const cookieStore = await cookies();
-  const locale = getLocaleFromCookieValue(cookieStore.get("sdd_locale")?.value);
   const token = params.token ?? null;
   const reason = params.reason ?? null;
 

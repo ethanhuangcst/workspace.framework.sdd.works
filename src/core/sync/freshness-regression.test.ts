@@ -69,10 +69,9 @@ const originalCronSecret = process.env.CRON_SECRET;
 type HttpInstallBody = {
   packageUrl?: string;
   commitSha?: string;
-  extract_recommended?: boolean;
-  local_commit_matches?: boolean;
   cache_refresh?: string;
   cache_stale?: boolean;
+  plan?: { action: string };
   manifest?: { files: { skills: string[] } };
   error?: { code: string };
 };
@@ -119,10 +118,25 @@ function httpInstall(
     installed_commit?: string;
     installed_version?: string;
     force?: boolean;
+    inventory?: {
+      ledger: {
+        version: number;
+        package_version: string;
+        package_commit: string;
+        pack_complete?: boolean;
+        files: { skills: string[]; rules: string[]; agents: string[]; workflows: string[] };
+      } | null;
+      missing: string[];
+    };
   } = {},
 ): Promise<HttpInstallBody> {
   return installFrameworkHttp(
-    { client: "cursor", os: "darwin", ...args },
+    {
+      client: "cursor",
+      os: "darwin",
+      ...args,
+      inventory: args.inventory ?? { ledger: null, missing: [] },
+    },
     {
       channel: "http",
       home,
@@ -220,14 +234,26 @@ describe("freshness regression — HTTP install (F1, F5, F9)", () => {
     // Skills deleted on disk — only manifest remains.
 
     const body = await httpInstall(home, {
-      installed_commit: "sha-same",
-      installed_version: "main",
+      inventory: {
+        ledger: {
+          version: 1,
+          package_version: "main",
+          package_commit: "sha-same",
+          pack_complete: true,
+          files: {
+            skills: ["tdd", "atdd", "dod"],
+            rules: [],
+            agents: [],
+            workflows: [],
+          },
+        },
+        missing: ["tdd", "atdd", "dod"],
+      },
     });
 
     expect(body.error?.code).not.toBe("already_up_to_date");
+    expect(body.plan?.action).toBe("apply");
     expect(body.packageUrl).toContain("/api/sdd/package");
-    expect(body.extract_recommended).toBe(true);
-    expect(body.local_commit_matches).toBe(true);
     expect(existsSync(join(home, ".cursor/skills/tdd"))).toBe(false);
   });
 
@@ -273,8 +299,7 @@ describe("freshness regression — HTTP install (F1, F5, F9)", () => {
     });
 
     expect(body.commitSha).toBe("sha-new");
-    expect(body.local_commit_matches).toBe(false);
-    expect(body.extract_recommended).toBe(true);
+    expect(body.plan?.action).toBe("apply");
     expect(body.cache_refresh).toBe("refreshed");
     expect(body.manifest?.files.skills).toContain("skills/a-tdd/SKILL.md");
   });

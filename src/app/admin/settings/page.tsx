@@ -1,13 +1,11 @@
-import { cookies } from "next/headers";
 import { AdminSettingsClient } from "./AdminSettingsClient";
 import { requireAdmin } from "@/auth/require-admin";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { getRequestLocale } from "@/lib/request-locale";
 import { db } from "@/lib/db";
 
 export default async function AdminSettingsRoute() {
   const admin = await requireAdmin();
-  const cookieStore = await cookies();
-  const locale = getLocaleFromCookieValue(cookieStore.get("sdd_locale")?.value);
+  const locale = await getRequestLocale();
 
   const row = await db.setting.findUnique({ where: { id: "singleton" } });
 

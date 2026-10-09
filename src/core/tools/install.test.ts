@@ -365,7 +365,7 @@ describe("install", () => {
     expect(existsSync(join(home, ".cursor"))).toBe(false);
   });
 
-  it("should_return_portable_paths_on_http_without_install_home", async () => {
+  it("should_return_writer_required_on_http_without_inventory", async () => {
     seedHttpCache("sha-http-portable", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const result = await install(
@@ -373,20 +373,14 @@ describe("install", () => {
       { channel: "http" },
     );
     const body = parseToolJson<{
-      extractTarget: string;
-      manifestPath: string;
-      paths: { skills: string; rules: string };
-      previousManifest: unknown;
-      resolution_source: string;
+      code: string;
       instructions: string;
+      resolution_source: string;
     }>(result);
-    expect(body.extractTarget).toBe("~/.cursor");
-    expect(body.manifestPath).toBe("~/.cursor/.sdd-installed.json");
-    expect(body.paths.skills).toBe("~/.cursor/skills/");
-    expect(body.paths.rules).toBe("~/.cursor/rules/");
-    expect(body.previousManifest).toBeNull();
+    expect(body.code).toBe("writer_required");
     expect(body.resolution_source).toBe("seed");
-    expect(body.instructions).toContain('tar xz -C "~/.cursor"');
+    expect(body.instructions).toContain("Do not extract an archive into the client root");
+    expect(body.instructions).not.toContain("tar xz");
   });
 
   it("should_return_expanded_paths_on_http_with_install_home", async () => {
@@ -394,7 +388,11 @@ describe("install", () => {
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const result = await install(
-      { client: "cursor", os: "darwin" },
+      {
+        client: "cursor",
+        os: "darwin",
+        inventory: { ledger: null, missing: [] },
+      },
       {
         channel: "http",
         home,
@@ -407,18 +405,18 @@ describe("install", () => {
       packageUrl: string;
       version: string;
       commitSha: string;
-      paths: { skills: string };
+      plan: { action: string };
       manifest: { package_version: string; files: { skills: string[] } };
       instructions: string;
     }>(result);
     expect(body.packageUrl).toContain("/api/sdd/package?version=latest");
     expect(body.version).toBe("v1.0.0");
     expect(body.commitSha).toBe("sha-http-v1");
-    expect(body.paths.skills).toContain(".cursor/skills");
+    expect(body.plan.action).toBe("apply");
     expect(body.manifest.package_version).toBe("v1.0.0");
     expect(body.manifest.files.skills).toContain("skills/tdd/SKILL.md");
     expect(body.manifest).toMatchObject({ pack_complete: true });
-    expect(body.instructions).toContain("curl -fsSL");
+    expect(body.instructions).toContain("Do not extract the archive into the client root");
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(false);
   });
 
@@ -439,7 +437,11 @@ describe("install", () => {
       JSON.stringify(previous, null, 2),
     );
     const result = await install(
-      { client: "cursor", os: "darwin" },
+      {
+        client: "cursor",
+        os: "darwin",
+        inventory: { ledger: previous, missing: [] },
+      },
       {
         channel: "http",
         home,
@@ -448,9 +450,9 @@ describe("install", () => {
         skipLlm: true,
       },
     );
-    const body = parseToolJson<{ previousManifest: typeof previous }>(result);
-    expect(body.previousManifest?.package_version).toBe("v1.0.0");
-    expect(body.previousManifest?.files.skills).toContain("old-skill");
+    const body = parseToolJson<{ plan: { action: string; delete: string[] } }>(result);
+    expect(body.plan.action).toBe("apply");
+    expect(body.plan.delete).toContain("old-skill");
   });
 
   it("should_honor_env_relocation_source", async () => {
@@ -499,7 +501,7 @@ describe("install", () => {
     expect(body.cache_age_minutes).toBeGreaterThan(30);
     expect(body.cache_stale).toBe(true);
     expect(body.instructions).toContain("package cache may be stale");
-    expect(body.instructions).toContain("verify local files");
+    expect(body.instructions).toContain("local program");
   });
 
   it("should_never_return_already_up_to_date_on_http_even_when_commit_matches", async () => {
@@ -534,15 +536,13 @@ describe("install", () => {
       },
     );
     const body = parseToolJson<{
+      code: string;
       packageUrl: string;
-      extract_recommended: boolean;
-      local_commit_matches: boolean;
       error?: { code: string };
     }>(result);
     expect(body.error).toBeUndefined();
+    expect(body.code).toBe("writer_required");
     expect(body.packageUrl).toContain("/api/sdd/package");
-    expect(body.extract_recommended).toBe(true);
-    expect(body.local_commit_matches).toBe(true);
   });
 
   it("should_return_new_package_when_cache_refreshed_to_new_commit", async () => {
@@ -590,8 +590,16 @@ describe("install", () => {
       {
         client: "cursor",
         os: "darwin",
-        installed_commit: "sha-old",
-        installed_version: "main",
+        inventory: {
+          ledger: {
+            version: 1,
+            package_version: "main",
+            package_commit: "sha-old",
+            pack_complete: true,
+            files: { skills: ["tdd"], rules: [], agents: [], workflows: [] },
+          },
+          missing: [],
+        },
       },
       {
         channel: "http",
@@ -604,14 +612,12 @@ describe("install", () => {
     const body = parseToolJson<{
       commitSha: string;
       cache_refresh?: string;
-      extract_recommended: boolean;
-      local_commit_matches: boolean;
+      plan: { action: string };
       manifest: { files: { skills: string[] } };
     }>(result);
     expect(body.cache_refresh).toBe("refreshed");
     expect(body.commitSha).toBe("sha-new");
-    expect(body.extract_recommended).toBe(true);
-    expect(body.local_commit_matches).toBe(false);
+    expect(body.plan.action).toBe("apply");
     expect(body.manifest.files.skills).toContain("skills/atdd/SKILL.md");
   });
 
@@ -733,7 +739,11 @@ describe("install", () => {
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const result = await install(
-      { client: "cursor", os: "darwin" },
+      {
+        client: "cursor",
+        os: "darwin",
+        inventory: { ledger: null, missing: [] },
+      },
       {
         channel: "http",
         home,
@@ -745,20 +755,16 @@ describe("install", () => {
     const body = parseToolJson<{
       receiptPath?: string;
       receipt?: unknown;
-      manifestPath: string;
       manifest: {
         pack_complete: boolean;
         files: { skills: string[] };
       };
-      paths: { templates?: string };
       instructions: string;
     }>(result);
     expect(body.receiptPath).toBeUndefined();
     expect(body.receipt).toBeUndefined();
-    expect(body.manifestPath).toMatch(/\.sdd-installed\.json$/);
     expect(body.manifest.pack_complete).toBe(true);
     expect(body.manifest.files.skills).toContain("skills/tdd/SKILL.md");
-    expect(body.paths.templates).toContain("templates");
     expect(body.instructions.toLowerCase()).toContain(".sdd-installed.json");
     expect(body.instructions.toLowerCase()).not.toContain("receipt");
     expect(existsSync(join(home, ".cursor/.sdd-installed.json"))).toBe(false);
@@ -772,8 +778,16 @@ describe("install", () => {
       {
         client: "cursor",
         os: "darwin",
-        installed_commit: "sha-old",
-        installed_version: "main",
+        inventory: {
+          ledger: {
+            version: 1,
+            package_version: "main",
+            package_commit: "sha-old",
+            pack_complete: true,
+            files: { skills: [], rules: [], agents: [], workflows: [], templates: [] },
+          },
+          missing: [],
+        },
       },
       {
         channel: "http",
@@ -785,11 +799,13 @@ describe("install", () => {
     );
     const body = parseToolJson<{
       packageUrl: string;
+      plan: { action: string };
       manifest: { pack_complete: boolean };
       error?: { code: string };
     }>(result);
     expect(body.error).toBeUndefined();
     expect(body.packageUrl).toContain("/api/sdd/package");
+    expect(body.plan.action).toBe("noop");
     expect(body.manifest.pack_complete).toBe(true);
   });
 

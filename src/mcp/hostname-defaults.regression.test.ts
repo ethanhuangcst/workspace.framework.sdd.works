@@ -64,10 +64,9 @@ describe("hostname defaults after ADR-127 (BUG-host regression)", () => {
     expect(res.status).toBe(200);
     const body = await res.text();
     expect(body).toContain(`${CANONICAL}/mcp`);
-    expect(body).toContain(`SDD_SERVER_URL": "${CANONICAL}"`);
     expect(body).toContain('"framework.sdd.works"');
     expect(body).not.toContain(`${LEGACY_ORIGIN}/mcp`);
-    expect(body).not.toContain(`SDD_SERVER_URL": "${LEGACY_ORIGIN}"`);
+    expect(body).not.toContain('"command"');
   });
 
   it("should_serve_lite_and_node_markdown_with_sdd_works_origin", async () => {

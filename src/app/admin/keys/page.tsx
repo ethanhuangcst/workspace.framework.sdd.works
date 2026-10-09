@@ -1,7 +1,6 @@
-import { cookies } from "next/headers";
 import { AdminKeysClient } from "./AdminKeysClient";
 import { requireAdmin } from "@/auth/require-admin";
-import { getLocaleFromCookieValue } from "@/lib/locale";
+import { getRequestLocale } from "@/lib/request-locale";
 import { db } from "@/lib/db";
 import { decryptKeyValue } from "@/lib/keys-crypto";
 
@@ -12,8 +11,7 @@ export default async function AdminKeysRoute({
 }) {
   const admin = await requireAdmin();
   const params = await searchParams;
-  const cookieStore = await cookies();
-  const locale = getLocaleFromCookieValue(cookieStore.get("sdd_locale")?.value);
+  const locale = await getRequestLocale();
 
   const rows = await db.key.findMany({ orderBy: { createdAt: "desc" } });
   const keys = rows.map((row) => ({
