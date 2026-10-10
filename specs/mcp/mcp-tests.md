@@ -308,9 +308,9 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] S1 path (`backend-01`) — public `GET /setup` serves that markdown; `GET /agent-setup` redirects to `/setup`
 - [x] S1 local (`backend-01`) — with local `PUBLIC_BASE_URL`, body rewrites MCP URL to that origin
 - [ ] BF1 bundled fallback (ADR-131) — empty cache or fixture commit reads bundled pack under `pack.framework.sdd.works/`; result is `apply` with bundled files; no `cache_empty`, `fixture_pack`, or `sync_pending`
-- [ ] MC-18 templates nested path — install file list includes `templates/framework.sdd.works/{locale}/...`; after install `{client_root}/templates/framework.sdd.works/{locale}/` exists; `constants.json` and AI-read trio live under `templates/framework.sdd.works/`
-- [ ] MC-16 ADR-132 root — known client omits `root`, uses seed-map root; unknown client gets `root_required`, then validated agent root
-- [ ] MC-17 install page — `GET /install` serves markdown naming the MCP install sequence; `GET /setup` links to it from an After setup note; setup still has no install section
+- [x] MC-18 templates nested path — install file list includes `templates/framework.sdd.works/{locale}/...`; after install `{client_root}/templates/framework.sdd.works/{locale}/` exists; `constants.json` and AI-read trio live under `templates/framework.sdd.works/`
+- [x] MC-16 ADR-132 root — known client omits `root`, uses seed-map root; unknown client gets `root_required`, then validated agent root
+- [x] MC-17 install page — `GET /install` serves markdown naming the MCP install sequence; `GET /setup` links to it from an After setup note; setup still has no install section. [MC-17](../issues-log.md) closed on localhost Vitest 10 Oct 2026; optional live Codex replay is not required for close
 
 ---
 
@@ -440,7 +440,7 @@ Commands when this section is implemented: `npx vitest run src/core/tools src/ap
 - [ ] url-plan **AC8b** bundled fallback green in Vitest (ADR-131)
 - [ ] url-plan **AC12–AC13** real pack pointer and fixture-pack falls back to bundled
 - [ ] url-plan **AC14** no writer binary to build or version (ADR-131)
-- [ ] syncedAt updates on unchanged commit (ADR-130 decision 5, MC-14) — in `sync-job.ts`, when `existing.latestCommit === commitSha` and `!force`, rewrite the manifest with `syncedAt: now` before returning `unchanged`
+- [x] syncedAt updates on unchanged commit (ADR-130 decision 5, MC-14) — in `sync-job.ts`, when `existing.latestCommit === commitSha` and `!force`, rewrite the manifest with `syncedAt: now` before returning `unchanged`
 - [ ] url-plan **AC16** (MC-07) HTTP tool list includes `sdd_get_key` and a missing name is `not_found` without a tool error
 - [ ] MC-08 review: `mcp-design.md` does not tell the agent to download a GitHub release file
 - [ ] ADR-131 review: no writer binary, no stdio transport, no `~/.sdd/` directory
@@ -524,16 +524,16 @@ feature-93 owns the known-client path: server uses seed-map root, ignores agent-
 
 ### Pass criteria
 
-- [ ] feature-93: known client omits `root` and installs at seed-map root
-- [ ] feature-93: known client with wrong `root` still uses seed-map root (server ignores it)
-- [ ] feature-93: templates land at `templates/framework.sdd.works/{locale}/` (MC-18, MC-15)
-- [ ] feature-93: tool descriptions name `client` and `os`, tell agent to omit `root`, resolve for `en`/`zh-Hans`/`zh-Hant` (MC-16)
-- [ ] feature-93: legacy path-detect chain removed from install path
-- [ ] feature-94: unknown client without `root` returns `root_required`
-- [ ] feature-94: unknown client with valid `root` uses that root
-- [ ] feature-94: unknown client with invalid `root` returns `path_rejected`
-- [ ] feature-94: missing client returns `client_unknown`
-- [ ] feature-94: no `root_warning` in any result (ADR-132 decision 6)
+- [x] feature-93: known client omits `root` and installs at seed-map root
+- [x] feature-93: known client with wrong `root` still uses seed-map root (server ignores it)
+- [x] feature-93: templates land at `templates/framework.sdd.works/{locale}/` (MC-18, MC-15)
+- [x] feature-93: tool descriptions name `client` and `os`, tell agent to omit `root`, resolve for `en`/`zh-Hans`/`zh-Hant` (MC-16)
+- [x] feature-93: legacy path-detect chain removed from install path
+- [x] feature-94: unknown client without `root` returns `root_required`
+- [x] feature-94: unknown client with valid `root` uses that root
+- [x] feature-94: unknown client with invalid `root` returns `path_rejected`
+- [x] feature-94: missing client returns `client_unknown`
+- [x] feature-94: no `root_warning` in any result (ADR-132 decision 6)
 
 Command when these sections are implemented: `npx vitest run src/core/tools/install.test.ts src/core/tools/bundled-pack.test.ts src/mcp/tool-descriptions.test.ts src/core/path-e2e.test.ts`.
 
@@ -562,13 +562,187 @@ Stories: [`mcp-stories.md`](./mcp-stories.md) `sdd-mcp-install` AC8. Design: [`m
 
 ### Pass criteria
 
-- [ ] `GET /install` returns `text/markdown` with the install sequence body
-- [ ] Body names: read ledger, call `sdd_install_framework` with `client` and `os`, download tarball, extract listed paths, write ledger last
-- [ ] Body tells agent to omit `root` for known clients; send `root` only after `root_required` for unknown clients
-- [ ] Body does not name a git host or repository
-- [ ] `GET /setup` has an "After setup" note linking to `GET /install`
-- [ ] `GET /setup` still has no install section
-- [ ] `install-full/route.ts` is in the setup backend module boundary list and does not import pack install modules
-- [ ] `setup-paths.ts` rewrites `/install` to `/api/agent-setup/install-full`
+- [x] `GET /install` returns `text/markdown` with the install sequence body
+- [x] Body names: read ledger, call `sdd_install_framework` with `client` and `os`, download tarball, extract listed paths, write ledger last
+- [x] Body tells agent to omit `root` for known clients; send `root` only after `root_required` for unknown clients
+- [x] Body does not name a git host or repository
+- [x] `GET /setup` has an "After setup" note linking to `GET /install`
+- [x] `GET /setup` still has no install section
+- [x] `install-full/route.ts` is in the setup backend module boundary list and does not import pack install modules
+- [x] `setup-paths.ts` rewrites `/install` to `/api/agent-setup/install-full`
 
 Command when this section is implemented: `npx vitest run src/app/api/agent-setup/install-full src/mcp/module-boundary.test.ts src/mcp/setup-paths.test.ts src/app/api/sdd/sdd-api.test.ts`.
+
+---
+
+<a id="16-manual-e2e-before-go-live"></a>
+
+## 16. Manual e2e before go-live (task-02)
+
+Goal: before the production image deploy, confirm on localhost that the MCP installer, `sdd_install_framework`, and `sdd_update_framework` work end to end across the three test IDEs, and that the issues closed in Sprint 9 stay resolved. This is operator evidence for [task-02 Go-live](../sprint-backlog.md#sprint-9). It does not replace the automated sections above.
+
+Helper script: [`scripts/manual-e2e-prep.sh`](../../scripts/manual-e2e-prep.sh) (`--clean`, `--stage-ledger`, `--backup-mcp`, `--restore-mcp`, `--fixture-on`, `--fixture-off`).
+
+### Preconditions
+
+- Local dev server runs on `http://localhost:3040` (`make dev` or `npm run dev`).
+- Admin Framework sync ran this session, so `.data/sdd-packages/manifest.json` has a real `latestCommit` (not `sha-v1.0.0`). Confirm: `curl -sS http://localhost:3040/api/sdd/versions | jq '.latestCommit'`.
+- `GET http://localhost:3040/api/sdd/lite/files` returns 200 JSON (lite route on localhost).
+- The three test IDEs are installed: CodeBuddy CN, TRAE CN, Codex.
+- A bearer token for the MCP endpoint is available from `.env` (`MCP_TOKEN` or equivalent). The agent reads it from the MCP config; the operator does not paste it in chat.
+
+### Seed-map roots (darwin) under test
+
+| Client id | Skills | Rules | Agents | Workflows | Other | MCP config |
+| --- | --- | --- | --- | --- | --- | --- |
+| `codebuddy` | `~/.codebuddy/skills/` | `~/.codebuddy/Rules/` | `~/.codebuddy/agents/` | `~/.codebuddy/workflows/` | `~/.codebuddy/sdd/` | `~/.codebuddy/mcp.json` |
+| `trae-cn` | `~/.trae-cn/skills/` | `~/.trae-cn/rules/` | `~/.trae-cn/agents/` | `~/.trae-cn/workflows/` | `~/.trae-cn/sdd/` | `~/Library/Application Support/Trae CN/User/mcp.json` |
+| `codex` | `~/.agents/skills/` | `~/.codex/rules/` | `~/.codex/agents/` | `~/.codex/workflows/` | `~/.codex/sdd/` | `~/.codex/config.toml` |
+
+Source: `packages/sdd-paths/paths.json` and [`client.paths.md`](./client.paths.md). TRAE CN user MCP file is the Application Support path, not `~/.trae-cn/mcp.json`.
+
+### Environment prep
+
+Run once before the first test case for each client. Use the helper script or the commands below.
+
+1. Clean prior pack files for one client:
+
+   ```bash
+   bash scripts/manual-e2e-prep.sh --clean codebuddy
+   bash scripts/manual-e2e-prep.sh --clean trae-cn
+   bash scripts/manual-e2e-prep.sh --clean codex
+   ```
+
+   Do not delete MCP config files. Setup owns those.
+
+2. Stage a simulated ledger for the update test (TC-6):
+
+   ```bash
+   bash scripts/manual-e2e-prep.sh --stage-ledger codebuddy
+   ```
+
+   Same for `trae-cn` and `codex` when you run TC-6 for that client. Delete the ledger before the first-install test (TC-2).
+
+3. Back up each MCP config before setup (TC-1):
+
+   ```bash
+   bash scripts/manual-e2e-prep.sh --backup-mcp codebuddy
+   bash scripts/manual-e2e-prep.sh --backup-mcp trae-cn
+   bash scripts/manual-e2e-prep.sh --backup-mcp codex
+   ```
+
+### Test cases
+
+Each test case names the call, the expected result, and the issue it verifies. Run TC-1 through TC-6 per client (`codebuddy`, `trae-cn`, `codex`). Run TC-7 through TC-9 once from any connected client.
+
+#### TC-1 Setup connects MCP for the current client only (MC-10)
+
+1. Open the IDE. Paste the setup sentence from `http://localhost:3040/setup` for that client section.
+2. Let the agent add the `framework.sdd.works` MCP entry with `url: http://localhost:3040/mcp`.
+3. Expected: only that client's MCP config changes. Diff the config against the backup from `--backup-mcp`.
+4. Pass: the diff adds or replaces exactly one `framework.sdd.works` entry with the localhost URL. No other client's config changes. For TRAE CN, the changed file is the Application Support `mcp.json`, not `~/.trae-cn/mcp.json` and not `~/.trae/mcp.json`.
+5. Issues verified: MC-10 (current-client-only), WA-19 (production copy uses canonical host; localhost is expected here).
+
+#### TC-2 Install page guides the agent, no project scaffold (MC-17)
+
+1. With MCP connected, ask the agent: install the sdd.works framework pack.
+2. The agent fetches `http://localhost:3040/install`, then calls `sdd_install_framework` with `client` and `os` and no `root`.
+3. Expected: the agent does not create `specs/` files in the workspace. It calls the tool, downloads the tarball from `http://localhost:3040/api/sdd/package`, copies listed paths into the seed-map root, and writes `.sdd-installed.json` last.
+4. Pass: pack files exist under the seed-map root; `.sdd-installed.json` has `pack_complete: true`; no `specs/` tree was created in the workspace.
+5. Issues verified: MC-17 (install page, no scaffold), ADR-132 (omit `root` for known client).
+
+#### TC-3 Known client installs at seed-map root, not workspace (MC-16)
+
+1. Before the call, note the workspace path the IDE is open in.
+2. Call `sdd_install_framework` with `client: "<id>"`, `os: "darwin"`, no `root`.
+3. Expected: the tool result `root` equals the seed-map root for that client. Files land under that root.
+4. Pass: no pack file appears under the workspace folder. The result has no `root_warning`. `resolution_source` is `seed`.
+5. Issues verified: MC-16 (known client uses seed-map root).
+
+#### TC-4 Templates land at the nested path (MC-18, MC-15)
+
+1. After TC-2 or TC-3, inspect the installed tree.
+2. Expected: `{client_root}/templates/framework.sdd.works/EN/` exists and holds the AI-read trio and `constants.json`.
+3. Pass: the nested `templates/framework.sdd.works/` path exists. No flat `templates/EN/` at the client root.
+4. Issues verified: MC-18 (nested templates), MC-15 (skill text and layout agree).
+
+#### TC-5 Update returns noop on same commit (ADR-132, MC-14)
+
+1. After a fresh install, call `sdd_update_framework` with the same `client`, `os`, and the ledger from the just-written `.sdd-installed.json`.
+2. Expected: result `action` is `noop`. No files change.
+3. Pass: the tool result says `noop`. The ledger on disk is unchanged.
+4. Issues verified: MC-14 (server `syncedAt` refresh is a separate sync check; this case confirms install noop).
+
+#### TC-6 Update returns apply on older commit (MC-16 update path)
+
+1. Run `--clean <client>` then `--stage-ledger <client>`.
+2. Call `sdd_update_framework` with `client`, `os`, and that ledger.
+3. Expected: result `action` is `apply`. `packageUrl` is present. The agent downloads, copies listed paths, and writes the ledger last.
+4. Pass: files land at the seed-map root. The new `.sdd-installed.json` has the current `package_commit` and `pack_complete: true`.
+5. Issues verified: MC-16 update path, ADR-131 (tarball URL on this server).
+
+#### TC-7 Fixture pack does not reach the client (MC-06, MC-03)
+
+1. From the repo root: `bash scripts/manual-e2e-prep.sh --fixture-on`. Restart the dev server if the install path caches manifest state.
+2. Call `sdd_install_framework` with `client`, `os`, no ledger.
+3. Expected: the tool uses the bundled pack under `pack.framework.sdd.works/`. `pack_source` is `bundled`. No fixture file bytes are written to the client root.
+4. Pass: the installed files match the bundled pack, not the six-file fixture. Run `--fixture-off` after.
+5. Issues verified: MC-06 (fixture guard), MC-03 (no fixture pack in production path).
+
+#### TC-8 sdd_get_key missing name is not a tool error (MC-09)
+
+1. With MCP connected, call `sdd_get_key` with a name that does not exist in the admin key store.
+2. Expected: the tool returns text `not_found` with `isError` absent or false.
+3. Call `sdd_get_key` with an empty name.
+4. Expected: `isError` is true, code is `invalid_input`.
+5. Pass: missing name is not a tool error; empty name is.
+6. Issues verified: MC-09.
+
+#### TC-9 Unknown client returns root_required (ADR-132)
+
+1. Call `sdd_install_framework` with `client: "unknown-cli"`, `os: "darwin"`, no `root`.
+2. Expected: result code is `root_required`. No files listed. No tarball URL.
+3. Retry with a valid `root` such as `/tmp/sdd-test-home/.my-cli`. Expected: `apply` with that root.
+4. Retry with an invalid `root` such as `/etc/sdd`. Expected: code `path_rejected`.
+5. Pass: unknown client without `root` returns `root_required`; with valid `root` proceeds; with invalid `root` rejects.
+6. Issues verified: ADR-132 unknown-client path, MC-16 unknown-client path.
+
+### Issue verification matrix
+
+| Issue | Test case | Expected evidence |
+| --- | --- | --- |
+| MC-10 current-client-only setup | TC-1 | Only current client MCP config changes |
+| MC-17 install page, no scaffold | TC-2 | Agent calls tool, no `specs/` tree in workspace |
+| MC-16 known client seed-map root | TC-3, TC-6 | Root is seed-map path, not workspace |
+| MC-18 nested templates | TC-4 | `templates/framework.sdd.works/{locale}/` exists |
+| MC-15 skill text and layout agree | TC-4 | Same nested path |
+| MC-14 syncedAt on unchanged | TC-5 | `noop` result |
+| MC-06 fixture guard | TC-7 | `pack_source: bundled`, no fixture bytes |
+| MC-03 no fixture in production | TC-7 | Same |
+| MC-09 get_key not_found | TC-8 | `not_found` text, not `isError` |
+| ADR-132 omit root known | TC-2, TC-3 | Agent omits `root`, server resolves |
+| ADR-132 root_required unknown | TC-9 | `root_required` then validated `root` |
+
+### Pass criteria
+
+- [ ] TC-1 setup connects MCP for all three clients with no cross-client edits
+- [ ] TC-2 install page guides agent for all three clients with no workspace scaffold
+- [ ] TC-3 known client installs at seed-map root for CodeBuddy CN, TRAE CN, Codex
+- [ ] TC-4 nested templates path confirmed for at least one client
+- [ ] TC-5 update noop on same commit
+- [ ] TC-6 update apply on older simulated ledger
+- [ ] TC-7 fixture pack falls back to bundled
+- [ ] TC-8 sdd_get_key missing name is not a tool error
+- [ ] TC-9 unknown client root_required flow
+- [ ] Evidence recorded in [`mcp-manual-test-results.md`](./mcp-manual-test-results.md) under **Manual e2e before go-live**
+
+### Recording
+
+Record each run in [`mcp-manual-test-results.md`](./mcp-manual-test-results.md) under **Manual e2e before go-live**. One table per client with columns: check, result, evidence. Paste the tool result JSON for install and update. Note the `pack_source` value. After all three clients pass, task-02 is ready for the production deploy smoke in [`release.md`](../release.md) §7.3.
+
+### Execution order (operator)
+
+1. Start dev server. Confirm versions and lite/files on localhost.
+2. For each client in `codebuddy`, `trae-cn`, `codex`: `--backup-mcp`, `--clean`, TC-1, TC-2, TC-3, TC-4, TC-5, `--clean`, `--stage-ledger`, TC-6, record table.
+3. Once: TC-7 (`--fixture-on` / `--fixture-off`), TC-8, TC-9.
+4. Tick pass criteria above and update OGT rows on [`status.md`](../status.md) when each TC completes.

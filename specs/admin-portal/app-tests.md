@@ -509,7 +509,7 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 | Setup paste uses **`sdd.works`** only | **AC48**; §29 component checks |
 | No durable second hostname in lite partner sentence | [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) after cutover |
 
-- [ ] **AC48** scenarios reviewed with operator
+- [x] **AC48** scenarios reviewed with operator
 - [ ] Redirect **`framework.sdd.works`** → **`sdd.works`** documented and verified in staging or production
 
 ## 32. Checklist for feature-84 — admin URLs (Web-portal-20)
@@ -522,8 +522,8 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 | `/login` and `/admin` still require auth | Existing auth tests / manual |
 | Guide tabs expose no admin secrets | §18 and public API smoke |
 
-- [ ] **AC49** scenarios reviewed with operator
-- [ ] Footer admin link behavior documented (new tab vs same host)
+- [x] **AC49** scenarios reviewed with operator
+- [x] Footer admin link behavior documented (new tab vs same host)
 
 ## 33. Checklist for Web-portal-21 (partner install-first landing; unplanned here)
 

@@ -794,6 +794,18 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | Admin URLs (**AC49**) | Document `/login`, `/reset-password`, `/admin/*` relative to the public guide; footer admin link behavior; no secrets on public tabs |
 | Verification | [`app-tests.md`](./app-tests.md) §31–§32 |
 
+**Technical design**
+
+| Area | Change |
+| --- | --- |
+| `release.md` | Add a dedicated **Operator guide to public URLs** section that consolidates the three questions: visitor bookmark host (**`sdd.works`**), course host (**`learn.sdd.works`**), and admin entry versus public guide. Today this content is scattered across §7.1, §7.3, and §10. |
+| `go-live/` notes | Confirm [`hostname-cutover-inventory.md`](../go-live/20261008/hostname-cutover-inventory.md) already records live DNS, redirects, and WordPress notes. Add a one-line pointer from the `release.md` section to this file for detail. |
+| Copy audit (**AC48**) | Verify setup paste sentence and [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) use **`https://sdd.works`** only. No code change unless a second hostname persists. |
+| Admin routing (**AC49**) | Document that `/login`, `/reset-password`, and `/admin/*` live on **`sdd.works`** today, and the footer admin link opens in a new tab. No code change; app behavior already shipped with **feature-72**. |
+| Verification | Manual: operator reviews the `release.md` section against **AC48** and **AC49** scenarios. Curl: `framework.sdd.works` redirect and `sdd.works` smoke from §7.1. No new automated test. |
+
+**Build readiness:** **AC48**, **AC49**, §31–§32, and the content table above define the contract. The deliverable is documentation in [`release.md`](../release.md) and a pointer to [`go-live/`](../go-live/) notes. Next step: **`fullstack-engineer`** (documentation write), then operator review.
+
 #### Partner install-first landing (Web-portal-21; partner repo)
 
 **Reader summary:** Build or specify a **partner** site (for example 2study.ai) whose hero action is “install SDD,” linking to setup markdown on **`sdd.works`** and the instructions guide. Do not replace framework portal **`/`**, which already is the guide.

@@ -220,14 +220,14 @@ Browser: open **`https://sdd.works/`** (private window if the old WordPress path
 
 ### 7.2 Full setup, lite installer, Node installer
 
-> **Live note (2026-10-09):** On the currently deployed image, **`GET /setup` returns 404** ([WA-21](./issues-log.md)). Until the next GHCR Recreate, smoke **`GET /api/agent-setup`** (and `/agent-setup` if it still maps) for markdown. After deploy, prefer **`/setup`**.
+> **Live note (2026-10-10):** [WA-21](./issues-log.md) closed on localhost; the **currently deployed image** may still return **404** on **`GET /setup`**. After the next GHCR Recreate, smoke **`GET /setup`** first; use **`GET /api/agent-setup`** only as fallback on an old tag.
 
 ```bash
 curl -sS -H 'Accept: text/markdown' https://sdd.works/setup | head -40
 # Expect after next image: markdown; mcp URLs use https://sdd.works
 # Expect: MCP entry name still framework.sdd.works
 # Expect: no https://framework.sdd.works as pack/MCP origin
-# Fallback until WA-21 closed: curl -sS https://sdd.works/api/agent-setup | head -40
+# Fallback on old image only: curl -sS https://sdd.works/api/agent-setup | head -40
 
 curl -sS -o /dev/null -w '%{http_code}\n' https://sdd.works/agent-setup
 # Expect: 3xx to /setup
@@ -335,6 +335,41 @@ Spot-check one other app on the node (for example places or kb health). Confirm 
 | [`go-live/hk_vps_3_setting.md`](./go-live/hk_vps_3_setting.md) | Port and stack isolation on 野草云3 |
 | [`adr/ADR-127-public-hostnames-sdd-and-learn.md`](./adr/ADR-127-public-hostnames-sdd-and-learn.md) | Hostname product rules |
 | [`test-report.md`](./test-report.md) | Last automated hostname Vitest report |
+
+## 12. Operator guide to public URLs (feature-84 / Web-portal-20)
+
+After hostname cutover, one place in this handbook answers where visitors bookmark the portal, where the WordPress course lives, and how admin URLs relate to the public guide. App behavior shipped with [feature-72](./sprint-backlog.md#sprint-9) ([ADR-127](./adr/ADR-127-public-hostnames-sdd-and-learn.md)). Live DNS, redirects, and WordPress notes: [`go-live/20261008/hostname-cutover-inventory.md`](./go-live/20261008/hostname-cutover-inventory.md).
+
+### Visitor URLs (AC48)
+
+| Host or path | Role |
+| --- | --- |
+| **`https://sdd.works`** | Canonical visitor entry: instructions guide (`/`, `/instructions`), full setup markdown (`GET /setup`), Streamable HTTP MCP (`/mcp`), package APIs under `/api/sdd/*` |
+| **`https://learn.sdd.works`** | WordPress course site. Learn tab iframe uses **`https://learn.sdd.works/en/learn-embedded/`** |
+| **`https://framework.sdd.works`** | Legacy portal hostname. Page requests **301** to **`https://sdd.works`** with the same path. **`/api/*` is not redirected** (GitHub webhook and package GETs stay on the request host) |
+| **`https://www.sdd.works`** | **301** to apex **`https://sdd.works`** |
+
+User-facing copy must not name two official portal hosts:
+
+- Setup one-line paste: `Fetch and execute the setup instructions from https://sdd.works/setup` (production uses [`getVisitorPasteOrigin`](../src/mcp/public-origin.ts) → **`https://sdd.works`**).
+- Lite partner sentence: [`public/agent-setup/paste-sentences.json`](../public/agent-setup/paste-sentences.json) resolves `{origin}` to the same canonical host in production ([`paste-sentences.ts`](../src/mcp/paste-sentences.ts)).
+
+### Admin URLs (AC49)
+
+| Path on **`sdd.works`** | Role |
+| --- | --- |
+| `/login` | Admin sign-in |
+| `/reset-password` | Password reset request |
+| `/set-password`, `/accept-invite` | Auth flows from mail links |
+| `/admin/*` | Keys, Settings, Framework sync, Accounts (session required) |
+
+The public guide on **`sdd.works`** is not the only documented admin entry forever. Operators use the paths above on the same apex host today. The guide footer **Admin portal** link points to **`/login`**, opens in a **new tab** (`target="_blank"`, `rel="noopener noreferrer"`), and does not expose operator secrets on public tabs.
+
+### Verify this guide (feature-84)
+
+1. Read this section against **AC48** and **AC49** in [`app-stories.md`](./admin-portal/app-stories.md).
+2. Run §7.1 curl smokes (`framework.sdd.works` redirect, `sdd.works` **200**).
+3. Checklist: [`app-tests.md`](./admin-portal/app-tests.md) §31–§32.
 
 ## 11. Done when
 

@@ -8,6 +8,100 @@
 
 ## 2026-10-10
 
+### OGT closed: instructions-tabs rules in Admin pack note
+
+**Why:** User confirmed OGT 2 done.
+
+**What changed:** [`status.md`](./status.md) moves **Add instructions-tabs rules to Admin Settings pack note** from open OGT to closed OGT (Sprint 9).
+
+**Verification:** User confirm. Content lives in [`src/content/.admin-note.md`](../src/content/.admin-note.md) § **How to customize content tabs on instructions page**.
+
+### Review-status rows 1–5 applied
+
+**Why:** User chose option 2 after review-status found five mismatches.
+
+**What changed:** [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) merges Sprint 9 **Done** into one table. [`product-backlog.md`](./product-backlog.md#pb-137) [MCP-08](./product-backlog.md#pb-137) and [MCP-09](./product-backlog.md#pb-138) **Done**. [`status.md`](./status.md) refreshes `as_of`, closes OGT **Review `sdd_get_key` so the return is clean** ( [MC-07](./issues-log.md) already closed). Sprint 9 Retrospective block 9 for epic close hygiene.
+
+**Verification:** Board read-back only.
+
+### MCP-07 retired; Sprint 9 task-02 Go-live
+
+**Why:** The remaining work is the production sync check. A task is not a product backlog item.
+
+**What changed:** [MCP-07](./product-backlog.md#pb-105) is **Retired**. Sprint 9 [task-02 Go-live](./sprint-backlog.md#sprint-9) is **ToDo**. [`status.md`](./status.md) names that task.
+
+**Verification:** Board only. No code change.
+
+### MC-10 and MC-17 closed on localhost evidence
+
+**Why:** User implemented the close plan: localhost page checks and Vitest count as done; production agent replay is not required.
+
+**What changed:** [`issues-log.md`](./issues-log.md) moves [MC-10](./issues-log.md) and [MC-17](./issues-log.md) to **Closed**. [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md) adds MC-10 / MC-17 localhost section. [`status.md`](./status.md) updated.
+
+**Verification:** `npx vitest run src/app/api/sdd/sdd-api.test.ts -t should_return_agent_setup_markdown` and `-t should_return_install_full_markdown` → 2 passed (10 Oct 2026). User **close confirm** yes in chat (same session).
+
+### feature-84 / Web-portal-20 closed (operator URL guide)
+
+**Why:** User verified usable after reading [`release.md`](./release.md) §12.
+
+**What changed:** [`release.md`](./release.md) §12 (operator guide to public URLs). [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) [feature-84](./sprint-backlog.md#sprint-9) **Done**. [`product-backlog.md`](./product-backlog.md#pb-106) [Web-portal-20](./product-backlog.md#pb-106) **Done**. [`app-tests.md`](./admin-portal/app-tests.md) §31–§32 operator review boxes checked. [`knowledge/agent/doc-only-sbi-verify-path.md`](./knowledge/agent/doc-only-sbi-verify-path.md) added.
+
+**Verification:** User **close confirm** in chat (doc review). `npm test` green after §12 landed. §31 “redirect verified in staging or production” stays unchecked until [release.md](./release.md) §7.1 on a live host.
+
+### WA-19, WA-20, WA-21 closed on localhost evidence
+
+**Why:** User said close now after localhost setup markdown, Setup tab confirm, and production paste-origin Vitest.
+
+**What changed:** [`issues-log.md`](./issues-log.md) moves [WA-19](./issues-log.md), [WA-20](./issues-log.md), [WA-21](./issues-log.md) to **Closed**. [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md) updated.
+
+**Verification:** Setup v11 at local `GET /setup`; user confirm WA-20; `hostname-defaults.regression.test.ts` production paste test 1 passed.
+
+**Boundary:** Production `https://sdd.works/setup` was still **404** on 2026-10-10. After go-live, run [`release.md`](./release.md) §7.2 smokes on the live host.
+
+### feature-92 closed on localhost (setup page SBI)
+
+**Why:** User confirmed feature-92 is usable on local dev. Go-live is not done yet.
+
+**What changed:** [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) moves [feature-92](./sprint-backlog.md#sprint-9) to **Done**. [WA-19](./issues-log.md), [WA-20](./issues-log.md), [WA-21](./issues-log.md) stay **Open** until production matches.
+
+**Verification:** User close confirm in chat. Local `GET http://localhost:3040/setup` returned setup markdown `2026-10-09.v11` with rewritten MCP URL `http://127.0.0.1:3041/mcp` and After setup link to `http://localhost:3040/install`. WorkBuddy, CodeBuddy CN, TRAE CN path, and current-client-only sections present.
+
+**Boundary:** Production `https://sdd.works/setup` was still **404** on 2026-10-10. After the next image, confirm live Copy uses `https://sdd.works/setup` and the Setup tab has no Node card, then close the WA rows.
+
+### Sprint 9 close batch: task-01, feature-90, 91, 93, 94, 95
+
+**Why:** User asked to run the close-SBIs plan after task-01 close confirm. Automated verification passed for engineering SBIs. [feature-92](./sprint-backlog.md#sprint-9) stays **ToDo** until production `https://sdd.works/setup` returns 200.
+
+**What changed:** [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) rows **Done** for task-01, feature-90, feature-91, feature-93, feature-94, feature-95. Closed [MC-12](./issues-log.md), [MC-15](./issues-log.md), [MC-18](./issues-log.md), [MC-16](./issues-log.md). [MC-10](./issues-log.md), [MC-17](./issues-log.md), [WA-19](./issues-log.md)–[WA-21](./issues-log.md) stay **Open**.
+
+**Verification:** `npx vitest run src/mcp/module-boundary.test.ts src/app/api/sdd/sdd-api.test.ts src/core/tools/install.test.ts src/core/sync/bundled-pack.test.ts src/mcp/tool-descriptions.test.ts` (84 passed). Localhost `GET /api/agent-setup/install-full` returns install markdown. Production `https://sdd.works/setup` still **404** on 10 Oct 2026.
+
+### Retrospective: verify usable in the same session as ship
+
+**Why:** On-demand retrospective; user noted rework when usable checks wait for a new chat.
+
+**What changed:** [`knowledge/agent/verify-usable-same-session-as-ship.md`](./knowledge/agent/verify-usable-same-session-as-ship.md). Sprint 9 Retrospective block 7 under **Learnings**, **Opportunities**, and **Future actions** ([`sprint-backlog.md`](./sprint-backlog.md#sprint-9)).
+
+**Verification:** Knowledge index row in [`knowledge/README.md`](./knowledge/README.md).
+
+### feature-82 closed on localhost (MCP-07 SBI)
+
+**Why:** The user cannot deploy now and accepted localhost curls as close evidence for feature-82.
+
+**What changed:** [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) moves [feature-82](./sprint-backlog.md#sprint-9) to **Done**. [MCP-07](./product-backlog.md#pb-105) and [Spec-seeds-15](./product-backlog.md#pb-97) stay **ToDo**. [`status.md`](./status.md) updated. Knowledge: [`lite-pack-allowlist-is-a-pack-file.md`](./knowledge/agent/lite-pack-allowlist-is-a-pack-file.md).
+
+**Verification:** User close confirm in chat. Local curls: versions, lite/files HTTP 200 with 13 files, package `x-sdd-commit` `3d5880c042f00547ba9716c2957f80e56464e14b`.
+
+**Boundary:** Production `GET /api/sdd/lite/files` was still HTML 404 on 2026-10-10. That check stays on the parent PBI.
+
+### feature-96 closed (sync receipt on unchanged commit)
+
+**Why:** User confirmed feature-96 is usable after localhost verification of the unchanged-commit sync path.
+
+**What changed:** [`sync-job.ts`](../src/core/sync/sync-job.ts) rewrites `manifest.json` with `syncedAt: now` when `existing.latestCommit === commitSha` and `!force`, then returns `unchanged`. [`sync-job.test.ts`](../src/core/sync/sync-job.test.ts) asserts the refreshed timestamp. [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) row **Done**. [MC-14](./issues-log.md) closed.
+
+**Verification:** Vitest `sync-job.test.ts` (7 passed). Localhost: `syncFrameworkRepo()` returned `unchanged` for commit `3d5880c0…`; `syncedAt` advanced from `2026-10-10T06:50:22.245Z` to `2026-10-10T06:53:29.616Z`.
+
 ### feature-97 / Web-portal-39 closed (visitor locale)
 
 **Why:** User confirmed the visitor locale feature is usable after automated checks for AC51–AC59.
@@ -78,7 +172,7 @@
 
 **Verification**: `npx vitest run src/mcp/create-server.test.ts src/mcp/tool-descriptions.test.ts` (13 passed). User confirmed MC-09 usable 09/Oct/2026.
 
-**Boundary**: [MC-07](./issues-log.md) stays open (HTTP still lists `sdd_get_key`). Status OGT **Review `sdd_get_key` so the return is clean** waits for a separate close confirm.
+**Boundary**: [MC-07](./issues-log.md) was already **Closed** in issues-log; status OGT **Review `sdd_get_key` so the return is clean** closed on 2026-10-10 review-status row 4.
 
 ### MCP design: TBD1–TBD5 and the current install steps
 

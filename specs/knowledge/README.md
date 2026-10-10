@@ -24,3 +24,6 @@ Product requirements live under `specs/`. Architecture decisions live under `spe
 | [`ops/mcp-stdio-source-vs-binary.md`](./ops/mcp-stdio-source-vs-binary.md) | Cursor `tsx` stdio vs placed `~/.sdd/sdd-mcp` | 2026-09-26 |
 | [`agent/install-writer-fixture-cache.md`](./agent/install-writer-fixture-cache.md) | Fixture cache and a GitHub URL in the install writer | 2026-10-09 |
 | [`agent/mcp-expected-result-not-iserror.md`](./agent/mcp-expected-result-not-iserror.md) | Expected MCP lookup results must not set `isError` | 2026-10-09 |
+| [`agent/lite-pack-allowlist-is-a-pack-file.md`](./agent/lite-pack-allowlist-is-a-pack-file.md) | Allow-list is a pack-root file; deploy does not copy it | 2026-10-10 |
+| [`agent/verify-usable-same-session-as-ship.md`](./agent/verify-usable-same-session-as-ship.md) | Close confirm and usable check in the same session as the ship | 2026-10-10 |
+| [`agent/doc-only-sbi-verify-path.md`](./agent/doc-only-sbi-verify-path.md) | Doc-only SBIs: name file path, AC ids, and verify steps before close | 2026-10-10 |
