@@ -547,29 +547,36 @@ describe("GET /api/sdd/lite/files", () => {
   }
 
   it("should_return_file_list_and_same_origin_download_links", async () => {
-    const { sha } = seedLiteCache();
-    const res = await getLiteFiles(liteFilesRequest());
-    expect(res.status).toBe(200);
-    const body = (await res.json()) as {
-      package_version: string;
-      package_commit: string;
-      cache_synced_at: string;
-      files: string[];
-      downloads: { path: string; url: string }[];
-    };
-    expect(body.package_version).toBe("v1.0.0");
-    expect(body.package_commit).toBe(sha);
-    expect(body.cache_synced_at).toBe("2026-01-01T00:00:00.000Z");
-    expect(body.files).toEqual([
-      "rules/friendly-language.mdc",
-      "skills/testing-expert/SKILL.md",
-    ]);
-    expect(body.downloads).toHaveLength(2);
-    for (const entry of body.downloads) {
-      expect(entry.url.startsWith("http://localhost/api/sdd/lite/file?")).toBe(
-        true,
-      );
-      expect(new URL(entry.url).searchParams.get("path")).toBe(entry.path);
+    const prevBase = process.env.PUBLIC_BASE_URL;
+    delete process.env.PUBLIC_BASE_URL;
+    try {
+      const { sha } = seedLiteCache();
+      const res = await getLiteFiles(liteFilesRequest());
+      expect(res.status).toBe(200);
+      const body = (await res.json()) as {
+        package_version: string;
+        package_commit: string;
+        cache_synced_at: string;
+        files: string[];
+        downloads: { path: string; url: string }[];
+      };
+      expect(body.package_version).toBe("v1.0.0");
+      expect(body.package_commit).toBe(sha);
+      expect(body.cache_synced_at).toBe("2026-01-01T00:00:00.000Z");
+      expect(body.files).toEqual([
+        "rules/friendly-language.mdc",
+        "skills/testing-expert/SKILL.md",
+      ]);
+      expect(body.downloads).toHaveLength(2);
+      for (const entry of body.downloads) {
+        expect(
+          entry.url.startsWith("http://localhost/api/sdd/lite/file?"),
+        ).toBe(true);
+        expect(new URL(entry.url).searchParams.get("path")).toBe(entry.path);
+      }
+    } finally {
+      if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
+      else process.env.PUBLIC_BASE_URL = prevBase;
     }
   });
 
