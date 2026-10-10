@@ -130,7 +130,7 @@ describe("syncFrameworkRepo", () => {
       });
 
       const result = await syncFrameworkRepo();
-      expect(result.status).toBe("synced");
+      expect("status" in result && result.status).toBe("synced");
       const commitSha = "sha-v1.0.0";
       const allowlistPath = join(unpackedDir(commitSha), LITE_PACK_ALLOWLIST_FILENAME);
       expect(existsSync(allowlistPath)).toBe(true);

@@ -177,6 +177,74 @@
                 </div>
               </div>
             </div>
+
+            <div class="setup-manual" data-testid="setup-manual">
+              <h3 class="section-subtitle">Manual setup</h3>
+              <p class="field-note">If your agent cannot edit its own MCP config, add the remote MCP URL yourself.</p>
+              <div class="codeblock codeblock--file">
+                <div class="codeblock-head">
+                  <span class="codeblock-tag">mcp.json</span>
+                  <button
+                    class="codeblock-copy"
+                    type="button"
+                    data-copy-from-pre
+                    data-testid="copy-manual-mcp"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <pre class="codeblock-text mono">{
+  "mcpServers": {
+    "framework.sdd.works": {
+      "url": "https://sdd.works/mcp"
+    }
+  }
+}</pre>
+              </div>
+              <p class="field-note">Run the command for Claude Code or Codex, or merge the sample above into your MCP file for the others. Keep every other entry.</p>
+              <ul class="setup-manual-paths">
+                <li>
+                  <span class="setup-manual-client">Claude Code</span>
+                  <div class="codeblock">
+                    <pre class="codeblock-text mono">claude mcp add --transport http --scope user framework.sdd.works https://sdd.works/mcp</pre>
+                    <button
+                      class="codeblock-copy"
+                      type="button"
+                      data-copy-from-pre
+                      data-testid="copy-manual-claude"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </li>
+                <li>
+                  <span class="setup-manual-client">Codex</span>
+                  <div class="codeblock">
+                    <pre class="codeblock-text mono">codex mcp add framework.sdd.works --url https://sdd.works/mcp</pre>
+                    <button
+                      class="codeblock-copy"
+                      type="button"
+                      data-copy-from-pre
+                      data-testid="copy-manual-codex"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </li>
+                <li>
+                  <span class="setup-manual-client">Cursor</span>
+                  <p class="setup-manual-note">Manually paste the sample above into <code>~/.cursor/mcp.json</code>.</p>
+                </li>
+                <li>
+                  <span class="setup-manual-client">CodeBuddy CN / WorkBuddy CN</span>
+                  <p class="setup-manual-note">Manually paste the sample above into <code>~/.codebuddy/mcp.json</code>.</p>
+                </li>
+                <li>
+                  <span class="setup-manual-client">TRAE CN</span>
+                  <p class="setup-manual-note">Manually paste the sample above into <code>~/Library/Application Support/Trae CN/User/mcp.json</code>.</p>
+                </li>
+              </ul>
+            </div>
           </section>
 
           <section class="guide-section" id="agents">

@@ -4,17 +4,20 @@ import { useCallback, useTransition } from "react";
 import { InstructionsPage } from "@/components/features/InstructionsPage";
 import type { Locale } from "@/i18n/t";
 import type { InstructionsPageTab } from "@/lib/instructions-tabs-dom";
+import type { SetupManualPasteContent } from "@/lib/setup-manual";
 
 export function InstructionsClient({
   initialLocale,
   tabs,
   activeQueryParam = "setup",
   setupPromptSentence,
+  manualPaste,
 }: {
   initialLocale: Locale;
   tabs: InstructionsPageTab[];
   activeQueryParam?: string;
   setupPromptSentence: string;
+  manualPaste: SetupManualPasteContent;
 }) {
   const [, startTransition] = useTransition();
 
@@ -37,6 +40,7 @@ export function InstructionsClient({
       tabs={tabs}
       activeQueryParam={activeQueryParam}
       setupPromptSentence={setupPromptSentence}
+      manualPaste={manualPaste}
     />
   );
 }

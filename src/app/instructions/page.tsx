@@ -26,6 +26,7 @@ export default async function InstructionsRoute({
       tabs={tabs}
       activeQueryParam={activeQueryParam}
       setupPromptSentence={paste.setupPromptSentence}
+      manualPaste={paste.manualPaste}
     />
   );
 }

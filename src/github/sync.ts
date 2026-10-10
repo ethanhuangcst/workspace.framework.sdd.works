@@ -302,10 +302,18 @@ export function getGitHubPort(): GitHubPort {
 
 /**
  * Prefer an in-process double only when a test called setGitHubPortForTests.
- * GITHUB_FIXTURE is ignored. Production never selects the fixture port.
+ * In non-production dev and test runs, GITHUB_FIXTURE=1 selects the fixture
+ * port so E2E and local smoke do not hit live GitHub. Production never
+ * selects the fixture port.
  */
 export function getGitHubPortForRepo(owner: string): GitHubPort {
   if (overridePort) return overridePort;
+  if (
+    process.env.GITHUB_FIXTURE === "1" &&
+    process.env.NODE_ENV !== "production"
+  ) {
+    return createFixtureGitHubPort();
+  }
   void owner;
   return createOctokitPort();
 }

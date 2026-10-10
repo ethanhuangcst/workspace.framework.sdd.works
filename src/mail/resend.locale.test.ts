@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const send = vi.fn(async () => ({ data: { id: "1" }, error: null }));
+const send = vi.fn(async (_payload: { subject: string; html: string }) => ({
+  data: { id: "1" },
+  error: null,
+}));
 
 vi.mock("resend", () => ({
   Resend: class {

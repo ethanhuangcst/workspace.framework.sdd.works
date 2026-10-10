@@ -18,7 +18,7 @@
 
 **Principles**
 
-- Unit tests may inject an in-process GitHub double and must clear it after the test. The running server ignores `GITHUB_FIXTURE`. Production has no fixture port. After a suite overwrites `Setting.githubUrl`, restore the previous value when tests finish.
+- Unit tests may inject an in-process GitHub double and must clear it after the test. Production ignores `GITHUB_FIXTURE` and has no fixture port. Dev and E2E select the fixture port when `GITHUB_FIXTURE=1` and `NODE_ENV` is not `production`. After a suite overwrites `Setting.githubUrl`, restore the previous value when tests finish.
 - Fixture-green CI is not DoD. Marking MCP features Done requires an operator-verified live client path (HTTP against real keys and a real repo), not fixture-only contracts.
 - Never assert on plaintext key values in logs; assert structured error codes and shape.
 - Path allow-list and escape rejection are critical-path: 100% coverage.
@@ -418,7 +418,7 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-url-plan) **AC1–AC16**, [
 | Plan request root | API | Known client body has client, os, ledger; no `root`. Unknown client after `root_required` includes validated `root`. No file contents (**AC11**, ADR-132) |
 | Tarball URL | API | Known client sends `client`, `os`, `ledger` (no `root`). Unknown client sends `root` after `root_required`. A non-empty cache returns `apply` with a tarball URL on this server. The result does not include `writer_required` or `accepted_root`. The body has no git host (url-plan **AC8**, **AC15**, ADR-132) |
 | Bundled fallback | API | An empty cache or fixture commit reads the bundled pack under `pack.framework.sdd.works/`. The result is `apply` with bundled files. The result does not return `cache_empty`, `fixture_pack`, or `sync_pending` (ADR-131, url-plan **AC8b**) |
-| Fixture pointer | operator | After a pack sync, `latestCommit` is a git commit from the pack repository. `GET /api/sdd/package?version=latest` is not the six-file fixture set. The portal process ignores `GITHUB_FIXTURE` (url-plan **AC12**) |
+| Fixture pointer | operator | After a pack sync, `latestCommit` is a git commit from the pack repository. `GET /api/sdd/package?version=latest` is not the six-file fixture set. Production ignores `GITHUB_FIXTURE`. Dev and E2E with `GITHUB_FIXTURE=1` use the fixture port (url-plan **AC12**) |
 | Fixture pack falls back | unit | Cached commit `sha-v1.0.0`, or the fixture file set, falls back to the bundled pack under `pack.framework.sdd.works/`. The result is `apply` with bundled files. No client file is written from the fixture (url-plan **AC13**, ADR-131) |
 | No writer binary | review | No `dist/sdd-mcp-*` files. No `~/.sdd/sdd-mcp`. No writer binary build step. The result includes a tarball URL and the file list (**AC14**, ADR-131) |
 | syncedAt on unchanged | unit | A sync with the same commit as the cache updates `syncedAt` to now. The install does not return `cache_stale` solely because of age (ADR-130 decision 5, MC-14) |
@@ -581,7 +581,7 @@ Command when this section is implemented: `npx vitest run src/app/api/agent-setu
 
 Goal: before the production image deploy, confirm on localhost that the MCP installer, `sdd_install_framework`, and `sdd_update_framework` work end to end across the three test IDEs, and that the issues closed in Sprint 9 stay resolved. This is operator evidence for [task-02 Go-live](../sprint-backlog.md#sprint-9). It does not replace the automated sections above.
 
-Helper script: [`scripts/manual-e2e-prep.sh`](../../scripts/manual-e2e-prep.sh) (`--clean`, `--stage-ledger`, `--backup-mcp`, `--restore-mcp`, `--fixture-on`, `--fixture-off`).
+Helper script: [`scripts/manual-e2e-prep.sh`](../../scripts/manual-e2e-prep.sh) (`--clean`, `--stage-ledger`, `--backup-mcp`, `--restore-mcp`, `--fixture-on`, `--fixture-off`). TC-2 verify: [`scripts/manual-e2e-verify-tc2.sh`](../../scripts/manual-e2e-verify-tc2.sh) `<client>` `[workspace_path]`. TC-3 verify: [`scripts/manual-e2e-verify-tc3.sh`](../../scripts/manual-e2e-verify-tc3.sh) `<client>` `<workspace_path>`. TC-4 verify: [`scripts/manual-e2e-verify-tc4.sh`](../../scripts/manual-e2e-verify-tc4.sh) `<client>`. TC-5 verify: [`scripts/manual-e2e-verify-tc5.sh`](../../scripts/manual-e2e-verify-tc5.sh) `<client>` (disk; agent must report `noop`). TC-6 prep: `--clean` then `--stage-ledger`; verify: [`scripts/manual-e2e-verify-tc6.sh`](../../scripts/manual-e2e-verify-tc6.sh) `<client>` (after agent `apply`). TC-7: [`--fixture-on`](../../scripts/manual-e2e-prep.sh) then install once; verify [`scripts/manual-e2e-verify-tc7.sh`](../../scripts/manual-e2e-verify-tc7.sh); then [`--fixture-off`](../../scripts/manual-e2e-prep.sh). TC-8: call `sdd_get_key` once from any connected client; baseline [`scripts/manual-e2e-verify-tc8.sh`](../../scripts/manual-e2e-verify-tc8.sh). TC-9: three `sdd_install_framework` calls (unknown client); baseline [`scripts/manual-e2e-verify-tc9.sh`](../../scripts/manual-e2e-verify-tc9.sh).
 
 ### Preconditions
 
@@ -702,7 +702,7 @@ Each test case names the call, the expected result, and the issue it verifies. R
 
 1. Call `sdd_install_framework` with `client: "unknown-cli"`, `os: "darwin"`, no `root`.
 2. Expected: result code is `root_required`. No files listed. No tarball URL.
-3. Retry with a valid `root` such as `/tmp/sdd-test-home/.my-cli`. Expected: `apply` with that root.
+3. Retry with a valid `root` under the operator home directory, such as `$HOME/sdd-test-home/.my-cli` (Darwin rejects `/tmp/…` as `not_under_home`). Expected: `apply` with that root.
 4. Retry with an invalid `root` such as `/etc/sdd`. Expected: code `path_rejected`.
 5. Pass: unknown client without `root` returns `root_required`; with valid `root` proceeds; with invalid `root` rejects.
 6. Issues verified: ADR-132 unknown-client path, MC-16 unknown-client path.
@@ -725,20 +725,22 @@ Each test case names the call, the expected result, and the issue it verifies. R
 
 ### Pass criteria
 
-- [ ] TC-1 setup connects MCP for all three clients with no cross-client edits
-- [ ] TC-2 install page guides agent for all three clients with no workspace scaffold
-- [ ] TC-3 known client installs at seed-map root for CodeBuddy CN, TRAE CN, Codex
-- [ ] TC-4 nested templates path confirmed for at least one client
-- [ ] TC-5 update noop on same commit
-- [ ] TC-6 update apply on older simulated ledger
-- [ ] TC-7 fixture pack falls back to bundled
-- [ ] TC-8 sdd_get_key missing name is not a tool error
-- [ ] TC-9 unknown client root_required flow
-- [ ] Evidence recorded in [`mcp-manual-test-results.md`](./mcp-manual-test-results.md) under **Manual e2e before go-live**
+- [x] TC-1 setup connects MCP for CodeBuddy CN and TRAE CN with no cross-client edits (2026-10-10)
+- [ ] TC-1 Codex canonical setup fetch ([MC-19](../issues-log.md); alternate wiring documented)
+- [x] TC-2 install page guides agent for CodeBuddy CN and TRAE CN with no workspace scaffold
+- [ ] TC-2 through TC-6 Codex (operator token exhausted 2026-10-10; see [`go-live-test.md`](./go-live-test.md))
+- [x] TC-3 known client installs at seed-map root for CodeBuddy CN and TRAE CN
+- [x] TC-4 nested templates path confirmed (both clients; verify-tc4)
+- [x] TC-5 update noop on same commit (both clients)
+- [x] TC-6 update apply on older simulated ledger (both clients)
+- [x] TC-7 fixture pack falls back to bundled (once per run; disk MC-06)
+- [x] TC-8 sdd_get_key missing name is not a tool error (once per run)
+- [x] TC-9 unknown client root_required flow (once per run; valid `root` under `$HOME` on Darwin)
+- [x] Evidence recorded in [`mcp-manual-test-results.md`](./mcp-manual-test-results.md) under **Manual e2e before go-live**
 
 ### Recording
 
-Record each run in [`mcp-manual-test-results.md`](./mcp-manual-test-results.md) under **Manual e2e before go-live**. One table per client with columns: check, result, evidence. Paste the tool result JSON for install and update. Note the `pack_source` value. After all three clients pass, task-02 is ready for the production deploy smoke in [`release.md`](../release.md) §7.3.
+Record each run in [`mcp-manual-test-results.md`](./mcp-manual-test-results.md) under **Manual e2e before go-live**. One table per client with columns: check, result, evidence. Paste the tool result JSON for install and update. Note the `pack_source` value. Pair-run log: [`go-live-test.md`](./go-live-test.md). **Codex:** when operator token is unavailable, mark Codex rows `skip` and keep OGT rows on [`status.md`](../status.md) as Codex-only until verified. After all three clients pass, task-02 is ready for the production deploy smoke in [`release.md`](../release.md) §7.3.
 
 ### Execution order (operator)
 

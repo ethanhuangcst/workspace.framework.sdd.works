@@ -46,6 +46,22 @@ describe("fixture GitHub port", () => {
     }
   });
 
+  it("should_use_fixture_port_in_dev_when_GITHUB_FIXTURE_set", async () => {
+    const env = process.env as Record<string, string | undefined>;
+    const nodeEnv = env.NODE_ENV;
+    env.GITHUB_FIXTURE = "1";
+    env.NODE_ENV = "development";
+    try {
+      const port = getGitHubPortForRepo("fixture");
+      const reachable = await port.checkRepoAccessible("fixture", "sdd-framework");
+      expect(reachable).toBe(true);
+    } finally {
+      if (nodeEnv === undefined) delete env.NODE_ENV;
+      else env.NODE_ENV = nodeEnv;
+      delete env.GITHUB_FIXTURE;
+    }
+  });
+
   it("should_cache_tree_for_ttl", async () => {
     setGitHubPortForTests(createFixtureGitHubPort());
     const first = await fetchRepoTreeCached("fixture", "sdd-framework", 1_000);

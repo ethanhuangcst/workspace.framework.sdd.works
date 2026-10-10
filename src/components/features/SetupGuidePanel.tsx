@@ -2,6 +2,10 @@
 
 import { t, type Locale } from "@/i18n/t";
 import { CopyButton } from "@/components/ui/CopyButton";
+import {
+  MANUAL_CLIENTS,
+  type SetupManualPasteContent,
+} from "@/lib/setup-manual";
 
 const INSTALL_CMD = "sdd_install_framework";
 const AGENT_LOGOS = [
@@ -62,12 +66,61 @@ function CmdBlock({
   );
 }
 
+function FileBlock({
+  tag,
+  value,
+  locale,
+  testid,
+}: {
+  tag: string;
+  value: string;
+  locale: Locale;
+  testid?: string;
+}) {
+  return (
+    <div className="codeblock codeblock--file">
+      <div className="codeblock-head">
+        <span className="codeblock-tag">{tag}</span>
+        <CopyButton
+          className="codeblock-copy"
+          value={value}
+          label={t(locale, "admin.keys.copy")}
+          copiedLabel={t(locale, "admin.common.copied")}
+          data-testid={testid}
+        />
+      </div>
+      <pre className="codeblock-text mono">{value}</pre>
+    </div>
+  );
+}
+
+function ManualPasteNote({ locale, path }: { locale: Locale; path: string }) {
+  return (
+    <p className="setup-manual-note">
+      {t(locale, "admin.guide.manual_paste_prefix")}
+      <code>{path}</code>
+      {t(locale, "admin.guide.manual_paste_suffix")}
+    </p>
+  );
+}
+
+function manualCommandForClient(
+  manualPaste: SetupManualPasteContent,
+  clientId: string,
+): string {
+  if (clientId === "claude") return manualPaste.claudeCommand;
+  if (clientId === "codex") return manualPaste.codexCommand;
+  throw new Error(`setup-manual: missing command for ${clientId}`);
+}
+
 export function SetupGuidePanel({
   locale,
   setupPromptSentence,
+  manualPaste,
 }: {
   locale: Locale;
   setupPromptSentence: string;
+  manualPaste: SetupManualPasteContent;
 }) {
   return (
     <>
@@ -114,6 +167,38 @@ export function SetupGuidePanel({
               testid="copy-install-cmd"
             />
           </div>
+        </div>
+
+        <div className="setup-manual" data-testid="setup-manual">
+          <h3 className="section-subtitle">
+            {t(locale, "admin.guide.manual_title")}
+          </h3>
+          <p className="field-note">{t(locale, "admin.guide.manual_body")}</p>
+          <FileBlock
+            tag="mcp.json"
+            value={manualPaste.mcpSample}
+            locale={locale}
+            testid="copy-manual-mcp"
+          />
+          <p className="field-note">
+            {t(locale, "admin.guide.manual_paths_intro")}
+          </p>
+          <ul className="setup-manual-paths">
+            {MANUAL_CLIENTS.map((client) => (
+              <li key={client.id}>
+                <span className="setup-manual-client">{client.label}</span>
+                {client.type === "command" ? (
+                  <CmdBlock
+                    value={manualCommandForClient(manualPaste, client.id)}
+                    locale={locale}
+                    testid={`copy-manual-${client.id}`}
+                  />
+                ) : (
+                  <ManualPasteNote locale={locale} path={client.path} />
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

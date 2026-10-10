@@ -65,10 +65,6 @@ export function LearnScrumEmbedPanel({
   }, [applyHeight]);
 
   useEffect(() => {
-    setIframeLoaded(false);
-    receivedHeightRef.current = false;
-    postedHeightRef.current = null;
-    setFrameHeightPx(null);
     const iframe = iframeRef.current;
     if (!iframe) return;
 
@@ -84,7 +80,7 @@ export function LearnScrumEmbedPanel({
       observer.disconnect();
       window.clearTimeout(timer);
     };
-  }, [embedUrl, syncFrameHeight]);
+  }, [syncFrameHeight]);
 
   const frameHeightStyle =
     frameHeightPx !== null ? { height: `${frameHeightPx}px` } : undefined;

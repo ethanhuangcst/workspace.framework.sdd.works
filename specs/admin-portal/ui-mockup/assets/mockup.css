@@ -2318,6 +2318,49 @@ td.table-check {
   margin-bottom: 1.5rem;
 }
 
+.setup-manual-paths {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.setup-manual-paths li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.setup-manual-client {
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.setup-manual-paths .codeblock {
+  margin: 0;
+}
+
+.setup-manual-note {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.setup-manual-note code {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--mute);
+  word-break: break-all;
+}
+
 .setup-fallback {
   margin-top: 1.5rem;
 }

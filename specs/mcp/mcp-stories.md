@@ -1780,8 +1780,9 @@ Scenario: The latest pack is a git commit from the pack repository
   When an operator syncs the pack repository
   Then latestCommit is a git commit from that repository
   And GET /api/sdd/package?version=latest is not the six-file fixture set
-  And the portal process ignores GITHUB_FIXTURE
-  And a practice GitHub port does not replace latestCommit in the portal process
+  And the production portal process ignores GITHUB_FIXTURE
+  And a non-production process with GITHUB_FIXTURE=1 uses the fixture port
+  And a practice GitHub port does not replace latestCommit in the production portal process
 ```
 
 #### AC13 — MC-06, ADR-131

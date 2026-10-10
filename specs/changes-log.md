@@ -8,6 +8,30 @@
 
 ## 2026-10-10
 
+### Dev fixture GitHub port for Settings and Framework E2E
+
+**Why:** Settings and Framework end-to-end tests now use a dev-only fixture GitHub port.
+
+**What changed:** [`mcp/mcp-tests.md`](./mcp/mcp-tests.md) principles and fixture-pointer row. [`mcp/mcp-stories.md`](./mcp/mcp-stories.md) AC12. [`go-live/framework-sdd-works-deployment-instruction.md`](./go-live/framework-sdd-works-deployment-instruction.md) omit table. Production ignores `GITHUB_FIXTURE`. Dev and end-to-end tests may set `GITHUB_FIXTURE=1` when `NODE_ENV` is not `production`.
+
+**Verification:** `npm test`, `npm run lint`, `npm run build`, and Playwright `e2e/settings-framework.spec.ts` passed on 2026-10-10.
+
+### Manual e2e §16 specs and status: Codex OGTs open (token exhausted)
+
+**Why:** Pair-run finished CodeBuddy CN, TRAE CN, and once-per-run checks; Codex TC-2 through TC-6 were not run when operator Codex token ran out.
+
+**What changed:** [`mcp/mcp-tests.md`](./mcp/mcp-tests.md) §16 pass criteria and recording note. [`mcp/mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md) summary. [`mcp/go-live-test.md`](./mcp/go-live-test.md) run status table. [`status.md`](./status.md) where we are now and OGT rows renamed to Codex-only with not-verified status.
+
+**Verification:** Evidence tables in go-live-test and mcp-manual-test-results on 2026-10-10.
+
+### MC-19 opened: Codex setup one-liner cannot fetch localhost
+
+**Why:** Manual E2E TC-1 showed Codex agent shell cannot reach `http://localhost:3040/setup` while Terminal and Codex built-in browser can.
+
+**What changed:** [`issues-log.md`](./issues-log.md) adds open [MC-19](./issues-log.md). [`mcp/go-live-test.md`](./mcp/go-live-test.md) records TC-1 verdicts. [`mcp/mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md) fills TC-1 rows for three clients.
+
+**Verification:** Pair-run log and terminal diffs on 10 Oct 2026; §16 TC-1 checkbox stays open for Codex canonical path.
+
 ### OGT closed: instructions-tabs rules in Admin pack note
 
 **Why:** User confirmed OGT 2 done.

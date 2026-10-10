@@ -26,6 +26,30 @@ const SECRET_COPY = {
 } as const;
 
 test.describe("MCP instructions", () => {
+  test("should_show_manual_setup_section", async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/instructions");
+    await page.waitForLoadState("networkidle");
+
+    const manual = page.getByTestId("setup-manual");
+    await expect(manual).toBeVisible();
+    await expect(page.getByTestId("copy-manual-mcp")).toBeVisible();
+    await expect(page.getByTestId("copy-manual-claude")).toBeVisible();
+    await expect(page.getByTestId("copy-manual-codex")).toBeVisible();
+    await expect(page.getByText("~/.cursor/mcp.json")).toBeVisible();
+    await expect(page.getByText("~/.codebuddy/mcp.json")).toBeVisible();
+    await expect(
+      page.getByText("~/Library/Application Support/Trae CN/User/mcp.json"),
+    ).toBeVisible();
+    await expect(page.locator("#tools")).toHaveCount(0);
+
+    await page.getByTestId("copy-manual-mcp").click();
+    const clipboard = await page.evaluate(() => navigator.clipboard.readText());
+    expect(clipboard).toContain("framework.sdd.works");
+    expect(clipboard).toContain("/mcp");
+    expect(clipboard).not.toContain('"command"');
+  });
+
   test("should_show_guide_and_agents_roster", async ({ page }) => {
     await page.goto("/instructions");
 

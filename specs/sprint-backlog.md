@@ -792,6 +792,7 @@ No open rows.
 | #   | Code    | SBI     | Parent PBI | Module/Type | Related specs                                                                                                                                                                                                 | Status |
 | --- | ------- | ------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
 | 1   | task-02 | Go-live | —          | MCP/Task    | - [release.md](./release.md) §7.3 - After deploy, `https://sdd.works/api/sdd/lite/files` returns 200. Versions and package return a real pack commit. [Spec-seeds-15](./product-backlog.md#pb-97) stays **ToDo** until that check passes. | **ToDo** |
+| 2   | feature-98 | Manual mcp.json setup guide on the Setup tab | [Web-portal-41 Manual mcp.json setup guide on the Setup tab](./product-backlog.md#pb-140) | Webapp/Feature | - [ADR-122](./adr/ADR-122-instructions-guide-hero-and-setup-tab.md) partly reversed; new ADR at implementation - [`prompt.md`](../public/agent-setup/prompt.md) is the source for the URL and client paths - [`SetupGuidePanel.tsx`](../src/components/features/SetupGuidePanel.tsx) | **ToDo** |
 
 
 ### Retrospective
@@ -959,6 +960,7 @@ No open rows.
 
 | #   | Component | PBI Code                                   | Description                                   | Size          | Related                                                                                                | Status |
 | --- | --------- | ------------------------------------------ | --------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------ | ------ |
-| 1   | webapp    | [Web-portal-21](./product-backlog.md#L479) | Partner install-first landing (separate site) | Implementable | - [Web-portal-06](./product-backlog.md#pb-72) - AC50 `[app-stories.md](./admin-portal/app-stories.md)` | ToDo   |
+| 1   | webapp    | [Web-portal-21](./product-backlog.md#L512) | Partner install-first landing (separate site) | Implementable | - [Web-portal-06](./product-backlog.md#pb-72) - AC50 `[app-stories.md](./admin-portal/app-stories.md)` | ToDo   |
+| 2   | webapp    | [Web-portal-40](./product-backlog.md#L476) | Setup paste sentence in the visitor locale    | Implementable | - [Web-portal-06](./product-backlog.md#pb-72) - [Web-portal-39](./product-backlog.md#pb-136) - `admin.guide.setup_prompt` | ToDo   |
 
 

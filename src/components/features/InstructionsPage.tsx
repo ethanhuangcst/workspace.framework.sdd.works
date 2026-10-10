@@ -16,6 +16,7 @@ import {
   guideTabTestId,
   type InstructionsPageTab,
 } from "@/lib/instructions-tabs-dom";
+import type { SetupManualPasteContent } from "@/lib/setup-manual";
 
 export function InstructionsPage({
   locale,
@@ -23,12 +24,14 @@ export function InstructionsPage({
   tabs,
   activeQueryParam: activeFromServer = "setup",
   setupPromptSentence,
+  manualPaste,
 }: {
   locale: Locale;
   onLocaleChange: (locale: Locale) => void;
   tabs: InstructionsPageTab[];
   activeQueryParam?: string;
   setupPromptSentence: string;
+  manualPaste: SetupManualPasteContent;
 }) {
   const pathname = usePathname() || "/";
   const setupQueryParam =
@@ -110,10 +113,15 @@ export function InstructionsPage({
               <SetupGuidePanel
                 locale={locale}
                 setupPromptSentence={setupPromptSentence}
+                manualPaste={manualPaste}
               />
             ) : null}
             {tab.type === "embedded_external_page" && tab.embedUrl ? (
-              <LearnScrumEmbedPanel locale={locale} embedUrl={tab.embedUrl} />
+              <LearnScrumEmbedPanel
+                key={tab.embedUrl}
+                locale={locale}
+                embedUrl={tab.embedUrl}
+              />
             ) : null}
             {tab.type === "content" ? (
               <article

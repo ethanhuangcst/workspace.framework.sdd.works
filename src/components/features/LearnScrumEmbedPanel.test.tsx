@@ -8,7 +8,6 @@ import {
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  LEARN_EMBED_FALLBACK_TIMEOUT_MS,
   LEARN_EMBED_HEIGHT_MESSAGE_TYPE,
   estimateLearnEmbedGridHeightPx,
 } from "@/lib/learn-embed-messaging";
@@ -198,6 +197,7 @@ describe("LearnScrumEmbedPanel", () => {
   it("should_show_skeleton_again_when_embed_url_changes", () => {
     const { rerender } = render(
       <LearnScrumEmbedPanel
+        key="https://learn.sdd.works/en/learn-embedded/"
         locale="en"
         embedUrl="https://learn.sdd.works/en/learn-embedded/"
       />,
@@ -207,6 +207,7 @@ describe("LearnScrumEmbedPanel", () => {
 
     rerender(
       <LearnScrumEmbedPanel
+        key="https://learn.sdd.works/en/learn-embedded/?v=2"
         locale="en"
         embedUrl="https://learn.sdd.works/en/learn-embedded/?v=2"
       />,

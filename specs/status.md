@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-10 (Sprint 9 WIP; twenty-two SBIs Done; MCP-08 and MCP-09 Done; task-02 ToDo)
+> as_of: 2026-10-10 (Sprint 9 WIP; twenty-two SBIs Done; MCP-08 and MCP-09 Done; task-02 ToDo; manual e2e CB/TRAE pass; Codex OGTs open)
 > [Definition](../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#statusmd)
 
 ---
@@ -24,7 +24,7 @@
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: [task-02 Go-live](./sprint-backlog.md#sprint-9) is **ToDo**. Manual e2e OGTs TC-1 through TC-9 are **ToDo** on this file. Spec and prep script are ready: [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16, [`manual-e2e-prep.sh`](../scripts/manual-e2e-prep.sh). Localhost preflight passed 2026-10-10. Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md).
+- What SBI are we working on now: [task-02 Go-live](./sprint-backlog.md#sprint-9) is **ToDo**. Manual e2e §16 **pass** on CodeBuddy CN and TRAE CN (TC-1 through TC-6) and **pass** once-per-run for TC-7 through TC-9 (Cursor MCP + verify scripts) on 2026-10-10. Evidence: [`go-live-test.md`](./mcp/go-live-test.md), [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md). **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md).
 
 ## what could be the next
 
@@ -34,17 +34,19 @@
 
 ## Current OGT(On-going Tasks)
 
+CodeBuddy CN and TRAE CN finished §16 TC-1 through TC-6 on 2026-10-10. TC-7 through TC-9 finished once-per-run (not Codex-specific). Rows **1 through 9** stay open for **Codex only**; operator did not verify Codex because the Codex token ran out 2026-10-10.
+
 | # | Task Name | Affected SBIs | Created | Status |
 | --- | --- | --- | --- | --- |
-| 1 | TC-1 Setup connects MCP for current client only | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-10](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo |
-| 2 | TC-2 Install page guides agent, no scaffold | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-17](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo |
-| 3 | TC-3 Known client installs at seed-map root | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-16](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo |
-| 4 | TC-4 Templates land at nested path | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-18](./issues-log.md), [MC-15](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo |
-| 5 | TC-5 Update noop on same commit | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-14](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo |
-| 6 | TC-6 Update apply on older ledger | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-16](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo |
-| 7 | TC-7 Fixture pack falls back to bundled | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-06](./issues-log.md), [MC-03](./issues-log.md)<br>- [`scripts/manual-e2e-prep.sh`](../scripts/manual-e2e-prep.sh) | Sprint 9 | ToDo |
-| 8 | TC-8 sdd_get_key missing name not a tool error | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-09](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo |
-| 9 | TC-9 Unknown client root_required flow | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [ADR-132](./adr/ADR-132-simplified-install-root-and-templates.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo |
+| 1 | Codex TC-1 Setup connects MCP (canonical fetch) | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-10](./issues-log.md), [MC-19](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo, Codex not verified |
+| 2 | Codex TC-2 Install page guides agent, no scaffold | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-17](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo, Codex not verified (token exhausted) |
+| 3 | Codex TC-3 Known client installs at seed-map root | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-16](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo, Codex not verified (token exhausted) |
+| 4 | Codex TC-4 Templates land at nested path | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-18](./issues-log.md), [MC-15](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo, Codex not verified (token exhausted) |
+| 5 | Codex TC-5 Update noop on same commit | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-14](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo, Codex not verified (token exhausted) |
+| 6 | Codex TC-6 Update apply on older ledger | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-16](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo, Codex not verified (token exhausted) |
+| 7 | Codex TC-7 Fixture pack falls back to bundled | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-06](./issues-log.md), [MC-03](./issues-log.md)<br>- [`scripts/manual-e2e-prep.sh`](../scripts/manual-e2e-prep.sh) | Sprint 9 | ToDo, Codex not verified (once-per-run pass elsewhere) |
+| 8 | Codex TC-8 sdd_get_key missing name not a tool error | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [MC-09](./issues-log.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo, Codex not verified (once-per-run pass elsewhere) |
+| 9 | Codex TC-9 Unknown client root_required flow | - [task-02 Go-live](./sprint-backlog.md#sprint-9)<br>- [ADR-132](./adr/ADR-132-simplified-install-root-and-templates.md)<br>- [`mcp-tests.md`](./mcp/mcp-tests.md#16-manual-e2e-before-go-live) §16 | Sprint 9 | ToDo, Codex not verified (once-per-run pass elsewhere) |
 | 10 | Fix stale `product-backlog.md#L` links in specs | - [`scripts/check-spec-links.sh`](../scripts/check-spec-links.sh)<br>- [`sprint-backlog.md`](./sprint-backlog.md#sprint-8) Parent PBI and Unplanned PBIs<br>- [`changes-log.md`](./changes-log.md) | Sprint 8 | ToDo |
 
 ## Last 15 closed OGTs
@@ -67,4 +69,4 @@
 | 14 | Rename skill `fullstack-developer` to `fullstack-engineer` | - | Sprint 7 | Sprint 7 |
 | 15 | Seed files should state Pokymon Card Collection is an example only | - [task-01 Cross-review five process file seeds](./sprint-backlog.md#sprint-6) | Sprint 5 | Sprint 6 |
 
-Last updated: 2026-10-10 Closed OGT **Add instructions-tabs rules to Admin Settings pack note** (user confirm)
+Last updated: 2026-10-10 Manual e2e §16: CodeBuddy and TRAE pass; OGT TC-1 through TC-9 narrowed to Codex-only verification (token exhausted)

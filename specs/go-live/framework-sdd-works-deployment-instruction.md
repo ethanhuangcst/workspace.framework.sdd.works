@@ -228,7 +228,7 @@ Set in stack **`framework-sdd-works`** (both containers unless noted). Values **
 | --- | --- |
 | `QWEN_*` | Stdio path-discovery LLM only (ADR-047); HTTP MCP does not call Qwen |
 | `MCP_HTTP_PORT` on **web** | MCP runs in sibling container |
-| `GITHUB_FIXTURE` | Ignored. The server does not select a fixture port from this variable. Do not set it. |
+| `GITHUB_FIXTURE` | Production ignores this variable and does not select a fixture port. Do not set it on Server 2. Dev and E2E may set `GITHUB_FIXTURE=1` when `NODE_ENV` is not `production`. |
 | `E2E_*` / `PLAYWRIGHT_*` | Test harness only |
 
 #### Optional overrides

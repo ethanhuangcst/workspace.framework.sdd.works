@@ -72,7 +72,7 @@
 
 ## Manual e2e before go-live
 
-Plan: [`mcp-tests.md`](./mcp-tests.md#16-manual-e2e-before-go-live) §16. Prep: [`scripts/manual-e2e-prep.sh`](../../scripts/manual-e2e-prep.sh). OGT rows TC-1 through TC-9 on [`status.md`](../status.md).
+Plan: [`mcp-tests.md`](./mcp-tests.md#16-manual-e2e-before-go-live) §16. Prep: [`scripts/manual-e2e-prep.sh`](../../scripts/manual-e2e-prep.sh). Pair-run: [`go-live-test.md`](./go-live-test.md). **Summary (2026-10-10):** CodeBuddy CN and TRAE CN **pass** TC-1 through TC-6. TC-7 through TC-9 **pass** once-per-run. **Codex not verified:** operator token exhausted; TC-2 through TC-6 **skip**; TC-1 canonical **fail** ([MC-19](../issues-log.md)). Open OGT rows on [`status.md`](../status.md) track **Codex only** until rerun.
 
 ### Preflight (fill when you start)
 
@@ -87,39 +87,39 @@ Plan: [`mcp-tests.md`](./mcp-tests.md#16-manual-e2e-before-go-live) §16. Prep: 
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| TC-1 setup MCP only | | |
-| TC-2 install via /install | | |
-| TC-3 seed-map root | | |
-| TC-4 nested templates | | |
-| TC-5 update noop | | |
-| TC-6 update apply | | |
+| TC-1 setup MCP only | pass | Canonical prompt; `~/.codebuddy/mcp.json`; URL-only entry; tools in session; MC-10 diffs clean ([go-live-test.md](./go-live-test.md)) |
+| TC-2 install via /install | pass | MCP tool + tarball; 73 files; ledger; no workspace `specs/` ([go-live-test.md](./go-live-test.md)) |
+| TC-3 seed-map root | pass | Root `~/.codebuddy`; workspace clean; verify-tc3 PASS ([go-live-test.md](./go-live-test.md)) |
+| TC-4 nested templates | pass | verify-tc4 PASS; no flat `templates/EN/` ([go-live-test.md](./go-live-test.md)) |
+| TC-5 update noop | pass | Agent `noop`; ledger unchanged ([go-live-test.md](./go-live-test.md)) |
+| TC-6 update apply | pass | Staged ledger → apply; 73 files; verify-tc6 PASS ([go-live-test.md](./go-live-test.md)) |
 
 ### TRAE CN (`trae-cn`)
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| TC-1 setup MCP only | | |
-| TC-2 install via /install | | |
-| TC-3 seed-map root | | |
-| TC-4 nested templates | | |
-| TC-5 update noop | | |
-| TC-6 update apply | | |
+| TC-1 setup MCP only | pass | Canonical prompt via shell fetch; Application Support `mcp.json`; tools in session; MC-10 diffs clean ([go-live-test.md](./go-live-test.md)) |
+| TC-2 install via /install | pass | Same install sequence; root `~/.trae-cn`; verify PASS ([go-live-test.md](./go-live-test.md)) |
+| TC-3 seed-map root | pass | Root `~/.trae-cn`; workspace clean; verify-tc3 PASS ([go-live-test.md](./go-live-test.md)) |
+| TC-4 nested templates | pass | verify-tc4 PASS ([go-live-test.md](./go-live-test.md)) |
+| TC-5 update noop | pass | Agent `noop`; no disk writes ([go-live-test.md](./go-live-test.md)) |
+| TC-6 update apply | pass | apply via HTTP MCP fallback; verify-tc6 PASS ([go-live-test.md](./go-live-test.md)) |
 
 ### Codex (`codex`)
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| TC-1 setup MCP only | | |
-| TC-2 install via /install | | |
-| TC-3 seed-map root | | |
-| TC-4 nested templates | | |
-| TC-5 update noop | | |
-| TC-6 update apply | | |
+| TC-1 setup MCP only | fail (canonical) | One-line fetch failed (agent shell curl); alternate browser + `codex mcp remove/add` wired MCP; `codex mcp get` enabled `streamable_http`; [MC-19](../issues-log.md); [go-live-test.md](./go-live-test.md) |
+| TC-2 install via /install | skip | Operator Codex token exhausted 2026-10-10 ([go-live-test.md](./go-live-test.md)) |
+| TC-3 seed-map root | skip | Same |
+| TC-4 nested templates | skip | Same |
+| TC-5 update noop | skip | Same |
+| TC-6 update apply | skip | Same |
 
 ### Once per run (any connected client)
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| TC-7 fixture → bundled | | `--fixture-on` / `--fixture-off` |
-| TC-8 get_key not_found | | |
-| TC-9 root_required | | |
+| TC-7 fixture → bundled | pass (disk) | No fixture stub on client; `pack_source` was `cache` after sync (see [go-live-test.md](./go-live-test.md)); `--fixture-off` run |
+| TC-8 get_key not_found | pass | Cursor MCP: missing name → `not_found`; empty → `invalid_input`; verify-tc8 Vitest PASS ([go-live-test.md](./go-live-test.md)) |
+| TC-9 root_required | pass | Cursor MCP: `root_required` → apply under `$HOME` → `/etc/sdd` `path_rejected`; verify-tc9 Vitest PASS ([go-live-test.md](./go-live-test.md)) |

@@ -40,6 +40,9 @@ export default defineConfig({
       KEYS_ENCRYPTION_KEY:
         process.env.KEYS_ENCRYPTION_KEY ??
         "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      // Dev-only fixture GitHub port so Settings/Framework E2E does not hit
+      // live GitHub. Ignored in production (NODE_ENV=production).
+      GITHUB_FIXTURE: "1",
     },
   },
 });

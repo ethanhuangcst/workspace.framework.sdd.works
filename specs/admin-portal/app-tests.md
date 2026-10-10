@@ -19,7 +19,7 @@
 **Principles**
 
 - Critical path: login, session cookie, CSRF mutations, keys CRUD encrypt/decrypt, settings save reachability, framework tree error shell.
-- Never commit secrets; CI uses a fixture `KEYS_ENCRYPTION_KEY`. The server ignores `GITHUB_FIXTURE`. Production has no fixture port.
+- Never commit secrets; CI uses a fixture `KEYS_ENCRYPTION_KEY`. The production server ignores `GITHUB_FIXTURE`; dev and E2E set `GITHUB_FIXTURE=1` to use the in-process fixture GitHub port.
 - Prefer role / text / `data-testid` selectors over brittle CSS.
 - Isolated test DB; never production data.
 - When a suite injects an in-process GitHub double, clear it in `afterEach` / `afterAll`. Do not point `npm run dev` at fixture pack data.
@@ -98,7 +98,7 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | Framework admin note (**Web-portal-26**) | Signed-in on `/admin/framework`: **Admin note** opens dialog; `framework-admin-note-body` shows pack-file table row (for example `lite-pack.allowlist.json`); json fence shows `codeblock--file` with Copy; Close returns to tree without navigation |
 | i18n | Locale switch updates chrome copy. **Web-portal-39:** one browser check with no `sdd_locale` and `Accept-Language: zh-TW` loads `/` with `html lang` `zh-Hant` and stores `sdd_locale=zh-Hant` (**AC52**) |
 
-Config: `playwright.config.ts` injects a fixture `KEYS_ENCRYPTION_KEY`. It does not set `GITHUB_FIXTURE`. The server ignores that variable.
+Config: `playwright.config.ts` injects a fixture `KEYS_ENCRYPTION_KEY` and sets `GITHUB_FIXTURE=1` so the dev server uses the in-process fixture GitHub port (dev only; `NODE_ENV !== production`). The production server ignores `GITHUB_FIXTURE` and has no fixture port.
 
 **Operator pitfall (this Mac):** Playwright’s fixture encryption key can differ from `.env.local`. Prefer a separate E2E database, or re-encrypt / delete rows encrypted under the fixture key before opening the Keys page in `npm run dev`.
 
@@ -406,9 +406,9 @@ Run before **Web-portal-35** is **Done**. [ADR-122](../adr/ADR-122-instructions-
 | --- | --- |
 | i18n | `admin.guide.title` is Built on Harness. Ready for Scrum in en, zh-Hans, zh-Hant. Keys `setup_highlight`, `setup_install_phrase`, `setup_update_tool` present in all three catalogs. |
 | Hero CSS | `--font-hero` loads Antonio. `.guide-hero-title` logo height **5.625rem**, `margin-left: -23px`, h1 **700** and clamp per `app-design.md`. |
-| Setup DOM | `setup-highlight`, `copy-setup-prompt`, `copy-install-phrase`, `copy-install-cmd`, `setup-update-preface`, `guide-agents`. No `#manual-setup`, `#tools`, `copy-update-cmd`. |
-| `/setup` API | `GET /setup` markdown still documents stdio `mcp.json` (portal does not duplicate it). |
-| Component tests | `InstructionsPage.test.tsx` asserts Setup panel without manual MCP block or Tools table. |
+| Setup DOM | `setup-highlight`, `copy-setup-prompt`, `copy-install-phrase`, `copy-install-cmd`, `setup-update-preface`, `guide-agents`. No `#tools`, `copy-update-cmd`. The `setup-manual` block returns in [§35](#35-checklist-for-web-portal-41-manual-mcpjson-setup-guide); the Tools table stays removed. |
+| `/setup` API | `GET /setup` markdown still documents the per-client `mcp.json` and commands. The portal Setup tab mirrors the same sample and paths in [§35](#35-checklist-for-web-portal-41-manual-mcpjson-setup-guide). |
+| Component tests | `InstructionsPage.test.tsx` asserts Setup panel without a Tools table. The manual `mcp.json` block is asserted in [§35](#35-checklist-for-web-portal-41-manual-mcpjson-setup-guide), not here. |
 | Mockup | `01-home.html` and `13-instructions.html` match production structure for hero and Setup. |
 
 - [ ] Hero title and Antonio render on `/` and `/instructions`
@@ -581,3 +581,37 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 - [x] Public features call with no `locale` query stays `en` even when `Accept-Language` is `zh-CN`
 - [x] One browser load with no cookie and `Accept-Language: zh-TW` shows `lang=zh-Hant` and sets `sdd_locale`
 - [x] Locale switch still updates chrome copy
+
+## 35. Checklist for Web-portal-41 (manual mcp.json setup guide)
+
+**What this proves:** The Setup tab shows a Manual setup section with the `mcp.json` sample and five clients in order. Claude Code and Codex run a command; Cursor, CodeBuddy CN, and TRAE CN paste the sample into a file. The sample and per-client methods match `public/agent-setup/prompt.md`. Matches **AC60–AC61** and [`app-design.md`](./app-design.md) `/instructions` row. Partly reverses [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md): the `mcp.json` sample returns; the Tools table stays removed.
+
+**Tools:** Vitest for `SetupGuidePanel` and the drift check against `prompt.md`. Playwright for one Setup-tab render check. No new browser matrix.
+
+**Pyramid:** unit cases for sample text, client order, and path strings (about 70%). One integration test reads `prompt.md` and compares the URL and paths to the rendered panel (about 20%). One browser check covers the section render and the Copy control (about 10%).
+
+| Check | Layer | Method |
+| --- | --- | --- |
+| `setup-manual` section is present on the Setup tab | Unit | **AC60**; `SetupGuidePanel` test |
+| `mcp.json` sample has `framework.sdd.works` with only `url`, no `command` | Unit | **AC60** |
+| Sample `url` is the visitor paste origin plus `/mcp` | Unit | **AC60**; `getVisitorPasteOrigin` |
+| Five clients in order: Claude Code, Codex, Cursor, CodeBuddy CN / WorkBuddy CN, TRAE CN | Unit | **AC60** |
+| Claude Code row shows `claude mcp add --transport http --scope user framework.sdd.works {origin}/mcp` | Unit | **AC60** |
+| Codex row shows `codex mcp add framework.sdd.works --url {origin}/mcp` | Unit | **AC60** |
+| Cursor row tells the visitor to paste into `~/.cursor/mcp.json`, no codeblock | Unit | **AC60** |
+| CodeBuddy CN row tells the visitor to paste into `~/.codebuddy/mcp.json`, no codeblock | Unit | **AC60** |
+| TRAE CN row tells the visitor to paste into `~/Library/Application Support/Trae CN/User/mcp.json`, no codeblock | Unit | **AC60** |
+| `copy-manual-mcp` copies the sample text | Unit | **AC60** |
+| `copy-manual-claude` and `copy-manual-codex` copy their commands | Unit | **AC60** |
+| `setup-manual` sits after `copy-setup-prompt` and before `guide-agents` | Unit | **AC60** |
+| Sample URL and client paths match `public/agent-setup/prompt.md` | Integration | **AC61**; drift check |
+| A drift between the page and `prompt.md` fails the test | Integration | **AC61** |
+| Manual setup section renders on `/` and `/instructions` | Browser | **AC60**; Playwright |
+| `copy-manual-mcp` copies the sample in a real browser | Browser | **AC60**; Playwright |
+| No Tools table returns | Browser | **AC60**; regression from [§25](#25-regression-after-adr-122-guide-hero-and-setup-tab) |
+
+- [ ] Unit cases for sample, order, and paths pass
+- [ ] Drift check against `prompt.md` passes
+- [ ] One browser load shows the Manual setup section and the Copy control works
+- [ ] No Tools table on the Setup tab
+

@@ -1927,3 +1927,76 @@ Scenario: Features API without a locale query stays en
   When the client calls GET /api/sdd/features
   Then the JSON locale field is en
 ```
+
+---
+
+## `setup-manual` — Web-portal-41
+
+The Setup tab shows a Manual setup section for visitors whose agent cannot edit its own MCP config. The section lists five clients in order: Claude Code, Codex, Cursor, CodeBuddy CN / WorkBuddy CN, TRAE CN. Claude Code and Codex run a command. Cursor, CodeBuddy CN, and TRAE CN paste the `mcp.json` sample into a file. The sample and the per-client methods match `public/agent-setup/prompt.md` (the body of `GET /setup`). This partly reverses [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md): the `mcp.json` sample returns; the Tools table stays removed.
+
+**Default Given:** the visitor opens `/` or `/instructions` and the Setup tab is active.
+
+### User story 1 — Manual setup section is present
+
+**As a** visitor whose agent cannot edit its own MCP config
+**I want** the MCP URL and the per-client method on the Setup tab
+**So that** I can connect without the setup prompt
+
+#### AC60
+
+```gherkin
+Scenario: Manual setup section shows the mcp.json sample and five clients
+  When the visitor opens the Setup tab
+  Then the setup-manual section is present
+  And it shows one mcp.json codeblock with the entry framework.sdd.works set to only url
+  And that url is the visitor paste origin followed by /mcp
+  And the sample has no command field
+  And the section lists five clients in order Claude Code Codex Cursor CodeBuddy CN WorkBuddy CN and TRAE CN
+
+Scenario: Claude Code and Codex rows show a run command with Copy
+  When the visitor opens the Setup tab
+  Then the Claude Code row shows a codeblock with claude mcp add --transport http --scope user framework.sdd.works and the visitor origin mcp
+  And the Codex row shows a codeblock with codex mcp add framework.sdd.works --url and the visitor origin mcp
+  And each command codeblock has a Copy control
+
+Scenario: Cursor CodeBuddy CN and TRAE CN rows tell the visitor to paste the sample
+  When the visitor opens the Setup tab
+  Then the Cursor row tells the visitor to paste the sample into ~/.cursor/mcp.json
+  And the CodeBuddy CN row tells the visitor to paste the sample into ~/.codebuddy/mcp.json
+  And the TRAE CN row tells the visitor to paste the sample into ~/Library/Application Support/Trae CN/User/mcp.json
+  And none of these three rows shows a codeblock
+
+Scenario: The mcp.json sample Copy control copies the sample text
+  When the visitor activates the copy-manual-mcp control
+  Then the clipboard contains the mcp.json sample text with the visitor origin mcp url
+
+Scenario: Manual setup sits below the copy prompt and above the agents roster
+  When the visitor opens the Setup tab
+  Then the setup-manual section appears after the copy-setup-prompt control
+  And the setup-manual section appears before the guide-agents roster
+```
+
+### User story 2 — Manual setup matches the fetched setup markdown
+
+**As a** visitor
+**I want** the on-page sample and paths to match what the agent gets from GET /setup
+**So that** I do not see two different configs for the same client
+
+#### AC61
+
+```gherkin
+Scenario: The mcp.json URL matches prompt.md
+  Given public/agent-setup/prompt.md is the source for GET /setup
+  When the visitor opens the Setup tab
+  Then the mcp.json sample url equals the url in prompt.md for the same origin
+  And the Claude Code command equals the command in prompt.md
+  And the Codex command equals the command in prompt.md
+  And the Cursor path equals the path named in prompt.md
+  And the CodeBuddy CN path equals the path named in prompt.md
+  And the TRAE CN path equals the path named in prompt.md
+
+Scenario: A drift between the page and prompt.md fails the test
+  Given prompt.md names a different url or client path than the Setup tab
+  When the drift check runs
+  Then the test fails
+```

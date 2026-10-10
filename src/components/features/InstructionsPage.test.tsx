@@ -4,6 +4,10 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { InstructionsPage } from "./InstructionsPage";
 import type { Locale } from "@/i18n/t";
 import type { InstructionsPageTab } from "@/lib/instructions-tabs-page";
+import {
+  getManualMcpSample,
+  getSetupManualPasteContent,
+} from "@/lib/setup-manual";
 
 const LEARN_EMBED_URL = "https://learn.sdd.works/en/learn-embedded/";
 const LEARN_SITE_URL = "https://learn.sdd.works";
@@ -89,6 +93,7 @@ const SETUP_SENTENCE =
   "Fetch and execute the setup instructions from https://sdd.works/setup";
 const DEFAULT_PASTE = {
   setupPromptSentence: SETUP_SENTENCE,
+  manualPaste: getSetupManualPasteContent(),
 } as const;
 
 function renderGuide(
@@ -97,12 +102,14 @@ function renderGuide(
     | "tabs"
     | "onLocaleChange"
     | "setupPromptSentence"
+    | "manualPaste"
   > & {
     featuresHtml?: string;
     scrumHtml?: string;
     includeLearn?: boolean;
     onLocaleChange?: () => void;
     setupPromptSentence?: string;
+    manualPaste?: typeof DEFAULT_PASTE.manualPaste;
   },
 ) {
   const {
@@ -111,6 +118,7 @@ function renderGuide(
     includeLearn,
     onLocaleChange,
     setupPromptSentence = DEFAULT_PASTE.setupPromptSentence,
+    manualPaste = DEFAULT_PASTE.manualPaste,
     ...rest
   } = props;
   return render(
@@ -123,6 +131,7 @@ function renderGuide(
         locale: rest.locale,
       })}
       setupPromptSentence={setupPromptSentence}
+      manualPaste={manualPaste}
       {...rest}
     />,
   );
@@ -221,7 +230,7 @@ describe("InstructionsPage", () => {
         value: { writeText },
       });
 
-      renderGuide({ locale }),
+      renderGuide({ locale });
 
       fireEvent.click(screen.getByTestId("copy-setup-prompt"));
 
@@ -250,13 +259,45 @@ describe("InstructionsPage", () => {
     expect(screen.queryByText(/Install Node\.js first/i)).not.toBeInTheDocument();
   });
 
-  it("should_not_show_manual_mcp_block_on_setup_tab", () => {
+  it("should_show_manual_mcp_block_on_setup_tab", () => {
     renderGuide({ locale: "en" });
 
+    expect(screen.getByTestId("setup-manual")).toBeInTheDocument();
+    expect(screen.getByTestId("copy-manual-mcp")).toBeInTheDocument();
+    expect(screen.getByText(/Manual setup/i)).toBeInTheDocument();
+    expect(screen.getByTestId("copy-manual-claude")).toBeInTheDocument();
+    expect(screen.getByTestId("copy-manual-codex")).toBeInTheDocument();
+    expect(screen.getByText("~/.cursor/mcp.json")).toBeInTheDocument();
+    expect(screen.getByText("~/.codebuddy/mcp.json")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "~/Library/Application Support/Trae CN/User/mcp.json",
+      ),
+    ).toBeInTheDocument();
     expect(screen.queryByTestId("copy-mcp-config")).toBeNull();
-    expect(screen.queryByText(/Manual setup/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/curl/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Back to home/i)).not.toBeInTheDocument();
+    expect(document.getElementById("tools")).toBeNull();
+  });
+
+  it("should_show_manual_clients_in_order_with_url_only_sample", () => {
+    renderGuide({ locale: "en" });
+
+    const manual = screen.getByTestId("setup-manual");
+    const clients = manual.querySelectorAll(".setup-manual-client");
+    expect(Array.from(clients).map((el) => el.textContent)).toEqual([
+      "Claude Code",
+      "Codex",
+      "Cursor",
+      "CodeBuddy CN / WorkBuddy CN",
+      "TRAE CN",
+    ]);
+
+    const sample = getManualMcpSample();
+    expect(manual.querySelector(".codeblock--file pre")?.textContent).toBe(
+      sample,
+    );
+    expect(sample).not.toMatch(/"command"/);
   });
 
   it("should_show_update_command_above_agents_without_tools_table", () => {
