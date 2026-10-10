@@ -1,6 +1,6 @@
 # Go-live plan — task-02 (2026-10-10)
 
-> **SBI:** [task-02 Go-live](../../sprint-backlog.md#sprint-9). **Goal:** production `https://sdd.works` serves the portal, setup, lite installer, node installer, package API, and MCP from the current code on `origin/main` at `e7c851a`.
+> **SBI:** [task-02 Go-live](../../sprint-backlog.md#sprint-9). **Goal:** production `https://sdd.works` serves the portal, setup, lite installer, node installer, package API, and MCP from the current code on `origin/main` at `91c0852`.
 
 ## Current state (audited 2026-10-10 18:05 UTC+8)
 
@@ -24,29 +24,31 @@
 
 ### Code (new, committed, pushed to `origin/main`)
 
-- **HEAD:** `e7c851add44ac5a6e321805196150cf583180efb`
+- **HEAD:** `91c0852c1b620fe0a8dc0e35be32c8c2742c5d8d`
 - **Working tree:** clean (only untracked `.cursor/`, `samectx-notes/`, `sha-old/`, `sha-same/`, `~/`)
 - **Gates (localhost, 2026-10-10):** typecheck pass, lint pass, build pass, Vitest 447 passed 5 skipped, Playwright 41 passed
+- **CI (GitHub Actions, 2026-10-10):** green on `91c0852` (first green CI since `cc8a2c4` on 2026-09-25)
 
 ### What the new image adds over `5e047ef`
 
 | Fix | Issue | Commit |
 | --- | --- | --- |
-| `GET /setup` returns 200 | [WA-21](../../issues-log.md) | `e7c851a` |
+| `GET /setup` returns 200 | [WA-21](../../issues-log.md) | `a9d94ea` |
 | `GET /setup/install` returns 200 | Lite installer | `1a89290` |
 | `GET /setup/node` returns 200 | Node installer | `1a89290` |
 | `GET /api/setup/node/catalog` returns 200 | Node catalog | `1a89290` |
 | `GET /api/sdd/lite/files` returns 200 | Lite files | `1a89290` |
 | `framework.sdd.works` → 301 redirect | [feature-72](../../sprint-backlog.md#sprint-9) | `5e047ef` (partial) |
 | HTTP-only install, nested templates | [ADR-132](../../adr/ADR-132-simplified-install-root-and-templates.md) | `1a89290` |
-| Setup tab manual MCP JSON guide | ADR-133 | `e7c851a` |
-| Dev fixture GitHub port for E2E | GITHUB_FIXTURE | `e7c851a` |
+| Setup tab manual MCP JSON guide | ADR-133 | `a9d94ea` |
+| Dev fixture GitHub port for E2E | GITHUB_FIXTURE | `a9d94ea` |
+| CI green (lite files URL + KnowledgeFolderPanel test) | CI was red since 2026-09-25 | `91c0852` |
 
 ## Unknowns and blockers
 
 | # | Unknown | Status | Who resolves | Blocks |
 | --- | --- | --- | --- | --- |
-| U1 | Has a new GHCR image been built for `e7c851a`? | **Unknown** — `gh` CLI not authenticated in this session | Operator checks GitHub Actions | Deploy |
+| U1 | Has a new GHCR image been built for `91c0852`? | **Yes** — GHCR workflow succeeded on `91c0852` (2026-10-10) | Resolved | Deploy |
 | U2 | Is `MCP_AUTH_TOKEN` set on production? | **No** — confirmed MCP responds without Bearer | Operator sets it in Portainer before deploy | Security |
 | U3 | Are all P0 secrets set in Portainer? | Partial — `DATABASE_URL` and `GITHUB_TOKEN` work; `MCP_AUTH_TOKEN` missing; `SESSION_SECRET`, `KEYS_ENCRYPTION_KEY`, `ADMIN_SEED_PASSWORD` unknown | Operator verifies in Portainer | Deploy |
 | U4 | Has the seed admin password been rotated? | Unknown | Operator checks after first login | Security |
@@ -64,7 +66,8 @@
 - [x] `npm run build` — exit 0 (2026-10-10)
 - [x] `npm test` — 447 passed, 5 skipped (2026-10-10)
 - [x] `npx playwright test` — 41 passed (2026-10-10)
-- [x] `origin/main` at `e7c851a` (committed and pushed)
+- [x] `origin/main` at `91c0852` (committed and pushed)
+- [x] CI green on `91c0852` (GitHub Actions, 2026-10-10)
 
 ### Manual e2e §16 (MCP installer)
 
@@ -75,7 +78,7 @@
 
 ### Operator pre-flight (operator only)
 
-- [ ] Confirm GHCR image exists for `e7c851a` (GitHub Actions → GHCR)
+- [ ] Confirm GHCR image exists for `91c0852` (GitHub Actions → GHCR)
 - [ ] Confirm Portainer can pull the image by full sha tag
 - [ ] Set `MCP_AUTH_TOKEN` in Portainer (P0 security blocker)
 - [ ] Verify all P0 secrets present in Portainer stack env
@@ -86,13 +89,13 @@
 
 ### Step 1 — Build GHCR image (operator or CI)
 
-1. Push to `main` already done (`e7c851a`).
+1. Push to `main` already done (`91c0852`).
 2. GitHub Actions workflow `ghcr.yml` builds on push to `main`.
-3. Check https://github.com/ethanhuangcst/workspace.framework.sdd.works/actions for a green run on `e7c851a`.
+3. Check https://github.com/ethanhuangcst/workspace.framework.sdd.works/actions for a green run on `91c0852`.
 4. If no run triggered, manually dispatch the workflow on `main`.
-5. Wait for green. Record the full git sha as `IMAGE_TAG`: `e7c851add44ac5a6e321805196150cf583180efb`.
+5. Wait for green. Record the full git sha as `IMAGE_TAG`: `91c0852c1b620fe0a8dc0e35be32c8c2742c5d8d`.
 
-**Done when:** GHCR package page shows the tag `e7c851add44ac5a6e321805196150cf583180efb`.
+**Done when:** GHCR package page shows the tag `91c0852c1b620fe0a8dc0e35be32c8c2742c5d8d`.
 
 ### Step 2 — Portainer pull check (operator)
 
@@ -116,7 +119,7 @@
 ### Step 4 — Portainer Recreate (operator)
 
 1. Portainer → 野草云3 → Stacks → `framework-sdd-works`.
-2. Set `IMAGE_TAG` to `e7c851add44ac5a6e321805196150cf583180efb` in stack env.
+2. Set `IMAGE_TAG` to `91c0852c1b620fe0a8dc0e35be32c8c2742c5d8d` in stack env.
 3. Update the stack with **Pull** + **Recreate** (both web and mcp share the image).
 4. Wait until `framework-sdd-web` and `framework-sdd-mcp` are **running**.
 5. Glance at other stacks — they should not mass-restart.
@@ -243,7 +246,7 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://mypoke.trade/
 
 ## Done when
 
-- [ ] Image `e7c851add44ac5a6e321805196150cf583180efb` is running on web and mcp
+- [ ] Image `91c0852c1b620fe0a8dc0e35be32c8c2742c5d8d` is running on web and mcp
 - [ ] S1 through S4 pass
 - [ ] S5 confirmed or WordPress `frame-ancestors` ticket opened
 - [ ] S6 confirmed (no mass-restart of sibling apps)
