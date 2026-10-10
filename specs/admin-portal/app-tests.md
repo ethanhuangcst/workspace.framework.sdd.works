@@ -610,8 +610,8 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 | `copy-manual-mcp` copies the sample in a real browser | Browser | **AC60**; Playwright |
 | No Tools table returns | Browser | **AC60**; regression from [§25](#25-regression-after-adr-122-guide-hero-and-setup-tab) |
 
-- [ ] Unit cases for sample, order, and paths pass
-- [ ] Drift check against `prompt.md` passes
-- [ ] One browser load shows the Manual setup section and the Copy control works
-- [ ] No Tools table on the Setup tab
+- [x] Unit cases for sample, order, and paths pass
+- [x] Drift check against `prompt.md` passes
+- [x] One browser load shows the Manual setup section and the Copy control works
+- [x] No Tools table on the Setup tab
 

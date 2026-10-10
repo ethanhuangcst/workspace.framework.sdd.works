@@ -778,6 +778,7 @@ Depends on Sprint 8 (Learn embed tab and content tabs).
 | 20  | feature-94 | Unknown client install: server returns root_required, agent asks the person, server validates                     | [MCP-09 sdd_install_framework and sdd_update_framework re-design](./product-backlog.md#pb-138) | MCP/Feature    | - [install-http.ts](../src/core/tools/install-http.ts) returns root_required for a client not in the seed map. - Agent asks the person, retries with root, server validates. - Stories: [mcp-stories.md](./mcp/mcp-stories.md) `sdd-mcp-path-map` AC2b/AC2c, `sdd-mcp-cross-client` AC2, `sdd-mcp-path-detect` story 2 AC2/AC3, `sdd-mcp-url-plan` AC6/AC9/AC10/AC11. - Tests: [mcp-tests.md](./mcp/mcp-tests.md#13-mcp-09-install-root) §13 feature-94 rows. - Closed [MC-16](./issues-log.md) unknown-client path.                                                                                                                                            | **Done** |
 | 21  | feature-95 | Add the install page at /install that guides the agent through the MCP install sequence                           | [MCP-09 sdd_install_framework and sdd_update_framework re-design](./product-backlog.md#pb-138) | MCP/Feature    | - New public/agent-setup/install-full.md served at GET /install. - GET /setup links to it from an After setup note. - Stories: [mcp-stories.md](./mcp/mcp-stories.md) `sdd-mcp-install` AC8. - Tests: [mcp-tests.md](./mcp/mcp-tests.md#14-feature-95-install-page) §14. - Design: [mcp-design.md](./mcp/mcp-design.md) §2.0 (setup backend owns GET /install), §2.2 Install page. - Closed [MC-17](./issues-log.md).                                                                                                                                                                                                                                           | **Done** |
 | 22  | feature-96 | Refresh the sync timestamp when the commit is unchanged                                                           | [MCP-09 sdd_install_framework and sdd_update_framework re-design](./product-backlog.md#pb-138) | MCP/Feature    | - [sync-job.ts](../src/core/sync/sync-job.ts) rewrites syncedAt: now when existing.latestCommit equals commitSha and not force. - Closed [MC-14](./issues-log.md).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | **Done** |
+| 23  | feature-98 | Manual mcp.json setup guide on the Setup tab                                                                    | [Web-portal-41 Manual mcp.json setup guide on the Setup tab](./product-backlog.md#pb-140)       | Webapp/Feature | - [ADR-133](./adr/ADR-133-manual-mcp-json-setup-guide-returns.md) - [`SetupGuidePanel.tsx`](../src/components/features/SetupGuidePanel.tsx) - [`setup-manual.ts`](../src/lib/setup-manual.ts) - [`app-tests.md`](./admin-portal/app-tests.md) §35 - User close confirm 2026-10-10                                                                                                                                                                                                                                              | **Done** |
 
 
 
@@ -792,7 +793,6 @@ No open rows.
 | #   | Code    | SBI     | Parent PBI | Module/Type | Related specs                                                                                                                                                                                                 | Status |
 | --- | ------- | ------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
 | 1   | task-02 | Go-live | —          | MCP/Task    | - [release.md](./release.md) §7.3 - After deploy, `https://sdd.works/api/sdd/lite/files` returns 200. Versions and package return a real pack commit. [Spec-seeds-15](./product-backlog.md#pb-97) stays **ToDo** until that check passes. | **ToDo** |
-| 2   | feature-98 | Manual mcp.json setup guide on the Setup tab | [Web-portal-41 Manual mcp.json setup guide on the Setup tab](./product-backlog.md#pb-140) | Webapp/Feature | - [ADR-122](./adr/ADR-122-instructions-guide-hero-and-setup-tab.md) partly reversed; new ADR at implementation - [`prompt.md`](../public/agent-setup/prompt.md) is the source for the URL and client paths - [`SetupGuidePanel.tsx`](../src/components/features/SetupGuidePanel.tsx) | **ToDo** |
 
 
 ### Retrospective
@@ -831,7 +831,7 @@ No open rows.
 
 #### 6. [Oct 10, 2026], feature-82 done
 
-- User accepted localhost curls as close evidence because production deploy waits. [lite-pack-allowlist-is-a-pack-file.md](./knowledge/agent/lite-pack-allowlist-is-a-pack-file.md). Parent [MCP-07](./product-backlog.md#pb-105) stays **ToDo**.
+- User accepted localhost curls as close evidence because production deploy waits. [lite-pack-allowlist-is-a-pack-file.md](./knowledge/agent/lite-pack-allowlist-is-a-pack-file.md). Parent [MCP-07](./product-backlog.md#pb-105) is **Retired**; production pack check lives on [task-02 Go-live](./sprint-backlog.md#sprint-9).
 
 
 
@@ -850,6 +850,12 @@ No open rows.
 #### 9. [Oct 10, 2026], MCP-08, MCP-09 done
 
 - User applied review-status rows 1–5 after all child SBIs were **Done**; epic rows stayed **ToDo** until this hygiene pass.
+
+
+
+#### 10. [Oct 10, 2026], feature-98 done
+
+- User **close confirm** after Manual setup on the Setup tab ([ADR-133](./adr/ADR-133-manual-mcp-json-setup-guide-returns.md)); Tools table stays removed.
 
 **Opportunities**
 
@@ -933,7 +939,7 @@ No open rows.
 
 #### 6. [Oct 10, 2026], feature-82 done
 
-- On the next production image, curl `https://sdd.works/api/sdd/lite/files` and close [MCP-07](./product-backlog.md#pb-105) only when that response is 200 JSON.
+- On the next production image, curl `https://sdd.works/api/sdd/lite/files` and close [task-02 Go-live](./sprint-backlog.md#sprint-9) when that response is 200 JSON ([MCP-07](./product-backlog.md#pb-105) **Retired**).
 
 
 

@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-10 (Sprint 9 WIP; twenty-two SBIs Done; MCP-08 and MCP-09 Done; task-02 ToDo; manual e2e CB/TRAE pass; Codex OGTs open)
+> as_of: 2026-10-10 (Sprint 9 WIP; twenty-three SBIs Done; task-02 ToDo only; manual e2e CB/TRAE pass; Codex OGTs open)
 > [Definition](../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#statusmd)
 
 ---
@@ -18,13 +18,13 @@
 | Sprint 1 - 6 | Done | - Sprint 1 closed 2026-09-25.<br>- Sprint 2 closed 2026-09-26.<br>- Sprint 3 closed the web portal and MCP for R2.<br>- Sprint 4 closed 2026-10-03.<br>- [Sprint 5](./sprint-backlog.md#sprint-5) closed 2026-10-05.<br>- [Sprint 6](./sprint-backlog.md#sprint-6) closed 2026-10-05. |
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Thirteen SBIs **Done** (includes [feature-81](./sprint-backlog.md#sprint-8) sticky guide header for [Web-portal-29](./product-backlog.md#pb-126)). |
-| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Twenty-two SBIs **Done**. [MCP-08](./product-backlog.md#pb-137) and [MCP-09](./product-backlog.md#pb-138) **Done**. Open SBI: [task-02 Go-live](./sprint-backlog.md#sprint-9). [MCP-07](./product-backlog.md#pb-105) is **Retired**. Re-smoke live `/setup` and §7.1 hostnames after deploy. |
+| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Twenty-three SBIs **Done** (includes [feature-98](./sprint-backlog.md#sprint-9) / [Web-portal-41](./product-backlog.md#pb-140)). Open SBI: [task-02 Go-live](./sprint-backlog.md#sprint-9) only. [MCP-07](./product-backlog.md#pb-105) is **Retired**. Re-smoke live `/setup` and §7.1 hostnames after deploy. |
 | Unplanned PBIs | — | - One row: [Web-portal-21](./product-backlog.md#pb-107) partner site (not this repo). |
 
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: [task-02 Go-live](./sprint-backlog.md#sprint-9) is **ToDo**. Manual e2e §16 **pass** on CodeBuddy CN and TRAE CN (TC-1 through TC-6) and **pass** once-per-run for TC-7 through TC-9 (Cursor MCP + verify scripts) on 2026-10-10. Evidence: [`go-live-test.md`](./mcp/go-live-test.md), [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md). **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md).
+- What SBI are we working on now: [task-02 Go-live](./sprint-backlog.md#sprint-9) is the only open SBI (**ToDo**). [feature-98](./sprint-backlog.md#sprint-9) / [Web-portal-41](./product-backlog.md#pb-140) closed 2026-10-10 after user confirm. Manual e2e §16 **pass** on CodeBuddy CN and TRAE CN (TC-1 through TC-6) and **pass** once-per-run for TC-7 through TC-9 (Cursor MCP + verify scripts) on 2026-10-10. Evidence: [`go-live-test.md`](./mcp/go-live-test.md), [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md). **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md).
 
 ## what could be the next
 

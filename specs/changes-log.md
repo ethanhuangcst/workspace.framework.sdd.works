@@ -8,6 +8,14 @@
 
 ## 2026-10-10
 
+### feature-98 / Web-portal-41 closed (Manual mcp.json setup guide)
+
+**Why:** User confirmed feature-98 usable and accepted review-status hygiene rows 1–4.
+
+**What changed:** [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) [feature-98](./sprint-backlog.md#sprint-9) **Done**. [`product-backlog.md`](./product-backlog.md#pb-140) [Web-portal-41](./product-backlog.md#pb-140) **Done**. [`app-tests.md`](./admin-portal/app-tests.md) §35 checklist checked. [`status.md`](./status.md) names **task-02** as the only open SBI. [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) Retrospective block 6 and Future actions block 6 retarget production pack curls from retired [MCP-07](./product-backlog.md#pb-105) to [task-02 Go-live](./sprint-backlog.md#sprint-9).
+
+**Verification:** User **close confirm** in chat.
+
 ### Dev fixture GitHub port for Settings and Framework E2E
 
 **Why:** Settings and Framework end-to-end tests now use a dev-only fixture GitHub port.
