@@ -96,7 +96,7 @@ describe("hostname defaults after ADR-127 (BUG-host regression)", () => {
 
   it("should_force_canonical_visitor_paste_origin_in_production_even_when_public_base_is_localhost", () => {
     clearPublicOriginEnv();
-    process.env.NODE_ENV = "production";
+    (process.env as Record<string, string | undefined>).NODE_ENV = "production";
     process.env.PUBLIC_BASE_URL = "http://localhost:3040";
     expect(getVisitorPasteOrigin()).toBe(CANONICAL);
     expect(getSetupGuidePasteSentences().setupPromptSentence).toBe(
@@ -115,7 +115,7 @@ describe("hostname defaults after ADR-127 (BUG-host regression)", () => {
 
   it("should_use_public_base_url_for_visitor_paste_origin_outside_production", () => {
     clearPublicOriginEnv();
-    process.env.NODE_ENV = "development";
+    (process.env as Record<string, string | undefined>).NODE_ENV = "development";
     process.env.PUBLIC_BASE_URL = "http://localhost:3040";
     expect(getVisitorPasteOrigin()).toBe("http://localhost:3040");
     expect(getSetupGuidePasteSentences().setupPromptSentence).toBe(

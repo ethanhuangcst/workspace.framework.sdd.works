@@ -1,7 +1,7 @@
 # ADR-054: Hybrid HTTP MCP + AI tarball extraction
 
 ## Status
-Accepted — **primary end-user path superseded by [ADR-058](./ADR-058-stdio-end-user-http-fallback.md).** HTTP install/update behavior in this ADR remains the **fallback** when the local program cannot be installed or the client accepts only a URL.
+Accepted — **primary end-user path superseded by [ADR-058](./ADR-058-stdio-end-user-http-fallback.md), then by [ADR-131](./ADR-131-http-only-install-bundled-fallback.md).** HTTP install/update behavior in this ADR is the only path. ADR-131 removes the writer binary and the stdio transport. The agent downloads a tarball URL and extracts listed files.
 
 ## Context
 End users need a simple MCP setup: no binary path in `mcp.json`, no terminal commands, and AI-driven install/update from chat. ADR-051 (zero-dep stdio binary) and ADR-053 (thin stdio client) solved server-side package distribution but still required a local binary and `command` in MCP config.

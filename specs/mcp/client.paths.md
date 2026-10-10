@@ -2,7 +2,9 @@
 
 **Area:** MCP install/update (MCPI-01 / MCPI-02 / MCPI-04)
 **Source of truth for:** `packages/sdd-paths/paths.json` seed map expansion (Sprint 7 / MCPI-02).
-**Related:** [`mcp-stories.md`](./mcp-stories.md) · [`r1-req-spec.md`](../phase1-process-specs/r1-req-spec.md) §3 · [ADR-047](../adr/ADR-047-qwen-install-path-discovery.md)
+**Related:** [`mcp-stories.md`](./mcp-stories.md) · [`mcp-design.md`](./mcp-design.md) · [ADR-047](../adr/ADR-047-qwen-install-path-discovery.md) · [ADR-131](../adr/ADR-131-http-only-install-bundled-fallback.md)
+
+**Status (ADR-132):** The agent sends `client` and `os` over HTTP. The server resolves the seed-map root for known clients. Unknown clients return `root_required` until the person supplies `root`. Env vars in this file are operator reference only; install does not read them at runtime.
 
 Research date: 2026-09-17. Confirm before relying on a path — clients ship new versions frequently.
 
@@ -13,7 +15,7 @@ Research date: 2026-09-17. Confirm before relying on a path — clients ship new
 Each client entry has:
 
 - **Regular paths** — where the client reads skills / rules / agents / other framework artifacts by default, split into **user (global)** and **project (workspace)** scopes. OS variants only where they differ.
-- **Read customized paths** — env vars, config files, or MCP mechanisms the install tool can inspect to discover non-default roots. This is what MCPI-04 (Qwen path discovery) and the resolver `overrides` parameter consume.
+- **Read customized paths** — env vars, config files, or MCP mechanisms an operator can inspect to understand non-default roots. ADR-132 does not consume these at install time; they are reference for the relocation limitation and future work.
 - **Notes** — precedence, compatibility aliases, character limits, gotchas.
 
 **Legend:** `~` = `$HOME` (macOS/Linux), `%USERPROFILE%` = Windows home. `darwin` / `linux` / `win32` match Node `process.platform`.
@@ -190,7 +192,7 @@ Agent file: YAML frontmatter (`name`, `description`, `model`, `tools`) + Markdow
 
 Memory: `~/.codebuddy/CODEBUDDY.md` (user), `./CODEBUDDY.md` or `./.codebuddy/CODEBUDDY.md` (project), `./CODEBUDDY.local.md` (local). MCP: `~/.codebuddy/mcp.json` (global), `.codebuddy/mcp.json` (project). Settings: `~/.codebuddy/settings.json` + `settings.local.json`.
 
-`GET /setup` (setup version `2026-10-09.v10`) uses two headings for this same user MCP file: **CodeBuddy (international)** for CodeBuddy or WorkBuddy, and **CodeBuddy CN** for CodeBuddy CN or WorkBuddy CN. Project MCP is `.codebuddy/mcp.json` only when the user asked to configure the current workspace.
+`GET /setup` (setup version `2026-10-09.v11`) uses two headings for this same user MCP file: **CodeBuddy (international)** for CodeBuddy or WorkBuddy, and **CodeBuddy CN** for CodeBuddy CN or WorkBuddy CN. Project MCP is `.codebuddy/mcp.json` only when the user asked to configure the current workspace.
 
 **Read customized paths**
 
@@ -225,7 +227,7 @@ MCP:
 
 `~/.trae-cn/mcp.json` is not the Manage-page user MCP list for TRAE CN. Settings: `.trae/settings.json` + `.trae/settings.local.json` (gitignored). Compatible: `AGENTS.md`, `CLAUDE.md`, `CLAUDE.local.md` at project root.
 
-`GET /setup` (setup version `2026-10-09.v10`) uses **TRAE (international)** for `~/.trae/mcp.json` and **TRAE CN** for the Application Support user file above. The international section does not use the TRAE CN path. The TRAE CN section does not use `~/.trae/mcp.json` or `~/.trae-cn/mcp.json` for the user list.
+`GET /setup` (setup version `2026-10-09.v11`) uses **TRAE (international)** for `~/.trae/mcp.json` and **TRAE CN** for the Application Support user file above. The international section does not use the TRAE CN path. The TRAE CN section does not use `~/.trae/mcp.json` or `~/.trae-cn/mcp.json` for the user list.
 
 **Read customized paths**
 
@@ -410,35 +412,36 @@ Cursor, Claude Code, Codex, Copilot, Cline, WorkBuddy, TRAE, Windsurf, Kiro, Ope
 
 ---
 
-## Evaluation: Detect-then-resolve-then-write install flow
+## Evaluation: Server resolves root (ADR-132)
 
-**Proposal:** Each `sdd_install_framework` / `sdd_update_framework` call reads the calling client's configuration first, determines the actual install path, then writes — instead of relying on seed-map defaults alone.
+**Decision:** The agent sends `client`, `os`, and optional `ledger`. For a known client, the server uses the seed map. For an unknown client, the server returns `root_required` until the agent sends a validated `root`. Relocation env vars documented below are a known limitation, not inputs to install.
 
-**Research date:** 2026-09-17. Evidence: MCP 2026-07-28 spec, SDK source, Microsoft APM, client docs.
+**Research date:** 2026-09-17 (client paths). ADR-132 confirmed 2026-10-10.
 
 ### How client identification works in MCP
 
 | Transport | Mechanism | Available signals |
 | --- | --- | --- |
-| **stdio** | Server is a child process — inherits `process.env` | `clientInfo.name` from initialize + all client env vars (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`, etc.) + `CLAUDE_PROJECT_DIR` |
-| **HTTP** | Stateless request carries `_meta.io.modelcontextprotocol/clientInfo` | `clientInfo.name` only — **no** env vars, **no** local filesystem access |
+| **HTTP (ADR-131 / ADR-132, only transport)** | Stateless request carries `_meta.io.modelcontextprotocol/clientInfo` | `clientInfo.name` helps the agent choose `client`. The server cannot read the caller's env vars or filesystem. The server resolves `root` for known clients. |
 
 Our SDK (`@modelcontextprotocol/sdk`): `McpServer.server.getClientVersion()` returns `{ name, version }` from the initialize handshake. Accessible inside tool handlers via the server instance.
 
-**Note:** MCP 2026-07-28 spec deprecates `roots/list` (server-initiated request for working dirs). New pattern is MRTR (Multi Round-Trip Requests) — server returns `InputRequiredResult`, client retries with input. For path discovery, explicit `client` arg + env vars are simpler than MRTR.
+**Note:** MCP 2026-07-28 spec deprecates `roots/list`. For unknown clients, the server returns `root_required` and the agent retries with person-supplied `root`.
 
-### Proposed resolution chain (stdio — full chain; HTTP fallback — seed templates only, ADR-054 / ADR-058)
+### Install flow (ADR-132)
 
 ```
-1. Explicit `client` arg (caller tells us)           → highest priority
-2. `clientInfo.name` from MCP initialize              → identify which client
-3. Env var resolution (per-client)                    → check CLAUDE_CONFIG_DIR, CODEX_HOME, etc.
-4. Config file probe (per-client)                     → read ~/.claude.json, ~/.codex/config.toml, etc.
-5. Seed map fallback (PATH-01)                        → default paths from paths.json
-6. Qwen discovery (MCPI-04, ADR-047)                  → last resort, for clients with no env var
+Agent side:
+1. Map session to `client` (user, clientInfo.name, aliases)
+2. Call sdd_install_framework with client, os, ledger (omit root for known clients)
+
+Server side (HTTP):
+3. Known client: seed-map root for client + os
+4. Unknown client without root: root_required
+5. Unknown client with root: validate path policy, then use root
 ```
 
-Steps 1–4 are **deterministic** (no LLM cost). Step 6 is only for clients without env vars (Cursor, WorkBuddy, TRAE, Windsurf).
+The env-var table below is reference for operators and future relocation work. Install does not walk that chain in the first ADR-132 release.
 
 ### Env var resolution table (verified 2026-09-17)
 
@@ -478,45 +481,13 @@ The MCP `clientInfo.name` sent by each client is not standardized. Expected valu
 
 Build a case-insensitive mapping table with aliases. Fall back to explicit `client` arg if `clientInfo.name` is empty or unrecognized.
 
-### Pros
+### Relocation limitation
 
-1. **Deterministic for 6+ clients** — Claude Code, Codex, Cline, Kiro, Copilot, OpenCode all expose env vars. No LLM cost for those.
-2. **Handles relocation** — users who set `CLAUDE_CONFIG_DIR` or `CODEX_HOME` are resolved correctly, not silently missed.
-3. **Already proven** — Microsoft's Agent Package Manager (APM) uses exactly this pattern: `resolved_config_path()` checks env var → falls back to default.
-4. **No extra round trips** — env vars are in `process.env` at spawn time; config files are local reads. No MRTR needed.
-5. **Strictly better than seed-map-only** — seed map becomes the fallback instead of the primary.
+Users who set `CLAUDE_CONFIG_DIR`, `CODEX_HOME`, or similar env vars still install to the seed-map default until a future story adds relocation support. Document that limit in install tool text and on `GET /install`.
 
-### Cons / Risks
+### Retired proposal (ADR-131 agent detect chain)
 
-1. **stdio (primary, ADR-058)** — env vars and config files are accessible when the server runs as a child process. The local program writes pack files. **HTTP install (fallback, ADR-054):** returns portable seed-map templates (`~/.cursor…`) + `packageUrl`; the AI agent extracts on the caller machine — no server-side env/config/LLM probe.
-2. **4 clients have no env var** — Cursor, WorkBuddy, TRAE, Windsurf. For those, the flow falls through to seed map → Qwen. No regression vs. current design.
-3. **`clientInfo.name` not standardized** — different clients may send different names. Need a case-insensitive mapping table with aliases. Verify with real clients during Sprint 6.
-4. **Config file formats differ** — JSON (`~/.claude.json`), TOML (`~/.codex/config.toml`), YAML (`~/.continue/config.yaml`). Per-client parser needed. Only read the fields relevant to path discovery; don't parse the entire config.
-5. **Extra filesystem reads** — each install call probes 1–3 config files. Mitigated by caching resolved paths per session (stdio session is long-lived).
-6. **SDK access** — `getClientVersion()` is on `McpServer.server` (the underlying `Server`), not on `McpServer` directly. Tool handlers need a reference to the server instance.
-
-### Comparison with current design (MCPI-04 / ADR-047)
-
-| Aspect | Current (seed map + Qwen) | Proposed (detect + env + seed + Qwen) |
-| --- | --- | --- |
-| Deterministic | Only seed map defaults | Env vars for 6+ clients, seed map for rest |
-| LLM cost | Qwen call on every install | Qwen only for 4 clients without env vars |
-| Relocation handling | Missed (seed map is static) | Handled via env vars |
-| Accuracy | Probabilistic (Qwen) | Exact for env-var clients, probabilistic for others |
-| Latency | Qwen round trip (~seconds) | Local file reads (~ms) for env-var clients |
-| Complexity | Lower | Higher (per-client resolver) but bounded |
-
-### Recommendation
-
-**Adopt for Sprint 6 (MCPI-01).** The detect-then-resolve-then-write flow is strictly better:
-
-1. Build a `resolveClientPaths(client, os, env)` function that chains: env vars → config file probe → seed map → (optional Qwen).
-2. Use `McpServer.server.getClientVersion()` to auto-detect the client from `clientInfo.name` when the explicit `client` arg is omitted.
-3. Cache resolved paths per stdio session (the server process lives for the duration of the client session).
-4. Keep Qwen as the last-resort fallback for clients without env vars (Cursor, WorkBuddy, TRAE, Windsurf).
-5. Update ADR-047 to document the new resolution chain.
-
-**HTTP vs stdio:** stdio (primary, ADR-058) runs the full detect-resolve-write chain locally. HTTP (fallback, ADR-054) returns seed templates + tarball URL; the AI executor runs `curl | tar` and writes `.sdd-installed.json` on the user machine. `local_install_required` is deprecated on HTTP.
+An earlier design had the agent read env vars and config files, send `root` as a hint, and receive `root_warning` when the hint differed from the seed map. ADR-132 retires that chain to reduce agent mistakes such as sending a workspace folder as `root` (MC-16).
 
 
 

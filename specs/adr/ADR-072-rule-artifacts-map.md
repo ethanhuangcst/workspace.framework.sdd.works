@@ -8,7 +8,7 @@ Harness rules in the guide had no `sdd-` prefix in 2026-09-27: `dod.mdc`, `incre
 
 `sdd-audit-artifacts` is a skill. It runs when someone asks for an audit, lists gaps, and waits for an instruction. Between audits, an agent can add or move a project file and leave `{workspace}/artifacts-map.md` unchanged.
 
-The EN seed `templates/EN/artifacts-map.md` is a starter. It is not the list a live project must match.
+The EN seed `templates/framework.sdd.works/EN/artifacts-map.md` is a starter. It is not the list a live project must match.
 
 ## Decision
 1. The rule name is `artifacts-map`. The file is `artifacts-map.mdc`. No `sdd-` prefix.

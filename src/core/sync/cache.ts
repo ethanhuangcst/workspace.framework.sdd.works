@@ -19,8 +19,6 @@ export type CachedPackageRef = {
   syncedAt: string;
 };
 
-export const CACHE_STALE_MINUTES = 30;
-
 export function getCachedManifest(): PackageManifest | null {
   return readPackageManifest();
 }

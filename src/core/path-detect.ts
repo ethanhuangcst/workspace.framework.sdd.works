@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { validateExpandedPath } from "@/core/path-policy";
 import { discoverPathsWithLlm, type LlmPort } from "@/core/path-resolve-llm";
 
-export type ResolutionSource = "env" | "config" | "seed" | "llm";
+export type ResolutionSource = "env" | "config" | "seed" | "llm" | "agent";
 
 export type ResolvedClientPaths = {
   primary: PathRoots;

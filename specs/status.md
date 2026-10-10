@@ -1,8 +1,8 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-09 (Sprint 9 WIP)
-> [Definition](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#statusmd)
+> as_of: 2026-10-10 (Sprint 9 WIP)
+> [Definition](../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#statusmd)
 
 ---
 
@@ -18,19 +18,19 @@
 | Sprint 1 - 6 | Done | - Sprint 1 closed 2026-09-25.<br>- Sprint 2 closed 2026-09-26.<br>- Sprint 3 closed the web portal and MCP for R2.<br>- Sprint 4 closed 2026-10-03.<br>- [Sprint 5](./sprint-backlog.md#sprint-5) closed 2026-10-05.<br>- [Sprint 6](./sprint-backlog.md#sprint-6) closed 2026-10-05. |
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Thirteen SBIs **Done** (includes [feature-81](./sprint-backlog.md#sprint-8) sticky guide header for [Web-portal-29](./product-backlog.md#pb-126)). |
-| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Eleven SBIs **Done**: [feature-72](./sprint-backlog.md#sprint-9)–[feature-79](./sprint-backlog.md#sprint-9), [feature-86](./sprint-backlog.md#sprint-9)–[feature-88](./sprint-backlog.md#sprint-9). Three SBIs **ToDo**: [feature-80](./sprint-backlog.md#sprint-9), [feature-82](./sprint-backlog.md#sprint-9), [feature-84](./sprint-backlog.md#sprint-9). |
+| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Twelve SBIs **Done**: [feature-72](./sprint-backlog.md#sprint-9)–[feature-79](./sprint-backlog.md#sprint-9), [feature-86](./sprint-backlog.md#sprint-9)–[feature-88](./sprint-backlog.md#sprint-9), [feature-97](./sprint-backlog.md#sprint-9). Ten SBIs **ToDo**: [task-01](./sprint-backlog.md#sprint-9), [feature-90](./sprint-backlog.md#sprint-9)–[feature-96](./sprint-backlog.md#sprint-9), [feature-82](./sprint-backlog.md#sprint-9), [feature-84](./sprint-backlog.md#sprint-9) (MCP-08, MCP-09, MCP-07; feature-80 retired). |
 | Unplanned PBIs | — | - One row: [Web-portal-21](./product-backlog.md#pb-107) partner site (not this repo). |
 
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: No **WIP** SBI. Last closed: [feature-72](./sprint-backlog.md#sprint-9), [feature-74](./sprint-backlog.md#sprint-9), [feature-77](./sprint-backlog.md#sprint-9), [feature-88](./sprint-backlog.md#sprint-9). Next **ToDo** is [feature-80 Tagged release ships sdd-mcp on GitHub](./sprint-backlog.md#sprint-9). [MC-09](./issues-log.md) closed 09/Oct/2026 (`sdd_get_key` missing name is not a tool error). [MC-07](./issues-log.md), [WA-14](./issues-log.md), and [WA-15](./issues-log.md) stay open. [WA-18](./issues-log.md) closed with [feature-77](./sprint-backlog.md#sprint-9).
+- What SBI are we working on now: No **WIP** SBI. Last closed: [feature-97](./sprint-backlog.md#sprint-9) ([Web-portal-39](./product-backlog.md#pb-136)). Next **ToDo** is [task-01 Write ADR-132 and sync all specs to the simplified install design](./sprint-backlog.md#sprint-9). [feature-80](./sprint-backlog.md#sprint-9) retired, superseded by [MCP-08](./product-backlog.md#pb-137) and [MCP-09](./product-backlog.md#pb-138). [MC-09](./issues-log.md) closed 09/Oct/2026 (`sdd_get_key` missing name is not a tool error). [MC-07](./issues-log.md), [WA-14](./issues-log.md), and [WA-15](./issues-log.md) stay open. [WA-18](./issues-log.md) closed with [feature-77](./sprint-backlog.md#sprint-9).
 
 ## what could be the next
 
-- Start [Sprint 9](./sprint-backlog.md#sprint-9) [feature-80](./sprint-backlog.md#sprint-9) ([MCP-06](./product-backlog.md#pb-104)) or [feature-82](./sprint-backlog.md#sprint-9) ([MCP-07](./product-backlog.md#pb-105)).
-- [Spec-seeds-15](./product-backlog.md#pb-97) stays **ToDo** until [feature-82](./sprint-backlog.md#sprint-9) puts the lite allow-list in production sync cache and the install tarball.
-- [feature-84](./sprint-backlog.md#sprint-9) finishes the operator guide to public URLs (visitor bookmark host plus where admin sign-in lives) after [feature-72](./sprint-backlog.md#sprint-9).
+- Start [Sprint 9](./sprint-backlog.md#sprint-9) [task-01](./sprint-backlog.md#sprint-9): write [ADR-132](./adr/ADR-132-simplified-install-root-and-templates.md) and sync specs to the simplified install design. Then [feature-90](./sprint-backlog.md#sprint-9)–[feature-96](./sprint-backlog.md#sprint-9) implement the setup separation and the install redesign.
+- [feature-82](./sprint-backlog.md#sprint-9) ([MCP-07](./product-backlog.md#pb-105)) serves the live pack after admin sync.
+- [feature-84](./sprint-backlog.md#sprint-9) finishes the operator guide to public URLs after [feature-72](./sprint-backlog.md#sprint-9).
 - [Web-portal-21](./product-backlog.md#pb-107) is **unplanned** here (partner property such as 2study.ai).
 
 ## Current OGT(On-going Tasks)
@@ -47,7 +47,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | Refresh CE-SKILL catalog for shipped skills | - [framework-tests.md](./framework/framework-tests.md) **CE-SKILL-07**, **CE-SKILL-14** | Sprint 7 refine | Sprint 9 |
 | 2 | Use a numbered table reply in compare and planning skills | - sdd-refine-backlog, sdd-update-specs, sdd-plan-sprint, sdd-spec-to-build, atdd-expert, sdd-review-status | Sprint 7 | Sprint 9 |
-| 3 | Refine Implementable PBI i18n-03 HanS and HanT engineering artifacts | - [i18n-03](./product-backlog.md#L304) · `templates/HanS/`, `templates/HanT/` engineering seeds | Sprint 7 plan | Sprint 9 |
+| 3 | Refine Implementable PBI i18n-03 HanS and HanT engineering artifacts | - [i18n-03](./product-backlog.md#L304) · `templates/framework.sdd.works/HanS/`, `templates/framework.sdd.works/HanT/` engineering seeds | Sprint 7 plan | Sprint 9 |
 | 4 | Rewrite pack-scrum-in-sdd.md | - [ogt-8-pack-scrum-in-sdd.md](./framework/ogt-8-pack-scrum-in-sdd.md)<br>- [ADR-126](./adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)<br>- AI-read trio beside `constants.json` · **CE-OGT-8** | 2026-10-08 | Sprint 9 |
 | 5 | Restructure workspace: seeds in a separate folder with its own Git remote | - [`pack.framework.sdd.works/`](../pack.framework.sdd.works/) pack authoring tree<br>- Remote `framework.sdd.works.git` | Sprint 8 | Sprint 9 |
 | 6 | All links should use placeholders such as `{client_root}` and `{workspace}` | - [`check-pack-seed-links.sh`](../scripts/check-pack-seed-links.sh)<br>- [`pack.framework.sdd.works/`](../pack.framework.sdd.works/) pack tree<br>- [`framework-stories.md`](./framework/framework-stories.md#sdd-pack-deliverable-links--ogt-2-pack-link-placeholders) AC1–AC4 | Sprint 5 | Sprint 9 |

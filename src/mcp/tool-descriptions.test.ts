@@ -28,4 +28,21 @@ describe("mcpToolDescription", () => {
       messages["zh-Hans"][key],
     );
   });
+
+  const INSTALL_TOOLS = ["sdd_install_framework", "sdd_update_framework"] as const;
+
+  for (const locale of ["en", "zh-Hans", "zh-Hant"] as const) {
+    it(`should_name_client_os_and_root_omission_for_install_tools_${locale}`, () => {
+      for (const tool of INSTALL_TOOLS) {
+        const desc = mcpToolDescription(tool, locale);
+        expect(desc.toLowerCase()).toMatch(/client/);
+        expect(desc.toLowerCase()).toMatch(/\bos\b/);
+        expect(desc).not.toMatch(/^mcp\.tools\./);
+        if (locale === "en") {
+          expect(desc).toMatch(/path map/i);
+          expect(desc).toMatch(/omit root/i);
+        }
+      }
+    });
+  }
 });

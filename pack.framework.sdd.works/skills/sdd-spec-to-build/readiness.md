@@ -43,9 +43,9 @@ From the chosen module `files` list, pick **one** path per job. Do not assume `{
 
 | Job | Match rule (first match in the module `files` list) |
 | --- | --- |
-| 2 Stories | Basename ends with `-stories.md`, or basename is exactly `stories.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-stories.md`](../../templates/sdd-scrum-practices.md#module-name-storiesmd). |
-| 3 Tests | Basename ends with `-tests.md`, or basename is exactly `tests.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-tests.md`](../../templates/sdd-scrum-practices.md#module-name-testsmd). |
-| 4, 5, 6, 7 Design (and UI work) | Basename ends with `-design.md`, or basename is exactly `design.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-design.md`](../../templates/sdd-scrum-practices.md#module-name-designmd) (**UI design**, **Technical design**). |
+| 2 Stories | Basename ends with `-stories.md`, or basename is exactly `stories.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-stories.md`](../../templates/framework.sdd.works/sdd-scrum-practices.md#module-name-storiesmd). |
+| 3 Tests | Basename ends with `-tests.md`, or basename is exactly `tests.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-tests.md`](../../templates/framework.sdd.works/sdd-scrum-practices.md#module-name-testsmd). |
+| 4, 5, 6, 7 Design (and UI work) | Basename ends with `-design.md`, or basename is exactly `design.md`. Section rules: EN [`sdd-scrum-practices.md` § `{module-name}-design.md`](../../templates/framework.sdd.works/sdd-scrum-practices.md#module-name-designmd) (**UI design**, **Technical design**). |
 
 Flat layouts without a component subfolder are valid: for example `specs/stories.md`, `specs/tests.md`, `specs/design.md` when the map lists them on a module with no `folder`. Prefixed flat paths such as `specs/app-stories.md` under `{artifacts_root}` without a subfolder use the same suffix rules.
 
@@ -72,7 +72,7 @@ Do not treat the first stale job as full readiness. Do not propose implement ski
 
 ## Build handoff
 
-After readiness confirm, name the skill or skills the user should invoke next. The pack does not ship `sdd-build` (ADR-108).
+After readiness confirm, name the skill or skills from the table below that the user should invoke next.
 
 | SBI shape | Propose first | Also when needed |
 | --- | --- | --- |

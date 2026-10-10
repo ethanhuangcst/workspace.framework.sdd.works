@@ -8,8 +8,8 @@ description: >
   design, a mockup, or technical design. Loads atdd-expert, testing-expert,
   sdd-update-specs, frontend-designer, frontend-developer, or fullstack-engineer.
   Does not implement the feature. After readiness confirm, proposes domain
-  implement skills such as fullstack-engineer or frontend-developer, not a pack
-  sdd-build skill.
+  implement skills such as fullstack-engineer or frontend-developer per the
+  build handoff table.
 ---
 
 # Spec to build
@@ -67,7 +67,7 @@ When readiness is satisfied and the user confirms, propose domain implement skil
 
 - Readiness mode may assess all jobs without writing. One job still writes at most one confirm batch per reply unless the user names more than one job.
 - Do not say the feature is well spec'd or propose implement skills without a readiness summary and user confirm.
-- Do not propose or ship a pack skill named `sdd-build`.
+- Propose only skills named in readiness.md Build handoff. Do not invent a pack implement skill.
 - Do not run UI jobs 4–6 when applicability is N/A.
 - Do not start the next feature.
 - Do not set a backlog row to **Done**.

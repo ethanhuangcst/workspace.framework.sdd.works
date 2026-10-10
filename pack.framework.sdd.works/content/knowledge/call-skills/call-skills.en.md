@@ -44,4 +44,4 @@ The framework pack ships skills under `skills/` on full MCP install. Each skill 
 
 ## Pack lookup
 
-`templates/constants.json` lists skill keys the pack expects on the client root. If a key is missing after install, re-run MCP install or copy the skill folder from the pack tarball before you rely on the picker.
+`templates/framework.sdd.works/constants.json` lists skill keys the pack expects on the client root. If a key is missing after install, re-run MCP install or copy the skill folder from the pack tarball before you rely on the picker.

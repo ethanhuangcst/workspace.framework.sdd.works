@@ -93,4 +93,4 @@ After the work, send one message with:
 
 ## Optional SDD harness
 
-When the project uses the framework pack, `sdd-spec-to-build` may load this skill for job 7 (technical design). After engineering readiness confirm, the user invokes this skill to implement one SBI when the work spans UI, API, data, or auth. Stories and acceptance criteria stay in module specs and `atdd-expert`. Close stays in `sdd-dod.mdc`. The pack does not ship `sdd-build` (ADR-108).
+When the project uses the framework pack, `sdd-spec-to-build` may load this skill for job 7 (technical design). After engineering readiness confirm, the user invokes this skill to implement one SBI when the work spans UI, API, data, or auth. Stories and acceptance criteria stay in module specs and `atdd-expert`. Close stays in `sdd-dod.mdc`.

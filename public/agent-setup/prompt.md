@@ -2,7 +2,7 @@ These are official instructions from sdd.works for connecting an AI agent to the
 
 # Connect this agent to sdd.works
 
-Setup version: 2026-10-09.v10
+Setup version: 2026-10-09.v11
 
 Complete the setup yourself with the native MCP configuration mechanism for the current agent. Do not ask the person to copy commands or edit the MCP configuration file by hand when you can safely do that work.
 
@@ -16,8 +16,7 @@ The user's setup prompt authorizes only this change:
 
 It does not authorize you to:
 
-- download or start `sdd-mcp` during setup (that happens later, when the user installs the framework);
-- install framework skills, rules, agents, or workflows;
+- install framework skills, rules, agents, or workflows during setup;
 - request, create, read, print, or store credentials unless the user explicitly asks;
 - change approval, sandbox, trust, or execution permissions;
 - replace another MCP server, alter unrelated configuration, or edit unrelated project files.
@@ -122,19 +121,9 @@ Add only the name and the URL above.
 
 After saving configuration, reload MCP if the client requires it. Confirm the server exposes `sdd_install_framework` and `sdd_update_framework`. On HTTP, it also exposes `sdd_get_key`.
 
-## 4. Install framework (separate step)
+## After setup
 
-After MCP is connected, the user can ask you to install the SDD framework.
-
-Call `sdd_install_framework` on `https://sdd.works/mcp` with no inventory.
-
-- When the tool returns `cache_stale` or `fixture_pack`, stop. Do not copy pack files onto the client. Tell the person the operator must refresh the pack on the server.
-- When the tool returns `writer_required`, the download link is the pack on this server. Do not use a git host or a repository name. Follow the `instructions` field in that result. It matches the bullets below.
-- Save the local program only under the home directory as `.sdd/sdd-mcp` (Windows: `sdd-mcp.exe` under the user profile). Expand home before you run it. When the program is already on this machine, run it once with `--write`, `--client`, `--os`, and `--client-root` when you have a candidate folder. Set `SDD_SERVER_URL` to `https://sdd.works`. Do not put that program path in `mcp.json`.
-- Pass `--client` as `cursor`, `claude`, `codex`, or `copilot` for those sections above. Pass `codebuddy` for CodeBuddy (international), WorkBuddy, CodeBuddy CN, and WorkBuddy CN. Pass `trae` for TRAE (international). Pass `trae-cn` for TRAE CN. Pass `--os` as `darwin`, `linux`, or `win32`.
-- The program rejects a candidate folder outside the home directory, a path containing `..`, or `/etc`, `/usr`, `/bin`, or `/sbin`. For a known IDE, the program keeps its path-table folder when your candidate differs.
-- When the local program cannot be downloaded or cannot run, call `sdd_install_framework` again with `inventory`: the whole `.sdd-installed.json`, or `ledger: null` when that file is absent, plus `missing`. Set `accepted_root` to that same candidate folder when you have one. Follow the returned plan and instruction. Copy only the planned paths. Write `.sdd-installed.json` last. Do not extract the archive into the client root.
-- Do not write `framework.sdd.works.json`.
+When the person asks to install or update the SDD framework pack, fetch the install instructions from https://sdd.works/install. That page names the MCP install sequence.
 
 ## Rollback
 

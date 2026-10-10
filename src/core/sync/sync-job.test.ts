@@ -17,6 +17,7 @@ import {
   packageTarPath,
   unpackedDir,
 } from "./paths";
+import { LITE_PACK_ALLOWLIST_FILENAME } from "@/core/seeds/lite-install-manifest";
 import { setSyncJobDepsForTests, syncFrameworkRepo } from "./sync-job";
 
 const originalCacheDir = process.env.SDD_PACKAGE_CACHE_DIR;
@@ -82,6 +83,59 @@ describe("syncFrameworkRepo", () => {
       const manifest = readPackageManifest();
       expect(manifest?.latestCommit).toBe("sha-v1.0.0");
       expect(manifest?.inventory.skills).toContain("tdd");
+    });
+  });
+
+  it("should_copy_lite_pack_allowlist_at_unpack_root", async () => {
+    await withTempCache(async () => {
+      const pkgRoot = mkdtempSync(join(tmpdir(), "sdd-sync-pkg-lite-"));
+      mkdirSync(join(pkgRoot, "skills/testing-expert"), { recursive: true });
+      writeFileSync(join(pkgRoot, "skills/testing-expert/SKILL.md"), "# testing-expert\n");
+      mkdirSync(join(pkgRoot, "rules"), { recursive: true });
+      writeFileSync(join(pkgRoot, "rules/friendly-language.mdc"), "# friendly\n");
+      writeFileSync(
+        join(pkgRoot, LITE_PACK_ALLOWLIST_FILENAME),
+        JSON.stringify({
+          skills: ["skills/testing-expert/SKILL.md"],
+          rules: ["rules/friendly-language.mdc"],
+        }),
+      );
+      writeFileSync(join(pkgRoot, "pkg.tgz"), "fake-tar");
+
+      setSyncJobDepsForTests({
+        async getRepoUrl() {
+          return "https://github.com/fixture/sdd-framework";
+        },
+        async materialize(_o, _r, ref, destDir) {
+          mkdirSync(join(destDir, "unpacked"), { recursive: true });
+          cpSync(pkgRoot, join(destDir, "unpacked"), { recursive: true });
+          writeFileSync(join(destDir, "pkg.tgz"), "fake-tar");
+          return { commitSha: `sha-${ref}` };
+        },
+        async resolveCommit(_o, _r, ref) {
+          return `sha-${ref}`;
+        },
+        async listTags() {
+          return [{ id: "v1.0.0", published_at: "2026-01-01T00:00:00.000Z" }];
+        },
+        async fetchTree() {
+          return {
+            skills: ["testing-expert"],
+            rules: ["friendly-language.mdc"],
+            agents: [],
+            workflows: [],
+            other: [LITE_PACK_ALLOWLIST_FILENAME],
+          };
+        },
+      });
+
+      const result = await syncFrameworkRepo();
+      expect(result.status).toBe("synced");
+      const commitSha = "sha-v1.0.0";
+      const allowlistPath = join(unpackedDir(commitSha), LITE_PACK_ALLOWLIST_FILENAME);
+      expect(existsSync(allowlistPath)).toBe(true);
+      const raw = readFileSync(allowlistPath, "utf8");
+      expect(JSON.parse(raw).skills).toContain("skills/testing-expert/SKILL.md");
     });
   });
 
@@ -166,6 +220,57 @@ describe("syncFrameworkRepo", () => {
 
       const result = await syncFrameworkRepo();
       expect(result).toEqual({ status: "unchanged", commitSha: sha, version: "main" });
+      const saved = JSON.parse(
+        readFileSync(join(getPackageCacheDir(), MANIFEST_FILENAME), "utf8"),
+      ) as { syncedAt: string; latestCommit: string; latestVersion: string };
+      expect(saved.syncedAt).not.toBe("2026-01-01T00:00:00.000Z");
+      expect(saved.latestCommit).toBe(sha);
+      expect(saved.latestVersion).toBe("main");
+    });
+  });
+
+  it("should_refresh_syncedAt_only_on_unchanged_commit", async () => {
+    await withTempCache(async () => {
+      const sha = "sha-unchanged-receipt";
+      const oldSyncedAt = "2020-06-15T12:00:00.000Z";
+      mkdirSync(unpackedDir(sha), { recursive: true });
+      writeFileSync(packageTarPath(sha), "tar");
+      writeFileSync(join(getPackageCacheDir(), MANIFEST_FILENAME), JSON.stringify({
+        latestCommit: sha,
+        latestVersion: "main",
+        versions: [{ id: "main", commitSha: sha }],
+        inventory: { skills: ["atdd"], rules: [], agents: [], workflows: [], other: [] },
+        syncedAt: oldSyncedAt,
+      }));
+
+      setSyncJobDepsForTests({
+        async getRepoUrl() {
+          return "https://github.com/fixture/sdd-framework";
+        },
+        async materialize() {
+          return { commitSha: sha };
+        },
+        async resolveCommit() {
+          return sha;
+        },
+        async listTags() {
+          return [{ id: "main" }];
+        },
+        async fetchTree() {
+          return { skills: [], rules: [], agents: [], workflows: [], other: [] };
+        },
+      });
+
+      const before = readPackageManifest();
+      expect(before?.syncedAt).toBe(oldSyncedAt);
+
+      const result = await syncFrameworkRepo();
+      expect(result).toEqual({ status: "unchanged", commitSha: sha, version: "main" });
+
+      const after = readPackageManifest();
+      expect(after?.latestCommit).toBe(sha);
+      expect(after?.syncedAt).not.toBe(oldSyncedAt);
+      expect(Date.parse(after!.syncedAt)).toBeGreaterThan(Date.parse(oldSyncedAt));
     });
   });
 

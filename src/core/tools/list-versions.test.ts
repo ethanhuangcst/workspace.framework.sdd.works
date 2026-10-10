@@ -52,11 +52,11 @@ describe("listVersions", () => {
     expect(body.inventory.skills).toContain("tdd");
   });
 
-  it("should_return_package_unavailable_on_http_when_cache_empty", async () => {
+  it("should_return_invalid_input_on_http_when_cache_empty", async () => {
     clearListVersionsCache();
     process.env.SDD_PACKAGE_CACHE_DIR = mkdtempSync(join(tmpdir(), "sdd-lv-empty-"));
     const result = await listVersions({ channel: "http" });
     const body = parseToolJson<{ error: { code: string } }>(result);
-    expect(body.error.code).toBe("package_unavailable");
+    expect(body.error.code).toBe("invalid_input");
   });
 });

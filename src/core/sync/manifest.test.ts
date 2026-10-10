@@ -40,4 +40,18 @@ describe("inventoryFromTree", () => {
     expect(inv.other).not.toContain("Rules");
     expect(inv.other).not.toContain("templates");
   });
+
+  it("should_put_root_lite_pack_allowlist_in_other", () => {
+    const tree: TreeNode[] = [
+      { name: "lite-pack.allowlist.json", type: "file" },
+      {
+        name: "skills/",
+        type: "dir",
+        children: [{ name: "tdd", type: "dir", children: [] }],
+      },
+    ];
+    const inv = inventoryFromTree(tree);
+    expect(inv.other).toContain("lite-pack.allowlist.json");
+    expect(inv.skills).toEqual(["tdd"]);
+  });
 });

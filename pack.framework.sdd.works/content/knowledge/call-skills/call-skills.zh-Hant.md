@@ -44,4 +44,4 @@
 
 ## 包內索引
 
-`templates/constants.json` 列出用戶端根目錄上應有的技能鍵。安裝後若缺鍵，在依賴選擇器之前請重新 MCP 安裝或從包 tarball 複製對應技能資料夾。
+`templates/framework.sdd.works/constants.json` 列出用戶端根目錄上應有的技能鍵。安裝後若缺鍵，在依賴選擇器之前請重新 MCP 安裝或從包 tarball 複製對應技能資料夾。

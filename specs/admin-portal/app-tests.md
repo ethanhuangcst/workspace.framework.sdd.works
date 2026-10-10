@@ -494,7 +494,7 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 - [ ] Pack and bundled instructions-tabs JSON match **AC44**
 - [ ] Validator rejects pre-cutover embed host **`sdd.works`**
 - [ ] postMessage origin gate uses **`learn.sdd.works`**
-- [ ] Setup paste and `/setup` markdown URLs use **`sdd.works`**
+- [x] Setup paste and `/setup` markdown URLs use **`sdd.works`**
 - [ ] Redirect **`framework.sdd.works`** → **`sdd.works`** verified in staging or production
 - [ ] WordPress **`learn-embedded`** allows portal **`frame-ancestors`**
 - [ ] No regression on Learn loading (§21–§23) or secret on Learn (§18)
@@ -546,8 +546,8 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 - [ ] `GET /setup/node` returns 200 markdown per **AC45**; no MCP or lite instructions in body
 - [ ] `GET /api/setup/node/catalog` returns 200 JSON per **AC46**
 - [ ] `GET /setup/install` and `GET /setup` unchanged except lite paste text may come from JSON (**AC21** parity)
-- [ ] Setup has **no** **`copy-node-setup-prompt`** and still has no **`copy-lite-setup-prompt`** ([WA-20](../issues-log.md))
-- [ ] **`copy-setup-prompt`** still copies full MCP `/setup` sentence; in production origin is **`https://sdd.works`** ([WA-19](../issues-log.md))
+- [x] Setup has **no** **`copy-node-setup-prompt`** and still has no **`copy-lite-setup-prompt`** ([WA-20](../issues-log.md))
+- [x] **`copy-setup-prompt`** still copies full MCP `/setup` sentence; in production origin is **`https://sdd.works`** ([WA-19](../issues-log.md))
 - [ ] No admin session required for node markdown or catalog routes
 - [ ] No console or server error on these paths
 
@@ -576,8 +576,8 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 | First visit `zh-TW` shows Traditional and stores the cookie | Browser | **AC52**; `html lang` is `zh-Hant` |
 | Switcher still reloads into the chosen locale | Browser | existing i18n row; **AC55** |
 
-- [ ] Unit tag map and q-value cases pass
-- [ ] Invalid cookie is replaced, not left in place
-- [ ] Public features call with no `locale` query stays `en` even when `Accept-Language` is `zh-CN`
-- [ ] One browser load with no cookie and `Accept-Language: zh-TW` shows `lang=zh-Hant` and sets `sdd_locale`
-- [ ] Locale switch still updates chrome copy
+- [x] Unit tag map and q-value cases pass
+- [x] Invalid cookie is replaced, not left in place
+- [x] Public features call with no `locale` query stays `en` even when `Accept-Language` is `zh-CN`
+- [x] One browser load with no cookie and `Accept-Language: zh-TW` shows `lang=zh-Hant` and sets `sdd_locale`
+- [x] Locale switch still updates chrome copy

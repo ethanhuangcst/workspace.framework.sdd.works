@@ -44,4 +44,4 @@
 
 ## 包内索引
 
-`templates/constants.json` 列出客户端根目录上应有的技能键。安装后若缺键，在依赖选择器之前请重新 MCP 安装或从包 tarball 复制对应技能文件夹。
+`templates/framework.sdd.works/constants.json` 列出客户端根目录上应有的技能键。安装后若缺键，在依赖选择器之前请重新 MCP 安装或从包 tarball 复制对应技能文件夹。

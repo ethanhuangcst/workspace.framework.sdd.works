@@ -30,7 +30,6 @@ import {
   startScheduledSyncInterval,
 } from "@/core/sync/scheduled-sync";
 import { parseToolJson } from "@/core/tools/errors";
-import { installFramework } from "@/core/tools/install";
 import { installFrameworkHttp } from "@/core/tools/install-http";
 import { ensurePackageCacheFresh } from "./ensure-cache-fresh";
 import { setSyncJobDepsForTests } from "./sync-job";
@@ -300,16 +299,15 @@ describe("freshness regression — HTTP install (F1, F5, F9)", () => {
 
     expect(body.commitSha).toBe("sha-new");
     expect(body.plan?.action).toBe("apply");
-    expect(body.cache_refresh).toBe("refreshed");
     expect(body.manifest?.files.skills).toContain("skills/a-tdd/SKILL.md");
   });
 
-  it("F9: stale syncedAt refuses install", async () => {
+  it("F9: old syncedAt still returns install plan", async () => {
     seedCache("sha-stale", "main", ["tdd"], "2020-01-01T00:00:00.000Z");
     const home = mkdtempSync(join(tmpdir(), "sdd-home-f9-"));
     const body = await httpInstall(home);
-    expect(body.error?.code).toBe("cache_stale");
-    expect(body.plan).toBeUndefined();
+    expect(body.error).toBeUndefined();
+    expect(body.plan?.action).toBe("apply");
   });
 });
 
@@ -396,7 +394,7 @@ describe("freshness regression — sync failure (F3)", () => {
     expect(body.commitSha).toBe("sha-preserved");
   });
 
-  it("F3b: sync fails with no cache — install returns sync_pending", async () => {
+  it("F3b: sync fails with no cache — install uses bundled pack", async () => {
     process.env.SDD_PACKAGE_CACHE_DIR = mkdtempSync(join(tmpdir(), "sdd-empty-"));
     setEnsureCacheFreshDepsForTests({
       readManifest: () => null,
@@ -407,7 +405,8 @@ describe("freshness regression — sync failure (F3)", () => {
 
     const home = mkdtempSync(join(tmpdir(), "sdd-home-f3b-"));
     const body = await httpInstall(home);
-    expect(body.error?.code).toBe("sync_pending");
+    expect(body.error).toBeUndefined();
+    expect(body.plan?.action).toBe("apply");
   });
 });
 
@@ -477,42 +476,40 @@ describe("freshness regression — webhook + cron triggers (F6, F7)", () => {
   });
 });
 
-describe("freshness regression — stdio self-heal (F10)", () => {
-  it("F10: stdio reinstalls when manifest exists but skill files deleted", async () => {
+describe("freshness regression — HTTP self-heal (F10)", () => {
+  it("F10: HTTP plan is apply when manifest exists but skill files deleted", async () => {
+    seedCache("sha-f10", "main", ["tdd"]);
+    setEnsureCacheFreshDepsForTests({
+      readManifest: readPackageManifest,
+      resolveLive: async () => ({ commitSha: "sha-f10", version: "main" }),
+      sync: async () => ({
+        status: "unchanged" as const,
+        commitSha: "sha-f10",
+        version: "main",
+      }),
+      clearVersionsCache: () => {},
+    });
     const home = mkdtempSync(join(tmpdir(), "sdd-home-f10-"));
-    const pkg = mkdtempSync(join(tmpdir(), "sdd-pkg-f10-"));
-    mkdirSync(join(pkg, "skills/tdd"), { recursive: true });
-    mkdirSync(join(pkg, "rules"), { recursive: true });
-    mkdirSync(join(pkg, "agents"), { recursive: true });
-    mkdirSync(join(pkg, "workflows"), { recursive: true });
-    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "# tdd\n");
-    writeFileSync(join(pkg, "rules/sdd-dod.mdc"), "# dod\n");
-
-    const { setPackageFetchForTests } = await import("@/core/tools/package-fetch");
-    setPackageFetchForTests(async () => ({
-      version: "main",
-      commitSha: "sha-stdio",
-      tempDir: pkg,
-    }));
-
-    const ctx = {
-      channel: "stdio" as const,
-      home,
-      userProfile: home,
-      env: { HOME: home },
-      skipLlm: true,
-    };
-    await installFramework({ client: "cursor", os: "darwin" }, ctx);
+    writeLocalManifest(home, "sha-f10", "main", ["tdd"]);
     rmSync(join(home, ".cursor/skills/tdd"), { recursive: true, force: true });
 
-    const second = await installFramework({ client: "cursor", os: "darwin" }, ctx);
-    const body = parseToolJson<{ version: string; error?: { code: string } }>(
-      second,
-    );
-    expect(body.error?.code).not.toBe("already_up_to_date");
-    expect(body.version).toBe("main");
-    expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
-
-    setPackageFetchForTests(null);
+    const body = await httpInstall(home, {
+      inventory: {
+        ledger: {
+          version: 1,
+          package_version: "main",
+          package_commit: "sha-f10",
+          pack_complete: true,
+          files: {
+            skills: ["skills/tdd/SKILL.md"],
+            rules: [],
+            agents: [],
+            workflows: [],
+          },
+        },
+        missing: ["skills/tdd/SKILL.md"],
+      },
+    });
+    expect(body.plan?.action).toBe("apply");
   });
 });

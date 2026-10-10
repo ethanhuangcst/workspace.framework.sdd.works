@@ -106,7 +106,7 @@ List the candidate parts of the product, so the user can pick the modules.
 - **Subfolder:** set `folder`, optional `stem` when the filename prefix differs from `folder`, and `files` as `{artifacts_root}/{folder}/{stem}-design.md` (and stories, tests). Create the subfolder only after the user asks.
 - **Flat + stem:** omit `folder`, set `stem`, and `files` as `{artifacts_root}/{stem}-design.md` (and stories, tests).
 - **Singleton:** when the map will have exactly one module entry, the user may choose `design.md`, `stories.md`, and `tests.md` under `{artifacts_root}` with no `folder` and no `stem`.
-- Read the Confirm summary in [artifacts-map.json](../../templates/sdd-scrum-practices.md#artifacts-mapjson), so module paths match the chosen layout.
+- Read the Confirm summary in [artifacts-map.json](../../templates/framework.sdd.works/sdd-scrum-practices.md#artifacts-mapjson), so module paths match the chosen layout.
 - Keep each module for task 8.
 
 ### 7b. Decide whether to recommend `.secrets`
@@ -121,7 +121,7 @@ Pick whether task 8 includes `{artifacts_root}/.secrets` in the Confirm summary.
 
 ### 8. Confirm, then write
 
-Read only [artifacts-map.json](../../templates/sdd-scrum-practices.md#artifacts-mapjson) in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`. When `locale` is missing, use `EN`. Start at that heading. Stop at the next heading of the same level. Do not read the rest of that file.
+Read only [artifacts-map.json](../../templates/framework.sdd.works/sdd-scrum-practices.md#artifacts-mapjson) in `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md`. When `locale` is missing, use `EN`. Start at that heading. Stop at the next heading of the same level. Do not read the rest of that file.
 
 - Show the Confirm summary from that section, filled with the user's answers, so the user sees the settings before a write.
 - In that summary, write Language and the language name, so the user does not read `locale`. The file still stores `locale`.

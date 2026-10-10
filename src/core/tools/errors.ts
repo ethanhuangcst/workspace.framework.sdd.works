@@ -4,19 +4,11 @@ export type McpErrorCode =
   | "not_found"
   | "unauthorized"
   | "invalid_input"
-  | "package_unavailable"
-  | "local_install_required"
   | "not_implemented"
   | "client_unknown"
+  | "root_required"
   | "os_unsupported"
-  | "path_rejected"
-  | "client_config_unresolved"
-  | "llm_unavailable"
-  | "already_up_to_date"
-  | "sync_pending"
-  | "cache_stale"
-  | "fixture_pack"
-  | "version_not_found";
+  | "path_rejected";
 
 export function toolOk(data: unknown): CallToolResult {
   return {

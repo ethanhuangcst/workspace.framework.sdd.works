@@ -1,7 +1,7 @@
 # ADR-058: End-user stdio installer with HTTP fallback
 
 ## Status
-Accepted
+Accepted. **Retired 2026-10-09 by [ADR-131](./ADR-131-http-only-install-bundled-fallback.md).** No stdio installer, no local program, no HTTP fallback. HTTP (Streamable HTTP on `/mcp`) is the only transport. The agent downloads a tarball and extracts listed files.
 
 ## Context
 ADR-054 made Streamable HTTP the primary end-user path: `mcp.json` holds only `"url": "https://framework.sdd.works/mcp"`. `sdd_install_framework` and `sdd_update_framework` return a download link and instructions. The agent in the IDE unpacks the archive and writes `.sdd-installed.json`. A production call on 25 Sep 2026 confirmed that path. The eight client-root scenarios need a deterministic writer. An agent that follows or skips those instructions can keep or lose user files.

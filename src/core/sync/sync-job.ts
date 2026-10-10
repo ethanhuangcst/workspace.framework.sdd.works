@@ -164,6 +164,17 @@ export async function syncFrameworkRepo(options?: {
     const existing = readPackageManifest();
     if (!options?.force && existing?.latestCommit === commitSha) {
       rmSync(tempRoot, { recursive: true, force: true });
+      const refreshed: PackageManifest = {
+        ...existing,
+        latestVersion,
+        versions: existing.versions.length
+          ? existing.versions.map((v) =>
+              v.id === latestVersion ? { ...v, commitSha } : v,
+            )
+          : [{ id: latestVersion, commitSha }],
+        syncedAt: new Date().toISOString(),
+      };
+      writePackageManifest(refreshed);
       return { status: "unchanged", commitSha, version: latestVersion };
     }
 

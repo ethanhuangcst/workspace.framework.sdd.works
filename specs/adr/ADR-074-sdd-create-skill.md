@@ -4,7 +4,7 @@
 [ADR-092](./ADR-092-pack-authoring-skill-sdd-prefix.md) restores pack folder `sdd-create-skill`. [ADR-089](./ADR-089-pack-authoring-skill-names.md) is superseded. Constants key `skill_create_skill` is unchanged.
 
 ## Status
-Accepted
+Accepted. Amended 2026-10-09 by [ADR-130](./ADR-130-simplified-installer-url-only-and-empty-cache.md) decision 9: `constants.json` install path is `{client_root}/templates/`, not `{client_root}/templates/framework.sdd.works/`.
 
 ## Context
 The pack contained two skill-authoring folders. `skill-creator` carries an eval viewer, graders, a description optimizer, and packaging scripts aimed at one agent product. `create-skill` is a useful authoring baseline, and the pack copy is written for one tool: it names that tool’s store, a project skills path, and a frontmatter flag that other tools do not share.

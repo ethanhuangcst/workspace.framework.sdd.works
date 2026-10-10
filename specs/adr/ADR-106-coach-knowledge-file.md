@@ -1,7 +1,7 @@
 # ADR-106: coach-knowledge.md for topics outside Scrum in SDD
 
 ## Status
-Accepted
+Accepted. Amended 2026-10-09 by [ADR-130](./ADR-130-simplified-installer-url-only-and-empty-cache.md) decision 9: install path is `{client_root}/templates/`, not `{client_root}/templates/framework.sdd.works/`.
 
 ## Context
 
@@ -10,7 +10,7 @@ Ethan coaches Scrum in SDD and also uses harness engineering, XP (Extreme Progra
 ## Decision
 
 1. The pack meaning of those five topics lives in `coach-knowledge.md`.
-2. The authoring seed is `pack.framework.sdd.works/templates/coach-knowledge.md`. After install, the file is `{client_root}/templates/framework.sdd.works/coach-knowledge.md`. It is AI-read and EN-only with the same template policy as [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md).
+2. The authoring seed is `pack.framework.sdd.works/templates/framework.sdd.works/coach-knowledge.md`. After install, the file is `{client_root}/templates/framework.sdd.works/coach-knowledge.md`. It is AI-read and EN-only with the same template policy as [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md).
 3. Ethan reads one heading when a question or a guiding proposal needs that topic. The read starts at the heading and stops at the next heading of the same level. Onboard does not open the file.
 4. `ethan.md` names the file and when to load it. The essays stay out of the agent file.
 5. A request to design a model host, retrieval, or an AI system follows `ai-architect`. `coach-knowledge.md` does not hold that design.

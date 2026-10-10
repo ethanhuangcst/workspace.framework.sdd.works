@@ -2,7 +2,7 @@
 
 > Type: Framework (implementation spec)
 > as_of: 2026-10-08
-> [Definition](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#terminology-in-practice)
+> [Definition](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#terminology-in-practice)
 
 Status row: [`status.md`](../status.md) open OGT **#8 Rewrite pack-scrum-in-sdd.md**.
 
@@ -18,11 +18,11 @@ Ship **`pack-scrum-in-sdd.md`**, **`sdd-scrum-practices.md`**, and **`coach-know
 
 | # | Work | Result |
 | --- | --- | --- |
-| 1 | AI-read guide | `pack.framework.sdd.works/templates/pack-scrum-in-sdd.md` (no Index, internal links) |
-| 2 | Move practices and coach | From `templates/EN/` to `templates/` beside `constants.json` |
-| 3 | Remove old guides | Delete `templates/EN/scrum-in-sdd.md` and `templates/HanS/scrum-in-sdd.md` |
-| 4 | `ethan.md` | Read trio under `{client_root}/templates/framework.sdd.works/` with no `{locale}` |
-| 5 | Practices and locale seed links | `./pack-scrum-in-sdd.md` among the trio; `../` from `templates/EN/` seeds |
+| 1 | AI-read guide | `pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md` (no Index, internal links) |
+| 2 | Move practices and coach | From `templates/framework.sdd.works/EN/` to `templates/` beside `constants.json` |
+| 3 | Remove old guides | Delete `templates/framework.sdd.works/EN/scrum-in-sdd.md` and `templates/framework.sdd.works/HanS/scrum-in-sdd.md` |
+| 4 | `ethan.md` | Read trio under `{client_root}/templates/` with no `{locale}` |
+| 5 | Practices and locale seed links | `./pack-scrum-in-sdd.md` among the trio; `../` from `templates/framework.sdd.works/EN/` seeds |
 | 6 | Features catalog | Row **`pack-scrum-in-sdd.md`** for the AI guide role |
 | 7 | Rebuild script | `--index-only` writes human EN paths only |
 | 8 | Skills | Pack and `.cursor` skills point at the trio without `{locale}` |
@@ -38,20 +38,20 @@ Ship **`pack-scrum-in-sdd.md`**, **`sdd-scrum-practices.md`**, and **`coach-know
 
 | File | Authoring | After install |
 | --- | --- | --- |
-| Guide | `templates/pack-scrum-in-sdd.md` | `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
-| Practices | `templates/sdd-scrum-practices.md` | `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` |
-| Coach knowledge | `templates/coach-knowledge.md` | `{client_root}/templates/framework.sdd.works/coach-knowledge.md` |
+| Guide | `templates/framework.sdd.works/pack-scrum-in-sdd.md` | `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
+| Practices | `templates/framework.sdd.works/sdd-scrum-practices.md` | `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` |
+| Coach knowledge | `templates/framework.sdd.works/coach-knowledge.md` | `{client_root}/templates/framework.sdd.works/coach-knowledge.md` |
 
 ## Verification
 
 ```bash
-test ! -e pack.framework.sdd.works/templates/EN/scrum-in-sdd.md
-test ! -e pack.framework.sdd.works/templates/HanS/scrum-in-sdd.md
-test ! -e pack.framework.sdd.works/templates/EN/sdd-scrum-practices.md
-test ! -e pack.framework.sdd.works/templates/EN/coach-knowledge.md
-test -f pack.framework.sdd.works/templates/pack-scrum-in-sdd.md
-test -f pack.framework.sdd.works/templates/sdd-scrum-practices.md
-test -f pack.framework.sdd.works/templates/coach-knowledge.md
+test ! -e pack.framework.sdd.works/templates/framework.sdd.works/EN/scrum-in-sdd.md
+test ! -e pack.framework.sdd.works/templates/framework.sdd.works/HanS/scrum-in-sdd.md
+test ! -e pack.framework.sdd.works/templates/framework.sdd.works/EN/sdd-scrum-practices.md
+test ! -e pack.framework.sdd.works/templates/framework.sdd.works/EN/coach-knowledge.md
+test -f pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md
+test -f pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md
+test -f pack.framework.sdd.works/templates/framework.sdd.works/coach-knowledge.md
 npm run check:pack-seeds
 npm test -- src/lib/scrum-in-sdd-catalog.test.ts
 ```

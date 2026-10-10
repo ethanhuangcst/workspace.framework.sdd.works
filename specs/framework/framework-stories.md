@@ -947,10 +947,10 @@ Scenario: Human seed rules
 Scenario: Agent template rules
   Given EN human content is updated
   When sdd-guide-editor syncs the agent variant
-  Then pack.framework.sdd.works/templates/pack-scrum-in-sdd.md matches semantic section order with human EN
+  Then pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md matches semantic section order with human EN
   And the AI-read file omits the Index block
   And the AI-read file may link to install-safe pack paths named in reference.md
-  And templates/HanS/scrum-in-sdd.md is absent
+  And templates/framework.sdd.works/HanS/scrum-in-sdd.md is absent
 ```
 
 #### AC4
@@ -999,9 +999,9 @@ Design: [ogt-8-pack-scrum-in-sdd.md](./ogt-8-pack-scrum-in-sdd.md). [ADR-126](..
 Scenario: AI guide seed path
   Given the pack authoring tree after OGT-8 implementation
   When a verifier lists templates/
-  Then pack-scrum-in-sdd.md sdd-scrum-practices.md and coach-knowledge.md sit beside constants.json
-  And scrum-in-sdd.md is absent under templates/EN/ and templates/HanS/
-  And sdd-scrum-practices.md is absent under templates/EN/
+  Then pack-scrum-in-sdd.md sdd-scrum-practices.md and coach-knowledge.md sit under templates/framework.sdd.works/ beside constants.json
+  And scrum-in-sdd.md is absent under templates/framework.sdd.works/EN/ and templates/framework.sdd.works/HanS/
+  And sdd-scrum-practices.md is absent under templates/framework.sdd.works/EN/
 ```
 
 #### AC2
@@ -1011,7 +1011,7 @@ Scenario: Ethan guide path
   Given pack.framework.sdd.works/agents/ethan.md after implementation
   When the Guide and practices section is read
   Then it names pack-scrum-in-sdd.md under templates/framework.sdd.works/ without a locale segment
-  And it does not name scrum-in-sdd.md under templates/
+  And it does not name scrum-in-sdd.md under templates/framework.sdd.works/
 ```
 #### AC3
 
@@ -1020,7 +1020,7 @@ Scenario: Index script human-only
   Given scrum-in-sdd.en.md changed on the human seed
   When the maintainer runs rebuild-scrum-in-sdd-en.mjs --index-only
   Then content/scrum-in-sdd/scrum-in-sdd.en.md and src/content mirror update
-  And templates/pack-scrum-in-sdd.md is not overwritten by that script
+  And templates/framework.sdd.works/pack-scrum-in-sdd.md is not overwritten by that script
 ```
 
 #### AC4
@@ -1335,7 +1335,7 @@ Scenario: Copy seed and map row after confirm
   And specs/.secrets is missing
   When task 8 writes
   Then artifacts-map.json files lists specs/.secrets
-  And specs/.secrets is copied from the locale EN HanS or HanT seed under templates/framework.sdd.works
+  And specs/.secrets is copied from the locale EN HanS or HanT seed under templates/
   And each line is NAME= with an empty value
   And the file contains no secret value
 ```
@@ -1544,7 +1544,7 @@ Scenario Outline: Kickoff does not copy client-root prose into the project
   Then constants.json is not in the project
   And pack-scrum-in-sdd.md is not in the project
   And sdd-scrum-practices.md is not in the project
-  And those files remain under {client_root}/templates/framework.sdd.works/
+  And those files remain under {client_root}/templates/
   And constants.json is not a row in artifacts-map.json
 
   Examples:
@@ -1561,7 +1561,7 @@ HanT uses the same rule when that locale's kickoff fixture exists.
 Scenario Outline: Guide and practices are read from the locale folder
   Given a locale body exists for "<locale>"
   When ethan needs the guide or the practices
-  Then he reads {client_root}/templates/framework.sdd.works/<locale>/
+  Then he reads {client_root}/templates/<locale>/
   And he does not copy the EN body into the project to fill a missing locale
 
   Examples:
@@ -1648,7 +1648,7 @@ Tests: CE-TPL-04. AC2 applies when that locale seed exists. A missing translatio
 
 Core artifacts are `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `artifacts-map.json`.
 
-`pack-scrum-in-sdd.md` and `sdd-scrum-practices.md` are the client-root template files under `templates/framework.sdd.works/` beside `constants.json`. They are not project files.
+`pack-scrum-in-sdd.md` and `sdd-scrum-practices.md` are the client-root template files under `templates/` beside `constants.json`. They are not project files.
 
 `artifacts-map.json` is the project file in [Map paths](#map-paths). Its locale field is `EN`, `HanS`, or `HanT`. An empty locale is [sdd-artifact-locale](#sdd-artifact-locale--reply-language-follows-the-map). The audit verdicts are [sdd-audit-artifacts](#sdd-audit-artifacts).
 
@@ -1839,7 +1839,7 @@ Tests: CE-TPL-11.
 
 Engineering artifacts are `architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-tests.md`, `release.md`, `test-strategy.md`, `.secrets`, and `issues-log.md`.
 
-`architecture.md`, `release.md`, `test-strategy.md`, and `.secrets` have EN seeds under `pack.framework.sdd.works/templates/EN/`. Do not add them to a project map before the file exists.
+`architecture.md`, `release.md`, `test-strategy.md`, and `.secrets` have EN seeds under `pack.framework.sdd.works/templates/framework.sdd.works/EN/`. Do not add them to a project map before the file exists.
 
 #### AC1
 
@@ -1880,7 +1880,7 @@ User confirmed EN `.secrets` seed usable 2026-10-05 ([Spec-seeds-12](../product-
 
 Tests: CE-TPL-12 for flat module paths (AC2). CE-TPL-13 for `.secrets` seed shape (AC3).
 
-User confirmed EN seeds usable 2026-10-05 for [Spec-seeds-10](../product-backlog.md#L266) (`architecture.md`), [Spec-seeds-11](../product-backlog.md#L268) (`release.md`), [Spec-seeds-12](../product-backlog.md#L270) (`.secrets`), and [Spec-seeds-13](../product-backlog.md#L274) (`test-strategy.md`) via Sprint 7 [feature-47](../sprint-backlog.md#sprint-7), [feature-48](../sprint-backlog.md#sprint-7), [feature-49](../sprint-backlog.md#sprint-7), and [feature-50](../sprint-backlog.md#sprint-7). This repo's live [`architecture.md`](../architecture.md) and [`release.md`](../release.md) stay JIT pointers; the pack starters live under `pack.framework.sdd.works/templates/EN/`.
+User confirmed EN seeds usable 2026-10-05 for [Spec-seeds-10](../product-backlog.md#L266) (`architecture.md`), [Spec-seeds-11](../product-backlog.md#L268) (`release.md`), [Spec-seeds-12](../product-backlog.md#L270) (`.secrets`), and [Spec-seeds-13](../product-backlog.md#L274) (`test-strategy.md`) via Sprint 7 [feature-47](../sprint-backlog.md#sprint-7), [feature-48](../sprint-backlog.md#sprint-7), [feature-49](../sprint-backlog.md#sprint-7), and [feature-50](../sprint-backlog.md#sprint-7). This repo's live [`architecture.md`](../architecture.md) and [`release.md`](../release.md) stay JIT pointers; the pack starters live under `pack.framework.sdd.works/templates/framework.sdd.works/EN/`.
 
 ## `lite-install-manifest` — Lite install allow-list (feature-53)
 

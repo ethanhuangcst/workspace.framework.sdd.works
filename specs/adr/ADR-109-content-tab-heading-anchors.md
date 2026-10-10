@@ -15,7 +15,7 @@ Instructions **content** tabs render pack markdown in the portal ([ADR-071](ADR-
 4. Features em-dash list splitting stays as it is. Only headings gain ids.
 5. Guide headings use `scroll-margin-top` so the tab bar does not cover the target.
 6. Pack markdown is not rewritten to add HTML ids. A repeated fragment in an Index still targets the first matching heading. A later copy needs a new fragment in the markdown if it must be a separate target.
-7. English **human-read** `content/scrum-in-sdd/scrum-in-sdd.en.md` keeps an auto-built **Index** from heading slugs. **AI-read** `templates/pack-scrum-in-sdd.md` has no Index ([ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)). After part or heading edits on the human EN seed, run `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` from the product repo so Index `#` fragments stay aligned.
+7. English **human-read** `content/scrum-in-sdd/scrum-in-sdd.en.md` keeps an auto-built **Index** from heading slugs. **AI-read** `templates/framework.sdd.works/pack-scrum-in-sdd.md` has no Index ([ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)). After part or heading edits on the human EN seed, run `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` from the product repo so Index `#` fragments stay aligned.
 
 ## Rationale
 One renderer already serves every content tab. Anchors belong there so a new content tab inherits them. GitHub slug rules match the fragments already written in the seeds.

@@ -1,6 +1,6 @@
 /**
  * Automated equivalent of mcp-tests.md §5 (VERIF-01).
- * Uses temp HOME + installFramework — no operator Mac session required.
+ * Uses temp HOME + HTTP install plan — no operator Mac session required.
  */
 import { afterEach, describe, expect, it } from "vitest";
 import {
@@ -14,14 +14,22 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { clearPathDetectCache, detectClient } from "./path-detect";
-import { setPackageFetchForTests } from "./tools/package-fetch";
 import {
   MANIFEST_FILENAME,
   packageTarPath,
   unpackedDir,
 } from "./sync/paths";
 import { parseToolJson } from "./tools/errors";
-import { installFramework } from "./tools/install";
+import { installFrameworkHttp } from "./tools/install-http";
+import { applyPlannedFiles, writeLedgerFile } from "./tools/apply-plan";
+import type { InstallPlan } from "./tools/install-plan";
+
+type InstallHttpBody = {
+  plan: InstallPlan;
+  manifest?: Parameters<typeof writeLedgerFile>[1];
+  root?: string;
+  resolution_source?: string;
+};
 
 const originalCacheDir = process.env.SDD_PACKAGE_CACHE_DIR;
 
@@ -44,17 +52,25 @@ function seedCache(sha: string): string {
       syncedAt: "2026-01-01T00:00:00.000Z",
     }),
   );
-  setPackageFetchForTests(async () => ({
-    version: "main",
-    tempDir: unpacked,
-    commitSha: sha,
-  }));
   return dir;
+}
+
+async function installAndApply(
+  sha: string,
+  args: Parameters<typeof installFrameworkHttp>[0],
+  ctx: Parameters<typeof installFrameworkHttp>[1],
+) {
+  const result = await installFrameworkHttp(args, ctx);
+  const body = parseToolJson<InstallHttpBody>(result);
+  if (result.isError || body.plan.action !== "apply") return body;
+  const clientRoot = body.root ?? join(ctx.home ?? "", ".cursor");
+  applyPlannedFiles(unpackedDir(sha), clientRoot, body.plan);
+  if (body.manifest) writeLedgerFile(clientRoot, body.manifest);
+  return body;
 }
 
 afterEach(() => {
   clearPathDetectCache();
-  setPackageFetchForTests(null);
   if (originalCacheDir === undefined) {
     delete process.env.SDD_PACKAGE_CACHE_DIR;
   } else {
@@ -71,70 +87,62 @@ describe("path determination E2E (§5 automated)", () => {
   it("test2_CLAUDE_CONFIG_DIR_relocation", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-path-e2e-claude-"));
     mkdirSync(join(home, "skills"), { recursive: true });
-    seedCache("sha-claude");
-    const result = await installFramework(
+    const sha = "sha-claude";
+    seedCache(sha);
+    const body = await installAndApply(
+      sha,
       { client: "claude", os: "darwin" },
       {
-        channel: "stdio",
+        channel: "http",
         home,
         userProfile: home,
         env: { HOME: home, CLAUDE_CONFIG_DIR: home },
         skipLlm: true,
       },
     );
-    const body = parseToolJson<{
-      resolution_source?: string;
-      paths?: { skills?: string };
-      error?: { code: string };
-    }>(result);
-    expect(body.error?.code).not.toBe("client_unknown");
-    expect(body.resolution_source).toBe("env");
-    expect(body.paths?.skills).toBe(`${home}/skills/`);
-    expect(existsSync(join(home, "skills/tdd/SKILL.md"))).toBe(true);
+    expect(body.resolution_source).toBe("seed");
+    expect(body.root).toBe(`${home}/.claude`);
+    expect(existsSync(join(home, ".claude/skills/tdd/SKILL.md"))).toBe(true);
     rmSync(home, { recursive: true, force: true });
   });
 
   it("test3_CODEX_HOME_relocation", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-path-e2e-codex-"));
-    seedCache("sha-codex");
-    const result = await installFramework(
+    const sha = "sha-codex";
+    seedCache(sha);
+    const body = await installAndApply(
+      sha,
       { client: "codex", os: "darwin" },
       {
-        channel: "stdio",
+        channel: "http",
         home,
         userProfile: home,
         env: { HOME: home, CODEX_HOME: home },
         skipLlm: true,
       },
     );
-    const body = parseToolJson<{
-      resolution_source?: string;
-      paths?: { skills?: string };
-    }>(result);
-    expect(body.resolution_source).toBe("env");
-    expect(body.paths?.skills).toContain(home);
+    expect(body.resolution_source).toBe("seed");
+    expect(body.root).toBe(`${home}/.agents`);
     rmSync(home, { recursive: true, force: true });
   });
 
   it("test4_seed_fallback_without_env", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-path-e2e-seed-"));
-    seedCache("sha-seed");
-    const result = await installFramework(
+    const sha = "sha-seed";
+    seedCache(sha);
+    const body = await installAndApply(
+      sha,
       { client: "cursor", os: "darwin" },
       {
-        channel: "stdio",
+        channel: "http",
         home,
         userProfile: home,
         env: { HOME: home },
         skipLlm: true,
       },
     );
-    const body = parseToolJson<{
-      resolution_source?: string;
-      paths?: { skills?: string };
-    }>(result);
     expect(body.resolution_source).toBe("seed");
-    expect(body.paths?.skills).toBe(`${home}/.cursor/skills/`);
+    expect(body.root).toBe(`${home}/.cursor`);
     rmSync(home, { recursive: true, force: true });
   });
 
@@ -142,10 +150,10 @@ describe("path determination E2E (§5 automated)", () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-path-e2e-unknown-"));
     seedCache("sha-unknown");
     const before = readdirSync(home);
-    const result = await installFramework(
+    const result = await installFrameworkHttp(
       {},
       {
-        channel: "stdio",
+        channel: "http",
         clientInfo: { name: "unknown-cli-xyz" },
         home,
         userProfile: home,

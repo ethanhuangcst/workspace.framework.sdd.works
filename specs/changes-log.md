@@ -2,7 +2,69 @@
 
 > Type: Framework (process) artifact of framework.sdd.works
 > as_of: 2026-10-09
-> [Definition](../pack.framework.sdd.works/templates/sdd-scrum-practices.md#changes-logmd)
+> [Definition](../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#changes-logmd)
+
+---
+
+## 2026-10-10
+
+### feature-97 / Web-portal-39 closed (visitor locale)
+
+**Why:** User confirmed the visitor locale feature is usable after automated checks for AC51–AC59.
+
+**What changed:** [`sprint-backlog.md`](./sprint-backlog.md#sprint-9) moves [feature-97](./sprint-backlog.md#sprint-9) to **Done**. [`product-backlog.md`](./product-backlog.md#pb-136) row 94 **Done**. [`app-tests.md`](./admin-portal/app-tests.md) §34 pass criteria checked. Tests: [`e2e/visitor-locale.spec.ts`](../e2e/visitor-locale.spec.ts), [`src/mail/resend.locale.test.ts`](../src/mail/resend.locale.test.ts), existing locale and middleware Vitest.
+
+**Verification:** User close confirm in chat. Playwright 8/8 on visitor-locale spec; Vitest on locale, middleware, mail locale, features API **AC59**.
+
+### feature-82: sync cache tests and production probe (MCP-07)
+
+**Why:** §15 named automated gaps and production verification for live pack cache.
+
+**What changed:** `sync-job.test.ts`, `install.test.ts`, and `manifest.test.ts` add feature-82 cases. [`mcp-tests.md`](./mcp/mcp-tests.md) §15 CI criteria checked; production probe in [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md). No sync or route production code change.
+
+**Verification:** §15 Vitest bundle green. Production `/api/sdd/versions` and `/api/sdd/package` pass; `/api/sdd/lite/files` returns 404 on current image (deploy gap).
+
+**Boundary:** feature-82 stays **ToDo** until lite route is on production and **close confirm**.
+
+### feature-82 readiness: production pack sync specs (MCP-07)
+
+**Why:** feature-82 (live cache after Admin sync) had story ACs but no implementation gate like feature-95 §14. Integration tables still said package REST fell back to bundled pack, which does not match `versions/route.ts` and lite routes.
+
+**What changed:** [`mcp-design.md`](./mcp/mcp-design.md) adds §2.5 **Production pack sync (feature-82 / MCP-07)**. [`mcp-tests.md`](./mcp/mcp-tests.md) adds §15 with check tables, pass criteria, and CI commands; §2–§3 rows distinguish cache-only REST from MCP install bundled fallback. [`mcp-stories.md`](./mcp/mcp-stories.md) `mcp-production-pack-sync` expands **AC2** with `sync_pending` and `lite_manifest_missing`. [`framework-tests.md`](./framework/framework-tests.md), [`framework-design.md`](./framework/framework-design.md), [`architecture.md`](./architecture.md), [`release.md`](./release.md) §7.3, [`product-backlog.md`](./product-backlog.md) MCP-07, [`sprint-backlog.md`](./sprint-backlog.md) feature-82 row, and [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md) align to §15. No application code.
+
+**Verification:** §15 pass criteria stay unchecked until production sync evidence. Optional unit row: sync materializes `lite-pack.allowlist.json` at unpack root when implementing.
+
+**Boundary:** feature-82 stays **ToDo**. Spec readiness only.
+
+### feature-95 readiness: install page test section and module boundary update
+
+**Why:** `mcp-tests.md` had no dedicated section for feature-95 (install page at `GET /install`). The module boundary table in `mcp-design.md` §2.0 did not list the new route or markdown file.
+
+**What changed:** [`mcp-tests.md`](./mcp/mcp-tests.md) adds §14 **feature-95 / MCP-09 — Install page at `GET /install` (MC-17)** with check tables and pass criteria. [`mcp-design.md`](./mcp/mcp-design.md) §2.0 adds `GET /install`, `src/app/api/agent-setup/install-full/route.ts`, and `public/agent-setup/install-full.md` to the setup backend table; the boundary rule now names `GET /install` as a documentation page. [`sprint-backlog.md`](./sprint-backlog.md) feature-95 row links to §14 and the owning story. No new ADR. No application code.
+
+**Verification:** §14 names the test files (`install-full` route test, `module-boundary.test.ts`, `setup-paths.test.ts`, `sdd-api.test.ts`) and the command to run when implemented. Pass criteria checkboxes are unchecked (ToDo).
+
+**Boundary:** feature-95 stays **ToDo**. This is spec readiness, not implementation.
+
+### feature-94 readiness: dedicated test section for ADR-132 install root
+
+**Why:** `mcp-tests.md` had dedicated sections for MC-09 (§11) and feature-90 (§12) but not for feature-93/feature-94. The ADR-132 install-root checks were spread across §2, §3, §5, and §10 with no single implementation gate.
+
+**What changed:** [`mcp-tests.md`](./mcp/mcp-tests.md) adds §13 **feature-93 / feature-94 / MCP-09 — Simplified install root (ADR-132)** with per-SBI check tables and pass criteria. [`sprint-backlog.md`](./sprint-backlog.md) feature-93 and feature-94 rows now link to §13 and the owning stories. No new ADR. No application code.
+
+**Verification:** §13 names the test files (`install.test.ts`, `bundled-pack.test.ts`, `tool-descriptions.test.ts`, `path-e2e.test.ts`) and the command to run when implemented. Pass criteria checkboxes are unchecked (ToDo).
+
+**Boundary:** feature-93 and feature-94 stay **ToDo**. This is spec readiness, not implementation.
+
+### task-01: ADR-132 and simplified install spec sync
+
+**Why:** feature-89 was spec-only sprint prep, not a user-facing feature. ADR-131 still described agent root detection and `root_warning`. The team locked a simpler contract in MCP-09.
+
+**What changed:** Renamed Sprint 9 row feature-89 to **task-01** (Task SBI, no parent PBI). Added [`ADR-132`](./adr/ADR-132-simplified-install-root-and-templates.md). Updated [`mcp-design.md`](./mcp/mcp-design.md), [`mcp-stories.md`](./mcp/mcp-stories.md), [`mcp-tests.md`](./mcp/mcp-tests.md), [`client.paths.md`](./mcp/client.paths.md), [`framework-design.md`](./framework/framework-design.md), [`issues-log.md`](./issues-log.md) (MC-16, MC-17), [`status.md`](./status.md), [`product-backlog.md`](./product-backlog.md) MCP-09 Related, [`sprint-backlog.md`](./sprint-backlog.md).
+
+**Verification:** Spec link check and grep for `root_warning` / `resolution_source` in active MCP install sections (ADR-131 history may still mention retired terms).
+
+**Boundary:** No application code. feature-90–feature-96 implement the design.
 
 ---
 
@@ -130,7 +192,7 @@
 
 **What changed**: [`product-backlog.md`](./product-backlog.md) sets [i18n-03](./product-backlog.md#pb-69), [i18n-05](./product-backlog.md#pb-103), and [Spec-seeds-14](./product-backlog.md#pb-82) to **Done**. Requirement bullets name pack paths only (no module `{stem}-*` template seeds). [`sprint-backlog.md`](./sprint-backlog.md) [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis) is seven **ToDo** rows with clearer descriptions. [`status.md`](./status.md) unplanned count is 7.
 
-**Verification**: `pack.framework.sdd.works/templates/HanS/` and `HanT/` hold engineering and process starters. Pack and `src/content/features/` each ship three Features locale files. `rg admin-note src/app src/components` shows no Web-portal-26 UI yet.
+**Verification**: `pack.framework.sdd.works/templates/framework.sdd.works/HanS/` and `HanT/` hold engineering and process starters. Pack and `src/content/features/` each ship three Features locale files. `rg admin-note src/app src/components` shows no Web-portal-26 UI yet.
 
 ### Backlog refine accept all (eight findings)
 
@@ -168,7 +230,7 @@
 
 **Why**: HanS and HanT engineering templates, compare/planning reply shape, and L1 skill tests should match shipped pack skills.
 
-**What changed**: `templates/HanS/` and `templates/HanT/` engineering seeds. Pack skills use numbered tables via `response.md` or readiness blocks. [`framework-tests.md`](./framework/framework-tests.md) **CE-SKILL-14** cites gaps table format. [`status.md`](./status.md) closed open OGT rows 2–4.
+**What changed**: `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/` engineering seeds. Pack skills use numbered tables via `response.md` or readiness blocks. [`framework-tests.md`](./framework/framework-tests.md) **CE-SKILL-14** cites gaps table format. [`status.md`](./status.md) closed open OGT rows 2–4.
 
 **Verification**: Pack folders on disk; skill `response.md` files; CE-SKILL-14 text matches `sdd-update-specs/response.md`.
 
@@ -402,9 +464,9 @@
 
 **Why**: Dual `req-pb-N` and `pb-N` ids duplicated anchors without benefit. Markdown preview fails on cross-file `#pb-N` links from `sprint-backlog.md`.
 
-**What changed**: [`product-backlog.md`](./product-backlog.md) keeps `<a id="pb-N">` on each Requirements line only. The Product Backlog table links to `#pb-N`. EN seeds and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) describe one id and `./product-backlog.md#L{line}` for cross-file PBI links. [`framework-design.md`](./framework/framework-design.md) and process-artifacts AC in [`framework-stories.md`](./framework/framework-stories.md) match. Cross-file links under `specs/` and `src/content/` retarget to `#L{line}` or `#definition-of-do`; removed PBI anchors are plain text.
+**What changed**: [`product-backlog.md`](./product-backlog.md) keeps `<a id="pb-N">` on each Requirements line only. The Product Backlog table links to `#pb-N`. EN seeds and [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) describe one id and `./product-backlog.md#L{line}` for cross-file PBI links. [`framework-design.md`](./framework/framework-design.md) and process-artifacts AC in [`framework-stories.md`](./framework/framework-stories.md) match. Cross-file links under `specs/` and `src/content/` retarget to `#L{line}` or `#definition-of-do`; removed PBI anchors are plain text.
 
-**Verification**: `scripts/check-spec-links.sh` passes. `rg 'req-pb-' specs/product-backlog.md specs/framework/seeds/templates/EN/product-backlog.md` is empty.
+**Verification**: `scripts/check-spec-links.sh` passes. `rg 'req-pb-' specs/product-backlog.md specs/framework/seeds/templates/framework.sdd.works/EN/product-backlog.md` is empty.
 
 ### Remove Sprint 8 task-03 (2study.ai scope)
 
@@ -450,7 +512,7 @@
 
 **Why**: Backlog plan: user-readable Requirements bullets, lite HTTP installer category, retire MCP-05 partial ledger.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) adds Requirements bullets guidance and good or bad examples. [`product-backlog.md`](./product-backlog.md) rewrites Requirements (framework groupings, mcp, web-portal subsections, lite category), updates table nouns and Related for Spec-seeds-15 and Web-portal-17–19, retires MCP-05. [`sprint-backlog.md`](./sprint-backlog.md) Sprint 8 feature-53–57 and feature-54 **Retired**; `#pb-N` links. Related specs: [`mcp-design.md`](./mcp/mcp-design.md) §2.1c, [`mcp-stories.md`](./mcp/mcp-stories.md) partial ledger withdrawn, [`app-stories.md`](./admin-portal/app-stories.md) AC19–21, [`ADR-061`](./adr/ADR-061-setup-prompt-public-path.md), EN seed [`product-backlog.md`](./framework/seeds/templates/EN/product-backlog.md).
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) adds Requirements bullets guidance and good or bad examples. [`product-backlog.md`](./product-backlog.md) rewrites Requirements (framework groupings, mcp, web-portal subsections, lite category), updates table nouns and Related for Spec-seeds-15 and Web-portal-17–19, retires MCP-05. [`sprint-backlog.md`](./sprint-backlog.md) Sprint 8 feature-53–57 and feature-54 **Retired**; `#pb-N` links. Related specs: [`mcp-design.md`](./mcp/mcp-design.md) §2.1c, [`mcp-stories.md`](./mcp/mcp-stories.md) partial ledger withdrawn, [`app-stories.md`](./admin-portal/app-stories.md) AC19–21, [`ADR-061`](./adr/ADR-061-setup-prompt-public-path.md), EN seed [`product-backlog.md`](./framework/seeds/templates/framework.sdd.works/EN/product-backlog.md).
 
 **Verification**: `rg 'profiles/' product-backlog.md` empty. `rg 'install_profile|partial install ledger' product-backlog.md` matches only MCP-05 retired text. Practices file contains Requirements How to write examples.
 
@@ -468,13 +530,13 @@
 
 **Why**: User chose option 2 after onboard `sdd-review-status` listed two mismatches.
 
-**What changed**: [`status.md`](./status.md) closes OGT **Review ethan.md** to **Last 15 closed OGTs** (Closed Sprint 8). [`sprint-backlog.md`](./sprint-backlog.md) feature-51 related specs add [`coach-knowledge.md`](./framework/seeds/templates/EN/coach-knowledge.md) and [ADR-106](./adr/ADR-106-coach-knowledge-file.md).
+**What changed**: [`status.md`](./status.md) closes OGT **Review ethan.md** to **Last 15 closed OGTs** (Closed Sprint 8). [`sprint-backlog.md`](./sprint-backlog.md) feature-51 related specs add [`coach-knowledge.md`](./framework/seeds/templates/framework.sdd.works/EN/coach-knowledge.md) and [ADR-106](./adr/ADR-106-coach-knowledge-file.md).
 
 **Verification**: Open OGT table has no **Review ethan.md** row. feature-51 row lists coach-knowledge and ADR-106.
 
 ### OGT 2 closed: module design writing guide in practices
 
-**Why**: User confirmed OGT 2 done after EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) § [`{module-name}-design.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-designmd) and `sdd-spec-to-build` wiring shipped.
+**Why**: User confirmed OGT 2 done after EN [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) § [`{module-name}-design.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#module-name-designmd) and `sdd-spec-to-build` wiring shipped.
 
 **What changed**: [`status.md`](./status.md) moves the task from open OGT to **Last 15 closed OGTs** (Closed Sprint 8).
 
@@ -484,17 +546,17 @@
 
 **Why**: `sdd-spec-to-build` job 3 targets `*-tests.md` but EN practices had no section template; jobs 2–3 lacked explicit practice loads on the skill and neighbors.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) § [`{module-name}-tests.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-testsmd). [`sdd-spec-to-build`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md) and [`readiness.md`](./framework/seeds/skills/sdd-spec-to-build/readiness.md) link stories and tests anchors. [`atdd-expert`](./framework/seeds/skills/atdd-expert/SKILL.md) and [`testing-expert`](./framework/seeds/skills/testing-expert/SKILL.md) Knowledge rows load those sections. [`framework-design.md`](./framework/framework-design.md) § `{stem}-tests.md` and **CE-SKILL-04** updated.
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) § [`{module-name}-tests.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#module-name-testsmd). [`sdd-spec-to-build`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md) and [`readiness.md`](./framework/seeds/skills/sdd-spec-to-build/readiness.md) link stories and tests anchors. [`atdd-expert`](./framework/seeds/skills/atdd-expert/SKILL.md) and [`testing-expert`](./framework/seeds/skills/testing-expert/SKILL.md) Knowledge rows load those sections. [`framework-design.md`](./framework/framework-design.md) § `{stem}-tests.md` and **CE-SKILL-04** updated.
 
-**Verification**: `rg 'module-name-testsmd' specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md specs/framework/seeds/templates/EN/sdd-scrum-practices.md`.
+**Verification**: `rg 'module-name-testsmd' specs/framework/seeds/skills/sdd-spec-to-build/SKILL.md specs/framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md`.
 
 ### OGT 2: module `{stem}-design.md` writing guide in practices
 
 **Why**: `sdd-spec-to-build` jobs 4–7 name UI and technical design sections; the EN practices file had no section templates.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) § [`{module-name}-design.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-designmd) adds **What belongs where** (vs `architecture.md` and `release.md`), **UI design**, and **Technical design** templates. [`readiness.md`](./framework/seeds/skills/sdd-spec-to-build/readiness.md) links that anchor.
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) § [`{module-name}-design.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#module-name-designmd) adds **What belongs where** (vs `architecture.md` and `release.md`), **UI design**, and **Technical design** templates. [`readiness.md`](./framework/seeds/skills/sdd-spec-to-build/readiness.md) links that anchor.
 
-**Verification**: `rg '## UI design' specs/framework/seeds/templates/EN/sdd-scrum-practices.md`. `rg 'module-name-designmd' specs/framework/seeds/skills/sdd-spec-to-build/readiness.md`.
+**Verification**: `rg '## UI design' specs/framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md`. `rg 'module-name-designmd' specs/framework/seeds/skills/sdd-spec-to-build/readiness.md`.
 
 ### Sprint 7 closed; Sprint 8 WIP (install-first MVP)
 
@@ -548,7 +610,7 @@
 
 **Why**: User chose option 2 after `sdd-review-status` with the numbered mismatch table.
 
-**What changed**: [`status.md`](./status.md) current SBI and OGT rows. [`sprint-backlog.md`](./sprint-backlog.md) retrospective fixes; [feature-64](./sprint-backlog.md#sprint-7) **WIP**; Sprint 7 ToDo empty. [`product-backlog.md`](./product-backlog.md) Skill-01 and Skill-19 labels. EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) and EN/HanS [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) use `atdd-expert`. [`framework-tests.md`](./framework/framework-tests.md) CE-SKILL-19 expected results for rag-expert.
+**What changed**: [`status.md`](./status.md) current SBI and OGT rows. [`sprint-backlog.md`](./sprint-backlog.md) retrospective fixes; [feature-64](./sprint-backlog.md#sprint-7) **WIP**; Sprint 7 ToDo empty. [`product-backlog.md`](./product-backlog.md) Skill-01 and Skill-19 labels. EN [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) and EN/HanS [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md) use `atdd-expert`. [`framework-tests.md`](./framework/framework-tests.md) CE-SKILL-19 expected results for rag-expert.
 
 **Verification**: Open `sprint-backlog.md` Sprint 7 WIP lists seven rows. Current OGT on `status.md` has no atdd or fullstack rename rows.
 
@@ -614,9 +676,9 @@
 
 **Why**: User confirmed the dotenv-shaped `.secrets` starter usable for new projects.
 
-**What changed**: [`specs/framework/seeds/templates/EN/.secrets`](./framework/seeds/templates/EN/.secrets) (empty `KEY=` lines, `#` comments only); [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) `#secrets`; [`framework-design.md`](./framework/framework-design.md) § `.secrets`. [feature-49](./sprint-backlog.md#sprint-7) and [Spec-seeds-12](./product-backlog.md#L270) **Done**.
+**What changed**: [`specs/framework/seeds/templates/framework.sdd.works/EN/.secrets`](./framework/seeds/templates/framework.sdd.works/EN/.secrets) (empty `KEY=` lines, `#` comments only); [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) `#secrets`; [`framework-design.md`](./framework/framework-design.md) § `.secrets`. [feature-49](./sprint-backlog.md#sprint-7) and [Spec-seeds-12](./product-backlog.md#L270) **Done**.
 
-**Verification**: `rg '=' specs/framework/seeds/templates/EN/.secrets` shows only empty values after `=`; no token-like strings in the seed file.
+**Verification**: `rg '=' specs/framework/seeds/templates/framework.sdd.works/EN/.secrets` shows only empty values after `=`; no token-like strings in the seed file.
 
 ### Sprint 7: six SBIs closed on user confirm
 
@@ -678,7 +740,7 @@
 
 **Why**: Some projects keep design, stories, and tests under `{artifacts_root}` without a module subfolder; skills and update-project assumed `{folder}/{stem}-*`.
 
-**What changed**: [ADR-100](./adr/ADR-100-optional-module-folder.md). EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) `#artifacts-mapjson` (optional `folder`, flat example, confirm summary). [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md), HanS engineering line, [`framework-design.md`](./framework/framework-design.md). [`sdd-update-project`](./framework/seeds/skills/sdd-update-project/SKILL.md), [`sdd-atdd`](./framework/seeds/skills/sdd-atdd/SKILL.md), [`sdd-update-specs`](./framework/seeds/skills/sdd-update-specs/SKILL.md), [`sdd-audit-artifacts`](./framework/seeds/skills/sdd-audit-artifacts/SKILL.md). **CE-TPL-12** and engineering stories AC2. Live [`artifacts-map.json`](../artifacts-map.json) unchanged.
+**What changed**: [ADR-100](./adr/ADR-100-optional-module-folder.md). EN [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) `#artifacts-mapjson` (optional `folder`, flat example, confirm summary). [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md), HanS engineering line, [`framework-design.md`](./framework/framework-design.md). [`sdd-update-project`](./framework/seeds/skills/sdd-update-project/SKILL.md), [`sdd-atdd`](./framework/seeds/skills/sdd-atdd/SKILL.md), [`sdd-update-specs`](./framework/seeds/skills/sdd-update-specs/SKILL.md), [`sdd-audit-artifacts`](./framework/seeds/skills/sdd-audit-artifacts/SKILL.md). **CE-TPL-12** and engineering stories AC2. Live [`artifacts-map.json`](../artifacts-map.json) unchanged.
 
 **Verification**: `test -f specs/adr/ADR-100-optional-module-folder.md`.
 
@@ -710,7 +772,7 @@
 
 **Why**: Sprint 7 [Skill-01](./product-backlog.md#L87) needs story-mapping guidance before the ATDD skill ships.
 
-**What changed**: Sprint 7 **WIP**. [task-01](./sprint-backlog.md#sprint-7) adds ATDD and User Story Mapping terminology, expands [`{module-name}-stories.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#module-name-storiesmd) Template and How to write, and adds [§6 User Story Mapping](./framework/seeds/templates/EN/sdd-scrum-practices.md#6-user-story-mapping). New seed [`sdd-atdd`](./framework/seeds/skills/sdd-atdd/SKILL.md), **CE-SKILL-12**, framework design and stories. [feature-52](./sprint-backlog.md#sprint-7) stays **ToDo** until you confirm the skill usable.
+**What changed**: Sprint 7 **WIP**. [task-01](./sprint-backlog.md#sprint-7) adds ATDD and User Story Mapping terminology, expands [`{module-name}-stories.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#module-name-storiesmd) Template and How to write, and adds [§6 User Story Mapping](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#6-user-story-mapping). New seed [`sdd-atdd`](./framework/seeds/skills/sdd-atdd/SKILL.md), **CE-SKILL-12**, framework design and stories. [feature-52](./sprint-backlog.md#sprint-7) stays **ToDo** until you confirm the skill usable.
 
 **Verification**: `test -f specs/framework/seeds/skills/sdd-atdd/SKILL.md`. Practices index links `#6-user-story-mapping` and `#term-atdd`.
 
@@ -724,15 +786,15 @@
 
 ### Sprint 6 task-01 cross-review (five process files)
 
-**Why**: Sprint 6 [task-01](./sprint-backlog.md#sprint-6) validates EN process seeds, live `specs/` process files, and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) after ADR-098 and placeholder templating.
+**Why**: Sprint 6 [task-01](./sprint-backlog.md#sprint-6) validates EN process seeds, live `specs/` process files, and [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) after ADR-098 and placeholder templating.
 
-**What changed**: [pb-36](./product-backlog.md#L247) names a placeholder template seed. Live [`sprint-backlog.md`](./sprint-backlog.md) fixes stale `artifacts-map.md` and `/instructions` links. [`issues-log.md`](./issues-log.md) `as_of` aligned. Practices [`#artifacts-mapjson`](./framework/seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson) example text separates map JSON sample from five templated process seeds.
+**What changed**: [pb-36](./product-backlog.md#L247) names a placeholder template seed. Live [`sprint-backlog.md`](./sprint-backlog.md) fixes stale `artifacts-map.md` and `/instructions` links. [`issues-log.md`](./issues-log.md) `as_of` aligned. Practices [`#artifacts-mapjson`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#artifacts-mapjson) example text separates map JSON sample from five templated process seeds.
 
 **Verification**: CE-TPL-01, CE-TPL-04, CE-TPL-08 through CE-TPL-11 and framework-stories process-artifact AC1 and AC3 through AC13 read against EN seeds and live files. Link audit on live `product-backlog.md`, `sprint-backlog.md`, `status.md`, and `issues-log.md` passes. EN process seed relative links pass. [`artifacts-map.json`](../artifacts-map.json) lists the five process paths.
 
 ### Sprint 6 feature-42 Done (Spec-seeds-05, re-close)
 
-**Why**: User confirmed [feature-42](./sprint-backlog.md#sprint-6) usable after the EN [product-backlog.md](./framework/seeds/templates/EN/product-backlog.md) seed and [ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md) work.
+**Why**: User confirmed [feature-42](./sprint-backlog.md#sprint-6) usable after the EN [product-backlog.md](./framework/seeds/templates/framework.sdd.works/EN/product-backlog.md) seed and [ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md) work.
 
 **What changed**: [feature-42](./sprint-backlog.md#sprint-6) **Done** on [`sprint-backlog.md`](./sprint-backlog.md). [Spec-seeds-05](./product-backlog.md#L247) **Done** on [`product-backlog.md`](./product-backlog.md). Sprint 6 Retrospective Learnings **#4**. [`status.md`](./status.md) Sprint 6 note updated.
 
@@ -742,7 +804,7 @@
 
 **Why**: Generic DoD bullets were duplicated in `sprint-backlog.md` and `product-backlog.md` and drifted.
 
-**What changed**: [ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md). [`product-backlog.md`](./product-backlog.md#definition-of-done) is the canonical additional checklist for PBIs and SBIs. [`sprint-backlog.md`](./sprint-backlog.md) DoD section links there; sprint replacement lists stay on the sprint file. EN seeds, [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc), design, stories, **CE-TPL-04**.
+**What changed**: [ADR-098](./adr/ADR-098-sprint-backlog-dod-link-product-backlog.md). [`product-backlog.md`](./product-backlog.md#definition-of-done) is the canonical additional checklist for PBIs and SBIs. [`sprint-backlog.md`](./sprint-backlog.md) DoD section links there; sprint replacement lists stay on the sprint file. EN seeds, [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc), design, stories, **CE-TPL-04**.
 
 **Verification**: Sprint seed contains `product-backlog.md#definition-of-done`. No `Follow rule DoD` line in EN sprint-backlog seed.
 
@@ -750,7 +812,7 @@
 
 **Why**: Pokymon sample rows read like a real project after copy.
 
-**What changed**: [`templates/EN/changes-log.md`](./framework/seeds/templates/EN/changes-log.md) and [`templates/EN/issues-log.md`](./framework/seeds/templates/EN/issues-log.md) use `[product name]` and bracket placeholders. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) documents all five templated process seeds. [CE-TPL-11](./framework/framework-tests.md) covers the changes-log seed.
+**What changed**: [`templates/framework.sdd.works/EN/changes-log.md`](./framework/seeds/templates/framework.sdd.works/EN/changes-log.md) and [`templates/framework.sdd.works/EN/issues-log.md`](./framework/seeds/templates/framework.sdd.works/EN/issues-log.md) use `[product name]` and bracket placeholders. [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) documents all five templated process seeds. [CE-TPL-11](./framework/framework-tests.md) covers the changes-log seed.
 
 **Verification**: [CE-TPL-10](./framework/framework-tests.md) and CE-TPL-11 expected titles and shapes.
 
@@ -758,7 +820,7 @@
 
 **Why**: The Pokymon-filled status seed read like a real project after copy.
 
-**What changed**: [`templates/EN/status.md`](./framework/seeds/templates/EN/status.md) uses `[product name]` and bracket placeholders; [`framework-design.md`](./framework/framework-design.md) § status projection matches.
+**What changed**: [`templates/framework.sdd.works/EN/status.md`](./framework/seeds/templates/framework.sdd.works/EN/status.md) uses `[product name]` and bracket placeholders; [`framework-design.md`](./framework/framework-design.md) § status projection matches.
 
 **Verification**: [CE-TPL-08](./framework/framework-tests.md) expected title and section shape unchanged.
 
@@ -766,7 +828,7 @@
 
 **Why**: DoD duplicated `sdd-dod.mdc` defaults and sat between Requirements and the table.
 
-**What changed**: Live [`product-backlog.md`](./product-backlog.md) and EN seed use Product overview → Definition of Done (additional only) → Requirements → Product Backlog → Change record. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc) PBI Extra, [`framework-design.md`](./framework/framework-design.md), and [`framework-stories.md`](./framework/framework-stories.md) AC1 match.
+**What changed**: Live [`product-backlog.md`](./product-backlog.md) and EN seed use Product overview → Definition of Done (additional only) → Requirements → Product Backlog → Change record. [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), [`sdd-dod.mdc`](./framework/seeds/rules/sdd-dod.mdc) PBI Extra, [`framework-design.md`](./framework/framework-design.md), and [`framework-stories.md`](./framework/framework-stories.md) AC1 match.
 
 **Verification**: Readiness item 11 in practices; `rg "above the Product Backlog table" specs/` excludes historical change-log lines only.
 
@@ -774,7 +836,7 @@
 
 **Why**: Scope boundary duplicated requirements. The Pokymon-filled seed was easy to copy as if it were the user's product.
 
-**What changed**: Removed **Scope boundary** from [`product-backlog.md`](./product-backlog.md). Rewrote [`templates/EN/product-backlog.md`](./framework/seeds/templates/EN/product-backlog.md) as a placeholder template with no Pokymon content.
+**What changed**: Removed **Scope boundary** from [`product-backlog.md`](./product-backlog.md). Rewrote [`templates/framework.sdd.works/EN/product-backlog.md`](./framework/seeds/templates/framework.sdd.works/EN/product-backlog.md) as a placeholder template with no Pokymon content.
 
 **Verification**: Index and Requirements open without `#scope-boundary`. Seed header uses `[product name]` and one sample PBI row.
 
@@ -790,7 +852,7 @@
 
 **Why**: Sprint 6 Retrospective used `On demand` for by-rule and catch-up runs; `scrum-in-sdd.md` requires the incident (for example `feature-42 done`) for **By rule**.
 
-**What changed**: [`sdd-retrospective/SKILL.md`](./framework/seeds/skills/sdd-retrospective/SKILL.md) **Write rules** name `{SBI code} {SBI name} done`. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) Retrospective **How to write** clarifies when `On demand` is allowed.
+**What changed**: [`sdd-retrospective/SKILL.md`](./framework/seeds/skills/sdd-retrospective/SKILL.md) **Write rules** name `{SBI code} {SBI name} done`. [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) Retrospective **How to write** clarifies when `On demand` is allowed.
 
 **Verification**: Skill text bans `On demand` on the same run as an SBI or PBI **Done** write.
 
@@ -806,9 +868,9 @@
 
 **Why**: [Skill-07](./product-backlog.md#L99) and `sdd-close-sprint` do not ship ([ADR-076](./adr/ADR-076-review-status-one-skill.md)). Sprint 8 task-01 Related still pointed at Skill-07.
 
-**What changed**: Removed `skill_close_sprint` from [`constants.json`](./framework/seeds/templates/constants.json). [`framework-design.md`](./framework/framework-design.md) job index matches ethan Capabilities. Sprint 8 [task-01](./sprint-backlog.md#sprint-8) Related lists shipped skills and marks Skill-07 **Retired**.
+**What changed**: Removed `skill_close_sprint` from [`constants.json`](./framework/seeds/templates/framework.sdd.works/constants.json). [`framework-design.md`](./framework/framework-design.md) job index matches ethan Capabilities. Sprint 8 [task-01](./sprint-backlog.md#sprint-8) Related lists shipped skills and marks Skill-07 **Retired**.
 
-**Verification**: `rg skill_close_sprint specs/framework/seeds/templates/constants.json` is empty.
+**Verification**: `rg skill_close_sprint specs/framework/seeds/templates/framework.sdd.works/constants.json` is empty.
 
 ### Sprint 6 feature-42 Done (Spec-seeds-05)
 
@@ -816,7 +878,7 @@
 
 **What changed**: [`sprint-backlog.md`](./sprint-backlog.md) moves [feature-42](./sprint-backlog.md#sprint-6) to **Done**. [Spec-seeds-05](./product-backlog.md#L247) **Done** on [`product-backlog.md`](./product-backlog.md). Sprint 6 **Retrospective** learnings #2. [`status.md`](./status.md) Sprint 6 note updated.
 
-**Verification**: Seed path [`framework/seeds/templates/EN/product-backlog.md`](./framework/seeds/templates/EN/product-backlog.md). Open Sprint 6 ToDo: task-01 only.
+**Verification**: Seed path [`framework/seeds/templates/framework.sdd.works/EN/product-backlog.md`](./framework/seeds/templates/framework.sdd.works/EN/product-backlog.md). Open Sprint 6 ToDo: task-01 only.
 
 ### Status review picks (Sprint 6–7 alignment)
 
@@ -854,7 +916,7 @@
 
 **Why**: Rule-03 WIP sync should use the historical realtime-status name with `sdd-` prefix; `keep-update` key and filename diverged.
 
-**What changed**: [ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md). Seed [sdd-realtime-status.mdc](./framework/seeds/rules/sdd-realtime-status.mdc); [constants.json](./framework/seeds/templates/constants.json) key `realtime-status` (removed `keep-update`). [ADR-093](./adr/ADR-093-keep-update-wip-rule.md) superseded for name/key only. Living guides, design, stories, tests, portal AC, and Features i18n updated. Unprefixed `realtime-status.mdc` stays retired ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)).
+**What changed**: [ADR-096](./adr/ADR-096-sdd-realtime-status-rule-name.md). Seed [sdd-realtime-status.mdc](./framework/seeds/rules/sdd-realtime-status.mdc); [constants.json](./framework/seeds/templates/framework.sdd.works/constants.json) key `realtime-status` (removed `keep-update`). [ADR-093](./adr/ADR-093-keep-update-wip-rule.md) superseded for name/key only. Living guides, design, stories, tests, portal AC, and Features i18n updated. Unprefixed `realtime-status.mdc` stays retired ([ADR-091](./adr/ADR-091-retire-realtime-status-rule.md)).
 
 **Verification**: `ls specs/framework/seeds/rules/sdd-realtime-status.mdc`. `rg 'sdd-keep-update|"keep-update"' specs/framework/seeds specs/sprint-backlog.md specs/framework/framework-design.md specs/framework/framework-stories.md specs/framework/framework-tests.md src/content` is empty. Remove stale `sdd-keep-update.mdc` from `{client_root}/rules/` after pack update.
 
@@ -862,15 +924,15 @@
 
 **Why**: Separate pack `adr.md` and `knowledge.md` duplicated shapes already documented in practices and added install surface ([ADR-095](./adr/ADR-095-adr-knowledge-shape-in-practices.md)).
 
-**What changed**: Removed pack locale seeds `adr.md` and `knowledge.md`. Added **ADR instance shape** and **Knowledge instance shape** to EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). Updated [`sdd-retrospective`](./framework/seeds/skills/sdd-retrospective/SKILL.md), [`framework-design.md`](./framework/framework-design.md), CE-SKILL-10, and framework stories.
+**What changed**: Removed pack locale seeds `adr.md` and `knowledge.md`. Added **ADR instance shape** and **Knowledge instance shape** to EN [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md). Updated [`sdd-retrospective`](./framework/seeds/skills/sdd-retrospective/SKILL.md), [`framework-design.md`](./framework/framework-design.md), CE-SKILL-10, and framework stories.
 
-**Verification**: `test ! -f specs/framework/seeds/templates/EN/adr.md`. `rg 'locale}/adr\\.md|locale}/knowledge\\.md' specs/framework/seeds/skills/sdd-retrospective` is empty.
+**Verification**: `test ! -f specs/framework/seeds/templates/framework.sdd.works/EN/adr.md`. `rg 'locale}/adr\\.md|locale}/knowledge\\.md' specs/framework/seeds/skills/sdd-retrospective` is empty.
 
 ### sdd- prefix for framework-bound pack rules (ADR-094)
 
 **Why**: Rules that read or write SDD process artifacts should be distinguishable from portable rules such as `friendly-language.mdc`.
 
-**What changed**: [ADR-094](./adr/ADR-094-sdd-prefix-framework-rules.md). Renamed seeds to `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-keep-update.mdc`. [constants.json](./framework/seeds/templates/constants.json) values updated; keys unchanged. [sdd-create-rule](./framework/seeds/skills/sdd-create-rule/SKILL.md) naming split. CE-RULE-05 expects three `sdd-` rules plus `friendly-language.mdc`.
+**What changed**: [ADR-094](./adr/ADR-094-sdd-prefix-framework-rules.md). Renamed seeds to `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-keep-update.mdc`. [constants.json](./framework/seeds/templates/framework.sdd.works/constants.json) values updated; keys unchanged. [sdd-create-rule](./framework/seeds/skills/sdd-create-rule/SKILL.md) naming split. CE-RULE-05 expects three `sdd-` rules plus `friendly-language.mdc`.
 
 **Verification**: `ls specs/framework/seeds/rules/sdd-*.mdc`. No `dod.mdc`, `incremental-delivery.mdc`, or `keep-update.mdc` under `specs/framework/seeds/rules/`.
 
@@ -878,7 +940,7 @@
 
 **Why**: After [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md), open work had no always-on rule to keep process files aligned before Done.
 
-**What changed**: [ADR-093](./adr/ADR-093-keep-update-wip-rule.md). Seed [sdd-keep-update.mdc](./framework/seeds/rules/sdd-keep-update.mdc) and `keep-update` in [constants.json](./framework/seeds/templates/constants.json). [sdd-dod.mdc](./framework/seeds/rules/sdd-dod.mdc) points WIP checkpoints at `sdd-keep-update.mdc`. [Rule-03](./product-backlog.md#L206) reopened as keep-update. Sprint 6 [feature-43](./sprint-backlog.md#sprint-6) **WIP**. Four harness rules in design, stories, tests, guides, and portal AC.
+**What changed**: [ADR-093](./adr/ADR-093-keep-update-wip-rule.md). Seed [sdd-keep-update.mdc](./framework/seeds/rules/sdd-keep-update.mdc) and `keep-update` in [constants.json](./framework/seeds/templates/framework.sdd.works/constants.json). [sdd-dod.mdc](./framework/seeds/rules/sdd-dod.mdc) points WIP checkpoints at `sdd-keep-update.mdc`. [Rule-03](./product-backlog.md#L206) reopened as keep-update. Sprint 6 [feature-43](./sprint-backlog.md#sprint-6) **WIP**. Four harness rules in design, stories, tests, guides, and portal AC.
 
 **Verification**: `specs/framework/seeds/rules/sdd-keep-update.mdc` exists. `rg 'realtime-status' specs/framework/seeds` is empty. CE-RULE-05 lists four pack rules including `sdd-keep-update.mdc`.
 
@@ -886,9 +948,9 @@
 
 **Why**: DoD and sprint practices need a pack skill that persists ADR and knowledge under map roots without embedding long templates in SKILL.md; file shape lives on the client template tree only.
 
-**What changed**: New seed skill [`sdd-retrospective`](./framework/seeds/skills/sdd-retrospective/SKILL.md). Pack-only locale templates [`adr.md`](./framework/seeds/templates/EN/adr.md) and [`knowledge.md`](./framework/seeds/templates/EN/knowledge.md). [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) and [`framework-design.md`](./framework/framework-design.md) document pack-only install paths. EN [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) and portal copy name **sdd-retrospective**. [`framework-stories.md`](./framework/framework-stories.md) AC block and **CE-SKILL-10** in [`framework-tests.md`](./framework/framework-tests.md). OGT “Add pack seed templates adr.md and knowledge.md” closed in [`status.md`](./status.md).
+**What changed**: New seed skill [`sdd-retrospective`](./framework/seeds/skills/sdd-retrospective/SKILL.md). Pack-only locale templates [`adr.md`](./framework/seeds/templates/framework.sdd.works/EN/adr.md) and [`knowledge.md`](./framework/seeds/templates/framework.sdd.works/EN/knowledge.md). [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) and [`framework-design.md`](./framework/framework-design.md) document pack-only install paths. EN [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md) and portal copy name **sdd-retrospective**. [`framework-stories.md`](./framework/framework-stories.md) AC block and **CE-SKILL-10** in [`framework-tests.md`](./framework/framework-tests.md). OGT “Add pack seed templates adr.md and knowledge.md” closed in [`status.md`](./status.md).
 
-**Verification**: `ls specs/framework/seeds/templates/EN/adr.md specs/framework/seeds/templates/EN/knowledge.md specs/framework/seeds/skills/sdd-retrospective/SKILL.md`. `rg 'retrospective skill' specs/framework/seeds/templates/EN/scrum-in-sdd.md src/content/scrum-in-sdd` is empty. Current OGT table has no open row for adr/knowledge seeds.
+**Verification**: `ls specs/framework/seeds/templates/framework.sdd.works/EN/adr.md specs/framework/seeds/templates/framework.sdd.works/EN/knowledge.md specs/framework/seeds/skills/sdd-retrospective/SKILL.md`. `rg 'retrospective skill' specs/framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md src/content/scrum-in-sdd` is empty. Current OGT table has no open row for adr/knowledge seeds.
 
 ### Status review picks (RIDs + Sprint 7 WIP)
 
@@ -902,9 +964,9 @@
 
 **Why**: Close Sprint 5 OGTs: rename deployment starter, add product-level test strategy seed, classify `artifacts-map.json` as an SDD Core artifact.
 
-**What changed**: `deployment.md` → [`release.md`](./framework/seeds/templates/EN/release.md) (seed and [`specs/release.md`](./release.md)). New [`test-strategy.md`](./framework/seeds/templates/EN/test-strategy.md) seed and [`specs/test-strategy.md`](./test-strategy.md). [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), EN/HanS [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), `src/content/*`, [`artifacts-map.json`](../artifacts-map.json), Features i18n, and admin AC. [Spec-seeds-11](./product-backlog.md#L268) and [Spec-seeds-13](./product-backlog.md#L274) **Done**; Sprint 7 [feature-48](./sprint-backlog.md#sprint-7) and [feature-50](./sprint-backlog.md#sprint-7) **Done**. OGT 4–6 closed in [`status.md`](./status.md). [ADR-082](./adr/ADR-082-artifacts-map-json.md) context clarifies Core artifact vs process Markdown.
+**What changed**: `deployment.md` → [`release.md`](./framework/seeds/templates/framework.sdd.works/EN/release.md) (seed and [`specs/release.md`](./release.md)). New [`test-strategy.md`](./framework/seeds/templates/framework.sdd.works/EN/test-strategy.md) seed and [`specs/test-strategy.md`](./test-strategy.md). [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), EN/HanS [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), `src/content/*`, [`artifacts-map.json`](../artifacts-map.json), Features i18n, and admin AC. [Spec-seeds-11](./product-backlog.md#L268) and [Spec-seeds-13](./product-backlog.md#L274) **Done**; Sprint 7 [feature-48](./sprint-backlog.md#sprint-7) and [feature-50](./sprint-backlog.md#sprint-7) **Done**. OGT 4–6 closed in [`status.md`](./status.md). [ADR-082](./adr/ADR-082-artifacts-map-json.md) context clarifies Core artifact vs process Markdown.
 
-**Verification**: `ls specs/framework/seeds/templates/EN/` includes `release.md` and `test-strategy.md` with no `deployment.md`. `rg 'deployment\.md' specs/framework/seeds product-backlog.md specs/sprint-backlog.md specs/framework/framework-design.md specs/framework/framework-stories.md src/content artifacts-map.json` is empty. Root map lists `specs/release.md` and `specs/test-strategy.md`.
+**Verification**: `ls specs/framework/seeds/templates/framework.sdd.works/EN/` includes `release.md` and `test-strategy.md` with no `deployment.md`. `rg 'deployment\.md' specs/framework/seeds product-backlog.md specs/sprint-backlog.md specs/framework/framework-design.md specs/framework/framework-stories.md src/content artifacts-map.json` is empty. Root map lists `specs/release.md` and `specs/test-strategy.md`.
 
 ### Sprint 6 feature-37 and feature-38 Done
 
@@ -918,7 +980,7 @@
 
 **Why**: Cursor built-in `create-skill` and `create-rule` under `skills-cursor` collide with pack folders of the same name under `{client_root}/skills/`.
 
-**What changed**: [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) supersedes [ADR-089](./adr/ADR-089-pack-authoring-skill-names.md). Seed folders `sdd-create-skill`, `sdd-build-agent`, `sdd-create-rule`. [`constants.json`](./framework/seeds/templates/constants.json) values restored. Product backlog, sprint backlog, framework design/stories/tests, EN/HanS `scrum-in-sdd`, and [`status.md`](./status.md) use `sdd-*` names and paths. [ADR-074](./adr/ADR-074-sdd-create-skill.md) supersession note updated.
+**What changed**: [ADR-092](./adr/ADR-092-pack-authoring-skill-sdd-prefix.md) supersedes [ADR-089](./adr/ADR-089-pack-authoring-skill-names.md). Seed folders `sdd-create-skill`, `sdd-build-agent`, `sdd-create-rule`. [`constants.json`](./framework/seeds/templates/framework.sdd.works/constants.json) values restored. Product backlog, sprint backlog, framework design/stories/tests, EN/HanS `scrum-in-sdd`, and [`status.md`](./status.md) use `sdd-*` names and paths. [ADR-074](./adr/ADR-074-sdd-create-skill.md) supersession note updated.
 
 **Verification**: `ls specs/framework/seeds/skills/` lists the three `sdd-*` folders only (no unprefixed trio). `rg '^name: (create-skill|create-rule|build-agent)$' specs/framework/seeds/skills/` is empty. `constants.json` maps `skill_build_agent`, `skill_create_skill`, and `skill_create_rule` to the `sdd-*` folder names. Remove stale `~/.cursor/skills/create-skill`, `create-rule`, and `build-agent` after copy from seeds.
 
@@ -926,7 +988,7 @@
 
 **Why**: `sdd-dod.mdc` and `realtime-status.mdc` duplicated confirm-then-write for `status.md`. One owner for close avoids two Done paths.
 
-**What changed**: [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md). Removed [realtime-status.mdc](./framework/seeds/rules/realtime-status.mdc) and the `realtime-status` key in [constants.json](./framework/seeds/templates/constants.json). [sdd-dod.mdc](./framework/seeds/rules/sdd-dod.mdc) adds when to update `status.md` and points at practices `#statusmd`. [Rule-03](./product-backlog.md#L206) and Sprint 6 feature-39 are **Retired**. Guides, `src/content`, framework design/stories/tests, and admin portal AC list three harness rules.
+**What changed**: [ADR-091](./adr/ADR-091-retire-realtime-status-rule.md). Removed [realtime-status.mdc](./framework/seeds/rules/realtime-status.mdc) and the `realtime-status` key in [constants.json](./framework/seeds/templates/framework.sdd.works/constants.json). [sdd-dod.mdc](./framework/seeds/rules/sdd-dod.mdc) adds when to update `status.md` and points at practices `#statusmd`. [Rule-03](./product-backlog.md#L206) and Sprint 6 feature-39 are **Retired**. Guides, `src/content`, framework design/stories/tests, and admin portal AC list three harness rules.
 
 **Verification**: `rg 'realtime-status' specs/framework/seeds` is empty. `constants.json` `rules` has three keys. CE-RULE-05 names three rule files.
 
@@ -942,7 +1004,7 @@
 
 **Why**: Refine and sprint planning needed one place for PBI split rules, Feature versus Task SBI rules, and good or bad examples without duplicating the Size ladder.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) adds [5. Feature break down](#5-feature-break-down). [`sdd-refine-backlog/SKILL.md`](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) and [`sdd-plan-sprint/SKILL.md`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) load that heading in Knowledge.
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) adds [5. Feature break down](#5-feature-break-down). [`sdd-refine-backlog/SKILL.md`](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) and [`sdd-plan-sprint/SKILL.md`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) load that heading in Knowledge.
 
 **Verification**: Index link `#5-feature-break-down` resolves. `rg 'Feature break down' specs/framework/seeds/skills/sdd-refine-backlog specs/framework/seeds/skills/sdd-plan-sprint` shows Knowledge rows. Section 5 has no Plan mode text.
 
@@ -1008,13 +1070,13 @@
 
 **Why**: Authoring skills used an `sdd-` folder prefix while constants keys stayed `skill_*`. Short folder names match `prompt-optimizer` and rule files.
 
-**What changed**: [ADR-089](./adr/ADR-089-pack-authoring-skill-names.md). Seed folders renamed under `specs/framework/seeds/skills/`. [`constants.json`](./framework/seeds/templates/constants.json) values updated. Product backlog, sprint backlog, framework design/stories/tests, EN/HanS `scrum-in-sdd`, and [`status.md`](./status.md) use the new names. [ADR-074](./adr/ADR-074-sdd-create-skill.md) keeps historical context; folder name superseded by ADR-089.
+**What changed**: [ADR-089](./adr/ADR-089-pack-authoring-skill-names.md). Seed folders renamed under `specs/framework/seeds/skills/`. [`constants.json`](./framework/seeds/templates/framework.sdd.works/constants.json) values updated. Product backlog, sprint backlog, framework design/stories/tests, EN/HanS `scrum-in-sdd`, and [`status.md`](./status.md) use the new names. [ADR-074](./adr/ADR-074-sdd-create-skill.md) keeps historical context; folder name superseded by ADR-089.
 
 **Verification**: `rg 'sdd-build-agent|sdd-create-skill|sdd-create-rule' specs/framework/seeds/skills/` is empty. `constants.json` maps `skill_build_agent`, `skill_create_skill`, and `skill_create_rule` to the new folder names. Remove stale `~/.cursor/skills/sdd-*` copies after pack update.
 
 ### Refine skill paths use the client root
 
-**Why**: Relative links such as `../../templates/EN/` resolve from the skill file. They miss the pack after install. ADR files belong to this workspace only.
+**Why**: Relative links such as `../../templates/framework.sdd.works/EN/` resolve from the skill file. They miss the pack after install. ADR files belong to this workspace only.
 
 **What changed**: [sdd-refine-backlog](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) loads practices from `{client_root}/templates/framework.sdd.works/{locale}/` and friendly-language from `{client_root}/{rules_dir}/`. It does not read an adr folder.
 
@@ -1050,7 +1112,7 @@
 
 **Why**: One plan message offered options of one Implementable sprint item and options of three, as if they were the same sprint.
 
-**What changed**: [EN practices](./framework/seeds/templates/EN/sdd-scrum-practices.md) §1 says options in one message differ by at most one new Implementable Feature SBI. [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) applies that sentence before it sends the list.
+**What changed**: [EN practices](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) §1 says options in one message differ by at most one new Implementable Feature SBI. [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) applies that sentence before it sends the list.
 
 **Verification**: §1 names the count and says not to pad a thin option. Step 4 in the skill points at that sentence.
 
@@ -1098,7 +1160,7 @@
 
 **Why**: A sprint job can need an outcome that is still Epic or Theme. Keeping those rows off the plan hid the work. A fixed case list would hard-code product stories into the skill.
 
-**What changed**: [ADR-088](./adr/ADR-088-mvp-plan-names-coarse-pbi.md). [EN practices](./framework/seeds/templates/EN/sdd-scrum-practices.md) §1, §2, readiness item 9, and §4. [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) names those PBIs in plain language, writes an on-going task on accept, and schedules only Implementable PBIs.
+**What changed**: [ADR-088](./adr/ADR-088-mvp-plan-names-coarse-pbi.md). [EN practices](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) §1, §2, readiness item 9, and §4. [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) names those PBIs in plain language, writes an on-going task on accept, and schedules only Implementable PBIs.
 
 **Verification**: The skill chat template has “In this MVP, refine before the sprint delivers it” and an on-going task line. The write rules leave `Sprint` unchanged for a PBI that appears only in that block. Copy lives at `~/.cursor/skills/sdd-plan-sprint/SKILL.md`.
 
@@ -1130,7 +1192,7 @@
 
 **Why**: Requirements and the Product Backlog table should cross-link by PBI code. External files keep `#pb-N` on the table row.
 
-**What changed**: [EN sdd-scrum-practices](./framework/seeds/templates/EN/sdd-scrum-practices.md) product-backlog Requirements and table templates use one `#pb-N` anchor per Requirements line. Live [`product-backlog.md`](./product-backlog.md) and EN seed [`product-backlog.md`](./framework/seeds/templates/EN/product-backlog.md) match. [`framework-design.md`](./framework/framework-design.md) and [`framework-stories.md`](./framework/framework-stories.md) AC1 note the link rule.
+**What changed**: [EN sdd-scrum-practices](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) product-backlog Requirements and table templates use one `#pb-N` anchor per Requirements line. Live [`product-backlog.md`](./product-backlog.md) and EN seed [`product-backlog.md`](./framework/seeds/templates/framework.sdd.works/EN/product-backlog.md) match. [`framework-design.md`](./framework/framework-design.md) and [`framework-stories.md`](./framework/framework-stories.md) AC1 note the link rule.
 
 **Verification**: A Requirements line has `<a id="pb-N">` and `[code](#pb-N)`. The table PBI Code cell links `[code](#pb-N)` to that line.
 
@@ -1162,7 +1224,7 @@
 
 **Why**: Sprint planning had no way to exclude Epic or Theme rows. The readiness ladder on requirement bullets did not appear on the board.
 
-**What changed**: [EN sdd-scrum-practices](./framework/seeds/templates/EN/sdd-scrum-practices.md) adds Epic, Theme, and Implementable terminology, §4 Size product backlog, readiness item 9, MVP feature-set wording, and `Size` on Product Backlog and Unplanned PBIs templates. [product-backlog.md](./product-backlog.md) and [sprint-backlog.md](./sprint-backlog.md) Unplanned PBIs add `Size`; every existing row is Implementable. [sdd-refine-backlog](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) and [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) set Size on refine and schedule only Implementable PBIs. [ADR-086](./adr/ADR-086-pbi-size.md) records the decision.
+**What changed**: [EN sdd-scrum-practices](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) adds Epic, Theme, and Implementable terminology, §4 Size product backlog, readiness item 9, MVP feature-set wording, and `Size` on Product Backlog and Unplanned PBIs templates. [product-backlog.md](./product-backlog.md) and [sprint-backlog.md](./sprint-backlog.md) Unplanned PBIs add `Size`; every existing row is Implementable. [sdd-refine-backlog](./framework/seeds/skills/sdd-refine-backlog/SKILL.md) and [sdd-plan-sprint](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) set Size on refine and schedule only Implementable PBIs. [ADR-086](./adr/ADR-086-pbi-size.md) records the decision.
 
 **Verification**: Product Backlog header is `#`, Component, PBI Code, Description, Size, Related, Sprint, Status. Readiness item 9 and §4 exist in practices. Plan-sprint step 3 limits candidates to Implementable.
 
@@ -1178,7 +1240,7 @@
 
 **Why**: MCP-01 had Sprint — while Sprint 2 SBIs still parented it. Pack skills sdd-build-agent and sdd-create-rule had seeds but no PBI rows. Retired Skill-02 and Skill-10 stayed in the table without Requirements entries.
 
-**What changed**: [`product-backlog.md`](./product-backlog.md) splits [MCP-01](./product-backlog.md#L318) (installer Done, Sprint 2) from [MCP-04](./product-backlog.md#L323) (go-live ToDo). Adds [Skill-15](./product-backlog.md#L126) and [Skill-16](./product-backlog.md#L130). Removes retired Skill-02 and Skill-10 rows. [Skill-05](./product-backlog.md#L94) is WIP. [`sprint-backlog.md`](./sprint-backlog.md) Unplanned PBIs match. [`constants.json`](./framework/seeds/templates/constants.json) drops `skill_tracking` and adds `skill_build_agent`. [`status.md`](./status.md) points at MCP-04 go-live.
+**What changed**: [`product-backlog.md`](./product-backlog.md) splits [MCP-01](./product-backlog.md#L318) (installer Done, Sprint 2) from [MCP-04](./product-backlog.md#L323) (go-live ToDo). Adds [Skill-15](./product-backlog.md#L126) and [Skill-16](./product-backlog.md#L130). Removes retired Skill-02 and Skill-10 rows. [Skill-05](./product-backlog.md#L94) is WIP. [`sprint-backlog.md`](./sprint-backlog.md) Unplanned PBIs match. [`constants.json`](./framework/seeds/templates/framework.sdd.works/constants.json) drops `skill_tracking` and adds `skill_build_agent`. [`status.md`](./status.md) points at MCP-04 go-live.
 
 **Verification**: MCP-01 Sprint 2 Done has Sprint 2 installer SBIs. MCP-04 is — with no SBIs. Unplanned count stays 32.
 
@@ -1196,7 +1258,7 @@
 
 **What changed**: [`sdd-plan-sprint/SKILL.md`](./framework/seeds/skills/sdd-plan-sprint/SKILL.md) title is Sprint proposal. SBI and OGT expand once. Step 4 and the proposal use Extra tasks. Practices reads use `{locale}` headings only. Change PBIs re-runs step 4. Status and Limits use positive wording for OGT and status cells.
 
-**Verification**: No `../../templates/EN/` links in the skill body. The proposal list includes Extra tasks before AskQuestion.
+**Verification**: No `../../templates/framework.sdd.works/EN/` links in the skill body. The proposal list includes Extra tasks before AskQuestion.
 
 ### Plan sprint lists shared tasks
 
@@ -1218,7 +1280,7 @@
 
 **Why**: "Keep the set small" and "include every part" can both be true, so a planner has no pass or fail for one MVP.
 
-**What changed**: [1. Plan sprints by MVP](./framework/seeds/templates/EN/sdd-scrum-practices.md#1-plan-sprints-by-mvp) names the PBIs that job needs. [2. Slice product to MVPs](./framework/seeds/templates/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) states when the sprint passes and when it fails. `sdd-plan-sprint` reads those two sections from the locale practices file.
+**What changed**: [1. Plan sprints by MVP](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#1-plan-sprints-by-mvp) names the PBIs that job needs. [2. Slice product to MVPs](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#2-slice-product-to-mvps) states when the sprint passes and when it fails. `sdd-plan-sprint` reads those two sections from the locale practices file.
 
 **Verification**: The slice section has no "Keep the set small" line. A sprint fails when a PBI can be removed and the job still finishes, and when the job is still unfinished after the release.
 
@@ -1226,7 +1288,7 @@
 
 **Why**: The Terminology in practice section repeated artifact definitions that already live in artifact section rules and in the guide.
 
-**What changed**: [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice) is a table with PBI, SBI, Feature, Task, OGT, and MVP. Harness and artifact names stay in [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md#terminology). Process artifact headers link `#product-backlogmd`, `#sprint-backlogmd`, `#statusmd`, `#issues-logmd`, and `#changes-logmd` under Artifacts writing guideline. [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) and [`framework-design.md`](./framework/framework-design.md) match.
+**What changed**: [Terminology in practice](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#terminology-in-practice) is a table with PBI, SBI, Feature, Task, OGT, and MVP. Harness and artifact names stay in [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md#terminology). Process artifact headers link `#product-backlogmd`, `#sprint-backlogmd`, `#statusmd`, `#issues-logmd`, and `#changes-logmd` under Artifacts writing guideline. [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) and [`framework-design.md`](./framework/framework-design.md) match.
 
 **Verification**: The old `definition-of-*` anchors are gone from living headers. The guide Terminology line points at the practices table for the six work names.
 
@@ -1234,7 +1296,7 @@
 
 **Why**: One SBI needed one skill path. Separate `sdd-design`, `sdd-implement`, and `sdd-tdd` forced handoffs and kept a TDD folder with no seed.
 
-**What changed**: [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) supersedes [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md). The seed is [`sdd-spec-to-build/SKILL.md`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md). The `sdd-implement` seed is deleted. [`constants.json`](./framework/seeds/templates/constants.json) drops `sdd-tdd`, `sdd-design`, and `sdd-implement`, and adds `sdd-spec-to-build`. [Skill-11](./product-backlog.md#L108) owns the merged skill. Skill-02 and Skill-10 are Retired. Sprint 13 feature-13 is `sdd-spec-to-build`. feature-15 and feature-03 are Retired. feature-01 is `sdd-atdd` only. Living guides, Features catalogs, locale strings, stories, tests, and cross-skill seeds use the new name.
+**What changed**: [ADR-085](./adr/ADR-085-sdd-spec-to-build.md) supersedes [ADR-066](./adr/ADR-066-sdd-design-before-implementation.md). The seed is [`sdd-spec-to-build/SKILL.md`](./framework/seeds/skills/sdd-spec-to-build/SKILL.md). The `sdd-implement` seed is deleted. [`constants.json`](./framework/seeds/templates/framework.sdd.works/constants.json) drops `sdd-tdd`, `sdd-design`, and `sdd-implement`, and adds `sdd-spec-to-build`. [Skill-11](./product-backlog.md#L108) owns the merged skill. Skill-02 and Skill-10 are Retired. Sprint 13 feature-13 is `sdd-spec-to-build`. feature-15 and feature-03 are Retired. feature-01 is `sdd-atdd` only. Living guides, Features catalogs, locale strings, stories, tests, and cross-skill seeds use the new name.
 
 **Verification**: A search of living specs, Features markdown, and messages finds no `sdd-tdd`, `sdd-implement`, or living `sdd-design` except ADR-066 and dated history. The constants value is `sdd-spec-to-build`.
 
@@ -1252,7 +1314,7 @@
 
 **Why**: PBIs with no sprint assignment had no row in the schedule artifact, so unscheduled work was only visible in the Product Backlog `Sprint` cell.
 
-**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) adds **Unplanned PBIs** after the last sprint table. The table uses Product Backlog columns minus `Sprint`. The EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) template, the EN sprint-backlog seed, [`framework-design.md`](./framework/framework-design.md), and [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) match.
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) adds **Unplanned PBIs** after the last sprint table. The table uses Product Backlog columns minus `Sprint`. The EN [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) template, the EN sprint-backlog seed, [`framework-design.md`](./framework/framework-design.md), and [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md) match.
 
 **Verification**: The sprint-backlog Index links Unplanned PBIs last. The section header row is `#`, Component, PBI Code, Description, Related, Status. Product Backlog rows with `Sprint` `—` appear in that table.
 
@@ -1268,7 +1330,7 @@
 
 **Why**: The living skill name should say backlog, matching the job, while the constants key stays stable for readers that already resolve `skill_refine_pb`.
 
-**What changed**: [`constants.json`](./framework/seeds/templates/constants.json) sets `skill_refine_pb` to `sdd-refine-backlog`. Living guide lists, Features catalogs, [Skill-05](./product-backlog.md#L92), Sprint 6 feature-01, [`framework-design.md`](./framework/framework-design.md), [`framework-tests.md`](./framework/framework-tests.md), and [`app-stories.md`](./admin-portal/app-stories.md) use the new name. Job rows keep the key `skill_refine_pb`. Message keys `admin.guide.feat_sdd_refine_pb` stay. No `SKILL.md` in this change.
+**What changed**: [`constants.json`](./framework/seeds/templates/framework.sdd.works/constants.json) sets `skill_refine_pb` to `sdd-refine-backlog`. Living guide lists, Features catalogs, [Skill-05](./product-backlog.md#L92), Sprint 6 feature-01, [`framework-design.md`](./framework/framework-design.md), [`framework-tests.md`](./framework/framework-tests.md), and [`app-stories.md`](./admin-portal/app-stories.md) use the new name. Job rows keep the key `skill_refine_pb`. Message keys `admin.guide.feat_sdd_refine_pb` stay. No `SKILL.md` in this change.
 
 **Verification**: A search of living specs and Features markdown finds no `sdd-refine-pb`. The constants value is `sdd-refine-backlog`.
 
@@ -1290,7 +1352,7 @@
 
 **Why**: Numbered job sections in `sdd-scrum-practices.md` repeated skills and agent PBIs, or were empty. Workflow steps live in skills and agent PBIs.
 
-**What changed**: The EN [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) index links [Scrum in SDD practices](./framework/seeds/templates/EN/sdd-scrum-practices.md#scrum-in-sdd-practices). Subsections 1 and 3–8 are gone. [feature-30](./sprint-backlog.md#sprint-4) Related specs no longer use `#6-report-status`. Agent-09–14 and Spec-seeds-03 in [`product-backlog.md`](./product-backlog.md) name the skills. Future-sprint feature-01 rows name the skill, not a practices job number. [`framework-design.md`](./framework/framework-design.md) says the EN practices file no longer lists numbered jobs.
+**What changed**: The EN [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) index links [Scrum in SDD practices](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#scrum-in-sdd-practices). Subsections 1 and 3–8 are gone. [feature-30](./sprint-backlog.md#sprint-4) Related specs no longer use `#6-report-status`. Agent-09–14 and Spec-seeds-03 in [`product-backlog.md`](./product-backlog.md) name the skills. Future-sprint feature-01 rows name the skill, not a practices job number. [`framework-design.md`](./framework/framework-design.md) says the EN practices file no longer lists numbered jobs.
 
 **Verification**: The EN practices index has `Scrum in SDD practices`. Feature-30 does not link `#6-report-status`.
 
@@ -1300,9 +1362,9 @@
 
 **Why**: The path file, the missing template seed, and the practices example match the feature-03 done line.
 
-**What changed**: Sprint 4 [feature-03](./sprint-backlog.md#sprint-4) Project path file artifacts-map.json is Done. [Spec-seeds-04](./product-backlog.md#L238) is Done. [`artifacts-map.json`](../artifacts-map.json) is the project path file. There is no template seed. The example is in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapjson).
+**What changed**: Sprint 4 [feature-03](./sprint-backlog.md#sprint-4) Project path file artifacts-map.json is Done. [Spec-seeds-04](./product-backlog.md#L238) is Done. [`artifacts-map.json`](../artifacts-map.json) is the project path file. There is no template seed. The example is in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#artifacts-mapjson).
 
-**Verification**: The Sprint 4 table shows feature-03 as Done. `specs/artifacts-map.md` and `specs/framework/seeds/templates/EN/artifacts-map.md` are absent.
+**Verification**: The Sprint 4 table shows feature-03 as Done. `specs/artifacts-map.md` and `specs/framework/seeds/templates/framework.sdd.works/EN/artifacts-map.md` are absent.
 
 **Boundary**: Sprint 4 stays WIP. Sprint 5 stays ToDo.
 
@@ -1310,7 +1372,7 @@
 
 **Why**: Practices job 6 repeated `sdd-review-status`. That section is not needed.
 
-**What changed**: Sprint 4 [feature-30](./sprint-backlog.md#sprint-4) Practices job 6 for report status is Retired. The row stays. It is not removed, and it is not Done. [### 6. Report status](./framework/seeds/templates/EN/sdd-scrum-practices.md#6-report-status) is Retired. Report status is `sdd-review-status` (`skill_get_status`). [Skill-15](./product-backlog.md#L113) is Done. [feature-24](./sprint-backlog.md#sprint-4) stays Done. Agent-12 stays ToDo on Sprint 8. Current SBI in [`status.md`](./status.md) is feature-03 Project path file artifacts-map.json.
+**What changed**: Sprint 4 [feature-30](./sprint-backlog.md#sprint-4) Practices job 6 for report status is Retired. The row stays. It is not removed, and it is not Done. [### 6. Report status](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#6-report-status) is Retired. Report status is `sdd-review-status` (`skill_get_status`). [Skill-15](./product-backlog.md#L113) is Done. [feature-24](./sprint-backlog.md#sprint-4) stays Done. Agent-12 stays ToDo on Sprint 8. Current SBI in [`status.md`](./status.md) is feature-03 Project path file artifacts-map.json.
 
 **Verification**: The Sprint 4 table shows feature-30 as Retired and feature-03 as WIP. Practices job 6 is the Retired line.
 
@@ -1358,7 +1420,7 @@
 
 **Why**: The lookup is keys and paths. A Markdown table asked the reader to find the row.
 
-**What changed**: The authoring seed is [`constants.json`](./framework/seeds/templates/constants.json). Living specs, ethan, the design prompt, create skills, the guides, MCP ledger examples, and the install test name that file. The Cursor copy is `~/.cursor/templates/framework.sdd.works/constants.json`. [ADR-081](./adr/ADR-081-constants-json.md). The on-going task Change constants.md to JSON is closed.
+**What changed**: The authoring seed is [`constants.json`](./framework/seeds/templates/framework.sdd.works/constants.json). Living specs, ethan, the design prompt, create skills, the guides, MCP ledger examples, and the install test name that file. The Cursor copy is `~/.cursor/templates/framework.sdd.works/constants.json`. [ADR-081](./adr/ADR-081-constants-json.md). The on-going task Change constants.md to JSON is closed.
 
 **Verification**: `specs/framework/seeds/templates/constants.md` is absent. The install unit test that copies the lookup file passes.
 
@@ -1378,9 +1440,9 @@
 
 **Why**: A filled Pokymon map in the template folder looked like a starter a new project should copy.
 
-**What changed**: [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md). The template file is removed. The Pokymon map is the example in the artifacts-map section of [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md#artifacts-mapmd). `sdd-update-project` writes `{workspace}/artifacts-map.md` from the templates in that section. [Spec-seeds-04](./product-backlog.md#L238) and Sprint 4 feature-03 are Retired. [i18n-02](./product-backlog.md#L299) does not translate an artifacts-map seed.
+**What changed**: [ADR-080](./adr/ADR-080-no-artifacts-map-seed.md). The template file is removed. The Pokymon map is the example in the artifacts-map section of [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#artifacts-mapmd). `sdd-update-project` writes `{workspace}/artifacts-map.md` from the templates in that section. [Spec-seeds-04](./product-backlog.md#L238) and Sprint 4 feature-03 are Retired. [i18n-02](./product-backlog.md#L299) does not translate an artifacts-map seed.
 
-**Verification**: `specs/framework/seeds/templates/EN/artifacts-map.md` is absent. The example is in the practices section.
+**Verification**: `specs/framework/seeds/templates/framework.sdd.works/EN/artifacts-map.md` is absent. The example is in the practices section.
 
 **Boundary**: Audit fixtures stay. This repo's `specs/artifacts-map.md` stays. Feature-03 is Retired, not Done.
 
@@ -1432,7 +1494,7 @@
 
 **Why**: The user confirmed every sprint-backlog section. The design file still carried the old item table and retrospective rules.
 
-**What changed**: [`framework-design.md`](./framework/framework-design.md) `sprint-backlog.md` links the practices rules and states Additional Done Criteria, the sprint-heading row link, the three-key row order, and the three-label retrospective. [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md), the HanS guide, and the three portal guide copies say the By-rule record names the incident. Sprint 4 feature-04 and [Spec-seeds-06](./product-backlog.md#L250) are Done. The live [`sprint-backlog.md`](./sprint-backlog.md) header and RID description cells are restored after an editor format pass. [markdown-table-cell-bullets](./knowledge/agent/markdown-table-cell-bullets.md) records the table-cell and heading-id lesson.
+**What changed**: [`framework-design.md`](./framework/framework-design.md) `sprint-backlog.md` links the practices rules and states Additional Done Criteria, the sprint-heading row link, the three-key row order, and the three-label retrospective. [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md), the HanS guide, and the three portal guide copies say the By-rule record names the incident. Sprint 4 feature-04 and [Spec-seeds-06](./product-backlog.md#L250) are Done. The live [`sprint-backlog.md`](./sprint-backlog.md) header and RID description cells are restored after an editor format pass. [markdown-table-cell-bullets](./knowledge/agent/markdown-table-cell-bullets.md) records the table-cell and heading-id lesson.
 
 **Verification**: The design no longer says Item acceptance, `s1-feature-01`, or implementation order. The guide catalog and install tests pass, 46 of 46. The Sprint 4 table lists feature-04 Done between feature-11 and feature-03.
 
@@ -1450,7 +1512,7 @@
 
 **Why**: The user asked to test the retrospective shape on the live file and the EN seed.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the template. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use Learnings, Opportunities, and Future actions. A later run is the next number under those labels.
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) records the template. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use Learnings, Opportunities, and Future actions. A later run is the next number under those labels.
 
 **Verification**: Sprint 1 has records 1 through 4 under the labels that have a point. Sprint 2 in the EN seed has the three empty sentences.
 
@@ -1474,7 +1536,7 @@
 
 **Why**: The user required every status `ToDo`, `WIP`, and `Done` to be highlighted with `**`.
 
-**What changed**: The sprint body and sprint item table rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) say the status word is bold. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use that bold word in the table heading and the status cell. The sprint line was already `**Status: {status}**`.
+**What changed**: The sprint body and sprint item table rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) say the status word is bold. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use that bold word in the table heading and the status cell. The sprint line was already `**Status: {status}**`.
 
 **Verification**: The live file has 16 bold table headings and 85 bold status cells. The EN seed has 2 bold headings and 6 bold status cells.
 
@@ -1482,7 +1544,7 @@
 
 **Why**: The preview still showed Agent-02 and Agent-15 on one line, separated by a middle dot.
 
-**What changed**: Multi-fact cells in [`sprint-backlog.md`](./sprint-backlog.md) use `- ` bullets separated by `<br>`. The feature-28 Parent PBI cell is the check. The how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) shows that cell as the example.
+**What changed**: Multi-fact cells in [`sprint-backlog.md`](./sprint-backlog.md) use `- ` bullets separated by `<br>`. The feature-28 Parent PBI cell is the check. The how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) shows that cell as the example.
 
 **Verification**: No SBI table cell still contains ` · `. The feature-28 parent cell is two bullets.
 
@@ -1490,7 +1552,7 @@
 
 **Why**: The user added a sprint item table rule: more than one fact in a cell uses bullet points on separate lines.
 
-**What changed**: The how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) states that rule. Multi-fact cells in [`sprint-backlog.md`](./sprint-backlog.md) use `- ` bullets separated by `<br>`. The EN seed cells each have one fact, so they stay one line.
+**What changed**: The how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) states that rule. Multi-fact cells in [`sprint-backlog.md`](./sprint-backlog.md) use `- ` bullets separated by `<br>`. The EN seed cells each have one fact, so they stay one line.
 
 **Verification**: A cell with one fact is one line. A cell that had ` · ` between facts is now a bullet list.
 
@@ -1506,7 +1568,7 @@
 
 **Why**: The user confirmed the sprint item table, including Additional Done Criteria on top of the Definition of Done.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the template and the how-to. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow that table. Sprint item table rules stays WIP until the user confirms both files.
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) records the template and the how-to. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow that table. Sprint item table rules stays WIP until the user confirms both files.
 
 **Verification**: The practices file has the sprint item table template. The live Sprint 4 table and the EN seed tables use the new heading, the noun SBI, and the sort.
 
@@ -1522,7 +1584,7 @@
 
 **Why**: The sprint heading, Sprint Goal, and status line had no template in `sdd-scrum-practices.md`.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the confirmed sprint body template and how-to notes. The old sprint heading notes are that template. The live sprint sections and the EN seed already follow it. Sprint body rules stays WIP until the user confirms both files.
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) records the confirmed sprint body template and how-to notes. The old sprint heading notes are that template. The live sprint sections and the EN seed already follow it. Sprint body rules stays WIP until the user confirms both files.
 
 **Verification**: Sprint 4 has a Sprint Goal, a depends line, `**Status: WIP**`, and a progress note. EN Sprint 1 has `**Status: Done** (every item is complete)` and no depends line.
 
@@ -1538,7 +1600,7 @@
 
 **Why**: The Definition of Done section had no template in `sdd-scrum-practices.md`.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the confirmed template and how-to notes. The live Definition of Done section in [`sprint-backlog.md`](./sprint-backlog.md) stays as it is. The EN seed names the quality link Definition of Done and adds the Item acceptance sentence. Definition of Done rules stays WIP until the user confirms both files.
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) records the confirmed template and how-to notes. The live Definition of Done section in [`sprint-backlog.md`](./sprint-backlog.md) stays as it is. The EN seed names the quality link Definition of Done and adds the Item acceptance sentence. Definition of Done rules stays WIP until the user confirms both files.
 
 **Verification**: The practices file has `#### Definition of Done` with `##### Template` and `##### How to write`. The live checklist is unchanged.
 
@@ -1546,7 +1608,7 @@
 
 **Why**: The user confirmed the RID Log. The coverage table is not part of that section.
 
-**What changed**: RID Log rules left Current OGT. The RID coverage section is removed from [`sprint-backlog.md`](./sprint-backlog.md), the EN seed, and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). Definition of Done rules is WIP. The Definition of Done section is unchanged.
+**What changed**: RID Log rules left Current OGT. The RID coverage section is removed from [`sprint-backlog.md`](./sprint-backlog.md), the EN seed, and [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md). Definition of Done rules is WIP. The Definition of Done section is unchanged.
 
 **Verification**: Neither sprint-backlog file has a RID coverage heading. The Definition of Done heading and its checklist remain.
 
@@ -1554,7 +1616,7 @@
 
 **Why**: The RID tables had no row order.
 
-**What changed**: The RID Log how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) sorts each table by time, newer first, then by severity: Fetal, Broken, Blocking, High, Medium, Low. Open RIDs use Created Sprint. Closed RIDs use Closed Sprint. The live Open RIDs already follow that order.
+**What changed**: The RID Log how-to in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) sorts each table by time, newer first, then by severity: Fetal, Broken, Blocking, High, Medium, Low. Open RIDs use Created Sprint. Closed RIDs use Closed Sprint. The live Open RIDs already follow that order.
 
 **Verification**: D-2 and D-3 are Blocking in Sprint 2, and R-1 is Medium in Sprint 2, so R-1 stays last.
 
@@ -1562,7 +1624,7 @@
 
 **Why**: The RID Log used one table with type, status, handling note, and an open severity scale.
 
-**What changed**: The RID Log rule in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) is a template and how-to notes. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use an intro, Open RIDs, and Closed RIDs. Severity is Fetal, Broken, Blocking, High, Medium, or Low. The id is `{type}-{number}`, such as `D-1` and `R-1`. RID Log rules stays WIP until the user confirms both files.
+**What changed**: The RID Log rule in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) is a template and how-to notes. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use an intro, Open RIDs, and Closed RIDs. Severity is Fetal, Broken, Blocking, High, Medium, or Low. The id is `{type}-{number}`, such as `D-1` and `R-1`. RID Log rules stays WIP until the user confirms both files.
 
 **Verification**: The live file has D-2, D-3, and R-1 in Open RIDs, and D-1 in Closed RIDs. The EN seed has R-1 in Open RIDs and D-1 in Closed RIDs.
 
@@ -1570,7 +1632,7 @@
 
 **Why**: A section rule in `sdd-scrum-practices.md` listed the same facts again as narrative bullets.
 
-**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) says a section rule has a template and a how-to note for each placeholder. The notes are not restated as a narrative list. The header in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) is that template and those notes. The template is in a code block.
+**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) says a section rule has a template and a how-to note for each placeholder. The notes are not restated as a narrative list. The header in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) is that template and those notes. The template is in a code block.
 
 **Verification**: The header section has `##### Template` and `##### How to write`. It has no Content, Format, Writing, or Terms list.
 
@@ -1586,7 +1648,7 @@
 
 **Why**: The return link opened the Index, and the section name was still RID Registry.
 
-**What changed**: Each sprint and the RID section in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use `[Back to the top](#sprint-backlog-frameworksddworks)` in the live file and `[Back to the top](#sprint-backlog-pokymon-card-collection)` in the seed. The target is the H1. The section heading is `## RID Log (Risks,Impediments, Dependencies)`, and the Index link is `#rid-log-risksimpediments-dependencies`. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`status.md`](./status.md), and [`framework-design.md`](./framework/framework-design.md) use the name RID Log.
+**What changed**: Each sprint and the RID section in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed use `[Back to the top](#sprint-backlog-frameworksddworks)` in the live file and `[Back to the top](#sprint-backlog-pokymon-card-collection)` in the seed. The target is the H1. The section heading is `## RID Log (Risks,Impediments, Dependencies)`, and the Index link is `#rid-log-risksimpediments-dependencies`. [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), [`status.md`](./status.md), and [`framework-design.md`](./framework/framework-design.md) use the name RID Log.
 
 **Verification**: The live file has the top link under the RID Log heading and under Sprint 1 through Sprint 16. The EN seed has the top link under the RID Log heading, Sprint 1, and Sprint 2.
 
@@ -1594,7 +1656,7 @@
 
 **Why**: A reader who opens a sprint from the Index had no link back to that list.
 
-**What changed**: The line after each `## Sprint` heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `[Back to the index](#index)`. The heading stays `## Sprint` plus the number, so the preview id stays `sprint-1` and the same pattern for each later sprint. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records that line under Sprint heading.
+**What changed**: The line after each `## Sprint` heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `[Back to the index](#index)`. The heading stays `## Sprint` plus the number, so the preview id stays `sprint-1` and the same pattern for each later sprint. [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) records that line under Sprint heading.
 
 **Verification**: The live file has the link under Sprint 1 through Sprint 16. The EN seed has the link under Sprint 1 and Sprint 2. The target `#index` is the `### Index` heading.
 
@@ -1602,7 +1664,7 @@
 
 **Why**: The jump links sat in the Current project progress list with no heading.
 
-**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed place `### Index` after the Sprint goal bullet. The RID Registry link and the sprint links stay under that heading. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) require that heading.
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed place `### Index` after the Sprint goal bullet. The RID Registry link and the sprint links stay under that heading. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) require that heading.
 
 **Verification**: Both files show `### Index` before `[RID Registry](#rid-registry-risksimpediments-dependencies)`.
 
@@ -1610,7 +1672,7 @@
 
 **Why**: The heading with slashes produced the preview id `rid-registry-risks---impediments---dependencies`, and the jump link did not match it.
 
-**What changed**: The heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `## RID Registry (Risks,Impediments, Dependencies)`. The jump link is `#rid-registry-risksimpediments-dependencies`. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) use that heading and that id.
+**What changed**: The heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `## RID Registry (Risks,Impediments, Dependencies)`. The jump link is `#rid-registry-risksimpediments-dependencies`. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) use that heading and that id.
 
 **Verification**: Cursor turns spaces into hyphens, then removes commas and parentheses. That heading becomes `rid-registry-risksimpediments-dependencies`.
 
@@ -1618,7 +1680,7 @@
 
 **Why**: The heading `RID Registry (Risks / Impediments / Dependencies)` gets the preview id `rid-registry-risks---impediments---dependencies`. The link `#rid-registry-risks-impediments-dependencies` did not match that id.
 
-**What changed**: The heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `## RID Registry`. The jump link is `[RID Registry](./sprint-backlog.md#rid-registry)`. The Index heading is removed. The jump links stay in the Current project progress list. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) match that shape.
+**What changed**: The heading in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed is `## RID Registry`. The jump link is `[RID Registry](./sprint-backlog.md#rid-registry)`. The Index heading is removed. The jump links stay in the Current project progress list. The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) match that shape.
 
 **Verification**: Cursor builds a heading id by turning spaces into hyphens, then removing punctuation. `## RID Registry` becomes `rid-registry`.
 
@@ -1626,7 +1688,7 @@
 
 **Why**: Current project progress named the WIP sprint and did not list a jump to the RID Registry or to every sprint.
 
-**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) add an Index under Current project progress. The Index links the RID Registry, then each sprint, in sprint order. The link text is the name only. [`sprint-backlog.md`](./sprint-backlog.md) lists Sprint 1 through Sprint 16. The EN seed lists Sprint 1 and Sprint 2. Header rules stays WIP until the user confirms both files.
+**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) add an Index under Current project progress. The Index links the RID Registry, then each sprint, in sprint order. The link text is the name only. [`sprint-backlog.md`](./sprint-backlog.md) lists Sprint 1 through Sprint 16. The EN seed lists Sprint 1 and Sprint 2. Header rules stays WIP until the user confirms both files.
 
 **Verification**: Each Index link uses the heading slug for that section. The RID Registry link is `#rid-registry-risks-impediments-dependencies`. A sprint link is `#sprint-1` and the same pattern for each later sprint.
 
@@ -1634,7 +1696,7 @@
 
 **Why**: The principle lines named Sprint Goal, Increment, MVP, SBI, and OGT with no link, and the terminology store was not named in the seed building guide.
 
-**What changed**: [Terminology in practice](./framework/seeds/templates/EN/sdd-scrum-practices.md#terminology-in-practice) adds Sprint Goal and MVP. The principle lines in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed link Sprint Goal, Increment, MVP, SBI, and OGT there. Current WIP sprint is a bold heading link, and the bullet says to click the link to jump to that sprint. [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) names Terminology in practice as the terminology store.
+**What changed**: [Terminology in practice](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md#terminology-in-practice) adds Sprint Goal and MVP. The principle lines in [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed link Sprint Goal, Increment, MVP, SBI, and OGT there. Current WIP sprint is a bold heading link, and the bullet says to click the link to jump to that sprint. [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) names Terminology in practice as the terminology store.
 
 **Verification**: The live file links those five headings under `sdd-scrum-practices.md` and shows `[**Sprint 4**](./sprint-backlog.md#sprint-4)`. The EN seed links the same headings and shows Sprint 2.
 
@@ -1642,23 +1704,23 @@
 
 **Why**: The header stated the current sprint in one sentence and the sprint rule in another, with no jump to the current sprint.
 
-**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) add Sprint planning principles as the last blockquote item, and add a Current project progress section after the blockquote. Current project progress names the total sprints, links the current WIP sprint heading, and copies that Sprint Goal. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow those rules. Header rules stays WIP until the user confirms both files.
+**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) add Sprint planning principles as the last blockquote item, and add a Current project progress section after the blockquote. Current project progress names the total sprints, links the current WIP sprint heading, and copies that Sprint Goal. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow those rules. Header rules stays WIP until the user confirms both files.
 
-**Verification**: The live file links [Sprint 4](./sprint-backlog.md#sprint-4) and copies the Sprint 4 goal. The EN seed links Sprint 2 and copies the Sprint 2 goal. Sprint Goal, Increment, and OGT link [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md).
+**Verification**: The live file links [Sprint 4](./sprint-backlog.md#sprint-4) and copies the Sprint 4 goal. The EN seed links Sprint 2 and copies the Sprint 2 goal. Sprint Goal, Increment, and OGT link [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md).
 
 ### Sprint backlog header content
 
 **Why**: The header purpose still described a short-cycle list, and the header still had a Framework line.
 
-**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) say `sprint-backlog.md` is the Sprint Backlog artifact and lists every sprint. The file owns the schedule, the item status, and the latest project progress. Related links are `artifacts-map.md`, `scrum-in-sdd.md`, `status.md`, `product-backlog.md`, and `sdd-scrum-practices.md`. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow those rules. Header rules stays WIP until the user confirms both files.
+**What changed**: The header rules in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) say `sprint-backlog.md` is the Sprint Backlog artifact and lists every sprint. The file owns the schedule, the item status, and the latest project progress. Related links are `artifacts-map.md`, `scrum-in-sdd.md`, `status.md`, `product-backlog.md`, and `sdd-scrum-practices.md`. [`sprint-backlog.md`](./sprint-backlog.md) and the EN seed follow those rules. Header rules stays WIP until the user confirms both files.
 
-**Verification**: Neither header has a Framework line. The Sprint Backlog term links [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md#sprint-backlog). The SBI term links [Terminology](./framework/seeds/templates/EN/scrum-in-sdd.md#terminology).
+**Verification**: Neither header has a Framework line. The Sprint Backlog term links [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md#sprint-backlog). The SBI term links [Terminology](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md#terminology).
 
 ### The seed follows the live example
 
 **Why**: A section was done when only the live artifact passed.
 
-**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) adds a step before the stop. After the live example passes, the same section is updated in the EN seed under `specs/framework/seeds/templates/EN/`, using the Pokymon Card Collection example. The pass checks cover both files, and the user confirms both files.
+**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) adds a step before the stop. After the live example passes, the same section is updated in the EN seed under `specs/framework/seeds/templates/framework.sdd.works/EN/`, using the Pokymon Card Collection example. The pass checks cover both files, and the user confirms both files.
 
 **Verification**: Step 5 is the seed update. Step 6 starts the next section only after both files are confirmed. The Pass section names both files.
 
@@ -1666,7 +1728,7 @@
 
 **Why**: The method for writing an artifact seed was only in the chat.
 
-**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) records the method. Section rules stay only in [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). A term that already has a meaning there is a link. [`artifacts-map.md`](./artifacts-map.md) lists the guide.
+**What changed**: [`seed-artifacts-building-guide.md`](./seed-artifacts-building-guide.md) records the method. Section rules stay only in [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md). A term that already has a meaning there is a link. [`artifacts-map.md`](./artifacts-map.md) lists the guide.
 
 **Verification**: The user confirmed the draft. The file matches that draft.
 
@@ -1674,7 +1736,7 @@
 
 **Why**: The header of `sprint-backlog.md` restated row order, and that sentence disagreed with the practices.
 
-**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) records the header rules under `### sprint-backlog.md`. [`sprint-backlog.md`](./sprint-backlog.md) follows those rules. [`status.md`](./status.md) tracks seven section tasks, and Header rules is WIP. Sprint 4 feature-04 stays ToDo.
+**What changed**: [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) records the header rules under `### sprint-backlog.md`. [`sprint-backlog.md`](./sprint-backlog.md) follows those rules. [`status.md`](./status.md) tracks seven section tasks, and Header rules is WIP. Sprint 4 feature-04 stays ToDo.
 
 **Verification**: The header has one H1, one tight blockquote, plain links, and two sentences before the rule. Numbering and row order are not in the header.
 
@@ -1706,7 +1768,7 @@
 
 **Why**: The user confirmed both EN seeds are usable.
 
-**What changed**: Sprint 4 feature-21 is Done. [Spec-seeds-08](./product-backlog.md#L255) and [Spec-seeds-13](./product-backlog.md#L258) are Done. The EN [`artifacts-map.md`](./framework/seeds/templates/EN/artifacts-map.md) seed now says Open issues hold Open, Fixed, and Deferred rows, and Closed issues hold Closed rows. [`status.md`](./status.md) drops feature-21 from the next items.
+**What changed**: Sprint 4 feature-21 is Done. [Spec-seeds-08](./product-backlog.md#L255) and [Spec-seeds-13](./product-backlog.md#L258) are Done. The EN [`artifacts-map.md`](./framework/seeds/templates/framework.sdd.works/EN/artifacts-map.md) seed now says Open issues hold Open, Fixed, and Deferred rows, and Closed issues hold Closed rows. [`status.md`](./status.md) drops feature-21 from the next items.
 
 **Verification**: The seed tree names `changes-log.md` and the two issues-log tables the same way as [ADR-075](./adr/ADR-075-issues-log-tables.md), the design, and the practices. No seed says the issues-log status is only Open or Closed.
 
@@ -1734,7 +1796,7 @@
 
 **Why**: The conclusion record file is now `changes-log.md`.
 
-**What changed**: This file moved from `specs/change-log.md` to `specs/changes-log.md`. The EN seed moved to `specs/framework/seeds/templates/EN/changes-log.md`. Both titles are Changes log. Living specs, skills, and the published guide name `changes-log.md`. [Spec-seeds-08](./product-backlog.md#L255) stays ToDo.
+**What changed**: This file moved from `specs/change-log.md` to `specs/changes-log.md`. The EN seed moved to `specs/framework/seeds/templates/framework.sdd.works/EN/changes-log.md`. Both titles are Changes log. Living specs, skills, and the published guide name `changes-log.md`. [Spec-seeds-08](./product-backlog.md#L255) stays ToDo.
 
 **Verification**: Those living files name `changes-log.md`. The 2026-09-27 product-backlog row still names `change-log.md`.
 
@@ -1744,7 +1806,7 @@
 
 **Why**: The live log and the EN seed described a conclusion, and they did not state the day order or the entry labels.
 
-**What changed**: This file, [`changes-log.md`](./framework/seeds/templates/EN/changes-log.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), and [`framework-design.md`](./framework/framework-design.md) state the same shape. Days are `## YYYY-MM-DD`, newest first. Each entry is **Why**, **What changed**, and **Verification**. **Boundary** is optional. [Spec-seeds-08](./product-backlog.md#L255) stays ToDo.
+**What changed**: This file, [`changes-log.md`](./framework/seeds/templates/framework.sdd.works/EN/changes-log.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), and [`framework-design.md`](./framework/framework-design.md) state the same shape. Days are `## YYYY-MM-DD`, newest first. Each entry is **Why**, **What changed**, and **Verification**. **Boundary** is optional. [Spec-seeds-08](./product-backlog.md#L255) stays ToDo.
 
 **Verification**: The four files name those labels and the day order. This file's day headings run from `2026-09-30` down to `2026-09-21`.
 
@@ -1768,7 +1830,7 @@
 
 **Why**: The section title `Current OGT` did not say what the letters stand for.
 
-**What changed**: The heading is `Current OGT(On-going Tasks)` in the EN status seed, [`status.md`](./status.md), [Spec-seeds-07](./product-backlog.md#L252), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md) AC3, [`framework-test.md`](./framework/framework-tests.md) CE-TPL-08, and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md).
+**What changed**: The heading is `Current OGT(On-going Tasks)` in the EN status seed, [`status.md`](./status.md), [Spec-seeds-07](./product-backlog.md#L252), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md) AC3, [`framework-test.md`](./framework/framework-tests.md) CE-TPL-08, and [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md).
 
 **Verification**: A search of living specs finds `Current OGT` only in this file's earlier entry. The seed heading is `## Current OGT(On-going Tasks)`.
 
@@ -1784,7 +1846,7 @@
 
 **Why**: The English guide put `artifacts-map.md` under Framework artifacts, had no Core group, omitted `issues-log.md`, and used `{model_name}`. The design named authoring seeds that were not in the seed tree.
 
-**What changed**: [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md) lists Core artifacts (`scrum-in-sdd.md`, `sdd-scrum-practices.md`, `artifacts-map.md`), Framework artifacts (`product-backlog.md`, `sprint-backlog.md`, `status.md`, `change-log.md`), and Engineering artifacts (`architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-test.md`, `deployment.md`, `.secrets`, `issues-log.md`). `constants.md` and `.sdd-installed.json` are pack files beside those groups. The ADD Core group is not Scrum's KEEP core artifacts. New draft seeds: `seeds/.sdd-installed.json` (field example, `pack_complete: false`, outside the install allow-list), `templates/EN/issues-log.md`, `templates/EN/.secrets`, `rules/sdd-dod.mdc`, `rules/sdd-incremental-delivery.mdc`, `rules/realtime-status.mdc`, `rules/artifacts-map.mdc`, `skills/sdd-audit-artifacts/SKILL.md`, and `skills/sdd-get-status/SKILL.md`. [`framework-design.md`](./framework/framework-design.md) records the ledger example and the draft seeds. `skills/sdd-update-status/` was not added; `sdd-tracking` stays the status-write folder.
+**What changed**: [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md) lists Core artifacts (`scrum-in-sdd.md`, `sdd-scrum-practices.md`, `artifacts-map.md`), Framework artifacts (`product-backlog.md`, `sprint-backlog.md`, `status.md`, `change-log.md`), and Engineering artifacts (`architecture.md`, `{stem}-stories.md`, `{stem}-design.md`, `{stem}-test.md`, `deployment.md`, `.secrets`, `issues-log.md`). `constants.md` and `.sdd-installed.json` are pack files beside those groups. The ADD Core group is not Scrum's KEEP core artifacts. New draft seeds: `seeds/.sdd-installed.json` (field example, `pack_complete: false`, outside the install allow-list), `templates/framework.sdd.works/EN/issues-log.md`, `templates/framework.sdd.works/EN/.secrets`, `rules/sdd-dod.mdc`, `rules/sdd-incremental-delivery.mdc`, `rules/realtime-status.mdc`, `rules/artifacts-map.mdc`, `skills/sdd-audit-artifacts/SKILL.md`, and `skills/sdd-get-status/SKILL.md`. [`framework-design.md`](./framework/framework-design.md) records the ledger example and the draft seeds. `skills/sdd-update-status/` was not added; `sdd-tracking` stays the status-write folder.
 
 **Verification**: The seed tree has every authoring seed path the design names except the skills still listed as not in the tree and the HanS/HanT bodies. The `.secrets` seed has no value. The ledger example has `pack_complete: false`. OGT 2, feature-23, feature-24, Rule-01 through Rule-04, Spec-seeds-11, and Spec-seeds-13 stay open until the user confirms them.
 
@@ -1794,7 +1856,7 @@
 
 **Why**: Several SBIs in one cell were one comma-separated line, so the list was hard to scan.
 
-**What changed**: Each Affected SBIs item is its own bullet in the cell. The bullet is the code and the SBI name. Updated [Spec-seeds-07](./product-backlog.md#L252), [`framework-design.md`](./framework/framework-design.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`sdd-tracking`](./framework/seeds/skills/sdd-tracking/SKILL.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-tests.md), the EN status seed, and [`status.md`](./status.md).
+**What changed**: Each Affected SBIs item is its own bullet in the cell. The bullet is the code and the SBI name. Updated [Spec-seeds-07](./product-backlog.md#L252), [`framework-design.md`](./framework/framework-design.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), [`sdd-tracking`](./framework/seeds/skills/sdd-tracking/SKILL.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-tests.md), the EN status seed, and [`status.md`](./status.md).
 
 **Verification**: The open OGT row that names four SBIs shows four bullets. The EN seed sample cell is a bullet list.
 
@@ -1802,7 +1864,7 @@
 
 **Why**: The progress table repeated a sprint goal that already lives on the sprint backlog, and it listed every sprint on its own row.
 
-**What changed**: The progress table is `Sprint`, `Status`, `Note`. Consecutive Done sprints share one row. Consecutive ToDo sprints share one row. Where we are now adds one sentence after the sprint name. What is next follows the current sprint, the current SBI, and the sprint item order. Affected SBIs shows the code and the SBI name. The file ends with Last updated, a timestamp, and the agent name. Updated [Spec-seeds-07](./product-backlog.md#L252), [`framework-design.md`](./framework/framework-design.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-tests.md), the EN status seed, and [`status.md`](./status.md).
+**What changed**: The progress table is `Sprint`, `Status`, `Note`. Consecutive Done sprints share one row. Consecutive ToDo sprints share one row. Where we are now adds one sentence after the sprint name. What is next follows the current sprint, the current SBI, and the sprint item order. Affected SBIs shows the code and the SBI name. The file ends with Last updated, a timestamp, and the agent name. Updated [Spec-seeds-07](./product-backlog.md#L252), [`framework-design.md`](./framework/framework-design.md), [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), [`framework-stories.md`](./framework/framework-stories.md), [`framework-test.md`](./framework/framework-tests.md), the EN status seed, and [`status.md`](./status.md).
 
 **Verification**: The live progress table has three sprint rows: Sprint 1 - 3 Done, Sprint 4 WIP, Sprint 5 - 16 ToDo. The EN seed sprint header has no Sprint Goal column. The live file ends with Last updated.
 
@@ -1818,7 +1880,7 @@
 
 **Why**: Every sprint row repeated a DoD cell, and later sprints had put that row’s acceptance in the same cell.
 
-**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) and the EN sprint-backlog seed drop the DoD column. One Definition of Done checklist sits above the first sprint. Sprints 3, 4, and 5 state a replacement checklist. A row that had its own check keeps it as an item-acceptance line under that sprint. [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), and [`framework-test.md`](./framework/framework-tests.md) match.
+**What changed**: [`sprint-backlog.md`](./sprint-backlog.md) and the EN sprint-backlog seed drop the DoD column. One Definition of Done checklist sits above the first sprint. Sprints 3, 4, and 5 state a replacement checklist. A row that had its own check keeps it as an item-acceptance line under that sprint. [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), [`framework-design.md`](./framework/framework-design.md), [`framework-stories.md`](./framework/framework-stories.md), and [`framework-test.md`](./framework/framework-tests.md) match.
 
 **Verification**: Sprint item headers are `#`, Code, SBI, Parent PBI, Module/Type, Related specs, Status. The EN seed header matches. No sprint item header still contains DoD.
 
@@ -1826,7 +1888,7 @@
 
 **Why**: The Description cell was holding the requirement, and every row repeated the same DoD checklist.
 
-**What changed**: The requirement is a paragraph under the feature name. Description is a short summary. The Product Backlog DoD column is removed. One Definition of Done checklist sits above the Product Backlog table. Updated [`product-backlog.md`](./product-backlog.md), the EN product-backlog seed, [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md), [`framework-design.md`](./framework/framework-design.md), and [`framework-stories.md`](./framework/framework-stories.md).
+**What changed**: The requirement is a paragraph under the feature name. Description is a short summary. The Product Backlog DoD column is removed. One Definition of Done checklist sits above the Product Backlog table. Updated [`product-backlog.md`](./product-backlog.md), the EN product-backlog seed, [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md), [`framework-design.md`](./framework/framework-design.md), and [`framework-stories.md`](./framework/framework-stories.md).
 
 **Verification**: The live table header is Category, PBI Code, PBI, Description, Related, Sprint, Status. The EN seed header matches. Spec-seeds-07’s status starter stays in the requirement paragraph under that feature.
 
@@ -1938,7 +2000,7 @@
 
 **Why**: `Code` was hard to scan after the item name. The Product Backlog still called its done-check column acceptance criteria after the sprint table had moved to DoD.
 
-**What changed**: Sprint item columns are `#`, `Code`, `SBI`, Parent PBI, Module/Type, DoD, Related specs, Status. The Product Backlog column is `DoD`. The English product-backlog seed uses the same default DoD checks as the sprint seed. This repo’s product backlog keeps each row’s existing checks under that header. [`framework-design.md`](./framework/framework-design.md) and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) match.
+**What changed**: Sprint item columns are `#`, `Code`, `SBI`, Parent PBI, Module/Type, DoD, Related specs, Status. The Product Backlog column is `DoD`. The English product-backlog seed uses the same default DoD checks as the sprint seed. This repo’s product backlog keeps each row’s existing checks under that header. [`framework-design.md`](./framework/framework-design.md) and [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) match.
 
 **Verification**: Sprint tables have eight cells and `Code` is column 2. Product Backlog headers say `DoD`.
 
@@ -1946,7 +2008,7 @@
 
 **Why**: The sprint row was mixing story acceptance criteria with the check that marks the row done.
 
-**What changed**: The sprint-item column is `DoD` in [`sprint-backlog.md`](./sprint-backlog.md), the EN seed, [`framework-design.md`](./framework/framework-design.md), and [`sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md). The seed default is the DoD rule, user confirmation, linked acceptance criteria, and the quality standard. Sprint 3 uses its own three checks: confirmed usable, pack cross-review, and TRUE AGENT. Product Backlog acceptance criteria stay on the PBI.
+**What changed**: The sprint-item column is `DoD` in [`sprint-backlog.md`](./sprint-backlog.md), the EN seed, [`framework-design.md`](./framework/framework-design.md), and [`sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md). The seed default is the DoD rule, user confirmation, linked acceptance criteria, and the quality standard. Sprint 3 uses its own three checks: confirmed usable, pack cross-review, and TRUE AGENT. Product Backlog acceptance criteria stay on the PBI.
 
 **Verification**: Sprint tables use `DoD`. Sprint 4 and earlier sprints keep their previous cell text under that header. Sprint 3 feature-18 is one row again.
 
@@ -2012,7 +2074,7 @@
 
 **What changed**: [ADR-072](./adr/ADR-072-rule-artifacts-map.md). The rule file is `artifacts-map.mdc`, with no `sdd-` prefix. The EN guide lists it. Rule-04 is Sprint 3 feature-22, which still has to write `specs/framework/seeds/rules/artifacts-map.mdc` and update the remaining spec lists.
 
-**Verification**: Both Rules lists in `templates/EN/scrum-in-sdd.md` name `artifacts-map.mdc`. Sprint 3 feature-22 is ToDo.
+**Verification**: Both Rules lists in `templates/framework.sdd.works/EN/scrum-in-sdd.md` name `artifacts-map.mdc`. Sprint 3 feature-22 is ToDo.
 
 ### Portal markdown paths move under content/
 
@@ -2076,7 +2138,7 @@
 
 **Why**: The guide’s common name is Scrum-in-SDD; the seed path still said `sdd-scrum-guide.md`, so Ethan and catalogs opened a name that did not match the artifact label.
 
-**What changed**: EN and HanS seeds are [`scrum-in-sdd.md`](./framework/seeds/templates/EN/scrum-in-sdd.md). Living pointers (Ethan, practices, maps, process headers, Spec-seeds-02 / i18n-01, Features catalog, instruction mocks, feature-16 / Web-portal-12) use the new name. [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md). Sprint 3 feature-18 (rename) and feature-19 (portal catalog and unbuilt tab path). Dated history keeps the old name. Practices stay `sdd-scrum-practices.md`.
+**What changed**: EN and HanS seeds are [`scrum-in-sdd.md`](./framework/seeds/templates/framework.sdd.works/EN/scrum-in-sdd.md). Living pointers (Ethan, practices, maps, process headers, Spec-seeds-02 / i18n-01, Features catalog, instruction mocks, feature-16 / Web-portal-12) use the new name. [ADR-068](./adr/ADR-068-scrum-in-sdd-filename.md). Sprint 3 feature-18 (rename) and feature-19 (portal catalog and unbuilt tab path). Dated history keeps the old name. Practices stay `sdd-scrum-practices.md`.
 
 **Verification**: Both locale seeds exist under the new name. Ethan onboard names `scrum-in-sdd.md`. A search of living specs and Features markdown finds no `sdd-scrum-guide.md` except dated history and `samectx-notes/`.
 
@@ -2084,7 +2146,7 @@
 
 **Why**: The labeled-list decision needed a worked file, and artifact seeds do not need their own status or last-update line.
 
-**What changed**: [`framework-design.md`](./framework/framework-design.md) records that seeds omit status and last-update. The EN seed [`artifacts-map.md`](./framework/seeds/templates/EN/artifacts-map.md) is the Pokymon Card Collection labeled list. It replaces the old table catalog.
+**What changed**: [`framework-design.md`](./framework/framework-design.md) records that seeds omit status and last-update. The EN seed [`artifacts-map.md`](./framework/seeds/templates/framework.sdd.works/EN/artifacts-map.md) is the Pokymon Card Collection labeled list. It replaces the old table catalog.
 
 **Verification**: The seed is a labeled list with product name, `artifacts_root`, locale, and one block per file the example project already has. No status line and no timestamp on a row.
 
@@ -2100,7 +2162,7 @@
 
 **Why**: Ethan has to find the project index before he knows whether the artifacts root is `specs` or `docs`.
 
-**What changed**: `{workspace}/artifacts-map.md` names `artifacts_root`. The default is `specs`. The user may set `docs`. Paths in the map are relative to that folder. The filename stays `artifacts-map.md`. [`framework-design.md`](./framework/framework-design.md) moved from `templates/EN/` to `specs/framework/seeds/`.
+**What changed**: `{workspace}/artifacts-map.md` names `artifacts_root`. The default is `specs`. The user may set `docs`. Paths in the map are relative to that folder. The filename stays `artifacts-map.md`. [`framework-design.md`](./framework/framework-design.md) moved from `templates/framework.sdd.works/EN/` to `specs/framework/seeds/`.
 
 **Verification**: The old path is gone. Live links point at `specs/framework/framework-design.md`.
 
@@ -2361,7 +2423,7 @@
 - Remove the Tools intro that mentions WoodenSward Dojo. Tools table drops the Channel column. Install description: “Install agents, skills, rules, and other capabilities from framework.sdd.works.” Update description: “Update the framework.”
 - Body text and code blocks share one content width.
 - Footer, right edge aligned to that column: Admin portal link, then `copyright © Ethan Huang`.
-- Features tab lists only Agents, Skills, Rules, and Templates from [`sdd-scrum-guide.md`](./framework/seeds/templates/EN/sdd-scrum-guide.md) lines 314–349 (Artifacts map to Templates). Workflows and Knowledge are omitted. Each row is a name and one sentence.
+- Features tab lists only Agents, Skills, Rules, and Templates from [`sdd-scrum-guide.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-guide.md) lines 314–349 (Artifacts map to Templates). Workflows and Knowledge are omitted. Each row is a name and one sentence.
 
 **Verification**: UI mock at [`admin-portal/ui-mockup/01-home.html`](./admin-portal/ui-mockup/01-home.html) and [`13-instructions.html`](./admin-portal/ui-mockup/13-instructions.html). User confirms the mock before app implementation.
 
@@ -2383,7 +2445,7 @@
 
 **What changed**: Sprint 1 feature-01 and documentation-01 are Done. Spec-seeds-02 and Spec-seeds-03 are Done. Phase 1 archive links point at [`phase1-process-specs/`](./phase1-process-specs/). Sprint 1 status is Done. Next is Sprint 2.
 
-**Verification**: Every Sprint 1 SBI is Done. Seed files are under `templates/EN/`. No remaining `phase1-specs/` path under live `specs/`.
+**Verification**: Every Sprint 1 SBI is Done. Seed files are under `templates/framework.sdd.works/EN/`. No remaining `phase1-specs/` path under live `specs/`.
 
 **Boundary**: Does not add `constants.md`, `.secrets`, or HanS/HanT translations. Does not implement the installer.
 
@@ -2403,7 +2465,7 @@
 
 **Why**: Sprint rows used `#` and Category. A second retrospective in the same sprint was a second section.
 
-**What changed**: Sprint tables use Code, Parent PBI, Module, Type, SBI. Code is the type plus a number, such as `feature-01`. A seed is a Feature. Research, Bug-fix, and Documentation are the other named types. Task is supporting work that is none of those. An SBI and a PBI status is only `ToDo`, `WIP`, or `Done`. Apply the Definition of Done rule before `Done`. Parent PBI shows the code and the name. The product backlog column stays Category. One Retrospective section per sprint, with timestamped Learnings and Opportunities. Shape: [`framework/framework-design.md`](./framework/framework-design.md). Same-category product rows: [`framework/seeds/templates/EN/sdd-scrum-practices.md`](./framework/seeds/templates/EN/sdd-scrum-practices.md) §3.1.
+**What changed**: Sprint tables use Code, Parent PBI, Module, Type, SBI. Code is the type plus a number, such as `feature-01`. A seed is a Feature. Research, Bug-fix, and Documentation are the other named types. Task is supporting work that is none of those. An SBI and a PBI status is only `ToDo`, `WIP`, or `Done`. Apply the Definition of Done rule before `Done`. Parent PBI shows the code and the name. The product backlog column stays Category. One Retrospective section per sprint, with timestamped Learnings and Opportunities. Shape: [`framework/framework-design.md`](./framework/framework-design.md). Same-category product rows: [`framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md`](./framework/seeds/templates/framework.sdd.works/EN/sdd-scrum-practices.md) §3.1.
 
 **Verification**: Live and seed `sprint-backlog.md` use the new columns. No second Retrospective heading in Sprint 1.
 

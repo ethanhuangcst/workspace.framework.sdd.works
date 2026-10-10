@@ -1,4 +1,4 @@
-export type McpChannel = "stdio" | "http";
+export type McpChannel = "http";
 
 export type CreateSddMcpServerOptions = {
   channel: McpChannel;

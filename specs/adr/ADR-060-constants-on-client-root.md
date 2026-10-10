@@ -1,7 +1,7 @@
 # ADR-060: constants.md on the client root
 
 ## Status
-Accepted. Decision 1's filename `constants.md` is superseded by [ADR-081](./ADR-081-constants-json.md) on 2026-10-03. The client-root home and the no-copy rule stay.
+Accepted. Decision 1's filename `constants.md` is superseded by [ADR-081](./ADR-081-constants-json.md) on 2026-10-03. The client-root home and the no-copy rule stay. Amended 2026-10-09 by [ADR-130](./ADR-130-simplified-installer-url-only-and-empty-cache.md) decision 9: install path is `{client_root}/templates/`, not `{client_root}/templates/framework.sdd.works/`.
 
 ## Context
 The pack needs one lookup file for path names, the instructions URL, skill keys, and rule keys. Ethan reads it after `{client_root}/.sdd-installed.json` has `pack_complete: true`, and on a failed start he reads `instructions_url` from it when the file can be read.
@@ -13,7 +13,7 @@ The product needs a shorter name and a durable rule that the live copy stays on 
 ## Decision
 1. The lookup file is named **`constants.md`**.
 2. After install it lives at `{client_root}/templates/framework.sdd.works/constants.md`. On Cursor, `client_root` is `~/.cursor`.
-3. The authoring seed in this workspace is `specs/framework/seeds/templates/constants.md`. It sits beside `templates/EN/` and `templates/HanS/`, not inside a locale folder.
+3. The authoring seed in this workspace is `specs/framework/seeds/templates/constants.md`. It sits beside `templates/framework.sdd.works/EN/` and `templates/framework.sdd.works/HanS/`, not inside a locale folder.
 4. Do not copy `constants.md` into the workspace, into `{workspace}/specs`, or into the artifacts root. Locale seeds still copy into that root.
 5. ADR-056 decisions 1–5 stay. ADR-056 decision 6’s filename `project-constants.md` is superseded by this ADR. The home (user-root templates tree) and the no-copy rule stay.
 
@@ -22,7 +22,7 @@ One pack on the user root already means ethan reads harness lookup from `client_
 
 ## Consequences
 - Ethan, agent specs, MCP ledger examples, and Spec-seeds-01 name `constants.md`.
-- Writing rules for the file live in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md).
+- Writing rules for the file live in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md).
 - Path and no-copy summary live in [`framework-design.md`](../framework/framework-design.md).
 
 ## Date

@@ -19,7 +19,7 @@ export type ListVersionsResult = {
 };
 
 type ListVersionsOptions = {
-  channel?: "stdio" | "http";
+  channel?: "http";
 };
 
 type VersionsOverride =
@@ -55,27 +55,27 @@ function fromManifest(): ListVersionsResult | null {
 
 async function fetchVersionsFromServer(
   serverUrl = getSddServerUrl(),
-): Promise<ListVersionsResult | { code: "package_unavailable"; message: string }> {
+): Promise<ListVersionsResult | { code: "invalid_input"; message: string }> {
   const url = `${serverUrl.replace(/\/+$/, "")}/api/sdd/versions`;
   let res: Response;
   try {
     res = await fetch(url);
   } catch (error) {
     return {
-      code: "package_unavailable",
+      code: "invalid_input",
       message:
         error instanceof Error ? error.message : "Failed to reach package server",
     };
   }
   if (res.status === 409) {
     return {
-      code: "package_unavailable",
+      code: "invalid_input",
       message: "Package sync has not run on the server yet.",
     };
   }
   if (!res.ok) {
     return {
-      code: "package_unavailable",
+      code: "invalid_input",
       message: `Package server returned ${res.status}`,
     };
   }
@@ -107,7 +107,7 @@ export async function listVersions(
     const payload = fromManifest();
     if (!payload) {
       return toolError(
-        "package_unavailable",
+        "invalid_input",
         "Package sync has not run yet. Trigger sync from Settings or POST /api/admin/sync.",
       );
     }

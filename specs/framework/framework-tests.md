@@ -253,7 +253,7 @@ Do not treat a green L1 run as proof that `/ethan` appears in Cursor's list, or 
 - **Layer:** CI (automated) or review checklist until scripted.
 - **Pre-condition:** Pack markdown under `content/` and `templates/` describes ADR or Knowledge storage.
 - **Test steps:** Search `pack.framework.sdd.works/` for the literal segments `/specs/adr` and `/specs/knowledge` outside fenced `artifacts-map.json` examples and outside `sdd-pack-authoring.mdc` ban examples.
-- **Expected results:** Portal and template copy names `{workspace}/{adr}` and `{workspace}/{knowledge}` (or `{workspace-folder}/{adr}`) per [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#artifacts-mapjson). Plain text may cite an ADR id (for example `ADR-119`) without a link. JSON example values `"adr": "specs/adr"` in the practices map block stay allowed as a default map shape, not as a markdown link.
+- **Expected results:** Portal and template copy names `{workspace}/{adr}` and `{workspace}/{knowledge}` (or `{workspace-folder}/{adr}`) per [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#artifacts-mapjson). Plain text may cite an ADR id (for example `ADR-119`) without a link. JSON example values `"adr": "specs/adr"` in the practices map block stay allowed as a default map shape, not as a markdown link.
 
 #### CE-LOCALE-01 — Empty locale
 
@@ -511,19 +511,19 @@ Process files are `product-backlog.md`, `sprint-backlog.md`, `status.md`, `chang
 - **Layer:** L1.
 - **Pre-condition:** Seed: `pack.framework.sdd.works/skills/sdd-update-project/SKILL.md`. Design: [framework-design § sdd-update-project](../framework/framework-design.md#sdd-update-project).
 - **Test steps:** Read the description, task 8 bullets, and Limits if present. Read [framework-stories § sdd-update-project](../framework/framework-stories.md#sdd-update-project) AC1 through AC5.
-- **Expected results:** The description or body names database, API, or auth secrets as the recommend trigger. Task 8 includes `{artifacts_root}/.secrets` in the Confirm summary when recommended, copy from `{client_root}/templates/framework.sdd.works/{locale}/.secrets` only when the target is missing, and add the path to `files[]` when the confirmed summary kept that line. The skill asks one secrets question when the workspace is empty or has no stack signal. The skill does not place `.secrets` at workspace root. The skill does not write values into `.secrets` and does not edit `.env`, `.env.local`, or `.env.example`. AC1 through AC5 match the seed behavior after implement.
+- **Expected results:** The description or body names database, API, or auth secrets as the recommend trigger. Task 8 includes `{artifacts_root}/.secrets` in the Confirm summary when recommended, copy from `{client_root}/templates/{locale}/.secrets` only when the target is missing, and add the path to `files[]` when the confirmed summary kept that line. The skill asks one secrets question when the workspace is empty or has no stack signal. The skill does not place `.secrets` at workspace root. The skill does not write values into `.secrets` and does not edit `.env`, `.env.local`, or `.env.example`. AC1 through AC5 match the seed behavior after implement.
 
 #### CE-SKILL-23 — sdd-guide-editor
 
 - **Layer:** L1.
 - **Pre-condition:** Framework.sdd.works product workspace. Seed: `.cursor/skills/sdd-guide-editor/SKILL.md` and `reference.md`. Design: [framework-design § sdd-guide-editor](../framework/framework-design.md#sdd-guide-editor), [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md).
 - **Test steps:** Read the seed description, Knowledge table, Limits, and `reference.md` human vs agent tables. Ask to rename an EN part heading in the Scrum guide without confirm.
-- **Expected results:** The description names human portal seeds, AI template `pack-scrum-in-sdd.md`, sync, and zh locales on human seeds only. Knowledge links `reference.md` once. Limits state product-repo-only path, no pack `skills/` ship, no `constants.json` key, no process-file writes, and load **sdd-update-specs** when anchors or tab paths change. **reference.md** names human paths under `content/scrum-in-sdd/` and AI path `templates/pack-scrum-in-sdd.md`, Index policy, and manual AI sync until derive exists. The skill waits for confirm before multi-file writes. It does not write under `pack.framework.sdd.works/skills/sdd-guide-editor/`. After implement, [framework-stories § sdd-guide-editor](../framework/framework-stories.md#sdd-guide-editor) AC1 through AC6 match the seed behavior.
+- **Expected results:** The description names human portal seeds, AI template `pack-scrum-in-sdd.md`, sync, and zh locales on human seeds only. Knowledge links `reference.md` once. Limits state product-repo-only path, no pack `skills/` ship, no `constants.json` key, no process-file writes, and load **sdd-update-specs** when anchors or tab paths change. **reference.md** names human paths under `content/scrum-in-sdd/` and AI path `templates/framework.sdd.works/pack-scrum-in-sdd.md`, Index policy, and manual AI sync until derive exists. The skill waits for confirm before multi-file writes. It does not write under `pack.framework.sdd.works/skills/sdd-guide-editor/`. After implement, [framework-stories § sdd-guide-editor](../framework/framework-stories.md#sdd-guide-editor) AC1 through AC6 match the seed behavior.
 
 #### CE-SKILL-08 — get-status in HanS
 
 - **Layer:** L1.
-- **Pre-condition:** Audit reports locale `HanS` and verdict `Usable`. The five process files were copied from `templates/HanS/` (Chinese section headings allowed). Sprint and backlog table columns and status tokens match the EN seed.
+- **Pre-condition:** Audit reports locale `HanS` and verdict `Usable`. The five process files were copied from `templates/framework.sdd.works/HanS/` (Chinese section headings allowed). Sprint and backlog table columns and status tokens match the EN seed.
 - **Test steps:** Ask where the project is.
 - **Expected results:** The spoken answer is Simplified Chinese. The skill does not rewrite the five files. `Sprint 1`, `feature-01`, and table column names stay as written.
 
@@ -551,7 +551,7 @@ Cases are numbered in one sequence. They are not one scenario repeated. Read thi
 - The client root is `~/.codebuddy`. On Windows it is `%USERPROFILE%\.codebuddy`. The agent file is `~/.codebuddy/agents/ethan.md`. Skills are `~/.codebuddy/skills/<name>/SKILL.md` ([Pack folders](#pack-folders)). Copy the files in [Minimum framework installation](#minimum-framework-installation) into that live home, run the catalog, then delete those paths. Do not copy the skill to `~/.codebuddy/skills-marketplace/` or to `~/.claude/skills/`.
 - One workspace per case, under `specs/framework/fixtures/sdd-audit-artifacts/`. The folder name is the case id plus the case name, for example `CE-AUDIT-01-no-map-and-no-process-files`. Open that folder as the CodeBuddy CN workspace. Do not open this product repo as the workspace.
 - The ledger has `pack_complete` true before the audit runs. A pack-gate stop is not an audit result.
-- A map stores `artifacts_root`, `locale`, and workspace-relative paths in `files` and module `files`, as in the Pokymon example in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#artifacts-mapjson). Audit fixtures use JSON `files` lists. A process file that onboard does not read may be a one-line stub. Each `Usable` workspace names `Sprint 1` and `feature-01` in `specs/status.md` and `specs/sprint-backlog.md`, so `sdd-review-status` has a line to return.
+- A map stores `artifacts_root`, `locale`, and workspace-relative paths in `files` and module `files`, as in the Pokymon example in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#artifacts-mapjson). Audit fixtures use JSON `files` lists. A process file that onboard does not read may be a one-line stub. Each `Usable` workspace names `Sprint 1` and `feature-01` in `specs/status.md` and `specs/sprint-backlog.md`, so `sdd-review-status` has a line to return.
 - CE-AUDIT-17 clears the read bit on the checked-in map for the run, then restores it. The file in git stays readable.
 
 ### Minimum framework installation
@@ -564,7 +564,7 @@ Copy only these files. Paths are the CodeBuddy CN row of [Pack folders](#pack-fo
 | Agent | `~/.codebuddy/agents/ethan.md` | [`pack.framework.sdd.works/agents/ethan.md`](../../pack.framework.sdd.works/agents/ethan.md) |
 | Skill | `~/.codebuddy/skills/sdd-audit-artifacts/SKILL.md` | [`pack.framework.sdd.works/skills/sdd-audit-artifacts/SKILL.md`](../../pack.framework.sdd.works/skills/sdd-audit-artifacts/SKILL.md) |
 | Status read | `~/.codebuddy/skills/sdd-review-status/SKILL.md` | [`pack.framework.sdd.works/skills/sdd-review-status/SKILL.md`](../../pack.framework.sdd.works/skills/sdd-review-status/SKILL.md). Onboard reads this only after a `Usable` block. Without it, that reply sets `pack_complete` to false |
-| Constants | `~/.codebuddy/templates/framework.sdd.works/constants.json` | [`pack.framework.sdd.works/templates/constants.json`](../../pack.framework.sdd.works/templates/constants.json) |
+| Constants | `~/.codebuddy/templates/framework.sdd.works/constants.json` | [`pack.framework.sdd.works/templates/framework.sdd.works/constants.json`](../../pack.framework.sdd.works/templates/framework.sdd.works/constants.json) |
 
 Quit CodeBuddy CN and open it again after the agent file is copied, so the agent list reloads.
 
@@ -1050,7 +1050,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** Kickoff copies missing project seeds. Locale is `EN`, then repeat with `HanS` if that kickoff fixture exists.
 - **Test steps:** Finish the copy.
-- **Expected results:** `constants.json`, `pack-scrum-in-sdd.md`, and `sdd-scrum-practices.md` are not written into the project. They remain under `{client_root}/templates/framework.sdd.works/`.
+- **Expected results:** `constants.json`, `pack-scrum-in-sdd.md`, and `sdd-scrum-practices.md` are not written into the project. They remain under `{client_root}/templates/`.
 
 #### CE-TPL-04 — Sprint item columns
 
@@ -1064,14 +1064,14 @@ Check the seed header, the map path rule, the files that stay on the client root
 - **Layer:** L1.
 - **Pre-condition:** The authoring tree `pack.framework.sdd.works/templates/`.
 - **Test steps:** Look up `pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, and `coach-knowledge.md` beside `constants.json` under `templates/`. Look up process seeds under `HanS/` and `HanT/` when present.
-- **Expected results:** The three AI-read files exist beside `constants.json` under `templates/`. No `scrum-in-sdd.md` under any locale folder. HanS and HanT do not hold `pack-scrum-in-sdd.md`. When present, each locale folder holds the five process seeds and the four engineering seeds (`architecture.md`, `release.md`, `test-strategy.md`, `.secrets`) with the same basenames as `templates/EN/`.
+- **Expected results:** The three AI-read files exist beside `constants.json` under `templates/framework.sdd.works/`. No `scrum-in-sdd.md` under any locale folder. HanS and HanT do not hold `pack-scrum-in-sdd.md`. When present, each locale folder holds the five process seeds and the four engineering seeds (`architecture.md`, `release.md`, `test-strategy.md`, `.secrets`) with the same basenames as `templates/framework.sdd.works/EN/`.
 
 #### CE-OGT-8 — pack-scrum-in-sdd rename (status OGT #8)
 
 - **Layer:** L1.
 - **Pre-condition:** [ogt-8-pack-scrum-in-sdd.md](../framework/ogt-8-pack-scrum-in-sdd.md) is the implementation spec. [ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) is accepted.
 - **Test steps:** Run the verification block in ogt-8-pack-scrum-in-sdd.md. Read `ethan.md` Guide and practices. Read `rebuild-scrum-in-sdd-en.mjs` TARGETS for `--index-only`.
-- **Expected results:** Disk matches AC1–AC4 in [framework-stories § OGT-8](../framework/framework-stories.md#ogt-8-pack-scrum-in-sdd-rename). `npm run check:pack-seeds` passes. Human tab paths in `.instructions-tabs.json` still use `content/scrum-in-sdd/`. `--index-only` writes human EN paths only and does not write `templates/pack-scrum-in-sdd.md`.
+- **Expected results:** Disk matches AC1–AC4 in [framework-stories § OGT-8](../framework/framework-stories.md#ogt-8-pack-scrum-in-sdd-rename). `npm run check:pack-seeds` passes. Human tab paths in `.instructions-tabs.json` still use `content/scrum-in-sdd/`. `--index-only` writes human EN paths only and does not write `templates/framework.sdd.works/pack-scrum-in-sdd.md`.
 
 #### CE-TPL-06 — Windows path join
 
@@ -1097,7 +1097,7 @@ Check the seed header, the map path rule, the files that stay on the client root
 #### CE-TPL-08 — EN status seed shape
 
 - **Layer:** L1.
-- **Pre-condition:** `pack.framework.sdd.works/templates/EN/status.md`.
+- **Pre-condition:** `pack.framework.sdd.works/templates/framework.sdd.works/EN/status.md`.
 - **Test steps:** Read the title, the related list, Project progress, and both OGT tables.
 - **Expected results:** The title is `The latest status of [product name]`. The header has three lines: `Type`, `as_of`, and a Definition link. The sections are Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), and Last 15 closed OGTs. Project progress has rows Project kickoff and Initial product backlog refined, then a sprint table with columns `Sprint`, `Status`, and `Note`. The where-we-are-now sprint line has room for one sentence after the sprint name. An Affected SBIs sample is a bullet list. Each bullet is a code and an SBI name. The file ends with Last updated, a timestamp, and the agent name. The open OGT columns are `#`, Task Name, Affected SBIs, Created, and Status. The closed OGT columns are `#`, Task Name, Affected SBIs, Created, and Closed.
 
@@ -1111,21 +1111,21 @@ Check the seed header, the map path rule, the files that stay on the client root
 #### CE-TPL-10 — EN issues-log seed shape
 
 - **Layer:** L1.
-- **Pre-condition:** `pack.framework.sdd.works/templates/EN/issues-log.md`.
+- **Pre-condition:** `pack.framework.sdd.works/templates/framework.sdd.works/EN/issues-log.md`.
 - **Test steps:** Read the two tables and the header comment.
 - **Expected results:** The title is `Issues log ([product name])`. The sections are Open issues, then Closed issues. Open columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Status`, and `Added time`. Open status values are `Open`, `Fixed`, and `Deferred`. Closed columns are `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`, `Close Check`, `Closed Sprint`, and `Closed time`. Priority values are `Fatal`, `High`, `Medium`, and `Low`. A sample row sits only in a comment with bracket placeholders. The header has three lines: `Type`, `as_of`, and a Definition link. Pass is a person reading the seed and confirming those lines. No fixture workspace. Playwright does not apply.
 
 #### CE-TPL-11 — EN changes-log seed shape
 
 - **Layer:** L1.
-- **Pre-condition:** `pack.framework.sdd.works/templates/EN/changes-log.md`.
+- **Pre-condition:** `pack.framework.sdd.works/templates/framework.sdd.works/EN/changes-log.md`.
 - **Test steps:** Read the title, header, and first entry block.
 - **Expected results:** The title is `Changes log ([product name])`. The header has three lines: `Type`, `as_of`, and a Definition link. One `##` date heading and one `###` entry title use bracket placeholders. The entry has **Why**, **What changed**, and **Verification** paragraphs with bracket placeholders. No Pokymon or other sample product name appears in the body.
 
 #### CE-TPL-13 — EN .secrets seed shape
 
 - **Layer:** L1.
-- **Pre-condition:** `pack.framework.sdd.works/templates/EN/.secrets`.
+- **Pre-condition:** `pack.framework.sdd.works/templates/framework.sdd.works/EN/.secrets`.
 - **Test steps:** Read the file line by line.
 - **Expected results:** The file is dotenv-shaped: `#` comment lines for rules and groups; secret lines are `NAME=` with nothing after `=` before an optional end-of-line `#` that names where the value lives. No `Type`, `as_of`, or Markdown table. No line contains a token-like secret value. A placeholder line `{SECRET_NAME}=` appears at the end. Pass is a person reading the seed and confirming those lines. No fixture workspace.
 
@@ -1142,8 +1142,18 @@ Unit checks on the JSON file and `validateLiteInstallManifest`. No HTTP route, n
 | Layer | Share | Tool |
 | --- | --- | --- |
 | Unit | 100% for this SBI | Vitest [`src/core/seeds/lite-install-manifest.test.ts`](../../src/core/seeds/lite-install-manifest.test.ts) |
-| API | N/A | File-links route is Web-portal-17 |
+| API | N/A in feature-53 | File-links route is Web-portal-17; production cache check is [feature-82](../sprint-backlog.md#sprint-9) / [MCP-07](../product-backlog.md#pb-105) in [`mcp-tests.md`](../mcp/mcp-tests.md#15-feature-82-production-pack-sync) §15 |
 | Browser | N/A | No screen |
+
+### feature-82 / MCP-07 — allow-list in sync cache (Spec-seeds-15 close)
+
+[Spec-seeds-15](../product-backlog.md#pb-97) closes when production sync puts `lite-pack.allowlist.json` at the pack unpack root. **CE-LITE-01** and **CE-LITE-02** stay the authoring gate. Operator and integration coverage: [`mcp-tests.md`](../mcp/mcp-tests.md#15-feature-82-production-pack-sync) §15, [`release.md`](../release.md) §7.3 step 7.
+
+| Check | Layer | Method |
+| --- | --- | --- |
+| Allow-list seed valid | unit | **CE-LITE-01**, **CE-LITE-02** |
+| Lite API reads cache allow-list | integration | `sdd-api.test.ts` `GET /api/sdd/lite/files` ([`app-tests.md`](../admin-portal/app-tests.md) feature-55) |
+| Allow-list on disk after sync | operator | Unpack under `SDD_PACKAGE_CACHE_DIR` after Admin Framework sync; production `curl` lite/files |
 
 ### Automation
 

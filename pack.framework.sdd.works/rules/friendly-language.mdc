@@ -13,33 +13,33 @@ Applies to every chat reply and every Markdown file.
 
 ## Check
 
-1. The first sentence gives the result, the limit, or the next action.
-2. The reply states the result, so the search story stays out. A search story is what the agent searched, tried, or decided.
-3. A Markdown section stands alone for a later agent.
-4. The wording is short, clear, and concise. A sentence has one meaning.
-5. A line passes or fails, except where both allowed outcomes are named.
-6. One concept keeps one name. A short form is expanded on first use. A specialist term has its plain meaning beside it.
-7. State the fact. A sentence fails when it adds warmth, eagerness, or a clever contrast and adds no fact. A new phrase in that class fails the same way.
-8. A claim that the text does not show fails.
-9. Each paragraph has one idea. Two or more facts under one heading use a lower heading and a bullet list. A continuation is indented two spaces under its bullet. One fact stays one sentence. The substance is still complete.
-10. When the sentence names an action, name who does it, to what, and with what result. A result with no actor passes.
-11. Items at one level are parallel. One list uses one order: alphabetical, numeric, or the order the reader does the work. A comparison is a table.
-12. A line uses words. An image the user asked for is allowed.
-13. A break is a comma, a colon, or a new sentence. A labeled bad example may show an em dash.
-14. Write Markdown, so the file has no raw HTML tag. Lists are tight: no blank line between the item and the indented next line. The last section is visible in Cursor preview.
-15. An instruction names the verb, the work, and the result.
-16. A definition names what a term is. The verb, the work, and the result stay on an instruction.
-17. A ban names the result.
-18. A line the user reads uses words the user types.
-19. A heading names what the reader gets. A single verb fails.
-20. An example the user reads states what the user understands. An example that only states what the agent saw in the files fails.
-21. A line the user reads is written from the user's view: the status, the reason, and the change.
-22. A line the reader reads uses the words that reader would say for that job. A line fails when the reader must translate it to their own words.
+1. The reader understands the meaning on the first read. A line the reader must re-read or translate fails.
+2. The first sentence gives the result, the limit, or the next action.
+3. The reply states the result, so the search story stays out. A search story is what the agent searched, tried, or decided.
+4. A Markdown section stands alone for a later agent.
+5. The wording is short, clear, and concise. A sentence has one meaning.
+6. A line passes or fails, except where both allowed outcomes are named.
+7. One concept keeps one name. A short form is expanded on first use. A specialist term has its plain meaning beside it.
+8. State the fact. A sentence fails when it adds warmth, eagerness, or a clever contrast and adds no fact. A new phrase in that class fails the same way.
+9. A claim that the text does not show fails.
+10. Each paragraph has one idea. Two or more facts under one heading use a lower heading and a bullet list. A continuation is indented two spaces under its bullet. One fact stays one sentence. The substance is still complete.
+11. When the sentence names an action, name who does it, to what, and with what result. A result with no actor passes.
+12. Items at one level are parallel. One list uses one order: alphabetical, numeric, or the order the reader does the work. A comparison is a table.
+13. A line uses words. An image the user asked for is allowed.
+14. A break is a comma, a colon, or a new sentence. A labeled bad example may show an em dash.
+15. Write Markdown, so the file has no raw HTML tag. Lists are tight: no blank line between the item and the indented next line. The last section is visible in Cursor preview.
+16. An instruction names the verb, the work, and the result.
+17. A definition names what a term is. The verb, the work, and the result stay on an instruction.
+18. A ban names the result.
+19. A line the user reads uses words the user types.
+20. A heading names what the reader gets. A single verb fails.
+21. An example the user reads states what the user understands. An example that only states what the agent saw in the files fails.
+22. A line the user reads is written from the user's view: the status, the reason, and the change.
+23. A line the reader reads uses the words that reader would say for that job. A line fails when the reader must translate it to their own words.
 
 ## Principles
 
-Write so a person can act on the text. A Markdown section stands alone for a later agent.
-
+- Write so a person can act on the text. A Markdown section stands alone for a later agent.
 - Short. One sentence when one sentence carries the fact.
 - Clear. One meaning. A sentence that can be read two ways fails.
 - Concise. Cut filler. Keep the fact.
@@ -65,6 +65,8 @@ The first sentence gives that person one of these:
 - The result
 - The limit
 - The next action
+
+Before you send the line, ask: would a person who never read this spec understand this sentence? If not, rewrite.
 
 Then:
 

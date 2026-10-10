@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (amended 2026-10-08: trio beside `constants.json`, not under `EN/`)
+Accepted (amended 2026-10-08: trio beside `constants.json`, not under `EN/`; amended 2026-10-09 by [ADR-130](./ADR-130-simplified-installer-url-only-and-empty-cache.md) decision 9: install path is `{client_root}/templates/`, not `{client_root}/templates/framework.sdd.works/`).
 
 ## Context
 
@@ -23,14 +23,14 @@ Human-read Scrum guide stays **`content/scrum-in-sdd/scrum-in-sdd.{locale}.md`**
 
 | File | Role | Authoring seed | After install |
 | --- | --- | --- | --- |
-| `pack-scrum-in-sdd.md` | Names and meaning for Scrum in SDD | `pack.framework.sdd.works/templates/pack-scrum-in-sdd.md` | `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
-| `sdd-scrum-practices.md` | What, how, and when | `pack.framework.sdd.works/templates/sdd-scrum-practices.md` | `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` |
-| `coach-knowledge.md` | Harness, XP, BDD, Lean, AI delivery topics outside the guide | `pack.framework.sdd.works/templates/coach-knowledge.md` | `{client_root}/templates/framework.sdd.works/coach-knowledge.md` |
+| `pack-scrum-in-sdd.md` | Names and meaning for Scrum in SDD | `pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md` | `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
+| `sdd-scrum-practices.md` | What, how, and when | `pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md` | `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` |
+| `coach-knowledge.md` | Harness, XP, BDD, Lean, AI delivery topics outside the guide | `pack.framework.sdd.works/templates/framework.sdd.works/coach-knowledge.md` | `{client_root}/templates/framework.sdd.works/coach-knowledge.md` |
 
 1. These three files are **AI-read**: agents open them from `{client_root}/templates/framework.sdd.works/` with **no `{locale}` segment**; they use **internal pack links** among themselves; they are **not** instructions portal content tabs.
 2. They sit beside `constants.json` ([ADR-060](./ADR-060-constants-on-client-root.md), [ADR-081](./ADR-081-constants-json.md)). Locale folders hold process and engineering seeds that may copy into the project.
 3. **No HanS or HanT copies** of the AI-read trio. Retire the intent of [i18n-04](../product-backlog.md#L304) for template guide locales. Chinese guide text for people lives in **human-read** `content/scrum-in-sdd/scrum-in-sdd.zh-Hans.md` and `scrum-in-sdd.zh-Hant.md`.
-4. Remove **`templates/{EN|HanS|HanT}/scrum-in-sdd.md`**, **`templates/EN/sdd-scrum-practices.md`**, and **`templates/EN/coach-knowledge.md`** when the move lands.
+4. Remove **`templates/{EN|HanS|HanT}/scrum-in-sdd.md`**, **`templates/framework.sdd.works/EN/sdd-scrum-practices.md`**, and **`templates/framework.sdd.works/EN/coach-knowledge.md`** when the move lands.
 5. Locale seeds that link to the trio use `../pack-scrum-in-sdd.md` and `../sdd-scrum-practices.md`.
 
 ### Human-read guide (unchanged role, distinct paths)

@@ -1,25 +1,16 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import {
-  cpSync,
-  existsSync,
-  lstatSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { resolveTemplates, type PathRoots } from "@sdd/paths";
+import { homedir } from "node:os";
+import { expandHome, resolve, resolveTemplates, type PathRoots } from "@sdd/paths";
+import { validateExpandedPath } from "@/core/path-policy";
 import {
   detectClient,
-  resolveClientPaths,
   type PathDetectOptions,
   type ResolvedClientPaths,
 } from "@/core/path-detect";
 import type { InstallLedger } from "./install-plan";
-import { fetchPackage } from "./package-fetch";
-import { toolError, toolOk } from "./errors";
+import { toolError } from "./errors";
 
 export const MANIFEST_NAME = ".sdd-installed.json";
 
@@ -31,17 +22,17 @@ export type InstallArgs = {
   /** HTTP hint only — AI read from local manifest; never used for already_up_to_date. */
   installed_commit?: string;
   installed_version?: string;
-  /** Present when the caller read the disk. Omitted means the writer has not run. */
+  /** Present when the caller read the disk. Omitted means ledger null and missing []. */
   inventory?: {
     ledger: InstallLedger | null;
     missing: string[];
   };
-  /** Recorded on HTTP plan requests. The server does not choose the write folder from this field. */
-  accepted_root?: string;
+  /** Agent-detected client root. Server validates against path policy (ADR-131). */
+  root?: string;
 };
 
 export type InstallContext = PathDetectOptions & {
-  channel: "stdio" | "http";
+  channel: "http";
   clientInfo?: { name?: string };
 };
 
@@ -83,42 +74,6 @@ function listPackFiles(dir: string, prefix: string): string[] {
   return out;
 }
 
-function copyTree(from: string, to: string): void {
-  if (!existsSync(from)) return;
-  mkdirSync(dirname(to), { recursive: true });
-  cpSync(from, to, { recursive: true });
-}
-
-function isClientRelativePath(name: string): boolean {
-  return /[/\\]/.test(name.replace(/[/\\]+$/, ""));
-}
-
-function resolveListedPath(
-  clientRoot: string,
-  categoryRoot: string,
-  name: string,
-): string {
-  const rel = name.replace(/[/\\]+$/, "");
-  if (isClientRelativePath(rel)) {
-    return join(clientRoot, rel);
-  }
-  return join(categoryRoot, rel);
-}
-
-function removeListed(
-  clientRoot: string,
-  categoryRoot: string,
-  names: string[],
-): void {
-  for (const name of names) {
-    const abs = resolveListedPath(clientRoot, categoryRoot, name);
-    if (!existsSync(abs)) continue;
-    // ADR-059: a directory name in an older ledger is not a delete of that directory.
-    if (lstatSync(abs).isDirectory()) continue;
-    rmSync(abs, { force: true });
-  }
-}
-
 function readManifest(clientRoot: string): Manifest | null {
   const path = join(clientRoot, MANIFEST_NAME);
   if (!existsSync(path)) return null;
@@ -139,35 +94,8 @@ function readManifest(clientRoot: string): Manifest | null {
   }
 }
 
-function writeManifest(clientRoot: string, manifest: Manifest): void {
-  mkdirSync(clientRoot, { recursive: true });
-  writeFileSync(join(clientRoot, MANIFEST_NAME), JSON.stringify(manifest, null, 2));
-}
-
 function templatesRoot(clientRoot: string): string {
   return join(clientRoot, "templates");
-}
-
-function verifyManifestIntegrity(
-  roots: PathRoots,
-  clientRoot: string,
-  manifest: Manifest,
-): boolean {
-  const checks: [string, string[]][] = [
-    [roots.skills, manifest.files.skills],
-    [roots.rules, manifest.files.rules],
-    [roots.agents, manifest.files.agents],
-    [roots.workflows, manifest.files.workflows],
-    [templatesRoot(clientRoot), manifest.files.templates],
-  ];
-  for (const [categoryRoot, names] of checks) {
-    for (const name of names) {
-      if (!existsSync(resolveListedPath(clientRoot, categoryRoot, name))) {
-        return false;
-      }
-    }
-  }
-  return true;
 }
 
 function clientRootFromSkills(skills: string): string {
@@ -220,69 +148,70 @@ function inventoryFromUnpacked(unpackedPath: string): ManifestFiles {
   };
 }
 
-function buildHttpInstallInstructions(
-  extractTarget: string,
-  manifestPath: string,
-  packageUrl: string,
-  options?: { cacheStale?: boolean; cacheAgeMinutes?: number },
-): string {
-  const lines = [
-    "HTTP MCP cannot write the local filesystem. Execute these steps on the developer machine:",
-    "Always verify local files from the manifest exist before skipping extraction. If any skill, rule, agent, workflow, or template file is missing, you MUST run step 2.",
-    `1. Read ${manifestPath} if it exists (previousManifest). Remove only the files listed under files.* before extracting. Do not delete a parent directory for a listed file path.`,
-    `2. Download and extract only pack allow-list folders (agents, skills|skill, rules|Rules, workflows, templates): curl -fsSL "${packageUrl}" | tar xz -C "${extractTarget}" --strip-components 1`,
-    `3. Write the manifest JSON returned in this response to ${manifestPath} last (after extract and verify). The manifest includes pack_complete: true and each pack file path.`,
-    "4. Verify skills, rules, agents, workflows, and templates exist under the paths returned.",
-  ];
-  if (options?.cacheStale) {
-    const age = Math.round(options.cacheAgeMinutes ?? 30);
-    lines.push(
-      `Note: package cache may be stale (last synced ${age} min ago). Ask the operator to run sync, or retry shortly.`,
-    );
-  }
-  return lines.join("\n");
-}
-
 export {
-  buildHttpInstallInstructions,
   inventoryFromUnpacked,
   hasInstallHome,
   templatesRoot,
   readManifest as readInstallManifest,
 };
 
+function rootsFromClientRoot(clientRoot: string, win: boolean): PathRoots {
+  const sep = win ? "\\" : "/";
+  const base = clientRoot.replace(/[/\\]+$/, "");
+  return {
+    skills: `${base}${sep}skills${sep}`,
+    rules: `${base}${sep}rules${sep}`,
+    agents: `${base}${sep}agents${sep}`,
+    workflows: `${base}${sep}workflows${sep}`,
+    other: `${base}${sep}sdd${sep}`,
+  };
+}
+
+function resolveUnknownClientRoot(
+  args: InstallArgs,
+  home: string,
+  userProfile: string,
+  os: string,
+  detected: string,
+): InstallContextResult {
+  const trimmed = args.root?.trim();
+  if (!trimmed) {
+    return {
+      ok: false,
+      result: toolError(
+        "root_required",
+        "Send root for this client after asking the person where the IDE stores skills and rules.",
+      ),
+    };
+  }
+  const expanded = expandHome(trimmed, home, userProfile);
+  const pathErr = validateExpandedPath(expanded, home, userProfile);
+  if (pathErr) {
+    const message =
+      pathErr.code === "path_rejected" ? pathErr.reason : pathErr.code;
+    return {
+      ok: false,
+      result: toolError("path_rejected", message),
+    };
+  }
+  const win = os === "win32";
+  const roots = rootsFromClientRoot(expanded, win);
+  const resolved: ResolvedClientPaths = {
+    primary: roots,
+    compat: [],
+    source: "agent",
+  };
+  return {
+    ok: true,
+    ctx: { detected, resolved, roots, clientRoot: expanded },
+  };
+}
+
 export async function resolveInstallContextForHttp(
   args: InstallArgs,
   ctx: InstallContext,
 ): Promise<InstallContextResult> {
   return resolveInstallContext(args, ctx);
-}
-
-function applyPackage(
-  pkgDir: string,
-  roots: PathRoots,
-  clientRoot: string,
-): ManifestFiles {
-  const skillsSrc = resolvePackSourceDir(pkgDir, "skills");
-  const rulesSrc = resolvePackSourceDir(pkgDir, "rules");
-  const agentsSrc = join(pkgDir, "agents");
-  const workflowsSrc = join(pkgDir, "workflows");
-  const templatesSrc = join(pkgDir, "templates");
-  const templatesDest = templatesRoot(clientRoot);
-
-  if (skillsSrc) copyTree(skillsSrc, roots.skills);
-  if (rulesSrc) copyTree(rulesSrc, roots.rules);
-  if (existsSync(agentsSrc)) copyTree(agentsSrc, roots.agents);
-  if (existsSync(workflowsSrc)) copyTree(workflowsSrc, roots.workflows);
-  if (existsSync(templatesSrc)) copyTree(templatesSrc, templatesDest);
-
-  return {
-    skills: skillsSrc ? listPackFiles(skillsSrc, "skills") : [],
-    rules: rulesSrc ? listPackFiles(rulesSrc, "rules") : [],
-    agents: listPackFiles(agentsSrc, "agents"),
-    workflows: listPackFiles(workflowsSrc, "workflows"),
-    templates: listPackFiles(templatesSrc, "templates"),
-  };
 }
 
 type ResolvedInstallContext = {
@@ -317,10 +246,14 @@ async function resolveInstallContext(
     const templates = resolveTemplates(detected, os);
     if ("code" in templates) {
       if (templates.code === "client_unknown") {
-        return {
-          ok: false,
-          result: toolError("client_unknown", `Unknown client: ${detected}`),
-        };
+        const fallbackHome = homedir();
+        return resolveUnknownClientRoot(
+          args,
+          fallbackHome,
+          fallbackHome,
+          os,
+          detected,
+        );
       }
       return {
         ok: false,
@@ -342,148 +275,68 @@ async function resolveInstallContext(
     };
   }
 
-  const resolved = await resolveClientPaths(detected, {
-    ...ctx,
-    os,
-    skipLlm: ctx.skipLlm,
-  });
-  if ("code" in resolved) {
-    const code = resolved.code;
-    if (code === "client_unknown") {
-      return {
-        ok: false,
-        result: toolError("client_unknown", `Unknown client: ${detected}`),
-      };
+  const home = ctx.home ?? ctx.env?.HOME ?? homedir();
+  const userProfile = ctx.userProfile ?? ctx.env?.USERPROFILE ?? home;
+  const seed = resolve(detected, os, undefined, { home, userProfile });
+  if ("code" in seed) {
+    if (seed.code === "client_unknown") {
+      return resolveUnknownClientRoot(
+        args,
+        home,
+        userProfile,
+        os,
+        detected,
+      );
     }
-    if (code === "os_unsupported") {
+    if (seed.code === "os_unsupported") {
       return {
         ok: false,
         result: toolError("os_unsupported", `Unsupported OS for ${detected}`),
       };
     }
-    if (code === "path_rejected") {
+    if (seed.code === "path_rejected") {
       return {
         ok: false,
-        result: toolError("path_rejected", resolved.reason),
-      };
-    }
-    if (code === "llm_unavailable") {
-      return {
-        ok: false,
-        result: toolError("llm_unavailable", "Qwen path discovery failed"),
+        result: toolError("path_rejected", seed.reason),
       };
     }
     return {
       ok: false,
-      result: toolError("client_config_unresolved", "Could not resolve client paths"),
+      result: toolError("client_unknown", `Unknown client: ${detected}`),
     };
   }
 
-  const roots = resolved.primary;
+  const roots: PathRoots = {
+    skills: seed.skills,
+    rules: seed.rules,
+    agents: seed.agents,
+    workflows: seed.workflows,
+    other: seed.other,
+  };
   const clientRoot = clientRootFromSkills(roots.skills);
-  return { ok: true, ctx: { detected, resolved, roots, clientRoot } };
+  const resolvedPaths: ResolvedClientPaths = {
+    primary: roots,
+    compat: seed.compat ?? [],
+    source: "seed",
+  };
+  return {
+    ok: true,
+    ctx: { detected, resolved: resolvedPaths, roots, clientRoot },
+  };
 }
 
 export async function installFramework(
   args: InstallArgs,
   ctx: InstallContext,
 ): Promise<CallToolResult> {
-  if (ctx.channel === "http") {
-    return toolError(
-      "package_unavailable",
-      "HTTP install uses installFrameworkHttp from install-http.",
-    );
-  }
-
-  const installCtx = await resolveInstallContext(args, ctx);
-  if (!installCtx.ok) return installCtx.result;
-  const { detected, resolved, roots, clientRoot } = installCtx.ctx;
-
-  const pkg = await fetchPackage(args.version);
-  if ("code" in pkg) {
-    return toolError("package_unavailable", pkg.message);
-  }
-
-  const previous = readManifest(clientRoot);
-  if (previous && !args.force) {
-    const sameCommit =
-      Boolean(previous.package_commit) &&
-      previous.package_commit === pkg.commitSha;
-    const sameVersion = previous.package_version === pkg.version;
-    if (
-      sameCommit &&
-      sameVersion &&
-      verifyManifestIntegrity(roots, clientRoot, previous)
-    ) {
-      // Missing pack_complete: rewrite flag only (scenario 6a). Present true/false: already up to date.
-      if (previous.pack_complete === undefined) {
-        const installedAt = new Date().toISOString();
-        writeManifest(clientRoot, {
-          version: previous.version ?? 1,
-          package_version: previous.package_version,
-          package_commit: previous.package_commit,
-          installed_at: installedAt,
-          pack_complete: true,
-          files: previous.files,
-        });
-        return toolOk({
-          version: pkg.version,
-          paths: {
-            ...roots,
-            templates: templatesRoot(clientRoot),
-          },
-          manifestPath: join(clientRoot, MANIFEST_NAME),
-          ledger_rewritten: true,
-          resolution_source: resolved.source,
-        });
-      }
-      return toolError(
-        "already_up_to_date",
-        `Framework ${pkg.version} is already installed.`,
-      );
-    }
-  }
-
-  if (previous) {
-    removeListed(clientRoot, roots.skills, previous.files.skills);
-    removeListed(clientRoot, roots.rules, previous.files.rules);
-    removeListed(clientRoot, roots.agents, previous.files.agents);
-    removeListed(clientRoot, roots.workflows, previous.files.workflows);
-    removeListed(clientRoot, templatesRoot(clientRoot), previous.files.templates);
-  }
-
-  const files = applyPackage(pkg.tempDir, roots, clientRoot);
-  const installedAt = new Date().toISOString();
-  writeManifest(clientRoot, {
-    version: 1,
-    package_version: pkg.version,
-    package_commit: pkg.commitSha,
-    installed_at: installedAt,
-    pack_complete: true,
-    files,
-  });
-
-  return toolOk({
-    version: pkg.version,
-    paths: {
-      ...roots,
-      templates: templatesRoot(clientRoot),
-    },
-    manifestPath: join(clientRoot, MANIFEST_NAME),
-    asset_counts: {
-      skills: files.skills.length,
-      rules: files.rules.length,
-      agents: files.agents.length,
-      workflows: files.workflows.length,
-      templates: files.templates.length,
-    },
-    resolution_source: resolved.source,
-  });
+  const { installFrameworkHttp } = await import("./install-http");
+  return installFrameworkHttp(args, ctx);
 }
 
 export async function updateFramework(
   args: InstallArgs,
   ctx: InstallContext,
 ): Promise<CallToolResult> {
-  return installFramework(args, ctx);
+  const { updateFrameworkHttp } = await import("./install-http");
+  return updateFrameworkHttp(args, ctx);
 }

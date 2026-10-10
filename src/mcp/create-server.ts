@@ -10,20 +10,13 @@ import type { InstallLedger } from "@/core/tools/install-plan";
 import { getMcpBrandIcons, getMcpWebsiteUrl } from "./brand";
 import { mcpToolDescription } from "./tool-descriptions";
 import type { CreateSddMcpServerOptions } from "./server-options";
-import { createStdioMcpServer } from "./create-server-stdio";
 
 export type { McpChannel, CreateSddMcpServerOptions } from "./server-options";
-export { createStdioMcpServer };
 
 export const SDD_TOOL_NAMES = [
   "sdd_install_framework",
   "sdd_update_framework",
   "sdd_get_key",
-] as const;
-
-export const SDD_STDIO_TOOL_NAMES = [
-  "sdd_install_framework",
-  "sdd_update_framework",
 ] as const;
 
 function withInventory(args: {
@@ -33,6 +26,7 @@ function withInventory(args: {
   force?: boolean;
   installed_commit?: string;
   installed_version?: string;
+  root?: string;
   inventory?: { ledger: unknown; missing: string[] } | undefined;
 }): InstallArgs {
   return {
@@ -42,6 +36,7 @@ function withInventory(args: {
     force: args.force,
     installed_commit: args.installed_commit,
     installed_version: args.installed_version,
+    root: args.root,
     inventory: args.inventory
       ? {
           ledger: (args.inventory.ledger ?? null) as InstallLedger | null,
@@ -51,23 +46,11 @@ function withInventory(args: {
   };
 }
 
-/**
- * Shared MCP server for framework.sdd.works (transport-agnostic tool core).
- * Stdio binary entry uses createStdioMcpServer so Prisma stays out of the compile.
- */
+/** HTTP MCP server for framework.sdd.works (Streamable HTTP only, ADR-131). */
 export function createSddMcpServer(
   options: CreateSddMcpServerOptions,
 ): McpServer {
   const { channel, authorized } = options;
-
-  if (channel === "stdio") {
-    return createStdioMcpServer({
-      authorized: options.authorized,
-      clientInfo: options.clientInfo,
-      installHome: options.installHome,
-      skipLlm: options.skipLlm,
-    });
-  }
 
   const installCtx = (): InstallContext => {
     let clientInfo = options.clientInfo;
@@ -116,6 +99,12 @@ export function createSddMcpServer(
         force: z.boolean().optional(),
         installed_commit: z.string().optional(),
         installed_version: z.string().optional(),
+        root: z
+          .string()
+          .optional()
+          .describe(
+            "Client root for this client and os. Omit to let the server resolve it from the path map. Send this only when you confirmed the path-map root for the running IDE.",
+          ),
         inventory: z
           .object({
             ledger: z.unknown().nullable(),
@@ -123,7 +112,7 @@ export function createSddMcpServer(
           })
           .optional()
           .describe(
-            "Disk inventory. Omit it to get writer_required. Send ledger null when the file is absent.",
+            "Disk inventory. Send ledger null when .sdd-installed.json is absent.",
           ),
       },
     },
@@ -141,6 +130,12 @@ export function createSddMcpServer(
         force: z.boolean().optional(),
         installed_commit: z.string().optional(),
         installed_version: z.string().optional(),
+        root: z
+          .string()
+          .optional()
+          .describe(
+            "Client root for this client and os. Omit to let the server resolve it from the path map. Send this only when you confirmed the path-map root for the running IDE.",
+          ),
         inventory: z
           .object({
             ledger: z.unknown().nullable(),

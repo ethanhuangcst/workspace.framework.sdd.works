@@ -8,7 +8,7 @@ type Body = {
   client?: string;
   os?: string;
   force?: boolean;
-  accepted_root?: string;
+  root?: string;
   inventory?: {
     ledger: InstallLedger | null;
     missing?: string[];
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         ledger: body.inventory.ledger ?? null,
         missing: body.inventory.missing ?? [],
       },
-      accepted_root: body.accepted_root,
+      root: body.root,
     },
     { channel: "http", skipLlm: true },
   );

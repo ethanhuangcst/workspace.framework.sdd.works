@@ -10,6 +10,10 @@ export const SETUP_REDIRECTS = [
 
 export const SETUP_REWRITES = [
   {
+    source: "/install",
+    destination: "/api/agent-setup/install-full",
+  },
+  {
     source: "/setup/install",
     destination: "/api/agent-setup/install",
   },

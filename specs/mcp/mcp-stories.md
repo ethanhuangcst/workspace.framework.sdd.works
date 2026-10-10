@@ -1,16 +1,16 @@
 # framework.sdd.works — MCP service user stories
 
-MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Phase 1 backlog: [`r1-product-backlog.md`](../phase1-process-specs/r1-product-backlog.md). Phase 2 backlog: [`product-backlog.md`](../product-backlog.md).
+MCP server that installs and updates the SDD framework and resolves named keys. Stories and ACs for the **MCP** surface. Admin portal: [`app-stories.md`](../admin-portal/app-stories.md). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-tests.md`](./mcp-tests.md). Backlog: [`product-backlog.md`](../product-backlog.md).
 
-**Target install (ADR-129):** URL-only `mcp.json`, server write plan, local program writes, agent writes only when that program cannot run ([`sdd-mcp-url-plan`](#sdd-mcp-url-plan)). **Sprint 2 installer (MCP-01):** pack allow-list + install ledger. `files` lists each pack file (ADR-059), `pack_complete` is on `.sdd-installed.json` (ADR-057), and the end-user path is stdio with HTTP fallback (ADR-058). **Sprint 2 feature-14 (MCP-02):** local program at `~/.sdd/sdd-mcp` ([`sdd-mcp-local-binary`](#sdd-mcp-local-binary)). **Sprint 3 (MCP-03):** model-facing tools omit `sdd_list_versions` ([`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface), [ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). **Sprint 8 feature-54 (MCP-05):** **Retired** — partial install ledger withdrawn; lite HTTP copy is portal stories ([`app-stories.md`](../admin-portal/app-stories.md) AC19–21) and [`mcp-design.md`](./mcp-design.md) §2.1c. Sprint rows: feature-01, feature-06, feature-07, feature-08, feature-09, feature-14; Sprint 3 feature-08–09. Stories: [`sdd-mcp-install`](#sdd-mcp-install), [`sdd-mcp-install-ledger`](#sdd-mcp-install-ledger), [`sdd-mcp-client-root-scenarios`](#sdd-mcp-client-root-scenarios), [`sdd-mcp-prompt-setup`](#sdd-mcp-prompt-setup), [`sdd-mcp-http-install-policy`](#sdd-mcp-http-install-policy), [`sdd-mcp-local-binary`](#sdd-mcp-local-binary), [`sdd-mcp-tool-surface`](#sdd-mcp-tool-surface). Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-tests.md`](./mcp-tests.md) §7.6.
+**Status (ADR-132):** HTTP-only install ([ADR-131](../adr/ADR-131-http-only-install-bundled-fallback.md)), bundled pack fallback at `pack.framework.sdd.works/`, tarball URL delivery. The agent sends `client`, `os`, and `ledger`. Known clients omit `root`; the server uses the seed-map root. Unknown clients get `root_required` until the person supplies `root`. No agent-side root detection chain. See [`mcp-design.md`](./mcp-design.md) and [ADR-132](../adr/ADR-132-simplified-install-root-and-templates.md).
 
-**Tools:** `sdd_install_framework`, `sdd_update_framework`, and on HTTP only `sdd_get_key`. Protocol ids are not localized. `sdd_list_versions` is not registered ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)).
+**Tools:** `sdd_install_framework`, `sdd_update_framework`, `sdd_get_key` (HTTP only). `sdd_list_versions` is not registered ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)).
 
 **Roles:** MCP client (IDE/agent), Developer, Admin.
 
-**Default Given:** unless stated, the MCP client is connected and authorized where the tool requires auth.
+**Default Given:** unless stated, the MCP client is connected over Streamable HTTP and authorized where the tool requires auth.
 
-Open questions (do not block ACs that can use explicit `client`): ~~merge vs overwrite~~ (DECIDED: manifest-tracked merge, ADR-048); auto-detect vs required `client` (Cursor-first; prefer explicit `client` when ambiguous); `sdd_get_key` credential type; ~~TRAE Agents first-class vs candidate~~ (CONFIRMED first-class via empirical spike 2026-09-17).
+Open questions: ~~merge vs overwrite~~ (DECIDED: manifest-tracked merge, ADR-048); ~~auto-detect vs required `client`~~ (Cursor-first; prefer explicit `client` when ambiguous); ~~`sdd_get_key` credential type~~; ~~TRAE Agents first-class vs candidate~~ (CONFIRMED first-class via empirical spike 2026-09-17).
 
 ---
 
@@ -35,24 +35,47 @@ Scenario: Cursor roots resolve per OS
   And every returned path starts with the user home after expansion
 ```
 
-#### AC2
+#### AC2 — MC-16
 
 ```gherkin
-Scenario: Explicit overrides win
+Scenario: Known client uses the seed-map root when the agent omits root
   Given the resolver is called with client "cursor" and os "darwin"
-  And the caller supplies explicit skills/rules/other overrides
-  Then the resolver returns the overrides
-  And the overrides still pass path-policy before any write
+  And the agent does not send a root
+  When the server resolves the root
+  Then the server uses the seed-map root
+  And the install writes under the seed-map root
+```
+
+#### AC2b
+
+```gherkin
+Scenario: Unknown client with a valid root uses that root
+  Given the resolver is called with a client not in the seed map
+  And the agent sends a root inside the user home
+  When the server validates the root
+  Then the server uses the agent-sent root
+  And the root passes path-policy before any write
+```
+
+#### AC2c — MC-16
+
+```gherkin
+Scenario: Unknown client without a root gets root_required
+  Given the path map has no entry for client "unknown-cli"
+  And the agent does not send a root
+  When the server resolves the root
+  Then the result code is root_required
+  And no paths are returned
+  And the message tells the agent to ask the person for the client config root
 ```
 
 #### AC3
 
 ```gherkin
-Scenario: Unknown client or OS is rejected
-  Given the path map has no entry for client "unknown-cli"
-  When the resolver is called with client "unknown-cli"
+Scenario: Missing client or unknown OS is rejected
+  Given the agent does not send a client
+  When the resolver is called
   Then the result code is client_unknown
-  And no paths are returned
   Given the path map has cursor but no win32 entry and no default
   When the resolver is called with client "cursor" and os "win32"
   Then the result code is os_unsupported
@@ -99,15 +122,14 @@ Scenario: Map version is exposed for staleness warnings
 
 ### Notes
 
-- Updates are reactive (human PR, bump `version`), not scheduled. No daily job, no auto-discovery in v1.
-- The map is mechanism (where to write files), not product knowledge. Do not grow it into a per-client POI encyclopedia (`no-city-encyclopedia`).
-- Qwen discovery (MCPI-04) layers on top of this map as a fallback/refinement, never replacing it.
+- The seed map is the single path source (ADR-132). No LLM at install time.
+- The agent sends `client` and `os`. For a known client, the server uses the seed-map root. For an unknown client, the server returns `root_required` until the agent sends a validated `root`.
 
 ---
 
-## `sdd-mcp-transport-stdio` — stdio transport
+## `sdd-mcp-transport-stdio` — stdio transport — Retired (ADR-131)
 
-Node stdio entry registers tools with pinned `@modelcontextprotocol/sdk`. Core is transport-agnostic. (TRAN-01)
+**Retired.** ADR-131 removes the stdio transport. HTTP (Streamable HTTP on `/mcp`) is the only transport. No local program, no `~/.sdd/sdd-mcp` binary. The ACs below are retained for reference only and do not apply to the first release.
 
 ### User story 1 — Local client connects over stdio
 
@@ -142,7 +164,7 @@ Scenario: Invalid tool arguments are rejected before side effects
 
 ## `sdd-mcp-transport-http` — Streamable HTTP transport
 
-HTTP entry on `/mcp` with bearer or session auth. Same core as stdio. (TRAN-02)
+HTTP entry on `/mcp` with bearer or session auth. This is the only transport (ADR-131). (TRAN-02)
 
 ### User story 1 — Remote client connects over HTTP
 
@@ -178,23 +200,13 @@ Scenario: Missing or invalid bearer is rejected
 
 The model cannot call `sdd_list_versions`. Version listing stays on `GET /api/sdd/versions` and `listVersions()`. ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md), [MCP-03](../product-backlog.md#L339))
 
-### User story 1 — Model sees only install, update, and (HTTP) get_key
+### User story 1 — Model sees install, update, and get_key
 
 **As a** person using an agent that connects to framework.sdd.works MCP
 **I want** the tool list to omit `sdd_list_versions`
 **So that** install and update use latest without a catalog round trip
 
-#### AC1 — feature-08
-
-```gherkin
-Scenario: stdio tools/list omits sdd_list_versions
-  Given the MCP stdio process is started
-  When the client completes initialize and lists tools
-  Then the tool list is exactly sdd_install_framework and sdd_update_framework
-  And the tool list does not include sdd_list_versions
-```
-
-#### AC2 — feature-08
+#### AC1
 
 ```gherkin
 Scenario: HTTP tools/list omits sdd_list_versions and keeps get_key
@@ -204,7 +216,7 @@ Scenario: HTTP tools/list omits sdd_list_versions and keeps get_key
   And the tool list does not include sdd_list_versions
 ```
 
-#### AC3 — feature-08
+#### AC2
 
 ```gherkin
 Scenario: Install with omitted version still resolves latest
@@ -214,7 +226,7 @@ Scenario: Install with omitted version still resolves latest
   And the call does not require sdd_list_versions
 ```
 
-#### AC4 — feature-08
+#### AC3
 
 ```gherkin
 Scenario: Versions REST still returns the sync cache
@@ -287,52 +299,51 @@ Scenario: Empty key name
 
 ---
 
-## `sdd-mcp-install` — `sdd_install_framework` (stdio + HTTP, Cursor)
+## `sdd-mcp-install` — `sdd_install_framework` (HTTP, all clients)
 
-Install the **pack allow-list** (`agents`, `skills`, `rules`, `workflows`, `templates`) onto `{client_root}`. Stdio writes locally; HTTP returns tarball URL for AI extraction (ADR-054). Path allow-list. Structured summary. (MCPI-01, [MCP-01](../product-backlog.md#L318))
+Install the **pack allow-list** (`agents`, `skills`, `rules`, `workflows`, `templates`) onto `{client_root}`. The server validates the root, checks cache or bundled pack, and returns a tarball URL. The agent downloads the tarball, extracts listed paths, and writes the ledger last. (MCPI-01, [MCP-01](../product-backlog.md#L318))
 
-Phase 1 already copies skills/rules/agents/workflows. Feature-01 adds `templates/` and forbids copying product trees (`src`, `prisma`, app files) even when Settings GitHub URL is this service repo.
+### User story 1 — Install SDD framework
 
-### User story 1 — Install SDD framework for Cursor
-
-**As a** developer on Cursor
-**I want** to install the SDD framework pack into Cursor client-root folders
+**As a** developer
+**I want** to install the SDD framework pack into my client root
 **So that** the IDE can load agents, skills, rules, workflows, and templates
 
 #### AC1
 
 ```gherkin
-Scenario: Install writes every present pack folder under client_root
-  Given the client is Cursor on the developer machine over stdio
-  And the operator server has synced a package that contains some of agents, skills, rules, workflows, templates
-  And SDD_SERVER_URL points at the operator server
-  When the client calls sdd_install_framework for that version
-  Then the stdio process fetches the package from GET /api/sdd/package
-  And each pack folder that exists in the package is written under the matching Cursor root
-  And skills each containing SKILL.md are written under the Cursor skills root when present
-  And rules are written under the Cursor rules root when present
-  And templates are written under {client_root}/templates when present
-  And the result includes paths, version, and asset counts
+Scenario: Install returns a tarball URL and the agent writes listed files
+  Given the client calls sdd_install_framework over HTTP
+  And the agent sends client and os (and omits root for a known client)
+  And the pack cache has a real commit
+  When the tool runs
+  Then the result action is apply
+  And the result includes the resolved root, the version, the file list, deletions, and a tarball URL
+  And the tarball URL is on this server
+  And the result does not name a git host
+  And the result does not include inline file contents
+  And the result does not include writer_required
 ```
 
 #### AC1b
 
 ```gherkin
 Scenario: Non-pack top-level names are not copied
-  Given the synced package (or GitHub tree) also contains application folders such as src or prisma
-  When the client calls sdd_install_framework over stdio
-  Then those names are not written under {client_root}
-  And only agents, skills, rules, workflows, and templates from the package are copied
+  Given the synced package also contains application folders such as src or prisma
+  When the client calls sdd_install_framework
+  Then those names are not in the file list
+  And only agents, skills, rules, workflows, and templates from the package are listed
 ```
 
 #### AC2
 
 ```gherkin
 Scenario: Invalid or escaped path is rejected
-  Given the client calls sdd_install_framework
-  When the resolved target is outside allowed user config roots or contains path escape
+  Given the agent sends a root outside the home directory or containing ..
+  When the server validates the root
   Then the result code is path_rejected
-  And no files are written
+  And no files are listed
+  And no tarball URL is returned
 ```
 
 #### AC3
@@ -342,9 +353,9 @@ Scenario: Manifest exists but files were deleted
   Given the client has .sdd-installed.json matching the requested version
   And the listed skill or rule folders have been manually deleted
   When the client calls sdd_install_framework for that version
-  Then the tool reinstalls all package files
-  And the result includes paths, version, and asset_counts
-  And the result code is not already_up_to_date
+  Then the result action is apply
+  And the result includes the file list and a tarball URL
+  And the result action is not noop
 ```
 
 #### AC4
@@ -353,8 +364,8 @@ Scenario: Manifest exists but files were deleted
 Scenario: Force reinstall when version matches
   Given the client has a complete install at version A
   When the client calls sdd_install_framework with force true for version A
-  Then the tool reinstalls all package files
-  And the result includes version A and asset_counts
+  Then the result action is apply
+  And the result includes the file list and a tarball URL for version A
 ```
 
 #### AC5
@@ -364,30 +375,67 @@ Scenario: Same ref label but repo content changed
   Given the client has .sdd-installed.json for ref main at commit SHA-A
   And the GitHub repo at ref main now resolves to commit SHA-B with different skills
   When the client calls sdd_install_framework for main
-  Then the tool reinstalls all package files from SHA-B
-  And stale package-owned skills from SHA-A are removed
-  And the result is not already_up_to_date
+  Then the result action is apply with files from SHA-B
+  And stale package-owned skills from SHA-A are in the deletions list
+  And the result action is not noop
+```
+
+#### AC6 — Bundled fallback (ADR-131)
+
+```gherkin
+Scenario: Empty cache falls back to bundled pack
+  Given the pack cache is empty or has a fixture commit
+  When the client calls sdd_install_framework
+  Then the server reads the bundled pack under pack.framework.sdd.works/
+  And the result action is apply with files from the bundled pack
+  And the result does not return cache_empty or fixture_pack
+  And the agent writes the files and the ledger
+```
+
+#### AC7 — MC-18, templates nested path
+
+```gherkin
+Scenario: Install writes templates under the framework.sdd.works level
+  Given the pack templates folder holds a framework.sdd.works subfolder
+  When the client calls sdd_install_framework
+  Then the file list includes paths under templates/framework.sdd.works/
+  And after install {client_root}/templates/framework.sdd.works/{locale}/ exists for each locale
+  And constants.json and the AI-read trio live under {client_root}/templates/framework.sdd.works/
+  And the paths resolve the references skills, rules, and agents make to {client_root}/templates/framework.sdd.works/...
+```
+
+#### AC8 — MC-17, install page
+
+```gherkin
+Scenario: An install page names the MCP install sequence
+  When GET /install is requested
+  Then the response Content-Type is text/markdown
+  And the body names the sequence: read the ledger, call sdd_install_framework with client and os, download the tarball, extract listed paths, write the ledger last
+  And the body tells the agent to omit root for known clients
+  And the body does not name a git host or a repository
+  And GET /setup links to GET /install from an After setup note
+  And GET /setup still has no install section
 ```
 
 ---
 
 ## `sdd-mcp-install-ledger` — Install ledger (`.sdd-installed.json`, ADR-057)
 
-After a successful install or update, write `{client_root}/.sdd-installed.json` once with `pack_complete: true`, version, commit, and `files`. Ethan’s start gate ([Agent-04](../product-backlog.md#L76)) reads only this file. Do not write `framework.sdd.works.json`. ([MCP-01](../product-backlog.md#L318), Sprint 2 Feature-01)
+After a successful install or update, the agent writes `{client_root}/.sdd-installed.json` once with `pack_complete: true`, version, commit, and `files`. The server returns the ledger in the plan. The agent writes it last. Do not write `framework.sdd.works.json`. ([MCP-01](../product-backlog.md#L318))
 
 ### User story 1 — Ledger after a successful copy
 
 **As a** developer who installed the framework
 **I want** one install record at `{client_root}/.sdd-installed.json`
-**So that** Ethan can tell the pack copy finished without a second receipt file
+**So that** the agent can tell the pack copy finished without a second receipt file
 
 #### AC1
 
 ```gherkin
-Scenario: Stdio install writes the ledger last
-  Given a successful stdio sdd_install_framework that copied the present pack folders
-  When the tool returns success
-  Then {client_root}/.sdd-installed.json exists
+Scenario: Install result includes the ledger and the agent writes it last
+  Given a successful sdd_install_framework that returned action apply
+  When the agent extracts the listed files
+  Then the agent writes {client_root}/.sdd-installed.json last
   And pack_complete is true
   And installed_at, package_version, and package_commit are set
   And files lists the pack-owned paths that were written
@@ -398,18 +446,18 @@ Scenario: Stdio install writes the ledger last
 
 ```gherkin
 Scenario: Failed install does not mark the pack complete
-  Given sdd_install_framework over stdio is rejected with path_rejected or package_unavailable
+  Given sdd_install_framework is rejected with path_rejected or client_unknown
   When the tool returns
   Then no new .sdd-installed.json is written with pack_complete true
-  And no pack folders are written
+  And no pack files are written by the agent
 ```
 
 #### AC3
 
 ```gherkin
-Scenario: Update rewrites the ledger after a successful merge
+Scenario: Update rewrites the ledger after a successful copy
   Given an existing install with .sdd-installed.json
-  When sdd_update_framework completes a new package_commit over stdio
+  When sdd_update_framework returns action apply and the agent copies the new files
   Then .sdd-installed.json is rewritten with pack_complete true
   And files matches the new pack contents
 ```
@@ -417,34 +465,32 @@ Scenario: Update rewrites the ledger after a successful merge
 ### User story 2 — HTTP returns a plan and the ledger is written last
 
 **As a** developer using HTTP MCP
-**I want** the tool response to name the plan and the ledger path
+**I want** the tool response to name the plan and the ledger
 **So that** the ledger is written only after the planned files are copied
 
 #### AC4
 
 ```gherkin
-Scenario: HTTP install with inventory includes the ledger in the plan
+Scenario: HTTP install result includes the ledger in the plan
   Given the client calls sdd_install_framework over Streamable HTTP
-  And the caller sends inventory
-  And the operator sync cache contains the requested version
+  And the agent sends the ledger or no ledger
   When the tool runs
   Then the result is noop, rewrite_ledger, or apply
-  And an apply result names the ledger path {client_root}/.sdd-installed.json
+  And an apply result names the ledger in the response
   And the instruction says to write that ledger last
   And the instruction does not say to extract an archive into the client root
-  And the operator server is not written as a user config root
   And the result does not require framework.sdd.works.json
 ```
 
 #### AC5
 
 ```gherkin
-Scenario: HTTP does not report already up to date when a recorded file is missing
-  Given the caller sends inventory
-  And a recorded path is missing
+Scenario: HTTP does not return noop when a recorded file is missing
+  Given the agent sends the ledger
+  And a recorded path is missing on disk
   When sdd_install_framework runs over HTTP
   Then the result is apply
-  And the result does not include extract_recommended
+  And the result does not include writer_required
 ```
 
 ---
@@ -455,9 +501,9 @@ Scenario: HTTP does not report already up to date when a recorded file is missin
 
 ---
 
-## `sdd-mcp-client-root-scenarios` — Eight client-root outcomes (stdio)
+## `sdd-mcp-client-root-scenarios` — Client-root outcomes
 
-The local program (ADR-058) must produce the Expected outcomes in [`mcp-design.md`](./mcp-design.md) client-root scenarios. ([MCP-01](../product-backlog.md#L318))
+The server uses the seed-map root for known clients. Unknown clients supply `root` after `root_required`. The agent writes listed files and keeps unlisted user files. ([MCP-01](../product-backlog.md#L318))
 
 ### User story 1 — Preserve user files and record pack files
 
@@ -473,23 +519,25 @@ Scenario: First install replaces same path and keeps other skills
   And ~/.cursor/skills/tdd/SKILL.md exists with content "my tdd notes"
   And ~/.cursor/.sdd-installed.json does not exist
   And the pack has tdd and does not have samectx
-  When sdd_install_framework runs over stdio
-  Then samectx content stays "my skill"
-  And skills/tdd/SKILL.md becomes the pack text
-  And .sdd-installed.json lists skills/tdd/SKILL.md not samectx
+  When sdd_install_framework runs over HTTP
+  Then the file list includes skills/tdd/SKILL.md not skills/samectx/SKILL.md
+  And the agent writes skills/tdd/SKILL.md with the pack text
+  And the agent does not write skills/samectx/SKILL.md
+  And samectx content stays "my skill"
+  And the agent writes .sdd-installed.json listing skills/tdd/SKILL.md not samectx
   And pack_complete is true
   And framework.sdd.works.json does not exist
 ```
 
-#### AC2 — feature-08
+#### AC2
 
 ```gherkin
 Scenario: Update replaces recorded pack files and keeps an unlisted user skill
   Given .sdd-installed.json lists skills/tdd/SKILL.md only
   And samectx exists with content "my skill"
   And skills/tdd/my-notes.md exists and is not listed
-  When sdd_update_framework installs a new pack that still has skills/tdd/SKILL.md
-  Then skills/tdd/SKILL.md becomes the new pack text
+  When sdd_update_framework returns apply for a new pack that still has skills/tdd/SKILL.md
+  Then the agent writes skills/tdd/SKILL.md with the new pack text
   And the skills/tdd directory is not deleted
   And my-notes.md stays
   And samectx stays "my skill"
@@ -497,13 +545,13 @@ Scenario: Update replaces recorded pack files and keeps an unlisted user skill
   And pack_complete is true
 ```
 
-#### AC2b — feature-06
+#### AC2b
 
 ```gherkin
 Scenario: An old ledger that names a skill folder does not delete that folder
   Given .sdd-installed.json lists the folder name tdd under files.skills
   And skills/tdd/my-notes.md exists
-  When sdd_update_framework installs a new pack that has skills/tdd/SKILL.md
+  When sdd_update_framework returns apply for a new pack that has skills/tdd/SKILL.md
   Then skills/tdd is not removed as a directory
   And my-notes.md stays
   And the new ledger lists skills/tdd/SKILL.md
@@ -511,7 +559,7 @@ Scenario: An old ledger that names a skill folder does not delete that folder
   And pack_complete is true
 ```
 
-#### AC3 — feature-07
+#### AC3
 
 ```gherkin
 Scenario: Same version and commit leave a user edit in place
@@ -519,8 +567,8 @@ Scenario: Same version and commit leave a user edit in place
   And pack_complete is true
   And skills/tdd/SKILL.md content is "my edited tdd"
   And the server pack is still main at abc
-  When sdd_install_framework runs over stdio without force
-  Then the result is already_up_to_date
+  When sdd_install_framework runs over HTTP without force
+  Then the result is noop
   And the content stays "my edited tdd"
 ```
 
@@ -530,98 +578,100 @@ Scenario: Same version and commit leave a user edit in place
 Scenario: Notes folder outside the pack is left alone
   Given ~/.cursor/notes/ideas.md exists with content "my ideas"
   And notes is not in .sdd-installed.json
-  When sdd_install_framework runs over stdio
+  When sdd_install_framework runs over HTTP
   Then notes/ideas.md stays "my ideas"
 ```
 
-#### AC5 — feature-06
+#### AC5
 
 ```gherkin
 Scenario: File-level record keeps user note inside a pack skill folder
   Given .sdd-installed.json lists skills/tdd/SKILL.md and skills/tdd/old-step.md
   And skills/tdd/my-notes.md exists with content "my notes" and is not listed
   And the new pack has skills/tdd/SKILL.md "new pack tdd" and no old-step.md
-  When sdd_update_framework runs over stdio
-  Then SKILL.md becomes "new pack tdd"
-  And old-step.md is deleted
+  When sdd_update_framework runs over HTTP
+  Then the agent writes SKILL.md with "new pack tdd"
+  And the agent deletes old-step.md
   And my-notes.md stays "my notes"
   And the skills/tdd directory remains
   And the new ledger lists skills/tdd/SKILL.md only
   And pack_complete is true
 ```
 
-#### AC6a — feature-07
+#### AC6a
 
 ```gherkin
-Scenario: Old ledger missing pack_complete with same commit rewrites the flag only
+Scenario: Old ledger missing pack_complete with same commit returns rewrite_ledger
   Given .sdd-installed.json has main at abc, lists skills/tdd/SKILL.md, and has no pack_complete field
   And skills/tdd/SKILL.md content is "my edited tdd"
   And the server pack is main at abc
-  When sdd_install_framework runs over stdio
-  Then the result is not already_up_to_date
+  When sdd_install_framework runs over HTTP
+  Then the result is rewrite_ledger
   And the content stays "my edited tdd"
-  And .sdd-installed.json is rewritten with pack_complete true and the same version and commit
+  And the agent writes .sdd-installed.json with pack_complete true and the same version and commit
 ```
 
-#### AC6b — feature-08
+#### AC6b
 
 ```gherkin
-Scenario: Old ledger missing pack_complete with new commit replaces recorded files
+Scenario: Old ledger missing pack_complete with new commit returns apply
   Given .sdd-installed.json has main at abc with no pack_complete
   And the server pack is main at def with skills/tdd/SKILL.md "new pack tdd"
-  When sdd_update_framework runs over stdio
-  Then skills/tdd/SKILL.md becomes "new pack tdd"
+  When sdd_update_framework runs over HTTP
+  Then the result is apply
+  And the agent writes skills/tdd/SKILL.md with "new pack tdd"
   And unrecorded files such as my-notes.md stay
-  And the ledger has commit def and pack_complete true
+  And the agent writes the ledger with commit def and pack_complete true
 ```
 
-#### AC7a — feature-07
+#### AC7a
 
 ```gherkin
-Scenario: pack_complete false with same commit stays already up to date
+Scenario: pack_complete false with same commit returns noop
   Given .sdd-installed.json has main at abc, lists skills/tdd/SKILL.md, and pack_complete is false
   And all listed files exist
   And the server pack is main at abc
-  When sdd_install_framework runs over stdio without force
-  Then the result is already_up_to_date
+  When sdd_install_framework runs over HTTP without force
+  Then the result is noop
   And the content is not replaced
   And pack_complete stays false
 ```
 
-#### AC7b — feature-08
+#### AC7b
 
 ```gherkin
-Scenario: pack_complete false with new commit copies then sets true
+Scenario: pack_complete false with new commit returns apply and sets true
   Given .sdd-installed.json has pack_complete false for main at abc
   And the server pack is main at def
-  When sdd_update_framework runs over stdio
-  Then recorded pack files are replaced
+  When sdd_update_framework runs over HTTP
+  Then the result is apply
+  And the agent replaces recorded pack files
   And unrecorded user files stay
-  And pack_complete becomes true for commit def
+  And the agent writes the ledger with pack_complete true for commit def
 ```
 
-#### AC8 — feature-09
+#### AC8
 
 ```gherkin
 Scenario: Download failure writes nothing
   Given .sdd-installed.json has pack_complete true for main at abc
-  And the package download fails
-  When sdd_install_framework runs over stdio
+  And the tarball download fails
+  When sdd_install_framework returns apply and the agent tries to download
   Then existing files are unchanged
   And .sdd-installed.json is unchanged
   And pack_complete stays true
-  And the tool reports the error
+  And the agent reports the error to the user
 ```
 
 ---
 
-## `sdd-mcp-update` — `sdd_update_framework` (stdio, Cursor)
+## `sdd-mcp-update` — `sdd_update_framework` (HTTP)
 
 Refresh an existing install. Idempotent on the same version. (MCPU-01)
 
 ### User story 1 — Update to a chosen or latest version
 
-**As a** developer with an existing Cursor install
+**As a** developer with an existing install
 **I want** to update the SDD framework
 **So that** skills and rules match the chosen package version
 
@@ -629,20 +679,20 @@ Refresh an existing install. Idempotent on the same version. (MCPU-01)
 
 ```gherkin
 Scenario: Update to a newer version
-  Given Cursor already has the SDD framework at version A
+  Given the client already has the SDD framework at version A
   And version B is available and newer than A
   When the client calls sdd_update_framework for version B
-  Then the install matches version B
-  And the result includes a structured summary of changes
+  Then the result action is apply with files for version B
+  And the result includes a tarball URL and the file list
 ```
 
 #### AC2
 
 ```gherkin
-Scenario: Same version is idempotent
-  Given Cursor already has the SDD framework at version A
+Scenario: Same version is noop
+  Given the client already has the SDD framework at version A
   When the client calls sdd_update_framework for version A
-  Then the result code is already_up_to_date
+  Then the result is noop
   And existing user files are not rewritten without cause
 ```
 
@@ -650,41 +700,43 @@ Scenario: Same version is idempotent
 
 ## `sdd-mcp-cross-client` — Cross-client path resolution
 
-Seed path maps for first-class clients across macOS, Windows, and Linux, plus **Qwen-assisted** search of local client configuration to determine install roots (ADR-047). TRAE Agents stays candidate until verified. (MCPI-02, MCPI-04)
+Seed path maps for first-class clients across macOS, Windows, and Linux. The seed map is the single path source (ADR-132). For a known client, the server uses the seed-map root. For an unknown client, the server returns `root_required` or validates the agent-sent `root`. (MCPI-02)
 
 ### User story 1 — Install uses resolved client paths
 
 **As a** developer on a first-class client
-**I want** install and update to resolve that client’s skills/rules roots from seed maps and local config
+**I want** install and update to resolve that client's root from the seed map
 **So that** assets land where the client loads skills and rules
 
 #### AC1
 
 ```gherkin
 Scenario: First-class client roots are resolved and used
-  Given the client argument or detection is Cursor Agents, WorkBuddy, WorkBuddy CN, Claude Code, Cline, VS Code, Codex, or Copilot
+  Given the client argument or detection is Cursor, CodeBuddy, TRAE, Claude Code, Codex, or Copilot
   And the OS is macOS, Windows, or Linux
-  When the client calls sdd_install_framework over stdio
-  Then files are written only under that client’s resolved skills and rules roots for that OS
-  And every written path passed the path allow-list
+  When the client calls sdd_install_framework over HTTP
+  Then files are listed only under that client's resolved root for that OS
+  And every listed path passed the path allow-list
 ```
 
 #### AC2
 
 ```gherkin
-Scenario: Unknown or unverified client is rejected
+Scenario: Unknown client without a root gets root_required
   Given the client is not in the first-class seed map
-  And Qwen cannot confidently resolve config roots
+  And the agent does not send a root
   When the client calls sdd_install_framework
-  Then the result is a structured error
-  And no files are written
+  Then the result code is root_required
+  And no files are listed
 ```
 
 ---
 
-## `sdd-mcp-path-llm` — Qwen client-config discovery
+## `sdd-mcp-path-llm` — Qwen client-config discovery — Retired from install (ADR-130 decision 10, ADR-131)
 
-Use Qwen to search local client configuration when installing skills/rules across clients. Fallback to seed map. (MCPI-04)
+**Retired.** The local LLM discovery path is removed from the end-user install. No writer binary, no stdio program, no Qwen call at install time. The agent sends `client` and `os`; the server uses the seed map for known clients ([ADR-132](../adr/ADR-132-simplified-install-root-and-templates.md)). `src/core/path-resolve-llm.ts` is retained for a deferred server-side discover endpoint; that endpoint is not part of the first release.
+
+The ACs below are retained for the deferred endpoint, not for the first release.
 
 ### User story 1 — LLM proposes roots from config snippets
 
@@ -740,167 +792,137 @@ Scenario: LLM-proposed escape is rejected
 
 ---
 
-## `sdd-mcp-path-detect` — Client path detection
+## `sdd-mcp-path-detect` — Client identification (ADR-132)
 
-Deterministically read client configuration (env vars + config files) to resolve install paths. Fall back to Qwen + seed map. (MCPI-05)
+The agent maps the running session to `client`. It does not run an env-var or config-file chain to choose `root`. The server resolves the root for known clients. Unknown clients use `root_required` and a person-supplied `root`. Env-var relocation stories from ADR-131 are retired. (MCPI-05)
 
-### User story 1 — Auto-detect calling client
+### User story 1 — Agent identifies calling client
 
-**As a** developer calling sdd_install_framework without an explicit client argument
-**I want** the MCP server to detect which client I am from the MCP handshake
-**So that** I do not have to specify the client every time
+**As a** developer calling sdd_install_framework
+**I want** the agent to send the correct `client` from the MCP handshake or the user
+**So that** the server can resolve the seed-map root
 
 #### AC1
 
 ```gherkin
-Scenario: clientInfo.name auto-detects Cursor
+Scenario: clientInfo.name maps to Cursor
   Given the MCP client sends clientInfo.name "cursor" or "Cursor" in the initialize handshake
-  When the client calls sdd_install_framework without a client argument over stdio
-  Then the server resolves paths for the cursor client
-  And the resolution source is env, config, seed, or llm
+  When the agent calls sdd_install_framework with client cursor and os darwin
+  And the agent omits root
+  Then the server uses the seed-map root for cursor
   And the result is not client_unknown
 ```
 
 #### AC2
 
 ```gherkin
-Scenario: clientInfo.name auto-detects Claude Code
+Scenario: clientInfo.name maps to Claude Code
   Given the MCP client sends clientInfo.name "claude-code" or "Claude Code"
-  When the client calls sdd_install_framework without a client argument over stdio
-  Then the server resolves paths for the claude client
-  And the resolution source is env, config, seed, or llm
+  When the agent calls sdd_install_framework with client claude and os darwin
+  And the agent omits root
+  Then the server uses the seed-map root for claude
 ```
 
 #### AC3
 
 ```gherkin
-Scenario: Unrecognized clientInfo.name falls back to explicit arg or error
+Scenario: Unrecognized clientInfo.name with no client argument is rejected
   Given the MCP client sends an unrecognized clientInfo.name
   And no explicit client argument is provided
-  When the client calls sdd_install_framework
+  When the agent calls sdd_install_framework
   Then the result code is client_unknown
-  And no files are written
+  And no files are listed
 ```
 
-### User story 2 — Env var resolution
+### User story 2 — Server-side resolution
 
-**As a** developer who relocated my client config directory via an env var
-**I want** sdd_install_framework to honor that relocation
-**So that** files are written to my actual config location, not the default
+**As a** developer
+**I want** the server to use the seed-map root for known clients and root_required for unknown clients
+**So that** install files land where the IDE loads them
 
 #### AC1
 
 ```gherkin
-Scenario: CLAUDE_CONFIG_DIR relocates skills root
-  Given CLAUDE_CONFIG_DIR is set to a non-default absolute path
-  When the client calls sdd_install_framework for the claude client over stdio
-  Then skills are written under $CLAUDE_CONFIG_DIR/skills/
-  And the resolution source is env
+Scenario: Known client omits root and the server uses the seed map
+  When the agent calls sdd_install_framework with a known client and os
+  And the agent omits root
+  Then the server resolves the root from the seed map
+  And the result includes the resolved root
 ```
 
 #### AC2
 
 ```gherkin
-Scenario: CODEX_HOME relocates skills root
-  Given CODEX_HOME is set to a non-default absolute path
-  When the client calls sdd_install_framework for the codex client over stdio
-  Then skills are written under the resolved Codex skills root under $CODEX_HOME
-  And the resolution source is env
+Scenario: Unknown client without root gets root_required
+  Given the client is not in the seed map
+  And the agent does not send a root
+  When the agent calls sdd_install_framework
+  Then the result code is root_required
+  And no files are listed
+  And the message tells the agent to ask the person for the client config root
 ```
 
 #### AC3
 
 ```gherkin
-Scenario: CLINE_DIR relocates skills root
-  Given CLINE_DIR is set to a non-default absolute path
-  When the client calls sdd_install_framework for the cline client over stdio
-  Then skills are written under $CLINE_DIR/skills/
-  And the resolution source is env
+Scenario: Unknown client with an invalid root gets path_rejected
+  Given the client is not in the seed map
+  And the agent sends a root outside the home directory or containing ..
+  When the server validates the root
+  Then the result code is path_rejected
+  And no files are listed
 ```
 
-#### AC4
+#### AC4 — ADR-132 decision 6
 
 ```gherkin
-Scenario: KIRO_HOME relocates skills root
-  Given KIRO_HOME is set to a non-default absolute path
-  When the client calls sdd_install_framework for the kiro client over stdio
-  Then skills are written under $KIRO_HOME/skills/
-  And the resolution source is env
+Scenario: The install result has no root_warning or resolution_source
+  Given the client is known or unknown
+  When the server resolves or validates the root
+  Then the result does not include a root_warning field
+  And the result does not include resolution_source
 ```
 
-### User story 3 — Config file probe
+### User story 3 — Tool description tells the agent to send client and os (MC-16, feature-93)
 
-**As a** developer whose client config file documents custom skill paths
-**I want** sdd_install_framework to read the config file
-**So that** install targets match the client's actual configuration
+**As an** agent calling `sdd_install_framework` or `sdd_update_framework`
+**I want** the tool description and the `root` field description to tell me to send `client` and `os` and to omit `root` for a known client
+**So that** I do not send a workspace folder as `root` and the server resolves the root from the seed map
 
 #### AC1
 
 ```gherkin
-Scenario: Config file probe finds customized skills root
-  Given the client config file exists at the documented path
-  And the config file contains a custom skills root entry
-  When the client calls sdd_install_framework over stdio
-  Then the server reads the config file and resolves the custom skills root
-  And the resolution source is config
-  And the resolved path passes the allow-list before any write
+Scenario: The install tool description names client and os and tells the agent to omit root for a known client
+  When the agent reads the sdd_install_framework tool description
+  Then the description names client and os as the inputs the agent sends
+  And the description tells the agent to omit root unless it confirmed the path-map root for the running IDE
+  And the description says the server resolves root from client and os
 ```
 
 #### AC2
 
 ```gherkin
-Scenario: Config file absent falls through to seed map
-  Given the client config file does not exist at the documented path
-  And no relocating env var is set
-  And the seed map has defaults for the client
-  When the client calls sdd_install_framework over stdio
-  Then roots come from the seed map
-  And the resolution source is seed
+Scenario: The update tool description matches the install tool description
+  When the agent reads the sdd_update_framework tool description
+  Then the description matches the sdd_install_framework description for the root-omission rule
 ```
 
-### User story 4 — Fallback to Qwen + seed map
-
-**As a** developer on a client without env vars or config files (Cursor, WorkBuddy, TRAE, Windsurf)
-**I want** sdd_install_framework to fall back to Qwen then seed map
-**So that** install still works even without deterministic signals
-
-#### AC1
+#### AC3
 
 ```gherkin
-Scenario: No env var, no config file → Qwen → seed
-  Given the client has no documented env var for config relocation
-  And no config file is found at the documented path
-  And Qwen credentials are configured
-  When the client calls sdd_install_framework over stdio
-  Then the server falls through to Qwen discovery
-  And if Qwen resolves, the resolution source is llm
-  And if Qwen fails, the seed map is used and the resolution source is seed
+Scenario: The root field description tells the agent to omit it for a known client
+  When the agent reads the root input schema description for sdd_install_framework or sdd_update_framework
+  Then the description says to omit root to let the server resolve it from the path map
+  And the description says to send root only when the agent confirmed the path-map root for the running IDE
 ```
 
-#### AC2
+#### AC4 — i18n
 
 ```gherkin
-Scenario: All resolution fails → structured error, no writes
-  Given no env var, no config file, Qwen unavailable, and no seed map entry
-  When the client calls sdd_install_framework over stdio
-  Then the result code is client_config_unresolved or llm_unavailable
-  And no files are written
-```
-
-### User story 5 — Resolution source in summary
-
-**As a** developer
-**I want** the install summary to report how paths were resolved
-**So that** I can debug path issues and trust the install target
-
-#### AC1
-
-```gherkin
-Scenario: Summary includes resolution_source
-  Given the client calls sdd_install_framework over stdio
-  When the install completes
-  Then the result includes resolution_source with one of: env, config, seed, llm
-  And the result includes the resolved paths for skills, rules, and other
+Scenario: The tool description is localized for every supported locale
+  When the agent reads the sdd_install_framework or sdd_update_framework tool description for locale en, zh-Hans, or zh-Hant
+  Then each localized description names client and os and tells the agent to omit root for a known client
+  And no locale falls back to a missing key
 ```
 
 ---
@@ -913,7 +935,7 @@ Operator server sync job fetches framework files from GitHub into local cache. (
 
 **As the** operator server
 **I want** to sync the configured GitHub repo into a local package cache
-**So that** stdio clients can install without direct GitHub or database access
+**So that** clients can install without direct GitHub or database access
 
 #### AC1
 
@@ -998,34 +1020,36 @@ Scenario: Cron route runs scheduled sync
   Then syncFrameworkRepo runs
 ```
 
-#### AC9 — HTTP install refreshes stale cache (ADR-055)
+#### AC9 — HTTP install uses cache or bundled fallback (ADR-131)
 
 ```gherkin
-Scenario: Repo moved ahead of cache on HTTP install
-  Given cache latestCommit is SHA-OLD
-  And live GitHub tip resolves to SHA-NEW
-  When sdd_install_framework runs on HTTP channel
-  Then the server syncs before returning packageUrl
-  And commitSha in the response is SHA-NEW
-  And already_up_to_date is not returned when installed_commit is SHA-OLD
+Scenario: HTTP install uses cache when available
+  Given cache latestCommit is SHA-A
+  And the live GitHub tip is SHA-A
+  When sdd_install_framework runs on HTTP
+  Then the server reads from the cache
+  And the result includes a tarball URL on this server
+  And the result does not name a git host
 ```
 
-#### AC10 — Cache older than 30 minutes is refused
+#### AC10 — ADR-130 decision 5, MC-14
 
 ```gherkin
-Scenario: A cache older than 30 minutes is refused
-  Given cache syncedAt is older than 30 minutes
-  When sdd_install_framework runs
-  Then the result code is cache_stale
-  And the result has no write plan
-  And the result has no packageUrl
+Scenario: A successful sync updates syncedAt even when the commit is unchanged
+  Given the sync job already stored commit SHA-A
+  And the live git tip is still SHA-A
+  When the sync job runs again
+  Then the result status is unchanged
+  And syncedAt is updated to now
+  And the install does not return cache_stale solely because of age
+  And a missing cache falls back to the bundled pack under pack.framework.sdd.works/ (ADR-131)
 ```
 
 ### E2E test plan (freshness regression)
 
 | Test | Layer | Assertion |
 | --- | --- | --- |
-| `install.test.ts` — stale cache + live tip ahead | 3 | Returns new commitSha after refresh; not `already_up_to_date` |
+| `install.test.ts` — stale cache + live tip ahead | 3 | Returns new commitSha after refresh; not `noop` |
 | `webhook/route.test.ts` | 1 | Valid HMAC → sync; bad HMAC → 401 |
 | `sync/cron/route.test.ts` | 2 | Valid CRON_SECRET → sync |
 | `ensure-cache-fresh.test.ts` | 3 | Sync when cache ≠ live; fresh when equal |
@@ -1035,11 +1059,11 @@ Scenario: A cache older than 30 minutes is refused
 
 ## `sdd-mcp-package-api` — Package REST API (PKAPI-01)
 
-Public REST API serves sync cache to stdio clients. (ADR-053)
+Public REST API serves sync cache to clients. A missing cache falls back to the bundled pack (ADR-131). (ADR-053)
 
-### User story 1 — stdio client downloads packages
+### User story 1 — Client downloads packages
 
-**As a** stdio MCP binary on an end-user machine
+**As a** client
 **I want** to fetch package versions and tarballs from the operator server
 **So that** I can install without DB, GitHub token, or Prisma
 
@@ -1065,10 +1089,11 @@ Scenario: Package download
 #### AC3
 
 ```gherkin
-Scenario: Sync pending before first sync
+Scenario: Empty cache falls back to bundled pack (ADR-131)
   Given no sync has run
   When GET /api/sdd/versions is called
-  Then the response is 409 with error code sync_pending
+  Then the response is 200 with the bundled pack version and inventory
+  And the response does not return sync_pending
 ```
 
 #### AC4
@@ -1076,6 +1101,7 @@ Scenario: Sync pending before first sync
 ```gherkin
 Scenario: Unknown version returns not found
   Given the sync cache does not contain version v9.9.9
+  And the bundled pack does not contain version v9.9.9
   When GET /api/sdd/package?version=v9.9.9 is called
   Then the response is 404 with error code version_not_found
 ```
@@ -1091,28 +1117,29 @@ Scenario: Admin manual sync trigger
 
 ---
 
-## `sdd-mcp-http-install-policy` — HTTP install policy (fallback, ADR-054 / ADR-058)
+## `sdd-mcp-http-install-policy` — HTTP install policy (ADR-131)
 
-HTTP MCP must not write the caller disk. The current install contract is [URL MCP and server write plan](#sdd-mcp-url-plan). The server returns `writer_required` or a plan. The agent does not extract an archive into the client root.
+HTTP MCP returns a plan with a tarball URL. The agent downloads the tarball, extracts listed paths, and writes the ledger last. The server does not write the caller disk. No writer binary, no `writer_required`, no `accepted_root`.
 
-### User story 1 — Remote install returns a plan
+### User story 1 — Remote install returns a plan with a tarball URL
 
 **As a** developer calling MCP over HTTP
-**I want** install and update to return a plan and the pack URL on this server
-**So that** the hosted server never writes another user’s client folder
+**I want** install and update to return a plan and a tarball URL on this server
+**So that** the hosted server never writes another user's client folder
 
 #### AC1
 
 ```gherkin
-Scenario: HTTP install returns package URL and instructions
+Scenario: HTTP install returns a tarball URL
   Given the client calls sdd_install_framework over Streamable HTTP
-  And the operator sync cache contains the requested version
+  And the agent sends client, os, and the ledger or no ledger (no root for known clients; root after root_required for unknown clients)
   When the tool runs
-  Then a call with no inventory returns writer_required and packageUrl on this server
-  And a call with inventory returns noop, rewrite_ledger, or apply
+  Then the result is noop, rewrite_ledger, or apply
+  And an apply result includes a tarball URL on this server
   And the result does not name a git host
+  And the result does not include writer_required
+  And the result does not include accepted_root
   And the server disk is not written as a user config root
-  And a temp client home on the server process is unchanged
 ```
 
 #### AC2
@@ -1121,43 +1148,54 @@ Scenario: HTTP install returns package URL and instructions
 Scenario: HTTP update follows the same policy
   Given the client calls sdd_update_framework over Streamable HTTP
   When the tool runs
-  Then the result includes packageUrl and instructions
+  Then the result includes a tarball URL and the file list
   And the server disk is not written as a user config root
+```
+
+#### AC3 — Bundled fallback (ADR-131)
+
+```gherkin
+Scenario: Empty cache falls back to bundled pack
+  Given the pack cache is empty or has a fixture commit
+  When sdd_install_framework runs over HTTP
+  Then the server reads the bundled pack under pack.framework.sdd.works/
+  And the result is apply with files from the bundled pack
+  And the result does not return cache_empty or fixture_pack
 ```
 
 ---
 
-## `sdd-mcp-prompt-setup` — Prompt-based MCP setup (SETUP-01, ADR-058)
+## `sdd-mcp-prompt-setup` — Prompt-based MCP setup (SETUP-01, ADR-131)
 
-End users paste one prompt. The agent writes one URL entry. The person does not edit the MCP file by hand. The agent does not download an executable and does not name a git host. The current contract is [URL MCP and server write plan](#sdd-mcp-url-plan).
+End users paste one prompt. The agent writes one URL entry. The person does not edit the MCP file by hand. The agent does not download an executable and does not name a git host. The setup page has no install section. Install instructions live in the `sdd_install_framework` tool result.
 
-### User story 1 — One-prompt stdio setup
+### User story 1 — One-prompt setup
 
-**As an** end user in Cursor or CodeBuddy
+**As an** end user
 **I want** to paste one prompt to connect framework.sdd.works MCP
-**So that** a local program writes pack files on install without me editing mcp.json
+**So that** my agent connects without me editing mcp.json
 
-#### AC1 — feature-05 / feature-14
+#### AC1
 
 ```gherkin
-Scenario: Agent setup endpoint serves stdio instructions
+Scenario: Agent setup endpoint serves URL-only instructions
   When GET /setup is requested
   Then the response Content-Type is text/markdown
   And the body shows one URL entry for https://sdd.works/mcp
   And the body has no command entry
   And the body does not ask the person to edit the MCP file by hand
-  And the body does not authorize installing the framework pack in the same step
+  And the body has no install section
   And the body does not name a git host or a repository
 ```
 
-#### AC2 — feature-05
+#### AC2
 
 ```gherkin
-Scenario: A missing local program still uses the URL entry
+Scenario: No local program is needed
   When GET /setup is requested
-  And ~/.sdd/sdd-mcp is missing
-  Then the body still shows only the url https://sdd.works/mcp
-  And the body does not switch to a command entry
+  Then the body shows only the url https://sdd.works/mcp
+  And the body does not mention a local program or a writer binary
+  And the body does not name ~/.sdd/sdd-mcp
 ```
 
 #### AC3 — backend-01
@@ -1193,7 +1231,7 @@ Scenario: Agent setup names the TRAE CN user MCP file
 ```gherkin
 Scenario: Agent setup names CodeBuddy and TRAE editions and limits scope to the running agent
   When GET /setup is requested
-  Then the body setup version is 2026-10-09.v10
+  Then the body setup version is 2026-10-09.v11
   And the body names CodeBuddy (international) for CodeBuddy or WorkBuddy
   And the body names CodeBuddy CN for CodeBuddy CN or WorkBuddy CN
   And both CodeBuddy sections name ~/.codebuddy/mcp.json
@@ -1204,27 +1242,98 @@ Scenario: Agent setup names CodeBuddy and TRAE editions and limits scope to the 
   And the TRAE CN section does not write ~/.trae-cn/mcp.json or ~/.trae/mcp.json for the TRAE CN user list
   And the body tells the agent to change MCP configuration only for the agent running this session
   And the body tells the agent not to read or write another IDE's mcp.json unless the user names that IDE
+  And the body has no install section
+  And the body does not name --write, --client, --os, --client-root, SDD_SERVER_URL, or accepted_root
 ```
 
-#### AC7 — MC-11 / install flags on the setup page
+#### AC7 — MC-11 / install lives in the tool result, not the setup prompt
 
 ```gherkin
-Scenario: Agent setup tells the agent how to run the local program
-  When GET /setup is requested
-  Then the body tells the agent to run the local program with --write, --client, --os, and --client-root when it has a candidate folder
-  And the body tells the agent to set SDD_SERVER_URL to https://sdd.works
-  And the body tells the agent to pass --client as codebuddy for both CodeBuddy editions
-  And the body tells the agent to pass --client as trae for TRAE (international) and trae-cn for TRAE CN
-  And the body tells the agent to pass --os as darwin, linux, or win32
-  And when the program cannot run, the body tells the agent to set accepted_root to that candidate folder
-  And the body does not name a git host
+Scenario: The install tool result gives a tarball URL
+  Given the caller sends client, os, and root or no root
+  And the pack cache is not empty
+  When sdd_install_framework runs
+  Then the result includes a tarball URL on this server
+  And the result does not name --write, --client, --os, --client-root, SDD_SERVER_URL, or accepted_root
+  And the result does not name a git host
+  And GET /setup does not name any of those flags
 ```
 
 ---
 
-## `sdd-mcp-local-binary` — Local program ~/.sdd/sdd-mcp (MCP-02, feature-14)
+## `sdd-mcp-module-boundary` — Setup and pack install backends are separate code modules (feature-90, MCP-08)
 
-Zero client runtime. The build machine compiles one executable per OS and CPU (ADR-051). The host copy lands at `~/.sdd/sdd-mcp`. That program is the stdio writer for install and update.
+The setup backend and the pack install backend run in separate code modules. A change to one module cannot silently reach the other. The boundary is enforced by an import check and by handler behavior. See `mcp-design.md` §2.0 for the file table and boundary rules.
+
+### User story 1 — Setup backend has no pack install logic
+
+**As a** maintainer
+**I want** the setup backend to contain no pack install code
+**So that** a setup change cannot break install, update, or ledger behavior
+
+#### AC1 — import boundary
+
+```gherkin
+Scenario: Setup backend files do not import from the pack install module
+  When the import boundary check runs for the setup backend
+  Then no file under src/app/api/agent-setup or src/mcp/setup-* imports from src/core/tools or src/core/sync
+  And no file under src/mcp/paste-sentences.ts or src/mcp/node-setup-catalog.ts imports from src/core/tools or src/core/sync
+```
+
+#### AC2 — handler behavior
+
+```gherkin
+Scenario: GET /setup does not call install plan or tarball functions
+  When GET /setup is requested
+  Then the response is the setup markdown
+  And the handler does not call composeInstallPlan, apply-plan, or package-fetch functions
+  And the handler does not read the pack cache or the bundled pack
+```
+
+### User story 2 — Pack install backend has no setup logic
+
+**As a** maintainer
+**I want** the pack install backend to contain no setup serving code
+**So that** an install change cannot alter what the person pastes or what GET /setup returns
+
+#### AC1 — import boundary
+
+```gherkin
+Scenario: Pack install backend files do not import from the setup backend
+  When the import boundary check runs for the pack install backend
+  Then no file under src/core/tools or src/core/sync imports from src/mcp/setup-markdown, src/mcp/setup-paths, src/mcp/paste-sentences, src/mcp/node-setup-catalog, or src/mcp/brand
+```
+
+#### AC2 — handler behavior
+
+```gherkin
+Scenario: sdd_install_framework does not call setup functions
+  When sdd_install_framework is called with client and os
+  Then the handler resolves the root, builds the plan, and returns a tarball URL
+  And the handler does not call setup-markdown, paste-sentences, or node-setup-catalog functions
+  And the result has no setup markdown content
+```
+
+### User story 3 — MCP server entry is the only shared wiring
+
+**As a** maintainer
+**I want** only the MCP server entry to import from both modules
+**So that** the boundary has one visible wiring point
+
+#### AC1 — wiring point
+
+```gherkin
+Scenario: Only the MCP server entry imports from both modules
+  When the import boundary check runs for the shared wiring
+  Then only src/mcp/create-server.ts and src/mcp/http-server.ts import from both the setup backend and the pack install backend
+  And no other file imports from both modules
+```
+
+---
+
+## `sdd-mcp-local-binary` — Local program ~/.sdd/sdd-mcp — Retired (ADR-131)
+
+**Retired.** ADR-131 removes the local program. No `~/.sdd/sdd-mcp` binary, no per-OS builds, no stdio writer. HTTP (Streamable HTTP on `/mcp`) is the only transport. The agent downloads a tarball and extracts listed files. The ACs below are retained for reference only and do not apply to the first release.
 
 ### User story 1 — Host binary speaks MCP and writes the pack
 
@@ -1285,13 +1394,128 @@ Scenario: Source does not embed operator secrets
 
 ---
 
+<a id="sdd-mcp-writer-stdout"></a>
+
+## `sdd-mcp-writer-stdout` — Writer stdout reports — Retired (ADR-131)
+
+**Retired.** ADR-131 removes the writer binary. No stdout contract, no `accepted_root` to echo, no `--write` mode. The agent downloads a tarball and extracts listed files. The server returns the resolved root and file list in the tool result. The ACs below are retained for reference only and do not apply to the first release.
+
+### User story — The agent can confirm where files landed
+
+**As an** agent running the writer binary
+**I want** the writer stdout to name the accepted root and the written files
+**So that** I can detect a wrong `--client` or `--os` before I trust the result
+
+#### AC1
+
+```gherkin
+Scenario: Apply prints the accepted root and the file list
+  Given the writer runs --write with a known client and a known os
+  And the server plan is apply
+  When the writer copies the planned files
+  Then the stdout is valid JSON
+  And the stdout action is apply
+  And the stdout includes accepted_root as an absolute path
+  And the stdout includes commit and version
+  And the stdout includes files as a list of written paths
+```
+
+#### AC2
+
+```gherkin
+Scenario: Rewrite ledger prints the accepted root and the file list
+  Given the writer runs --write with a known client and a known os
+  And the server plan is rewrite_ledger
+  When the writer rewrites the ledger
+  Then the stdout is valid JSON
+  And the stdout action is rewrite_ledger
+  And the stdout includes accepted_root, commit, version, and files
+```
+
+#### AC3
+
+```gherkin
+Scenario: Noop prints the accepted root only
+  Given the writer runs --write with a known client and a known os
+  And the server plan is noop
+  When the writer exits without copying files
+  Then the stdout is valid JSON
+  And the stdout action is noop
+  And the stdout includes accepted_root
+  And the stdout does not include files
+```
+
+#### AC4
+
+```gherkin
+Scenario: A wrong client or os is visible from the stdout
+  Given the agent passes --client trae and --os darwin
+  And the path table maps trae to ~/.trae/
+  When the writer runs --write
+  Then the stdout accepted_root is under ~/.trae/
+  And the agent can detect that the root does not match the intended TRAE CN root
+```
+
+---
+
+<a id="sdd-mcp-empty-cache"></a>
+
+## `sdd-mcp-empty-cache` — Empty cache returns an empty framework — Retired (ADR-131)
+
+**Retired.** ADR-131 replaces the empty-cache behavior with bundled pack fallback. When the cache is empty or has a fixture commit, the server reads the bundled pack under `pack.framework.sdd.works/`. The agent never sees `cache_empty`, `fixture_pack`, or `sync_pending`. The server always returns a plan. The ACs below are retained for reference only and do not apply to the first release.
+
+### User story — Install proceeds without error on an empty cache
+
+**As an** agent calling install before the operator synced the pack
+**I want** the tool to return an empty framework, not an error
+**So that** I do not fail and do not name a git host to the user
+
+#### AC1
+
+```gherkin
+Scenario: Empty cache returns an empty framework
+  Given the pack cache is empty
+  When sdd_install_framework runs
+  Then the result code is not sync_pending
+  And the result has zero files
+  And the result has an empty ledger
+  And pack_complete is true
+  And cache_empty is true
+  And the result does not name a git host or a repository
+```
+
+#### AC2
+
+```gherkin
+Scenario: The agent writes nothing on an empty cache
+  Given the pack cache is empty
+  When sdd_install_framework returns an empty framework
+  Then the agent does not write .sdd-installed.json
+  And the agent does not write any pack file
+  And the agent tells the user to sync the pack on the admin portal
+```
+
+#### AC3
+
+```gherkin
+Scenario: The next install after a sync gets real files
+  Given the pack cache was empty
+  And the operator synced the pack on the admin portal
+  When sdd_install_framework runs again
+  Then the result has real files
+  And cache_empty is not true
+  And the agent writes the pack files and the ledger
+```
+
+---
+
 <a id="mcp-github-release"></a>
 
-## `mcp-github-release` — Tagged release ships sdd-mcp (feature-80 / MCP-06)
+## `mcp-github-release` — Tagged release ships sdd-mcp — Retired (ADR-131)
 
-**Plain summary:** A version tag can publish the five program files for operators. Setup and `sdd_install_framework` do not name that release. The agent download link is the pack on this server. The MCP entry stays a URL.
+**Plain summary (current work is [feature-80 / MCP-06](../product-backlog.md#pb-104), not this section):** Visitors connect with a **URL only** (`https://sdd.works/mcp`). Pack files come from a **tarball on this portal**, not from a GitHub Release and not from a local `sdd-mcp` binary. See [ADR-131](../adr/ADR-131-http-only-install-bundled-fallback.md) and [`sdd-mcp-url-plan`](#sdd-mcp-url-plan).
 
-**Parent PBI:** [MCP-06](../product-backlog.md#L332). **Design:** [ADR-058](../adr/ADR-058-stdio-end-user-http-fallback.md), [`mcp-design.md`](./mcp-design.md) §2.1. **Tests:** [`mcp-tests.md`](./mcp-tests.md#9-sprint-9-mcp-06-and-mcp-07) §9.1.
+**Retired.** ADR-131 removes the local program. No per-OS binaries to publish on a GitHub release. The ACs below are kept for history only.
 
 ### User story — Operator publishes installers on GitHub
 
@@ -1344,7 +1568,7 @@ Scenario: A missing local program still uses the URL
 
 **Plain summary:** On the live portal, Admin → Framework → Sync with git repository must refresh the pack tree that MCP install, lite file links, and package APIs read. That includes `lite-pack.allowlist.json` at the pack root.
 
-**Parent PBI:** [MCP-07](../product-backlog.md#L335). **Portal:** Admin Framework sync ([Web-portal-26](../product-backlog.md#pb-123) **Done**). **Tests:** [`mcp-tests.md`](./mcp-tests.md#9-sprint-9-mcp-06-and-mcp-07) §9.2; closes [Spec-seeds-15](../product-backlog.md#pb-97) when verified in production.
+**Parent PBI:** [MCP-07](../product-backlog.md#pb-105). **Portal:** Admin Framework sync ([Web-portal-26](../product-backlog.md#pb-123) **Done**). **Design:** [`mcp-design.md`](./mcp-design.md#25-production-pack-sync-feature-82--mcp-07) §2.5. **Tests:** [`mcp-tests.md`](./mcp-tests.md#15-feature-82-production-pack-sync) §15; closes [Spec-seeds-15](../product-backlog.md#pb-97) when verified in production.
 
 ### User story — Live install uses the synced pack commit
 
@@ -1365,22 +1589,35 @@ Scenario: Sync materializes pack files in production cache
 #### AC2 — feature-82
 
 ```gherkin
-Scenario: Install APIs read sync cache not live GitHub per request
-  Given production finished a successful Framework sync
-  When a client calls package resolution or lite file list APIs
-  Then responses are built from the synced cache volume
-  And a missing sync does not silently serve an empty allow-list
+Scenario: Lite and package APIs read the sync cache only
+  Given production finished a successful Framework sync with a real pack commit
+  When a client calls GET /api/sdd/lite/files or GET /api/sdd/package
+  Then responses are built from the synced cache volume (SDD_PACKAGE_CACHE_DIR)
+  And the handler does not call GitHub at request time
+
+Scenario: Missing sync or allow-list fails visibly
+  Given the package cache has no manifest
+  When a client calls GET /api/sdd/lite/files
+  Then the response status is 409
+  And the error code is sync_pending
+  Given the cache unpack exists but lite-pack.allowlist.json is absent at the pack root
+  When a client calls GET /api/sdd/lite/files
+  Then the response status is 404
+  And the error code is lite_manifest_missing
+  And the body does not return an empty files array with status 200
 ```
+
+**Note:** HTTP MCP install (`sdd_install_framework`) may still read the bundled pack when the cache is empty or holds a fixture commit ([ADR-131](../adr/ADR-131-http-only-install-bundled-fallback.md)). feature-82 verifies that production sync populated the cache so live install and lite routes serve the GitHub pack, not the fixture stub or bundled fallback alone.
 
 ---
 
 <a id="sdd-mcp-url-plan"></a>
 
-## `sdd-mcp-url-plan` — URL MCP and server write plan (ADR-129)
+## `sdd-mcp-url-plan` — URL MCP and tarball install (ADR-129, ADR-131)
 
-**Plain summary:** The person pastes one sentence. The agent registers `https://sdd.works/mcp` and replaces an older `framework.sdd.works` entry with that URL. Install asks the server for a plan. The local program writes the plan. When that program cannot run, the agent sends the ledger and writes the same plan.
+**Plain summary:** The person pastes one sentence. The agent registers `https://sdd.works/mcp`. Install calls the server, which validates the root, checks cache or bundled pack, and returns a plan with a tarball URL. The agent downloads the tarball, extracts listed paths, and writes the ledger last. No writer binary, no `accepted_root`, no `writer_required`.
 
-Design: [`mcp-design.md`](./mcp-design.md) **Target (ADR-129)**. Tests: [`mcp-tests.md`](./mcp-tests.md#10-adr-129-url-plan).
+Design: [`mcp-design.md`](./mcp-design.md). Tests: [`mcp-tests.md`](./mcp-tests.md#10-adr-129-url-plan).
 
 ### User story — Paste registers the URL
 
@@ -1409,21 +1646,21 @@ Scenario: An existing entry becomes the URL
   And the command path is gone
 ```
 
-### User story — The program writes the server plan
+### User story — The agent downloads the tarball and writes listed files
 
 **As a** person installing the framework
-**I want** the local program to write the files the server names
+**I want** the agent to download the tarball and extract the listed files
 **So that** my own files stay when the pack is already current
 
 #### AC3
 
 ```gherkin
-Scenario: Matching ledger and present files skip the copy
+Scenario: Matching ledger and present files return noop
   Given .sdd-installed.json has the same version and commit as the pack
   And every recorded path exists
-  When the local program sends that ledger and an empty missing list
-  Then the server plan is noop
-  And the program does not change pack files
+  When the agent calls sdd_install_framework with that ledger
+  Then the result is noop
+  And the agent does not change pack files
 ```
 
 #### AC4
@@ -1432,93 +1669,107 @@ Scenario: Matching ledger and present files skip the copy
 Scenario: A missing recorded file is repaired
   Given .sdd-installed.json lists skills/tdd/SKILL.md
   And that file is absent
-  When the local program sends the ledger and missing includes skills/tdd/SKILL.md
-  Then the server plan is apply
-  And the program writes that file and writes the ledger last with pack_complete true
+  When the agent calls sdd_install_framework with the ledger and missing includes skills/tdd/SKILL.md
+  Then the result is apply
+  And the agent downloads the tarball, writes that file, and writes the ledger last with pack_complete true
 ```
 
 #### AC5
 
 ```gherkin
 Scenario: A path outside the home is rejected
-  Given the candidate client root is outside the home directory
-  When the local program checks the root
+  Given the agent sends a root outside the home directory
+  When the server validates the root
   Then the result code is path_rejected
+  And no tarball URL is returned
   And no pack file is written
 ```
-
-### User story — The agent writes only when the program cannot run
-
-**As a** person whose machine cannot run the local program
-**I want** the agent to install from the same plan
-**So that** the file set matches a program install
 
 #### AC6
 
 ```gherkin
-Scenario: Fallback sends the ledger and writes planned paths
-  Given the local program cannot be downloaded or cannot run
-  And .sdd-installed.json exists
-  When the agent sends that ledger and the missing list
-  Then the server returns the plan, the instruction, and the pack URL
+Scenario: Known client omits root; unknown client sends validated root
+  When the agent calls sdd_install_framework for a known client with client and os only
+  Then the server uses the seed-map root
+  And the result includes the resolved seed-map root
   And the agent writes only the paths in the plan
   And the agent writes the ledger last
   And the agent does not extract the archive into the client root
-  And the call sets accepted_root to the candidate folder when the agent has one
+  Given the client is not in the seed map
+  When the agent first calls without root
+  Then the result code is root_required
+  When the agent retries with a valid root inside the home directory
+  Then the server uses that root
 ```
 
 #### AC7
 
 ```gherkin
 Scenario: No ledger is a first install
-  Given the local program cannot run
-  And .sdd-installed.json is absent
-  When the agent sends ledger absent and an empty missing list
-  Then the server plan is apply for the pack allow-list
-  And the agent writes those paths and the ledger last
+  Given .sdd-installed.json is absent
+  When the agent calls sdd_install_framework with no ledger
+  Then the result is apply for the pack allow-list
+  And the agent downloads the tarball, writes those paths, and writes the ledger last
 ```
 
 #### AC8 — MC-02
 
 ```gherkin
-Scenario: Install with no inventory names the pack on this server
-  Given the caller sends no inventory
-  And the pack cache is younger than 30 minutes
+Scenario: Install names the tarball on this server
+  Given the caller sends client, os, and root or no root
+  And the pack cache is not empty
   When sdd_install_framework runs
-  Then the result code is writer_required
-  And packageUrl is the pack on this server
+  Then the result includes a tarball URL on this server
   And the result does not name a git host or a repository
+  And the result does not include writer_required
+```
+
+#### AC8b — Bundled fallback (ADR-131)
+
+```gherkin
+Scenario: An empty cache falls back to the bundled pack
+  Given the pack cache is empty or has a fixture commit
+  When sdd_install_framework runs
+  Then the server reads the bundled pack under pack.framework.sdd.works/
+  And the result is apply with files from the bundled pack
+  And the result does not return cache_empty or fixture_pack
+  And the result does not name a git host or a repository
+  And the agent writes the files and the ledger
 ```
 
 #### AC9 — MC-04
 
 ```gherkin
-Scenario: A known client keeps the path-table root
-  Given the client is codebuddy
-  And the candidate root is a different folder inside the home directory
-  When the local program checks the root
-  Then the accepted root is the path-table root for codebuddy
-  And the candidate folder is not written
+Scenario: An unknown client with an agent-sent root uses that root
+  Given the client is not in the seed map
+  And the agent sends a root inside the home directory
+  When the server validates the root
+  Then the server uses the agent-sent root
+  And the result includes that root
 ```
 
 #### AC10 — MC-04
 
 ```gherkin
 Scenario: A parent segment or a system path is rejected
-  Given the candidate root contains .. or is /etc, /usr, /bin, or /sbin
-  When the local program checks the root
+  Given the agent sends a root containing .. or /etc, /usr, /bin, or /sbin
+  When the server validates the root
   Then the result code is path_rejected
+  And no tarball URL is returned
   And no pack file is written
 ```
 
-#### AC11 — MC-05
+#### AC11 — MC-05, ADR-132
 
 ```gherkin
-Scenario: The plan request records the accepted root
-  Given the local program accepted a client root
-  When it posts the install plan
-  Then the body includes that accepted root, the ledger, the client, the operating system, and missing
+Scenario: The plan request carries root only for unknown clients after root_required
+  When the agent calls sdd_install_framework for a known client
+  Then the body includes the client, the operating system, and the ledger or no ledger
+  And the body does not include root
   And the body does not include file contents
+  When the client is unknown and the person supplied a root
+  Then the body includes root
+  And the server validates that root
 ```
 
 #### AC12 — MC-03
@@ -1533,37 +1784,39 @@ Scenario: The latest pack is a git commit from the pack repository
   And a practice GitHub port does not replace latestCommit in the portal process
 ```
 
-#### AC13 — MC-06
+#### AC13 — MC-06, ADR-131
 
 ```gherkin
-Scenario: A fixture pack is not written
+Scenario: A fixture commit falls back to the bundled pack
   Given the cached commit is sha-v1.0.0 or the cached tarball is the fixture file set
   When sdd_install_framework runs
-  Then the result code is fixture_pack
-  And no client file is written
+  Then the server reads the bundled pack under pack.framework.sdd.works/
+  And the result is apply with files from the bundled pack
+  And no client file is written from the fixture
+  And the result does not return fixture_pack
 ```
 
-#### AC14 — MC-01
+#### AC14 — MC-01, ADR-131
 
 ```gherkin
-Scenario: The built program refuses a stale cache
-  Given each dist sdd-mcp file and the home .sdd/sdd-mcp file are built from the current source
-  When a cache older than 30 minutes is offered to --write
-  Then the program exits without copying files
-  And the program output names cache_stale
-```
-
-#### AC15 — MC-11
-
-```gherkin
-Scenario: The install tool result names the writer flags
-  Given the caller sends no inventory
-  And the pack cache is younger than 30 minutes
+Scenario: No writer binary to be older than source
+  Given the server source is current
   When sdd_install_framework runs
-  Then the instructions name --write, --client, --os, and --client-root
-  And the instructions name SDD_SERVER_URL
-  And the instructions tell the agent to set accepted_root to the candidate folder when the program cannot run
-  And the instructions do not name a git host
+  Then there is no writer binary to build or version
+  And the result includes a tarball URL and the file list
+  And the agent writes the files and the ledger
+```
+
+#### AC15 — MC-11, ADR-131
+
+```gherkin
+Scenario: The install tool result gives a tarball URL
+  Given the caller sends client, os, and root or no root
+  And the pack cache is not empty
+  When sdd_install_framework runs
+  Then the result includes a tarball URL on this server
+  And the result does not name --write, --client, --os, --client-root, SDD_SERVER_URL, or accepted_root
+  And the result does not name a git host
 ```
 
 #### AC16 — MC-07

@@ -4,7 +4,6 @@ import {
   createFixtureGitHubPort,
   fetchRepoTreeCached,
   flatPathsToTree,
-  getGitHubPort,
   getGitHubPortForRepo,
   setGitHubPortForTests,
 } from "./sync";
@@ -31,18 +30,19 @@ describe("fixture GitHub port", () => {
   });
 
   it("should_ignore_GITHUB_FIXTURE_and_a_fixture_owner", () => {
-    const nodeEnv = process.env.NODE_ENV;
-    const token = process.env.GITHUB_TOKEN;
-    process.env.GITHUB_FIXTURE = "1";
-    process.env.NODE_ENV = "production";
-    delete process.env.GITHUB_TOKEN;
+    const env = process.env as Record<string, string | undefined>;
+    const nodeEnv = env.NODE_ENV;
+    const token = env.GITHUB_TOKEN;
+    env.GITHUB_FIXTURE = "1";
+    env.NODE_ENV = "production";
+    delete env.GITHUB_TOKEN;
     try {
       expect(() => getGitHubPortForRepo("fixture")).toThrow(/GITHUB_TOKEN/);
     } finally {
-      if (nodeEnv === undefined) delete process.env.NODE_ENV;
-      else process.env.NODE_ENV = nodeEnv;
-      if (token === undefined) delete process.env.GITHUB_TOKEN;
-      else process.env.GITHUB_TOKEN = token;
+      if (nodeEnv === undefined) delete env.NODE_ENV;
+      else env.NODE_ENV = nodeEnv;
+      if (token === undefined) delete env.GITHUB_TOKEN;
+      else env.GITHUB_TOKEN = token;
     }
   });
 

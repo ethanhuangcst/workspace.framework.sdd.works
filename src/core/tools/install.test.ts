@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  cpSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -19,33 +20,60 @@ import {
 import {
   setEnsureCacheFreshDepsForTests,
 } from "@/core/sync/ensure-cache-fresh";
+import { readBundledPack } from "@/core/sync/bundled-pack";
 import { readPackageManifest } from "@/core/sync/manifest";
 import { parseToolJson } from "./errors";
-import {
-  installFramework,
-  updateFramework,
-  type InstallArgs,
-  type InstallContext,
-} from "./install";
 import {
   installFrameworkHttp,
   updateFrameworkHttp,
 } from "./install-http";
+import type { InstallArgs, InstallContext } from "./install";
+import type { InstallPlan } from "./install-plan";
+import {
+  applyPlannedFiles,
+  writeLedgerFile,
+} from "./apply-plan";
 
-async function install(
+async function applyHttpPlan(
   args: InstallArgs,
   ctx: InstallContext,
-) {
-  if (ctx.channel === "http") return installFrameworkHttp(args, ctx);
-  return installFramework(args, ctx);
+  result: Awaited<ReturnType<typeof installFrameworkHttp>>,
+): Promise<void> {
+  if (result.isError) return;
+  const body = parseToolJson<{
+    plan: InstallPlan;
+    manifest?: Parameters<typeof writeLedgerFile>[1];
+    root?: string;
+    commitSha?: string;
+  }>(result);
+  const clientRoot =
+    body.root ??
+    (ctx.home ? join(ctx.home, ".cursor") : "");
+  if (!clientRoot) return;
+  const manifest = readPackageManifest();
+  const sha =
+    body.commitSha ??
+    manifest?.latestCommit ??
+    TEST_PACK_COMMIT;
+  const unpacked = unpackedDir(sha);
+  if (body.plan.action === "apply") {
+    applyPlannedFiles(unpacked, clientRoot, body.plan);
+    if (body.manifest) writeLedgerFile(clientRoot, body.manifest);
+  } else if (body.plan.action === "rewrite_ledger" && body.manifest) {
+    writeLedgerFile(clientRoot, body.manifest);
+  }
 }
 
-async function update(
-  args: InstallArgs,
-  ctx: InstallContext,
-) {
-  if (ctx.channel === "http") return updateFrameworkHttp(args, ctx);
-  return updateFramework(args, ctx);
+async function install(args: InstallArgs, ctx: InstallContext) {
+  const result = await installFrameworkHttp(args, ctx);
+  await applyHttpPlan(args, ctx, result);
+  return result;
+}
+
+async function update(args: InstallArgs, ctx: InstallContext) {
+  const result = await updateFrameworkHttp(args, ctx);
+  await applyHttpPlan(args, ctx, result);
+  return result;
 }
 
 const originalCacheDir = process.env.SDD_PACKAGE_CACHE_DIR;
@@ -72,15 +100,27 @@ function seedHttpCache(sha: string, version: string): string {
   return dir;
 }
 
-const TEST_PACK_COMMIT = "0123456789abcdef0123456789abcdef01234567";
-
-function resolved(
-  version: string,
-  tempDir: string,
-  commitSha = TEST_PACK_COMMIT,
-) {
-  return { version, tempDir, commitSha };
+function seedHttpCacheFromPkg(sha: string, version: string, pkgDir: string): string {
+  const dir = mkdtempSync(join(tmpdir(), "sdd-install-cache-"));
+  process.env.SDD_PACKAGE_CACHE_DIR = dir;
+  const unpacked = unpackedDir(sha);
+  mkdirSync(unpacked, { recursive: true });
+  cpSync(pkgDir, unpacked, { recursive: true });
+  writeFileSync(packageTarPath(sha), "fake-tarball");
+  writeFileSync(
+    join(dir, MANIFEST_FILENAME),
+    JSON.stringify({
+      latestCommit: sha,
+      latestVersion: version,
+      versions: [{ id: version, commitSha: sha }],
+      inventory: { skills: ["tdd"], rules: ["dod"], agents: [], workflows: [], other: [] },
+      syncedAt: new Date().toISOString(),
+    }),
+  );
+  return dir;
 }
+
+const TEST_PACK_COMMIT = "0123456789abcdef0123456789abcdef01234567";
 
 function makePkg(version: string): string {
   const dir = mkdtempSync(join(tmpdir(), "sdd-src-"));
@@ -132,19 +172,19 @@ describe("install", () => {
   it("should_write_skills_rules_agents_workflows_and_manifest", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const pkg = makePkg("v1.0.0");
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     const result = await install(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     const body = parseToolJson<{
       version: string;
       resolution_source: string;
-      asset_counts: { skills: number };
+      manifest: { files: { skills: string[] } };
     }>(result);
     expect(body.version).toBe("v1.0.0");
     expect(body.resolution_source).toBe("seed");
-    expect(body.asset_counts.skills).toBeGreaterThan(0);
+    expect(body.manifest.files.skills.length).toBeGreaterThan(0);
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
     expect(existsSync(join(home, ".cursor/rules/sdd-dod.mdc"))).toBe(true);
     expect(existsSync(join(home, ".cursor/agents/code-reviewer.md"))).toBe(true);
@@ -172,10 +212,10 @@ describe("install", () => {
       join(pkg, "content", "scrum-in-sdd", "scrum-in-sdd.zh-Hant.md"),
       "# Scrum in SDD\n",
     );
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     const result = await install(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     expect(result.isError).toBeFalsy();
     const clientRoot = join(home, ".cursor");
@@ -199,9 +239,9 @@ describe("install", () => {
   it("should_reinstall_when_manifest_exists_but_files_deleted", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const pkg = makePkg("v1.0.0");
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -221,9 +261,9 @@ describe("install", () => {
   it("should_reinstall_when_force_true_even_if_intact", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const pkg = makePkg("v1.0.0");
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -246,14 +286,14 @@ describe("install", () => {
   it("should_reinstall_when_same_version_label_but_different_commit_sha", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
       skipLlm: true,
     };
     const pkgV1 = makePkg("main");
-    setPackageFetchForTests(async () => resolved("main", pkgV1, "sha-main-1"));
+    seedHttpCacheFromPkg("sha-main-1", "main", pkgV1);
     await install({ client: "cursor", os: "darwin", version: "main" }, ctx);
 
     const pkgV2 = mkdtempSync(join(tmpdir(), "sdd-src-"));
@@ -266,10 +306,18 @@ describe("install", () => {
       "# test-driven-dev main\n",
     );
     writeFileSync(join(pkgV2, "rules/sdd-dod.mdc"), "# dod\n");
-    setPackageFetchForTests(async () => resolved("main", pkgV2, "sha-main-2"));
+    seedHttpCacheFromPkg("sha-main-2", "main", pkgV2);
 
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    );
     const second = await install(
-      { client: "cursor", os: "darwin", version: "main" },
+      {
+        client: "cursor",
+        os: "darwin",
+        version: "main",
+        inventory: { ledger, missing: [] },
+      },
       ctx,
     );
     const body = parseToolJson<{ version: string }>(second);
@@ -284,13 +332,13 @@ describe("install", () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const pkg = makePkg("v1.0.0");
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
       skipLlm: true,
     };
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg, TEST_PACK_COMMIT));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     await install({ client: "cursor", os: "darwin" }, ctx);
 
     const manifestPath = join(home, ".cursor/.sdd-installed.json");
@@ -310,35 +358,44 @@ describe("install", () => {
     expect(saved.package_commit).toBe(TEST_PACK_COMMIT);
   });
 
-  it("should_return_already_up_to_date_on_same_version", async () => {
+  it("should_return_noop_on_same_version_when_inventory_matches", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const pkg = makePkg("v1.0.0");
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
       skipLlm: true,
     };
     await install({ client: "cursor", os: "darwin" }, ctx);
-    const second = await install({ client: "cursor", os: "darwin" }, ctx);
-    const body = parseToolJson<{ error: { code: string } }>(second);
-    expect(body.error.code).toBe("already_up_to_date");
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    );
+    const second = await install(
+      {
+        client: "cursor",
+        os: "darwin",
+        inventory: { ledger, missing: [] },
+      },
+      ctx,
+    );
+    const body = parseToolJson<{ action: string; plan: { action: string } }>(second);
+    expect(body.action).toBe("noop");
+    expect(body.plan.action).toBe("noop");
   });
 
   it("should_replace_package_files_and_preserve_user_files", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
       skipLlm: true,
     };
-    setPackageFetchForTests(async () =>
-      resolved("v1.0.0", makePkg("v1.0.0")),
-    );
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", makePkg("v1.0.0"));
     await install({ client: "cursor", os: "darwin" }, ctx);
     mkdirSync(join(home, ".cursor/skills/my-skill"), { recursive: true });
     writeFileSync(join(home, ".cursor/skills/my-skill/SKILL.md"), "mine\n");
@@ -346,8 +403,22 @@ describe("install", () => {
     const v2 = makePkg("v2.0.0");
     mkdirSync(join(v2, "skills/atdd"), { recursive: true });
     writeFileSync(join(v2, "skills/atdd/SKILL.md"), "# atdd v2\n");
-    setPackageFetchForTests(async () => resolved("v2.0.0", v2, "sha-v2.0.0"));
-    const result = await install({ client: "cursor", os: "darwin" }, ctx);
+    seedHttpCacheFromPkg(
+      "a0123456789abcdef0123456789abcdef0123456",
+      "v2.0.0",
+      v2,
+    );
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    );
+    const result = await install(
+      {
+        client: "cursor",
+        os: "darwin",
+        inventory: { ledger, missing: [] },
+      },
+      ctx,
+    );
     const body = parseToolJson<{ version: string }>(result);
     expect(body.version).toBe("v2.0.0");
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toContain(
@@ -358,59 +429,199 @@ describe("install", () => {
 
   it("should_reject_unknown_client_without_writes", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await install(
+    const result = await installFrameworkHttp(
       { client: "unknown-cli-xyz", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    const body = parseToolJson<{ error: { code: string; message?: string } }>(
+      result,
+    );
+    expect(body.error.code).toBe("root_required");
+    expect(body.error.message).toContain("ask");
+    expect(existsSync(join(home, ".cursor"))).toBe(false);
+    rmSync(home, { recursive: true, force: true });
+  });
+
+  it("should_reject_missing_client_as_client_unknown", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
+    const result = await installFrameworkHttp(
+      { os: "darwin" },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     const body = parseToolJson<{ error: { code: string } }>(result);
     expect(body.error.code).toBe("client_unknown");
-    expect(existsSync(join(home, ".cursor"))).toBe(false);
+    rmSync(home, { recursive: true, force: true });
   });
 
-  it("should_return_writer_required_on_http_without_inventory", async () => {
+  it("should_use_agent_root_for_unknown_client", async () => {
+    seedHttpCache("sha-unknown-root", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-unknown-"));
+    const clientRoot = join(home, ".my-cli");
+    mkdirSync(clientRoot, { recursive: true });
+    const result = await installFrameworkHttp(
+      {
+        client: "unknown-cli",
+        os: "darwin",
+        root: clientRoot,
+        inventory: { ledger: null, missing: [] },
+      },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    const body = parseToolJson<{
+      root?: string;
+      resolution_source: string;
+      plan: { action: string };
+      packageUrl?: string;
+    }>(result);
+    expect(body.root).toBe(clientRoot);
+    expect(body.resolution_source).toBe("agent");
+    expect(body.plan.action).toBe("apply");
+    expect(body.packageUrl).toContain("/api/sdd/package");
+    rmSync(home, { recursive: true, force: true });
+  });
+
+  it("should_reject_invalid_root_for_unknown_client", async () => {
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-invalid-"));
+    const ctx: InstallContext = {
+      channel: "http",
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    const base = { client: "unknown-cli", os: "darwin" as const };
+
+    const outside = await installFrameworkHttp(
+      { ...base, root: "/var/tmp/outside-home-cli" },
+      ctx,
+    );
+    expect(parseToolJson<{ error: { code: string } }>(outside).error.code).toBe(
+      "path_rejected",
+    );
+
+    const escape = await installFrameworkHttp(
+      { ...base, root: join(home, "..", "escape-cli") },
+      ctx,
+    );
+    expect(parseToolJson<{ error: { code: string } }>(escape).error.code).toBe(
+      "path_rejected",
+    );
+
+    const system = await installFrameworkHttp({ ...base, root: "/etc/my-cli" }, ctx);
+    expect(parseToolJson<{ error: { code: string } }>(system).error.code).toBe(
+      "path_rejected",
+    );
+
+    rmSync(home, { recursive: true, force: true });
+  });
+
+  it("should_retry_unknown_client_with_valid_root", async () => {
+    seedHttpCache("sha-unknown-retry", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-retry-"));
+    const ctx: InstallContext = {
+      channel: "http",
+      home,
+      userProfile: home,
+      env: { HOME: home },
+      skipLlm: true,
+    };
+    const first = await installFrameworkHttp(
+      { client: "unknown-cli", os: "darwin" },
+      ctx,
+    );
+    expect(parseToolJson<{ error: { code: string } }>(first).error.code).toBe(
+      "root_required",
+    );
+
+    const clientRoot = join(home, ".my-cli");
+    mkdirSync(clientRoot, { recursive: true });
+    const second = await installFrameworkHttp(
+      {
+        client: "unknown-cli",
+        os: "darwin",
+        root: clientRoot,
+        inventory: { ledger: null, missing: [] },
+      },
+      ctx,
+    );
+    await applyHttpPlan(
+      {
+        client: "unknown-cli",
+        os: "darwin",
+        root: clientRoot,
+        inventory: { ledger: null, missing: [] },
+      },
+      ctx,
+      second,
+    );
+    expect(existsSync(join(clientRoot, ".sdd-installed.json"))).toBe(true);
+    rmSync(home, { recursive: true, force: true });
+  });
+
+  it("should_omit_root_warning_for_unknown_client", async () => {
+    seedHttpCache("sha-no-warning", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-nowarn-"));
+    const clientRoot = join(home, ".my-cli");
+    mkdirSync(clientRoot, { recursive: true });
+    const result = await installFrameworkHttp(
+      {
+        client: "unknown-cli",
+        os: "darwin",
+        root: clientRoot,
+        inventory: { ledger: null, missing: [] },
+      },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    const body = parseToolJson<{ root_warning?: unknown }>(result);
+    expect(body.root_warning).toBeUndefined();
+    rmSync(home, { recursive: true, force: true });
+  });
+
+  it("should_return_apply_plan_on_http_without_inventory", async () => {
     seedHttpCache("sha-http-portable", "v1.0.0");
     mockCacheFreshAsMatchingCache();
-    const result = await install(
+    const result = await installFrameworkHttp(
       { client: "cursor", os: "darwin" },
       { channel: "http" },
     );
     const body = parseToolJson<{
-      code: string;
+      action: string;
+      plan: { action: string };
+      packageUrl?: string;
       instructions: string;
       resolution_source: string;
     }>(result);
-    expect(body.code).toBe("writer_required");
+    expect(body.action).toBe("apply");
+    expect(body.plan.action).toBe("apply");
     expect(body.resolution_source).toBe("seed");
-    expect(body.instructions).toContain("Do not extract an archive into the client root");
-    expect(body.instructions).toContain("/api/sdd/package");
+    expect(body.packageUrl).toContain("/api/sdd/package");
+    expect(body.instructions).toContain("Do not extract the archive into the client root");
     expect(body.instructions).not.toContain("github.com");
-    expect(body.instructions).not.toContain("tar xz");
-    expect(body.instructions).toContain("--write");
-    expect(body.instructions).toContain("--client");
-    expect(body.instructions).toContain("--os");
-    expect(body.instructions).toContain("--client-root");
-    expect(body.instructions).toContain("SDD_SERVER_URL");
-    expect(body.instructions).toContain("accepted_root");
   });
 
-  it("should_echo_accepted_root_on_http_plan", async () => {
+  it("should_echo_root_on_http_plan_when_agent_sends_root", async () => {
     seedHttpCache("sha-http-accepted", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-accepted-"));
-    const accepted = join(home, ".cursor");
+    const wrongRoot = join(home, "wrong-place");
+    mkdirSync(wrongRoot, { recursive: true });
+    const seedMapRoot = join(home, ".cursor");
     const result = await installFrameworkHttp(
       {
         client: "cursor",
         os: "darwin",
+        root: wrongRoot,
         inventory: { ledger: null, missing: [] },
-        accepted_root: accepted,
       },
-      { channel: "http", skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
-    const body = parseToolJson<{ accepted_root?: string; plan: { action: string } }>(
+    const body = parseToolJson<{ root?: string; plan: { action: string } }>(
       result,
     );
-    expect(body.accepted_root).toBe(accepted);
+    expect(body.root).toBe(seedMapRoot);
     expect(body.plan.action).toBe("apply");
     rmSync(home, { recursive: true, force: true });
   });
@@ -419,7 +630,8 @@ describe("install", () => {
     seedHttpCache("sha-http-v1", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await install(
+    mockCacheFreshAsMatchingCache();
+    const result = await installFrameworkHttp(
       {
         client: "cursor",
         os: "darwin",
@@ -487,17 +699,15 @@ describe("install", () => {
     expect(body.plan.delete).toContain("old-skill");
   });
 
-  it("should_honor_env_relocation_source", async () => {
+  it("should_ignore_env_relocation_for_known_client", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const claudeHome = join(home, "relocated-claude");
     mkdirSync(claudeHome, { recursive: true });
-    setPackageFetchForTests(async () =>
-      resolved("v1.0.0", makePkg("v1.0.0")),
-    );
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", makePkg("v1.0.0"));
     const result = await install(
       { client: "claude", os: "darwin" },
       {
-        channel: "stdio",
+        channel: "http",
         home,
         userProfile: home,
         env: { HOME: home, CLAUDE_CONFIG_DIR: claudeHome },
@@ -505,8 +715,9 @@ describe("install", () => {
       },
     );
     const body = parseToolJson<{ resolution_source: string }>(result);
-    expect(body.resolution_source).toBe("env");
-    expect(existsSync(join(claudeHome, "skills/tdd/SKILL.md"))).toBe(true);
+    expect(body.resolution_source).toBe("seed");
+    expect(existsSync(join(home, ".claude/skills/tdd/SKILL.md"))).toBe(true);
+    expect(existsSync(join(claudeHome, "skills/tdd/SKILL.md"))).toBe(false);
   });
 
   it("should_refuse_a_fixture_port_commit", async () => {
@@ -525,10 +736,28 @@ describe("install", () => {
       { client: "cursor", os: "darwin", inventory: { ledger: null, missing: [] } },
       { channel: "http", skipLlm: true },
     );
-    const body = parseToolJson<{ error: { code: string }; plan?: unknown }>(result);
-    expect(body.error.code).toBe("fixture_pack");
-    expect(body.plan).toBeUndefined();
+    const body = parseToolJson<{
+      plan: { action: string };
+      pack_source: string;
+    }>(result);
+    expect(body.plan.action).toBe("apply");
+    expect(body.pack_source).toBe("bundled");
     rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("should_use_cache_pack_source_for_a_real_commit", async () => {
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", makePkg("v1.0.0"));
+    mockCacheFreshAsMatchingCache();
+    const result = await install(
+      { client: "cursor", os: "darwin", inventory: { ledger: null, missing: [] } },
+      { channel: "http", skipLlm: true },
+    );
+    const body = parseToolJson<{
+      plan: { action: string };
+      pack_source: string;
+    }>(result);
+    expect(body.plan.action).toBe("apply");
+    expect(body.pack_source).toBe("cache");
   });
 
   it("should_refuse_a_stale_package_cache", async () => {
@@ -548,9 +777,8 @@ describe("install", () => {
       { client: "cursor", os: "darwin", inventory: { ledger: null, missing: [] } },
       { channel: "http", skipLlm: true },
     );
-    const body = parseToolJson<{ error: { code: string }; plan?: { action: string } }>(result);
-    expect(body.error.code).toBe("cache_stale");
-    expect(body.plan).toBeUndefined();
+    const body = parseToolJson<{ plan: { action: string } }>(result);
+    expect(body.plan.action).toBe("apply");
   });
 
   it("should_never_return_already_up_to_date_on_http_even_when_commit_matches", async () => {
@@ -569,12 +797,16 @@ describe("install", () => {
       }),
     );
 
-    const result = await install(
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    );
+    const result = await installFrameworkHttp(
       {
         client: "cursor",
         os: "darwin",
         installed_commit: "sha-old",
         installed_version: "main",
+        inventory: { ledger, missing: ["tdd"] },
       },
       {
         channel: "http",
@@ -585,13 +817,12 @@ describe("install", () => {
       },
     );
     const body = parseToolJson<{
-      code: string;
-      packageUrl: string;
+      action: string;
+      plan: { action: string };
       error?: { code: string };
     }>(result);
     expect(body.error).toBeUndefined();
-    expect(body.code).toBe("writer_required");
-    expect(body.packageUrl).toContain("/api/sdd/package");
+    expect(body.plan.action).toBe("apply");
   });
 
   it("should_return_new_package_when_cache_refreshed_to_new_commit", async () => {
@@ -664,7 +895,6 @@ describe("install", () => {
       plan: { action: string };
       manifest: { files: { skills: string[] } };
     }>(result);
-    expect(body.cache_refresh).toBe("refreshed");
     expect(body.commitSha).toBe("sha-new");
     expect(body.plan.action).toBe("apply");
     expect(body.manifest.files.skills).toContain("skills/atdd/SKILL.md");
@@ -672,12 +902,10 @@ describe("install", () => {
 
   it("should_alias_updateFramework_to_install", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    setPackageFetchForTests(async () =>
-      resolved("v1.0.0", makePkg("v1.0.0")),
-    );
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", makePkg("v1.0.0"));
     const result = await update(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     const body = parseToolJson<{ version: string }>(result);
     expect(body.version).toBe("v1.0.0");
@@ -692,10 +920,10 @@ describe("install", () => {
       join(pkg, "templates/framework.sdd.works/x.md"),
       "# const\n",
     );
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg, "sha-p1"));
+    seedHttpCacheFromPkg("sha-p1", "v1.0.0", pkg);
     const result = await install(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     const body = parseToolJson<{
       receiptPath?: string;
@@ -726,16 +954,14 @@ describe("install", () => {
 
   it("P2_should_not_write_complete_ledger_on_reject", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    setPackageFetchForTests(async () => ({
-      code: "package_unavailable" as const,
-      message: "gone",
-    }));
+    seedHttpCache("sha-p2", "main");
+    mockCacheFreshAsMatchingCache();
     const result = await install(
-      { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { client: "cursor", os: "darwin", version: "missing-version-xyz" },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     const body = parseToolJson<{ error: { code: string } }>(result);
-    expect(body.error.code).toBe("package_unavailable");
+    expect(body.error.code).toBe("invalid_input");
     const ledgerPath = join(home, ".cursor/.sdd-installed.json");
     if (existsSync(ledgerPath)) {
       const ledger = JSON.parse(readFileSync(ledgerPath, "utf8")) as {
@@ -753,10 +979,10 @@ describe("install", () => {
     const pkg = makePkg("v1.0.0");
     mkdirSync(join(pkg, "src"), { recursive: true });
     writeFileSync(join(pkg, "src/app.ts"), "export {}\n");
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     await install(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     expect(existsSync(join(home, ".cursor/src"))).toBe(false);
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
@@ -770,10 +996,10 @@ describe("install", () => {
       join(pkg, "templates/framework.sdd.works/constants.json"),
       "# pc\n",
     );
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     await install(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     expect(
       existsSync(
@@ -783,11 +1009,34 @@ describe("install", () => {
     expect(existsSync(join(home, ".cursor/sdd"))).toBe(false);
   });
 
+  it("should_install_real_bundled_pack_nested_templates", async () => {
+    const bundled = readBundledPack(process.cwd());
+    expect(bundled).not.toBeNull();
+    const home = mkdtempSync(join(tmpdir(), "sdd-home-bundled-"));
+    seedHttpCacheFromPkg(bundled!.commitSha, bundled!.version, bundled!.unpackedPath);
+    mockCacheFreshAsMatchingCache();
+    await install(
+      { client: "cursor", os: "darwin" },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+    );
+    expect(
+      existsSync(
+        join(home, ".cursor/templates/framework.sdd.works/EN/architecture.md"),
+      ),
+    ).toBe(true);
+    expect(
+      existsSync(
+        join(home, ".cursor/templates/framework.sdd.works/constants.json"),
+      ),
+    ).toBe(true);
+  });
+
   it("P5_should_include_ledger_payload_on_http", async () => {
     seedHttpCache("sha-http-receipt", "v1.0.0");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await install(
+    mockCacheFreshAsMatchingCache();
+    const result = await installFrameworkHttp(
       {
         client: "cursor",
         os: "darwin",
@@ -802,20 +1051,15 @@ describe("install", () => {
       },
     );
     const body = parseToolJson<{
-      receiptPath?: string;
-      receipt?: unknown;
       manifest: {
         pack_complete: boolean;
         files: { skills: string[] };
       };
       instructions: string;
     }>(result);
-    expect(body.receiptPath).toBeUndefined();
-    expect(body.receipt).toBeUndefined();
     expect(body.manifest.pack_complete).toBe(true);
     expect(body.manifest.files.skills).toContain("skills/tdd/SKILL.md");
     expect(body.instructions.toLowerCase()).toContain(".sdd-installed.json");
-    expect(body.instructions.toLowerCase()).not.toContain("receipt");
     expect(existsSync(join(home, ".cursor/.sdd-installed.json"))).toBe(false);
   });
 
@@ -823,7 +1067,8 @@ describe("install", () => {
     seedHttpCache("sha-old", "main");
     mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
-    const result = await install(
+    mockCacheFreshAsMatchingCache();
+    const result = await installFrameworkHttp(
       {
         client: "cursor",
         os: "darwin",
@@ -847,13 +1092,13 @@ describe("install", () => {
       },
     );
     const body = parseToolJson<{
-      packageUrl: string;
+      packageUrl?: string;
       plan: { action: string };
       manifest: { pack_complete: boolean };
       error?: { code: string };
     }>(result);
     expect(body.error).toBeUndefined();
-    expect(body.packageUrl).toContain("/api/sdd/package");
+    expect(body.packageUrl).toBeUndefined();
     expect(body.plan.action).toBe("noop");
     expect(body.manifest.pack_complete).toBe(true);
   });
@@ -865,10 +1110,10 @@ describe("install", () => {
     writeFileSync(join(home, ".cursor/skills/samectx/SKILL.md"), "my skill");
     writeFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "my tdd notes");
     const pkg = makePkg("v1.0.0");
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg, "sha-c1"));
+    seedHttpCacheFromPkg("sha-c1", "v1.0.0", pkg);
     await install(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     expect(readFileSync(join(home, ".cursor/skills/samectx/SKILL.md"), "utf8")).toBe(
       "my skill",
@@ -895,10 +1140,10 @@ describe("install", () => {
     mkdirSync(join(home, ".cursor/notes"), { recursive: true });
     writeFileSync(join(home, ".cursor/notes/ideas.md"), "my ideas");
     const pkg = makePkg("v1.0.0");
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     await install(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     expect(readFileSync(join(home, ".cursor/notes/ideas.md"), "utf8")).toBe(
       "my ideas",
@@ -914,10 +1159,10 @@ describe("install", () => {
     writeFileSync(join(pkg, "skill/tdd/SKILL.md"), "# tdd\n");
     writeFileSync(join(pkg, "Rules/sdd-dod.mdc"), "# dod\n");
     writeFileSync(join(pkg, "agents/code-reviewer.md"), "# agent\n");
-    setPackageFetchForTests(async () => resolved("v1.0.0", pkg));
+    seedHttpCacheFromPkg(TEST_PACK_COMMIT, "v1.0.0", pkg);
     await install(
       { client: "cursor", os: "darwin" },
-      { channel: "stdio", home, userProfile: home, env: { HOME: home }, skipLlm: true },
+      { channel: "http", home, userProfile: home, env: { HOME: home }, skipLlm: true },
     );
     expect(existsSync(join(home, ".cursor/skills/tdd/SKILL.md"))).toBe(true);
     expect(existsSync(join(home, ".cursor/rules/sdd-dod.mdc"))).toBe(true);
@@ -926,7 +1171,7 @@ describe("install", () => {
   it("C5_should_delete_recorded_pack_file_and_keep_unlisted_note", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -956,8 +1201,19 @@ describe("install", () => {
 
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
-    setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
-    await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
+    seedHttpCacheFromPkg("sha-new", "main", pkg);
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    );
+    await update(
+      {
+        client: "cursor",
+        os: "darwin",
+        version: "main",
+        inventory: { ledger, missing: [] },
+      },
+      ctx,
+    );
 
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "new pack tdd",
@@ -967,20 +1223,20 @@ describe("install", () => {
       "my notes",
     );
     expect(existsSync(join(home, ".cursor/skills/tdd"))).toBe(true);
-    const ledger = JSON.parse(
+    const ledgerAfter = JSON.parse(
       readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
     ) as {
       pack_complete: boolean;
       files: { skills: string[] };
     };
-    expect(ledger.pack_complete).toBe(true);
-    expect(ledger.files.skills).toEqual(["skills/tdd/SKILL.md"]);
+    expect(ledgerAfter.pack_complete).toBe(true);
+    expect(ledgerAfter.files.skills).toEqual(["skills/tdd/SKILL.md"]);
   });
 
   it("C2b_should_not_delete_directory_when_old_ledger_names_folder", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -1008,7 +1264,7 @@ describe("install", () => {
 
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
-    setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
+    seedHttpCacheFromPkg("sha-new", "main", pkg);
     await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
 
     expect(existsSync(join(home, ".cursor/skills/tdd"))).toBe(true);
@@ -1032,7 +1288,7 @@ describe("install", () => {
   it("C3_should_leave_edit_when_same_commit_and_pack_complete_true", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -1059,13 +1315,21 @@ describe("install", () => {
     );
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
-    setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
+    seedHttpCacheFromPkg("abc", "main", pkg);
+    const ledger = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    );
     const result = await install(
-      { client: "cursor", os: "darwin", version: "main" },
+      {
+        client: "cursor",
+        os: "darwin",
+        version: "main",
+        inventory: { ledger, missing: [] },
+      },
       ctx,
     );
-    const body = parseToolJson<{ error: { code: string } }>(result);
-    expect(body.error.code).toBe("already_up_to_date");
+    const body = parseToolJson<{ action: string; plan: { action: string } }>(result);
+    expect(body.action).toBe("noop");
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "my edited tdd",
     );
@@ -1074,7 +1338,7 @@ describe("install", () => {
   it("C6a_should_rewrite_missing_pack_complete_without_replacing_bytes", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -1100,16 +1364,24 @@ describe("install", () => {
     );
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
-    setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
+    seedHttpCacheFromPkg("abc", "main", pkg);
+    const ledgerBefore = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    );
     const result = await install(
-      { client: "cursor", os: "darwin", version: "main" },
+      {
+        client: "cursor",
+        os: "darwin",
+        version: "main",
+        inventory: { ledger: ledgerBefore, missing: [] },
+      },
       ctx,
     );
-    const body = parseToolJson<{ error?: { code: string }; ledger_rewritten?: boolean }>(
+    const body = parseToolJson<{ action: string; plan: { action: string } }>(
       result,
     );
-    expect(body.error).toBeUndefined();
-    expect(body.ledger_rewritten).toBe(true);
+    expect(body.action).toBe("rewrite_ledger");
+    expect(body.plan.action).toBe("rewrite_ledger");
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "my edited tdd",
     );
@@ -1130,7 +1402,7 @@ describe("install", () => {
   it("C7a_should_keep_pack_complete_false_on_same_commit", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -1157,13 +1429,21 @@ describe("install", () => {
     );
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "pack tdd");
-    setPackageFetchForTests(async () => resolved("main", pkg, "abc"));
+    seedHttpCacheFromPkg("abc", "main", pkg);
+    const ledgerBefore = JSON.parse(
+      readFileSync(join(home, ".cursor/.sdd-installed.json"), "utf8"),
+    );
     const result = await install(
-      { client: "cursor", os: "darwin", version: "main" },
+      {
+        client: "cursor",
+        os: "darwin",
+        version: "main",
+        inventory: { ledger: ledgerBefore, missing: [] },
+      },
       ctx,
     );
-    const body = parseToolJson<{ error: { code: string } }>(result);
-    expect(body.error.code).toBe("already_up_to_date");
+    const body = parseToolJson<{ action: string; plan: { action: string } }>(result);
+    expect(body.action).toBe("noop");
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "my edited tdd",
     );
@@ -1176,7 +1456,7 @@ describe("install", () => {
   it("C2_should_replace_recorded_file_and_keep_unlisted_skill_and_note", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -1206,7 +1486,7 @@ describe("install", () => {
     );
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
-    setPackageFetchForTests(async () => resolved("main", pkg, "sha-new"));
+    seedHttpCacheFromPkg("sha-new", "main", pkg);
     await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "new pack tdd",
@@ -1234,7 +1514,7 @@ describe("install", () => {
   it("C6b_should_replace_on_new_commit_when_pack_complete_missing", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -1261,7 +1541,7 @@ describe("install", () => {
     );
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
-    setPackageFetchForTests(async () => resolved("main", pkg, "def"));
+    seedHttpCacheFromPkg("def", "main", pkg);
     await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "new pack tdd",
@@ -1279,7 +1559,7 @@ describe("install", () => {
   it("C7b_should_set_pack_complete_true_on_new_commit_when_flag_was_false", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -1307,7 +1587,7 @@ describe("install", () => {
     );
     const pkg = makePkg("main");
     writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "new pack tdd");
-    setPackageFetchForTests(async () => resolved("main", pkg, "def"));
+    seedHttpCacheFromPkg("def", "main", pkg);
     await update({ client: "cursor", os: "darwin", version: "main" }, ctx);
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "new pack tdd",
@@ -1325,7 +1605,7 @@ describe("install", () => {
   it("C8_should_leave_folder_unchanged_when_download_fails", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-home-"));
     const ctx = {
-      channel: "stdio" as const,
+      channel: "http" as const,
       home,
       userProfile: home,
       env: { HOME: home },
@@ -1350,16 +1630,14 @@ describe("install", () => {
     const ledgerPath = join(home, ".cursor/.sdd-installed.json");
     writeFileSync(ledgerPath, JSON.stringify(ledgerBefore, null, 2));
     const ledgerJsonBefore = readFileSync(ledgerPath, "utf8");
-    setPackageFetchForTests(async () => ({
-      code: "package_unavailable" as const,
-      message: "download failed",
-    }));
-    const result = await install(
-      { client: "cursor", os: "darwin", version: "main" },
+    seedHttpCacheFromPkg("abc", "main", makePkg("main"));
+    mockCacheFreshAsMatchingCache();
+    const result = await installFrameworkHttp(
+      { client: "cursor", os: "darwin", version: "missing-version-xyz" },
       ctx,
     );
     const body = parseToolJson<{ error: { code: string } }>(result);
-    expect(body.error.code).toBe("package_unavailable");
+    expect(body.error.code).toBe("invalid_input");
     expect(readFileSync(join(home, ".cursor/skills/tdd/SKILL.md"), "utf8")).toBe(
       "pack tdd",
     );

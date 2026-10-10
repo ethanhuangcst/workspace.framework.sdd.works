@@ -17,7 +17,7 @@ related:
 
 ## Summary
 
-`/ethan` (or `/coach-ethan`) starts whichever Cursor **custom agent** is registered under that frontmatter `name`. Cursor discovers those files from `~/.cursor/agents/` (client root) and `<workspace>/.cursor/agents/` (project). It does **not** discover agents from workspace templates (`<workspace>/.cursor/templates/framework.sdd.works/`).
+`/ethan` (or `/coach-ethan`) starts whichever Cursor **custom agent** is registered under that frontmatter `name`. Cursor discovers those files from `~/.cursor/agents/` (client root) and `<workspace>/.cursor/agents/` (project). It does **not** discover agents from workspace templates (`<workspace>.cursor/templates/`).
 
 ## Evidence
 

@@ -1,8 +1,6 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import {
-  CACHE_STALE_MINUTES,
-  resolveCachedVersion,
-} from "@/core/sync/cache";
+import { resolveCachedVersion } from "@/core/sync/cache";
+import { readBundledPack } from "@/core/sync/bundled-pack";
 import { ensurePackageCacheFresh } from "@/core/sync/ensure-cache-fresh";
 import { isRefusedFixturePack } from "@/core/sync/fixture-pack";
 import {
@@ -44,22 +42,79 @@ function planInstruction(
   ].join("\n");
 }
 
-function writerInstruction(serverUrl: string, packageUrl: string): string {
-  const lines = [
-    "The local program must write the pack. Do not extract an archive into the client root.",
-    `Download the pack from ${packageUrl}. That file is the pack on this server.`,
-    "Do not use a git host or a repository name.",
-    "When the local program is already on this machine, save it as the home directory plus .sdd/sdd-mcp. Expand the home directory first. Do not leave a tilde in the path. On Windows the file name is sdd-mcp.exe.",
-    `Run that file once with --write, --client, --os, and --client-root when you have a candidate folder. Set SDD_SERVER_URL to ${serverUrl}.`,
-    "When the local program cannot run, call sdd_install_framework again with inventory and set accepted_root to that same candidate folder when you have one.",
-    "Do not put that path in mcp.json. mcp.json stays a url entry only.",
-  ];
-  return lines.join("\n");
+type ResolvedPack = {
+  version: string;
+  commitSha: string;
+  unpackedPath: string;
+  syncedAt: string;
+  packSource: "cache" | "bundled";
+};
+
+function resolvePackForInstall(
+  requested?: string,
+): ResolvedPack | CallToolResult {
+  const cached = resolveCachedVersion(requested);
+  if (!("code" in cached)) {
+    if (isRefusedFixturePack(cached.commitSha, cached.unpackedPath)) {
+      const bundled = readBundledPack();
+      if (!bundled) {
+        return toolError(
+          "invalid_input",
+          "Cached pack is a fixture and bundled fallback is missing.",
+        );
+      }
+      return {
+        version: bundled.version,
+        commitSha: bundled.commitSha,
+        unpackedPath: bundled.unpackedPath,
+        syncedAt: new Date().toISOString(),
+        packSource: "bundled",
+      };
+    }
+    return {
+      version: cached.version,
+      commitSha: cached.commitSha,
+      unpackedPath: cached.unpackedPath,
+      syncedAt: cached.syncedAt,
+      packSource: "cache",
+    };
+  }
+
+  const trimmed = requested?.trim();
+  if (cached.code === "version_not_found" && trimmed && trimmed !== "latest") {
+    return toolError(
+      "invalid_input",
+      `Version ${trimmed} is not in the package cache.`,
+    );
+  }
+
+  const bundled = readBundledPack();
+  if (!bundled) {
+    return toolError(
+      "invalid_input",
+      "Package cache is empty and bundled fallback is missing.",
+    );
+  }
+  return {
+    version: bundled.version,
+    commitSha: bundled.commitSha,
+    unpackedPath: bundled.unpackedPath,
+    syncedAt: new Date().toISOString(),
+    packSource: "bundled",
+  };
+}
+
+function isToolResult(value: unknown): value is CallToolResult {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "content" in value &&
+    Array.isArray((value as CallToolResult).content)
+  );
 }
 
 /**
- * HTTP install/update. No inventory: ask for the local writer.
- * Inventory present: return the server plan. This module stays out of the stdio binary.
+ * HTTP install/update (ADR-131). Validates agent root, uses cache or bundled pack, returns plan + tarball URL.
  */
 export async function installFrameworkHttp(
   args: InstallArgs,
@@ -67,95 +122,67 @@ export async function installFrameworkHttp(
 ): Promise<CallToolResult> {
   const installCtx = await resolveInstallContextForHttp(args, ctx);
   if (!installCtx.ok) return installCtx.result;
-  const { detected, resolved } = installCtx.ctx;
+  const { detected, resolved, clientRoot } = installCtx.ctx;
 
-  const fresh = await ensurePackageCacheFresh();
+  await ensurePackageCacheFresh();
 
-  const cached = resolveCachedVersion(args.version);
-  if ("code" in cached) {
-    if (cached.code === "sync_pending") {
-      return toolError(
-        "sync_pending",
-        "Package cache not ready. Operator must run sync first.",
-      );
-    }
-    return toolError("version_not_found", "Requested version not in cache.");
-  }
+  const packResult = resolvePackForInstall(args.version);
+  if (isToolResult(packResult)) return packResult;
+  const pack = packResult;
 
-  const versionParam = args.version?.trim() || "latest";
+  const versionParam =
+    args.version?.trim() ||
+    (pack.packSource === "bundled" ? pack.version : "latest");
   const serverUrl = getSddServerUrl().replace(/\/+$/, "");
   const packageUrl = `${serverUrl}/api/sdd/package?version=${encodeURIComponent(versionParam)}`;
-  const files = inventoryFromUnpacked(cached.unpackedPath);
-  const cacheAgeMinutes =
-    (Date.now() - Date.parse(cached.syncedAt)) / (60 * 1000);
-  const cacheStale = cacheAgeMinutes > CACHE_STALE_MINUTES;
-  const cache = {
-    cache_synced_at: cached.syncedAt,
-    cache_age_minutes: Math.round(cacheAgeMinutes * 10) / 10,
-    cache_stale: cacheStale,
-    cache_refresh: "code" in fresh ? undefined : fresh.status,
-  };
+  const files = inventoryFromUnpacked(pack.unpackedPath);
 
-  if (cacheStale) {
-    return toolError(
-      "cache_stale",
-      `Package cache is ${Math.round(cacheAgeMinutes)} minutes old. Sync the pack before install. The writer must not copy this cache.`,
-    );
-  }
-
-  if (isRefusedFixturePack(cached.commitSha, cached.unpackedPath)) {
-    return toolError(
-      "fixture_pack",
-      "The cached pack is a test fixture. Sync the real pack from git before install.",
-    );
-  }
-
-  if (!args.inventory) {
-    return toolOk({
-      code: "writer_required",
-      packageUrl,
-      version: cached.version,
-      commitSha: cached.commitSha,
-      client: detected,
-      resolution_source: resolved.source,
-      ...cache,
-      instructions: writerInstruction(serverUrl, packageUrl),
-    });
-  }
-
-  const ledger = asLedger(args.inventory.ledger);
+  const ledger = asLedger(args.inventory?.ledger ?? null);
+  const missing = args.inventory?.missing ?? [];
   const plan = composeInstallPlan({
     ledger,
-    missing: args.inventory.missing ?? [],
+    missing,
     force: args.force,
-    packageVersion: cached.version,
-    packageCommit: cached.commitSha,
+    packageVersion: pack.version,
+    packageCommit: pack.commitSha,
     packFiles: files,
   });
   const installedAt = new Date().toISOString();
   const manifest = {
     version: 1 as const,
-    package_version: cached.version,
-    package_commit: cached.commitSha,
+    package_version: pack.version,
+    package_commit: pack.commitSha,
     installed_at: installedAt,
     pack_complete: true as const,
     files,
   };
 
-  return toolOk({
-    packageUrl,
-    version: cached.version,
-    commitSha: cached.commitSha,
+  const rootForResponse = clientRoot;
+
+  const body: Record<string, unknown> = {
+    action: plan.action,
+    root: rootForResponse,
+    version: pack.version,
+    commitSha: pack.commitSha,
     client: detected,
     plan,
     manifest,
     resolution_source: resolved.source,
-    ...(args.accepted_root?.trim()
-      ? { accepted_root: args.accepted_root.trim() }
-      : {}),
-    ...cache,
-    instructions: planInstruction(plan.action, packageUrl, plan.delete, plan.write),
-  });
+    pack_source: pack.packSource,
+    cache_synced_at: pack.syncedAt,
+    instructions: planInstruction(
+      plan.action,
+      plan.action === "apply" ? packageUrl : "",
+      plan.delete,
+      plan.write,
+    ),
+  };
+
+  if (plan.action === "apply") {
+    body.packageUrl = packageUrl;
+  }
+
+  return toolOk(body);
 }
 
 export async function updateFrameworkHttp(

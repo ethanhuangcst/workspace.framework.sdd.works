@@ -18,11 +18,7 @@ import {
 } from "@/core/sync/paths";
 import { parseToolJson } from "@/core/tools/errors";
 import { encryptKeyValue } from "@/lib/keys-crypto";
-import {
-  createSddMcpServer,
-  SDD_STDIO_TOOL_NAMES,
-  SDD_TOOL_NAMES,
-} from "./create-server";
+import { createSddMcpServer, SDD_TOOL_NAMES } from "./create-server";
 
 const hasDb = Boolean(process.env.DATABASE_URL);
 const FIXTURE_KEY =
@@ -30,29 +26,6 @@ const FIXTURE_KEY =
   "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 
 describe("createSddMcpServer tool contracts", () => {
-  it("should_advertise_two_tools_on_stdio", async () => {
-    const server = createSddMcpServer({ channel: "stdio", authorized: true });
-    const [clientTransport, serverTransport] =
-      InMemoryTransport.createLinkedPair();
-    const client = new Client({ name: "test", version: "0.0.0" });
-    await server.connect(serverTransport);
-    await client.connect(clientTransport);
-    const listed = await client.listTools();
-    const names = listed.tools.map((t) => t.name).sort();
-    expect(names).toEqual([...SDD_STDIO_TOOL_NAMES].sort());
-    expect(names).not.toContain("sdd_get_key");
-    expect(names).not.toContain("sdd_list_versions");
-    const init = client.getServerVersion();
-    expect(init?.name).toBe("framework.sdd.works");
-    expect(init?.icons?.length).toBeGreaterThanOrEqual(2);
-    expect(init?.icons?.[0]?.src).toMatch(/^https?:\/\/.+\/sdd-mark\.png$/);
-    expect(init?.icons?.[1]?.src.startsWith("data:image/png;base64,")).toBe(
-      true,
-    );
-    await client.close();
-    await server.close();
-  });
-
   it("should_advertise_brand_icons_on_http_initialize", async () => {
     const server = createSddMcpServer({ channel: "http", authorized: true });
     const [clientTransport, serverTransport] =
@@ -163,39 +136,8 @@ describe("MCP install/update contracts", () => {
     }
   });
 
-  it("should_install_over_stdio_and_return_package_url_on_http", async () => {
+  it("should_return_plan_and_package_url_on_http", async () => {
     const home = mkdtempSync(join(tmpdir(), "sdd-mcp-home-"));
-    const pkg = mkdtempSync(join(tmpdir(), "sdd-mcp-pkg-"));
-    mkdirSync(join(pkg, "skills/tdd"), { recursive: true });
-    writeFileSync(join(pkg, "skills/tdd/SKILL.md"), "# tdd\n");
-    setPackageFetchForTests(async () => ({
-      version: "v1.0.0",
-      commitSha: "sha-v1.0.0",
-      tempDir: pkg,
-    }));
-
-    const stdio = createSddMcpServer({
-      channel: "stdio",
-      authorized: true,
-      clientInfo: { name: "cursor" },
-      installHome: home,
-      skipLlm: true,
-    });
-    const [c1, s1] = InMemoryTransport.createLinkedPair();
-    const client = new Client({ name: "cursor", version: "0.0.0" });
-    await stdio.connect(s1);
-    await client.connect(c1);
-    const installed = await client.callTool({
-      name: "sdd_install_framework",
-      arguments: { client: "cursor", os: "darwin" },
-    });
-    const body = parseToolJson<{ version: string; resolution_source: string }>(
-      installed as never,
-    );
-    expect(body.version).toBe("v1.0.0");
-    expect(body.resolution_source).toBe("seed");
-    await client.close();
-    await stdio.close();
 
     seedHttpCache("sha-http-mcp", "v1.0.0");
     mockCacheFreshAsMatchingCache();
@@ -232,8 +174,11 @@ describe("MCP install/update contracts", () => {
       name: "sdd_install_framework",
       arguments: { client: "cursor", os: "darwin" },
     });
-    const prodBody = parseToolJson<{ code: string }>(prodInstall as never);
-    expect(prodBody.code).toBe("writer_required");
+    const prodBody = parseToolJson<{ action: string; plan: { action: string } }>(
+      prodInstall as never,
+    );
+    expect(prodBody.action).toBe("apply");
+    expect(prodBody.plan.action).toBe("apply");
     await prodClient.close();
     await httpProd.close();
   });

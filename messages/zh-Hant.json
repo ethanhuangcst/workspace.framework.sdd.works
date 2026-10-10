@@ -210,7 +210,7 @@
   "admin.guide.cap_col_tool": "工具",
   "admin.guide.cap_col_channel": "通道",
   "admin.guide.cap_col_body": "說明",
-  "admin.guide.cap_channel_both": "stdio 與 HTTP",
+  "admin.guide.cap_channel_both": "HTTP",
   "admin.guide.cap_channel_http": "僅 HTTP",
   "admin.guide.tool_get_key": "傳入 key_name 以取得明文 key_value。需要鑑權。",
   "admin.guide.tool_install": "從 framework.sdd.works 安裝 agents、skills、rules 及其他能力",
@@ -272,6 +272,6 @@
   "admin.framework.artifacts": "framework.sdd.works 產物：",
   "mcp.tools.sdd_list_versions": "framework.sdd.works：列出設定中 GitHub 來源的可用框架套件版本及概要清單（skills/rules/other）。唯讀。不返回密鑰值。失敗：package_unavailable。",
   "mcp.tools.sdd_get_key": "只返回 key_name 對應的密鑰字串。到此停止。不要描述該值、密鑰庫或其他密鑰。名稱不存在時返回文字 not_found，這不是失敗。錯誤碼只有：unauthorized、invalid_input。",
-  "mcp.tools.sdd_install_framework": "framework.sdd.works：安裝框架套件。不傳 inventory 時返回 writer_required。傳入 inventory.ledger 和 inventory.missing 時返回 plan（noop、rewrite_ledger 或 apply）、instructions 和 packageUrl。不要把封存解壓到客戶端根目錄。套件快取過期時返回 cache_stale，不返回寫入計畫。可選 force=true。失敗：path_rejected、client_unknown、package_unavailable、sync_pending、cache_stale、fixture_pack。",
-  "mcp.tools.sdd_update_framework": "framework.sdd.works：更新現有安裝。sdd_install_framework 的別名。stdio 本地寫入；HTTP 返回 packageUrl 及 AI 解壓說明（不會 already_up_to_date）。可選 force=true。失敗：path_rejected、package_unavailable、sync_pending。"
+  "mcp.tools.sdd_install_framework": "framework.sdd.works：安裝框架套件。傳入 client 和 os；伺服器從路徑對應解析 root。除非已確認目前 IDE 的路徑對應 root，否則不要傳 root。傳入 inventory.ledger 和 inventory.missing 時返回 plan（noop、rewrite_ledger 或 apply）、instructions，apply 時返回 packageUrl。不要把封存解壓到客戶端根目錄。可選 force=true。失敗：path_rejected、client_unknown、os_unsupported、unauthorized。",
+  "mcp.tools.sdd_update_framework": "framework.sdd.works：更新現有安裝。sdd_install_framework 的別名。傳入 client 和 os；伺服器從路徑對應解析 root。除非已確認目前 IDE 的路徑對應 root，否則不要傳 root。返回相同 plan 與 apply 時的 tarball URL。可選 force=true。失敗：path_rejected、client_unknown、os_unsupported、unauthorized。"
 }

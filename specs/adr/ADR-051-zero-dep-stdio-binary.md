@@ -1,7 +1,7 @@
 # ADR-051: Zero-dependency stdio MCP via Bun compile
 
 ## Status
-Accepted
+Accepted. **Retired 2026-10-09 by [ADR-131](./ADR-131-http-only-install-bundled-fallback.md).** No stdio binary, no per-OS builds, no GitHub Release assets. HTTP (Streamable HTTP on `/mcp`) is the only transport.
 
 ## Context
 NFR-9 requires that the client operating system install no runtime dependencies (Node, npm, Bun, etc.) to call `sdd_install_framework` / `sdd_update_framework` over stdio. The dev entrypoint `npx tsx src/mcp/stdio.ts` requires Node and npm on the client, which violates that requirement. The tech-spec already described "stdio binary local" but no packaging existed.

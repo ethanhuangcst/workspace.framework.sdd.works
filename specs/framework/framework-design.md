@@ -1,14 +1,14 @@
 # Design — framework
 
-> **Purpose**: Overall design for every framework artifact: where the file lives, the shape it keeps, and how the coach runs. What, how, and when stay in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md). Names and meaning stay in AI-read [`pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/pack-scrum-in-sdd.md) ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)).
-> **Practices**: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md).
-> **Framework**: [`pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/pack-scrum-in-sdd.md) · human portal [`content/scrum-in-sdd/`](../../pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md).
+> **Purpose**: Overall design for every framework artifact: where the file lives, the shape it keeps, and how the coach runs. What, how, and when stay in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md). Names and meaning stay in AI-read [`pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md) ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)).
+> **Practices**: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md).
+> **Framework**: [`pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md) · human portal [`content/scrum-in-sdd/`](../../pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md).
 > **Stories**: [`framework-stories.md`](./framework-stories.md). **Tests**: [`framework-tests.md`](./framework-tests.md).
 > **Seed prompt**: [`../../pack.framework.sdd.works/agents/ethan.md`](../../pack.framework.sdd.works/agents/ethan.md).
 
 ## framework-artifacts
 
-An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header): a title line, then a blockquote with `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.json` while `sdd-update-project` is still copying files.
+An artifact seed has no status line (`initialized`, `draft`, `confirmed`, `updated`, or `status: active`). A Framework (process) artifact header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#header): a title line, then a blockquote with `Type`, `as_of`, and a Definition link. `as_of` is the date of the last edit. Work status stays on the product backlog, the sprint backlog, and `status.md`. Git holds the author. The only init signal is `initialized: no` on a live `artifacts-map.json` while `sdd-update-project` is still copying files.
 
 ### Two repositories
 
@@ -69,7 +69,7 @@ Coach ethan: presence, onboard, jobs, and the installable prompt. The prompt in 
 > **Purpose**: Define how coach-ethan is present, what it does, what it reads, how start-up resolves files, and how capabilities grow across MVPs.
 > **Status**: design · as_of 2026-09-29 · onboard is the audit verdict, then `sdd-review-status` when the verdict is Usable
 > **Backlog**: [Agent-04 Agent ethan onboard with pack receipt start gate](../product-backlog.md#L76) · [Agent-01 Local Cursor agent](../product-backlog.md#L63) · [MCP-01 Pack copy onto the client root](../product-backlog.md#L318)
-> **Framework**: [`pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/pack-scrum-in-sdd.md) · **Practices**: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) (what, how, when)
+> **Framework**: [`pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md) · **Practices**: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) (what, how, when)
 > **RID**: [D1](../sprint-backlog.md#rid-d1) (closed: local Cursor agent)
 > **Stories**: [`framework-stories.md`](./framework-stories.md#agents) · **Tests**: [`framework-tests.md`](./framework-tests.md#agents)
 > **Seed prompt**: [`../../pack.framework.sdd.works/agents/ethan.md`](../../pack.framework.sdd.works/agents/ethan.md)
@@ -215,7 +215,7 @@ The pack source is [ethanhuangcst/framework.sdd.works](https://github.com/ethanh
 }
 ```
 
-HTTP still does not write the caller’s disk. The tool result names this path. The model writes the ledger last, after extract and verify. Do not ship a finished ledger inside the tarball. The stdio path writes the same file after the copy. Idempotency ignores `pack_complete` and still uses version, commit, and the files on disk (ADR-052).
+HTTP does not write the caller's disk. The tool result names a tarball URL on this server. The agent downloads the tarball, extracts the listed paths, and writes the ledger last. Do not ship a finished ledger inside the tarball. Idempotency ignores `pack_complete` and still uses version, commit, and the files on disk (ADR-052, ADR-131).
 
 On every start, before any greeting or job list, Ethan reads only `{client_root}/.sdd-installed.json`. `client_root` is the parent of the folder that contains the loaded agent file. He does not look for the ledger in the workspace. He does not scan skills, rules, workflows, or templates to decide completeness. A ledger with no `pack_complete` field is not true.
 
@@ -236,7 +236,7 @@ Update project settings uses `sdd-update-project` (`skill_update_project`). [ADR
 
 ### 3. Jobs
 
-**What / how / when** for each job lives only in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) **Jobs**. Ethan does not embed those steps in the agent prompt.
+**What / how / when** for each job lives only in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) **Jobs**. Ethan does not embed those steps in the agent prompt.
 
 The prompt does not keep a job table. The `skills` object in `constants.json` is the job index. The user may ask in `artifact_locale`. When the user asks for a job, ethan matches the key, opens `{client_root}/{skills_dir}/{folder}` from that object, and follows the skill. Onboard uses `skill_audit_artifacts`, `skill_update_project`, and `skill_get_status`. Skills perform the work. The table below is author documentation. It is not copied into the prompt.
 
@@ -266,7 +266,7 @@ Coach capabilities over time (still true):
 | Store | Where | What |
 | --- | --- | --- |
 | **Client root (CR)** | Cursor: `~/.cursor` from MCP `paths` / `.sdd-installed.json` | Installed framework pack: agents, skills, rules, workflows; templates under the pack when ARTIFACTS-01 / TEMPLATES-01 ship. This is the only framework tree for this repository. |
-| **Workspace templates (WS-t)** | `<workspace>/.cursor/templates/framework.sdd.works/<locale>/` | Process files if a project pasted that folder. This repository has no WS-t. |
+| **Workspace templates (WS-t)** | `<workspace>/.cursor/templates/<locale>/` | Process files if a project pasted that folder. This repository has no WS-t. |
 | **Workspace specs (WS-s)** | `<workspace>/specs/` | Live project process files. `sdd-update-project` copies a seed only where the target file is missing. |
 | **Project agents** | `<workspace>/.cursor/agents/` | Cursor registry for slash-invoke in this workspace. **Not** WS-t. |
 
@@ -284,8 +284,7 @@ Chat history is ongoing context for the thread. No memory store, embeddings, or 
 
 The MCP tools `sdd_install_framework` and `sdd_update_framework` copy the pack. Ethan does not call them. The installer behavior stays in [`mcp-design.md`](../mcp/mcp-design.md).
 
-- **stdio**: the local program writes into resolved `paths` and updates `.sdd-installed.json`.
-- **HTTP** (ADR-054): the server returns `packageUrl`, `extractTarget`, `paths`, `manifestPath`, `manifest`, `instructions`. Extract only to `extractTarget` / `paths`. Never extract the tarball into `workspace/specs/`.
+- **HTTP (ADR-131 / ADR-132, only path)**: the server resolves the root from the seed map for known clients, or returns `root_required` until the agent sends a validated `root` for unknown clients; checks the cache or bundled pack; returns a tarball URL with the file list, deletions, and the new ledger. The agent downloads the tarball, extracts only the listed paths into the resolved root, and writes the ledger last. Never extract the tarball into `workspace/specs/`.
 
 #### 5.2 Project constants
 
@@ -345,7 +344,7 @@ MVP 2 needs only a minimal `plan` skill. The rest ship with the full pack.
 
 ### 11. Out of scope
 
-- Filling AI-read [`pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/pack-scrum-in-sdd.md) and human-read `content/scrum-in-sdd/` (GUIDE-01 / sprint guide slices). Implementation: [ogt-8-pack-scrum-in-sdd.md](./ogt-8-pack-scrum-in-sdd.md).
+- Filling AI-read [`pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md) and human-read `content/scrum-in-sdd/` (GUIDE-01 / sprint guide slices). Implementation: [ogt-8-pack-scrum-in-sdd.md](./ogt-8-pack-scrum-in-sdd.md).
 - Building the six skills in this design turn. The installable prompt is §14 and the seed file.
 - Hosting coach-ethan as a remote MCP tool or resource.
 - Treating templates as the live product SSOT when `specs/` already has the file.
@@ -375,9 +374,8 @@ No new model server, registry, or feature store. Cursor’s model is the agent. 
 1. User creates an empty folder and opens it as the Cursor workspace.
 2. User confirms the Release 1 MCP server is connected in this Cursor profile (tools include `sdd_install_framework` and `sdd_update_framework`). If it is not connected, stop. Do not bundle MCP setup into this SBI.
 3. User asks the default agent to install or update the framework. That agent calls `sdd_install_framework` or `sdd_update_framework` (`sdd_update_framework` is an alias of install).
-4. **HTTP** (end-user path, ADR-054): the tool returns `packageUrl`, `extractTarget`, `paths`, `manifest`, and `instructions`. The default agent downloads the tarball and extracts **only** to `extractTarget` / `paths`. `paths.agents` is `~/.cursor/agents/`.
-5. **stdio** (local binary): the tool writes those paths itself and updates `.sdd-installed.json`.
-6. Verify `~/.cursor/agents/ethan.md` exists and every name in `manifest.files` exists under `paths`. If the agent file is missing, the install failed for this SBI even if skills or rules copied.
+4. **HTTP** (end-user path, ADR-131): the tool returns a tarball URL, the file list, deletions, and the new ledger. The default agent downloads the tarball and extracts **only** the listed paths into the resolved root. `paths.agents` is `~/.cursor/agents/`.
+5. Verify `~/.cursor/agents/ethan.md` exists and every name in the ledger `files` exists under the resolved root. If the agent file is missing, the install failed for this SBI even if skills or rules copied.
 7. User reloads the window if Cursor does not list the new agent yet.
 8. User types `/ethan`. Cursor loads `~/.cursor/agents/ethan.md` because the empty workspace has no project agent with the same name.
 
@@ -424,8 +422,8 @@ Decision: every `/ethan` on an empty project is the user agent at `~/.cursor/age
 | [`../sprint-backlog.md`](../sprint-backlog.md) | Schedule and D1 |
 | [`../architecture.md`](../architecture.md) | Stack pointer; presence decision |
 | [`../artifacts-map.json`](../artifacts-map.json) | Project index (framework / process / tracking / knowledge / optional / this product) |
-| [`../../pack.framework.sdd.works/templates/pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/pack-scrum-in-sdd.md) | Names and meaning (AI-read) |
-| [`../../pack.framework.sdd.works/templates/sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
+| [`../../pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md) | Names and meaning (AI-read) |
+| [`../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) | What, how, when (jobs, templates, table conventions) |
 | [`../mcp/mcp-design.md`](../mcp/mcp-design.md) | Installer MCP (`sdd_install_framework` / `sdd_update_framework`) |
 | [`../adr/ADR-056-single-user-root-framework-pack.md`](../adr/ADR-056-single-user-root-framework-pack.md) | One pack on the user root |
 | [`../adr/ADR-057-install-ledger-pack-complete.md`](../adr/ADR-057-install-ledger-pack-complete.md) | `pack_complete` on `.sdd-installed.json` |
@@ -595,7 +593,7 @@ The skill for `skill_get_status` owns the status reply.
 
 ## rules
 
-Harness rules install under `{client_root}/rules/`. Framework-bound rules use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). The guide names four harness rules: `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-realtime-status.mdc`, and `friendly-language.mdc`. [Rule-03](../product-backlog.md#L206) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). Close writes live in `sdd-dod.mdc`; WIP checkpoints live in `sdd-realtime-status.mdc`. [ADR-091](../adr/ADR-091-retire-realtime-status-rule.md) retired `realtime-status.mdc` only. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `pack.framework.sdd.works/templates/constants.json`.
+Harness rules install under `{client_root}/rules/`. Framework-bound rules use an `sdd-` prefix ([ADR-094](../adr/ADR-094-sdd-prefix-framework-rules.md)). The guide names four harness rules: `sdd-dod.mdc`, `sdd-incremental-delivery.mdc`, `sdd-realtime-status.mdc`, and `friendly-language.mdc`. [Rule-03](../product-backlog.md#L206) is realtime-status WIP sync ([ADR-096](../adr/ADR-096-sdd-realtime-status-rule-name.md)). Close writes live in `sdd-dod.mdc`; WIP checkpoints live in `sdd-realtime-status.mdc`. [ADR-091](../adr/ADR-091-retire-realtime-status-rule.md) retired `realtime-status.mdc` only. Rule-04 friendly-language ships in the seed tree. The pack does not ship `artifacts-map.mdc`. A change to a pack skill folder or a pack rule file updates the matching key in `pack.framework.sdd.works/templates/framework.sdd.works/constants.json`.
 
 | Rule | Authoring seed | After install |
 | --- | --- | --- |
@@ -624,7 +622,7 @@ The file is already loaded on every chat. The miss is in the instructions, not i
 - "Standard terminology" allows a specialist word with no plain meaning beside it.
 - The rule never names the marks that show up in the replies: an em dash, a spaced double hyphen used as a break, an emoji, a coined short form, or a first sentence about what the agent did.
 - Cursor's default prose favors long, complete sentences. A soft preference loses to that default. A replacement has to name the mark and require a rewrite.
-- The rule never mentions the Cursor preview stop. A loose list after a header blockquote with several links still hides the rest of the file. Evidence is in [`cursor-markdown-preview-loose-list.md`](../knowledge/agent/cursor-markdown-preview-loose-list.md). The same tight-list rule is in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) under Writing markdown.
+- The rule never mentions the Cursor preview stop. A loose list after a header blockquote with several links still hides the rest of the file. Evidence is in [`cursor-markdown-preview-loose-list.md`](../knowledge/agent/cursor-markdown-preview-loose-list.md). The same tight-list rule is in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) under Writing markdown.
 
 #### How the replacement is designed
 
@@ -1004,7 +1002,7 @@ The status skill is [Skill-12](../product-backlog.md#L113).
 #### What the skill holds
 
 - The skill compares the board with the named work, lists each mismatch, and writes after the user says yes to the shown text.
-- How to write a process file stays in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md).
+- How to write a process file stays in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md).
 - The skill loads that section when a file is about to change.
 
 #### The board
@@ -1069,7 +1067,7 @@ Sprint-planning skill. [Skill-05](../product-backlog.md#L94). Constants key `ski
 | Authoring seed | `pack.framework.sdd.works/skills/sdd-plan-sprint/SKILL.md` |
 | After install | `{client_root}/skills/sdd-plan-sprint/SKILL.md` |
 
-The skill proposes existing PBIs for the next ToDo sprint (or the sprints the user names) so each sprint is one MVP. [2. Slice product to MVPs](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#2-slice-product-to-mvps) stays in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md). The skill writes the five process files only after the user picks. It does not create a PBI, mark Done, or edit the install ledger.
+The skill proposes existing PBIs for the next ToDo sprint (or the sprints the user names) so each sprint is one MVP. [2. Slice product to MVPs](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#2-slice-product-to-mvps) stays in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md). The skill writes the five process files only after the user picks. It does not create a PBI, mark Done, or edit the install ledger.
 
 ### sdd-refine-backlog
 
@@ -1335,6 +1333,8 @@ Pack allow-list for lite copy. Basename [ADR-107](../adr/ADR-107-lite-pack-allow
 
 [feature-53](../sprint-backlog.md#sprint-8) ships the authoring seed and CI validation in this product repo. It does not add an HTTP route, write `.sdd-installed.json`, or change portal sync. Those stay on [Web-portal-17](../product-backlog.md#L446) and [MCP-07](../product-backlog.md#L325). Copy the seed to the pack repo root at go-live ([Go-live](#go-live)).
 
+[feature-82](../sprint-backlog.md#sprint-9) / [MCP-07](../product-backlog.md#pb-105) verifies production Admin Framework sync copies that file into the server cache unpack and that lite install reads it ([`mcp-design.md`](../mcp/mcp-design.md#25-production-pack-sync-feature-82--mcp-07) §2.5, [`mcp-tests.md`](../mcp/mcp-tests.md#15-feature-82-production-pack-sync) §15). Until that check passes, [Spec-seeds-15](../product-backlog.md#pb-97) stays **ToDo**.
+
 | Role | Path |
 | --- | --- |
 | Authoring seed | `pack.framework.sdd.works/lite-pack.allowlist.json` |
@@ -1455,7 +1455,7 @@ Lookup file for pack path names, the instructions URL, skill keys, and rule keys
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `pack.framework.sdd.works/templates/constants.json` (beside the locale folders, not inside one) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/constants.json` (beside the locale folders, not inside one) |
 | After install | `{client_root}/templates/framework.sdd.works/constants.json` |
 
 Do not copy `constants.json` into the workspace, into `{workspace}/specs`, or into the artifacts root. It has no row in `artifacts-map.json`.
@@ -1466,7 +1466,7 @@ AI-read names and meaning. It does not take what, how, and when from practices. 
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `pack.framework.sdd.works/templates/pack-scrum-in-sdd.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
 | After install | `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
 
 It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads it from the client **EN** template folder. **EN only.** No HanS or HanT copy.
@@ -1493,7 +1493,7 @@ Pack meaning for harness engineering, XP (Extreme Programming), BDD (Behavior-Dr
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `pack.framework.sdd.works/templates/coach-knowledge.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/coach-knowledge.md` |
 | After install | `{client_root}/templates/framework.sdd.works/coach-knowledge.md` |
 
 It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads one heading from the client **EN** template folder. AI-read EN only with [ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md).
@@ -1504,19 +1504,19 @@ What, how, and when. It does not redefine guide terms.
 
 | Role | Path |
 | --- | --- |
-| Authoring seed | `pack.framework.sdd.works/templates/sdd-scrum-practices.md` |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md` |
 | After install | `{client_root}/templates/framework.sdd.works/sdd-scrum-practices.md` |
 
 It is not a project file under `artifacts_root`. Do not copy it into the project. Ethan reads it from the client **EN** template folder. EN only.
 
 ### artifacts-map.json
 
-Path configuration for this project. It is an SDD Core artifact with **`pack-scrum-in-sdd.md`**, **`sdd-scrum-practices.md`**, and the map file. It is not a Framework process Markdown artifact and not a copied template seed. The JSON shape is in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md). Module `files` lists are authoritative; `folder` is optional ([ADR-100](../adr/ADR-100-optional-module-folder.md)).
+Path configuration for this project. It is an SDD Core artifact with **`pack-scrum-in-sdd.md`**, **`sdd-scrum-practices.md`**, and the map file. It is not a Framework process Markdown artifact and not a copied template seed. The JSON shape is in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#artifacts-mapjson). [ADR-082](../adr/ADR-082-artifacts-map-json.md). Optional `adr` and `knowledge` keys name directory roots for those trees. [ADR-090](../adr/ADR-090-adr-knowledge-map-roots.md). Module `files` lists are authoritative; `folder` is optional ([ADR-100](../adr/ADR-100-optional-module-folder.md)).
 
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/artifacts-map.json` |
-| Templates and example | [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#artifacts-mapjson) |
+| Templates and example | [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#artifacts-mapjson) |
 
 There is no template seed. [ADR-080](../adr/ADR-080-no-artifacts-map-seed.md). `sdd-update-project` writes the project file from the configuration in that section. It does not copy the Pokymon example. [Spec-seeds-04](../product-backlog.md#L238) and Sprint 4 feature-03 are retired.
 
@@ -1542,13 +1542,13 @@ No standing rule updates this file. A turn updates a stored path when the user a
 
 ### Locale folders (HanS and HanT)
 
-`sdd-update-project` copies template seeds from `pack.framework.sdd.works/templates/{locale}/` when the map stores `HanS` or `HanT`. The AI-read trio (`pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, `coach-knowledge.md`) and `constants.json` stay beside `templates/` only; they are not duplicated under locale folders ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)).
+`sdd-update-project` copies template seeds from `pack.framework.sdd.works/templates/framework.sdd.works/{locale}/` when the map stores `HanS` or `HanT`. The AI-read trio (`pack-scrum-in-sdd.md`, `sdd-scrum-practices.md`, `coach-knowledge.md`) and `constants.json` stay under `templates/framework.sdd.works/` only; they are not duplicated under locale folders ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)).
 
 | Locale | Folder | Process seed basenames | Engineering seed basenames |
 | --- | --- | --- | --- |
-| `EN` | `templates/EN/` | `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, `issues-log.md` | `architecture.md`, `release.md`, `test-strategy.md`, `.secrets` |
-| `HanS` | `templates/HanS/` | same five | same four |
-| `HanT` | `templates/HanT/` | same five | same four |
+| `EN` | `templates/framework.sdd.works/EN/` | `product-backlog.md`, `sprint-backlog.md`, `status.md`, `changes-log.md`, `issues-log.md` | `architecture.md`, `release.md`, `test-strategy.md`, `.secrets` |
+| `HanS` | `templates/framework.sdd.works/HanS/` | same five | same four |
+| `HanT` | `templates/framework.sdd.works/HanT/` | same five | same four |
 
 A HanS or HanT seed translates file titles and section headings into Simplified or Traditional Chinese. It keeps the same backlog and sprint **table column names**, status tokens (`ToDo`, `WIP`, `Done`), and codes (`Sprint 1`, `feature-01`) as the EN seed. Stable HTML ids on Index targets stay English slugs when cross-file links depend on them. Operator guidance and bracket placeholders use the target locale. Pack authoring for [i18n-05](../product-backlog.md#L307) and [i18n-03](../product-backlog.md#L304) covers these files. Generic `{stem}-stories.md`, `{stem}-design.md`, and `{stem}-tests.md` pack starters are not locale folders yet; module specs still follow EN practices sections until a later backlog item adds them.
 
@@ -1559,24 +1559,24 @@ Product requirements and acceptance for the project. The seed is a placeholder t
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/product-backlog.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/product-backlog.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/product-backlog.md` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
 Columns, in this order: `#`, Component, PBI Code, Description, Size, Related, Sprint, Status.
 
-The column name stays Component. There is no DoD column. Body section order is Product overview, Definition of Done, Requirements, Product Backlog, Change record. The Definition of Done section lists additional PBI checks on top of `sdd-dod.mdc`; standard close checks stay in the rule. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. Requirements carry one `#pb-N` anchor. The table links `{pbi code}` to `#pb-N` on the Requirements line. Same-file `Related` links use `#pb-N`. Cross-file links from `sprint-backlog.md` use `./product-backlog.md#L{line}` for that Requirements line. Section rules are in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
+The column name stays Component. There is no DoD column. Body section order is Product overview, Definition of Done, Requirements, Product Backlog, Change record. The Definition of Done section lists additional PBI checks on top of `sdd-dod.mdc`; standard close checks stay in the rule. Each Requirements item has a PBI code, one noun for the deliverable, and bullets. The table `Description` is that noun. Requirements carry one `#pb-N` anchor. The table links `{pbi code}` to `#pb-N` on the Requirements line. Same-file `Related` links use `#pb-N`. Cross-file links from `sprint-backlog.md` use `./product-backlog.md#L{line}` for that Requirements line. Section rules are in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md). An item uses `ToDo`, `WIP`, or `Done`, with the same meanings as in [sprint-backlog.md](#sprint-backlogmd).
 
 ### sprint-backlog.md
 
-Sprint schedule and the SBI list. The seed is a placeholder template for a new project. It is not this repo's sprint backlog. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). `Definition` links [sprint-backlog.md](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#sprint-backlogmd). After the last sprint section, [Unplanned PBIs](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#unplanned-pbis) lists PBIs with no sprint using the Product Backlog columns minus `Sprint`.
+Sprint schedule and the SBI list. The seed is a placeholder template for a new project. It is not this repo's sprint backlog. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#header). `Definition` links [sprint-backlog.md](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#sprint-backlogmd). After the last sprint section, [Unplanned PBIs](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#unplanned-pbis) lists PBIs with no sprint using the Product Backlog columns minus `Sprint`.
 
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/sprint-backlog.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/sprint-backlog.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/sprint-backlog.md` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
 #### Sprint item table
 
-The template and one note per placeholder are in [Sprint item table](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#sprint-item-table) in `sdd-scrum-practices.md`. This section keeps the facts that the stories and tests check.
+The template and one note per placeholder are in [Sprint item table](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#sprint-item-table) in `sdd-scrum-practices.md`. This section keeps the facts that the stories and tests check.
 
 Columns, in this order: `#`, Code, SBI, Parent PBI, Module/Type, Related specs, Status.
 
@@ -1590,7 +1590,7 @@ There is no DoD column. The Definition of Done section above the first sprint ta
 
 **Module/Type** is one cell: the module name, a slash, and the Type. Example: `Framework/Feature`.
 
-**Type** is one word. **Feature** and **Task** are defined in [Terminology in practice](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#terminology-in-practice).
+**Type** is one word. **Feature** and **Task** are defined in [Terminology in practice](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#terminology-in-practice).
 
 - **Research**: the item finds and records evidence before a feature is specified. It does not ship the feature.
 - **Bug-fix**: the item corrects a defect in something already delivered. It does not add a new capability.
@@ -1622,7 +1622,7 @@ The sprint line uses the same three words. `Done` only when every SBI in that sp
 
 #### Retrospective
 
-The template and one note per placeholder are in [Retrospective](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#retrospective) in `sdd-scrum-practices.md`.
+The template and one note per placeholder are in [Retrospective](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#retrospective) in `sdd-scrum-practices.md`.
 
 - Each sprint has one Retrospective section. A later retrospective in that sprint is appended to the same section. Do not open a second Retrospective heading.
 - Three labels, in this order: Learnings, Opportunities, and Future actions. A later retrospective adds a record under those same labels.
@@ -1640,9 +1640,9 @@ Current sprint projection. It is not a second sprint backlog. It is not the defe
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/status.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/status.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/status.md` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
-The title is `The latest status of [product name]`. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). `Definition` links [status.md](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings as a placeholder template. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
+The title is `The latest status of [product name]`. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#header). `Definition` links [status.md](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#statusmd). Sections, in order: Project progress, where we are now, what could be the next, Current OGT(On-going Tasks), Last 15 closed OGTs. Column rules, the `#` rewrite, the cap of 15, and the defect exclusion are in [§2.3](#23-status-projection). The seed keeps those headings as a placeholder template. It does not keep an HTML comment. It does not copy this repo's live sprint text. [ADR-070](../adr/ADR-070-change-log-and-issues-log.md).
 
 ### changes-log.md
 
@@ -1651,9 +1651,9 @@ Conclusion record. An entry is written when a change is done. It states what cha
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/changes-log.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/changes-log.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/changes-log.md` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
-Section rules for the header and the entry are in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#changes-logmd). The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). The EN seed is a placeholder template with one sample entry block. It does not copy this repo's live change log.
+Section rules for the header and the entry are in [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#changes-logmd). The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#header). The EN seed is a placeholder template with one sample entry block. It does not copy this repo's live change log.
 
 ### issues-log.md
 
@@ -1662,7 +1662,7 @@ Defect record. A row is opened when a defect is found and stays after it is clos
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/issues-log.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/issues-log.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/issues-log.md` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
 Two tables, in order.
 
@@ -1672,7 +1672,7 @@ Closed issues: `Id`, `Title`, `Component`, `Priority`, `Description`, `Related`,
 
 Priority is `Fatal`, `High`, `Medium`, or `Low`. `Id` does not change when a row is sorted or moves. `Description` is under 3 lines. `Close Check` is shorter. Use bullets when a sentence is not enough. `Related` is a spec id, a link, and the name. Both tables sort by component A to Z, then by time, oldest first. Open uses `Added time`. Closed uses `Closed time`. The date shape is `30/Sep/2026`.
 
-It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#header). `Definition` links [issues-log.md](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md#issues-logmd). The EN seed is a placeholder template with empty tables and an optional sample row in an HTML comment only. It does not copy this repo's live issues.
+It is not the change log. An audit gap that is a defect is recorded here after the user confirms the gap. The change log gets a row only when a fix is concluded. An open defect is not an OGT row. The file header uses [Header (process artifacts)](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#header). `Definition` links [issues-log.md](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#issues-logmd). The EN seed is a placeholder template with empty tables and an optional sample row in an HTML comment only. It does not copy this repo's live issues.
 
 ### architecture.md
 
@@ -1681,9 +1681,9 @@ Architecture starter for a new project. It is not this repo's architecture spec.
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/architecture.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/architecture.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/architecture.md` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `#architecturemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-10](../product-backlog.md#L266), [feature-47](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/HanS/` and `templates/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) `#architecturemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-10](../product-backlog.md#L266), [feature-47](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
 
 ### {stem}-stories.md
 
@@ -1703,7 +1703,7 @@ Test spec for one module.
 
 The filename is `{stem}-tests.md`. The same stem rules as [{stem}-stories.md](#stem-storiesmd) apply. `specs/web-app/app-tests.md` is `{workspace}/specs/web-app/app-tests.md` when the stem is `app`.
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `#module-name-testsmd`.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) `#module-name-testsmd`.
 
 ### release.md
 
@@ -1712,9 +1712,9 @@ Release starter for a new project: local startup and go-live order. It is not th
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/release.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/release.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/release.md` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `#releasemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-11](../product-backlog.md#L268), [feature-48](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/HanS/` and `templates/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) `#releasemd`. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-11](../product-backlog.md#L268), [feature-48](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
 
 ### test-strategy.md
 
@@ -1723,9 +1723,9 @@ Product-level test strategy starter for a new project. It extends **common-test-
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/test-strategy.md` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/test-strategy.md` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/test-strategy.md` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) test-strategy section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-13](../product-backlog.md#L274), [feature-50](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/HanS/` and `templates/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) test-strategy section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-13](../product-backlog.md#L274), [feature-50](../sprint-backlog.md#sprint-7)). HanS and HanT authoring seeds ship under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/` ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
 
 ### .secrets
 
@@ -1734,9 +1734,9 @@ Dotenv-shaped registry: secret **names**, empty values, `#` comments for rules a
 | Role | Path |
 | --- | --- |
 | On a project | `{workspace}/{artifacts_root}/.secrets` |
-| Authoring seed | `pack.framework.sdd.works/templates/EN/.secrets` (HanS and HanT: same basename under `templates/HanS/` and `templates/HanT/`) |
+| Authoring seed | `pack.framework.sdd.works/templates/framework.sdd.works/EN/.secrets` (HanS and HanT: same basename under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/`) |
 
-Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/sdd-scrum-practices.md) `.secrets` section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#L270), [feature-49](../sprint-backlog.md#sprint-7)). The seed includes bracketed sample keys (database, auth, third-party, deploy, bootstrap) and a `{SECRET_NAME}=` placeholder line. HanS and HanT authoring seeds ship under `templates/HanS/` and `templates/HanT/` with Chinese comment lines ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
+Section rules: [`sdd-scrum-practices.md`](../../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md) `.secrets` section. User confirmed EN seed usable 2026-10-05 ([Spec-seeds-12](../product-backlog.md#L270), [feature-49](../sprint-backlog.md#sprint-7)). The seed includes bracketed sample keys (database, auth, third-party, deploy, bootstrap) and a `{SECRET_NAME}=` placeholder line. HanS and HanT authoring seeds ship under `templates/framework.sdd.works/HanS/` and `templates/framework.sdd.works/HanT/` with Chinese comment lines ([i18n-03](../product-backlog.md#L304)). Do not add a map row until the project file exists.
 
 ### adr/
 
@@ -1770,7 +1770,7 @@ OGT 2 in [`status.md`](../status.md): pack files must not link into this product
 | `{workspace}/{knowledge}` | Knowledge directory when the map names a `knowledge` key |
 | `{artifacts_root}` | Specs folder path from the map (often `{workspace}/specs`) |
 
-Process and engineering specs in the **customer** workspace link sibling files with workspace-relative paths (for example `{artifacts_root}/admin-portal/app-design.md`). Pack seeds link **in-pack** targets with relative paths that still work after install (`../../templates/sdd-scrum-practices.md#…`, `../../rules/friendly-language.mdc`).
+Process and engineering specs in the **customer** workspace link sibling files with workspace-relative paths (for example `{artifacts_root}/admin-portal/app-design.md`). Pack seeds link **in-pack** targets with relative paths that still work after install (`../../templates/framework.sdd.works/sdd-scrum-practices.md#…`, `../../rules/friendly-language.mdc`).
 
 ### Ban (markdown links)
 

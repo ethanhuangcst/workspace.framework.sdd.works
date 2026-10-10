@@ -1,6 +1,6 @@
 # ADR-055 — Layered sync freshness
 
-**Status:** Accepted  
+**Status:** Accepted. **Updated 2026-10-09 by [ADR-131](./ADR-131-http-only-install-bundled-fallback.md):** The `cache_stale` age gate is removed. A missing cache falls back to the bundled pack under `pack.framework.sdd.works/`. The sync job stays and updates `syncedAt` on every successful sync.  
 **Date:** 2026-09-18  
 **Context:** ADR-053, ADR-054, SYNK-01
 

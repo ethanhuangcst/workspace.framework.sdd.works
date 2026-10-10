@@ -264,7 +264,23 @@ curl -sS https://sdd.works/api/sdd/versions
 
 ```bash
 curl -sS https://sdd.works/api/sdd/lite/files | head -c 500; echo
+# Expect: 200 JSON with non-empty files and downloads (feature-82 / MCP-07)
+# Fail: 409 sync_pending — run Framework sync again
+# Fail: 404 lite_manifest_missing — pack repo root lacks lite-pack.allowlist.json in cache
 ```
+
+7. **feature-82 / MCP-07** production cache check:
+
+```bash
+curl -sS https://sdd.works/api/sdd/versions | jq '.latestCommit, .syncedAt, .inventory'
+# Expect: latestCommit is a real git SHA from the pack repo (not sha-v1.0.0 fixture)
+# Expect: inventory lists skills/rules/agents from the synced tree
+
+curl -sI "https://sdd.works/api/sdd/package?version=latest" | grep -E 'HTTP|X-SDD-'
+# Expect: 200 and X-SDD-Commit matches latestCommit from /versions
+```
+
+Optional on the server (SSH): confirm `lite-pack.allowlist.json` exists under `/data/sdd-packages/<latestCommit>/unpacked/` (exact layout matches [`mcp-design.md`](./mcp/mcp-design.md#25-production-pack-sync-feature-82--mcp-07) §2.5).
 
 ### 7.4 MCP
 

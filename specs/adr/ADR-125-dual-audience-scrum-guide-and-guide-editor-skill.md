@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (amended 2026-10-08: human-read vs ai-read link policy; amended 2026-10-08: [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) AI filename and EN-only template guide)
+Accepted (amended 2026-10-08: human-read vs ai-read link policy; amended 2026-10-08: [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) AI filename and EN-only template guide; amended 2026-10-09 by [ADR-130](./ADR-130-simplified-installer-url-only-and-empty-cache.md) decision 9: install path is `{client_root}/templates/`, not `{client_root}/templates/framework.sdd.works/`).
 
 ## Context
 
@@ -36,7 +36,7 @@ Human-read files include an Index, follow friendly-language and pack-authoring r
 
 | Role | Path |
 | --- | --- |
-| Pack authoring | `pack.framework.sdd.works/templates/pack-scrum-in-sdd.md` |
+| Pack authoring | `pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
 | After install | `{client_root}/templates/framework.sdd.works/pack-scrum-in-sdd.md` |
 
 AI-read file omits the Index, uses install-safe internal links, and is **English only**. See [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) for the trio with practices and coach-knowledge.

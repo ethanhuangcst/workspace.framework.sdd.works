@@ -5,7 +5,7 @@ Accepted. The filename `artifacts-map.md` is superseded by [ADR-082](./ADR-082-a
 
 ## Context
 
-`specs/framework/seeds/templates/EN/artifacts-map.md` was a filled Pokymon Card Collection map sitting in the template folder. A new project could copy that file and treat Pokymon paths as its own map. The templates for the map already live in the artifacts-map section of `sdd-scrum-practices.md`.
+`specs/framework/seeds/templates/framework.sdd.works/EN/artifacts-map.md` was a filled Pokymon Card Collection map sitting in the template folder. A new project could copy that file and treat Pokymon paths as its own map. The templates for the map already live in the artifacts-map section of `sdd-scrum-practices.md`.
 
 ## Decision
 

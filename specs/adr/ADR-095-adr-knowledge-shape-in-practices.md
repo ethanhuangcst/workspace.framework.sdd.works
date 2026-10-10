@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted. Amended 2026-10-09 by [ADR-130](./ADR-130-simplified-installer-url-only-and-empty-cache.md) decision 9: install path is `{client_root}/templates/`, not `{client_root}/templates/framework.sdd.works/`.
 
 ## Context
 
@@ -22,7 +22,7 @@ One practices file already holds process and engineering writing rules. Keeping 
 
 ## Consequences
 
-- Authoring seeds: delete `specs/framework/seeds/templates/EN/adr.md` and `knowledge.md`; add shape subsections to EN `sdd-scrum-practices.md`.
+- Authoring seeds: delete `specs/framework/seeds/templates/framework.sdd.works/EN/adr.md` and `knowledge.md`; add shape subsections to EN `sdd-scrum-practices.md`.
 - Update `sdd-retrospective`, framework design, framework tests (CE-SKILL-10), and framework stories.
 - Client template trees drop the two files on the next `sdd_update_framework`. Stale copies on `{client_root}` are harmless until update.
 - HanS `sdd-scrum-practices.md` gains matching sections in a later i18n story.

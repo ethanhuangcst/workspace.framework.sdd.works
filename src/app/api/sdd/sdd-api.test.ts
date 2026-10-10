@@ -17,6 +17,7 @@ import { GET as getLiteFiles } from "./lite/files/route";
 import { GET as getLiteFile } from "./lite/file/route";
 import { GET as getAgentSetup } from "../agent-setup/route";
 import { GET as getLiteInstallSetup } from "../agent-setup/install/route";
+import { GET as getInstallFull } from "../agent-setup/install-full/route";
 import { getLitePartnerSetupSentence } from "@/mcp/brand";
 import { GET as getNodeSetup } from "../agent-setup/node/route";
 import { GET as getNodeCatalog } from "../setup/node/catalog/route";
@@ -106,12 +107,15 @@ describe("SDD package API", () => {
       expect(body).toContain('"url": "https://sdd.works/mcp"');
       expect(body).toContain("https://sdd.works/mcp");
       expect(body).toContain("sdd_install_framework");
-      expect(body).toContain("2026-10-09.v10");
-      expect(body).toContain("cache_stale");
-      expect(body).toContain("fixture_pack");
-      expect(body).toContain("path-table folder");
-      expect(body).toContain("Follow the `instructions` field");
+      expect(body).toContain("2026-10-09.v11");
+      expect(body).not.toContain("cache_stale");
+      expect(body).not.toContain("fixture_pack");
+      expect(body).not.toContain("path-table folder");
+      expect(body).not.toContain("Follow the `instructions` field");
       expect(body).toContain("Change MCP configuration only for the agent that is running this session");
+      expect(body).toContain(
+        "Do not read or write another IDE's mcp.json unless the user names that IDE",
+      );
       expect(body).toContain(
         "When CodeBuddy or CodeBuddy CN is running, do not edit Cursor, TRAE, or TRAE CN MCP files.",
       );
@@ -130,7 +134,7 @@ describe("SDD package API", () => {
       expect(body).not.toContain("sdd-mcp-darwin-arm64");
       expect(body).not.toContain("github.com");
       expect(body).not.toContain("releases/latest/download");
-      expect(body).toContain("the pack on this server");
+      expect(body).not.toContain("the pack on this server");
       expect(body).toContain("WorkBuddy");
       expect(body).toContain("WorkBuddy CN");
       expect(body).toContain(
@@ -139,18 +143,43 @@ describe("SDD package API", () => {
       expect(body).toContain(
         "Do not use `~/Library/Application Support/Trae CN/User/mcp.json` or `~/.trae-cn/mcp.json` for this user MCP list.",
       );
-      expect(body).toContain("--write");
-      expect(body).toContain("--client");
-      expect(body).toContain("--os");
-      expect(body).toContain("--client-root");
-      expect(body).toContain("SDD_SERVER_URL");
-      expect(body).toContain("accepted_root");
-      expect(body).toContain("Pass `codebuddy` for CodeBuddy (international), WorkBuddy, CodeBuddy CN, and WorkBuddy CN.");
-      expect(body).toContain("Pass `trae` for TRAE (international). Pass `trae-cn` for TRAE CN.");
-      expect(body).toContain("Pass `--os` as `darwin`, `linux`, or `win32`.");
+      expect(body).not.toContain("--write");
+      expect(body).not.toContain("--client-root");
+      expect(body).not.toContain("SDD_SERVER_URL");
+      expect(body).not.toContain("accepted_root");
+      expect(body).not.toContain("Pass `--os` as `darwin`, `linux`, or `win32`.");
       expect(body).toContain("Library/Application Support/Trae CN/User/mcp.json");
       expect(body).toContain("Do not write `~/.trae-cn/mcp.json` or `~/.trae/mcp.json` for TRAE CN");
       expect(body).not.toContain("Lite install version:");
+      expect(body).toContain("## After setup");
+      expect(body).toContain("https://sdd.works/install");
+      expect(body).not.toContain("Download the pack from the `packageUrl`");
+      expect(body).not.toContain("Write the ledger last");
+    } finally {
+      if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
+      else process.env.PUBLIC_BASE_URL = prevBase;
+    }
+  });
+
+  it("should_return_install_full_markdown", async () => {
+    const prevBase = process.env.PUBLIC_BASE_URL;
+    delete process.env.PUBLIC_BASE_URL;
+    delete process.env.MCP_PUBLIC_URL;
+    try {
+      const res = await getInstallFull();
+      expect(res.status).toBe(200);
+      expect(res.headers.get("Content-Type")).toContain("text/markdown");
+      const body = await res.text();
+      expect(body).toContain("Install page version: 2026-10-10.v1");
+      expect(body).toContain(".sdd-installed.json");
+      expect(body).toContain("sdd_install_framework");
+      expect(body).toContain("Download the pack from the `packageUrl`");
+      expect(body).toContain("Write the ledger last");
+      expect(body).toContain("Omit `root`");
+      expect(body).toContain("root_required");
+      expect(body).not.toContain("github.com");
+      expect(body).not.toContain("sdd_list_versions");
+      expect(body).toContain("- write `framework.sdd.works.json`;");
     } finally {
       if (prevBase === undefined) delete process.env.PUBLIC_BASE_URL;
       else process.env.PUBLIC_BASE_URL = prevBase;

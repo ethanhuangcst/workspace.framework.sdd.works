@@ -1,7 +1,7 @@
 # ADR-053: Server-side package sync + thin stdio client
 
 ## Status
-Accepted
+Accepted. **Updated 2026-10-09 by [ADR-131](./ADR-131-http-only-install-bundled-fallback.md):** The sync job and package REST API stay. The "thin stdio client" (decision 3) is retired. HTTP is the only transport. The server reads from the cache or the bundled pack under `pack.framework.sdd.works/`.
 
 ## Context
 The stdio MCP binary was sharing code with the operator portal: `resolvePackage` and `listVersions` read `db.setting` (Prisma + PostgreSQL) and call GitHub via Octokit (`GITHUB_TOKEN`). That pulled Prisma, `DATABASE_URL`, `KEYS_ENCRYPTION_KEY`, and `@octokit/rest` into a client binary that should satisfy NFR-9 (zero client dependencies). Bun `--compile` also risked embedding the Prisma native engine (ADR-051).

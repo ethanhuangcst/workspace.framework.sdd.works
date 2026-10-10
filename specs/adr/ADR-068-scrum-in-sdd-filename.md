@@ -2,7 +2,7 @@
 
 ## Status
 
-Superseded for **AI template** filename and locale copies. [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) names the AI-read guide **`pack-scrum-in-sdd.md`** under `templates/EN/` only. **Human-read** portal files remain **`content/scrum-in-sdd/scrum-in-sdd.{locale}.md`**.
+Superseded for **AI template** filename and locale copies. [ADR-126](./ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md) names the AI-read guide **`pack-scrum-in-sdd.md`** under `templates/framework.sdd.works/EN/` only. **Human-read** portal files remain **`content/scrum-in-sdd/scrum-in-sdd.{locale}.md`**.
 
 ## Context
 
@@ -15,7 +15,7 @@ Ethan’s onboard, process headers, artifacts maps, Features catalog copy, and t
 1. The guide filename is `scrum-in-sdd.md` in every locale folder under `templates/{EN|HanS|HanT}/`.
 2. Practices stay `sdd-scrum-practices.md`.
 3. Living pointers use the new name. Dated change-log paragraphs and dated product-backlog history keep the name that was true on that date.
-4. When a HanT guide is added ([i18n-01](../product-backlog.md#L297)), it is `scrum-in-sdd.md` in `templates/HanT/`.
+4. When a HanT guide is added ([i18n-01](../product-backlog.md#L297)), it is `scrum-in-sdd.md` in `templates/framework.sdd.works/HanT/`.
 
 ## Rationale
 
