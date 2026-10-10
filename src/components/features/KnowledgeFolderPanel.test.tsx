@@ -1,11 +1,31 @@
-import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { KnowledgeFolderPanel } from "./KnowledgeFolderPanel";
+
+vi.mock("next/link", () => ({
+  default: ({
+    children,
+    href,
+    ...rest
+  }: {
+    children: React.ReactNode;
+    href: string;
+  }) => (
+    <a href={href} {...rest}>
+      {children}
+    </a>
+  ),
+}));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
+
+afterEach(async () => {
+  cleanup();
+  await act(async () => {});
+});
 
 describe("KnowledgeFolderPanel", () => {
   it("should_show_path_trail_at_root_without_folder_h2_or_back", () => {
