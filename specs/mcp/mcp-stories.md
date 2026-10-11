@@ -164,20 +164,21 @@ Scenario: Invalid tool arguments are rejected before side effects
 
 ## `sdd-mcp-transport-http` — Streamable HTTP transport
 
-HTTP entry on `/mcp` with bearer or session auth. This is the only transport (ADR-131). (TRAN-02)
+HTTP entry on `/mcp`. The public client file is a URL only ([ADR-130](../adr/ADR-130-simplified-installer-url-only-and-empty-cache.md), [MC-20](../issues-log.md)). This is the only transport (ADR-131). (TRAN-02)
 
-### User story 1 — Remote client connects over HTTP
+### User story 1 — Remote client connects with the URL only
 
 **As a** developer using a remote MCP client
-**I want** to call the same tools on `/mcp` with a bearer token
-**So that** cloud clients and third-party apps can use the service
+**I want** to call the tools on `/mcp` with only the URL in `mcp.json`
+**So that** CodeBuddy, TRAE, and Cursor connect without a bearer token
 
 #### AC1
 
 ```gherkin
-Scenario: Authorized HTTP client lists tools
+Scenario: URL-only client lists tools on the public host
   Given Streamable HTTP MCP is available at /mcp
-  And the client sends a valid bearer token
+  And MCP_AUTH_TOKEN is unset
+  And the client sends no Authorization header
   When the client completes initialize and lists tools
   Then the tool list includes sdd_install_framework, sdd_update_framework, and sdd_get_key
   And the tool list does not include sdd_list_versions
@@ -186,13 +187,16 @@ Scenario: Authorized HTTP client lists tools
 #### AC2
 
 ```gherkin
-Scenario: Missing or invalid bearer is rejected
+Scenario: A private host with a token rejects a missing bearer
   Given Streamable HTTP MCP is available at /mcp
-  When the client calls /mcp without a valid bearer token
+  And MCP_AUTH_TOKEN is set
+  When the client calls /mcp without a matching bearer token
   Then the result is unauthorized
   And no tool runs
   And no stack trace is returned
 ```
+
+The public host `sdd.works` leaves `MCP_AUTH_TOKEN` unset. [ADR-050](../adr/ADR-050-mcp-http-optional-bearer.md) still applies on a private host that sets the variable.
 
 ---
 

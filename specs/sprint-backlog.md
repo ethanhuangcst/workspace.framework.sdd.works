@@ -857,6 +857,10 @@ No open rows.
 
 - User **close confirm** after Manual setup on the Setup tab ([ADR-133](./adr/ADR-133-manual-mcp-json-setup-guide-returns.md)); Tools table stays removed.
 
+#### 11. [Oct 11, 2026], MC-20 done
+
+- Go-live set `MCP_AUTH_TOKEN` on public `sdd.works` against the URL-only client contract ([ADR-130](./adr/ADR-130-simplified-installer-url-only-and-empty-cache.md)); [ADR-050](./adr/ADR-050-mcp-http-optional-bearer.md) now names that host as unset-token mode.
+
 **Opportunities**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
@@ -905,6 +909,10 @@ No open rows.
 
 - When the last epic child SBI closes, set the parent PBI **Done** in the same review-status pass or name the epic in the mismatch table.
 
+#### 9. [Oct 11, 2026], MC-20 done
+
+- Treat a security checklist that forces a public bearer as a conflict with [ADR-130](./adr/ADR-130-simplified-installer-url-only-and-empty-cache.md) until product and ops agree in one ADR.
+
 **Future actions**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
@@ -952,6 +960,10 @@ No open rows.
 #### 8. [Oct 10, 2026], feature-84 done
 
 - On the next documentation-only SBI, inspect whether the close thread named file path, AC anchors, and verify steps before the user said usable.
+
+#### 9. [Oct 11, 2026], MC-20 done
+
+- On the next public MCP deploy, confirm `MCP_AUTH_TOKEN` is absent in Portainer and that URL-only `initialize` returns 200 before client reconnect checks.
 
 ---
 

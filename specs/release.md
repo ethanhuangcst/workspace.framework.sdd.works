@@ -100,7 +100,7 @@ Do not commit `.portainer.env`. Compose shape stays in [`go-live/20261008/portai
 | `ADMIN_SEED_EMAIL` | Portainer (web) + `.secrets` | Default `me@ethanhuang.com` if omitted |
 | `ADMIN_SEED_USERNAME` | Portainer (web) | Usually `admin` |
 | `GITHUB_TOKEN` | Portainer (both) + `.secrets` | PAT: package sync / Framework tree (`contents:read`). Portainer **Registries** needs a token with **`read:packages`** for GHCR pull (may be the same PAT) |
-| `MCP_AUTH_TOKEN` | Portainer (mcp) + `.secrets` | Bearer for **`/mcp`** |
+| `MCP_AUTH_TOKEN` | Portainer (mcp), private host only | Leave **unset** on public `sdd.works` so clients use the URL only ([MC-20](./issues-log.md)). Set it only on a private host |
 | `PUBLIC_BASE_URL` | Portainer (both) | **`https://sdd.works`** (already set) |
 | `SDD_SERVER_URL` | Portainer (mcp) | **`https://sdd.works`** (already set) |
 | `IMAGE_TAG` | Portainer stack env | **Full git sha** for this go-live (see §1; not `main` / `latest`) |
@@ -183,11 +183,11 @@ curl -sS -H 'accept: application/dns-json' 'https://cloudflare-dns.com/dns-query
 curl -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:3008/
 curl -sS -o /dev/null -w '%{http_code}\n' -X POST http://127.0.0.1:3204/mcp \
   -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <MCP_AUTH_TOKEN>' \
+  -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"1.0"}},"id":1}'
 ```
 
-Expect web `200` or `307`. MCP `200` with JSON-RPC (or `401` without Bearer). Public **`502` on `/mcp`** means NPM→mcp upstream is down; fix the mcp container, not DNS.
+Expect web `200` or `307`. Public MCP `200` with JSON-RPC and no bearer ([MC-20](./issues-log.md)). A private host that sets `MCP_AUTH_TOKEN` returns `401` when the bearer is missing. Public **`502` on `/mcp`** means NPM→mcp upstream is down; fix the mcp container, not DNS.
 
 ## 7. Smoke (this release)
 
@@ -285,16 +285,15 @@ Optional on the server (SSH): confirm `lite-pack.allowlist.json` exists under `/
 ### 7.4 MCP
 
 ```bash
-export MCP_TOKEN='…'   # from Portainer; do not commit
 curl -sS -X POST https://sdd.works/mcp \
-  -H "Authorization: Bearer $MCP_TOKEN" \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"1.0"}},"id":1}'
 ```
 
-- [ ] **initialize** succeeds (not **502**)
-- [ ] Wrong/missing Bearer → **401**
-- [ ] Cursor (optional): `url` `https://sdd.works/mcp` + Bearer → tools include `sdd_get_key`, `sdd_install_framework`, `sdd_update_framework`
+- [ ] **initialize** succeeds with no bearer (not **401**, not **502**)
+- [ ] Client `mcp.json` has `"url": "https://sdd.works/mcp"` and no `Authorization` header
+- [ ] Tools include `sdd_get_key`, `sdd_install_framework`, `sdd_update_framework`
 
 ### 7.5 Learn tab (portal code + WordPress)
 

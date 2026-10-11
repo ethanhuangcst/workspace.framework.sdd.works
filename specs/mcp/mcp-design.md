@@ -383,7 +383,9 @@ The pack `constants.json` defines `"templates_dir": "templates"`. The pack `temp
 
 ## 7. Security
 
-- The MCP entry is a URL only. No `command`, no `args`, no local path in the MCP file.
+- The MCP entry is a URL only. No `command`, no `args`, no local path, and no `headers` field in the MCP file.
+- The public host `sdd.works` leaves `MCP_AUTH_TOKEN` unset. A client that sends only the URL is accepted ([MC-20](../issues-log.md)).
+- A private host that sets `MCP_AUTH_TOKEN` returns 401 when the bearer is missing or wrong, and no tool runs ([ADR-050](../adr/ADR-050-mcp-http-optional-bearer.md)).
 - The server validates `client` and `os`.
 - For a known client, the server uses the seed-map root. For an unknown client, the server returns `root_required` until the agent sends a validated `root`.
 - The server rejects a resolved path outside the home directory, with `..`, or a system path.

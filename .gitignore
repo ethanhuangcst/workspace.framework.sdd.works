@@ -5,6 +5,7 @@
 *.pem
 specs/.secrets
 specs/go-live/.portainer.env
+specs/go-live/**/portainer.env
 
 # Dependencies / build
 node_modules/

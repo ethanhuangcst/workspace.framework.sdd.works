@@ -1,6 +1,8 @@
 # Go-live plan — task-02 (2026-10-10)
 
 > **SBI:** [task-02 Go-live](../../sprint-backlog.md#sprint-9). **Goal:** production `https://sdd.works` serves the portal, setup, lite installer, node installer, package API, and MCP from the current code on `origin/main` at `91c0852`.
+>
+> **MC-20 (2026-10-11):** the public host leaves `MCP_AUTH_TOKEN` unset. Do not follow U2 below on the next recreate. A URL-only `mcp.json` must reach `/mcp`.
 
 ## Current state (audited 2026-10-10 18:05 UTC+8)
 
@@ -250,7 +252,7 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://mypoke.trade/
 - [ ] S1 through S4 pass
 - [ ] S5 confirmed or WordPress `frame-ancestors` ticket opened
 - [ ] S6 confirmed (no mass-restart of sibling apps)
-- [ ] `MCP_AUTH_TOKEN` set and MCP rejects missing Bearer
+- [x] `MCP_AUTH_TOKEN` set and MCP rejects missing Bearer (done on 10 Oct 2026). [MC-20](../../issues-log.md) reverses this for the public host. Leave the variable unset on the next recreate.
 - [ ] Seed admin password rotated if the seed value was shared
 - [ ] At least one API key created (if testing `sdd_get_key`)
 - [ ] `https://sdd.works/api/sdd/lite/files` returns 200 (after Force sync)

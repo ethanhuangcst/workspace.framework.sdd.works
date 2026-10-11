@@ -51,8 +51,8 @@ Commands: `npx vitest run packages/sdd-paths src/core src/app/api/sdd src/auth s
 
 | Scenario | Assert |
 | --- | --- |
-| HTTP unauthorized | Missing/wrong bearer → 401 / `unauthorized` before tool body |
-| HTTP open mode (ADR-050) | Unset `MCP_AUTH_TOKEN` → tools callable on loopback |
+| HTTP URL-only public (MC-20) | Unset `MCP_AUTH_TOKEN` → initialize and tools succeed with no `Authorization` header |
+| HTTP unauthorized (ADR-050 private host) | When `MCP_AUTH_TOKEN` is set, missing or wrong bearer → 401 / `unauthorized` before the tool body |
 | HTTP tool list | Three tools: `sdd_install_framework`, `sdd_update_framework`, `sdd_get_key`; `sdd_list_versions` absent ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)) |
 | Versions REST (not MCP tool) | `GET /api/sdd/versions` reads sync cache manifest only; no key values; `paths_version` present; empty cache → 409 `sync_pending` ([feature-82](./mcp-tests.md#15-feature-82-production-pack-sync) operator path fills cache) |
 | `sdd_get_key` | HTTP only. Known name: text is the secret only and `isError` is absent. Missing name: text is `not_found` and `isError` is absent. Unauthorized: `isError` is true and code is `unauthorized` |
@@ -589,7 +589,7 @@ Helper script: [`scripts/manual-e2e-prep.sh`](../../scripts/manual-e2e-prep.sh) 
 - Admin Framework sync ran this session, so `.data/sdd-packages/manifest.json` has a real `latestCommit` (not `sha-v1.0.0`). Confirm: `curl -sS http://localhost:3040/api/sdd/versions | jq '.latestCommit'`.
 - `GET http://localhost:3040/api/sdd/lite/files` returns 200 JSON (lite route on localhost).
 - The three test IDEs are installed: CodeBuddy CN, TRAE CN, Codex.
-- A bearer token for the MCP endpoint is available from `.env` (`MCP_TOKEN` or equivalent). The agent reads it from the MCP config; the operator does not paste it in chat.
+- The MCP entry is the URL only. No `Authorization` header. Localhost leaves `MCP_AUTH_TOKEN` unset ([MC-20](../issues-log.md), [ADR-130](../adr/ADR-130-simplified-installer-url-only-and-empty-cache.md)).
 
 ### Seed-map roots (darwin) under test
 

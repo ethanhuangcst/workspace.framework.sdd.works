@@ -52,7 +52,7 @@ Guided release for stack **`framework-sdd-works`**. Follow in order. Do **not** 
 
 | Client | URL | Auth |
 | --- | --- | --- |
-| Cursor (Streamable HTTP) | `https://sdd.works/mcp` | `Authorization: Bearer <MCP_AUTH_TOKEN>` |
+| Cursor, CodeBuddy, TRAE (Streamable HTTP) | `https://sdd.works/mcp` | none. The entry is the URL only ([MC-20](../issues-log.md)) |
 | Instructions / setup prompt | `https://sdd.works/setup` | none (public markdown). `GET /agent-setup` redirects here. |
 | Package API (stdio clients) | `https://sdd.works/api/sdd/versions` · `/api/sdd/package` | none (public read) |
 
@@ -139,7 +139,7 @@ Step A (GHCR) unblocked after push to `main`. Portainer (Step E) still awaits op
 | `KEYS_ENCRYPTION_KEY` | **Pending** | 64 hex chars; immutable after first Keys write |
 | `ADMIN_SEED_PASSWORD` | **Pending** | Required for seed (SEED-01) |
 | `GITHUB_TOKEN` | **Pending** | `contents:read` on framework package source repo |
-| `MCP_AUTH_TOKEN` | **Pending** | Bearer for public `/mcp` |
+| `MCP_AUTH_TOKEN` | **Leave unset** on public `sdd.works` | URL-only clients ([MC-20](../issues-log.md)). Set only on a private host |
 | `RESEND_API_KEY` / `MAIL_FROM` | **Pending** | P1 — mail flows |
 | `GITHUB_WEBHOOK_SECRET` / `CRON_SECRET` | **Pending** | P2 — optional at go-live |
 | GHCR read PAT (Portainer registry) | **Pending** | `read:packages` if private pull fails |
@@ -171,7 +171,7 @@ These are **not** pasted into this file. Prepare them in your secret store befor
 | **Cron bearer secret** | `CRON_SECRET` | Generate random string; use as `Authorization: Bearer …` on `POST /api/sync/cron` | Optional backup sync trigger |
 | **Session signing secret** | `SESSION_SECRET` | `openssl rand -base64 32` (or equivalent) | Rotating invalidates all admin sessions |
 | **Keys encryption key** | `KEYS_ENCRYPTION_KEY` | `openssl rand -hex 32` (64 hex chars) | **Immutable after first Keys write** — changing it breaks existing encrypted rows (ADR-048) |
-| **MCP HTTP bearer** | `MCP_AUTH_TOKEN` | `openssl rand -base64 32` | Required on public `/mcp`; share with MCP clients only |
+| **MCP HTTP bearer** | `MCP_AUTH_TOKEN` | Leave unset on public `sdd.works` | Private host only. A set value requires `Authorization: Bearer` and breaks the URL-only client |
 | **Resend API key** | `RESEND_API_KEY` | Resend dashboard | Required for password reset / invite mail |
 | **Admin bootstrap password** | `ADMIN_SEED_PASSWORD` | Operator-chosen strong password | Seed fails if blank; change via portal after first login |
 
@@ -193,7 +193,7 @@ Set in stack **`framework-sdd-works`** (both containers unless noted). Values **
 | `ADMIN_SEED_PASSWORD` | web | Non-empty password | **Seed throws; container exits** |
 | `KEYS_ENCRYPTION_KEY` | both | 64-char hex | Keys CRUD fails |
 | `GITHUB_TOKEN` | both | GitHub PAT `contents:read` | Sync / Framework tree / package API empty |
-| `MCP_AUTH_TOKEN` | mcp | Random bearer | **Do not expose `/mcp` publicly without this** |
+| `MCP_AUTH_TOKEN` | mcp | Unset on public `sdd.works` | A set value makes URL-only clients receive 401 ([MC-20](../issues-log.md)) |
 | `MCP_HTTP_HOST` | mcp | `0.0.0.0` | MCP not reachable from NPM |
 | `MCP_HTTP_PORT` | mcp | `3041` | NPM Custom Location mismatch |
 | `MCP_HTTP_PATH` | mcp | `/mcp` | Client URL mismatch |
@@ -266,7 +266,8 @@ Without Settings URL + force sync, `GET /api/sdd/versions` returns **`409 sync_p
 **Secrets in Portainer (P0)**
 
 - [ ] `DATABASE_URL`, `SESSION_SECRET`, `KEYS_ENCRYPTION_KEY`, `ADMIN_SEED_PASSWORD`
-- [ ] `GITHUB_TOKEN`, `MCP_AUTH_TOKEN`
+- [ ] `GITHUB_TOKEN`
+- [ ] `MCP_AUTH_TOKEN` is unset on public `sdd.works`
 - [ ] `PUBLIC_BASE_URL`, `SDD_SERVER_URL`, MCP listen vars
 
 **Secrets for mail (P1 — if using reset/invite)**
@@ -392,11 +393,11 @@ networks:
 curl -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:3008/
 curl -sS -o /dev/null -w '%{http_code}\n' -X POST http://127.0.0.1:3204/mcp \
   -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <MCP_AUTH_TOKEN>' \
+  -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"1.0"}},"id":1}'
 ```
 
-Expect web `200` or `307`; MCP `200` with JSON-RPC result (401 without Bearer).
+Expect web `200` or `307`. Public MCP `200` with JSON-RPC and no bearer ([MC-20](../issues-log.md)).
 
 **Done when:** both containers healthy; debug ports respond.
 
@@ -500,21 +501,20 @@ Run in order. Both surfaces must pass.
 
 ### H4 — MCP (Streamable HTTP)
 
-Use a strong **`MCP_AUTH_TOKEN`** from Portainer (not chat).
+Public `sdd.works` leaves `MCP_AUTH_TOKEN` unset. The client file is the URL only ([MC-20](../issues-log.md)).
 
-- [ ] **Cursor:** `.cursor/mcp.json` → `url` `https://sdd.works/mcp`, header `Authorization: Bearer …` → **initialize** succeeds
+- [ ] **Cursor, CodeBuddy, TRAE:** `mcp.json` → `url` `https://sdd.works/mcp`, no `Authorization` header → **initialize** succeeds
 - [ ] **tools/list** includes: `sdd_get_key`, `sdd_install_framework`, `sdd_update_framework` ([ADR-063](../adr/ADR-063-unregister-sdd-list-versions.md)). `sdd_list_versions` is absent.
 - [ ] After sync, `GET /api/sdd/versions` returns versions (not an MCP tool)
 - [ ] **sdd_install_framework** over HTTP (fallback) returns `packageUrl` + extraction instructions — **no** server-side writes to user home (ADR-054)
-- [ ] Missing / wrong Bearer → `401 unauthorized`
+- [ ] A call with no bearer returns `200`, not `401`
 
 Optional HTTP smoke:
 
 ```bash
-export MCP_TOKEN='…'
 curl -sS -X POST https://sdd.works/mcp \
-  -H "Authorization: Bearer $MCP_TOKEN" \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"1.0"}},"id":1}'
 ```
 
@@ -664,7 +664,7 @@ Quick index mapped to [`.env.example`](../../.env.example):
 | `ADMIN_SEED_*` | P0 | yes |
 | `KEYS_ENCRYPTION_KEY` | P0 | yes |
 | `GITHUB_TOKEN` | P0 | yes |
-| `MCP_AUTH_TOKEN` | P0 | yes |
+| `MCP_AUTH_TOKEN` | Leave unset on public `sdd.works` | yes |
 | `MCP_HTTP_*` | P0 | yes |
 | `PUBLIC_BASE_URL` | P0 | yes |
 | `SDD_PACKAGE_CACHE_DIR` | P0 | compose default |

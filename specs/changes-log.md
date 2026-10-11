@@ -6,6 +6,16 @@
 
 ---
 
+## 2026-10-11
+
+### MC-20 closed: public MCP is URL-only again
+
+**Why:** User confirmed MC-20 usable after production cleared `MCP_AUTH_TOKEN` and CodeBuddy CN plus TRAE CN connected with URL-only `mcp.json`.
+
+**What changed:** [`issues-log.md`](./issues-log.md) moves [MC-20](./issues-log.md) to Closed. [`ADR-050`](./adr/ADR-050-mcp-http-optional-bearer.md) records the public-host amendment. MCP stories, tests, design, [`release.md`](./release.md), and the deployment instruction match URL-only on `sdd.works`. Image `61efdcc` messaging in [`http-server.ts`](../src/mcp/http-server.ts) and [`auth.ts`](../src/mcp/auth.ts).
+
+**Verification:** `POST https://sdd.works/mcp` initialize with no bearer returned 200; tools list matched the contract; user confirmed both clients.
+
 ## 2026-10-10
 
 ### feature-98 / Web-portal-41 closed (Manual mcp.json setup guide)
