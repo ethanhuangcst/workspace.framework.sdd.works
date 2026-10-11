@@ -2,7 +2,7 @@ import type { IncomingMessage } from "node:http";
 
 /**
  * ADR-049 + ADR-050: HTTP MCP bearer gate.
- * Token set → require matching Bearer. Token unset → allow (local open mode).
+ * Token set → require matching Bearer. Token unset → allow (public URL-only mode on sdd.works, or local dev).
  */
 export function getConfiguredMcpAuthToken(): string | null {
   const token = process.env.MCP_AUTH_TOKEN?.trim();

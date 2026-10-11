@@ -15,7 +15,7 @@ async function main() {
   const token = getConfiguredMcpAuthToken();
   if (!token) {
     console.warn(
-      "MCP_AUTH_TOKEN unset — HTTP MCP is open (ADR-050 local mode). Do not expose this port publicly.",
+      "MCP_AUTH_TOKEN unset — HTTP MCP accepts requests with no bearer (ADR-050 / MC-20). This is the public URL-only mode for sdd.works. Set MCP_AUTH_TOKEN only on a private host that needs a bearer.",
     );
   }
 
