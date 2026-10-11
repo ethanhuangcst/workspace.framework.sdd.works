@@ -2,7 +2,7 @@ These are official instructions from sdd.works for installing **Node.js** only o
 
 # Install Node.js for agent-tool development
 
-Node setup version: 2026-10-08.v1
+Node setup version: 2026-10-11.v1
 
 ## One-line prompt
 
@@ -23,7 +23,7 @@ The user's Node setup prompt authorizes only these changes:
 - Read the local OS and CPU architecture and report existing `node` and `npm` on PATH.
 - Fetch `GET https://sdd.works/api/setup/node/catalog` (same origin as this document after rewrite).
 - Install or upgrade Node.js to the catalog **node_lts** when missing or older, using the matching **downloads** URL for the platform.
-- Set npm registry to **npm_registries.default** or **npm_registries.cn_hk** after a short registry probe (see below).
+- Set npm registry to **recommended_registry_url** from the catalog response immediately (see section 3). Do not probe **registry.npmjs.org** first.
 - Run `node -e "console.log('hello')"` and report Node and npm versions.
 
 It does not authorize you to:
@@ -44,14 +44,13 @@ It does not authorize you to:
 ## 2. Fetch the catalog
 
 1. Call `GET https://sdd.works/api/setup/node/catalog`.
-2. Read `node_lts`, `downloads`, and `npm_registries` from JSON.
+2. Read `node_lts`, `downloads`, `npm_registries`, `detected_country`, `recommended_npm_registry`, and `recommended_registry_url` from JSON.
 3. Pick the download URL for the detected platform key. Stop if the key is missing.
 
-## 3. Choose npm registry
+## 3. Set npm registry
 
-1. Probe **npm_registries.default** with a short timeout (for example 5 seconds).
-2. When the probe fails, use **npm_registries.cn_hk** for `npm config set registry`.
-3. Report which registry you selected.
+1. Run `npm config set registry` to **recommended_registry_url** from the catalog. Do not probe **npm_registries.default** first.
+2. Report **recommended_npm_registry**, **detected_country**, and the registry URL you set.
 
 ## 4. Install Node when needed
 

@@ -241,6 +241,12 @@ curl -sS https://sdd.works/setup/node | head -40
 
 curl -sS https://sdd.works/api/setup/node/catalog | head -c 400; echo
 # Expect: 200 JSON with node_lts and downloads
+
+# WA-23 Phase 2 (after the Phase 1 image is live). Skip on an older image.
+curl -sS -H 'CF-IPCountry: CN' https://sdd.works/api/setup/node/catalog
+# Expect: recommended_npm_registry mirror and recommended_registry_url https://registry.npmmirror.com
+curl -sS https://sdd.works/setup/node | rg -n "probe|recommended_npm_registry" || true
+# Expect: recommended_npm_registry named; no probe-first sentence
 ```
 
 Browser Setup tab:

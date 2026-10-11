@@ -9,5 +9,8 @@
   "npm_registries": {
     "default": "https://registry.npmjs.org",
     "cn_hk": "https://registry.npmmirror.com"
+  },
+  "npm_registry_policy": {
+    "mirror_regions": ["CN", "HK", "MO"]
   }
 }

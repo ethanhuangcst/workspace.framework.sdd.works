@@ -221,8 +221,11 @@ describe("SDD package API", () => {
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toContain("text/markdown");
       const body = await res.text();
-      expect(body).toContain("Node setup version: 2026-10-08.v1");
+      expect(body).toContain("Node setup version: 2026-10-11.v1");
       expect(body).toContain("GET https://sdd.works/api/setup/node/catalog");
+      expect(body).toContain("recommended_npm_registry");
+      expect(body).toContain("recommended_registry_url");
+      expect(body).not.toContain("Probe **npm_registries.default**");
       expect(body).toContain("node_prerequisite");
       expect(body).toContain('node -e "console.log(\'hello\')"');
       expect(body).toContain("It does not authorize you to:");
@@ -234,17 +237,40 @@ describe("SDD package API", () => {
   });
 
   it("should_return_node_setup_catalog_json", async () => {
-    const res = await getNodeCatalog();
-    expect(res.status).toBe(200);
-    const body = (await res.json()) as {
+    const resDefault = await getNodeCatalog(new NextRequest("http://localhost/api/setup/node/catalog"));
+    expect(resDefault.status).toBe(200);
+    const bodyDefault = (await resDefault.json()) as {
       node_lts: string;
       downloads: Record<string, string>;
       npm_registries: { default: string; cn_hk: string };
+      npm_registry_policy: { mirror_regions: string[] };
+      recommended_npm_registry: string;
+      recommended_registry_url: string;
+      detected_country: string;
     };
-    expect(body.node_lts).toBeTruthy();
-    expect(body.downloads["darwin-arm64"]).toMatch(/^https:\/\//);
-    expect(body.npm_registries.default).toBe("https://registry.npmjs.org");
-    expect(body.npm_registries.cn_hk).toBe("https://registry.npmmirror.com");
+    expect(bodyDefault.node_lts).toBeTruthy();
+    expect(bodyDefault.downloads["darwin-arm64"]).toMatch(/^https:\/\//);
+    expect(bodyDefault.npm_registries.default).toBe("https://registry.npmjs.org");
+    expect(bodyDefault.npm_registries.cn_hk).toBe("https://registry.npmmirror.com");
+    expect(bodyDefault.npm_registry_policy.mirror_regions).toContain("CN");
+    expect(bodyDefault.recommended_npm_registry).toBe("default");
+    expect(bodyDefault.recommended_registry_url).toBe("https://registry.npmjs.org");
+    expect(bodyDefault.detected_country).toBe("unknown");
+
+    const resCn = await getNodeCatalog(
+      new NextRequest("http://localhost/api/setup/node/catalog", {
+        headers: { "CF-IPCountry": "CN" },
+      }),
+    );
+    expect(resCn.status).toBe(200);
+    const bodyCn = (await resCn.json()) as {
+      recommended_npm_registry: string;
+      recommended_registry_url: string;
+      detected_country: string;
+    };
+    expect(bodyCn.recommended_npm_registry).toBe("mirror");
+    expect(bodyCn.recommended_registry_url).toBe("https://registry.npmmirror.com");
+    expect(bodyCn.detected_country).toBe("CN");
   });
 
   it("should_rewrite_lite_install_origin_when_public_base_is_local", async () => {

@@ -1720,7 +1720,8 @@ Scenario: Node setup markdown is public
   And the Content-Type includes text/markdown
   And the body includes instructions to detect OS and CPU architecture
   And the body instructs GET /api/setup/node/catalog on the same origin
-  And the body instructs a short npm registry probe and catalog fallback cn_hk
+  And the body does not instruct probing registry.npmjs.org before choosing a registry
+  And the body instructs npm config set registry from catalog recommended_npm_registry
   And the body instructs node -e hello verification
   And the body documents the node_prerequisite paste sentence from paste-sentences.json
   And the body does not instruct sdd_install_framework
@@ -1743,6 +1744,7 @@ Scenario: Node catalog returns LTS and platform downloads
   And the JSON includes node_lts
   And downloads includes darwin-arm64 darwin-x64 and win32-x64 with https URLs
   And npm_registries includes default and cn_hk with https URLs
+  And the JSON includes npm_registry_policy with mirror_regions
   And the response includes no secrets
 
 Scenario: Node catalog is public
@@ -1771,6 +1773,53 @@ Scenario: Lite partner sentence stays out of Setup UI
   Given the visitor opens the Setup tab on the public guide
   Then there is no copy-lite-setup-prompt control
   And copy-setup-prompt for GET /setup remains
+```
+
+#### AC60 — WA-23 Phase 1 (npm mirror by country, no probe)
+
+Engineering detail: [`app-design.md`](./app-design.md) **WA-23 npm registry by country**. Supersedes the feature-88 probe sentence. No new MCP tool. Paste sentence **`node_prerequisite`** stays the same.
+
+**Plain summary:** When the catalog request comes from mainland China, Hong Kong, or Macao, the agent sets the npm registry to the mirror immediately. Other countries keep the default registry. The agent does not probe `registry.npmjs.org` first.
+
+```gherkin
+Scenario: Catalog recommends the mirror for CN, HK, and MO
+  Given npm_registry_policy.mirror_regions includes CN, HK, and MO
+  When GET /api/setup/node/catalog is called with header CF-IPCountry CN
+  Then recommended_npm_registry is mirror
+  And recommended_registry_url is npm_registries.cn_hk
+  And the same holds for CF-IPCountry HK and CF-IPCountry MO
+
+Scenario: Catalog recommends the default registry outside the mirror list
+  When GET /api/setup/node/catalog is called with header CF-IPCountry US
+  Then recommended_npm_registry is default
+  And recommended_registry_url is npm_registries.default
+
+Scenario: Missing country header does not probe and uses default
+  When GET /api/setup/node/catalog is called without CF-IPCountry
+  Then recommended_npm_registry is default
+  And the response does not require the agent to probe registry.npmjs.org
+
+Scenario: Node markdown forbids a pre-mirror probe
+  When GET /setup/node is called
+  Then the body tells the agent to set npm config set registry from recommended_registry_url
+  And the body does not tell the agent to probe the default registry and switch after failure
+```
+
+#### AC61 — WA-23 Phase 2 (go-live)
+
+**Plain summary:** After the image that contains Phase 1 is on `https://sdd.works`, production catalog and markdown match AC60. This phase does not change code.
+
+```gherkin
+Scenario: Production node markdown has no probe-first instruction
+  When GET https://sdd.works/setup/node returns 200
+  Then the body does not instruct a short timeout probe of registry.npmjs.org before choosing a registry
+  And the body names recommended_npm_registry
+
+Scenario: Production catalog returns mirror for a China country header
+  When GET https://sdd.works/api/setup/node/catalog is called with header CF-IPCountry CN
+  Then the status is 200
+  And recommended_npm_registry is mirror
+  And recommended_registry_url is https://registry.npmmirror.com
 ```
 
 ---

@@ -640,7 +640,7 @@ Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy
 | --- | --- |
 | Environment | Instruct detecting OS and CPU (`darwin` / `win32`, `arm64` / `x64`) and reading `node` / `npm` on PATH |
 | Catalog | Instruct `GET /api/setup/node/catalog` (same origin after rewrite) |
-| Registry probe | Short timeout against default npm registry; use catalog **`cn_hk`** when probe fails |
+| Registry choice | Read catalog **`recommended_npm_registry`**. Set `npm config set registry` to **`recommended_registry_url`** immediately. Do not probe **`registry.npmjs.org`** first ([WA-23](../issues-log.md), **AC60**). |
 | Install | Node LTS from catalog **`downloads`** for the detected platform only when missing or below pinned LTS; ask before admin or sudo |
 | Verify | `node -e "console.log('hello')"` and report Node and npm versions |
 | Forbidden | No `sdd_install_framework`, no lite file copy, no `.sdd-lite-installed.json`, no unrelated project edits |
@@ -652,9 +652,19 @@ Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy
 | --- | --- |
 | Route | `GET /api/setup/node/catalog` |
 | Source | [`public/agent-setup/node-catalog.json`](../../public/agent-setup/node-catalog.json) (or `src/content/node-catalog.json` bundled mirror; pick one path in implementation and document in handler) |
-| Shape | `version`, `node_lts` (semver string), `downloads` map (`darwin-arm64`, `darwin-x64`, `win32-x64` → HTTPS URL strings), `npm_registries` (`default`, `cn_hk` → registry base URLs) |
+| Shape | `version`, `node_lts`, `downloads`, `npm_registries` (`default`, `cn_hk`), `npm_registry_policy.mirror_regions` (ISO codes, first release **`CN`**, **`HK`**, **`MO`**), plus response fields **`detected_country`**, **`recommended_npm_registry`** (`mirror` or `default`), **`recommended_registry_url`** |
+| Country | Read **`CF-IPCountry`** only. Unknown or missing header → **`default`**. Do not use `Accept-Language`. |
 | Auth | None |
-| Tests | Vitest: schema validation; 200 JSON; URLs are HTTPS; no secrets |
+| Tests | Vitest: schema; CN/HK/MO → mirror; US and missing header → default; HTTPS URLs; no secrets. **AC60**. |
+
+##### WA-23 phases
+
+| Phase | Outcome |
+| --- | --- |
+| **1 Fix** | Catalog policy, country header, `node.md` §3, unit and route tests. No new MCP tool. Paste sentence unchanged. |
+| **2 Go-live** | Deploy the Phase 1 image. Confirm **AC61** on `https://sdd.works` ([`release.md`](../release.md) Node setup smoke). No extra code. |
+
+Style is a fixed workflow in markdown plus JSON. No model call. Rollback is an empty `mirror_regions` list or a revert of the catalog handler.
 
 ##### Implementation plan (feature-88)
 
