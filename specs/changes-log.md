@@ -8,6 +8,14 @@
 
 ## 2026-10-11
 
+### WA-23 closed: production Node setup is mirror-first for CN, HK, MO
+
+**Why:** User confirmed WA-23 usable after production smoke on `https://sdd.works`.
+
+**What changed:** [`issues-log.md`](./issues-log.md) moves [WA-23](./issues-log.md) to Closed. Image `4227f3e`. [`go-live-plan.md`](./go-live/20261010/go-live-plan.md) records that tag. [Web-portal-38](./product-backlog.md#pb-135) stays **Done**.
+
+**Verification:** `GET https://sdd.works/setup/node` is version `2026-10-11.v1` and does not probe `registry.npmjs.org` first. Catalog from a China network returns `recommended_npm_registry` `mirror` and `https://registry.npmmirror.com`. User **close confirm** 11 Oct 2026.
+
 ### MC-20 closed: public MCP is URL-only again
 
 **Why:** User confirmed MC-20 usable after production cleared `MCP_AUTH_TOKEN` and CodeBuddy CN plus TRAE CN connected with URL-only `mcp.json`.

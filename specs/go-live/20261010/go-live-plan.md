@@ -3,6 +3,8 @@
 > **SBI:** [task-02 Go-live](../../sprint-backlog.md#sprint-9). **Goal:** production `https://sdd.works` serves the portal, setup, lite installer, node installer, package API, and MCP from the current code on `origin/main` at `91c0852`.
 >
 > **MC-20 (2026-10-11):** the public host leaves `MCP_AUTH_TOKEN` unset. Do not follow U2 below on the next recreate. A URL-only `mcp.json` must reach `/mcp`.
+>
+> **WA-23 Phase 2 (2026-10-11):** deploy commit `4227f3e60af32e5a43d224ffb282ee25adc336d0`. Change Portainer **`IMAGE_TAG`** only. Do not rotate secrets. `MCP_AUTH_TOKEN` stays unset. Passed the same day: [`release.md`](../../release.md) Node setup smoke showed `Node setup version: 2026-10-11.v1` and catalog `recommended_npm_registry` `mirror` on a China network. User close confirm the same day.
 
 ## Current state (audited 2026-10-10 18:05 UTC+8)
 

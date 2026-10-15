@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-11 (Sprint 9 WIP; twenty-three SBIs Done; task-02 ToDo only; MC-20 closed; Codex OGTs open)
+> as_of: 2026-10-11 (Sprint 9 WIP; twenty-three SBIs Done; task-02 ToDo only; MC-20 closed; WA-23 closed; Codex OGTs open)
 > [Definition](../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#statusmd)
 
 ---
@@ -24,7 +24,7 @@
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: [task-02 Go-live](./sprint-backlog.md#sprint-9) is the only open SBI (**ToDo**). [feature-98](./sprint-backlog.md#sprint-9) / [Web-portal-41](./product-backlog.md#pb-140) closed 2026-10-10 after user confirm. Manual e2e §16 **pass** on CodeBuddy CN and TRAE CN (TC-1 through TC-6) and **pass** once-per-run for TC-7 through TC-9 (Cursor MCP + verify scripts) on 2026-10-10. Evidence: [`go-live-test.md`](./mcp/go-live-test.md), [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md). [MC-20](./issues-log.md) closed 2026-10-11: public `https://sdd.works/mcp` accepts URL-only `mcp.json` (image `61efdcc`, `MCP_AUTH_TOKEN` unset). **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md), [WA-22](./issues-log.md), [MC-19](./issues-log.md).
+- What SBI are we working on now: [task-02 Go-live](./sprint-backlog.md#sprint-9) is the only open SBI (**ToDo**). [feature-98](./sprint-backlog.md#sprint-9) / [Web-portal-41](./product-backlog.md#pb-140) closed 2026-10-10 after user confirm. Manual e2e §16 **pass** on CodeBuddy CN and TRAE CN (TC-1 through TC-6) and **pass** once-per-run for TC-7 through TC-9 (Cursor MCP + verify scripts) on 2026-10-10. Evidence: [`go-live-test.md`](./mcp/go-live-test.md), [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md). [MC-20](./issues-log.md) closed 2026-10-11: public `https://sdd.works/mcp` accepts URL-only `mcp.json` (image `61efdcc`, `MCP_AUTH_TOKEN` unset). [WA-23](./issues-log.md) closed 2026-10-11: Node setup on `https://sdd.works` is mirror-first for CN, HK, and MO (image `4227f3e`). **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md), [WA-22](./issues-log.md), [MC-19](./issues-log.md).
 
 ## what could be the next
 
