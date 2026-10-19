@@ -114,7 +114,7 @@ export function getAgentSetupUrl(): string {
 }
 
 export function getLiteInstallSetupUrl(): string {
-  return `${getMcpWebsiteUrl().replace(/\/$/, "")}/setup/install`;
+  return `${getMcpWebsiteUrl().replace(/\/$/, "")}/lite/install`;
 }
 
 export function getNodeSetupUrl(): string {

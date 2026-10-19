@@ -6,6 +6,11 @@ export const SETUP_REDIRECTS = [
     destination: "/setup",
     permanent: false as const,
   },
+  {
+    source: "/setup/install",
+    destination: "/lite/install",
+    permanent: false as const,
+  },
 ];
 
 export const SETUP_REWRITES = [
@@ -14,7 +19,7 @@ export const SETUP_REWRITES = [
     destination: "/api/agent-setup/install-full",
   },
   {
-    source: "/setup/install",
+    source: "/lite/install",
     destination: "/api/agent-setup/install",
   },
   {

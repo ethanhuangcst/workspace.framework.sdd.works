@@ -850,7 +850,7 @@ Scenario: Signed-in instructions open from the header
 
 #### AC3 — feature-11, superseded by AC21 (feature-56 / Web-portal-18 Part 2)
 
-Shipped the one-line fetch for `GET /setup`. After [feature-56](../sprint-backlog.md#sprint-8), assert AC21 for the lite install URL (`GET /setup/install`).
+Shipped the one-line fetch for `GET /setup`. After [feature-56](../sprint-backlog.md#sprint-8), assert AC21 for the lite install URL (`GET /lite/install`, [ADR-134](../adr/ADR-134-lite-install-public-path.md)).
 
 ```gherkin
 Scenario: Setup copy is the one-line fetch prompt
@@ -1131,7 +1131,7 @@ Scenario: Install omits the portal guide files
 **I want** lite install instructions from the public site
 **So that** I can copy listed pack skills and rules without the full MCP install
 
-[Web-portal-18](../product-backlog.md#L488) delivers two parts: **AC20** (public agent markdown at `GET /setup/install`) and **AC21** (Setup copy control for that URL). Sprint SBI [feature-56](../sprint-backlog.md#sprint-8) covers both; the PBI is **Done** only when AC20 and AC21 pass.
+[Web-portal-18](../product-backlog.md#L488) delivers two parts: **AC20** (public agent markdown at `GET /lite/install`, [ADR-134](../adr/ADR-134-lite-install-public-path.md)) and **AC21** (partner paste of that URL). Sprint SBI [feature-56](../sprint-backlog.md#sprint-8) covers both; the PBI is **Done** only when AC20 and AC21 pass.
 
 #### AC19 — feature-55 / Web-portal-17
 
@@ -1188,11 +1188,11 @@ Scenario: Sync not ready returns sync_pending
 
 #### AC20 — feature-56 / Web-portal-18 Part 1 (agent markdown)
 
-Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** — source `public/agent-setup/install.md`, rewrite `GET /setup/install`.
+Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** — source `public/agent-setup/install.md`, rewrite `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). `GET /setup/install` redirects to that path.
 
 ```gherkin
 Scenario: Lite install prompt is public without MCP tools
-  When GET /setup/install is called
+  When GET /lite/install is called
   Then the response status is 200
   And the body matches the public lite install markdown source
   And the body instructs the agent to fetch the lite link list and copy only those files
@@ -1202,9 +1202,14 @@ Scenario: Lite install prompt is public without MCP tools
 
 Scenario: Lite prompt references synced manifest paths
   Given lite-pack.allowlist.json exists in the sync cache
-  When GET /setup/install is called
+  When GET /lite/install is called
   Then the response tells the agent to use GET /api/sdd/lite/files
   And extract paths stay limited to paths in that manifest
+
+Scenario: Old lite URL redirects to the public path
+  When GET /setup/install is called
+  Then the response redirects to /lite/install
+  And the redirect target is not /setup/install
 ```
 
 #### AC21 — feature-56 / Web-portal-18 Part 2 (partner one-line)
@@ -1761,7 +1766,7 @@ Scenario: Paste sentences file defines lite and node agent prompts
   Given public/agent-setup/paste-sentences.json version is 1
   Then sentences includes lite_install and node_prerequisite
   And each value contains exactly one origin placeholder
-  And resolvePasteSentence lite_install with origin https://sdd.works equals Fetch and execute the setup instructions from https://sdd.works/setup/install
+  And resolvePasteSentence lite_install with origin https://sdd.works equals Fetch and execute the setup instructions from https://sdd.works/lite/install
   And resolvePasteSentence node_prerequisite with origin https://sdd.works equals Fetch and execute the setup instructions from https://sdd.works/setup/node
 
 Scenario: Setup tab has no Node install copy control

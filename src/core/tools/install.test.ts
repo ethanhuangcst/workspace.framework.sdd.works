@@ -481,7 +481,85 @@ describe("install", () => {
     rmSync(home, { recursive: true, force: true });
   });
 
+  it("should_normalize_explicit_client_alias", async () => {
+    seedHttpCache("sha-workbuddy-alias", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const result = await installFrameworkHttp(
+      {
+        client: "workbuddy",
+        os: "darwin",
+        inventory: { ledger: null, missing: [] },
+      },
+      { channel: "http", skipLlm: true },
+    );
+    const body = parseToolJson<{
+      root?: string;
+      resolution_source: string;
+      plan: { action: string };
+    }>(result);
+    expect(body.root).toBe("~/.codebuddy");
+    expect(body.resolution_source).toBe("seed");
+    expect(body.plan.action).toBe("apply");
+  });
+
+  it("should_accept_absolute_root_outside_server_home_on_http", async () => {
+    seedHttpCache("sha-mc21-abs", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const serverHome = "/home/nextjs";
+    const ctx: InstallContext = {
+      channel: "http",
+      home: serverHome,
+      userProfile: serverHome,
+      env: { HOME: serverHome },
+      skipLlm: true,
+    };
+    const clientRoot = "/Users/ethanhuang/.workbuddy";
+    const result = await installFrameworkHttp(
+      {
+        client: "unknown-cli",
+        os: "darwin",
+        root: clientRoot,
+        inventory: { ledger: null, missing: [] },
+      },
+      ctx,
+    );
+    const body = parseToolJson<{
+      root?: string;
+      plan: { action: string };
+    }>(result);
+    expect(body.root).toBe(clientRoot);
+    expect(body.plan.action).toBe("apply");
+  });
+
+  it("should_keep_tilde_root_unexpanded_on_http", async () => {
+    seedHttpCache("sha-mc21-tilde", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
+    const serverHome = "/home/nextjs";
+    const ctx: InstallContext = {
+      channel: "http",
+      home: serverHome,
+      userProfile: serverHome,
+      env: { HOME: serverHome },
+      skipLlm: true,
+    };
+    const result = await installFrameworkHttp(
+      {
+        client: "unknown-cli",
+        os: "darwin",
+        root: "~/.workbuddy",
+        inventory: { ledger: null, missing: [] },
+      },
+      ctx,
+    );
+    const raw = JSON.stringify(result);
+    expect(raw).not.toContain("/home/nextjs");
+    const body = parseToolJson<{ root?: string }>(result);
+    expect(body.root).toBe("~/.workbuddy");
+  });
+
   it("should_reject_invalid_root_for_unknown_client", async () => {
+    seedHttpCache("sha-invalid-root", "v1.0.0");
+    mockCacheFreshAsMatchingCache();
     const home = mkdtempSync(join(tmpdir(), "sdd-home-invalid-"));
     const ctx: InstallContext = {
       channel: "http",
@@ -490,18 +568,22 @@ describe("install", () => {
       env: { HOME: home },
       skipLlm: true,
     };
-    const base = { client: "unknown-cli", os: "darwin" as const };
+    const base = {
+      client: "unknown-cli",
+      os: "darwin" as const,
+      inventory: { ledger: null, missing: [] },
+    };
 
     const outside = await installFrameworkHttp(
       { ...base, root: "/var/tmp/outside-home-cli" },
       ctx,
     );
-    expect(parseToolJson<{ error: { code: string } }>(outside).error.code).toBe(
-      "path_rejected",
+    expect(parseToolJson<{ plan: { action: string } }>(outside).plan.action).toBe(
+      "apply",
     );
 
     const escape = await installFrameworkHttp(
-      { ...base, root: join(home, "..", "escape-cli") },
+      { ...base, root: `${home}/../escape-cli` },
       ctx,
     );
     expect(parseToolJson<{ error: { code: string } }>(escape).error.code).toBe(

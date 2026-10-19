@@ -39,7 +39,7 @@ The two jobs run in two separate code modules. The boundary keeps setup serving 
 
 | Module | Owns | Files |
 | --- | --- | --- |
-| Setup backend | `GET /setup`, `GET /setup/install`, `GET /setup/node`, `GET /install`, setup markdown rewrite, paste sentences, client MCP file paths, node setup catalog | `src/app/api/agent-setup/route.ts`, `src/app/api/agent-setup/install/route.ts`, `src/app/api/agent-setup/node/route.ts`, `src/app/api/agent-setup/install-full/route.ts`, `src/mcp/setup-markdown.ts`, `src/mcp/setup-paths.ts`, `src/mcp/paste-sentences.ts`, `src/mcp/node-setup-catalog.ts`, `src/mcp/brand.ts`, `src/mcp/public-origin.ts`, `public/agent-setup/prompt.md`, `public/agent-setup/install.md`, `public/agent-setup/node.md`, `public/agent-setup/install-full.md` |
+| Setup backend | `GET /setup`, `GET /lite/install`, `GET /setup/node`, `GET /install`, setup markdown rewrite, paste sentences, client MCP file paths, node setup catalog | `src/app/api/agent-setup/route.ts`, `src/app/api/agent-setup/install/route.ts`, `src/app/api/agent-setup/node/route.ts`, `src/app/api/agent-setup/install-full/route.ts`, `src/mcp/setup-markdown.ts`, `src/mcp/setup-paths.ts`, `src/mcp/paste-sentences.ts`, `src/mcp/node-setup-catalog.ts`, `src/mcp/brand.ts`, `src/mcp/public-origin.ts`, `public/agent-setup/prompt.md`, `public/agent-setup/install.md`, `public/agent-setup/node.md`, `public/agent-setup/install-full.md` |
 | Pack install backend | `sdd_install_framework`, `sdd_update_framework`, `sdd_get_key`, install plan, tarball URL, ledger, cache and bundled pack read | `src/core/tools/install.ts`, `src/core/tools/install-http.ts`, `src/core/tools/install-plan.ts`, `src/core/tools/apply-plan.ts`, `src/core/tools/get-key.ts`, `src/core/tools/list-versions.ts`, `src/core/tools/package-fetch.ts`, `src/core/tools/errors.ts`, `src/core/sync/*` |
 
 Boundary rules:
@@ -49,7 +49,7 @@ Boundary rules:
 - Shared types live in `src/core/tools/errors.ts` or a types module the two modules agree on. The setup backend does not import install-only types.
 - Client detection (`src/core/path-detect.ts`) is install-only. The setup backend uses `src/mcp/setup-paths.ts` for the client MCP file path table. The pack install backend uses the seed map in `packages/sdd-paths/paths.json`, not the setup path table.
 - The MCP server entry (`src/mcp/create-server.ts`, `src/mcp/http-server.ts`) wires both modules. It is the only place that imports from both.
-- `GET /setup`, `GET /setup/install`, `GET /setup/node`, and `GET /install` are documentation pages served by the setup backend (`public/agent-setup/prompt.md`, `install.md`, `node.md`, `install-full.md`). The pack install backend is `sdd_install_framework` tool logic and does not serve markdown pages. Setup routes do not share a handler with MCP tool handlers. `GET /install` names the pack install sequence but does not call install functions; it serves static markdown only.
+- `GET /setup`, `GET /lite/install`, `GET /setup/node`, and `GET /install` are documentation pages served by the setup backend (`public/agent-setup/prompt.md`, `install.md`, `node.md`, `install-full.md`). `GET /setup/install` redirects to `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). The pack install backend is `sdd_install_framework` tool logic and does not serve markdown pages. Setup routes do not share a handler with MCP tool handlers. `GET /install` names the pack install sequence but does not call install functions; it serves static markdown only.
 
 ### 2.1 Job 1: Install MCP
 
@@ -276,7 +276,7 @@ The agent sends `client` and `os`. It does not detect or send `root` for known c
   "tarballUrl": "https://sdd.works/pack/sha-v1.2.0/diff.tar.gz",
   "ledger": {
     "package_version": "sha-v1.2.0",
-    "pack_complete": true,
+  "pack_complete": true,
     "files": [
       { "path": "skills/sdd-build/SKILL.md", "sha": "..." }
     ]
@@ -296,12 +296,13 @@ The server resolves the install root. The agent sends `client` and `os`. For a k
 
 ### Client identification
 
-The agent maps the running session to a `client` value using the user, the MCP handshake `clientInfo.name`, or aliases in the seed map. That step does not choose an install root.
+The agent maps the running session to a `client` value using the user, the MCP handshake `clientInfo.name`, or aliases in the seed map. That step does not choose an install root. Alias normalization applies to the explicit `client` argument as well as `clientInfo.name` (MC-21): `workbuddy` resolves to `codebuddy` before the seed-map lookup.
 
 ### Server-side resolution
 
-- Known client: resolve from the seed map using `client` and `os`. Ignore any `root` the agent sends.
-- Unknown client: when `root` is absent, return `root_required`. When `root` is present, validate it. Reject a path outside the home directory, a path with `..`, or `/etc`, `/usr`, `/bin`, `/sbin`. Return `path_rejected`.
+- Known client (after alias normalization): resolve from the seed map using `client` and `os`. Ignore any `root` the agent sends.
+- Unknown client: when `root` is absent, return `root_required`. When `root` is present, validate it structurally: reject `..` and `/etc`, `/usr`, `/bin`, `/sbin`. Return `path_rejected`.
+- HTTP channel (MC-21): the server home is not the client home, so a manual root is never checked against the server home. The server never expands `~`; the plan keeps the root unexpanded for the client agent to resolve locally.
 
 ### Relocation limitation
 
@@ -335,12 +336,15 @@ The `client` value maps to the canonical name in the seed map. Aliases are accep
 | `trae` | `trae` |
 | `trae-cn`, `trae_cn`, `trae cn` | `trae-cn` |
 
+Normalization runs on the explicit `client` argument and on `clientInfo.name` before the seed-map lookup (MC-21).
+
 ### Path validation
 
 The server rejects:
-- A path outside the home directory.
 - A path containing `..`.
 - System paths: `/etc`, `/usr`, `/bin`, `/sbin`.
+
+MC-21: the "outside the home directory" rule applies only when the server runs on the client machine. ADR-131 makes HTTP the only transport, so an HTTP manual root is not checked against the server home. The server does not expand `~` for an HTTP manual root; the plan keeps it unexpanded.
 
 ## 5. Ledger
 

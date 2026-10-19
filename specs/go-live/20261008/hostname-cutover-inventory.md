@@ -96,4 +96,4 @@
 
 ## Portal paths on apex
 
-`/`, `/instructions`, `/setup`, `/setup/install`, `/mcp`, `/api/`, `/admin/`, `/login`, `/_next/`
+`/`, `/instructions`, `/setup`, `/lite/install`, `/setup/install`, `/mcp`, `/api/`, `/admin/`, `/login`, `/_next/`

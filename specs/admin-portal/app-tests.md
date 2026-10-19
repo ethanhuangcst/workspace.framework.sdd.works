@@ -57,7 +57,7 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | `GET /api/sdd/features` (feature-07) | Cache `en` returns that file’s HTML with `source` `cache`; cache `zh-Hans` returns the Chinese file when present; missing cache `zh-Hant` returns cache English HTML, `source` `cache`, and `sourceLocale` `en`; no cache English file returns the package file with `source` `package`; response has no key values; raw HTML in the file is escaped. **AC59:** no `locale` query and `Accept-Language: zh-CN` still returns `locale` `en` |
 | `GET /api/sdd/lite/files` (feature-55) | With fixture unpack + valid `lite-pack.allowlist.json` at pack root: 200; body has `package_version`, `package_commit`, sorted `files`, and `downloads` with same-origin `url` per path; no GitHub fetch. Empty cache manifest → 409 `sync_pending`. Unpack without allow-list file → `lite_manifest_missing`. Bad allow-list (unsorted skills, missing file on disk, disallowed path) → `lite_manifest_invalid`; no `downloads`. |
 | `GET /api/sdd/lite/file` (feature-55) | Allow-listed path → 200 and bytes match unpack file. Path not in allow-list → `path_not_allowed`. `../` or absolute path → `path_invalid`. |
-| `GET /setup/install` (feature-56) | Public rewrite → install handler: 200, `Content-Type` includes `text/markdown`. Body matches `public/agent-setup/install.md` after local origin rewrite. Body includes **`lite_install`** paste text from [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) (or legacy `LITE_PARTNER_SETUP_SENTENCE` until feature-88), lite file list route, per-file download route, `{client_root}`, `.sdd-lite-installed.json` / receipt merge, and excludes `sdd_install_framework` and `.sdd-installed.json`. With fixture cache, body references `GET /api/sdd/lite/files`. No admin session. |
+| `GET /lite/install` (feature-56, [ADR-134](../adr/ADR-134-lite-install-public-path.md)) | Public rewrite → install handler: 200, `Content-Type` includes `text/markdown`. Body matches `public/agent-setup/install.md` after local origin rewrite. Body includes **`lite_install`** paste text from [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) (or legacy `LITE_PARTNER_SETUP_SENTENCE` until feature-88), lite file list route, per-file download route, `{client_root}`, `.sdd-lite-installed.json` / receipt merge, and excludes `sdd_install_framework` and `.sdd-installed.json`. With fixture cache, body references `GET /api/sdd/lite/files`. No admin session. `GET /setup/install` redirects to `/lite/install`. |
 | `paste-sentences.json` (feature-88) | File exists with `version` 1 and keys `lite_install`, `node_prerequisite`. Loader substitutes `{origin}`. Unit: resolved strings match **AC47**. `LITE_PARTNER_SETUP_SENTENCE` equals `lite_install` for production origin after refactor. |
 | `GET /setup/node` (feature-88, WA-23) | Public rewrite → node handler: 200 markdown; body matches `public/agent-setup/node.md` after origin rewrite; includes catalog route, `recommended_npm_registry`, hello check, authorization boundary; does not instruct a default-registry probe before mirror. Excludes MCP and lite copy. **AC45**, **AC60**. |
 | `GET /api/setup/node/catalog` (feature-88, WA-23) | 200 JSON with `node_lts`, platform `downloads`, `npm_registries.default` and `cn_hk`, `npm_registry_policy.mirror_regions`. Header `CF-IPCountry` `CN`, `HK`, or `MO` → `recommended_npm_registry` `mirror` and `recommended_registry_url` equals `cn_hk`. Header `US` or missing header → `default`. HTTPS URLs only; no admin session. **AC46**, **AC60**. |
@@ -156,14 +156,15 @@ Run after feature-55 routes ship, before the SBI is **Done**. Use `SDD_PACKAGE_C
 
 Run after feature-56 ships, before the SBI is **Done**. Covers AC20 and AC21. Fixture cache optional for markdown API case; use `/` and `/instructions`.
 
-- [ ] `GET /setup/install` returns 200 markdown with lite file API and receipt instructions; no `sdd_install_framework` or `.sdd-installed.json` in the body
+- [ ] `GET /lite/install` returns 200 markdown with lite file API and receipt instructions; no `sdd_install_framework` or `.sdd-installed.json` in the body
 - [ ] `GET /setup` still returns stdio-primary markdown (not lite install copy)
 - [ ] `copy-setup-prompt` still copies the `/setup` sentence
 - [ ] Setup has no `copy-lite-setup-prompt`
-- [ ] `GET /setup/install` body documents partner paste: `Fetch and execute the setup instructions from https://sdd.works/setup/install`
+- [ ] `GET /lite/install` body documents partner paste: `Fetch and execute the setup instructions from https://sdd.works/lite/install`
 - [ ] ~~Manual setup still shows one stdio `mcp.json` and no `curl`~~ N/A after ADR-122 (see §25)
 - [ ] Get secret on Learn tab only; Setup and Features unchanged
-- [ ] No admin session required for `GET /setup/install`
+- [ ] No admin session required for `GET /lite/install`
+- [ ] `GET /setup/install` redirects to `/lite/install`
 - [ ] No console or server error on these paths
 
 ---
@@ -485,7 +486,7 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 | Pack JSON | `pack.framework.sdd.works/content/.instructions-tabs.json` and `src/content/.instructions-tabs.json` **`learn-scrum-in-sdd.urls.*`** are **`https://learn.sdd.works/en/learn-embedded/`**. |
 | Allowlist | `EMBED_PAGE_HOST_ALLOWLIST` includes **`learn.sdd.works`** and **`www.learn.sdd.works`**. **`sdd.works`** is not an embed host after cutover. |
 | Constants | `SDD_WORKS_LEARN_URL` (or successor) resolves to **`https://learn.sdd.works/en/learn-embedded/`**. `SDD_LEARN_SITE_URL` stays **`https://learn.sdd.works`**. |
-| Setup / MCP | `SetupGuidePanel` and **`GET /setup`** markdown use production origin **`https://sdd.works`** (`/setup`, `/mcp`, lite `/setup/install`). Default **`PUBLIC_BASE_URL`** is **`https://sdd.works`**. |
+| Setup / MCP | `SetupGuidePanel` and **`GET /setup`** markdown use production origin **`https://sdd.works`** (`/setup`, `/mcp`, lite `/lite/install`). Default **`PUBLIC_BASE_URL`** is **`https://sdd.works`**. |
 | UI host | `layout` title and logo **`aria-label`** use **`sdd.works`**. |
 | Unit | `instructions-tabs.test.ts`, `instructions-tabs-config.test.ts`, `learn-embed-messaging.test.ts`, `sdd-works-learn-url.test.ts`, `InstructionsPage.test.tsx`, `LearnScrumEmbedPanel.test.tsx` assert new URLs and allowlist. |
 | Component | Learn iframe **`src`** and fallback **`href`** match **AC44**. Setup copy sentence uses **`sdd.works`**. |
@@ -546,7 +547,7 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 - [ ] `public/agent-setup/paste-sentences.json` validates; loader resolves **lite_install** and **node_prerequisite**
 - [ ] `GET /setup/node` returns 200 markdown per **AC45**; no MCP or lite instructions in body
 - [ ] `GET /api/setup/node/catalog` returns 200 JSON per **AC46**
-- [ ] `GET /setup/install` and `GET /setup` unchanged except lite paste text may come from JSON (**AC21** parity)
+- [ ] `GET /lite/install` and `GET /setup` unchanged except lite paste text may come from JSON (**AC21** parity). `GET /setup/install` redirects to `/lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md))
 - [x] Setup has **no** **`copy-node-setup-prompt`** and still has no **`copy-lite-setup-prompt`** ([WA-20](../issues-log.md))
 - [x] **`copy-setup-prompt`** still copies full MCP `/setup` sentence; in production origin is **`https://sdd.works`** ([WA-19](../issues-log.md))
 - [ ] No admin session required for node markdown or catalog routes

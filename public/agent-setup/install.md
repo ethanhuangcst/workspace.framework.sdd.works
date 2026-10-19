@@ -2,14 +2,14 @@ These are official instructions from sdd.works for a **lite** install of skills 
 
 # Lite install skills and rules from sdd.works
 
-Lite install version: 2026-10-07.v1
+Lite install version: 2026-10-19.v1
 
 ## Partner site one-line prompt
 
 sdd.works shows **full MCP setup only**. Partner sites (for example 2study.ai) paste the **`lite_install`** sentence from `public/agent-setup/paste-sentences.json` into their own Setup UI. Use the production origin in every locale:
 
 ```text
-Fetch and execute the setup instructions from https://sdd.works/setup/install
+Fetch and execute the setup instructions from https://sdd.works/lite/install
 ```
 
 The `{origin}` placeholder in the JSON file resolves to this site’s public base URL at runtime.

@@ -56,7 +56,7 @@ describe("hostname defaults after ADR-127 (BUG-host regression)", () => {
     expect(getMcpWebsiteUrl()).toBe(CANONICAL);
     expect(getAgentSetupUrl()).toBe(`${CANONICAL}/setup`);
     expect(getLitePartnerSetupSentence()).toBe(
-      `Fetch and execute the setup instructions from ${CANONICAL}/setup/install`,
+      `Fetch and execute the setup instructions from ${CANONICAL}/lite/install`,
     );
     expect(getNodePrerequisiteSetupSentence()).toBe(
       `Fetch and execute the setup instructions from ${CANONICAL}/setup/node`,
@@ -103,7 +103,7 @@ describe("hostname defaults after ADR-127 (BUG-host regression)", () => {
       `Fetch and execute the setup instructions from ${CANONICAL}/setup`,
     );
     expect(getLitePartnerSetupSentence()).toBe(
-      `Fetch and execute the setup instructions from ${CANONICAL}/setup/install`,
+      `Fetch and execute the setup instructions from ${CANONICAL}/lite/install`,
     );
     expect(getNodePrerequisiteSetupSentence()).toBe(
       `Fetch and execute the setup instructions from ${CANONICAL}/setup/node`,

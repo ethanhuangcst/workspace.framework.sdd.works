@@ -11,7 +11,7 @@
 | Next.js portal at **`https://sdd.works`** | WordPress course content authoring on **`learn.sdd.works`** (except iframe `frame-ancestors`) |
 | Streamable HTTP MCP at **`https://sdd.works/mcp`** | Publishing a new **stdio binary** GitHub Release (separate when binary changes) |
 | Full setup markdown **`GET /setup`** | Client-side pack install into `~/.cursor` |
-| Lite installer **`GET /setup/install`** + **`/api/sdd/lite/*`** | Renaming MCP entry id **`framework.sdd.works`** |
+| Lite installer **`GET /lite/install`** + **`/api/sdd/lite/*`** ([ADR-134](./adr/ADR-134-lite-install-public-path.md); `GET /setup/install` redirects) | Renaming MCP entry id **`framework.sdd.works`** |
 | Node installer **`GET /setup/node`** + **`/api/setup/node/catalog`** | Reverting apex DNS to WordPress |
 | Package read APIs **`/api/sdd/versions`**, **`/api/sdd/package`** | Editing email DNS (`send`, `_dmarc`, DKIM) |
 | Admin portal (Keys, Settings, Framework sync, Accounts) | Closing backlog rows / marking feature Done |
@@ -232,9 +232,12 @@ curl -sS -H 'Accept: text/markdown' https://sdd.works/setup | head -40
 curl -sS -o /dev/null -w '%{http_code}\n' https://sdd.works/agent-setup
 # Expect: 3xx to /setup
 
-curl -sS https://sdd.works/setup/install | head -40
+curl -sS https://sdd.works/lite/install | head -40
 # Expect: Lite install version; GET https://sdd.works/api/sdd/lite/files
-# Expect: partner sentence uses https://sdd.works/setup/install
+# Expect: partner sentence uses https://sdd.works/lite/install
+
+curl -sS -o /dev/null -w '%{http_code} %{redirect_url}\n' https://sdd.works/setup/install
+# Expect: 3xx to /lite/install
 
 curl -sS https://sdd.works/setup/node | head -40
 # Expect: Node setup version; GET https://sdd.works/api/setup/node/catalog

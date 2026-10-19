@@ -3,6 +3,7 @@ import {
   isUnderHome,
   validateExpandedPath,
   validatePathTemplate,
+  validatePortableRoot,
 } from "./path-policy";
 
 describe("path-policy", () => {
@@ -36,5 +37,16 @@ describe("path-policy", () => {
     expect(
       validateExpandedPath("/Users/dev/.cursor/../etc/", "/Users/dev", "/Users/dev"),
     ).toMatchObject({ code: "path_rejected" });
+  });
+
+  it("should_reject_portable_root_with_escape_or_forbidden_prefix", () => {
+    expect(validatePortableRoot("/Users/dev/../etc")).toMatchObject({
+      code: "path_rejected",
+    });
+    expect(validatePortableRoot("/etc/my-cli")).toMatchObject({
+      code: "path_rejected",
+    });
+    expect(validatePortableRoot("/Users/ethanhuang/.workbuddy")).toBeNull();
+    expect(validatePortableRoot("~/.workbuddy")).toBeNull();
   });
 });

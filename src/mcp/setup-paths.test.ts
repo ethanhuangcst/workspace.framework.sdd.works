@@ -9,6 +9,11 @@ describe("setup public paths", () => {
         destination: "/setup",
         permanent: false,
       },
+      {
+        source: "/setup/install",
+        destination: "/lite/install",
+        permanent: false,
+      },
     ]);
   });
 
@@ -19,7 +24,7 @@ describe("setup public paths", () => {
         destination: "/api/agent-setup/install-full",
       },
       {
-        source: "/setup/install",
+        source: "/lite/install",
         destination: "/api/agent-setup/install",
       },
       {

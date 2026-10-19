@@ -91,6 +91,8 @@ Scenario: Escaped or out-of-root path is rejected
   And the path is not used for writes
 ```
 
+MC-21 revision: the "escapes the user home" rule applies only when the server runs on the client machine. On the HTTP channel the server home is not the client home, so a manual root is rejected only for `..` or a forbidden root (`/etc`, `/usr`, `/bin`, `/sbin`), never for being outside the server home. See user story 3.
+
 ### User story 2 — The map is versioned and validated in CI
 
 **As a** maintainer
@@ -124,6 +126,52 @@ Scenario: Map version is exposed for staleness warnings
 
 - The seed map is the single path source (ADR-132). No LLM at install time.
 - The agent sends `client` and `os`. For a known client, the server uses the seed-map root. For an unknown client, the server returns `root_required` until the agent sends a validated `root`.
+
+### User story 3 — HTTP install resolves aliases and keeps the client root portable (MC-21)
+
+**As the** MCP install service
+**I want** explicit `client` values to use the alias table, and the HTTP manual root to be validated structurally without server-side `~` expansion
+**So that** a client on macOS or Windows installs through the remote server at its real local path
+
+#### AC7 — MC-21
+
+```gherkin
+Scenario: Explicit client alias resolves the seed-map root
+  Given the agent sends client "workbuddy" and omits root
+  When the server resolves the install root over HTTP
+  Then the server normalizes the client to "codebuddy"
+  And the result root is the codebuddy seed-map root
+  And the result is not root_required
+```
+
+#### AC8 — MC-21
+
+```gherkin
+Scenario: HTTP manual root outside the server home is accepted when structurally valid
+  Given the client is not in the seed map
+  And the server runs on Linux with home /home/nextjs
+  And the agent sends root /Users/ethanhuang/.workbuddy
+  When the server validates the root over HTTP
+  Then the root is accepted unchanged
+  And the plan targets /Users/ethanhuang/.workbuddy
+```
+
+#### AC9 — MC-21
+
+```gherkin
+Scenario: HTTP tilde root stays unexpanded in the plan
+  Given the client is not in the seed map
+  And the server runs on Linux with home /home/nextjs
+  And the agent sends root ~/.workbuddy
+  When the server validates the root over HTTP
+  Then the plan keeps the root as ~/.workbuddy
+  And no path in the result contains /home/nextjs
+```
+
+### Notes
+
+- AC4 revision for MC-21: `..` and `/etc`, `/usr`, `/bin`, `/sbin` still reject on every channel. The "outside the user home" rule applies only when the server runs on the client machine. The server never expands `~` for an HTTP manual root; the plan keeps the root unexpanded for the client agent to resolve locally.
+- Alias normalization applies to the explicit `client` argument and to the handshake `clientInfo.name`. The alias table in [mcp-design.md](./mcp-design.md) §4 Client aliases is the source.
 
 ---
 

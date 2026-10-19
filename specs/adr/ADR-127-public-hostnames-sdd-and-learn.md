@@ -38,7 +38,7 @@ Before this change:
 
 1. Public setup sentence and **`GET /setup`** links use **`https://sdd.works/setup`** (path unchanged; host only). Supersedes the host in [ADR-061](./ADR-061-setup-prompt-public-path.md) decision 1.
 2. HTTP MCP fallback URL in setup markdown: **`https://sdd.works/mcp`**.
-3. Partner lite paste ([`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts)): **`https://sdd.works/setup/install`**.
+3. Partner lite paste ([`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts)): **`https://sdd.works/lite/install`** ([ADR-134](./ADR-134-lite-install-public-path.md)). `GET /setup/install` redirects to that path.
 4. Default production origin in code (`PUBLIC_BASE_URL`, package fetch default, setup markdown prod constants): **`https://sdd.works`** unless env overrides.
 5. MCP **`initialize.name`** may stay **`framework.sdd.works`** (product id in existing client configs) until a separate story renames it; all **URL** strings in user-facing copy and fetched markdown use **`sdd.works`**.
 

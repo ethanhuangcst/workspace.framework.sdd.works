@@ -11,7 +11,7 @@ describe("paste-sentences", () => {
 
   it("should_resolve_lite_install_for_sdd_works_origin", () => {
     expect(resolvePasteSentence("lite_install", "https://sdd.works")).toBe(
-      "Fetch and execute the setup instructions from https://sdd.works/setup/install",
+      "Fetch and execute the setup instructions from https://sdd.works/lite/install",
     );
   });
 

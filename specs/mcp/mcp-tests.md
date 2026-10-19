@@ -517,7 +517,7 @@ feature-93 owns the known-client path: server uses seed-map root, ignores agent-
 | --- | --- | --- | --- |
 | Unknown client without `root` → `root_required` | unit | `install.test.ts`: call with `client: "unknown-cli"`, `os: "darwin"`, no `root`. Result code is `root_required`. No files listed. No tarball URL. Message tells the agent to ask the person for the client config root (feature-94) | feature-94 |
 | Unknown client with valid `root` → uses that root | unit | `install.test.ts`: call with `client: "unknown-cli"`, `os: "darwin"`, `root: "/tmp/sdd-test-home/.my-cli"`. Result `root` equals the expanded sent root. Plan proceeds (apply or noop) (feature-94) | feature-94 |
-| Unknown client with invalid `root` → `path_rejected` | unit | `install.test.ts`: call with `root` outside home, containing `..`, or `/etc`/`/usr`/`/bin`/`/sbin`. Result code is `path_rejected`. No files listed (feature-94) | feature-94 |
+| Unknown client with invalid `root` → `path_rejected` | unit | `install.test.ts`: call with `root` outside home, containing `..`, or `/etc`/`/usr`/`/bin`/`/sbin`. Result code is `path_rejected`. No files listed (feature-94). MC-21 revision: out-of-home roots are accepted on HTTP; only `..` and forbidden roots reject — see §17 | feature-94 |
 | Unknown client retry flow | integration | After `root_required`, the agent retries with a valid `root`. The second call returns `apply` with the tarball URL and the resolved root. The ledger writes to the sent root (feature-94) | feature-94 |
 | Missing client → `client_unknown` | unit | `install.test.ts`: call with no `client` and no `clientInfo`. Result code is `client_unknown`. No files listed (ADR-132 decision 4) | feature-94 |
 | Result has no `root_warning` or `resolution_source` for unknown | unit | `install.test.ts`: unknown-client result has no `root_warning` field. `resolution_source` is absent or `agent` for the unknown-with-root path (ADR-132 decision 6) | feature-94 |
@@ -748,3 +748,42 @@ Record each run in [`mcp-manual-test-results.md`](./mcp-manual-test-results.md) 
 2. For each client in `codebuddy`, `trae-cn`, `codex`: `--backup-mcp`, `--clean`, TC-1, TC-2, TC-3, TC-4, TC-5, `--clean`, `--stage-ledger`, TC-6, record table.
 3. Once: TC-7 (`--fixture-on` / `--fixture-off`), TC-8, TC-9.
 4. Tick pass criteria above and update OGT rows on [`status.md`](../status.md) when each TC completes.
+
+## 17. MC-21 — HTTP install alias normalization and portable client root
+
+Stories: [`mcp-stories.md`](./mcp-stories.md) `sdd-mcp-path-map` AC7–AC9, AC4 revision. Design: [`mcp-design.md`](./mcp-design.md) §4. Issues: [MC-21](../issues-log.md).
+
+| Case | Layer | Expect | AC |
+| --- | --- | --- | --- |
+| Explicit client `workbuddy` resolves the codebuddy seed root | unit (`install.test.ts`) | HTTP ctx with no installHome; call with `client: "workbuddy"`, `os: "darwin"`, no `root`. Result root is the codebuddy seed-map root; no `root_required`; `resolution_source` is `seed` | AC7 |
+| HTTP manual root outside the server home is accepted | unit | `client: "unknown-cli"`, ctx `home` set to a Linux-style server home; `root: "/Users/ethanhuang/.workbuddy"`. Result `root` equals the sent root; plan `apply`; no `path_rejected` | AC8 |
+| HTTP tilde root stays unexpanded | unit | ctx `home` set to a Linux-style server home; `root: "~/.workbuddy"`. Result root is `~/.workbuddy`; no path in the result contains the server home | AC9 |
+| `..` and forbidden roots still reject on HTTP | unit | `root` containing `..` and `root: "/etc/x"` each return `path_rejected` | AC4 rev |
+| Existing out-of-home rejection flips | unit | `should_reject_invalid_root_for_unknown_client`: the `/var/tmp/outside-home-cli` case now expects acceptance (structural-only validation); `..` and `/etc` cases keep `path_rejected` | AC4 rev |
+
+### Pass criteria
+
+- [ ] AC7 alias normalization passes
+- [ ] AC8 absolute root accepted on HTTP
+- [ ] AC9 tilde unexpanded, no server-home path in result
+- [ ] `..` and `/etc` still `path_rejected`
+- [ ] out-of-home assertions updated and suite green
+
+## 18. ADR-134 — Public lite path `/lite/install`
+
+Stories: [`app-stories.md`](../admin-portal/app-stories.md) AC20 redirect scenario, AC47 `lite_install` sentence. Design: [`mcp-design.md`](./mcp-design.md) §2.0, [ADR-134](../adr/ADR-134-lite-install-public-path.md).
+
+| Case | Layer | Expect |
+| --- | --- | --- |
+| Rewrite source | unit (`setup-paths.test.ts`) | `SETUP_REWRITES` maps `/lite/install` to `/api/agent-setup/install`. It does not map `/setup/install` to that handler. |
+| Old path redirect | unit (`setup-paths.test.ts`) | `SETUP_REDIRECTS` maps `/setup/install` to `/lite/install`. |
+| Partner sentence | unit (`paste-sentences.test.ts`) | `resolvePasteSentence("lite_install", "https://sdd.works")` ends with `/lite/install`. |
+| Markdown still lite-only | API (`sdd-api.test.ts`) | Handler body still names `/api/sdd/lite/files` and does not name `sdd_install_framework`. |
+
+### Pass criteria
+
+- [ ] `/lite/install` rewrite asserted
+- [ ] `/setup/install` redirect asserted
+- [ ] `lite_install` sentence uses `/lite/install`
+- [ ] Lite markdown contract unchanged except the public URL in the partner sentence
+

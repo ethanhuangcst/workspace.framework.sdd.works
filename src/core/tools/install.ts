@@ -2,8 +2,8 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { homedir } from "node:os";
-import { expandHome, resolve, resolveTemplates, type PathRoots } from "@sdd/paths";
-import { validateExpandedPath } from "@/core/path-policy";
+import { resolve, resolveTemplates, type PathRoots } from "@sdd/paths";
+import { validatePortableRoot } from "@/core/path-policy";
 import {
   detectClient,
   type PathDetectOptions,
@@ -169,8 +169,6 @@ function rootsFromClientRoot(clientRoot: string, win: boolean): PathRoots {
 
 function resolveUnknownClientRoot(
   args: InstallArgs,
-  home: string,
-  userProfile: string,
   os: string,
   detected: string,
 ): InstallContextResult {
@@ -184,8 +182,7 @@ function resolveUnknownClientRoot(
       ),
     };
   }
-  const expanded = expandHome(trimmed, home, userProfile);
-  const pathErr = validateExpandedPath(expanded, home, userProfile);
+  const pathErr = validatePortableRoot(trimmed);
   if (pathErr) {
     const message =
       pathErr.code === "path_rejected" ? pathErr.reason : pathErr.code;
@@ -195,7 +192,7 @@ function resolveUnknownClientRoot(
     };
   }
   const win = os === "win32";
-  const roots = rootsFromClientRoot(expanded, win);
+  const roots = rootsFromClientRoot(trimmed, win);
   const resolved: ResolvedClientPaths = {
     primary: roots,
     compat: [],
@@ -203,7 +200,7 @@ function resolveUnknownClientRoot(
   };
   return {
     ok: true,
-    ctx: { detected, resolved, roots, clientRoot: expanded },
+    ctx: { detected, resolved, roots, clientRoot: trimmed },
   };
 }
 
@@ -229,7 +226,10 @@ async function resolveInstallContext(
   args: InstallArgs,
   ctx: InstallContext,
 ): Promise<InstallContextResult> {
-  const detected = args.client ?? detectClient(ctx.clientInfo) ?? undefined;
+  const explicit = args.client?.trim();
+  const detected =
+    (explicit ? (detectClient(explicit) ?? explicit) : detectClient(ctx.clientInfo)) ??
+    undefined;
   if (!detected) {
     return {
       ok: false,
@@ -246,14 +246,7 @@ async function resolveInstallContext(
     const templates = resolveTemplates(detected, os);
     if ("code" in templates) {
       if (templates.code === "client_unknown") {
-        const fallbackHome = homedir();
-        return resolveUnknownClientRoot(
-          args,
-          fallbackHome,
-          fallbackHome,
-          os,
-          detected,
-        );
+        return resolveUnknownClientRoot(args, os, detected);
       }
       return {
         ok: false,
@@ -280,13 +273,7 @@ async function resolveInstallContext(
   const seed = resolve(detected, os, undefined, { home, userProfile });
   if ("code" in seed) {
     if (seed.code === "client_unknown") {
-      return resolveUnknownClientRoot(
-        args,
-        home,
-        userProfile,
-        os,
-        detected,
-      );
+      return resolveUnknownClientRoot(args, os, detected);
     }
     if (seed.code === "os_unsupported") {
       return {
