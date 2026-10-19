@@ -22,6 +22,18 @@ describe("middleware", () => {
     expect(response.status).toBe(200);
   });
 
+  it("should_redirect_framework_host_without_internal_port", () => {
+    const request = new NextRequest(
+      "https://framework.sdd.works:3000/instructions",
+      { headers: { host: "framework.sdd.works:3000" } },
+    );
+    const response = middleware(request);
+    expect(response.status).toBe(301);
+    expect(response.headers.get("location")).toBe(
+      "https://sdd.works/instructions",
+    );
+  });
+
   it("should_redirect_www_host_to_apex", () => {
     const request = new NextRequest("https://www.sdd.works/instructions?tab=setup", {
       headers: { host: "www.sdd.works" },
