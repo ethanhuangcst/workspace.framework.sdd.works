@@ -10,32 +10,32 @@ This document defines how Scrum is adopted in Spec-Driven Development, with Agen
 
 The Scrum Guide defines Scrum. This document does not replace it.
 
-- **Part I** names Agentic Programming, Harness Engineering, and Spec-Driven Development.
-- **Part II** states what classic Scrum does not cover in that setting.
-- **Part III** is the definition: what stays, what is added, and what changes.
-- **Appendix**: short summary of the 2020 Scrum Guide. That summary is the baseline for classic Scrum.
+- **Part I** states what classic Scrum does not cover in that setting.
+- **Part II** is the definition: what stays, what is added, and what changes.
+- **Part III** names Agentic Programming, Harness Engineering, and Spec-Driven Development.
+- **Appendix 2**: short summary of the 2020 Scrum Guide. That summary is the baseline for classic Scrum.
 
 ## Index
 
-- [Part I Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices](#part-i-agentic-programming-harness-engineering-and-spec-driven-development-sdd-aligned-with-agile-practices)
-  - [Agentic Programming](#agentic-programming)
-  - [Harness Engineering](#harness-engineering)
-  - [Spec-Driven Development (SDD)](#spec-driven-development-sdd)
-    - [Implementing Harness Engineering Principles with SDD](#implementing-harness-engineering-principles-with-sdd)
-    - [Integrating eXtreme Programming practices with SDD](#integrating-extreme-programming-practices-with-sdd)
-    - [Integrating Scrum with SDD](#integrating-scrum-with-sdd)
-  - [Integrating other Agile practices with SDD](#integrating-other-agile-practices-with-sdd)
-- [Part II The Scrum Gap for SDD](#part-ii-the-scrum-gap-for-sdd)
+- [Part I The Scrum Gap for SDD](#part-i-the-scrum-gap-for-sdd)
   - [SDD concepts that need to be added into scrum implementation](#sdd-concepts-that-need-to-be-added-into-scrum-implementation)
   - [Scrum concepts that need to be modified in Scrum in SDD](#scrum-concepts-that-need-to-be-modified-in-scrum-in-sdd)
-- [Part III Scrum in SDD Guide](#part-iii-scrum-in-sdd-guide)
+- [Part II Scrum in SDD Guide](#part-ii-scrum-in-sdd-guide)
   - [Overview](#overview)
   - [KEEP - what remains unchanged](#keep---what-remains-unchanged)
   - [ADD - what is added](#add---what-is-added)
   - [MODIFY: What changes](#modify-what-changes)
   - [Minimum Scrum in SDD setup](#minimum-scrum-in-sdd-setup)
   - [Operating principles](#operating-principles)
-- [Appendix: Short summary of the 2020 Scrum Guide](#appendix-short-summary-of-the-2020-scrum-guide)
+- [Part III Appendix 1 - Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices](#part-iii-appendix-1---agentic-programming-harness-engineering-and-spec-driven-development-sdd-aligned-with-agile-practices)
+  - [Agentic Programming](#agentic-programming)
+  - [Harness Engineering](#harness-engineering)
+  - [Spec-Driven Development (SDD)](#spec-driven-development-sdd)
+  - [Implementing Harness Engineering Principles with SDD](#implementing-harness-engineering-principles-with-sdd)
+  - [Integrating eXtreme Programming practices with SDD](#integrating-extreme-programming-practices-with-sdd)
+  - [Integrating Scrum with SDD](#integrating-scrum-with-sdd)
+  - [Integrating other Agile practices with SDD](#integrating-other-agile-practices-with-sdd)
+- [Appendix 2: Short summary of the 2020 Scrum Guide](#appendix-2-short-summary-of-the-2020-scrum-guide)
   - [Purpose of the Scrum Guide](#purpose-of-the-scrum-guide)
   - [Scrum Definition](#scrum-definition)
   - [Scrum Theory](#scrum-theory-1)
@@ -45,113 +45,20 @@ The Scrum Guide defines Scrum. This document does not replace it.
   - [Scrum Artifacts](#scrum-artifacts-2)
   - [End Note](#end-note)
 
-# **Part I** Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices
-
-With **Agentic Programming** and **Spec-Driven Development**, under **Harness Engineering principles**, software delivery is fundamentally reshaped.
-
-**Relationship to Agentic Programming, SDD and Harness Engineering:** **Agentic Programming** is the broader paradigm of using AI agents in software work. **Harness Engineering** is the infrastructure that makes it operational. **SDD** is the methodological approach within that paradigm, in which agents work from specifications as the **source of truth**.
-
-**They naturally align with Agile practices such as Scrum, Extreme Programming (XP), Behavior-Driven Development (BDD), and Acceptance Test-Driven Development (ATDD).**
-
-## Agentic Programming
-
-**Agentic Programming** is a software development approach in which **AI agents** act not merely as passive code assistants, but as **active collaborators** in the engineering workflow: **planning, coding, testing, debugging, reviewing**, and sometimes operating software, with autonomy bounded by **human-defined goals, constraints, and oversight**.
-
-## Harness Engineering
-
-**Harness Engineering** is the discipline of designing the **runtime framework** that enables AI agents to operate **reliably, safely, and effectively** in real-world environments. It includes **tool integration, execution orchestration, context and memory management, permissions and guardrails, observability, and human oversight**.
-
-- **Tool integration**: connects agents to files, APIs, and systems
-- **Execution orchestration**: manages planning, action, checking, and retries
-- **Context and memory**: controls what the agent knows and retains
-- **Permissions and guardrails**: constrain actions and reduce risk
-- **Observability and oversight**: support monitoring, evaluation, and human intervention
-
-
-## Spec-Driven Development (SDD)
-
-**Spec-Driven Development (SDD)** is an approach within agentic programming in which the **specification** is the **primary artifact**: requirements, behaviors, interfaces, constraints, and acceptance criteria are defined first, and implementation follows from the spec.
-
-- **Start with the spec**: define goals, workflows, tools, inputs/outputs, guardrails, and success criteria.
-- **Turn intent into structure**: define roles, rules, permissions, memory, and failure handling.
-- **Implement from the spec**: generate code, prompts, tool wrappers, tests, and orchestration.
-- **Derive tests from the spec**: define acceptance criteria, eval cases, and edge cases.
-- **Iterate at the spec layer first**: update the spec before patching implementation.
-- **Clarify multi-agent work**: align planner, coder, reviewer, and tester on one source of truth.
-- **Reduce drift and ambiguity**: make constraints explicit.
-- **Improve automation**: generate code, tests, docs, and validation more easily.
-
-## Implementing Harness Engineering Principles with SDD
-
-In **Spec-Driven Development (SDD)**, the **specification** defines behavior, constraints, and acceptance criteria. It is the **source of truth** for both implementation and evaluation, and under **Harness Engineering principles**, it is operationalized through several connected layers:
-
-- **Rules**: constrain execution.  
-- **Skills**: provide reusable capabilities.  
-- **Agents**: execute tasks against the spec.  
-- **Workflows**: coordinate actions and handoffs.  
-- **Knowledge**: ground execution in relevant context.  
-
-Together, these layers turn **specifications** into **reliable execution**.
-
-## Integrating eXtreme Programming practices with SDD
-
-In **SDD**, **eXtreme Programming (XP)** practices can be embedded in the **harness** so humans and AI agents follow consistent engineering standards, including:
-
-- **ATDD**: define acceptance tests from the spec before implementation.
-- **TDD**: write tests first, then implement to pass them.
-- **Pair Programming**: human-agent or agent-agent collaboration during development.
-- **CI/CD**: continuously validate, integrate, and deliver changes.
-- **Test Automation**: automatically run unit, integration, and end-to-end tests.
-- **Refactoring**: improve code structure without changing specified behavior.
-
-## Integrating Scrum with SDD
-
-**Scrum** sets the delivery rhythm. **SDD** keeps the spec as the source of truth.
-
-- **Product Backlog**: requirements and acceptance criteria.
-- **Sprint Backlog**: what this sprint will make true, and who does it.
-- **Increment**: the result that meets the spec and the Definition of Done.
-- **Events**: Planning, Daily Scrum, Review, and Retrospective stay. Humans and agents both take part.
-- **Definition of Done**: a rule, applied before the item is done.
-- **Incremental delivery**: finish one sprint item before starting the next.
-- **Spec first**: a behavior change starts in the spec. The sprint implements it.
-
-### How humans collaborate with AI agents in this approach
-
-**Humans** define and govern the **harness**; **AI agents** operate within it. Humans specify not only **what** should be built, but also **how** agents may work.
-
-- **Humans define the harness**: rules, skills, workflows, agent roles, and knowledge boundaries.
-- **Humans define the spec**: goals, constraints, business rules, and acceptance criteria.
-- **AI helps formalize and execute**: refine specs, implement, test, and iterate within the harness.
-- **Humans validate and supervise**: review outputs, resolve ambiguity, approve sensitive actions, and update the source of truth.
-- **AI provides feedback**: compare outcomes against the spec and surface gaps or failures.
-
-## Integrating other Agile practices with SDD
-
-**SDD** treats the **spec** as the shared source of truth. Several Agile methods already center on examples, tests, and small verified steps, so they fit the same harness without a separate process stack.
-
-- **Behavior-Driven Development (BDD)**: express behavior as scenarios (often Gherkin) derived from the spec. Product, engineering, and agents share one vocabulary before code changes.
-- **Acceptance Test-Driven Development (ATDD)**: agree on acceptance tests from the spec first, then implement until those tests pass. Aligns with the **atdd-expert** skill and the ATDD line under XP above.
-- **Lean thinking**: keep batches small, reduce handoff waste, and inspect outcomes against the spec often. Matches short sprints and incremental delivery in this guide.
-- **Kanban**: visualize work on the backlog and sprint board, limit work in progress, and pull the next item only when the spec for it is ready enough to build.
-- **Continuous delivery**: integrate and deploy when the spec, tests, and Definition of Done all pass. CI/CD in the harness automates that check.
-
-[Back to top](#index)
-
-# **Part II** The Scrum Gap for SDD
+# **Part I** The Scrum Gap for SDD
 
 When implementing **SDD** under **Harness Engineering principles**, gaps emerge that change the **Scrum definition**.
 
 ## SDD concepts that need to be added into scrum implementation
 
-Harness layers and SDD artifacts are added to classic Scrum. The authoritative lists are in **Part III** under **ADD - what is added**.
+Harness layers and SDD artifacts are added to classic Scrum. The authoritative lists are in **Part II** under **ADD - what is added**.
 
 - **Rules** constrain close, incremental delivery, WIP status, and readable Markdown.
 - **Skills** cover backlog, sprint, spec, audit, and build jobs.
-- **Agents**: scrum-master (**ethan** in this service).
+- **Agents**: Scrum Master (**ethan** in this service).
 - **Workflows**: placeholder until a job needs a defined handoff sequence.
 - **Knowledge**: ADR and knowledge trees at paths from `artifacts-map.json`.
-- **Artifacts**: core, framework, engineering, and pack files (detail in Part III).
+- **Artifacts**: core, framework, engineering, and pack files (detail in Part II).
 
 [Back to top](#index)
 
@@ -196,18 +103,10 @@ Harness layers and SDD artifacts are added to classic Scrum. The authoritative l
 #### Sprint Review
 
 #### Sprint Retrospective
-- **Retrospective** has three forms; the latter two are captured as ADR or Knowledge by the **sdd-retrospective** skill.
-1. **Sprint-end**: the classic human-human retrospective.
-2. **On demand**: a human-agent retrospective initiated by a human.
-3. **By rule**: an agent-agent retrospective triggered before work is marked done. The record names the incident that fired the rule, such as `feature-01 done`.
-
-- **Retrospectives** have **four triggers**:
-1. **Sprint-end**.
-2. **On demand**.
-3. Before marking a **task or SBI** as done.
-4. Before closing a **Sprint**.
-
-- **Retrospective** is a **skill**.
+- A **Retrospective** can run **much more often** than once per Sprint, so the team learns and improves in **real time**, not only at Sprint-end.
+- The conversation may be **human and human**, **human and agent**, or **agent and agent**, depending on who did the work and who holds the lesson.
+- A **human**, an **agent**, or the **sdd-retrospective** skill may **facilitate** the session. When the lesson should last, that skill records **ADR** or **Knowledge**.
+- Common moments still include **Sprint-end**, **on demand**, **before a task or SBI is marked done** (via **sdd-dod.mdc**), and **before Sprint close**.
 
 ### Scrum Artifacts
 
@@ -225,7 +124,7 @@ Harness layers and SDD artifacts are added to classic Scrum. The authoritative l
 
 [Back to top](#index)
 
-# **Part III** Scrum in SDD Guide
+# **Part II** Scrum in SDD Guide
 
 ## Overview
 
@@ -391,8 +290,9 @@ These are not project artifacts. They are not in any group above.
 - AI-generated outputs may be reviewed before or during the event.
 
 #### Sprint Retrospective
-- Retrospectives may occur at Sprint-end, on demand, by rule, or before Sprint close.
-- Retrospective is both an event and a skill.
+- Retrospectives may run far more often than classic Scrum, for real-time learning and improvement.
+- They may involve humans only, humans and agents, or agents only; a human, an agent, or **sdd-retrospective** may facilitate.
+- Sprint-end, on demand, DoD close, and pre–Sprint-close remain named moments; the skill persists durable lessons as ADR or Knowledge.
 
 ### Scrum Artifacts
 
@@ -438,7 +338,100 @@ These are not project artifacts. They are not in any group above.
 
 [Back to top](#index)
 
-# Appendix: Short summary of the 2020 Scrum Guide
+# **Part III** Appendix 1 - Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices
+
+With **Agentic Programming** and **Spec-Driven Development**, under **Harness Engineering principles**, software delivery is fundamentally reshaped.
+
+**Relationship to Agentic Programming, SDD and Harness Engineering:** **Agentic Programming** is the broader paradigm of using AI agents in software work. **Harness Engineering** is the infrastructure that makes it operational. **SDD** is the methodological approach within that paradigm, in which agents work from specifications as the **source of truth**.
+
+**They naturally align with Agile practices such as Scrum, Extreme Programming (XP), Behavior-Driven Development (BDD), and Acceptance Test-Driven Development (ATDD).**
+
+## Agentic Programming
+
+**Agentic Programming** is a software development approach in which **AI agents** act not merely as passive code assistants, but as **active collaborators** in the engineering workflow: **planning, coding, testing, debugging, reviewing**, and sometimes operating software, with autonomy bounded by **human-defined goals, constraints, and oversight**.
+
+## Harness Engineering
+
+**Harness Engineering** is the discipline of designing the **runtime framework** that enables AI agents to operate **reliably, safely, and effectively** in real-world environments. It includes **tool integration, execution orchestration, context and memory management, permissions and guardrails, observability, and human oversight**.
+
+- **Tool integration**: connects agents to files, APIs, and systems
+- **Execution orchestration**: manages planning, action, checking, and retries
+- **Context and memory**: controls what the agent knows and retains
+- **Permissions and guardrails**: constrain actions and reduce risk
+- **Observability and oversight**: support monitoring, evaluation, and human intervention
+
+
+## Spec-Driven Development (SDD)
+
+**Spec-Driven Development (SDD)** is an approach within agentic programming in which the **specification** is the **primary artifact**: requirements, behaviors, interfaces, constraints, and acceptance criteria are defined first, and implementation follows from the spec.
+
+- **Start with the spec**: define goals, workflows, tools, inputs/outputs, guardrails, and success criteria.
+- **Turn intent into structure**: define roles, rules, permissions, memory, and failure handling.
+- **Implement from the spec**: generate code, prompts, tool wrappers, tests, and orchestration.
+- **Derive tests from the spec**: define acceptance criteria, eval cases, and edge cases.
+- **Iterate at the spec layer first**: update the spec before patching implementation.
+- **Clarify multi-agent work**: align planner, coder, reviewer, and tester on one source of truth.
+- **Reduce drift and ambiguity**: make constraints explicit.
+- **Improve automation**: generate code, tests, docs, and validation more easily.
+
+## Implementing Harness Engineering Principles with SDD
+
+In **Spec-Driven Development (SDD)**, the **specification** defines behavior, constraints, and acceptance criteria. It is the **source of truth** for both implementation and evaluation, and under **Harness Engineering principles**, it is operationalized through several connected layers:
+
+- **Rules**: constrain execution.  
+- **Skills**: provide reusable capabilities.  
+- **Agents**: execute tasks against the spec.  
+- **Workflows**: coordinate actions and handoffs.  
+- **Knowledge**: ground execution in relevant context.  
+
+Together, these layers turn **specifications** into **reliable execution**.
+
+## Integrating eXtreme Programming practices with SDD
+
+In **SDD**, **eXtreme Programming (XP)** practices can be embedded in the **harness** so humans and AI agents follow consistent engineering standards, including:
+
+- **ATDD**: define acceptance tests from the spec before implementation.
+- **TDD**: write tests first, then implement to pass them.
+- **Pair Programming**: human-agent or agent-agent collaboration during development.
+- **CI/CD**: continuously validate, integrate, and deliver changes.
+- **Test Automation**: automatically run unit, integration, and end-to-end tests.
+- **Refactoring**: improve code structure without changing specified behavior.
+
+## Integrating Scrum with SDD
+
+**Scrum** sets the delivery rhythm. **SDD** keeps the spec as the source of truth.
+
+- **Product Backlog**: requirements and acceptance criteria.
+- **Sprint Backlog**: what this sprint will make true, and who does it.
+- **Increment**: the result that meets the spec and the Definition of Done.
+- **Events**: Planning, Daily Scrum, Review, and Retrospective stay. Humans and agents both take part.
+- **Definition of Done**: a rule, applied before the item is done.
+- **Incremental delivery**: finish one sprint item before starting the next.
+- **Spec first**: a behavior change starts in the spec. The sprint implements it.
+
+### How humans collaborate with AI agents in this approach
+
+**Humans** define and govern the **harness**; **AI agents** operate within it. Humans specify not only **what** should be built, but also **how** agents may work.
+
+- **Humans define the harness**: rules, skills, workflows, agent roles, and knowledge boundaries.
+- **Humans define the spec**: goals, constraints, business rules, and acceptance criteria.
+- **AI helps formalize and execute**: refine specs, implement, test, and iterate within the harness.
+- **Humans validate and supervise**: review outputs, resolve ambiguity, approve sensitive actions, and update the source of truth.
+- **AI provides feedback**: compare outcomes against the spec and surface gaps or failures.
+
+## Integrating other Agile practices with SDD
+
+**SDD** treats the **spec** as the shared source of truth. Several Agile methods already center on examples, tests, and small verified steps, so they fit the same harness without a separate process stack.
+
+- **Behavior-Driven Development (BDD)**: express behavior as scenarios (often Gherkin) derived from the spec. Product, engineering, and agents share one vocabulary before code changes.
+- **Acceptance Test-Driven Development (ATDD)**: agree on acceptance tests from the spec first, then implement until those tests pass. Aligns with the **atdd-expert** skill and the ATDD line under XP above.
+- **Lean thinking**: keep batches small, reduce handoff waste, and inspect outcomes against the spec often. Matches short sprints and incremental delivery in this guide.
+- **Kanban**: visualize work on the backlog and sprint board, limit work in progress, and pull the next item only when the spec for it is ready enough to build.
+- **Continuous delivery**: integrate and deploy when the spec, tests, and Definition of Done all pass. CI/CD in the harness automates that check.
+
+[Back to top](#index)
+
+# Appendix 2: Short summary of the 2020 Scrum Guide
 
 **Authors:** Ken Schwaber & Jeff Sutherland
 

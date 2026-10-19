@@ -10,14 +10,24 @@
 
 《Scrum 指南》定義 Scrum。本文不取代它。
 
-- **第一部分** 說明 Agentic Programming、Harness Engineering 和規格驅動開發。
-- **第二部分** 說明經典 Scrum 在這一設定下沒有覆蓋的內容。
-- **第三部分** 是定義：哪些保持不變，哪些新增，哪些改變。
-- **附錄**：2020 版《Scrum 指南》的簡要摘要。該摘要是經典 Scrum 的基線。
+- **第一部分** 說明經典 Scrum 在這一設定下沒有覆蓋的內容。
+- **第二部分** 是定義：哪些保持不變，哪些新增，哪些改變。
+- **第三部分** 說明 Agentic Programming、Harness Engineering 和規格驅動開發。
+- **附錄 2**：2020 版《Scrum 指南》的簡要摘要。該摘要是經典 Scrum 的基線。
 
 ## Index
 
-- [第一部分 Agentic Programming、Harness Engineering，以及與敏捷實踐對齊的規格驅動開發（SDD）](#第一部分-agentic-programmingharness-engineering以及與敏捷實踐對齊的規格驅動開發sdd)
+- [第一部分 SDD 下的 Scrum 缺口](#第一部分-sdd-下的-scrum-缺口)
+  - [需要加入 Scrum 實施的 SDD 概念](#需要加入-scrum-實施的-sdd-概念)
+  - [Scrum in SDD 中需要調整的 Scrum 概念](#scrum-in-sdd-中需要調整的-scrum-概念)
+- [第二部分 Scrum in SDD 指南](#第二部分-scrum-in-sdd-指南)
+  - [概述](#概述)
+  - [KEEP - 保持不變的內容](#keep---保持不變的內容)
+  - [ADD - 新增的內容](#add---新增的內容)
+  - [MODIFY：發生變化的內容](#modify發生變化的內容)
+  - [Scrum in SDD 的最小配置](#scrum-in-sdd-的最小配置)
+  - [運行原則](#運行原則)
+- [第三部分 附錄 1 - Agentic Programming、Harness Engineering，以及與敏捷實踐對齊的規格驅動開發（SDD）](#第三部分-附錄-1---agentic-programmingharness-engineering以及與敏捷實踐對齊的規格驅動開發sdd)
   - [Agentic Programming](#agentic-programming)
   - [Harness Engineering](#harness-engineering)
   - [Spec-Driven Development（SDD）](#spec-driven-developmentsdd)
@@ -25,17 +35,7 @@
   - [將極限編程實踐與 SDD 結合](#將極限編程實踐與-sdd-結合)
   - [將 Scrum 與 SDD 結合](#將-scrum-與-sdd-結合)
   - [將其他敏捷實踐與 SDD 結合](#將其他敏捷實踐與-sdd-結合)
-- [第二部分 SDD 下的 Scrum 缺口](#第二部分-sdd-下的-scrum-缺口)
-  - [需要加入 Scrum 實施的 SDD 概念](#需要加入-scrum-實施的-sdd-概念)
-  - [Scrum in SDD 中需要調整的 Scrum 概念](#scrum-in-sdd-中需要調整的-scrum-概念)
-- [第三部分 Scrum in SDD 指南](#第三部分-scrum-in-sdd-指南)
-  - [概述](#概述)
-  - [KEEP - 保持不變的內容](#keep---保持不變的內容)
-  - [ADD - 新增的內容](#add---新增的內容)
-  - [MODIFY：發生變化的內容](#modify發生變化的內容)
-  - [Scrum in SDD 的最小配置](#scrum-in-sdd-的最小配置)
-  - [運行原則](#運行原則)
-- [附錄：2020 版《Scrum 指南》簡要摘要](#附錄2020-版scrum-指南簡要摘要)
+- [附錄 2：2020 版《Scrum 指南》簡要摘要](#附錄-22020-版scrum-指南簡要摘要)
   - [《Scrum 指南》的目的](#scrum-指南的目的)
   - [Scrum 的定義](#scrum-的定義)
   - [Scrum 理論](#scrum-理論-1)
@@ -45,112 +45,20 @@
   - [Scrum 工件](#scrum-工件-2)
   - [結語](#結語)
 
-# **第一部分** Agentic Programming、Harness Engineering，以及與敏捷實踐對齊的規格驅動開發（SDD）
-
-在 **Agentic Programming** 和 **Spec-Driven Development** 之下，並遵循 **Harness Engineering** 原則，軟體交付方式被從根本上重塑。
-
-**與 Agentic Programming、SDD 和 Harness Engineering 的關係：** **Agentic Programming** 是在軟體工作中使用 AI agents 的更大範式。**Harness Engineering** 是讓它真正落地運行的基礎設施。**SDD** 是這一範式中的方法：agents 以規格（specification）作為 **source of truth** 開展工作。
-
-**它們與 Scrum、極限編程（Extreme Programming，XP）、行為驅動開發（Behavior-Driven Development，BDD）和驗收測試驅動開發（Acceptance Test-Driven Development，ATDD）等敏捷實踐自然對齊。**
-
-## Agentic Programming
-
-**Agentic Programming** 是一種軟體開發方式。在這種方式中，**AI agents** 不再只是被動的代碼助手，而是工程流程中的**主動協作者**：它們參與**規劃、編碼、測試、調試、審查**，有時還參與軟體運行。其自主性受**人定義的目標、約束和監督**所限定。
-
-## Harness Engineering
-
-**Harness Engineering** 是設計**運行時框架**的學科，讓 AI agents 在真實環境中**可靠、安全、有效**地運行。它包括**工具集成、執行編排、上下文與記憶管理、權限與護欄、可觀測性，以及人工監督**。
-
-- **工具集成**：把 agents 連接到文件、API 和系統
-- **執行編排**：管理規劃、行動、檢查和重試
-- **上下文與記憶**：控制 agent 知道什麼、保留什麼
-- **權限與護欄**：約束行為並降低風險
-- **可觀測性與監督**：支持監控、評估和人工介入
-
-## Spec-Driven Development（SDD）
-
-**Spec-Driven Development（SDD）** 是 agentic programming 中的一種方法。**規格（specification）** 是**首要工件**：先定義需求、行為、接口、約束和驗收標準，再據此實現。
-
-- **從規格開始**：定義目標、工作流、工具、輸入與輸出、護欄和成功標準。
-- **把意圖變成結構**：定義角色、規則、權限、記憶和失敗處理。
-- **按規格實現**：生成代碼、提示詞、工具封裝、測試和編排。
-- **從規格推導測試**：定義驗收標準、評估用例和邊界情況。
-- **先在規格層迭代**：先更新規格，再改實現。
-- **說清多 agent 協作**：讓規劃、編碼、審查和測試對齊同一份 source of truth。
-- **減少漂移和歧義**：把約束寫清楚。
-- **提高自動化**：更容易生成代碼、測試、文檔和校驗。
-
-## 用 SDD 落實 Harness Engineering 原則
-
-在 **Spec-Driven Development（SDD）** 中，**規格**定義行為、約束和驗收標準。它是實現和評估的 **source of truth**。在 **Harness Engineering** 原則下，它通過相互關聯的層落地：
-
-- **Rules**：約束執行。
-- **Skills**：提供可複用能力。
-- **Agents**：依據規格執行任務。
-- **Workflows**：協調動作與交接。
-- **Knowledge**：用相關上下文為執行提供依據。
-
-這些層把**規格**變成**可靠執行**。
-
-## 將極限編程實踐與 SDD 結合
-
-在 **SDD** 中，可以把 **eXtreme Programming（XP）** 實踐放進 **harness**，讓人和 AI agents 遵循同一套工程標準，包括：
-
-- **ATDD**：實現之前，根據規格定義驗收測試。
-- **TDD**：先寫測試，再實現到測試通過。
-- **結對編程（Pair Programming）**：開發中的人與 agent，或 agent 與 agent 協作。
-- **CI/CD**：持續驗證、集成並交付變更。
-- **測試自動化（Test Automation）**：自動運行單元、集成和端到端測試。
-- **重構（Refactoring）**：在不改變已規定行為的前提下改進代碼結構。
-
-## 將 Scrum 與 SDD 結合
-
-**Scrum** 規定交付節奏。**SDD** 把規格作為 source of truth。
-
-- **Product Backlog**：需求和驗收標準。
-- **Sprint Backlog**：本 Sprint 要做成的事，以及由誰完成。
-- **Increment**：滿足規格和 Definition of Done 的結果。
-- **事件**：Planning、Daily Scrum、Review 和 Retrospective 保留。人和 agents 都參加。
-- **Definition of Done**：一條規則，在條目完成前執行。
-- **增量交付**：完成一個 Sprint 條目後，再開始下一個。
-- **規格先行**：行為變更從規格開始。Sprint 負責實現。
-
-### 在這種方法中，人如何與 AI agents 協作
-
-**人**定義並治理 **harness**；**AI agents** 在其中運行。人不僅規定**做什麼**，也規定 agents **可以怎樣工作**。
-
-- **人定義 harness**：規則、技能、工作流、agent 角色和知識邊界。
-- **人定義規格**：目標、約束、業務規則和驗收標準。
-- **AI 協助寫清並執行**：在 harness 內細化規格、實現、測試和迭代。
-- **人驗證並監督**：審查輸出、消除歧義、批准敏感操作，並更新 source of truth。
-- **AI 提供反饋**：把結果與規格對照，並指出差距或失敗。
-
-## 將其他敏捷實踐與 SDD 結合
-
-**SDD** 把**規格**當作共享的 source of truth。多種敏捷方法已經以示例、測試和小步驗證為中心，因此可以放進同一套 harness，而不另起一套流程。
-
-- **行為驅動開發（BDD）**：用場景（常用 Gherkin）表達從規格得出的行為。產品、工程和 agents 在改代碼之前共用一套說法。
-- **驗收測試驅動開發（ATDD）**：先就規格上的驗收測試達成一致，再實現到這些測試通過。與 **atdd-expert** 技能，以及上文 XP 中的 ATDD 一致。
-- **精益思維**：保持批次小，減少交接浪費，並經常按規格檢查結果。與本指南中的短 Sprint 和增量交付一致。
-- **看板（Kanban）**：在 backlog 和 Sprint 板上看見工作，限制在製品，並且只在該項規格已足夠可建造時拉取下一項。
-- **持續交付**：規格、測試和 Definition of Done 都通過時再集成和部署。Harness 中的 CI/CD 自動做這項檢查。
-
-[返回頂部](#index)
-
-# **第二部分** SDD 下的 Scrum 缺口
+# **第一部分** SDD 下的 Scrum 缺口
 
 在 **Harness Engineering** 原則下實施 **SDD** 時，會出現改變 **Scrum 定義** 的缺口。
 
 ## 需要加入 Scrum 實施的 SDD 概念
 
-Harness 各層和 SDD 工件被加入經典 Scrum。權威清單在**第三部分**的 **ADD - 新增的內容**。
+Harness 各層和 SDD 工件被加入經典 Scrum。權威清單在**第二部分**的 **ADD - 新增的內容**。
 
 - **Rules** 約束關閉、增量交付、WIP 狀態，以及可讀的 Markdown。
 - **Skills** 覆蓋 backlog、Sprint、規格、審計和構建類工作。
-- **Agents**：scrum-master（本服務中為 **ethan**）。
+- **Agents**：Scrum Master（本服務中為 **ethan**）。
 - **Workflows**：在某項工作需要明確交接順序之前，保持佔位。
 - **Knowledge**：ADR 和知識目錄的路徑來自 `artifacts-map.json`。
-- **Artifacts**：核心、框架、工程工件，以及 pack 文件（細節在第三部分）。
+- **Artifacts**：核心、框架、工程工件，以及 pack 文件（細節在第二部分）。
 
 [返回頂部](#index)
 
@@ -202,18 +110,11 @@ Harness 各層和 SDD 工件被加入經典 Scrum。權威清單在**第三部�
 
 #### Sprint Retrospective
 
-- **回顧（Retrospective）** 有三種形式。後兩種由 **sdd-retrospective** 技能記成 ADR 或 Knowledge。
-1. **Sprint 結束時**：經典的人與人回顧。
-2. **按需**：由人發起的人與 agent 回顧。
-3. **按規則**：在工作被標為完成之前，由 agent 與 agent 觸發的回顧。記錄寫明觸發該規則的事件，例如 `feature-01 done`。
+- **回顧（Retrospective）** 可以**遠比每個 Sprint 一次更頻繁**地運行，讓團隊在**實時**中學習與改進，而不只在 Sprint 結束時。
+- 對話可以是**人與人**、**人與 agent**，或**agent 與 agent**，取決於誰做了這項工作、誰持有這條經驗。
+- 可以由**人**、**agent**，或 **sdd-retrospective** 技能來**主持**。當經驗應當長期保留時，該技能把它記成 **ADR** 或 **Knowledge**。
+- 常見時機仍包括 **Sprint 結束時**、**按需**、**在任務或 SBI 標為完成之前**（經 **sdd-dod.mdc**），以及**關閉 Sprint 之前**。
 
-- **回顧**有**四種觸發**：
-1. **Sprint 結束時**。
-2. **按需**。
-3. 在把**任務或 SBI** 標為完成之前。
-4. 在關閉 **Sprint** 之前。
-
-- **回顧**是一項 **skill**。
 
 ### Scrum 工件
 
@@ -234,7 +135,7 @@ Harness 各層和 SDD 工件被加入經典 Scrum。權威清單在**第三部�
 
 [返回頂部](#index)
 
-# **第三部分** Scrum in SDD 指南
+# **第二部分** Scrum in SDD 指南
 
 ## 概述
 
@@ -422,8 +323,10 @@ Harness 各層和 SDD 工件被加入經典 Scrum。權威清單在**第三部�
 
 #### Sprint Retrospective
 
-- 回顧可以發生在 Sprint 結束時、按需、按規則，或在關閉 Sprint 之前。
-- 回顧既是事件，也是一項技能。
+- 回顧可以遠比經典 Scrum 更頻繁地運行，用於實時學習與改進。
+- 可以只涉及人、人與 agent，或只有 agent；可由人、agent 或 **sdd-retrospective** 主持。
+- Sprint 結束時、按需、DoD 關閉，以及關閉 Sprint 之前仍是命名的時機；該技能把可持久化的經驗記成 ADR 或 Knowledge。
+
 
 ### Scrum 工件
 
@@ -474,7 +377,99 @@ Harness 各層和 SDD 工件被加入經典 Scrum。權威清單在**第三部�
 
 [返回頂部](#index)
 
-# 附錄：2020 版《Scrum 指南》簡要摘要
+# **第三部分** 附錄 1 - Agentic Programming、Harness Engineering，以及與敏捷實踐對齊的規格驅動開發（SDD）
+
+在 **Agentic Programming** 和 **Spec-Driven Development** 之下，並遵循 **Harness Engineering** 原則，軟體交付方式被從根本上重塑。
+
+**與 Agentic Programming、SDD 和 Harness Engineering 的關係：** **Agentic Programming** 是在軟體工作中使用 AI agents 的更大範式。**Harness Engineering** 是讓它真正落地運行的基礎設施。**SDD** 是這一範式中的方法：agents 以規格（specification）作為 **source of truth** 開展工作。
+
+**它們與 Scrum、極限編程（Extreme Programming，XP）、行為驅動開發（Behavior-Driven Development，BDD）和驗收測試驅動開發（Acceptance Test-Driven Development，ATDD）等敏捷實踐自然對齊。**
+
+## Agentic Programming
+
+**Agentic Programming** 是一種軟體開發方式。在這種方式中，**AI agents** 不再只是被動的代碼助手，而是工程流程中的**主動協作者**：它們參與**規劃、編碼、測試、調試、審查**，有時還參與軟體運行。其自主性受**人定義的目標、約束和監督**所限定。
+
+## Harness Engineering
+
+**Harness Engineering** 是設計**運行時框架**的學科，讓 AI agents 在真實環境中**可靠、安全、有效**地運行。它包括**工具集成、執行編排、上下文與記憶管理、權限與護欄、可觀測性，以及人工監督**。
+
+- **工具集成**：把 agents 連接到文件、API 和系統
+- **執行編排**：管理規劃、行動、檢查和重試
+- **上下文與記憶**：控制 agent 知道什麼、保留什麼
+- **權限與護欄**：約束行為並降低風險
+- **可觀測性與監督**：支持監控、評估和人工介入
+
+## Spec-Driven Development（SDD）
+
+**Spec-Driven Development（SDD）** 是 agentic programming 中的一種方法。**規格（specification）** 是**首要工件**：先定義需求、行為、接口、約束和驗收標準，再據此實現。
+
+- **從規格開始**：定義目標、工作流、工具、輸入與輸出、護欄和成功標準。
+- **把意圖變成結構**：定義角色、規則、權限、記憶和失敗處理。
+- **按規格實現**：生成代碼、提示詞、工具封裝、測試和編排。
+- **從規格推導測試**：定義驗收標準、評估用例和邊界情況。
+- **先在規格層迭代**：先更新規格，再改實現。
+- **說清多 agent 協作**：讓規劃、編碼、審查和測試對齊同一份 source of truth。
+- **減少漂移和歧義**：把約束寫清楚。
+- **提高自動化**：更容易生成代碼、測試、文檔和校驗。
+
+## 用 SDD 落實 Harness Engineering 原則
+
+在 **Spec-Driven Development（SDD）** 中，**規格**定義行為、約束和驗收標準。它是實現和評估的 **source of truth**。在 **Harness Engineering** 原則下，它通過相互關聯的層落地：
+
+- **Rules**：約束執行。
+- **Skills**：提供可複用能力。
+- **Agents**：依據規格執行任務。
+- **Workflows**：協調動作與交接。
+- **Knowledge**：用相關上下文為執行提供依據。
+
+這些層把**規格**變成**可靠執行**。
+
+## 將極限編程實踐與 SDD 結合
+
+在 **SDD** 中，可以把 **eXtreme Programming（XP）** 實踐放進 **harness**，讓人和 AI agents 遵循同一套工程標準，包括：
+
+- **ATDD**：實現之前，根據規格定義驗收測試。
+- **TDD**：先寫測試，再實現到測試通過。
+- **結對編程（Pair Programming）**：開發中的人與 agent，或 agent 與 agent 協作。
+- **CI/CD**：持續驗證、集成並交付變更。
+- **測試自動化（Test Automation）**：自動運行單元、集成和端到端測試。
+- **重構（Refactoring）**：在不改變已規定行為的前提下改進代碼結構。
+
+## 將 Scrum 與 SDD 結合
+
+**Scrum** 規定交付節奏。**SDD** 把規格作為 source of truth。
+
+- **Product Backlog**：需求和驗收標準。
+- **Sprint Backlog**：本 Sprint 要做成的事，以及由誰完成。
+- **Increment**：滿足規格和 Definition of Done 的結果。
+- **事件**：Planning、Daily Scrum、Review 和 Retrospective 保留。人和 agents 都參加。
+- **Definition of Done**：一條規則，在條目完成前執行。
+- **增量交付**：完成一個 Sprint 條目後，再開始下一個。
+- **規格先行**：行為變更從規格開始。Sprint 負責實現。
+
+### 在這種方法中，人如何與 AI agents 協作
+
+**人**定義並治理 **harness**；**AI agents** 在其中運行。人不僅規定**做什麼**，也規定 agents **可以怎樣工作**。
+
+- **人定義 harness**：規則、技能、工作流、agent 角色和知識邊界。
+- **人定義規格**：目標、約束、業務規則和驗收標準。
+- **AI 協助寫清並執行**：在 harness 內細化規格、實現、測試和迭代。
+- **人驗證並監督**：審查輸出、消除歧義、批准敏感操作，並更新 source of truth。
+- **AI 提供反饋**：把結果與規格對照，並指出差距或失敗。
+
+## 將其他敏捷實踐與 SDD 結合
+
+**SDD** 把**規格**當作共享的 source of truth。多種敏捷方法已經以示例、測試和小步驗證為中心，因此可以放進同一套 harness，而不另起一套流程。
+
+- **行為驅動開發（BDD）**：用場景（常用 Gherkin）表達從規格得出的行為。產品、工程和 agents 在改代碼之前共用一套說法。
+- **驗收測試驅動開發（ATDD）**：先就規格上的驗收測試達成一致，再實現到這些測試通過。與 **atdd-expert** 技能，以及上文 XP 中的 ATDD 一致。
+- **精益思維**：保持批次小，減少交接浪費，並經常按規格檢查結果。與本指南中的短 Sprint 和增量交付一致。
+- **看板（Kanban）**：在 backlog 和 Sprint 板上看見工作，限制在製品，並且只在該項規格已足夠可建造時拉取下一項。
+- **持續交付**：規格、測試和 Definition of Done 都通過時再集成和部署。Harness 中的 CI/CD 自動做這項檢查。
+
+[返回頂部](#index)
+
+# 附錄 2：2020 版《Scrum 指南》簡要摘要
 
 **作者：** Ken Schwaber 與 Jeff Sutherland
 

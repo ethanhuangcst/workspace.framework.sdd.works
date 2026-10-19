@@ -13,10 +13,14 @@ const TARGETS = [
 ];
 
 const PART_SIGNATURES = [
-  { key: "I", match: (title) => /Agentic Programming/i.test(title) },
-  { key: "II", match: (title) => /Gap in Classic/i.test(title) },
-  { key: "III", match: (title) => /Scrum in SDD Guide/i.test(title) },
-  { key: "IV", match: (title) => /2020 Scrum Guide Summary/i.test(title) },
+  { key: "I", match: (title) => /Scrum Gap for SDD/i.test(title) },
+  { key: "II", match: (title) => /Scrum in SDD Guide/i.test(title) },
+  {
+    key: "III",
+    match: (title) =>
+      /Appendix 1/i.test(title) ||
+      (/Agentic Programming/i.test(title) && /Agile/i.test(title)),
+  },
 ];
 
 function githubHeadingSlug(plain) {
@@ -43,10 +47,16 @@ function splitPartChunks(bodyLines) {
   const chunks = [];
   let current = null;
   for (const line of bodyLines) {
-    const m = line.match(/^# \*\*Part (I|II|III|IV)\*\* (.*)$/);
-    if (m) {
+    const partM = line.match(/^# \*\*Part (I|II|III)\*\* (.*)$/);
+    const appendixM = line.match(/^# Appendix 2: (.*)$/);
+    if (partM) {
       if (current) chunks.push(current);
-      current = { title: m[2], lines: [line] };
+      current = { kind: "part", title: partM[2], lines: [line] };
+      continue;
+    }
+    if (appendixM) {
+      if (current) chunks.push(current);
+      current = { kind: "appendix", title: appendixM[1], lines: [line] };
       continue;
     }
     if (current) current.lines.push(line);
@@ -56,7 +66,12 @@ function splitPartChunks(bodyLines) {
 }
 
 function orderAndLabelParts(chunks) {
-  const remaining = [...chunks];
+  const parts = chunks.filter((c) => c.kind === "part");
+  const appendix = chunks.find((c) => c.kind === "appendix");
+  if (!appendix) {
+    throw new Error("Missing Appendix 2 block");
+  }
+  const remaining = [...parts];
   const ordered = [];
   for (const sig of PART_SIGNATURES) {
     const idx = remaining.findIndex((c) => sig.match(c.title));
@@ -72,6 +87,7 @@ function orderAndLabelParts(chunks) {
       `Unmatched part blocks: ${remaining.map((c) => c.title).join("; ")}`,
     );
   }
+  ordered.push(...appendix.lines);
   return ordered;
 }
 
@@ -104,10 +120,10 @@ function transformPartIV(text) {
 function fixPartCrossReferences(text) {
   return text
     .replace(
-      /\*\*Part IV\*\* under \*\*ADD - what is added\*\*/g,
-      "**Part III** under **ADD - what is added**",
+      /\*\*Part (III|IV)\*\* under \*\*ADD - what is added\*\*/g,
+      "**Part II** under **ADD - what is added**",
     )
-    .replace(/detail in Part IV/g, "detail in Part III");
+    .replace(/detail in Part (III|IV)/g, "detail in Part II");
 }
 
 function collectHeadings(lines) {
@@ -148,22 +164,18 @@ function buildPreamble() {
     "",
     "> Type: Core artifact of framework.sdd.works",
     "> as_of: 2026-10-08",
-    "> [Definition](./sdd-scrum-practices.md#terminology-in-practice)",
+    "> **Author:** © 2026 Ethan Huang",
     "",
-    "**Author:** Ethan Huang",
-    "",
-    "© 2026 Ethan Huang",
+    "---",
     "",
     "This document defines how Scrum is adopted in Spec-Driven Development, with Agentic Programming under Harness Engineering principles.",
     "",
     "The Scrum Guide defines Scrum. This document does not replace it.",
     "",
-    "Read **Part I** through **Part III** for SDD and the Scrum in SDD definition. **Part IV** is the 2020 Scrum Guide summary at the end as reference.",
-    "",
-    "- **Part I** names Agentic Programming, Harness Engineering, and Spec-Driven Development.",
-    "- **Part II** states what classic Scrum does not cover in that setting.",
-    "- **Part III** is the definition: what stays, what is added, and what changes.",
-    "- **Part IV** summarizes the 2020 Scrum Guide. That summary is the baseline.",
+    "- **Part I** states what classic Scrum does not cover in that setting.",
+    "- **Part II** is the definition: what stays, what is added, and what changes.",
+    "- **Part III** names Agentic Programming, Harness Engineering, and Spec-Driven Development.",
+    "- **Appendix 2**: short summary of the 2020 Scrum Guide. That summary is the baseline for classic Scrum.",
     "",
   ];
 }
@@ -171,7 +183,7 @@ function buildPreamble() {
 function rebuildIndexOnly(md) {
   const lines = md.split("\n");
   const indexLine = lines.findIndex((l) => l === "## Index");
-  const firstPart = lines.findIndex((l) => /^# \*\*Part (I|II|III|IV)\*\* /.test(l));
+  const firstPart = lines.findIndex((l) => /^# \*\*Part I\*\* /.test(l));
   if (indexLine < 0) throw new Error("No ## Index section found");
   if (firstPart < 0) throw new Error("No part headings found");
   const header = lines.slice(0, indexLine);
@@ -183,7 +195,7 @@ function rebuildIndexOnly(md) {
 
 function rebuild(md) {
   const lines = md.split("\n");
-  const firstPart = lines.findIndex((l) => /^# \*\*Part (I|II|III|IV)\*\* /.test(l));
+  const firstPart = lines.findIndex((l) => /^# \*\*Part I\*\* /.test(l));
   if (firstPart < 0) throw new Error("No part headings found");
   const bodyLines = lines.slice(firstPart);
   const chunks = splitPartChunks(bodyLines);

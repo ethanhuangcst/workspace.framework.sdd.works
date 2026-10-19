@@ -200,13 +200,13 @@ Re-run when content-tab markdown renderers or heading slug rules change. **featu
 | Two headings with plain text `Rules` in one document | ids `rules` and `rules-1` |
 | A second `renderPortalMarkdown` call | slug counter starts again at the bare id |
 | Features markdown with an `h2` and an em-dash list row | heading has an `id`; the row still uses `feature-name` and `feature-desc` |
-| Browser | On `/instructions?tab=scrum-in-sdd`, activate the Part I index link and the Part IV index link (Scrum Guide summary). Each heading is in view and not under the tab bar. |
+| Browser | On `/instructions?tab=scrum-in-sdd`, activate the Part I index link and the Appendix 2 index link (2020 Scrum Guide summary). Each heading is in view and not under the tab bar. |
 
 - [ ] Bold Part IV heading id matches the Index fragment
 - [ ] Duplicate heading ids use `slug` then `slug-1`
 - [ ] Features em-dash split still works and the heading has an id
 - [ ] Index `#` fragments on the pack English file match rendered heading ids (Vitest `should_match_index_hrefs_to_rendered_heading_ids`)
-- [ ] Part I and Part IV index links on the Scrum tab scroll to those headings
+- [ ] Part I and Appendix 2 index links on the Scrum tab scroll to those headings
 - [ ] No console or server error on that path
 
 ## 14. Regression after Web-portal-29

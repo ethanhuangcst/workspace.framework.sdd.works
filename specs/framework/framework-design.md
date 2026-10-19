@@ -1483,7 +1483,7 @@ Long-form guide for people on the instructions portal. [ADR-125](../adr/ADR-125-
 | Product mirror | `src/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` |
 | Tab config | `pack.framework.sdd.works/content/.instructions-tabs.json` (`scrum-in-sdd` content tab) |
 
-**Human variant.** Includes `## Index` (h1 and h2 headings only). No links that require this product repo or other non-shipped artifacts. English body order: Part I–III, then **Appendix: Short summary of the 2020 Scrum Guide**. After structural EN edits, run `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` in this repo. Run `npm run check:pack-seeds` before pack push.
+**Human variant.** Includes `## Index` (h1 and h2 headings only). No links that require this product repo or other non-shipped artifacts. English body order: **Part I** The Scrum Gap for SDD, **Part II** Scrum in SDD Guide, **Part III** Appendix 1 (Agentic Programming, Harness Engineering, SDD), then **Appendix 2: Short summary of the 2020 Scrum Guide**. After structural EN edits, run `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` in this repo. Run `npm run check:pack-seeds` before pack push.
 
 Semantic content stays aligned with the agent template seeds; Index and link policy differ. Maintainers use **`sdd-guide-editor`** in `.cursor/skills/sdd-guide-editor/`. When anchors or tab paths change, load **`sdd-update-specs`** for admin-portal specs.
 
