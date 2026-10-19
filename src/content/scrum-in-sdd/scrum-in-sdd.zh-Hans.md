@@ -12,7 +12,7 @@
 
 - **第一部分** 说明经典 Scrum 在这一设定下没有覆盖的内容。
 - **第二部分** 是定义：哪些保持不变，哪些新增，哪些改变。
-- **第三部分** 说明 Agentic Programming、Harness Engineering 和规格驱动开发。
+- **附录 1**：Agentic Programming、Harness Engineering，以及与敏捷实践对齐的规格驱动开发（SDD）。
 - **附录 2**：2020 版《Scrum 指南》的简要摘要。该摘要是经典 Scrum 的基线。
 
 ## Index
@@ -27,7 +27,7 @@
   - [MODIFY：发生变化的内容](#modify发生变化的内容)
   - [Scrum in SDD 的最小配置](#scrum-in-sdd-的最小配置)
   - [运行原则](#运行原则)
-- [第三部分 附录 1 - Agentic Programming、Harness Engineering，以及与敏捷实践对齐的规格驱动开发（SDD）](#第三部分-附录-1---agentic-programmingharness-engineering以及与敏捷实践对齐的规格驱动开发sdd)
+- [附录 1：Agentic Programming、Harness Engineering，以及与敏捷实践对齐的规格驱动开发（SDD）](#附录-1agentic-programmingharness-engineering以及与敏捷实践对齐的规格驱动开发sdd)
   - [Agentic Programming](#agentic-programming)
   - [Harness Engineering](#harness-engineering)
   - [Spec-Driven Development（SDD）](#spec-driven-developmentsdd)
@@ -377,7 +377,7 @@ Harness 各层和 SDD 工件被加入经典 Scrum。权威清单在**第二部�
 
 [返回顶部](#index)
 
-# **第三部分** 附录 1 - Agentic Programming、Harness Engineering，以及与敏捷实践对齐的规格驱动开发（SDD）
+# 附录 1：Agentic Programming、Harness Engineering，以及与敏捷实践对齐的规格驱动开发（SDD）
 
 在 **Agentic Programming** 和 **Spec-Driven Development** 之下，并遵循 **Harness Engineering** 原则，软件交付方式被从根本上重塑。
 

@@ -15,13 +15,10 @@ const TARGETS = [
 const PART_SIGNATURES = [
   { key: "I", match: (title) => /Scrum Gap for SDD/i.test(title) },
   { key: "II", match: (title) => /Scrum in SDD Guide/i.test(title) },
-  {
-    key: "III",
-    match: (title) =>
-      /Appendix 1/i.test(title) ||
-      (/Agentic Programming/i.test(title) && /Agile/i.test(title)),
-  },
 ];
+
+const APPENDIX_1_TITLE =
+  "Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices";
 
 function githubHeadingSlug(plain) {
   return (
@@ -47,16 +44,32 @@ function splitPartChunks(bodyLines) {
   const chunks = [];
   let current = null;
   for (const line of bodyLines) {
-    const partM = line.match(/^# \*\*Part (I|II|III)\*\* (.*)$/);
-    const appendixM = line.match(/^# Appendix 2: (.*)$/);
+    const partM = line.match(/^# \*\*Part (I|II)\*\* (.*)$/);
+    const partLegacyM = line.match(/^# \*\*Part III\*\* Appendix 1 - (.*)$/);
+    const appendix1M = line.match(/^# Appendix 1: (.*)$/);
+    const appendix2M = line.match(/^# Appendix 2: (.*)$/);
     if (partM) {
       if (current) chunks.push(current);
       current = { kind: "part", title: partM[2], lines: [line] };
       continue;
     }
-    if (appendixM) {
+    if (appendix1M || partLegacyM) {
       if (current) chunks.push(current);
-      current = { kind: "appendix", title: appendixM[1], lines: [line] };
+      const title = appendix1M ? appendix1M[1] : partLegacyM[1];
+      current = {
+        kind: "appendix1",
+        title,
+        lines: [`# Appendix 1: ${title}`],
+      };
+      continue;
+    }
+    if (appendix2M) {
+      if (current) chunks.push(current);
+      current = {
+        kind: "appendix2",
+        title: appendix2M[1],
+        lines: [line],
+      };
       continue;
     }
     if (current) current.lines.push(line);
@@ -67,8 +80,12 @@ function splitPartChunks(bodyLines) {
 
 function orderAndLabelParts(chunks) {
   const parts = chunks.filter((c) => c.kind === "part");
-  const appendix = chunks.find((c) => c.kind === "appendix");
-  if (!appendix) {
+  const appendix1 = chunks.find((c) => c.kind === "appendix1");
+  const appendix2 = chunks.find((c) => c.kind === "appendix2");
+  if (!appendix1) {
+    throw new Error("Missing Appendix 1 block");
+  }
+  if (!appendix2) {
     throw new Error("Missing Appendix 2 block");
   }
   const remaining = [...parts];
@@ -87,7 +104,9 @@ function orderAndLabelParts(chunks) {
       `Unmatched part blocks: ${remaining.map((c) => c.title).join("; ")}`,
     );
   }
-  ordered.push(...appendix.lines);
+  appendix1.lines[0] = `# Appendix 1: ${appendix1.title}`;
+  ordered.push(...appendix1.lines);
+  ordered.push(...appendix2.lines);
   return ordered;
 }
 
@@ -174,7 +193,7 @@ function buildPreamble() {
     "",
     "- **Part I** states what classic Scrum does not cover in that setting.",
     "- **Part II** is the definition: what stays, what is added, and what changes.",
-    "- **Part III** names Agentic Programming, Harness Engineering, and Spec-Driven Development.",
+    `- **Appendix 1**: ${APPENDIX_1_TITLE}.`,
     "- **Appendix 2**: short summary of the 2020 Scrum Guide. That summary is the baseline for classic Scrum.",
     "",
   ];
@@ -224,7 +243,7 @@ function validateIndex(md) {
   let inIndex = false;
   for (const line of md.split("\n")) {
     if (line.startsWith("## Index")) inIndex = true;
-    else if (inIndex && line.startsWith("# **Part")) inIndex = false;
+    else if (inIndex && /^# \*\*Part I\*\* /.test(line)) inIndex = false;
     if (!inIndex) continue;
     let m;
     while ((m = indexLink.exec(line))) {

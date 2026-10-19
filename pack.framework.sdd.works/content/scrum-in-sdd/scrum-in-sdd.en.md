@@ -12,7 +12,7 @@ The Scrum Guide defines Scrum. This document does not replace it.
 
 - **Part I** states what classic Scrum does not cover in that setting.
 - **Part II** is the definition: what stays, what is added, and what changes.
-- **Part III** names Agentic Programming, Harness Engineering, and Spec-Driven Development.
+- **Appendix 1**: Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices.
 - **Appendix 2**: short summary of the 2020 Scrum Guide. That summary is the baseline for classic Scrum.
 
 ## Index
@@ -27,7 +27,7 @@ The Scrum Guide defines Scrum. This document does not replace it.
   - [MODIFY: What changes](#modify-what-changes)
   - [Minimum Scrum in SDD setup](#minimum-scrum-in-sdd-setup)
   - [Operating principles](#operating-principles)
-- [Part III Appendix 1 - Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices](#part-iii-appendix-1---agentic-programming-harness-engineering-and-spec-driven-development-sdd-aligned-with-agile-practices)
+- [Appendix 1: Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices](#appendix-1-agentic-programming-harness-engineering-and-spec-driven-development-sdd-aligned-with-agile-practices)
   - [Agentic Programming](#agentic-programming)
   - [Harness Engineering](#harness-engineering)
   - [Spec-Driven Development (SDD)](#spec-driven-development-sdd)
@@ -338,7 +338,7 @@ These are not project artifacts. They are not in any group above.
 
 [Back to top](#index)
 
-# **Part III** Appendix 1 - Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices
+# Appendix 1: Agentic Programming, Harness Engineering, and Spec-Driven Development (SDD) aligned with Agile practices
 
 With **Agentic Programming** and **Spec-Driven Development**, under **Harness Engineering principles**, software delivery is fundamentally reshaped.
 
