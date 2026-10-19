@@ -27,3 +27,4 @@ Product requirements live under `specs/`. Architecture decisions live under `spe
 | [`agent/lite-pack-allowlist-is-a-pack-file.md`](./agent/lite-pack-allowlist-is-a-pack-file.md) | Allow-list is a pack-root file; deploy does not copy it | 2026-10-10 |
 | [`agent/verify-usable-same-session-as-ship.md`](./agent/verify-usable-same-session-as-ship.md) | Close confirm and usable check in the same session as the ship | 2026-10-10 |
 | [`agent/doc-only-sbi-verify-path.md`](./agent/doc-only-sbi-verify-path.md) | Doc-only SBIs: name file path, AC ids, and verify steps before close | 2026-10-10 |
+| [`agent/proxy-port-leaks-into-redirects.md`](./agent/proxy-port-leaks-into-redirects.md) | Middleware redirect keeps the container port behind a proxy; clear `url.port` | 2026-10-19 |

@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-11 (Sprint 9 WIP; twenty-three SBIs Done; task-02 ToDo only; MC-20 closed; WA-23 closed; Codex OGTs open)
+> as_of: 2026-10-19 (Sprint 9 WIP; all twenty-four SBIs Done including [task-02 Go-live](./sprint-backlog.md#sprint-9); MC-21 and MC-22 closed; Codex OGTs open)
 > [Definition](../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#statusmd)
 
 ---
@@ -18,18 +18,18 @@
 | Sprint 1 - 6 | Done | - Sprint 1 closed 2026-09-25.<br>- Sprint 2 closed 2026-09-26.<br>- Sprint 3 closed the web portal and MCP for R2.<br>- Sprint 4 closed 2026-10-03.<br>- [Sprint 5](./sprint-backlog.md#sprint-5) closed 2026-10-05.<br>- [Sprint 6](./sprint-backlog.md#sprint-6) closed 2026-10-05. |
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Thirteen SBIs **Done** (includes [feature-81](./sprint-backlog.md#sprint-8) sticky guide header for [Web-portal-29](./product-backlog.md#pb-126)). |
-| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - Twenty-three SBIs **Done** (includes [feature-98](./sprint-backlog.md#sprint-9) / [Web-portal-41](./product-backlog.md#pb-140)). Open SBI: [task-02 Go-live](./sprint-backlog.md#sprint-9) only. [MCP-07](./product-backlog.md#pb-105) is **Retired**. Re-smoke live `/setup` and §7.1 hostnames after deploy. |
+| [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - All twenty-four SBIs **Done**. [task-02 Go-live](./sprint-backlog.md#sprint-9) closed 2026-10-19 after the production smoke on image `9eae528c...` (user **close confirm** the same evening). Sprint close waits for the user sprint confirm. |
 | Unplanned PBIs | — | - One row: [Web-portal-21](./product-backlog.md#pb-107) partner site (not this repo). |
 
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: [task-02 Go-live](./sprint-backlog.md#sprint-9) is the only open SBI (**ToDo**). [feature-98](./sprint-backlog.md#sprint-9) / [Web-portal-41](./product-backlog.md#pb-140) closed 2026-10-10 after user confirm. Manual e2e §16 **pass** on CodeBuddy CN and TRAE CN (TC-1 through TC-6) and **pass** once-per-run for TC-7 through TC-9 (Cursor MCP + verify scripts) on 2026-10-10. Evidence: [`go-live-test.md`](./mcp/go-live-test.md), [`mcp-manual-test-results.md`](./mcp/mcp-manual-test-results.md). [MC-20](./issues-log.md) closed 2026-10-11: public `https://sdd.works/mcp` accepts URL-only `mcp.json` (image `61efdcc`, `MCP_AUTH_TOKEN` unset). [WA-23](./issues-log.md) closed 2026-10-11: Node setup on `https://sdd.works` is mirror-first for CN, HK, and MO (image `4227f3e`). **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md), [WA-22](./issues-log.md), [MC-19](./issues-log.md).
+- What SBI are we working on now: none. [task-02 Go-live](./sprint-backlog.md#sprint-9) closed 2026-10-19: image `9eae528c5e8c798b33b62796019c7335b3b72590` serves `GET /lite/install` (version `2026-10-19.v1`, [ADR-134](./adr/ADR-134-lite-install-public-path.md)) with `GET /setup/install` 307 to `/lite/install`, HTTP install client roots are portable ([MC-21](./issues-log.md)), and the legacy-host 301 no longer carries port 3000 ([MC-22](./issues-log.md)). Production smoke passed: `/`, `/setup`, `/setup/node`, node catalog, versions (pack commit `82af2e5…`), package, lite files 200; MCP initialize 200 without bearer; webhook not 301; `www` 301. [MC-21](./issues-log.md) and [MC-22](./issues-log.md) closed 2026-10-19. **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md), [WA-22](./issues-log.md), [MC-19](./issues-log.md).
 
 ## what could be the next
 
-- After go-live, re-run [release.md](./release.md) §7.2 on `https://sdd.works/setup`, Copy, and Setup tab even though [WA-19](./issues-log.md)–[WA-21](./issues-log.md) are already closed on localhost.
-- After the next image deploy, confirm `https://sdd.works/api/sdd/lite/files` returns 200, then close [task-02 Go-live](./sprint-backlog.md#sprint-9).
+- All Sprint 9 SBIs are **Done**. Sprint 9 close needs the user sprint confirm and the sprint-end retrospective.
+- [Spec-seeds-15](./product-backlog.md#pb-97) may now move per its row after the production lite-files check passed.
 - [Web-portal-21](./product-backlog.md#pb-107) is **unplanned** here (partner property such as 2study.ai).
 
 ## Current OGT(On-going Tasks)
@@ -69,4 +69,4 @@ CodeBuddy CN and TRAE CN finished §16 TC-1 through TC-6 on 2026-10-10. TC-7 thr
 | 14 | Rename skill `fullstack-developer` to `fullstack-engineer` | - | Sprint 7 | Sprint 7 |
 | 15 | Seed files should state Pokymon Card Collection is an example only | - [task-01 Cross-review five process file seeds](./sprint-backlog.md#sprint-6) | Sprint 5 | Sprint 6 |
 
-Last updated: 2026-10-10 Manual e2e §16: CodeBuddy and TRAE pass; OGT TC-1 through TC-9 narrowed to Codex-only verification (token exhausted)
+Last updated: 2026-10-19 task-02 Go-live closed on image `9eae528c...`; MC-21 and MC-22 closed; all Sprint 9 SBIs Done

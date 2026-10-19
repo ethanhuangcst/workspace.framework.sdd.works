@@ -68,11 +68,11 @@ Then §7.1 (portal, `www` 301, webhook not 301), §7.2 (`/setup`, `/setup/node`,
 
 ## Done when
 
-- [ ] `IMAGE_TAG` `9eae528c5e8c798b33b62796019c7335b3b72590` running on web and mcp
-- [ ] `/lite/install` 200 with version `2026-10-19.v1`; `/setup/install` 3xx to `/lite/install`
-- [ ] `framework.sdd.works` 301 has **no** port in `location`
-- [ ] §7.1, §7.2, §7.4 smokes pass; siblings unaffected
-- [ ] Rollback sha recorded before Recreate
+- [x] `IMAGE_TAG` `9eae528c5e8c798b33b62796019c7335b3b72590` running on web and mcp (2026-10-19 evening)
+- [x] `/lite/install` 200 with version `2026-10-19.v1`; `/setup/install` 307 to `/lite/install`
+- [x] `framework.sdd.works` 301 has **no** port in `location`
+- [x] §7.1, §7.2, §7.4 smokes pass; siblings unaffected (user browser confirm 2026-10-19)
+- [x] Rollback sha recorded before Recreate (`4227f3e60af32e5a43d224ffb282ee25adc336d0`)
 
 ## References
 

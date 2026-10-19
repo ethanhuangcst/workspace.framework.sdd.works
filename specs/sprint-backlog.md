@@ -779,6 +779,7 @@ Depends on Sprint 8 (Learn embed tab and content tabs).
 | 21  | feature-95 | Add the install page at /install that guides the agent through the MCP install sequence                           | [MCP-09 sdd_install_framework and sdd_update_framework re-design](./product-backlog.md#pb-138) | MCP/Feature    | - New public/agent-setup/install-full.md served at GET /install. - GET /setup links to it from an After setup note. - Stories: [mcp-stories.md](./mcp/mcp-stories.md) `sdd-mcp-install` AC8. - Tests: [mcp-tests.md](./mcp/mcp-tests.md#14-feature-95-install-page) §14. - Design: [mcp-design.md](./mcp/mcp-design.md) §2.0 (setup backend owns GET /install), §2.2 Install page. - Closed [MC-17](./issues-log.md).                                                                                                                                                                                                                                           | **Done** |
 | 22  | feature-96 | Refresh the sync timestamp when the commit is unchanged                                                           | [MCP-09 sdd_install_framework and sdd_update_framework re-design](./product-backlog.md#pb-138) | MCP/Feature    | - [sync-job.ts](../src/core/sync/sync-job.ts) rewrites syncedAt: now when existing.latestCommit equals commitSha and not force. - Closed [MC-14](./issues-log.md).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | **Done** |
 | 23  | feature-98 | Manual mcp.json setup guide on the Setup tab                                                                    | [Web-portal-41 Manual mcp.json setup guide on the Setup tab](./product-backlog.md#pb-140)       | Webapp/Feature | - [ADR-133](./adr/ADR-133-manual-mcp-json-setup-guide-returns.md) - [`SetupGuidePanel.tsx`](../src/components/features/SetupGuidePanel.tsx) - [`setup-manual.ts`](../src/lib/setup-manual.ts) - [`app-tests.md`](./admin-portal/app-tests.md) §35 - User close confirm 2026-10-10                                                                                                                                                                                                                                              | **Done** |
+| 24  | task-02 | Go-live | —          | MCP/Task    | - [release.md](./release.md) §7.3 - Closed 2026-10-19 on image `9eae528c5e8c798b33b62796019c7335b3b72590`: `https://sdd.works/api/sdd/lite/files` 200, versions return real pack commit `82af2e5…`, package 200, §7.1/§7.2/§7.4 pass, user **close confirm** the same evening. [Spec-seeds-15](./product-backlog.md#pb-97) may move per its row. | **Done** |
 
 
 
@@ -792,7 +793,8 @@ No open rows.
 
 | #   | Code    | SBI     | Parent PBI | Module/Type | Related specs                                                                                                                                                                                                 | Status |
 | --- | ------- | ------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | task-02 | Go-live | —          | MCP/Task    | - [release.md](./release.md) §7.3 - After deploy, `https://sdd.works/api/sdd/lite/files` returns 200. Versions and package return a real pack commit. [Spec-seeds-15](./product-backlog.md#pb-97) stays **ToDo** until that check passes. | **ToDo** |
+
+No open rows.
 
 
 ### Retrospective
@@ -861,6 +863,10 @@ No open rows.
 
 - Go-live set `MCP_AUTH_TOKEN` on public `sdd.works` against the URL-only client contract ([ADR-130](./adr/ADR-130-simplified-installer-url-only-and-empty-cache.md)); [ADR-050](./adr/ADR-050-mcp-http-optional-bearer.md) now names that host as unset-token mode.
 
+#### 12. [Oct 19, 2026], task-02 Go-live done
+
+- Pre-flight production curls found the legacy-host 301 pointing at unreachable `sdd.works:3000` before Recreate, so the middleware port fix shipped in the same image. [proxy-port-leaks-into-redirects.md](./knowledge/agent/proxy-port-leaks-into-redirects.md)
+
 **Opportunities**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
@@ -913,6 +919,10 @@ No open rows.
 
 - Treat a security checklist that forces a public bearer as a conflict with [ADR-130](./adr/ADR-130-simplified-installer-url-only-and-empty-cache.md) until product and ops agree in one ADR.
 
+#### 10. [Oct 19, 2026], task-02 Go-live done
+
+- Run the release.md §7 curl smoke set before every Recreate, not only after, so pre-flight catches live regressions early.
+
 **Future actions**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
@@ -930,6 +940,10 @@ No open rows.
 #### 3. [Oct 8, 2026], feature-72, feature-74, feature-77, feature-88 done
 
 - On the next Learn iframe check in production, confirm WordPress `frame-ancestors` allows `https://sdd.works` per `[hostname-cutover-inventory.md](./go-live/20261008/hostname-cutover-inventory.md)`.
+
+#### 4. [Oct 19, 2026], task-02 Go-live done
+
+- At the next release Recreate, run the §7.1 hostname curls pre-deploy and record the results in the dated go-live plan.
 
 
 

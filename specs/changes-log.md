@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-10-19
+
+### Evening release: ADR-134 lite path, MC-21 install roots, MC-22 redirect port; task-02 closed
+
+**Why**: Partner sites need the lite instruction page on a dedicated public path, WorkBuddy CN installs were blocked by server-side root validation, and the legacy-host redirect sent visitors to an unreachable port.
+
+**What changed**: `GET /lite/install` serves the lite markdown (version `2026-10-19.v1`) and `GET /setup/install` 307-redirects to it ([ADR-134](./adr/ADR-134-lite-install-public-path.md)). HTTP installs normalize explicit `client` aliases and validate manual roots structurally only ([MC-21](./issues-log.md)). The middleware clears the redirect port so legacy hosts 301 to `https://sdd.works/...` ([MC-22](./issues-log.md)). [task-02 Go-live](./sprint-backlog.md#sprint-9) closed after the production smoke.
+
+**Verification**: Vitest 455 passed 5 skipped; typecheck, lint, build pass. GHCR green on `9eae528c5e8c798b33b62796019c7335b3b72590`. Production smoke 2026-10-19: `/lite/install` 200 with the new version, `/setup/install` 307 to `/lite/install`, legacy-host location without port, `www` 301, `/setup` and `/setup/node` 200, MCP initialize 200 without bearer, webhook 401, versions/package/lite-files 200.
+
+**Boundary**: No DNS, NPM host, or secret change. `MCP_AUTH_TOKEN` stays unset on the public host.
+
 ## 2026-10-11
 
 ### WA-23 closed: production Node setup is mirror-first for CN, HK, MO
