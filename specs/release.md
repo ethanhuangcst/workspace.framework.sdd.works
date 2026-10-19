@@ -17,13 +17,13 @@
 | Admin portal (Keys, Settings, Framework sync, Accounts) | Closing backlog rows / marking feature Done |
 | Operator guide to public URLs ([feature-84](./sprint-backlog.md#sprint-9) / [Web-portal-20](./product-backlog.md#pb-106)) | Pushing the [feature-80](./sprint-backlog.md#sprint-9) `v*` tag (this handbook only names that step) |
 
-**This cutover image (decided for go-live):** GHCR tag **`5e047ef418d3e7c25c040c13bf1efd854319f81d`** (full git sha). Short ref **`5e047ef`**. `origin/main` at 2026-10-08. GitHub Actions workflow **GHCR** succeeded (2026-10-08T11:41:42Z). Image:
+**Current release image:** GHCR tag **`9eae528c5e8c798b33b62796019c7335b3b72590`** (full git sha). Short ref **`9eae528`**. `origin/main` at 2026-10-19. GitHub Actions workflow **GHCR** succeeded (2026-10-19). Image:
 
-`ghcr.io/ethanhuangcst/workspace.framework.sdd.works/web:5e047ef418d3e7c25c040c13bf1efd854319f81d`
+`ghcr.io/ethanhuangcst/workspace.framework.sdd.works/web:9eae528c5e8c798b33b62796019c7335b3b72590`
 
 **`IMAGE_TAG` tracing rule:** In Portainer, set **`IMAGE_TAG`** to the **full** commit sha GHCR pushed (`format=long` in [`.github/workflows/ghcr.yml`](../.github/workflows/ghcr.yml)). Do not use branch name **`main`**, **`latest`**, or short sha in production unless you also record the full sha in your run notes. Short sha is fine in chat when it maps to one row in the deploy table below.
 
-**Not in `5e047ef`:** local uncommitted work (for example feature-80 setup **2026-10-08.v6**). Ship that in a later **`IMAGE_TAG`** after merge, push, and a green GHCR run.
+**Not in `9eae528`:** local uncommitted work. Ship that in a later **`IMAGE_TAG`** after merge, push, and a green GHCR run. Dated deploy plans: [`go-live/20261019/go-live-plan.md`](./go-live/20261019/go-live-plan.md) (tonight: ADR-134 lite path, MC-21 install roots, MC-22 redirect port).
 
 ## 2. Production runtime
 
@@ -84,7 +84,7 @@ Fill **values** only on your machine in [`specs/.secrets`](./.secrets) and in th
 | --- | --- |
 | File | [`go-live/.portainer.env`](./go-live/.portainer.env) (gitignored) |
 | Use | Copy all `KEY=value` lines into Portainer stack **`framework-sdd-works`** env before Recreate |
-| **`IMAGE_TAG`** | **`5e047ef418d3e7c25c040c13bf1efd854319f81d`** (full sha; matches §1) |
+| **`IMAGE_TAG`** | **`9eae528c5e8c798b33b62796019c7335b3b72590`** (full sha; matches §1) |
 | Regenerate | When secrets rotate, update [`.secrets`](./.secrets) then refresh `.portainer.env` |
 
 Do not commit `.portainer.env`. Compose shape stays in [`go-live/20261008/portainer.md`](./go-live/20261008/portainer.md).
@@ -142,8 +142,8 @@ Without Settings URL + sync, `GET /api/sdd/versions` returns **`409 sync_pending
 
 | Topic | Decision |
 | --- | --- |
-| Deploy **`IMAGE_TAG`** | **`5e047ef418d3e7c25c040c13bf1efd854319f81d`** |
-| GHCR also tags | **`5e047ef`** (short), **`latest`** (default branch; do not use for Recreate) |
+| Deploy **`IMAGE_TAG`** | **`9eae528c5e8c798b33b62796019c7335b3b72590`** |
+| GHCR also tags | **`9eae528`** (short), **`latest`** (default branch; do not use for Recreate) |
 | Public URLs in stack env | **`https://sdd.works`** for `PUBLIC_BASE_URL` and `SDD_SERVER_URL` |
 | Postgres database | **`framework_sdd`** on **`101.132.156.250:5432`** (DSN in `.portainer.env`) |
 | Previous Portainer paste | **`fc1c76c`** was stale; do not redeploy that tag for cutover |
@@ -153,8 +153,8 @@ Without Settings URL + sync, `GET /api/sdd/versions` returns **`409 sync_pending
 
 ## 5. Pre-flight
 
-1. **`origin/main`** is at **`5e047ef`** (`git rev-parse --short origin/main`).
-2. GHCR workflow **GHCR** succeeded for **`5e047ef418d3e7c25c040c13bf1efd854319f81d`** (2026-10-08). Pull by **full** tag, not `latest`.
+1. **`origin/main`** is at **`9eae528`** (`git rev-parse --short origin/main`).
+2. GHCR workflow **GHCR** succeeded for **`9eae528c5e8c798b33b62796019c7335b3b72590`** (2026-10-19). Pull by **full** tag, not `latest`.
 3. Confirm Portainer can pull that tag (`read:packages` on registry login).
 4. Confirm DNS (already live; do not flip apex back to WordPress):
 
@@ -381,7 +381,7 @@ The public guide on **`sdd.works`** is not the only documented admin entry forev
 
 ## 11. Done when
 
-- [ ] Image **`5e047ef418d3e7c25c040c13bf1efd854319f81d`** (or newer full sha) is running on web and mcp
+- [ ] Image **`9eae528c5e8c798b33b62796019c7335b3b72590`** (or newer full sha) is running on web and mcp
 - [ ] §7.1–§7.4 pass
 - [ ] §7.5 confirmed or WordPress `frame-ancestors` ticket opened
 - [ ] Seed admin password rotated if the seed value was shared
