@@ -983,6 +983,34 @@ No open rows.
 
 
 
+## Sprint 10
+
+[Back to the top](#sprint-backlog-frameworksddworks)
+
+Sprint Goal: Repository restructure per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md): lite prompts move to `lite-prompts/` and the app splits into `app/web`, `app/mcp`, `app/shared` with zero public URL change.
+
+Depends on Sprint 9 (production on `sdd.works`; [ADR-134](./adr/ADR-134-lite-install-public-path.md) lite path live).
+
+**Status: ToDo**
+
+### **Done**
+
+No rows yet.
+
+### **WIP**
+
+No open rows.
+
+### **ToDo**
+
+
+| #   | Code        | SBI                                        | Parent PBI                                                                                       | Module/Type   | Related specs                                                                                                                                                 | Status  |
+| --- | ----------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | feature-99  | Lite prompt definitions move to `lite-prompts/` | [Repo-01 Lite prompt definitions move to `lite-prompts/`](./product-backlog.md#pb-141)            | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [ADR-134](./adr/ADR-134-lite-install-public-path.md) - Six files move; six call-site path updates; Dockerfile copy; public URLs unchanged; raw static `/agent-setup/*.md` becomes 404 (accepted) | **ToDo** |
+| 2   | feature-100 | App split into `app/web`, `app/mcp`, `app/shared` | [Repo-02 App split into `app/web`, `app/mcp`, `app/shared`](./product-backlog.md#pb-142) | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - Depends on feature-99 - Alias rewrite across `@/` imports; one package.json; one GHCR image; Portainer mcp command path changes once at deploy | **ToDo** |
+
+
+
 ## Unplanned PBIs
 
 [Back to the top](#sprint-backlog-frameworksddworks)
@@ -994,7 +1022,5 @@ No open rows.
 | --- | --------- | ------------------------------------------ | --------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------ | ------ |
 | 1   | webapp    | [Web-portal-21](./product-backlog.md#L512) | Partner install-first landing (separate site) | Implementable | - [Web-portal-06](./product-backlog.md#pb-72) - AC50 `[app-stories.md](./admin-portal/app-stories.md)` | ToDo   |
 | 2   | webapp    | [Web-portal-40](./product-backlog.md#L476) | Setup paste sentence in the visitor locale    | Implementable | - [Web-portal-06](./product-backlog.md#pb-72) - [Web-portal-39](./product-backlog.md#pb-136) - `admin.guide.setup_prompt` | ToDo   |
-| 3   | repo      | [Repo-01](./product-backlog.md#L591) | Lite prompt definitions move to `lite-prompts/` | Implementable | - [ADR-135](./product-backlog.md#pb-141) - [ADR-134](../adr/ADR-134-lite-install-public-path.md) - Public URLs unchanged | ToDo   |
-| 4   | repo      | [Repo-02](./product-backlog.md#L598) | App split into `app/web`, `app/mcp`, `app/shared` | Implementable | - [ADR-135](../adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [Repo-01](./product-backlog.md#pb-141) - One package.json, one GHCR image | ToDo   |
 
 

@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-11-08
+
+### Sprint 10 scheduled: Repo-01 and Repo-02
+
+**Why**: The ADR-135 repository restructure needs its own sprint scope; the user picked a two-PBI Sprint 10 (no Web-portal-40) in plan confirm.
+
+**What changed**: [sprint-backlog.md](./sprint-backlog.md) gains **Sprint 10 (ToDo)** with `feature-99` ([Repo-01](./product-backlog.md#pb-141) lite-prompts move) and `feature-100` ([Repo-02](./product-backlog.md#pb-142) app split). Both rows leave Unplanned PBIs. [product-backlog.md](./product-backlog.md) rows 99 and 100 set Sprint to Sprint 10. [status.md](./status.md) shows Sprint 10 ToDo.
+
+**Verification**: Both PBI rows sit in the Sprint 10 ToDo table and no longer in Unplanned PBIs; product-backlog Sprint cells say Sprint 10; status.md Project progress lists Sprint 10.
+
+**Boundary**: Sprint 9 stays WIP pending sprint close confirm. No code change in this entry.
+
 ## 2026-10-19
 
 ### Evening release: ADR-134 lite path, MC-21 install roots, MC-22 redirect port; task-02 closed

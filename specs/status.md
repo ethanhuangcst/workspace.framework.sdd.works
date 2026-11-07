@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-10-19 (Sprint 9 WIP; all twenty-four SBIs Done including [task-02 Go-live](./sprint-backlog.md#sprint-9); MC-21 and MC-22 closed; Codex OGTs open)
+> as_of: 2026-11-08 (Sprint 9 WIP awaiting sprint close confirm; Sprint 10 ToDo with feature-99 and feature-100; MC-21 and MC-22 closed; Codex OGTs open)
 > [Definition](../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#statusmd)
 
 ---
@@ -19,7 +19,8 @@
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Thirteen SBIs **Done** (includes [feature-81](./sprint-backlog.md#sprint-8) sticky guide header for [Web-portal-29](./product-backlog.md#pb-126)). |
 | [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - All twenty-four SBIs **Done**. [task-02 Go-live](./sprint-backlog.md#sprint-9) closed 2026-10-19 after the production smoke on image `9eae528c...` (user **close confirm** the same evening). Sprint close waits for the user sprint confirm. |
-| Unplanned PBIs | — | - One row: [Web-portal-21](./product-backlog.md#pb-107) partner site (not this repo). |
+| [Sprint 10](./sprint-backlog.md#sprint-10) | ToDo | - Two SBIs: [feature-99](./sprint-backlog.md#sprint-10) ([Repo-01](./product-backlog.md#pb-141) lite-prompts move) and [feature-100](./sprint-backlog.md#sprint-10) ([Repo-02](./product-backlog.md#pb-142) app split), per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md). feature-99 ships first. |
+| Unplanned PBIs | — | - Two rows: [Web-portal-21](./product-backlog.md#pb-107) partner site (not this repo) and [Web-portal-40](./product-backlog.md#pb-139) setup paste sentence in the visitor locale. |
 
 ## where we are now
 
@@ -29,6 +30,7 @@
 ## what could be the next
 
 - All Sprint 9 SBIs are **Done**. Sprint 9 close needs the user sprint confirm and the sprint-end retrospective.
+- [Sprint 10](./sprint-backlog.md#sprint-10) is **ToDo**. First item: [feature-99](./sprint-backlog.md#sprint-10) moves the lite prompt files to `lite-prompts/` with unchanged public URLs. Then [feature-100](./sprint-backlog.md#sprint-10) splits the app per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md).
 - [Spec-seeds-15](./product-backlog.md#pb-97) may now move per its row after the production lite-files check passed.
 - [Web-portal-21](./product-backlog.md#pb-107) is **unplanned** here (partner property such as 2study.ai).
 
