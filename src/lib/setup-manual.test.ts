@@ -50,8 +50,7 @@ describe("setup-manual", () => {
   it("should_match_prompt_md_url_commands_and_paths", () => {
     const promptPath = join(
       process.cwd(),
-      "public",
-      "agent-setup",
+      "lite-prompts",
       "prompt.md",
     );
     const prompt = readFileSync(promptPath, "utf8");

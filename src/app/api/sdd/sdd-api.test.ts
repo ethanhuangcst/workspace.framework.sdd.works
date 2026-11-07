@@ -195,7 +195,7 @@ describe("SDD package API", () => {
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toContain("text/markdown");
       const body = await res.text();
-      expect(body).toContain("Lite install version: 2026-10-19.v1");
+      expect(body).toContain("Lite install version: 2026-11-08.v1");
       expect(body).toContain(getLitePartnerSetupSentence());
       expect(body).toContain("Partner site one-line prompt");
       expect(body).toContain("GET https://sdd.works/api/sdd/lite/files");
@@ -221,7 +221,7 @@ describe("SDD package API", () => {
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toContain("text/markdown");
       const body = await res.text();
-      expect(body).toContain("Node setup version: 2026-10-11.v1");
+      expect(body).toContain("Node setup version: 2026-11-08.v1");
       expect(body).toContain("GET https://sdd.works/api/setup/node/catalog");
       expect(body).toContain("recommended_npm_registry");
       expect(body).toContain("recommended_registry_url");

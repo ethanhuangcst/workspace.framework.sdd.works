@@ -999,14 +999,16 @@ No rows yet.
 
 ### **WIP**
 
-No open rows.
+
+| #   | Code        | SBI                                        | Parent PBI                                                                                       | Module/Type   | Related specs                                                                                                                                                 | Status  |
+| --- | ----------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | feature-99  | Lite prompt definitions move to `lite-prompts/` | [Repo-01 Lite prompt definitions move to `lite-prompts/`](./product-backlog.md#pb-141)            | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [ADR-134](./adr/ADR-134-lite-install-public-path.md) - Six files move; six call-site path updates; Dockerfile copy; public URLs unchanged; raw static `/agent-setup/*.md` becomes 404 (accepted) | **WIP** |
 
 ### **ToDo**
 
 
 | #   | Code        | SBI                                        | Parent PBI                                                                                       | Module/Type   | Related specs                                                                                                                                                 | Status  |
 | --- | ----------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| 1   | feature-99  | Lite prompt definitions move to `lite-prompts/` | [Repo-01 Lite prompt definitions move to `lite-prompts/`](./product-backlog.md#pb-141)            | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [ADR-134](./adr/ADR-134-lite-install-public-path.md) - Six files move; six call-site path updates; Dockerfile copy; public URLs unchanged; raw static `/agent-setup/*.md` becomes 404 (accepted) | **ToDo** |
 | 2   | feature-100 | App split into `app/web`, `app/mcp`, `app/shared` | [Repo-02 App split into `app/web`, `app/mcp`, `app/shared`](./product-backlog.md#pb-142) | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - Depends on feature-99 - Alias rewrite across `@/` imports; one package.json; one GHCR image; Portainer mcp command path changes once at deploy | **ToDo** |
 
 

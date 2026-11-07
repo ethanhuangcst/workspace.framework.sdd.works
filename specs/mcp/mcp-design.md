@@ -39,7 +39,7 @@ The two jobs run in two separate code modules. The boundary keeps setup serving 
 
 | Module | Owns | Files |
 | --- | --- | --- |
-| Setup backend | `GET /setup`, `GET /lite/install`, `GET /setup/node`, `GET /install`, setup markdown rewrite, paste sentences, client MCP file paths, node setup catalog | `src/app/api/agent-setup/route.ts`, `src/app/api/agent-setup/install/route.ts`, `src/app/api/agent-setup/node/route.ts`, `src/app/api/agent-setup/install-full/route.ts`, `src/mcp/setup-markdown.ts`, `src/mcp/setup-paths.ts`, `src/mcp/paste-sentences.ts`, `src/mcp/node-setup-catalog.ts`, `src/mcp/brand.ts`, `src/mcp/public-origin.ts`, `public/agent-setup/prompt.md`, `public/agent-setup/install.md`, `public/agent-setup/node.md`, `public/agent-setup/install-full.md` |
+| Setup backend | `GET /setup`, `GET /lite/install`, `GET /setup/node`, `GET /install`, setup markdown rewrite, paste sentences, client MCP file paths, node setup catalog | `src/app/api/agent-setup/route.ts`, `src/app/api/agent-setup/install/route.ts`, `src/app/api/agent-setup/node/route.ts`, `src/app/api/agent-setup/install-full/route.ts`, `src/mcp/setup-markdown.ts`, `src/mcp/setup-paths.ts`, `src/mcp/paste-sentences.ts`, `src/mcp/node-setup-catalog.ts`, `src/mcp/brand.ts`, `src/mcp/public-origin.ts`, `lite-prompts/prompt.md`, `lite-prompts/install.md`, `lite-prompts/node.md`, `lite-prompts/install-full.md` |
 | Pack install backend | `sdd_install_framework`, `sdd_update_framework`, `sdd_get_key`, install plan, tarball URL, ledger, cache and bundled pack read | `src/core/tools/install.ts`, `src/core/tools/install-http.ts`, `src/core/tools/install-plan.ts`, `src/core/tools/apply-plan.ts`, `src/core/tools/get-key.ts`, `src/core/tools/list-versions.ts`, `src/core/tools/package-fetch.ts`, `src/core/tools/errors.ts`, `src/core/sync/*` |
 
 Boundary rules:
@@ -49,7 +49,7 @@ Boundary rules:
 - Shared types live in `src/core/tools/errors.ts` or a types module the two modules agree on. The setup backend does not import install-only types.
 - Client detection (`src/core/path-detect.ts`) is install-only. The setup backend uses `src/mcp/setup-paths.ts` for the client MCP file path table. The pack install backend uses the seed map in `packages/sdd-paths/paths.json`, not the setup path table.
 - The MCP server entry (`src/mcp/create-server.ts`, `src/mcp/http-server.ts`) wires both modules. It is the only place that imports from both.
-- `GET /setup`, `GET /lite/install`, `GET /setup/node`, and `GET /install` are documentation pages served by the setup backend (`public/agent-setup/prompt.md`, `install.md`, `node.md`, `install-full.md`). `GET /setup/install` redirects to `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). The pack install backend is `sdd_install_framework` tool logic and does not serve markdown pages. Setup routes do not share a handler with MCP tool handlers. `GET /install` names the pack install sequence but does not call install functions; it serves static markdown only.
+- `GET /setup`, `GET /lite/install`, `GET /setup/node`, and `GET /install` are documentation pages served by the setup backend (`lite-prompts/prompt.md`, `install.md`, `node.md`, `install-full.md`). `GET /setup/install` redirects to `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). The pack install backend is `sdd_install_framework` tool logic and does not serve markdown pages. Setup routes do not share a handler with MCP tool handlers. `GET /install` names the pack install sequence but does not call install functions; it serves static markdown only.
 
 ### 2.1 Job 1: Install MCP
 
@@ -130,7 +130,7 @@ This job gets the framework files onto disk. The agent calls `sdd_install_framew
 
 #### Install page (MC-17)
 
-The install sequence lives at `GET /install` (`public/agent-setup/install-full.md`). An agent asked to install the framework, with MCP connected, fetches this page before calling `sdd_install_framework`. The page names the sequence: read the ledger, call `sdd_install_framework` with `client` and `os` (omit `root` for known clients), download the tarball, extract listed paths, write the ledger last. The setup page (`GET /setup`) links to this page from an "After setup" note. The setup boundary stays: `GET /setup` is MCP connection only and has no install section.
+The install sequence lives at `GET /install` (`lite-prompts/install-full.md`). An agent asked to install the framework, with MCP connected, fetches this page before calling `sdd_install_framework`. The page names the sequence: read the ledger, call `sdd_install_framework` with `client` and `os` (omit `root` for known clients), download the tarball, extract listed paths, write the ledger last. The setup page (`GET /setup`) links to this page from an "After setup" note. The setup boundary stays: `GET /setup` is MCP connection only and has no install section.
 
 #### Job 2 sequence
 

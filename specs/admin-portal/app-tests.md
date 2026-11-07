@@ -57,9 +57,9 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | `GET /api/sdd/features` (feature-07) | Cache `en` returns that file’s HTML with `source` `cache`; cache `zh-Hans` returns the Chinese file when present; missing cache `zh-Hant` returns cache English HTML, `source` `cache`, and `sourceLocale` `en`; no cache English file returns the package file with `source` `package`; response has no key values; raw HTML in the file is escaped. **AC59:** no `locale` query and `Accept-Language: zh-CN` still returns `locale` `en` |
 | `GET /api/sdd/lite/files` (feature-55) | With fixture unpack + valid `lite-pack.allowlist.json` at pack root: 200; body has `package_version`, `package_commit`, sorted `files`, and `downloads` with same-origin `url` per path; no GitHub fetch. Empty cache manifest → 409 `sync_pending`. Unpack without allow-list file → `lite_manifest_missing`. Bad allow-list (unsorted skills, missing file on disk, disallowed path) → `lite_manifest_invalid`; no `downloads`. |
 | `GET /api/sdd/lite/file` (feature-55) | Allow-listed path → 200 and bytes match unpack file. Path not in allow-list → `path_not_allowed`. `../` or absolute path → `path_invalid`. |
-| `GET /lite/install` (feature-56, [ADR-134](../adr/ADR-134-lite-install-public-path.md)) | Public rewrite → install handler: 200, `Content-Type` includes `text/markdown`. Body matches `public/agent-setup/install.md` after local origin rewrite. Body includes **`lite_install`** paste text from [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) (or legacy `LITE_PARTNER_SETUP_SENTENCE` until feature-88), lite file list route, per-file download route, `{client_root}`, `.sdd-lite-installed.json` / receipt merge, and excludes `sdd_install_framework` and `.sdd-installed.json`. With fixture cache, body references `GET /api/sdd/lite/files`. No admin session. `GET /setup/install` redirects to `/lite/install`. |
+| `GET /lite/install` (feature-56, [ADR-134](../adr/ADR-134-lite-install-public-path.md)) | Public rewrite → install handler: 200, `Content-Type` includes `text/markdown`. Body matches `lite-prompts/install.md` after local origin rewrite. Body includes **`lite_install`** paste text from [`paste-sentences.json`](../../lite-prompts/paste-sentences.json) (or legacy `LITE_PARTNER_SETUP_SENTENCE` until feature-88), lite file list route, per-file download route, `{client_root}`, `.sdd-lite-installed.json` / receipt merge, and excludes `sdd_install_framework` and `.sdd-installed.json`. With fixture cache, body references `GET /api/sdd/lite/files`. No admin session. `GET /setup/install` redirects to `/lite/install`. |
 | `paste-sentences.json` (feature-88) | File exists with `version` 1 and keys `lite_install`, `node_prerequisite`. Loader substitutes `{origin}`. Unit: resolved strings match **AC47**. `LITE_PARTNER_SETUP_SENTENCE` equals `lite_install` for production origin after refactor. |
-| `GET /setup/node` (feature-88, WA-23) | Public rewrite → node handler: 200 markdown; body matches `public/agent-setup/node.md` after origin rewrite; includes catalog route, `recommended_npm_registry`, hello check, authorization boundary; does not instruct a default-registry probe before mirror. Excludes MCP and lite copy. **AC45**, **AC60**. |
+| `GET /setup/node` (feature-88, WA-23) | Public rewrite → node handler: 200 markdown; body matches `lite-prompts/node.md` after origin rewrite; includes catalog route, `recommended_npm_registry`, hello check, authorization boundary; does not instruct a default-registry probe before mirror. Excludes MCP and lite copy. **AC45**, **AC60**. |
 | `GET /api/setup/node/catalog` (feature-88, WA-23) | 200 JSON with `node_lts`, platform `downloads`, `npm_registries.default` and `cn_hk`, `npm_registry_policy.mirror_regions`. Header `CF-IPCountry` `CN`, `HK`, or `MO` → `recommended_npm_registry` `mirror` and `recommended_registry_url` equals `cn_hk`. Header `US` or missing header → `default`. HTTPS URLs only; no admin session. **AC46**, **AC60**. |
 | Production node registry (WA-23 Phase 2) | After deploy: `GET https://sdd.works/setup/node` has no probe-first sentence. `GET https://sdd.works/api/setup/node/catalog` with `CF-IPCountry: CN` returns `recommended_npm_registry` `mirror`. **AC61**. Manual curl; not a CI job. |
 | Setup Node UI retired (WA-20 / AC47) | Component: Setup has no `copy-node-setup-prompt` and no Install Node.js first section. Paste file and `/setup/node` still covered above. |
@@ -544,7 +544,7 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 
 Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** in [`app-stories.md`](./app-stories.md).
 
-- [ ] `public/agent-setup/paste-sentences.json` validates; loader resolves **lite_install** and **node_prerequisite**
+- [ ] `lite-prompts/paste-sentences.json` validates; loader resolves **lite_install** and **node_prerequisite**
 - [ ] `GET /setup/node` returns 200 markdown per **AC45**; no MCP or lite instructions in body
 - [ ] `GET /api/setup/node/catalog` returns 200 JSON per **AC46**
 - [ ] `GET /lite/install` and `GET /setup` unchanged except lite paste text may come from JSON (**AC21** parity). `GET /setup/install` redirects to `/lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md))
@@ -586,7 +586,7 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 
 ## 35. Checklist for Web-portal-41 (manual mcp.json setup guide)
 
-**What this proves:** The Setup tab shows a Manual setup section with the `mcp.json` sample and five clients in order. Claude Code and Codex run a command; Cursor, CodeBuddy CN, and TRAE CN paste the sample into a file. The sample and per-client methods match `public/agent-setup/prompt.md`. Matches **AC60–AC61** and [`app-design.md`](./app-design.md) `/instructions` row. Partly reverses [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md): the `mcp.json` sample returns; the Tools table stays removed.
+**What this proves:** The Setup tab shows a Manual setup section with the `mcp.json` sample and five clients in order. Claude Code and Codex run a command; Cursor, CodeBuddy CN, and TRAE CN paste the sample into a file. The sample and per-client methods match `lite-prompts/prompt.md`. Matches **AC60–AC61** and [`app-design.md`](./app-design.md) `/instructions` row. Partly reverses [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md): the `mcp.json` sample returns; the Tools table stays removed.
 
 **Tools:** Vitest for `SetupGuidePanel` and the drift check against `prompt.md`. Playwright for one Setup-tab render check. No new browser matrix.
 
@@ -606,7 +606,7 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 | `copy-manual-mcp` copies the sample text | Unit | **AC60** |
 | `copy-manual-claude` and `copy-manual-codex` copy their commands | Unit | **AC60** |
 | `setup-manual` sits after `copy-setup-prompt` and before `guide-agents` | Unit | **AC60** |
-| Sample URL and client paths match `public/agent-setup/prompt.md` | Integration | **AC61**; drift check |
+| Sample URL and client paths match `lite-prompts/prompt.md` | Integration | **AC61**; drift check |
 | A drift between the page and `prompt.md` fails the test | Integration | **AC61** |
 | Manual setup section renders on `/` and `/instructions` | Browser | **AC60**; Playwright |
 | `copy-manual-mcp` copies the sample in a real browser | Browser | **AC60**; Playwright |

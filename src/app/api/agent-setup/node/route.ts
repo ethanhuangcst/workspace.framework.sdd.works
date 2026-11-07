@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { rewriteSetupMarkdownOrigins } from "@/mcp/setup-markdown";
 
 export async function GET() {
-  const promptPath = join(process.cwd(), "public", "agent-setup", "node.md");
+  const promptPath = join(process.cwd(), "lite-prompts", "node.md");
   const template = readFileSync(promptPath, "utf8");
   const body = rewriteSetupMarkdownOrigins(template);
   return new Response(body, {

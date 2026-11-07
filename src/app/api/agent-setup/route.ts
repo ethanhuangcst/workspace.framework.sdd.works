@@ -6,7 +6,7 @@ import {
 } from "@/mcp/setup-markdown";
 
 export async function GET() {
-  const promptPath = join(process.cwd(), "public", "agent-setup", "prompt.md");
+  const promptPath = join(process.cwd(), "lite-prompts", "prompt.md");
   const template = readFileSync(promptPath, "utf8");
   const body = appendLocalMcpAuthNote(rewriteSetupMarkdownOrigins(template));
   return new Response(body, {

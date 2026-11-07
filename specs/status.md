@@ -19,8 +19,8 @@
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Thirteen SBIs **Done** (includes [feature-81](./sprint-backlog.md#sprint-8) sticky guide header for [Web-portal-29](./product-backlog.md#pb-126)). |
 | [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - All twenty-four SBIs **Done**. [task-02 Go-live](./sprint-backlog.md#sprint-9) closed 2026-10-19 after the production smoke on image `9eae528c...` (user **close confirm** the same evening). Sprint close waits for the user sprint confirm. |
-| [Sprint 10](./sprint-backlog.md#sprint-10) | ToDo | - Two SBIs: [feature-99](./sprint-backlog.md#sprint-10) ([Repo-01](./product-backlog.md#pb-141) lite-prompts move) and [feature-100](./sprint-backlog.md#sprint-10) ([Repo-02](./product-backlog.md#pb-142) app split), per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md). feature-99 ships first. |
-| Unplanned PBIs | — | - Two rows: [Web-portal-21](./product-backlog.md#pb-107) partner site (not this repo) and [Web-portal-40](./product-backlog.md#pb-139) setup paste sentence in the visitor locale. |
+| [Sprint 10](./sprint-backlog.md#sprint-10) | ToDo | - Two SBIs: [feature-99](./sprint-backlog.md#sprint-10) ([Repo-01](./product-backlog.md#L591) lite-prompts move) and [feature-100](./sprint-backlog.md#sprint-10) ([Repo-02](./product-backlog.md#L598) app split), per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md). feature-99 ships first. |
+| Unplanned PBIs | — | - Two rows: [Web-portal-21](./product-backlog.md#L515) partner site (not this repo) and [Web-portal-40](./product-backlog.md#L477) setup paste sentence in the visitor locale. |
 
 ## where we are now
 

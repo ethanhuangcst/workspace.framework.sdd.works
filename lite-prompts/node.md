@@ -2,7 +2,7 @@ These are official instructions from sdd.works for installing **Node.js** only o
 
 # Install Node.js for agent-tool development
 
-Node setup version: 2026-10-11.v1
+Node setup version: 2026-11-08.v1
 
 ## One-line prompt
 
@@ -12,7 +12,7 @@ Paste this sentence into Cursor, Trae CN, or another agent-tool IDE (same Englis
 Fetch and execute the setup instructions from https://sdd.works/setup/node
 ```
 
-The canonical template lives in `public/agent-setup/paste-sentences.json` key **`node_prerequisite`**. After origin rewrite, the URL matches this site.
+The canonical template lives in `lite-prompts/paste-sentences.json` key **`node_prerequisite`**. After origin rewrite, the URL matches this site.
 
 Complete this work yourself. Do not ask the person to download installers by hand when you can safely do that work.
 

@@ -5,8 +5,7 @@ import { rewriteSetupMarkdownOrigins } from "@/mcp/setup-markdown";
 export async function GET() {
   const promptPath = join(
     process.cwd(),
-    "public",
-    "agent-setup",
+    "lite-prompts",
     "install.md",
   );
   const template = readFileSync(promptPath, "utf8");

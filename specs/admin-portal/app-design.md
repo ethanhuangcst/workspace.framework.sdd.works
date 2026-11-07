@@ -449,7 +449,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | Present SDD.works: Built on Harness. Ready for Scrum (title key `admin.guide.title`); install steps on Setup tab |
-| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#L419)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)); install phrase + `sdd_install_framework` after MCP connect; **Manual setup** section below the copy prompt (feature-98 / [Web-portal-41](../product-backlog.md#pb-140)): one `mcp.json` codeblock with `framework.sdd.works` set to only `"url": "{origin}/mcp"` (no `command`) and a Copy control, then five clients in order — Claude Code (`claude mcp add --transport http --scope user framework.sdd.works {origin}/mcp`, codeblock + Copy), Codex (`codex mcp add framework.sdd.works --url {origin}/mcp`, codeblock + Copy), Cursor (paste into `~/.cursor/mcp.json`, text line), CodeBuddy CN / WorkBuddy CN (paste into `~/.codebuddy/mcp.json`, text line), TRAE CN (paste into `~/Library/Application Support/Trae CN/User/mcp.json`, text line); the sample and per-client methods match [`prompt.md`](../../public/agent-setup/prompt.md) (the body of `GET /setup`); agents roster (7 names) without intro paragraph; **no** Tools table; update hint (`setup_update_tool`, one muted line naming `sdd_update_framework`) above agents heading; **no** secret form on Setup ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Learn Scrum: embed panel with secret form under the iframe ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); footer Admin portal link then copyright |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#L419)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)); install phrase + `sdd_install_framework` after MCP connect; **Manual setup** section below the copy prompt (feature-98 / [Web-portal-41](../product-backlog.md#pb-140)): one `mcp.json` codeblock with `framework.sdd.works` set to only `"url": "{origin}/mcp"` (no `command`) and a Copy control, then five clients in order — Claude Code (`claude mcp add --transport http --scope user framework.sdd.works {origin}/mcp`, codeblock + Copy), Codex (`codex mcp add framework.sdd.works --url {origin}/mcp`, codeblock + Copy), Cursor (paste into `~/.cursor/mcp.json`, text line), CodeBuddy CN / WorkBuddy CN (paste into `~/.codebuddy/mcp.json`, text line), TRAE CN (paste into `~/Library/Application Support/Trae CN/User/mcp.json`, text line); the sample and per-client methods match [`prompt.md`](../../lite-prompts/prompt.md) (the body of `GET /setup`); agents roster (7 names) without intro paragraph; **no** Tools table; update hint (`setup_update_tool`, one muted line naming `sdd_update_framework`) above agents heading; **no** secret form on Setup ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Learn Scrum: embed panel with secret form under the iframe ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); footer Admin portal link then copyright |
 | Tabs (WA-06) | Setup, Features, and Scrum in SDD are links (`?tab=features` / `?tab=scrum-in-sdd` on the current path). Click updates client state and the URL, so a full load still opens the selected tab. The tab list sits inside `.guide-sticky` (`z-index: 20`). Inactive panel uses `hidden` with `display: none !important`. Same on `/` and `/instructions`. |
 | Guide tab (Web-portal-12 / feature-16) | Third tab after Features (`?tab=scrum-in-sdd`, `#panel-scrum`). Label key `admin.guide.tab_scrum` is `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant` (not translated). Cache path is **human-read** `<unpacked>/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` ([ADR-071](../adr/ADR-071-portal-content-paths.md), [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md)). Fallback is `src/content/scrum-in-sdd/`. English order: **Part I** The Scrum Gap for SDD, **Part II** Scrum in SDD Guide, **Appendix 1:** Agentic Programming, Harness Engineering, and SDD aligned with Agile practices, then **Appendix 2: Short summary of the 2020 Scrum Guide**. The **Index** lists h1 and h2 with GitHub-style `#` fragments ([ADR-109](../adr/ADR-109-content-tab-heading-anchors.md)); regenerate with `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` after part or heading edits. Keep lists **tight** ([knowledge](../knowledge/agent/cursor-markdown-preview-loose-list.md)). Panel `.scrum-body`: `h1` 1.65rem, later part titles 2.75rem top margin; `h2` 1.2rem. No Features em-dash split. **AI-read** install guide is `templates/framework.sdd.works/pack-scrum-in-sdd.md` beside `constants.json` ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)); it is not this tab. OGT #8: [ogt-8-pack-scrum-in-sdd.md](../framework/ogt-8-pack-scrum-in-sdd.md). Get secret is not on this tab. |
 | Secret form (feature-04 / feature-05, [ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md), [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md) / feature-73) | Learn panel only, after `.learn-embed-fallback`. No intro. Spacing: **15px** iframe→fallback, **45px** fallback→`#learn-secret`. `.secret-stack` with `.secret-lookup` (`.input-box` + `.btn.secret-action-btn`) then **found row** `.codeblock.secret-result-block` with `.codeblock-text` + `.codeblock-copy.secret-action-btn` (Copy width = Get secret). Global `.codeblock`: square corners, `1.5px` border, `var(--fill)` background. Secret-stack codeblock row height **2.125rem**. Mock confirm: [`13-instructions.html`](./ui-mockup/13-instructions.html). |
@@ -542,7 +542,7 @@ Part 1 is public agent markdown at `GET /lite/install` ([ADR-134](../adr/ADR-134
 | --- | --- |
 | Portal | `/` and `/instructions` Setup show **full MCP only**. No `copy-lite-setup-prompt`. |
 | Partner sites | Paste [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts): `Fetch and execute the setup instructions from https://sdd.works/lite/install` (production URL in every locale). |
-| Authoring | Document the sentence in [`public/agent-setup/install.md`](../../public/agent-setup/install.md) section **Partner site one-line prompt**. |
+| Authoring | Document the sentence in [`lite-prompts/install.md`](../../lite-prompts/install.md) section **Partner site one-line prompt**. |
 | Verification | Agent fetches `GET /lite/install` after the user pastes the sentence in Trae CN or another partner UI. `GET /setup/install` redirects to `/lite/install`. |
 
 ##### Technical design (Part 1)
@@ -552,14 +552,14 @@ Part 1 is public agent markdown at `GET /lite/install` ([ADR-134](../adr/ADR-134
 | Public URL | `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). `GET /setup/install` redirects to `/lite/install`. |
 | Rewrite | [`SETUP_REWRITES`](../../src/mcp/setup-paths.ts): `source` `/lite/install`, `destination` `/api/agent-setup/install`. [`SETUP_REDIRECTS`](../../src/mcp/setup-paths.ts): `source` `/setup/install`, `destination` `/lite/install`. |
 | Handler | [`src/app/api/agent-setup/install/route.ts`](../../src/app/api/agent-setup/install/route.ts) — mirror [`agent-setup/route.ts`](../../src/app/api/agent-setup/route.ts): read template from disk, optional local origin substitution, return `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
-| Source file | [`public/agent-setup/install.md`](../../public/agent-setup/install.md) (new). Version line at top (for example `Lite install version: YYYY-MM-DD.vN`) like full `prompt.md`. |
+| Source file | [`lite-prompts/install.md`](../../lite-prompts/install.md) (new). Version line at top (for example `Lite install version: YYYY-MM-DD.vN`) like full `prompt.md`. |
 | Local dev rewrite | When `isLocalMcpDev()`, replace production origin `https://sdd.works` with `getMcpWebsiteUrl()` so fetches hit the local portal. Same pattern as full setup markdown. |
 | Auth | None. Public like `GET /setup`. |
 | Dependency | Agent steps call `GET /api/sdd/lite/files` and `GET /api/sdd/lite/file?path=` ([feature-55](#lite-install-file-links-feature-55--web-portal-17)). |
 
 **Markdown contract (AC20)**
 
-The served body must match `public/agent-setup/install.md` after rewrite. Integration tests assert the following (substring or dedicated section headings):
+The served body must match `lite-prompts/install.md` after rewrite. Integration tests assert the following (substring or dedicated section headings):
 
 | Requirement | In body |
 | --- | --- |
@@ -570,13 +570,13 @@ The served body must match `public/agent-setup/install.md` after rewrite. Integr
 | Forbidden | Must not instruct `sdd_install_framework`, `sdd_update_framework`, or writing `.sdd-installed.json` |
 | Scope | Copy only paths from the manifest (`skills/`, `rules/`). No agents, workflows, or templates from lite allow-list |
 
-Shared helpers: `getLiteInstallSetupUrl()` and lite paste text from [`public/agent-setup/paste-sentences.json`](../../public/agent-setup/paste-sentences.json) via `resolvePasteSentence('lite_install')` ([feature-88](#nodejs-setup-prompt-feature-88--web-portal-38)). Until feature-88 ships, [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) remains the runtime source; tests assert parity with the JSON file once the loader lands.
+Shared helpers: `getLiteInstallSetupUrl()` and lite paste text from [`lite-prompts/paste-sentences.json`](../../lite-prompts/paste-sentences.json) via `resolvePasteSentence('lite_install')` ([feature-88](#nodejs-setup-prompt-feature-88--web-portal-38)). Until feature-88 ships, [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) remains the runtime source; tests assert parity with the JSON file once the loader lands.
 
 ##### Implementation plan (feature-56 only)
 
 Do these in order. Write the failing test for a step before the code for that step. **feature-55** routes must be green first.
 
-1. **task-01.** Add `public/agent-setup/install.md` with the contract above and the partner one-line section. Review with operator before merge.
+1. **task-01.** Add `lite-prompts/install.md` with the contract above and the partner one-line section. Review with operator before merge.
 2. **task-02.** Add rewrite + `GET /api/agent-setup/install` handler + `setup-paths` test update. Integration tests in [`sdd-api.test.ts`](../../src/app/api/sdd/sdd-api.test.ts): 200 body contains required phrases and `LITE_PARTNER_SETUP_SENTENCE`; `GET /setup` rewrite still serves stdio `prompt.md` (not lite body).
 3. **task-03.** Keep Setup UI full-pack only (`SetupGuidePanel`). Unit test: no `copy-lite-setup-prompt` on Setup.
 4. **task-04.** Mockups without lite pill. Run [`app-tests.md`](./app-tests.md) §10 before marking feature-56 Done.
@@ -585,10 +585,10 @@ Do these in order. Write the failing test for a step before the code for that st
 
 | | |
 | --- | --- |
-| Authoring | [`public/agent-setup/paste-sentences.json`](../../public/agent-setup/paste-sentences.json) |
+| Authoring | [`lite-prompts/paste-sentences.json`](../../lite-prompts/paste-sentences.json) |
 | Schema | `version` (`1`). `sentences` object with keys **`lite_install`** and **`node_prerequisite`**. Each value is one string template containing `{origin}` once (no secrets). |
 | Loader | `src/mcp/paste-sentences.ts` (recommended): read JSON from disk, validate keys, `resolvePasteSentence(key, origin?)` where `origin` defaults to `getMcpWebsiteUrl()` without trailing slash. Export typed keys. |
-| Consumers | Partner lite paste ([AC21](./app-stories.md)); [`install.md`](../../public/agent-setup/install.md) **Partner site one-line prompt** section quotes **`lite_install`**; node markdown quotes **`node_prerequisite`**. Framework Setup UI no longer shows a Node copy pill ([WA-20](../issues-log.md)). Production paste origin uses [`getVisitorPasteOrigin`](../../src/mcp/public-origin.ts) ([WA-19](../issues-log.md)). |
+| Consumers | Partner lite paste ([AC21](./app-stories.md)); [`install.md`](../../lite-prompts/install.md) **Partner site one-line prompt** section quotes **`lite_install`**; node markdown quotes **`node_prerequisite`**. Framework Setup UI no longer shows a Node copy pill ([WA-20](../issues-log.md)). Production paste origin uses [`getVisitorPasteOrigin`](../../src/mcp/public-origin.ts) ([WA-19](../issues-log.md)). |
 
 | Full MCP setup | Stays on **`GET /setup`** / `prompt.md` and **`copy-setup-prompt`** ([AC36](./app-stories.md)). Optional later key **`mcp_full_setup`** in the same JSON is out of scope for feature-88. |
 
@@ -613,7 +613,7 @@ Do these in order. Write the failing test for a step before the code for that st
 
 #### Node.js setup prompt (feature-88 / Web-portal-38)
 
-Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy UI was **removed at go-live** ([WA-20](../issues-log.md)); **`node_prerequisite`** stays in [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) for markdown and partners. Part 3 is a public JSON catalog. This path is **not** lite install, **not** MCP install, **not** Git or Xcode.
+Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy UI was **removed at go-live** ([WA-20](../issues-log.md)); **`node_prerequisite`** stays in [`paste-sentences.json`](../../lite-prompts/paste-sentences.json) for markdown and partners. Part 3 is a public JSON catalog. This path is **not** lite install, **not** MCP install, **not** Git or Xcode.
 
 ##### Setup tab UI (Part 2 — retired on framework portal)
 
@@ -630,8 +630,8 @@ Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy
 | --- | --- |
 | Public URL | `GET /setup/node` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
 | Rewrite | [`SETUP_REWRITES`](../../src/mcp/setup-paths.ts): `source` `/setup/node`, `destination` `/api/agent-setup/node` |
-| Handler | [`src/app/api/agent-setup/node/route.ts`](../../src/app/api/agent-setup/node/route.ts) — read [`public/agent-setup/node.md`](../../public/agent-setup/node.md), local origin rewrite when `isLocalMcpDev()`, `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
-| Source file | `public/agent-setup/node.md` with version line (for example `Node setup version: YYYY-MM-DD.vN`) |
+| Handler | [`src/app/api/agent-setup/node/route.ts`](../../src/app/api/agent-setup/node/route.ts) — read [`lite-prompts/node.md`](../../lite-prompts/node.md), local origin rewrite when `isLocalMcpDev()`, `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
+| Source file | `lite-prompts/node.md` with version line (for example `Node setup version: YYYY-MM-DD.vN`) |
 | Auth | None |
 
 **Markdown contract (AC45)**
@@ -644,14 +644,14 @@ Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy
 | Install | Node LTS from catalog **`downloads`** for the detected platform only when missing or below pinned LTS; ask before admin or sudo |
 | Verify | `node -e "console.log('hello')"` and report Node and npm versions |
 | Forbidden | No `sdd_install_framework`, no lite file copy, no `.sdd-lite-installed.json`, no unrelated project edits |
-| Paste line | Document **`node_prerequisite`** sentence from [`paste-sentences.json`](../../public/agent-setup/paste-sentences.json) |
+| Paste line | Document **`node_prerequisite`** sentence from [`paste-sentences.json`](../../lite-prompts/paste-sentences.json) |
 
 ##### Technical design (Part 3 — catalog API)
 
 | | |
 | --- | --- |
 | Route | `GET /api/setup/node/catalog` |
-| Source | [`public/agent-setup/node-catalog.json`](../../public/agent-setup/node-catalog.json) (or `src/content/node-catalog.json` bundled mirror; pick one path in implementation and document in handler) |
+| Source | [`lite-prompts/node-catalog.json`](../../lite-prompts/node-catalog.json) (or `src/content/node-catalog.json` bundled mirror; pick one path in implementation and document in handler) |
 | Shape | `version`, `node_lts`, `downloads`, `npm_registries` (`default`, `cn_hk`), `npm_registry_policy.mirror_regions` (ISO codes, first release **`CN`**, **`HK`**, **`MO`**), plus response fields **`detected_country`**, **`recommended_npm_registry`** (`mirror` or `default`), **`recommended_registry_url`** |
 | Country | Read **`CF-IPCountry`** only. Unknown or missing header → **`default`**. Do not use `Accept-Language`. |
 | Auth | None |
@@ -697,7 +697,7 @@ A Manual setup section on the Setup tab shows the `mcp.json` sample and five cli
 | | |
 | --- | --- |
 | Component | [`SetupGuidePanel`](../../src/components/features/SetupGuidePanel.tsx) renders the section. No new route |
-| Sample source | The `mcp.json` sample, the two commands, and the three paths come from [`public/agent-setup/prompt.md`](../../public/agent-setup/prompt.md) (the body of `GET /setup`). A shared reader parses the per-client sections so the page and `prompt.md` stay in sync |
+| Sample source | The `mcp.json` sample, the two commands, and the three paths come from [`lite-prompts/prompt.md`](../../lite-prompts/prompt.md) (the body of `GET /setup`). A shared reader parses the per-client sections so the page and `prompt.md` stay in sync |
 | Drift check | A Vitest integration test reads `prompt.md` and compares the URL and each client path to the rendered panel. The test fails on any mismatch (**AC61**) |
 | Origin resolution | `getVisitorPasteOrigin()` fills `{origin}` in the sample URL and the two commands, the same helper the setup sentence uses |
 | Auth | None; the section is public on `/` and `/instructions` |

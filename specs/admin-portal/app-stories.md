@@ -1188,7 +1188,7 @@ Scenario: Sync not ready returns sync_pending
 
 #### AC20 — feature-56 / Web-portal-18 Part 1 (agent markdown)
 
-Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** — source `public/agent-setup/install.md`, rewrite `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). `GET /setup/install` redirects to that path.
+Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** — source `lite-prompts/install.md`, rewrite `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). `GET /setup/install` redirects to that path.
 
 ```gherkin
 Scenario: Lite install prompt is public without MCP tools
@@ -1214,13 +1214,13 @@ Scenario: Old lite URL redirects to the public path
 
 #### AC21 — feature-56 / Web-portal-18 Part 2 (partner one-line)
 
-Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** and **Agent paste sentences file (feature-88)** — key **`lite_install`** in [`public/agent-setup/paste-sentences.json`](../../public/agent-setup/paste-sentences.json); not on framework.sdd.works Setup UI. After feature-88, [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) must match the loader output.
+Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** and **Agent paste sentences file (feature-88)** — key **`lite_install`** in [`lite-prompts/paste-sentences.json`](../../lite-prompts/paste-sentences.json); not on framework.sdd.works Setup UI. After feature-88, [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) must match the loader output.
 
 ```gherkin
 Scenario: Partner paste uses production lite URL
   Given a partner site (not framework.sdd.works Setup)
   When the visitor pastes the lite install one-line prompt into an agent
-  Then the pasted text matches key lite_install in public/agent-setup/paste-sentences.json with origin https://sdd.works
+  Then the pasted text matches key lite_install in lite-prompts/paste-sentences.json with origin https://sdd.works
   And that protocol sentence is the same in every locale
 
 Scenario: framework.sdd.works Setup is full pack only
@@ -1716,7 +1716,7 @@ Scenario: Framework portal home is unchanged
 
 #### AC45 — feature-88 / Web-portal-38 Part 1 (Node agent markdown)
 
-Engineering detail: [`app-design.md`](./app-design.md) **Node.js setup prompt (feature-88)** — `public/agent-setup/node.md`, rewrite `GET /setup/node`.
+Engineering detail: [`app-design.md`](./app-design.md) **Node.js setup prompt (feature-88)** — `lite-prompts/node.md`, rewrite `GET /setup/node`.
 
 ```gherkin
 Scenario: Node setup markdown is public
@@ -1763,7 +1763,7 @@ Engineering detail: [`app-design.md`](./app-design.md) **Agent paste sentences f
 
 ```gherkin
 Scenario: Paste sentences file defines lite and node agent prompts
-  Given public/agent-setup/paste-sentences.json version is 1
+  Given lite-prompts/paste-sentences.json version is 1
   Then sentences includes lite_install and node_prerequisite
   And each value contains exactly one origin placeholder
   And resolvePasteSentence lite_install with origin https://sdd.works equals Fetch and execute the setup instructions from https://sdd.works/lite/install
@@ -1986,7 +1986,7 @@ Scenario: Features API without a locale query stays en
 
 ## `setup-manual` — Web-portal-41
 
-The Setup tab shows a Manual setup section for visitors whose agent cannot edit its own MCP config. The section lists five clients in order: Claude Code, Codex, Cursor, CodeBuddy CN / WorkBuddy CN, TRAE CN. Claude Code and Codex run a command. Cursor, CodeBuddy CN, and TRAE CN paste the `mcp.json` sample into a file. The sample and the per-client methods match `public/agent-setup/prompt.md` (the body of `GET /setup`). This partly reverses [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md): the `mcp.json` sample returns; the Tools table stays removed.
+The Setup tab shows a Manual setup section for visitors whose agent cannot edit its own MCP config. The section lists five clients in order: Claude Code, Codex, Cursor, CodeBuddy CN / WorkBuddy CN, TRAE CN. Claude Code and Codex run a command. Cursor, CodeBuddy CN, and TRAE CN paste the `mcp.json` sample into a file. The sample and the per-client methods match `lite-prompts/prompt.md` (the body of `GET /setup`). This partly reverses [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md): the `mcp.json` sample returns; the Tools table stays removed.
 
 **Default Given:** the visitor opens `/` or `/instructions` and the Setup tab is active.
 
@@ -2040,7 +2040,7 @@ Scenario: Manual setup sits below the copy prompt and above the agents roster
 
 ```gherkin
 Scenario: The mcp.json URL matches prompt.md
-  Given public/agent-setup/prompt.md is the source for GET /setup
+  Given lite-prompts/prompt.md is the source for GET /setup
   When the visitor opens the Setup tab
   Then the mcp.json sample url equals the url in prompt.md for the same origin
   And the Claude Code command equals the command in prompt.md

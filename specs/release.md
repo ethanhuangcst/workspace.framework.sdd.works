@@ -360,7 +360,7 @@ After hostname cutover, one place in this handbook answers where visitors bookma
 User-facing copy must not name two official portal hosts:
 
 - Setup one-line paste: `Fetch and execute the setup instructions from https://sdd.works/setup` (production uses [`getVisitorPasteOrigin`](../src/mcp/public-origin.ts) → **`https://sdd.works`**).
-- Lite partner sentence: [`public/agent-setup/paste-sentences.json`](../public/agent-setup/paste-sentences.json) resolves `{origin}` to the same canonical host in production ([`paste-sentences.ts`](../src/mcp/paste-sentences.ts)).
+- Lite partner sentence: [`lite-prompts/paste-sentences.json`](../lite-prompts/paste-sentences.json) resolves `{origin}` to the same canonical host in production ([`paste-sentences.ts`](../src/mcp/paste-sentences.ts)).
 
 ### Admin URLs (AC49)
 

@@ -424,7 +424,7 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-url-plan) **AC1–AC16**, [
 | syncedAt on unchanged | unit | A sync with the same commit as the cache updates `syncedAt` to now. The install does not return `cache_stale` solely because of age (ADR-130 decision 5, MC-14) |
 | Agent writes listed files | API | The tool result has the plan, the tarball URL, and the ledger. The instruction names planned paths and forbids extracting the archive into the client root. The agent writes the ledger last (url-plan **AC6**, **AC7**, ADR-131) |
 | Get secret stays on HTTP | integration | HTTP `tools/list` includes `sdd_get_key`. A missing name returns the text `not_found` and is not a tool error (url-plan **AC16**, MC-07). Section 11 covers the same return shape |
-| Retired setup block | review | [`mcp-design.md`](./mcp-design.md) does not tell the agent to download a GitHub release file. The setup body is `public/agent-setup/prompt.md` only (MC-08) |
+| Retired setup block | review | [`mcp-design.md`](./mcp-design.md) does not tell the agent to download a GitHub release file. The setup body is `lite-prompts/prompt.md` only (MC-08) |
 | Ledger input | unit | The plan function reads the ledger JSON and `missing`. It does not read file bodies |
 | LLM removed from install | review | No writer binary, no stdio program. The seed map is the single path source (ADR-130 decision 10, ADR-131) |
 | Tool description text (ADR-132, feature-93, MC-16) | unit | `sdd_install_framework` and `sdd_update_framework` descriptions name `client` and `os` and tell the agent to omit `root` for a known client; the `root` field description says to omit it to let the server resolve from the path map; descriptions resolve for `en`, `zh-Hans`, `zh-Hant` with no missing-key fallback. Assert in `tool-descriptions.test.ts` |
@@ -545,19 +545,19 @@ Command when these sections are implemented: `npx vitest run src/core/tools/inst
 
 Stories: [`mcp-stories.md`](./mcp-stories.md) `sdd-mcp-install` AC8. Design: [`mcp-design.md`](./mcp-design.md) §2.2 **Install page (MC-17)**, §2.0 module boundary (setup backend owns `GET /install`). ADR: [ADR-132](../adr/ADR-132-simplified-install-root-and-templates.md) decision 8. Issue: [MC-17](../issues-log.md).
 
-`GET /install` serves `public/agent-setup/install-full.md`. An agent with MCP connected fetches this page before calling `sdd_install_framework`. The page names the MCP install sequence. `GET /setup` links to it from an "After setup" note. The setup boundary stays: `GET /setup` is MCP connection only and has no install section.
+`GET /install` serves `lite-prompts/install-full.md`. An agent with MCP connected fetches this page before calling `sdd_install_framework`. The page names the MCP install sequence. `GET /setup` links to it from an "After setup" note. The setup boundary stays: `GET /setup` is MCP connection only and has no install section.
 
 ### Checks
 
 | Check | Layer | Method |
 | --- | --- | --- |
-| `GET /install` serves markdown | API | Request `GET /install`. Response `Content-Type` is `text/markdown`. Body is `public/agent-setup/install-full.md` with origin rewriting applied (`rewriteSetupMarkdownOrigins`). Assert in a route test or `sdd-api.test.ts` |
+| `GET /install` serves markdown | API | Request `GET /install`. Response `Content-Type` is `text/markdown`. Body is `lite-prompts/install-full.md` with origin rewriting applied (`rewriteSetupMarkdownOrigins`). Assert in a route test or `sdd-api.test.ts` |
 | Body names the install sequence | API | Body names the sequence: read the ledger, call `sdd_install_framework` with `client` and `os`, download the tarball, extract listed paths, write the ledger last. Assert each step appears in the body |
 | Body tells agent to omit `root` for known clients | API | Body says to omit `root` for a known client and let the server resolve from the path map. Body says to send `root` only after `root_required` for an unknown client (ADR-132) |
 | Body does not name a git host | API | Body does not name `github.com`, a repository owner, or a release asset. The tarball URL is on this server only |
-| `GET /setup` links to `GET /install` | API | `public/agent-setup/prompt.md` has an "After setup" note that links to `GET /install`. Assert the link appears in the setup markdown served by `GET /setup` |
+| `GET /setup` links to `GET /install` | API | `lite-prompts/prompt.md` has an "After setup" note that links to `GET /install`. Assert the link appears in the setup markdown served by `GET /setup` |
 | `GET /setup` still has no install section | API | The setup markdown still has no install section. The "After setup" note is a link, not an install sequence. Assert the setup body does not name `sdd_install_framework`, tarball, or ledger write steps |
-| Module boundary | unit | `src/app/api/agent-setup/install-full/route.ts` is in `SETUP_BACKEND_FILES` in `module-boundary.test.ts`. The route imports from `src/mcp/setup-markdown` only, not from `src/core/tools` or `src/core/sync`. The route reads `public/agent-setup/install-full.md` and serves it with origin rewriting |
+| Module boundary | unit | `src/app/api/agent-setup/install-full/route.ts` is in `SETUP_BACKEND_FILES` in `module-boundary.test.ts`. The route imports from `src/mcp/setup-markdown` only, not from `src/core/tools` or `src/core/sync`. The route reads `lite-prompts/install-full.md` and serves it with origin rewriting |
 | Setup rewrite path | unit | `src/mcp/setup-paths.ts` `SETUP_REWRITES` maps `source: "/install"` to `destination: "/api/agent-setup/install-full"`. Assert in `setup-paths.test.ts` |
 
 ### Pass criteria

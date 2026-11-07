@@ -25,7 +25,7 @@ export type NpmRegistryRecommendation = {
 };
 
 export function nodeCatalogPath(): string {
-  return join(process.cwd(), "public", "agent-setup", "node-catalog.json");
+  return join(process.cwd(), "lite-prompts", "node-catalog.json");
 }
 
 function isHttpsUrl(value: string): boolean {

@@ -19,7 +19,7 @@ const ORIGIN_PLACEHOLDER = "{origin}";
 let cached: PasteSentencesFile | null = null;
 
 function pasteSentencesPath(): string {
-  return join(process.cwd(), "public", "agent-setup", "paste-sentences.json");
+  return join(process.cwd(), "lite-prompts", "paste-sentences.json");
 }
 
 export function loadPasteSentencesFile(): PasteSentencesFile {
