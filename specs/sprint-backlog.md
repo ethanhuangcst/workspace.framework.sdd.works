@@ -994,5 +994,7 @@ No open rows.
 | --- | --------- | ------------------------------------------ | --------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------ | ------ |
 | 1   | webapp    | [Web-portal-21](./product-backlog.md#L512) | Partner install-first landing (separate site) | Implementable | - [Web-portal-06](./product-backlog.md#pb-72) - AC50 `[app-stories.md](./admin-portal/app-stories.md)` | ToDo   |
 | 2   | webapp    | [Web-portal-40](./product-backlog.md#L476) | Setup paste sentence in the visitor locale    | Implementable | - [Web-portal-06](./product-backlog.md#pb-72) - [Web-portal-39](./product-backlog.md#pb-136) - `admin.guide.setup_prompt` | ToDo   |
+| 3   | repo      | [Repo-01](./product-backlog.md#L591) | Lite prompt definitions move to `lite-prompts/` | Implementable | - [ADR-135](./product-backlog.md#pb-141) - [ADR-134](../adr/ADR-134-lite-install-public-path.md) - Public URLs unchanged | ToDo   |
+| 4   | repo      | [Repo-02](./product-backlog.md#L598) | App split into `app/web`, `app/mcp`, `app/shared` | Implementable | - [ADR-135](../adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [Repo-01](./product-backlog.md#pb-141) - One package.json, one GHCR image | ToDo   |
 
 

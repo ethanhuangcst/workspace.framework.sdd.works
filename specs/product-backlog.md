@@ -16,6 +16,7 @@
   - [web-portal](#web-portal)
   - [lite installer](#category-framework-http-lite-installer-through-local-agent)
   - [Node.js prerequisite](#category-developer-node-prerequisite-through-local-agent)
+  - [repository structure](#repository-structure)
 - [Product Backlog](#product-backlog)
 - [Change record](#change-record)
 
@@ -585,6 +586,24 @@ This path is **not** the MCP full install ([Web-portal-04](#pb-70)), **not** the
   - **Out of scope:** Git, Xcode Command Line Tools, Homebrew bootstrap, full project scaffold, and writing any client receipt file.
   - **Depends on:** [Web-portal-06](#pb-72), [Web-portal-18](#pb-99), [ADR-061](./adr/ADR-061-setup-prompt-public-path.md). Acceptance: **AC45**–**AC47** in [`admin-portal/app-stories.md`](./admin-portal/app-stories.md).
 
+#### Repository structure
+
+- <a id="pb-141"></a>[Repo-01](#pb-141) Lite prompt definitions move to `lite-prompts/`
+  - **Move:** The six setup and lite prompt files move from `public/agent-setup/` to `lite-prompts/`: `install.md`, `prompt.md`, `node.md`, `install-full.md`, `paste-sentences.json`, `node-catalog.json` ([ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md)).
+  - **URLs unchanged:** `GET /setup`, `GET /lite/install`, `GET /setup/install` (307 to `/lite/install`), `GET /setup/node`, `GET /install`, `GET /agent-setup` (307 to `/setup`), and `GET /api/setup/node/catalog` serve identical bodies before and after. The `lite_install` and `node_prerequisite` paste sentences keep their values.
+  - **One delta:** Raw static files such as `GET /agent-setup/install.md` stop being served (they are template files, not a documented contract). Spec-to-build decides between accepting the delta and adding a raw rewrite; the default is accept.
+  - **Call sites:** Four API routes under `src/app/api/agent-setup/`, [`paste-sentences.ts`](../src/mcp/paste-sentences.ts), and [`node-setup-catalog.ts`](../src/mcp/node-setup-catalog.ts) read the new path. The Dockerfile runner stage copies `lite-prompts/`. Tests and living-spec links update; history rows keep the old paths.
+  - **Out of scope:** The `app/web`, `app/mcp`, `app/shared` split ([Repo-02](#pb-142)); any body or version change in the prompt files.
+  - **Depends on:** [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md), [ADR-134](./adr/ADR-134-lite-install-public-path.md).
+- <a id="pb-142"></a>[Repo-02](#pb-142) App split into `app/web`, `app/mcp`, and `app/shared`
+  - **Move:** Per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md): web surfaces (`src/app`, `src/components`, `src/content`, `src/styles`, `src/i18n`, `src/mail`, `src/auth`, `middleware.ts`, `e2e`, `messages`) move to `app/web`; the MCP service (`http-server.ts`, `create-server.ts`, `auth.ts`, `tool-descriptions.ts`) moves to `app/mcp`; shared code (`src/core`, `src/github`, `src/lib`, the setup backend six, `prisma`, `packages`) moves to `app/shared`.
+  - **No workspaces:** One root `package.json` stays. `tsconfig.json` `paths` gains `@web/*`, `@mcp/*`, `@shared/*`; the `@/` imports rewrite mechanically.
+  - **Deploy contract:** One GHCR image and the image name stay. The Portainer mcp container command changes from `npx tsx src/mcp/http-server.ts` to `npx tsx app/mcp/http-server.ts` on the deploy that ships this PBI; the dated go-live plan records the edit. No public URL changes.
+  - **Boundary:** After the move, `web` imports `shared` and `mcp` imports `shared`; `web` and `mcp` do not import each other. [`module-boundary.test.ts`](../src/mcp/module-boundary.test.ts) keeps guarding that direction.
+  - **Gates:** Full Vitest, Playwright, typecheck, lint, and build pass locally; after deploy, [release.md](./release.md) §7 smoke passes end to end.
+  - **Out of scope:** npm workspaces, a second GHCR image, changes to `pack.framework.sdd.works/`, any behavior change.
+  - **Depends on:** [Repo-01](#pb-141), [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md).
+
 [Back to top](#index)
 
 ---
@@ -693,6 +712,8 @@ This path is **not** the MCP full install ([Web-portal-04](#pb-70)), **not** the
 | 96  | mcp       | [MCP-09](#pb-138) | `sdd_install_framework` and `sdd_update_framework` re-design | Epic | - [ADR-132](./adr/ADR-132-simplified-install-root-and-templates.md) - Child SBIs [feature-93](./sprint-backlog.md#sprint-9)–[feature-96](./sprint-backlog.md#sprint-9) **Done** - [`mcp-design.md`](./mcp/mcp-design.md) - [`mcp-stories.md`](./mcp/mcp-stories.md) - [`mcp-tests.md`](./mcp/mcp-tests.md) | Sprint 9 | Done    |
 | 97  | webapp    | [Web-portal-40](#pb-139) | Setup paste sentence in the visitor locale       | Implementable | - [Web-portal-06](#pb-72) - [Web-portal-39](#pb-136) - [ADR-061](./adr/ADR-061-setup-prompt-public-path.md) - [`setup-guide-paste.ts`](../src/lib/setup-guide-paste.ts) - `messages/*.json` `admin.guide.setup_prompt` | —        | ToDo    |
 | 98  | webapp    | [Web-portal-41](#pb-140) | Manual mcp.json setup guide on the Setup tab     | Implementable | - [ADR-133](./adr/ADR-133-manual-mcp-json-setup-guide-returns.md) - [`SetupGuidePanel.tsx`](../src/components/features/SetupGuidePanel.tsx) - [`app-tests.md`](./admin-portal/app-tests.md) §35 - [feature-98](./sprint-backlog.md#sprint-9) **Done** | Sprint 9 | Done    |
+| 99  | repo      | [Repo-01](#pb-141)       | Lite prompt definitions move to `lite-prompts/`  | Implementable | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [ADR-134](./adr/ADR-134-lite-install-public-path.md) - Public URLs unchanged; raw static `/agent-setup/*.md` delta decided at spec-to-build | —        | ToDo    |
+| 100 | repo      | [Repo-02](#pb-142)       | App split into `app/web`, `app/mcp`, `app/shared` | Implementable | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [Repo-01](#pb-141) - One package.json, one GHCR image; Portainer mcp command path changes once | —        | ToDo    |
 
 
 
@@ -708,6 +729,8 @@ This path is **not** the MCP full install ([Web-portal-04](#pb-70)), **not** the
 | Date       | Change                                                                                                                                                                                                                                                                                                                                                                                                          |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2026-10-10 | New requirement: [Web-portal-41](#pb-140) **Manual mcp.json setup guide on the Setup tab** (URL-only entry, per-client paths, matches `prompt.md`; partly reverses [ADR-122](./adr/ADR-122-instructions-guide-hero-and-setup-tab.md)). Product Backlog row 98. [Sprint 9](./sprint-backlog.md#sprint-9) **feature-98**. |
+| 2026-11-08 | New requirement: [Repo-01](#pb-141) **Lite prompt definitions move to `lite-prompts/`** (move six files out of `public/agent-setup/`, every documented public URL unchanged; [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) Phase 1). Product Backlog row 99. Unscheduled; [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis). |
+| 2026-11-08 | New requirement: [Repo-02](#pb-142) **App split into `app/web`, `app/mcp`, `app/shared`** (single package.json, alias rewrite, one GHCR image, Portainer mcp command path change; [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) Phase 2). Product Backlog row 100. Unscheduled; [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis). |
 | 2026-10-10 | New requirement: [Web-portal-40](#pb-139) **Setup paste sentence in the visitor locale** (i18n for `Fetch and execute the setup instructions from {origin}/setup` through `admin.guide.setup_prompt`). Product Backlog row 97. Unscheduled; [Unplanned PBIs](./sprint-backlog.md#unplanned-pbis). |
 | 2026-10-10 | [MCP-08](#pb-137) and [MCP-09](#pb-138) **Done** after review-status apply; all child SBIs were already **Done**. |
 | 2026-10-10 | [MCP-07](#pb-105) **Retired**. The production sync check is Sprint 9 [task-02 Go-live](./sprint-backlog.md#sprint-9). |
