@@ -1,7 +1,7 @@
 # The latest status of framework.sdd.works
 
 > Type: Framework (process) artifact of framework.sdd.works
-> as_of: 2026-11-08 (Sprint 9 WIP awaiting sprint close confirm; Sprint 10 ToDo with feature-99 and feature-100; MC-21 and MC-22 closed; Codex OGTs open)
+> as_of: 2026-11-08 (Sprint 9 WIP awaiting sprint close confirm; Sprint 10 WIP: feature-99 Done on image `58515f94...`, feature-100 next; Codex OGTs open)
 > [Definition](../pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md#statusmd)
 
 ---
@@ -19,18 +19,18 @@
 | [Sprint 7](./sprint-backlog.md#sprint-7) | Done | - Closed 2026-10-06. Seventeen SBIs **Done** (engineering skills, EN seeds, friendly-language rule). |
 | [Sprint 8](./sprint-backlog.md#sprint-8) | Done | - Closed 2026-10-07. Thirteen SBIs **Done** (includes [feature-81](./sprint-backlog.md#sprint-8) sticky guide header for [Web-portal-29](./product-backlog.md#pb-126)). |
 | [Sprint 9](./sprint-backlog.md#sprint-9) | WIP | - All twenty-four SBIs **Done**. [task-02 Go-live](./sprint-backlog.md#sprint-9) closed 2026-10-19 after the production smoke on image `9eae528c...` (user **close confirm** the same evening). Sprint close waits for the user sprint confirm. |
-| [Sprint 10](./sprint-backlog.md#sprint-10) | ToDo | - Two SBIs: [feature-99](./sprint-backlog.md#sprint-10) ([Repo-01](./product-backlog.md#L591) lite-prompts move) and [feature-100](./sprint-backlog.md#sprint-10) ([Repo-02](./product-backlog.md#L598) app split), per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md). feature-99 ships first. |
+| [Sprint 10](./sprint-backlog.md#sprint-10) | WIP | - [feature-99](./sprint-backlog.md#sprint-10) ([Repo-01](./product-backlog.md#L591)) **Done** 2026-11-08 on image `58515f94...` (user **close confirm** the same morning). [feature-100](./sprint-backlog.md#sprint-10) ([Repo-02](./product-backlog.md#L598)) next per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md). |
 | Unplanned PBIs | — | - Two rows: [Web-portal-21](./product-backlog.md#L515) partner site (not this repo) and [Web-portal-40](./product-backlog.md#L477) setup paste sentence in the visitor locale. |
 
 ## where we are now
 
 - Which sprint are we working on now: [Sprint 9](./sprint-backlog.md#sprint-9) is **WIP**. [Sprint 8](./sprint-backlog.md#sprint-8) is **Done**.
-- What SBI are we working on now: none. [task-02 Go-live](./sprint-backlog.md#sprint-9) closed 2026-10-19: image `9eae528c5e8c798b33b62796019c7335b3b72590` serves `GET /lite/install` (version `2026-10-19.v1`, [ADR-134](./adr/ADR-134-lite-install-public-path.md)) with `GET /setup/install` 307 to `/lite/install`, HTTP install client roots are portable ([MC-21](./issues-log.md)), and the legacy-host 301 no longer carries port 3000 ([MC-22](./issues-log.md)). Production smoke passed: `/`, `/setup`, `/setup/node`, node catalog, versions (pack commit `82af2e5…`), package, lite files 200; MCP initialize 200 without bearer; webhook not 301; `www` 301. [MC-21](./issues-log.md) and [MC-22](./issues-log.md) closed 2026-10-19. **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md), [WA-22](./issues-log.md), [MC-19](./issues-log.md).
+- What SBI are we working on now: [feature-100](./sprint-backlog.md#sprint-10) ([Repo-02](./product-backlog.md#L598)) app split into `app/web`, `app/mcp`, `app/shared` per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md). [feature-99](./sprint-backlog.md#sprint-10) closed 2026-11-08: image `58515f94bc9f8af0db6fc418e6335e7e40ac8f93` serves the same public URLs from `lite-prompts/`; production smoke 17 checks passed; user **close confirm** the same morning. **Open OGT rows TC-1 through TC-9 track Codex only:** not verified because operator Codex token ran out 2026-10-10 (TC-2 through TC-6 skipped; TC-1 canonical still [MC-19](./issues-log.md)). Open issues: [WA-14](./issues-log.md), [WA-15](./issues-log.md), [WA-22](./issues-log.md), [MC-19](./issues-log.md).
 
 ## what could be the next
 
 - All Sprint 9 SBIs are **Done**. Sprint 9 close needs the user sprint confirm and the sprint-end retrospective.
-- [Sprint 10](./sprint-backlog.md#sprint-10) is **ToDo**. First item: [feature-99](./sprint-backlog.md#sprint-10) moves the lite prompt files to `lite-prompts/` with unchanged public URLs. Then [feature-100](./sprint-backlog.md#sprint-10) splits the app per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md).
+- [Sprint 10](./sprint-backlog.md#sprint-10) is **WIP**. [feature-99](./sprint-backlog.md#sprint-10) is **Done**; next is [feature-100](./sprint-backlog.md#sprint-10), the app split per [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md).
 - [Spec-seeds-15](./product-backlog.md#pb-97) may now move per its row after the production lite-files check passed.
 - [Web-portal-21](./product-backlog.md#pb-107) is **unplanned** here (partner property such as 2study.ai).
 
@@ -71,4 +71,4 @@ CodeBuddy CN and TRAE CN finished §16 TC-1 through TC-6 on 2026-10-10. TC-7 thr
 | 14 | Rename skill `fullstack-developer` to `fullstack-engineer` | - | Sprint 7 | Sprint 7 |
 | 15 | Seed files should state Pokymon Card Collection is an example only | - [task-01 Cross-review five process file seeds](./sprint-backlog.md#sprint-6) | Sprint 5 | Sprint 6 |
 
-Last updated: 2026-10-19 task-02 Go-live closed on image `9eae528c...`; MC-21 and MC-22 closed; all Sprint 9 SBIs Done
+Last updated: 2026-11-08 feature-99 closed on image `58515f94...`; feature-100 app split in progress

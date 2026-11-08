@@ -867,6 +867,10 @@ No open rows.
 
 - Pre-flight production curls found the legacy-host 301 pointing at unreachable `sdd.works:3000` before Recreate, so the middleware port fix shipped in the same image. [proxy-port-leaks-into-redirects.md](./knowledge/agent/proxy-port-leaks-into-redirects.md)
 
+#### 13. [Nov 8, 2026], feature-99 done
+
+- A wide `git add specs/` swept an untracked dated `.portainer.env` with real secrets into the commit; GitHub push protection blocked the push, so the remote never saw them. [whole-dir-git-add-sweeps-secrets.md](./knowledge/agent/whole-dir-git-add-sweeps-secrets.md)
+
 **Opportunities**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
@@ -923,6 +927,10 @@ No open rows.
 
 - Run the release.md §7 curl smoke set before every Recreate, not only after, so pre-flight catches live regressions early.
 
+#### 11. [Nov 8, 2026], feature-99 done
+
+- Stage deployment commits by explicit file list, never by a directory that may hold operator paste files; check the ignore rules cover dotted and plain spellings when a new dated folder appears.
+
 **Future actions**
 
 #### 1. [Oct 8, 2026], feature-73, feature-75, feature-76, feature-78, feature-79, feature-86 done
@@ -944,6 +952,10 @@ No open rows.
 #### 4. [Oct 19, 2026], task-02 Go-live done
 
 - At the next release Recreate, run the §7.1 hostname curls pre-deploy and record the results in the dated go-live plan.
+
+#### 5. [Nov 8, 2026], feature-99 done
+
+- At the next restructure or deploy SBI, run `git status --short` after staging and confirm no env-like file enters the commit before pushing.
 
 
 
@@ -995,21 +1007,25 @@ Depends on Sprint 9 (production on `sdd.works`; [ADR-134](./adr/ADR-134-lite-ins
 
 ### **Done**
 
-No rows yet.
+
+| #   | Code        | SBI                                        | Parent PBI                                                                                       | Module/Type   | Related specs                                                                                                                                                 | Status  |
+| --- | ----------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | feature-99  | Lite prompt definitions move to `lite-prompts/` | [Repo-01 Lite prompt definitions move to `lite-prompts/`](./product-backlog.md#pb-141)            | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [ADR-134](./adr/ADR-134-lite-install-public-path.md) - Six files move; six call-site path updates; Dockerfile copy; public URLs unchanged; raw static `/agent-setup/*.md` becomes 404 (accepted) - Closed 2026-11-08 on image `58515f94...`, production smoke 17 checks passed, user **close confirm** the same morning | **Done** |
 
 ### **WIP**
 
 
 | #   | Code        | SBI                                        | Parent PBI                                                                                       | Module/Type   | Related specs                                                                                                                                                 | Status  |
 | --- | ----------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| 1   | feature-99  | Lite prompt definitions move to `lite-prompts/` | [Repo-01 Lite prompt definitions move to `lite-prompts/`](./product-backlog.md#pb-141)            | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [ADR-134](./adr/ADR-134-lite-install-public-path.md) - Six files move; six call-site path updates; Dockerfile copy; public URLs unchanged; raw static `/agent-setup/*.md` becomes 404 (accepted) | **WIP** |
+| 2   | feature-100 | App split into `app/web`, `app/mcp`, `app/shared` | [Repo-02 App split into `app/web`, `app/mcp`, `app/shared`](./product-backlog.md#pb-142) | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - Depends on feature-99 - Alias rewrite across `@/` imports; one package.json; one GHCR image; Portainer mcp command path changes once at deploy | **WIP** |
 
 ### **ToDo**
 
 
 | #   | Code        | SBI                                        | Parent PBI                                                                                       | Module/Type   | Related specs                                                                                                                                                 | Status  |
 | --- | ----------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| 2   | feature-100 | App split into `app/web`, `app/mcp`, `app/shared` | [Repo-02 App split into `app/web`, `app/mcp`, `app/shared`](./product-backlog.md#pb-142) | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - Depends on feature-99 - Alias rewrite across `@/` imports; one package.json; one GHCR image; Portainer mcp command path changes once at deploy | **ToDo** |
+
+No open rows.
 
 
 

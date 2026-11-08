@@ -8,6 +8,16 @@
 
 ## 2026-11-08
 
+### feature-99 closed: lite prompt definitions live at lite-prompts
+
+**Why**: The user confirmed feature-99 usable after the production smoke; the prompt-definition directory now matches the ADR-135 target layout.
+
+**What changed**: The six prompt files moved to `lite-prompts/`; public URLs are unchanged. [feature-99](./sprint-backlog.md#sprint-10) is **Done** in Sprint 10. [status.md](./status.md) records image `58515f94bc9f8af0db6fc418e6335e7e40ac8f93`. A knowledge note records the `git add` sweep incident ([whole-dir-git-add-sweeps-secrets.md](./knowledge/agent/whole-dir-git-add-sweeps-secrets.md)); `.gitignore` gained the dotted dated paste-file rule.
+
+**Verification**: Local gates green (Vitest 455, typecheck, lint, build). Production smoke 2026-11-08 passed 17 checks: new version lines `2026-11-08.v1` on `/lite/install` and `/setup/node`, `/setup/install` 307, `/agent-setup` 307, raw static 404, MCP 200, portal and redirect set green, versions/package/lite-files 200.
+
+**Boundary**: No secret reached the remote. `src/` layout unchanged; that is feature-100.
+
 ### Sprint 10 scheduled: Repo-01 and Repo-02
 
 **Why**: The ADR-135 repository restructure needs its own sprint scope; the user picked a two-PBI Sprint 10 (no Web-portal-40) in plan confirm.
