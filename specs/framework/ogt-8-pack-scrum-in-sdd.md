@@ -53,7 +53,7 @@ test -f pack.framework.sdd.works/templates/framework.sdd.works/pack-scrum-in-sdd
 test -f pack.framework.sdd.works/templates/framework.sdd.works/sdd-scrum-practices.md
 test -f pack.framework.sdd.works/templates/framework.sdd.works/coach-knowledge.md
 npm run check:pack-seeds
-npm test -- src/lib/scrum-in-sdd-catalog.test.ts
+npm test -- app/shared/lib/scrum-in-sdd-catalog.test.ts
 ```
 
 ## Definition of done (OGT close)

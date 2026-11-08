@@ -1003,7 +1003,7 @@ Sprint Goal: Repository restructure per [ADR-135](./adr/ADR-135-repo-structure-a
 
 Depends on Sprint 9 (production on `sdd.works`; [ADR-134](./adr/ADR-134-lite-install-public-path.md) lite path live).
 
-**Status: ToDo**
+**Status: WIP**
 
 ### **Done**
 
@@ -1011,13 +1011,11 @@ Depends on Sprint 9 (production on `sdd.works`; [ADR-134](./adr/ADR-134-lite-ins
 | #   | Code        | SBI                                        | Parent PBI                                                                                       | Module/Type   | Related specs                                                                                                                                                 | Status  |
 | --- | ----------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
 | 1   | feature-99  | Lite prompt definitions move to `lite-prompts/` | [Repo-01 Lite prompt definitions move to `lite-prompts/`](./product-backlog.md#pb-141)            | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - [ADR-134](./adr/ADR-134-lite-install-public-path.md) - Six files move; six call-site path updates; Dockerfile copy; public URLs unchanged; raw static `/agent-setup/*.md` becomes 404 (accepted) - Closed 2026-11-08 on image `58515f94...`, production smoke 17 checks passed, user **close confirm** the same morning | **Done** |
+| 2   | feature-100 | App split into `app/web`, `app/mcp`, `app/shared` | [Repo-02 App split into `app/web`, `app/mcp`, `app/shared`](./product-backlog.md#pb-142) | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - Depends on feature-99 - Alias rewrite across `@/` imports; one package.json; one GHCR image; Portainer mcp command path changes once at deploy - Closed 2026-11-09 on image `2a3b839c...`, production smoke passed, user **close confirm** the same night | **Done** |
 
 ### **WIP**
 
-
-| #   | Code        | SBI                                        | Parent PBI                                                                                       | Module/Type   | Related specs                                                                                                                                                 | Status  |
-| --- | ----------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| 2   | feature-100 | App split into `app/web`, `app/mcp`, `app/shared` | [Repo-02 App split into `app/web`, `app/mcp`, `app/shared`](./product-backlog.md#pb-142) | Repo/Refactor | - [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) - Depends on feature-99 - Alias rewrite across `@/` imports; one package.json; one GHCR image; Portainer mcp command path changes once at deploy | **WIP** |
+No open rows.
 
 ### **ToDo**
 
@@ -1027,7 +1025,22 @@ Depends on Sprint 9 (production on `sdd.works`; [ADR-134](./adr/ADR-134-lite-ins
 
 No open rows.
 
+### Retrospective
 
+**Learnings**
+
+#### 1. [Nov 9, 2026], feature-100 App split into `app/web`, `app/mcp`, `app/shared` done
+- Image `b5d50ff` omitted `docker-entrypoint-web.sh`, so the Node image ran that path with `node` and the web container crash-looped while Portainer showed running. [node-entrypoint-runs-missing-script.md](./knowledge/agent/node-entrypoint-runs-missing-script.md). [ADR-135](./adr/ADR-135-repo-structure-app-web-mcp-shared.md) assumed the runner stage copies every file the web process starts from; that assumption failed until image `2a3b839`.
+
+**Opportunities**
+
+#### 1. [Nov 9, 2026], feature-100 App split into `app/web`, `app/mcp`, `app/shared` done
+- Read the web log for `[entrypoint] starting Next.js web` before the NPM Save step, because a restart loop still looks running in the container list. [node-entrypoint-runs-missing-script.md](./knowledge/agent/node-entrypoint-runs-missing-script.md)
+
+**Future actions**
+
+#### 1. [Nov 9, 2026], feature-100 App split into `app/web`, `app/mcp`, `app/shared` done
+- On the next image change, start the built image once with its entrypoint and confirm `[entrypoint] starting Next.js web` before Recreate. Inspect at the next deploy SBI.
 
 ## Unplanned PBIs
 

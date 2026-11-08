@@ -29,3 +29,4 @@ Product requirements live under `specs/`. Architecture decisions live under `spe
 | [`agent/doc-only-sbi-verify-path.md`](./agent/doc-only-sbi-verify-path.md) | Doc-only SBIs: name file path, AC ids, and verify steps before close | 2026-10-10 |
 | [`agent/proxy-port-leaks-into-redirects.md`](./agent/proxy-port-leaks-into-redirects.md) | Middleware redirect keeps the container port behind a proxy; clear `url.port` | 2026-10-19 |
 | [`agent/whole-dir-git-add-sweeps-secrets.md`](./agent/whole-dir-git-add-sweeps-secrets.md) | `git add <dir>` swept an untracked `.portainer.env`; stage explicit files | 2026-11-08 |
+| [`agent/node-entrypoint-runs-missing-script.md`](./agent/node-entrypoint-runs-missing-script.md) | Node image runs a missing entrypoint with `node`; prove the built image | 2026-11-09 |

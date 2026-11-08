@@ -6,6 +6,28 @@
 
 ---
 
+## 2026-11-09
+
+### Image 2a3b839 live: web entrypoint is in the runner stage
+
+**Why**: Image `b5d50ff` left `docker-entrypoint-web.sh` out of the runner stage. The Node image then started that path with `node`, and `framework-sdd-web` crash-looped while the container list still said running.
+
+**What changed**: Commit `2a3b839` copies the script into `/app` with mode `755`. `docker-compose.prod.yml` MCP command is `app/mcp/http-server.ts`. Production `IMAGE_TAG` is `2a3b839c28a0dd330f68522b85b5ebb3928dd96c`. The lesson is [node-entrypoint-runs-missing-script.md](./knowledge/agent/node-entrypoint-runs-missing-script.md). The smoke record is [go-live plan 2026-11-08](./go-live/20261108/go-live-plan.md).
+
+**Verification**: Public smoke 2026-11-09: portal, setup, lite, and node pages 200 with version `2026-11-08.v1`; `/setup/install` 307 to `/lite/install`; legacy host 301 without a port; webhook 401; versions, lite files, and package 200; MCP initialize 200 and `tools/list` includes the three install tools.
+
+**Boundary**: Rollback target remains `58515f94bc9f8af0db6fc418e6335e7e40ac8f93` with the MCP command `src/mcp/http-server.ts`.
+
+### feature-100 closed: app split live on sdd.works
+
+**Why**: The user confirmed feature-100 usable after the production smoke on image `2a3b839`.
+
+**What changed**: [feature-100](./sprint-backlog.md#sprint-10) and [Repo-02](./product-backlog.md#pb-142) are **Done**. The app lives in `app/web`, `app/mcp`, and `app/shared`. Public URLs are unchanged. Sprint 10 stays **WIP** until the user confirms the sprint.
+
+**Verification**: The smoke in [go-live plan 2026-11-08](./go-live/20261108/go-live-plan.md) passed on 2026-11-09. Retrospective block 1 is on [Sprint 10](./sprint-backlog.md#sprint-10).
+
+**Boundary**: Sprint 9 stays **WIP** until its own sprint confirm. [Web-portal-21](./product-backlog.md#pb-107) and [Web-portal-40](./product-backlog.md#pb-139) stay unplanned.
+
 ## 2026-11-08
 
 ### feature-99 closed: lite prompt definitions live at lite-prompts
