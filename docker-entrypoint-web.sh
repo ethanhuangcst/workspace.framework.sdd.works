@@ -8,8 +8,8 @@ echo "[entrypoint] prisma db seed"
 npx tsx app/shared/prisma/seed.ts
 
 echo "[entrypoint] starting Next.js web"
-if [ -f "./server.js" ]; then
-  exec node server.js
+if [ -f "./standalone/app/web/server.js" ]; then
+  exec node standalone/app/web/server.js
 fi
 
-exec npx next start -p "${PORT:-3000}"
+exec npx next start app/web -p "${PORT:-3000}"

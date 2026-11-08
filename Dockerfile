@@ -26,22 +26,25 @@ ENV PATH="/app/node_modules/.bin:${PATH}"
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs
 
-# Standalone server: project tree sits at standalone/app/web; flatten to /app so
-# server.js stays at the image root and process.cwd()-relative reads keep working.
-COPY --from=builder /app/app/web/.next/standalone/app/web ./
-COPY --from=builder /app/app/web/.next/standalone/node_modules ./node_modules
-COPY --from=builder /app/app/web/.next/static ./.next/static
-COPY --from=builder /app/lite-prompts ./lite-prompts
-# TS sources for the MCP container (tsx runs them directly) and fs-read fallback data.
+# Keep the standalone tree NESTED: Turbopack materializes externalized packages
+# (for example the generated Prisma client) as relative symlinks that assume this
+# layout, and standalone server.js chdirs into its own directory.
+COPY --from=builder /app/app/web/.next/standalone ./standalone
+COPY --from=builder /app/app/web/.next/static ./standalone/app/web/.next/static
+# Data read through process.cwd() after the chdir lives beside server.js.
+COPY --from=builder /app/lite-prompts ./standalone/app/web/lite-prompts
+COPY --from=builder /app/app/shared/content ./standalone/app/web/app/shared/content
+COPY --from=builder /app/pack.framework.sdd.works ./standalone/app/web/pack.framework.sdd.works
+# MCP container runs tsx from /app: alias config, sources, and full prod deps.
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/package-lock.json ./package-lock.json
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/app/mcp ./app/mcp
 COPY --from=builder /app/app/shared ./app/shared
-COPY docker-entrypoint-web.sh ./docker-entrypoint-web.sh
-RUN chmod +x docker-entrypoint-web.sh
-
-# Prisma migrate/seed + MCP (tsx) — not bundled in Next standalone output.
-COPY package.json package-lock.json ./
-RUN npm install --no-save prisma@6.16.0 tsx@4.20.5 \
-  && npx prisma generate --schema=app/shared/prisma/schema.prisma \
+# tsx and prisma are runtime dependencies (entrypoint migrate/seed + MCP tsx),
+# so the production-only install carries both; postinstall regenerates the
+# Prisma client for this stage.
+RUN npm ci --omit=dev \
   && chown -R nextjs:nodejs /app
 
 USER nextjs

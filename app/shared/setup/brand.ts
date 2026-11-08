@@ -38,6 +38,7 @@ function readMarkBytes(): Buffer | null {
   const candidates = [
     resolveMcpMarkPath(),
     join(MCP_DIR, "..", "..", "public", "sdd-mark.png"),
+    join(process.cwd(), "public", "sdd-mark.png"),
     join(process.cwd(), "app", "web", "public", "sdd-mark.png"),
   ];
   for (const path of candidates) {
