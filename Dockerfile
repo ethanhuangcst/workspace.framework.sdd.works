@@ -47,6 +47,10 @@ COPY --from=builder /app/app/shared ./app/shared
 RUN npm ci --omit=dev \
   && chown -R nextjs:nodejs /app
 
+# The node image entrypoint runs the file with node when it is missing or not
+# executable, which crash-loops the web container.
+COPY --chmod=755 --chown=nextjs:nodejs docker-entrypoint-web.sh ./docker-entrypoint-web.sh
+
 USER nextjs
 EXPOSE 3000 3041
 CMD ["./docker-entrypoint-web.sh"]
