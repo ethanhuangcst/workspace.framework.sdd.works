@@ -39,16 +39,16 @@ The two jobs run in two separate code modules. The boundary keeps setup serving 
 
 | Module | Owns | Files |
 | --- | --- | --- |
-| Setup backend | `GET /setup`, `GET /lite/install`, `GET /setup/node`, `GET /install`, setup markdown rewrite, paste sentences, client MCP file paths, node setup catalog | `src/app/api/agent-setup/route.ts`, `src/app/api/agent-setup/install/route.ts`, `src/app/api/agent-setup/node/route.ts`, `src/app/api/agent-setup/install-full/route.ts`, `src/mcp/setup-markdown.ts`, `src/mcp/setup-paths.ts`, `src/mcp/paste-sentences.ts`, `src/mcp/node-setup-catalog.ts`, `src/mcp/brand.ts`, `src/mcp/public-origin.ts`, `lite-prompts/prompt.md`, `lite-prompts/install.md`, `lite-prompts/node.md`, `lite-prompts/install-full.md` |
-| Pack install backend | `sdd_install_framework`, `sdd_update_framework`, `sdd_get_key`, install plan, tarball URL, ledger, cache and bundled pack read | `src/core/tools/install.ts`, `src/core/tools/install-http.ts`, `src/core/tools/install-plan.ts`, `src/core/tools/apply-plan.ts`, `src/core/tools/get-key.ts`, `src/core/tools/list-versions.ts`, `src/core/tools/package-fetch.ts`, `src/core/tools/errors.ts`, `src/core/sync/*` |
+| Setup backend | `GET /setup`, `GET /lite/install`, `GET /setup/node`, `GET /install`, setup markdown rewrite, paste sentences, client MCP file paths, node setup catalog | `app/web/app/api/agent-setup/route.ts`, `app/web/app/api/agent-setup/install/route.ts`, `app/web/app/api/agent-setup/node/route.ts`, `app/web/app/api/agent-setup/install-full/route.ts`, `app/shared/setup/setup-markdown.ts`, `app/web/config/setup-paths.ts`, `app/shared/setup/paste-sentences.ts`, `app/shared/setup/node-setup-catalog.ts`, `app/shared/setup/brand.ts`, `app/shared/setup/public-origin.ts`, `lite-prompts/prompt.md`, `lite-prompts/install.md`, `lite-prompts/node.md`, `lite-prompts/install-full.md` |
+| Pack install backend | `sdd_install_framework`, `sdd_update_framework`, `sdd_get_key`, install plan, tarball URL, ledger, cache and bundled pack read | `app/shared/core/tools/install.ts`, `app/shared/core/tools/install-http.ts`, `app/shared/core/tools/install-plan.ts`, `app/shared/core/tools/apply-plan.ts`, `app/shared/core/tools/get-key.ts`, `app/shared/core/tools/list-versions.ts`, `app/shared/core/tools/package-fetch.ts`, `app/shared/core/tools/errors.ts`, `app/shared/core/sync/*` |
 
 Boundary rules:
 
-- The setup backend does not import from `src/core/tools/` or `src/core/sync/`.
-- The pack install backend does not import from `src/mcp/setup-*`, `src/mcp/paste-sentences.ts`, `src/mcp/node-setup-catalog.ts`, or `src/mcp/brand.ts`.
-- Shared types live in `src/core/tools/errors.ts` or a types module the two modules agree on. The setup backend does not import install-only types.
-- Client detection (`src/core/path-detect.ts`) is install-only. The setup backend uses `src/mcp/setup-paths.ts` for the client MCP file path table. The pack install backend uses the seed map in `packages/sdd-paths/paths.json`, not the setup path table.
-- The MCP server entry (`src/mcp/create-server.ts`, `src/mcp/http-server.ts`) wires both modules. It is the only place that imports from both.
+- The setup backend does not import from `app/shared/core/tools/` or `app/shared/core/sync/`.
+- The pack install backend does not import from `src/mcp/setup-*`, `app/shared/setup/paste-sentences.ts`, `app/shared/setup/node-setup-catalog.ts`, or `app/shared/setup/brand.ts`.
+- Shared types live in `app/shared/core/tools/errors.ts` or a types module the two modules agree on. The setup backend does not import install-only types.
+- Client detection (`app/shared/core/path-detect.ts`) is install-only. The setup backend uses `app/web/config/setup-paths.ts` for the client MCP file path table. The pack install backend uses the seed map in `app/shared/packages/sdd-paths/paths.json`, not the setup path table.
+- The MCP server entry (`app/mcp/create-server.ts`, `app/mcp/http-server.ts`) wires both modules. It is the only place that imports from both.
 - `GET /setup`, `GET /lite/install`, `GET /setup/node`, and `GET /install` are documentation pages served by the setup backend (`lite-prompts/prompt.md`, `install.md`, `node.md`, `install-full.md`). `GET /setup/install` redirects to `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). The pack install backend is `sdd_install_framework` tool logic and does not serve markdown pages. Setup routes do not share a handler with MCP tool handlers. `GET /install` names the pack install sequence but does not call install functions; it serves static markdown only.
 
 ### 2.1 Job 1: Install MCP
@@ -109,7 +109,7 @@ This job gets the framework files onto disk. The agent calls `sdd_install_framew
    - Missing or unmapped `client`: return `client_unknown`.
    - Known `client` with an unknown `os`: return `os_unsupported`.
 5. The server resolves the root:
-   - For a known client, the server uses the seed-map root (`packages/sdd-paths/paths.json`) by `client` and `os`. The server ignores any `root` the agent sends.
+   - For a known client, the server uses the seed-map root (`app/shared/packages/sdd-paths/paths.json`) by `client` and `os`. The server ignores any `root` the agent sends.
    - For a client that is not in the seed map, when `root` is absent return `root_required` so the agent can ask the person. When `root` is present, validate it against the path policy and use it. Return `path_rejected` when the path is outside the home, contains `..`, or is a system path.
 6. The server checks the pack source:
    - If the cache has a real commit (synced from GitHub), use the cache.
@@ -213,7 +213,7 @@ Operators sync the framework pack GitHub repo into the portal cache. End-user in
 
 | Fact | Detail |
 | --- | --- |
-| Trigger | Signed-in admin → **Framework** → **Sync with git repository** (`syncFrameworkRepo` in `src/core/sync/sync-job.ts`). Same job as webhook and scheduled sync |
+| Trigger | Signed-in admin → **Framework** → **Sync with git repository** (`syncFrameworkRepo` in `app/shared/core/sync/sync-job.ts`). Same job as webhook and scheduled sync |
 | Repo URL | `Setting.githubUrl` from Admin Settings. No hard-coded owner or repo |
 | Cache dir | `SDD_PACKAGE_CACHE_DIR`, default `.data/sdd-packages` locally; production volume `framework_sdd_packages` → `/data/sdd-packages` on web and MCP containers ([`release.md`](../release.md) §2) |
 | Manifest | `manifest.json` at cache root: `latestCommit`, `latestVersion`, `versions[]`, `inventory`, `syncedAt` |

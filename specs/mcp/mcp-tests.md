@@ -30,7 +30,7 @@
 
 | Module | Cases |
 | --- | --- |
-| `packages/sdd-paths` | Every client × OS resolves under HOME/USERPROFILE; no `..`; every client has `default`; trailing slashes consistent |
+| `app/shared/packages/sdd-paths` | Every client × OS resolves under HOME/USERPROFILE; no `..`; every client has `default`; trailing slashes consistent |
 | `path-policy` | Accept allow-listed roots; reject `/`, `/etc`, `..`, escape after expand |
 | install root (ADR-132) | Known client with omitted `root` → seed-map root; known client with wrong `root` sent → still seed-map root (ignore); unknown client without `root` → `root_required`; unknown client with valid `root` → that root; invalid path → `path_rejected`. |
 | `path-resolve-llm` | Retained for deferred server-side endpoint; not called from install (ADR-130 decision 10, ADR-131). Valid JSON schema accepted; low confidence → seed; escape path → `path_rejected` |
@@ -43,7 +43,7 @@
 | bundled pack fallback (ADR-131) | Empty cache or fixture commit reads bundled pack under `pack.framework.sdd.works/`; result is `apply` with bundled files; result does not return `cache_empty`, `fixture_pack`, or `sync_pending` |
 | os validation | Unknown `os` returns `os_unsupported`; valid os with no per-os entry falls to `default` |
 
-Commands: `npx vitest run packages/sdd-paths src/core src/app/api/sdd src/auth src/lib/keys-crypto.test.ts`.
+Commands: `npx vitest run app/shared/packages/sdd-paths src/core app/web/app/api/sdd src/auth app/shared/lib/keys-crypto.test.ts`.
 
 ---
 
@@ -165,7 +165,7 @@ Prerequisites: real GitHub test repo in `SDD_E2E_GITHUB_REPO`, `GITHUB_TOKEN`, o
 | S4 | Skill deleted in test repo → sync | Removed from cache inventory |
 | S5 | GitHub unavailable | sync_error; stale cache preserved |
 | S6 | Same commit re-sync | status unchanged |
-| S2–S5 (fixture) | Rename / delete / GitHub error | `src/core/sync/sync-scenarios.test.ts` (CI always) |
+| S2–S5 (fixture) | Rename / delete / GitHub error | `app/shared/core/sync/sync-scenarios.test.ts` (CI always) |
 | A1 | GET /api/sdd/versions after sync | 200 with versions + inventory |
 | A2 | GET /api/sdd/package?version=latest | 200 tarball; X-SDD-Commit header |
 | E1 | HTTP install after sync | Files under ~/.cursor/; manifest has package_commit |
@@ -176,7 +176,7 @@ Run opt-in (operator test repo):
 ```bash
 SDD_E2E_GITHUB_REPO=https://github.com/ethanhuangcst/test.sdd \
 GITHUB_TOKEN=... \
-npx vitest run src/core/sync/sync-e2e.test.ts
+npx vitest run app/shared/core/sync/sync-e2e.test.ts
 ```
 
 Fixture layout in [test.sdd](https://github.com/ethanhuangcst/test.sdd): `skills/{tdd,a-tdd}/SKILL.md`, `rules/sdd-dod.mdc`, `agents/code-reviewer.md`, `workflows/new-feature.md`.
@@ -191,7 +191,7 @@ Fixture layout in [test.sdd](https://github.com/ethanhuangcst/test.sdd): `skills
 
 ### 7.1 Fixture regression (default CI — no secrets)
 
-Implementation: `src/core/sync/freshness-regression.test.ts` (+ route/unit companions).
+Implementation: `app/shared/core/sync/freshness-regression.test.ts` (+ route/unit companions).
 
 | ID | Scenario | Given | When | Then |
 | --- | --- | --- | --- | --- |
@@ -221,7 +221,7 @@ This runs fixture regression + webhook/cron/ensure-cache-fresh unit tests. Live 
 
 ### 7.6 Install ledger + allow-list + client-root scenarios (MCP-01 — Feature-01)
 
-Fixture CI. Implement with `src/core/tools/install.test.ts`, HTTP install tests, and agent-setup route tests. Do not treat Feature-01 as Done until these pass.
+Fixture CI. Implement with `app/shared/core/tools/install.test.ts`, HTTP install tests, and agent-setup route tests. Do not treat Feature-01 as Done until these pass.
 
 | ID | Scenario | Given | When | Then |
 | --- | --- | --- | --- | --- |
@@ -248,7 +248,7 @@ Fixture CI. Implement with `src/core/tools/install.test.ts`, HTTP install tests,
 
 ### 7.2 Live GitHub regression (opt-in — test.sdd)
 
-Implementation: `src/core/sync/sync-e2e.test.ts`.
+Implementation: `app/shared/core/sync/sync-e2e.test.ts`.
 
 | ID | Scenario | Assert |
 | --- | --- | --- |
@@ -296,8 +296,8 @@ Run after pushing to **test.sdd** when validating a release:
 - [x] `npm run test:regression:freshness` green in CI (fixture layer) — verified 2026-09-18
 - [x] LE1–LE5 green locally with `SDD_E2E_GITHUB_REPO` + `GITHUB_TOKEN` — verified 2026-09-18
 - [x] F11a–F11b green in CI (tarball content assertions) — verified via `package-content.test.ts` in regression run
-- [x] M1 rename + HTTP install inventory — `src/core/sync/sync-scenarios.test.ts` (fixture)
-- [x] M2 force sync rematerializes Framework tree — `e2e/settings-framework.spec.ts` sync button
+- [x] M1 rename + HTTP install inventory — `app/shared/core/sync/sync-scenarios.test.ts` (fixture)
+- [x] M2 force sync rematerializes Framework tree — `app/web/e2e/settings-framework.spec.ts` sync button
 - [x] P1–P4, P5–P6 Feature-01 install ledger + allow-list (HTTP returns ledger payload, no receipt)
 - [x] C1, C4 first-install client-root scenarios
 - [x] C5, C2b feature-06 update deletes recorded files only; old folder name is not a directory delete
@@ -356,12 +356,12 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#mcp-production-pack-sync) **AC1–A
 
 | Check | Layer | Method |
 | --- | --- | --- |
-| Sync writes manifest + unpack | unit | `syncFrameworkRepo` in `src/core/sync/sync-job.test.ts` stores unpacked tree, tarball, and `manifest.json` with `latestCommit`, `inventory`, and `syncedAt` |
+| Sync writes manifest + unpack | unit | `syncFrameworkRepo` in `app/shared/core/sync/sync-job.test.ts` stores unpacked tree, tarball, and `manifest.json` with `latestCommit`, `inventory`, and `syncedAt` |
 | Sync copies pack-root files | unit / integration | Materialized unpack includes top-level pack files (for example `lite-pack.allowlist.json`) when the GitHub tree contains them. Extend `sync-job.test.ts` or `sync-scenarios.test.ts` with one allow-list file at unpack root when implementing |
 | Fixture commit refused for MCP install | unit | `isRefusedFixturePack` + `install-http.ts`: commit matching `sha-v\d+\.\d+\.\d+` or six-file stub unpack → `readBundledPack()` for MCP install only. Assert in `install.test.ts` / freshness **BF1** |
 | Lite route is cache-only | integration | `GET /api/sdd/lite/files` in `sdd-api.test.ts`: seeded cache + allow-list → 200 with `downloads`; empty manifest → 409 `sync_pending`; unpack without allow-list → 404 `lite_manifest_missing`; invalid allow-list → 422 `lite_manifest_invalid` (no empty `files` success) |
 | Package route is cache-only | integration | `GET /api/sdd/package` and `GET /api/sdd/versions` use `resolveCachedVersion` / manifest only; empty cache → 409 `sync_pending`. Assert in `sdd-api.test.ts` or `cache.test.ts` |
-| Admin sync trigger | integration / E2E | `POST /api/admin/sync` (admin auth) runs `syncFrameworkRepo`. Playwright: [`e2e/settings-framework.spec.ts`](../../e2e/settings-framework.spec.ts) sync button (portal module) |
+| Admin sync trigger | integration / E2E | `POST /api/admin/sync` (admin auth) runs `syncFrameworkRepo`. Playwright: [`app/web/e2e/settings-framework.spec.ts`](../../app/web/e2e/settings-framework.spec.ts) sync button (portal module) |
 | Production commit is real | operator | After production sync, `GET https://sdd.works/api/sdd/versions` → 200; `latestCommit` is a git SHA from the pack repo, not `sha-v1.0.0` or other fixture id. `GITHUB_FIXTURE` unset in Portainer |
 | Allow-list in production cache | operator | On the server, under `SDD_PACKAGE_CACHE_DIR` (production: `/data/sdd-packages`), the unpack dir for `latestCommit` contains `lite-pack.allowlist.json` at the pack root |
 | Lite links after sync | operator | `curl -sS https://sdd.works/api/sdd/lite/files` → 200; body lists allow-listed paths and same-origin `downloads` |
@@ -383,16 +383,16 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#mcp-production-pack-sync) **AC1–A
 - [x] Manifest `inventory.other` lists `lite-pack.allowlist.json` (same probe)
 - [x] `GET /api/sdd/package?version=latest` → 200; `X-SDD-Commit` matches `latestCommit` (same probe)
 - [ ] Admin Framework sync re-run after this deploy (last `syncedAt` 2026-10-09; re-sync optional before close)
-- [ ] `GET /api/sdd/lite/files` → 200 JSON on production (2026-10-10: **404** HTML; route missing on deployed image — ship a GHCR image that includes `src/app/api/sdd/lite/*`, then re-smoke)
+- [ ] `GET /api/sdd/lite/files` → 200 JSON on production (2026-10-10: **404** HTML; route missing on deployed image — ship a GHCR image that includes `app/web/app/api/sdd/lite/*`, then re-smoke)
 - [ ] MCP full install on production serves pack files from synced cache (operator or E2E evidence)
 - [ ] Parent [Spec-seeds-15](../product-backlog.md#pb-97) **Done** when allow-list is confirmed in production unpack and lite route returns 200
 
 ### Commands (CI)
 
 ```bash
-npx vitest run src/core/sync/sync-job.test.ts src/core/sync/cache.test.ts src/core/sync/fixture-pack.test.ts src/core/sync/manifest.test.ts src/app/api/sdd/sdd-api.test.ts
-npx vitest run src/core/tools/install.test.ts -t "should_use_cache_pack_source_for_a_real_commit|should_refuse_a_fixture_port_commit"
-npx vitest run src/core/sync/freshness-regression.test.ts -t F3b
+npx vitest run app/shared/core/sync/sync-job.test.ts app/shared/core/sync/cache.test.ts app/shared/core/sync/fixture-pack.test.ts app/shared/core/sync/manifest.test.ts app/web/app/api/sdd/sdd-api.test.ts
+npx vitest run app/shared/core/tools/install.test.ts -t "should_use_cache_pack_source_for_a_real_commit|should_refuse_a_fixture_port_commit"
+npx vitest run app/shared/core/sync/freshness-regression.test.ts -t F3b
 ```
 
 Operator commands: [`release.md`](../release.md) §7.3.
@@ -409,7 +409,7 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-url-plan) **AC1–AC16**, [
 | --- | --- | --- |
 | First paste writes the URL only | API | `GET /setup` body tells the agent to write `"url": "https://sdd.works/mcp"` and no `command` (**AC1**) |
 | Existing entry is replaced | API | The same body tells the agent to replace a `framework.sdd.works` entry that has `command` (**AC2**) |
-| Setup is URL only, no install section | API | `GET /setup` is setup version `2026-10-09.v11`. The body has no install section. It does not name `--write`, `--client`, `--os`, `--client-root`, `SDD_SERVER_URL`, or `accepted_root` (ADR-131, prompt-setup **AC6**). The body names `CodeBuddy (international)` (CodeBuddy or WorkBuddy) and `CodeBuddy CN` (CodeBuddy CN or WorkBuddy CN), both with `~/.codebuddy/mcp.json`, and `.codebuddy/mcp.json` only when the user asked to configure this project. It names `TRAE (international)` with `~/.trae/mcp.json` and forbids the Trae CN Application Support path for that list. It names TRAE CN `Library/Application Support/Trae CN/User/mcp.json` and forbids `~/.trae-cn/mcp.json` and `~/.trae/mcp.json` for that user list. It tells the agent to change MCP config only for the agent running this session (MC-10). Assert in [`sdd-api.test.ts`](../../src/app/api/sdd/sdd-api.test.ts) `should_return_agent_setup_markdown` |
+| Setup is URL only, no install section | API | `GET /setup` is setup version `2026-10-09.v11`. The body has no install section. It does not name `--write`, `--client`, `--os`, `--client-root`, `SDD_SERVER_URL`, or `accepted_root` (ADR-131, prompt-setup **AC6**). The body names `CodeBuddy (international)` (CodeBuddy or WorkBuddy) and `CodeBuddy CN` (CodeBuddy CN or WorkBuddy CN), both with `~/.codebuddy/mcp.json`, and `.codebuddy/mcp.json` only when the user asked to configure this project. It names `TRAE (international)` with `~/.trae/mcp.json` and forbids the Trae CN Application Support path for that list. It names TRAE CN `Library/Application Support/Trae CN/User/mcp.json` and forbids `~/.trae-cn/mcp.json` and `~/.trae/mcp.json` for that user list. It tells the agent to change MCP config only for the agent running this session (MC-10). Assert in [`sdd-api.test.ts`](../../app/web/app/api/sdd/sdd-api.test.ts) `should_return_agent_setup_markdown` |
 | Install tool result gives tarball URL | API | The `sdd_install_framework` tool result includes a tarball URL on this server. It does not name `--write`, `--client`, `--os`, `--client-root`, `SDD_SERVER_URL`, or `accepted_root` (ADR-131, prompt-setup **AC7**, MC-11). It does not name a git host |
 | Setup sentences the test must assert | API | The same test asserts `WorkBuddy`, `WorkBuddy CN`, the project-file sentence for `.codebuddy/mcp.json`, and both Trae sentences that forbid the other path (prompt-setup **AC6**, MC-12) |
 | Plan function | unit | Same ledger, same `missing`, same commit returns `noop`, `rewrite_ledger`, or `apply`. Matching version, commit, and no missing paths returns `noop` and does not list file writes (**AC3**) |
@@ -429,7 +429,7 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-url-plan) **AC1–AC16**, [
 | LLM removed from install | review | No writer binary, no stdio program. The seed map is the single path source (ADR-130 decision 10, ADR-131) |
 | Tool description text (ADR-132, feature-93, MC-16) | unit | `sdd_install_framework` and `sdd_update_framework` descriptions name `client` and `os` and tell the agent to omit `root` for a known client; the `root` field description says to omit it to let the server resolve from the path map; descriptions resolve for `en`, `zh-Hans`, `zh-Hant` with no missing-key fallback. Assert in `tool-descriptions.test.ts` |
 
-Commands when this section is implemented: `npx vitest run src/core/tools src/app/api/sdd`.
+Commands when this section is implemented: `npx vitest run app/shared/core/tools app/web/app/api/sdd`.
 
 - [ ] url-plan **AC1–AC2** setup markdown matches the URL contract
 - [x] prompt-setup **AC6** (MC-10, MC-12) setup markdown is version `2026-10-09.v11`, has no install section, and the test asserts WorkBuddy, WorkBuddy CN, the project-file rule, both Trae path bans, and the current-client scope sentence
@@ -462,7 +462,7 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-get-key) **AC1–AC4**. Des
 | Unauthorized | integration | `isError` is true. Text is `{"error":{"code":"unauthorized"}}`. The secret is absent (**AC3**) |
 | Empty name | unit | `isError` is true. Code is `invalid_input` (**AC4**) |
 
-Command: `npx vitest run src/mcp/create-server.test.ts src/mcp/tool-descriptions.test.ts` (13 passed, 09/Oct/2026).
+Command: `npx vitest run app/mcp/create-server.test.ts app/mcp/tool-descriptions.test.ts` (13 passed, 09/Oct/2026).
 
 - [x] **AC1** success text is the secret only
 - [x] **AC2** missing name and decrypt failure are not tool errors
@@ -476,13 +476,13 @@ Stories: [`mcp-stories.md`](./mcp-stories.md#sdd-mcp-module-boundary) **AC1–AC
 
 | Check | Layer | Method |
 | --- | --- | --- |
-| Setup backend import boundary | unit | An import-boundary test fails when any file under `src/app/api/agent-setup`, `src/mcp/setup-*`, `src/mcp/paste-sentences.ts`, or `src/mcp/node-setup-catalog.ts` imports from `src/core/tools` or `src/core/sync` (**story 1 AC1**) |
+| Setup backend import boundary | unit | An import-boundary test fails when any file under `app/web/app/api/agent-setup`, `src/mcp/setup-*`, `app/shared/setup/paste-sentences.ts`, or `app/shared/setup/node-setup-catalog.ts` imports from `app/shared/core/tools` or `app/shared/core/sync` (**story 1 AC1**) |
 | `GET /setup` handler behavior | unit | The handler returns setup markdown and does not call `composeInstallPlan`, `apply-plan`, or `package-fetch` functions, and does not read the pack cache or bundled pack (**story 1 AC2**) |
-| Pack install backend import boundary | unit | The import-boundary test fails when any file under `src/core/tools` or `src/core/sync` imports from `src/mcp/setup-markdown`, `src/mcp/setup-paths`, `src/mcp/paste-sentences`, `src/mcp/node-setup-catalog`, or `src/mcp/brand` (**story 2 AC1**) |
+| Pack install backend import boundary | unit | The import-boundary test fails when any file under `app/shared/core/tools` or `app/shared/core/sync` imports from `src/mcp/setup-markdown`, `src/mcp/setup-paths`, `src/mcp/paste-sentences`, `src/mcp/node-setup-catalog`, or `src/mcp/brand` (**story 2 AC1**) |
 | `sdd_install_framework` handler behavior | unit | The handler resolves the root, builds the plan, and returns a tarball URL, and does not call setup-markdown, paste-sentences, or node-setup-catalog functions; the result has no setup markdown content (**story 2 AC2**) |
-| Shared wiring point | unit | The import-boundary test confirms only `src/mcp/create-server.ts` and `src/mcp/http-server.ts` import from both modules; no other file imports from both (**story 3 AC1**) |
+| Shared wiring point | unit | The import-boundary test confirms only `app/mcp/create-server.ts` and `app/mcp/http-server.ts` import from both modules; no other file imports from both (**story 3 AC1**) |
 
-Command: `npx vitest run src/mcp/module-boundary.test.ts` (to be added in implementation).
+Command: `npx vitest run app/shared/setup/module-boundary.test.ts` (to be added in implementation).
 
 - [x] **AC1** setup backend has no pack install imports
 - [x] **AC2** `GET /setup` does not call install functions
@@ -535,7 +535,7 @@ feature-93 owns the known-client path: server uses seed-map root, ignores agent-
 - [x] feature-94: missing client returns `client_unknown`
 - [x] feature-94: no `root_warning` in any result (ADR-132 decision 6)
 
-Command when these sections are implemented: `npx vitest run src/core/tools/install.test.ts src/core/tools/bundled-pack.test.ts src/mcp/tool-descriptions.test.ts src/core/path-e2e.test.ts`.
+Command when these sections are implemented: `npx vitest run app/shared/core/tools/install.test.ts app/shared/core/tools/bundled-pack.test.ts app/mcp/tool-descriptions.test.ts app/shared/core/path-e2e.test.ts`.
 
 ---
 
@@ -557,8 +557,8 @@ Stories: [`mcp-stories.md`](./mcp-stories.md) `sdd-mcp-install` AC8. Design: [`m
 | Body does not name a git host | API | Body does not name `github.com`, a repository owner, or a release asset. The tarball URL is on this server only |
 | `GET /setup` links to `GET /install` | API | `lite-prompts/prompt.md` has an "After setup" note that links to `GET /install`. Assert the link appears in the setup markdown served by `GET /setup` |
 | `GET /setup` still has no install section | API | The setup markdown still has no install section. The "After setup" note is a link, not an install sequence. Assert the setup body does not name `sdd_install_framework`, tarball, or ledger write steps |
-| Module boundary | unit | `src/app/api/agent-setup/install-full/route.ts` is in `SETUP_BACKEND_FILES` in `module-boundary.test.ts`. The route imports from `src/mcp/setup-markdown` only, not from `src/core/tools` or `src/core/sync`. The route reads `lite-prompts/install-full.md` and serves it with origin rewriting |
-| Setup rewrite path | unit | `src/mcp/setup-paths.ts` `SETUP_REWRITES` maps `source: "/install"` to `destination: "/api/agent-setup/install-full"`. Assert in `setup-paths.test.ts` |
+| Module boundary | unit | `app/web/app/api/agent-setup/install-full/route.ts` is in `SETUP_BACKEND_FILES` in `module-boundary.test.ts`. The route imports from `src/mcp/setup-markdown` only, not from `app/shared/core/tools` or `app/shared/core/sync`. The route reads `lite-prompts/install-full.md` and serves it with origin rewriting |
+| Setup rewrite path | unit | `app/web/config/setup-paths.ts` `SETUP_REWRITES` maps `source: "/install"` to `destination: "/api/agent-setup/install-full"`. Assert in `setup-paths.test.ts` |
 
 ### Pass criteria
 
@@ -571,7 +571,7 @@ Stories: [`mcp-stories.md`](./mcp-stories.md) `sdd-mcp-install` AC8. Design: [`m
 - [x] `install-full/route.ts` is in the setup backend module boundary list and does not import pack install modules
 - [x] `setup-paths.ts` rewrites `/install` to `/api/agent-setup/install-full`
 
-Command when this section is implemented: `npx vitest run src/app/api/agent-setup/install-full src/mcp/module-boundary.test.ts src/mcp/setup-paths.test.ts src/app/api/sdd/sdd-api.test.ts`.
+Command when this section is implemented: `npx vitest run app/web/app/api/agent-setup/install-full app/shared/setup/module-boundary.test.ts app/web/config/setup-paths.test.ts app/web/app/api/sdd/sdd-api.test.ts`.
 
 ---
 
@@ -599,7 +599,7 @@ Helper script: [`scripts/manual-e2e-prep.sh`](../../scripts/manual-e2e-prep.sh) 
 | `trae-cn` | `~/.trae-cn/skills/` | `~/.trae-cn/rules/` | `~/.trae-cn/agents/` | `~/.trae-cn/workflows/` | `~/.trae-cn/sdd/` | `~/Library/Application Support/Trae CN/User/mcp.json` |
 | `codex` | `~/.agents/skills/` | `~/.codex/rules/` | `~/.codex/agents/` | `~/.codex/workflows/` | `~/.codex/sdd/` | `~/.codex/config.toml` |
 
-Source: `packages/sdd-paths/paths.json` and [`client.paths.md`](./client.paths.md). TRAE CN user MCP file is the Application Support path, not `~/.trae-cn/mcp.json`.
+Source: `app/shared/packages/sdd-paths/paths.json` and [`client.paths.md`](./client.paths.md). TRAE CN user MCP file is the Application Support path, not `~/.trae-cn/mcp.json`.
 
 ### Environment prep
 

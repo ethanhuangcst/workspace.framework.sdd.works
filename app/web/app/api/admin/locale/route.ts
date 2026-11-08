@@ -1,0 +1,48 @@
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import {
+  isLocale,
+  SDD_LOCALE_COOKIE,
+  SDD_LOCALE_COOKIE_MAX_AGE,
+} from "@shared/lib/locale";
+import { assertCsrf } from "@shared/auth/csrf";
+
+const bodySchema = z.object({
+  locale: z.string(),
+});
+
+export async function POST(request: NextRequest) {
+  if (!assertCsrf(request)) {
+    return NextResponse.json(
+      { error: { key: "errors.csrf" } },
+      { status: 403 },
+    );
+  }
+  let json: unknown;
+  try {
+    json = await request.json();
+  } catch {
+    return NextResponse.json(
+      { error: { key: "errors.invalid_input" } },
+      { status: 400 },
+    );
+  }
+
+  const parsed = bodySchema.safeParse(json);
+  if (!parsed.success || !isLocale(parsed.data.locale)) {
+    return NextResponse.json(
+      { error: { key: "errors.invalid_input" } },
+      { status: 400 },
+    );
+  }
+
+  const response = NextResponse.json({ ok: true, locale: parsed.data.locale });
+  response.cookies.set(SDD_LOCALE_COOKIE, parsed.data.locale, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: SDD_LOCALE_COOKIE_MAX_AGE,
+  });
+  return response;
+}

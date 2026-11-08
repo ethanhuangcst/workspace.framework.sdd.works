@@ -7,11 +7,18 @@ const eslintConfig = [
   {
     ignores: [
       ".next/**",
+      "**/.next/**",
       "node_modules/**",
       "coverage/**",
       "playwright-report/**",
       "test-results/**",
       "specs/**",
+      "pack.framework.sdd.works/**",
+      "dist/**",
+      "samectx-notes/**",
+      "sha-old/**",
+      "sha-same/**",
+      "~/",
     ],
   },
   {

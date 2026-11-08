@@ -2,10 +2,10 @@
 set -eu
 
 echo "[entrypoint] prisma migrate deploy"
-npx prisma migrate deploy
+npx prisma migrate deploy --schema=app/shared/prisma/schema.prisma
 
 echo "[entrypoint] prisma db seed"
-npx tsx prisma/seed.ts
+npx tsx app/shared/prisma/seed.ts
 
 echo "[entrypoint] starting Next.js web"
 if [ -f "./server.js" ]; then

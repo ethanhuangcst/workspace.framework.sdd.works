@@ -12,7 +12,7 @@ This document extends the agent rule **common-test-strategy**. [`framework-tests
 
 | Area | This project |
 | --- | --- |
-| Unit / integration / E2E | Vitest for `src/`; CE cases in [`framework-tests.md`](./framework/framework-tests.md) are manual or fixture-driven contract checks unless a case names Vitest automation (for example **CE-LITE-01**, **CE-LITE-02**, **CE-LITE-03**, **CE-LITE-04**) |
+| Unit / integration / E2E | Vitest for `app/`; CE cases in [`framework-tests.md`](./framework/framework-tests.md) are manual or fixture-driven contract checks unless a case names Vitest automation (for example **CE-LITE-01**, **CE-LITE-02**, **CE-LITE-03**, **CE-LITE-04**) |
 | CI | Default pipeline fixture-only; live third parties opt-in |
 | Critical journeys | MCP install/update, admin portal auth and keys, public instructions Features tab |
 

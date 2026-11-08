@@ -1196,7 +1196,7 @@ Maintainer skill for dual-audience Scrum in SDD guides. [ADR-125](../adr/ADR-125
 | Skill | `.cursor/skills/sdd-guide-editor/SKILL.md` |
 | Variant rules and seed map | `.cursor/skills/sdd-guide-editor/reference.md` |
 
-The skill edits human portal seeds and **`pack-scrum-in-sdd.md`** per [`reference.md`](../../.cursor/skills/sdd-guide-editor/reference.md). Default canonical EN path is `pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md`. It applies friendly-language and pack-authoring link rules on human files. It runs `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` after EN structural edits. It mirrors human seeds to `src/content/scrum-in-sdd/`. AI template sync is manual per reference until `--derive-agent` exists. Pack rename work: [ogt-8-pack-scrum-in-sdd.md](./ogt-8-pack-scrum-in-sdd.md).
+The skill edits human portal seeds and **`pack-scrum-in-sdd.md`** per [`reference.md`](../../.cursor/skills/sdd-guide-editor/reference.md). Default canonical EN path is `pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md`. It applies friendly-language and pack-authoring link rules on human files. It runs `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` after EN structural edits. It mirrors human seeds to `app/shared/content/scrum-in-sdd/`. AI template sync is manual per reference until `--derive-agent` exists. Pack rename work: [ogt-8-pack-scrum-in-sdd.md](./ogt-8-pack-scrum-in-sdd.md).
 
 It loads **`sdd-update-specs`** when Index anchors, part or appendix titles, or `.instructions-tabs.json` paths change. It does not ship files under `pack.framework.sdd.works/skills/`. It does not edit the five process files. It does not mark backlog rows Done. Tests: [`framework-tests.md`](./framework-tests.md) **CE-SKILL-23**.
 
@@ -1339,8 +1339,8 @@ Pack allow-list for lite copy. Basename [ADR-107](../adr/ADR-107-lite-pack-allow
 | --- | --- |
 | Authoring seed | `pack.framework.sdd.works/lite-pack.allowlist.json` |
 | Pack repo | Repo root `lite-pack.allowlist.json` |
-| Validator (product repo) | `src/core/seeds/lite-install-manifest.ts` (`LITE_PACK_ALLOWLIST_FILENAME`) |
-| Automated tests | `src/core/seeds/lite-install-manifest.test.ts` (**CE-LITE-01**, **CE-LITE-02**) |
+| Validator (product repo) | `app/shared/core/seeds/lite-install-manifest.ts` (`LITE_PACK_ALLOWLIST_FILENAME`) |
+| Automated tests | `app/shared/core/seeds/lite-install-manifest.test.ts` (**CE-LITE-01**, **CE-LITE-02**) |
 
 Paths inside the JSON are relative to the pack root. The same relative path exists under `pack.framework.sdd.works/` in this workspace.
 
@@ -1383,14 +1383,14 @@ Instructions page tab order and types ([Spec-seeds-16](../product-backlog.md#L27
 
 | Artifact | Path |
 | --- | --- |
-| Bundled config (authoring) | [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) |
+| Bundled config (authoring) | [`app/shared/content/.instructions-tabs.json`](../../app/shared/content/.instructions-tabs.json) |
 | Pack path after sync | `{unpacked}/content/.instructions-tabs.json` |
-| Operator doc | [`src/content/.admin-note.md`](../../src/content/.admin-note.md) |
-| Validator (feature-58) | [`validateInstructionsTabsConfig`](../../src/core/seeds/instructions-tabs-config.ts) |
-| Resolver + API (feature-59) | [`resolveInstructionsTabs`](../../src/lib/instructions-tabs.ts), [`GET /api/sdd/instructions-tabs`](../../src/app/api/sdd/instructions-tabs/route.ts) |
+| Operator doc | [`app/shared/content/.admin-note.md`](../../app/shared/content/.admin-note.md) |
+| Validator (feature-58) | [`validateInstructionsTabsConfig`](../../app/shared/core/seeds/instructions-tabs-config.ts) |
+| Resolver + API (feature-59) | [`resolveInstructionsTabs`](../../app/shared/lib/instructions-tabs.ts), [`GET /api/sdd/instructions-tabs`](../../app/web/app/api/sdd/instructions-tabs/route.ts) |
 | UI (feature-60) | `InstructionsPage` dynamic tab list; `CODE_TAB_REGISTRY` with `setup` panel |
 
-**Validator contract (feature-58, amended [ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md), [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md) for feature-74):** `validateInstructionsTabsConfig(document, { contentRoot, codeAllowlist })`. Each tab requires **`labels.en`**; **`labelKey` is invalid**. `contentRoot` is the sync unpack root (the directory that contains `content/`). Each `paths.{locale}` value joins to `contentRoot` for safety and optional file-existence checks. Each **`internal_page_folder`** row requires **`rootPath`** (pack-relative directory under `content/`); reject escape via `..`; when file checks run, require **`{contentRoot}/{rootPath}/.index.json`**. Per-folder **`.index.json`** files validate in the folder resolver (see [`app-design.md`](../admin-portal/app-design.md) Internal page folder). CE-TABS-01 uses `pack.framework.sdd.works` as `contentRoot` because the bundled JSON lives at `src/content/.instructions-tabs.json` but path strings stay pack-shaped (`content/features/…`). At runtime the resolver reads markdown from cache under `contentRoot`, then package fallback under `src/content/` with the same path mapping as Features ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Resolver exposes **`label`** per tab for the requested locale.
+**Validator contract (feature-58, amended [ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md), [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md) for feature-74):** `validateInstructionsTabsConfig(document, { contentRoot, codeAllowlist })`. Each tab requires **`labels.en`**; **`labelKey` is invalid**. `contentRoot` is the sync unpack root (the directory that contains `content/`). Each `paths.{locale}` value joins to `contentRoot` for safety and optional file-existence checks. Each **`internal_page_folder`** row requires **`rootPath`** (pack-relative directory under `content/`); reject escape via `..`; when file checks run, require **`{contentRoot}/{rootPath}/.index.json`**. Per-folder **`.index.json`** files validate in the folder resolver (see [`app-design.md`](../admin-portal/app-design.md) Internal page folder). CE-TABS-01 uses `pack.framework.sdd.works` as `contentRoot` because the bundled JSON lives at `app/shared/content/.instructions-tabs.json` but path strings stay pack-shaped (`content/features/…`). At runtime the resolver reads markdown from cache under `contentRoot`, then package fallback under `app/shared/content/` with the same path mapping as Features ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Resolver exposes **`label`** per tab for the requested locale.
 
 **API contract (feature-59):** Top-level `source` is `cache` or `bundled` for which config file validated. Do not use `configSource`. Each content tab may set `contentSource` `cache` or `package` for its markdown body, plus `sourceLocale` when locale fallback applies.
 
@@ -1408,8 +1408,8 @@ The server file list comes from [Web-portal-17](../product-backlog.md#L441) (sam
 | --- | --- |
 | Authoring example | `pack.framework.sdd.works/.sdd-lite-installed.example.json` |
 | On the client | `{client_root}/.sdd-lite-installed.json` |
-| Rules (product repo) | `src/core/seeds/lite-install-receipt.ts` |
-| Automated tests | `src/core/seeds/lite-install-receipt.test.ts` (**CE-LITE-03**, **CE-LITE-04**) |
+| Rules (product repo) | `app/shared/core/seeds/lite-install-receipt.ts` |
+| Automated tests | `app/shared/core/seeds/lite-install-receipt.test.ts` (**CE-LITE-03**, **CE-LITE-04**) |
 
 ### Receipt shape
 
@@ -1480,7 +1480,7 @@ Long-form guide for people on the instructions portal. [ADR-125](../adr/ADR-125-
 | Role | Path |
 | --- | --- |
 | Pack authoring | `pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` |
-| Product mirror | `src/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` |
+| Product mirror | `app/shared/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` |
 | Tab config | `pack.framework.sdd.works/content/.instructions-tabs.json` (`scrum-in-sdd` content tab) |
 
 **Human variant.** Includes `## Index` (h1 and h2 headings only). No links that require this product repo or other non-shipped artifacts. English body order: **Part I** The Scrum Gap for SDD, **Part II** Scrum in SDD Guide, **Appendix 1:** Agentic Programming, Harness Engineering, and SDD aligned with Agile practices, then **Appendix 2: Short summary of the 2020 Scrum Guide**. After structural EN edits, run `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` in this repo. Run `npm run check:pack-seeds` before pack push.

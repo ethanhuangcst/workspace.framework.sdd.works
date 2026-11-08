@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "../../tsconfig.tsbuildinfo",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "../../vitest.setup.ts",
+    "../shared/**/*.ts",
+    "../shared/**/*.tsx",
+    "../mcp/**/*.ts",
+    "../shared/messages/**/*.json",
+    "../shared/packages/**/*",
+    "../shared/prisma/**/*"
+  ],
+  "exclude": ["node_modules", ".next"]
+}

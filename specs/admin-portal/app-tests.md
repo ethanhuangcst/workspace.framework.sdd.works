@@ -39,11 +39,11 @@
 | Keys / settings Zod | Valid names; reject CJK in `key_value`; invalid GitHub URL |
 | ResetPasswordPage | After sent, link uses `admin.common.back_login` and href `/login` (WA-03). Failed request keeps the form and shows `reset-error` with a keyed message; no navigation (WA-05). Success callout uses the previous `admin.reset.sent` sentence with no `{email}`; request lead is hidden; URL has no `?email=` (WA-08 / WA-10 / Web-portal-11) |
 | Password set gate | No token + existing hash → redirect away from empty-account form; empty hash still allows set (WA-04) |
-| InstructionsPage | Tab switch Setup / Features; Features `aria-selected` and `panel-features` visibility (WA-06); copy value is the `/setup` sentence; one stdio `mcp.json`. **feature-56:** no `copy-lite-setup-prompt` on Setup; full `copy-setup-prompt` unchanged. **feature-07:** `features-body` shows fixture markdown for the active locale; a missing zh file in the cache shows the English cache file; a missing cache shows the file from `src/content/features/`; a `<script>` in the fixture is not executed; the fixed Agents / Skills / Rules / Templates lists are absent. **feature-04 / ADR-115:** `secret-lookup` is on Learn Scrum (`#learn-secret`) between iframe and fallback; Setup and Features have no `secret-lookup`; hint and button keys resolve in three locales per AC7 catalog. **feature-05 / WA-09 / WA-11 / ADR-115:** Get secret on `tab=learn-scrum-in-sdd` does not change tab; scroll into view for result or error; known, unknown, and empty cases match feature-05. **feature-60:** Tab bar order follows resolved config; load without `?tab=` selects Setup; `?tab=features` opens the content panel; each tab label uses its `labelKey`; unknown `?tab=` falls back to Setup; Setup has copy prompt only (no Get secret) |
-| **Web-portal-26** `admin-note.ts` | Cache file wins over package; missing cache reads `src/content/.admin-note.md`; HTML includes `content-table` for tables; fenced json becomes `codeblock--file`; `<script>` stripped; json pre preserves two-space indent from fixture markdown |
+| InstructionsPage | Tab switch Setup / Features; Features `aria-selected` and `panel-features` visibility (WA-06); copy value is the `/setup` sentence; one stdio `mcp.json`. **feature-56:** no `copy-lite-setup-prompt` on Setup; full `copy-setup-prompt` unchanged. **feature-07:** `features-body` shows fixture markdown for the active locale; a missing zh file in the cache shows the English cache file; a missing cache shows the file from `app/shared/content/features/`; a `<script>` in the fixture is not executed; the fixed Agents / Skills / Rules / Templates lists are absent. **feature-04 / ADR-115:** `secret-lookup` is on Learn Scrum (`#learn-secret`) between iframe and fallback; Setup and Features have no `secret-lookup`; hint and button keys resolve in three locales per AC7 catalog. **feature-05 / WA-09 / WA-11 / ADR-115:** Get secret on `tab=learn-scrum-in-sdd` does not change tab; scroll into view for result or error; known, unknown, and empty cases match feature-05. **feature-60:** Tab bar order follows resolved config; load without `?tab=` selects Setup; `?tab=features` opens the content panel; each tab label uses its `labelKey`; unknown `?tab=` falls back to Setup; Setup has copy prompt only (no Get secret) |
+| **Web-portal-26** `admin-note.ts` | Cache file wins over package; missing cache reads `app/shared/content/.admin-note.md`; HTML includes `content-table` for tables; fenced json becomes `codeblock--file`; `<script>` stripped; json pre preserves two-space indent from fixture markdown |
 | **Web-portal-26** `FrameworkView` | `framework-admin-note` visible when repo block shown; open adds `is-open` on backdrop; body has `guide-section` + `guide-md-body--prose`; Close and Escape hide modal; optional fetch error shows keyed callout |
 
-Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/components/features/FrameworkView.test.ts src/components/features/InstructionsPage.test.ts`
+Commands: `npx vitest run src/auth src/lib app/shared/lib/admin-note.test.ts app/web/components/features/FrameworkView.test.ts app/web/components/features/InstructionsPage.test.ts`
 
 ---
 
@@ -65,8 +65,8 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | Setup Node UI retired (WA-20 / AC47) | Component: Setup has no `copy-node-setup-prompt` and no Install Node.js first section. Paste file and `/setup/node` still covered above. |
 | Visitor paste origin (WA-19) | Unit: `getVisitorPasteOrigin` in production forces `https://sdd.works` even when `PUBLIC_BASE_URL` is localhost; setup paste sentence uses that origin. |
 | `GET /setup` (feature-56 regression) | Still 200 stdio-primary markdown from `prompt.md`; body is not `install.md`. |
-| `GET /api/sdd/instructions-tabs` (feature-59) | Cache `content/.instructions-tabs.json` valid → 200; `tabs` order matches file; `setup` code tab present; each `content` tab has `html` for `locale=en` from cache path; top-level `source` `cache`. Missing or invalid cache file → 200 from bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) only; top-level `source` `bundled`. Duplicate `queryParam` or unknown `code.id` → bundled fallback. Content path `../` → bundled fallback. Missing zh path → `sourceLocale` `en` for that tab. Per-tab markdown uses `contentSource` `cache` or `package` like Features. No GitHub fetch; no key values |
-| Instructions tabs resolver (feature-58 / feature-59) | Unit: parse and validate schema v1; reject empty `tabs`, duplicate `id` / `queryParam`, disallowed `code.id`, content row without `paths.en`, unsafe paths. Path values are relative to sync unpack root (`content/features/…`). File-existence checks use that root (fixture unpack or `pack.framework.sdd.works/`). Runtime package fallback maps those paths under `src/content/` (same as Features) |
+| `GET /api/sdd/instructions-tabs` (feature-59) | Cache `content/.instructions-tabs.json` valid → 200; `tabs` order matches file; `setup` code tab present; each `content` tab has `html` for `locale=en` from cache path; top-level `source` `cache`. Missing or invalid cache file → 200 from bundled [`app/shared/content/.instructions-tabs.json`](../../app/shared/content/.instructions-tabs.json) only; top-level `source` `bundled`. Duplicate `queryParam` or unknown `code.id` → bundled fallback. Content path `../` → bundled fallback. Missing zh path → `sourceLocale` `en` for that tab. Per-tab markdown uses `contentSource` `cache` or `package` like Features. No GitHub fetch; no key values |
+| Instructions tabs resolver (feature-58 / feature-59) | Unit: parse and validate schema v1; reject empty `tabs`, duplicate `id` / `queryParam`, disallowed `code.id`, content row without `paths.en`, unsafe paths. Path values are relative to sync unpack root (`content/features/…`). File-existence checks use that root (fixture unpack or `pack.framework.sdd.works/`). Runtime package fallback maps those paths under `app/shared/content/` (same as Features) |
 | Keys CRUD | Create / list / update / delete; decrypt with current `KEYS_ENCRYPTION_KEY` |
 | Users invite | Rate-limit invite; cannot delete self / last admin. **AC57:** invite mail keys resolve for the request `resolveLocale` (`zh-Hans` when cookie or `Accept-Language` says so) |
 | Password reset mail | **AC58:** reset mail keys resolve for the request `resolveLocale` |
@@ -89,7 +89,7 @@ Commands: `npx vitest run src/auth src/lib src/lib/admin-note.test.ts src/compon
 | Spec area | Scenarios |
 | --- | --- |
 | Public home | `/` shows `instructions-guide` (not logo-card home); footer fixed (WA-01, WA-02) |
-| Instructions | Guide title visible; Setup and Features tabs; Features click shows `panel-features` and the tab is the hit target at its center (WA-06); agents roster lists seven names in order. **feature-07:** Features shows `features-body` text from the cache fixture for `en` and `zh-Hans`; `zh-Hant` with no cache file shows the English cache body; a missing cache shows the body from `src/content/features/`; Setup still shows `copy-setup-prompt`. **feature-56:** Setup does not show `copy-lite-setup-prompt`; full MCP copy unchanged. **ADR-115:** Setup has no `secret-lookup`; Learn tab shows `secret-name` and `secret-get` between iframe and fallback; locale switch updates placeholder and button. **feature-05 on Learn:** Get secret at `#learn-secret` keeps `tab=learn-scrum-in-sdd`; result and error in view; known, unknown, and empty cases. **feature-60:** `/` load without query opens Setup; reorder fixture config puts Scrum before Features in the tab bar; `?tab=scrum-in-sdd` deep-links; Scrum and Features panels still load markdown from configured paths |
+| Instructions | Guide title visible; Setup and Features tabs; Features click shows `panel-features` and the tab is the hit target at its center (WA-06); agents roster lists seven names in order. **feature-07:** Features shows `features-body` text from the cache fixture for `en` and `zh-Hans`; `zh-Hant` with no cache file shows the English cache body; a missing cache shows the body from `app/shared/content/features/`; Setup still shows `copy-setup-prompt`. **feature-56:** Setup does not show `copy-lite-setup-prompt`; full MCP copy unchanged. **ADR-115:** Setup has no `secret-lookup`; Learn tab shows `secret-name` and `secret-get` between iframe and fallback; locale switch updates placeholder and button. **feature-05 on Learn:** Get secret at `#learn-secret` keeps `tab=learn-scrum-in-sdd`; result and error in view; known, unknown, and empty cases. **feature-60:** `/` load without query opens Setup; reorder fixture config puts Scrum before Features in the tab bar; `?tab=scrum-in-sdd` deep-links; Scrum and Features panels still load markdown from configured paths |
 | Login | Seeded admin reaches keys landing; empty-password admin → set-password; hashed admin is not trapped on empty-account set-password (WA-04) |
 | Password reset | Submit keeps URL `/reset-password` and shows success callout or `reset-error` (WA-05); success callout is the previous `admin.reset.sent` sentence with no `{email}` and has no `?email=` query (WA-08 / WA-10); mail capture / fixture path when configured; after send, Back to login → `/login` (WA-03) |
 | Keys | Create, list shows value, copy, edit, delete, bulk delete |
@@ -126,7 +126,7 @@ Run this after task-04 and task-05, before feature-07 is marked Done. Use `/` an
 - [x] Get secret: known name shows `secret-result` in view; unknown name shows `secret-missing`; empty name shows `secret-empty` and does not call the API
 - [x] Reset success still uses the previous `admin.reset.sent` sentence and stays on `/reset-password` with no `?email=`
 - [x] Locale switch still changes tab labels, the secret hint, and the secret button
-- [x] A missing sync cache still shows `features-body` from `src/content/features/` and does not remove Setup
+- [x] A missing sync cache still shows `features-body` from `app/shared/content/features/` and does not remove Setup
 - [ ] After ADR-115: Get secret on Learn tab only; Setup unchanged except no secret block
 - [x] No console or server error on these paths
 
@@ -171,7 +171,7 @@ Run after feature-56 ships, before the SBI is **Done**. Covers AC20 and AC21. Fi
 
 ## 11. Regression after feature-58–feature-60
 
-Run after dynamic tabs ship, before **feature-60** is **Done**. Isolated cache (`SDD_PACKAGE_CACHE_DIR`) plus bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json). Do not set `GITHUB_FIXTURE`.
+Run after dynamic tabs ship, before **feature-60** is **Done**. Isolated cache (`SDD_PACKAGE_CACHE_DIR`) plus bundled [`app/shared/content/.instructions-tabs.json`](../../app/shared/content/.instructions-tabs.json). Do not set `GITHUB_FIXTURE`.
 
 - [ ] `GET /api/sdd/instructions-tabs?locale=en` returns 200 with `setup`, `features`, and `scrum-in-sdd` tabs
 - [ ] `/` and `/instructions` without `?tab=` show Setup selected and `panel-setup` visible
@@ -267,7 +267,7 @@ Run before the Learn auto-height change ships. AC30 in [`app-stories.md`](./app-
 | --- | --- |
 | CSS | `.learn-embed-frame` has `width: 100%`, `border: 0`, no `aspect-ratio: 1 / 1`, no `min(72vh`. |
 | Component | `LearnScrumEmbedPanel` registers a `message` listener with origin allowlist. Valid `sdd-learn-embed-height` sets iframe `height`. Unknown types and bad origins are ignored. Fallback height applies before the first valid message. |
-| Contract | Message type string `sdd-learn-embed-height` lives in one module (for example `src/lib/learn-embed-messaging.ts`) and is imported by the panel and tests. |
+| Contract | Message type string `sdd-learn-embed-height` lives in one module (for example `app/shared/lib/learn-embed-messaging.ts`) and is imported by the panel and tests. |
 | Browser | On `/?tab=learn-scrum-in-sdd`, iframe width matches intro column. After sdd.works posts height, the frame height fits the grid without a large empty square. |
 
 - [ ] No fixed square aspect ratio on the iframe
@@ -356,7 +356,7 @@ Run before **WA-16** closes and **Web-portal-33** is **Done**. [ADR-119](../adr/
 | Validator | `validateInstructionsTabsConfig` fails when `labelKey` is present or `labels.en` is missing or empty. |
 | Resolver / API | `GET /api/sdd/instructions-tabs?locale=` returns **`label`** per tab from `labels[locale]` with en fallback. Response tabs omit `labelKey`. |
 | UI | `InstructionsPage` tab buttons show resolved **`label`**; no `t(locale, labelKey)` for tabs. |
-| Pack | Operator doc [`content/.admin-note.md`](../../src/content/.admin-note.md) and pack copy describe **`labels` only**. |
+| Pack | Operator doc [`content/.admin-note.md`](../../app/shared/content/.admin-note.md) and pack copy describe **`labels` only**. |
 | Unit | `instructions-tabs-config.test.ts`, `instructions-tabs.test.ts`, `InstructionsPage.test.tsx` use `labels` fixtures. |
 | Browser | Change `labels.en` for one tab in cache config, sync, reload guide: tab bar shows new text without editing `messages/*.json`. |
 
@@ -464,7 +464,7 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 
 | Layer | Check |
 | --- | --- |
-| Resolver | `readAdminNote`: cache `content/.admin-note.md` first; bundled `src/content/.admin-note.md` second; `source` `cache` or `package`; prose via `renderPortalMarkdown`; fences → `codeblock--file` with preserved pre indent. |
+| Resolver | `readAdminNote`: cache `content/.admin-note.md` first; bundled `app/shared/content/.admin-note.md` second; `source` `cache` or `package`; prose via `renderPortalMarkdown`; fences → `codeblock--file` with preserved pre indent. |
 | API | `GET /api/admin/admin-note`: 401 without session; 200 with `{ html, source }`; no locale param; no secrets in body. |
 | UI | `framework-admin-note` after sync button; `.floating-frame` inside `framework-admin-note-dialog`; `framework-admin-note-body` uses `guide-section` + `guide-md-body--prose`; literal **Admin note** and **Close**; Escape and backdrop dismiss; Copy on file fences. |
 | CSS | Copy `.floating-frame*` from mockup to `portal.css`; ADR-123 prose + ADR-117 codeblock tokens. |
@@ -483,7 +483,7 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 
 | Layer | Check |
 | --- | --- |
-| Pack JSON | `pack.framework.sdd.works/content/.instructions-tabs.json` and `src/content/.instructions-tabs.json` **`learn-scrum-in-sdd.urls.*`** are **`https://learn.sdd.works/en/learn-embedded/`**. |
+| Pack JSON | `pack.framework.sdd.works/content/.instructions-tabs.json` and `app/shared/content/.instructions-tabs.json` **`learn-scrum-in-sdd.urls.*`** are **`https://learn.sdd.works/en/learn-embedded/`**. |
 | Allowlist | `EMBED_PAGE_HOST_ALLOWLIST` includes **`learn.sdd.works`** and **`www.learn.sdd.works`**. **`sdd.works`** is not an embed host after cutover. |
 | Constants | `SDD_WORKS_LEARN_URL` (or successor) resolves to **`https://learn.sdd.works/en/learn-embedded/`**. `SDD_LEARN_SITE_URL` stays **`https://learn.sdd.works`**. |
 | Setup / MCP | `SetupGuidePanel` and **`GET /setup`** markdown use production origin **`https://sdd.works`** (`/setup`, `/mcp`, lite `/lite/install`). Default **`PUBLIC_BASE_URL`** is **`https://sdd.works`**. |
@@ -509,7 +509,7 @@ Run before Web-portal-26 closes. AC39–AC43 in [`app-stories.md`](./app-stories
 | --- | --- |
 | Go-live doc names canonical hosts | Read release / go-live notes |
 | Setup paste uses **`sdd.works`** only | **AC48**; §29 component checks |
-| No durable second hostname in lite partner sentence | [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) after cutover |
+| No durable second hostname in lite partner sentence | [`LITE_PARTNER_SETUP_SENTENCE`](../../app/shared/setup/brand.ts) after cutover |
 
 - [x] **AC48** scenarios reviewed with operator
 - [ ] Redirect **`framework.sdd.works`** → **`sdd.works`** documented and verified in staging or production
@@ -557,7 +557,7 @@ Run before **Web-portal-38** / **feature-88** is **Done**. **AC45**–**AC47** i
 
 **What this proves:** A first visit follows the browser language, stores `sdd_locale`, and later visits keep that choice. The switcher still wins. Public content APIs do not guess from `Accept-Language`. Invite and reset mail use the same resolver as the page. Matches **AC51–AC59** and [`app-design.md`](./app-design.md) §8.
 
-**Tools:** Vitest for `src/lib/locale.ts` and route tests. Playwright for one first-visit check. No new browser matrix beyond that one path plus the existing locale-switch check.
+**Tools:** Vitest for `app/shared/lib/locale.ts` and route tests. Playwright for one first-visit check. No new browser matrix beyond that one path plus the existing locale-switch check.
 
 **Pyramid:** unit cases carry the tag map (about 70%). Route tests cover cookie write, mail locale, and `GET /api/sdd/features` without `locale` (about 20%). One browser check covers first paint (about 10%).
 

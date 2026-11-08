@@ -112,7 +112,7 @@ Near-real-time: poll or webhook (`GITHUB_WEBHOOK_SECRET`) + short cache. Target:
 
 ## 8. i18n
 
-Catalogs `messages/en.json`, `zh-Hans.json`, `zh-Hant.json`. Helper `t(locale, key, vars)`. Locale cookie `sdd_locale`. Switcher labels: **EN / 简 / 繁** (locale ids remain `en` / `zh-Hans` / `zh-Hant`). Missing key → `en` → key name. Dates/numbers: `Intl`. `html lang`: `en` / `zh-CN` / `zh-Hant`.
+Catalogs `app/shared/messages/en.json`, `zh-Hans.json`, `zh-Hant.json`. Helper `t(locale, key, vars)`. Locale cookie `sdd_locale`. Switcher labels: **EN / 简 / 繁** (locale ids remain `en` / `zh-Hans` / `zh-Hant`). Missing key → `en` → key name. Dates/numbers: `Intl`. `html lang`: `en` / `zh-CN` / `zh-Hant`.
 
 ### Visitor locale (Web-portal-39)
 
@@ -137,10 +137,10 @@ Walk tags in q-value order. The first tag that maps wins.
 
 | Piece | Role |
 | --- | --- |
-| `resolveLocale` / `negotiateLocale` in `src/lib/locale.ts` | Cookie plus header. The only tag table. |
-| `getRequestLocale` in `src/lib/request-locale.ts` | App Router helper: reads `cookies()` and `Accept-Language`, then calls `resolveLocale`. |
-| `src/middleware.ts` | When the cookie is missing or invalid, set `sdd_locale` from `resolveLocale`. Do not duplicate the tag table. Skip locale writes on paths that only redirect (legacy host, old WordPress home). |
-| Server pages and `src/app/layout.tsx` | Call `getRequestLocale` so the first HTML matches the cookie that middleware sets. |
+| `resolveLocale` / `negotiateLocale` in `app/shared/lib/locale.ts` | Cookie plus header. The only tag table. |
+| `getRequestLocale` in `app/shared/lib/request-locale.ts` | App Router helper: reads `cookies()` and `Accept-Language`, then calls `resolveLocale`. |
+| `app/web/middleware.ts` | When the cookie is missing or invalid, set `sdd_locale` from `resolveLocale`. Do not duplicate the tag table. Skip locale writes on paths that only redirect (legacy host, old WordPress home). |
+| Server pages and `app/web/app/layout.tsx` | Call `getRequestLocale` so the first HTML matches the cookie that middleware sets. |
 | `POST /api/admin/locale` | Unchanged. Switcher overwrites the cookie. |
 | Invite and reset mail | Routes call `resolveLocale` on the request; `sendInviteMail` / `sendResetMail` already use `t(locale, …)`. |
 | `GET /api/sdd/features`, instructions-tabs, instructions-folder, scrum-in-sdd | Keep `?locale=`. Missing or invalid query stays `en`. Do not read `Accept-Language`. |
@@ -149,7 +149,7 @@ Walk tags in q-value order. The first tag that maps wins.
 
 Switcher `aria-pressed` marks the active locale. `html lang` follows the resolved locale (`zh-Hans` → `zh-CN`). No new message keys.
 
-Brand mark: `public/sdd-logo.png` (SDD WORKS wordmark, **transparent** background) in headers and public shells; favicon / apple-touch from the same brand family. Authoring source: [`src/618x618.logos.png`](../../src/618x618.logos.png) (718×256 RGBA) per [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). Host string **`sdd.works`** is the aria-label / protocol id after **ADR-127** — not duplicated as text beside the logo.
+Brand mark: `public/sdd-logo.png` (SDD WORKS wordmark, **transparent** background) in headers and public shells; favicon / apple-touch from the same brand family. Authoring source: [`app/web/618x618.logos.png`](../../app/web/618x618.logos.png) (718×256 RGBA) per [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md). Host string **`sdd.works`** is the aria-label / protocol id after **ADR-127** — not duplicated as text beside the logo.
 
 Display sizes (CSS, 200% of original tokens): home / auth wordmark height `144px` / `112px`; header mark height `72px`. Offsets: home logo `margin-left: -30px`; header logo `margin-left: -22px`. Do not paint an opaque background behind the logo image. `Logo.tsx` intrinsic dimensions: **718×256**. Guide hero (`.guide-hero-title`): logo **5.625rem** tall, **`margin-left: -23px`**, headline Antonio **clamp(1.45rem, 2.65vw, 2.125rem)** weight **700**, flex **align-items: center**. **`admin.guide.title`** is the same English line in **en**, **zh-Hans**, and **zh-Hant**.
 
@@ -167,7 +167,7 @@ Public/auth first paint: one 12px / 700ms rise; honor `prefers-reduced-motion`.
 
 ### Tokens
 
-Canonical file: [`src/styles/tokens.css`](../../src/styles/tokens.css) (keep in sync with mockup `:root`).
+Canonical file: [`app/web/styles/tokens.css`](../../app/web/styles/tokens.css) (keep in sync with mockup `:root`).
 
 ```css
 --bg: #fafafa; --bg-elevated: #ffffff;
@@ -218,7 +218,7 @@ content: list / form / read-only tree
 
 ```text
 app/                          # Next.js App Router (to scaffold)
-  layout.tsx                  # import src/styles/globals.css; favicon
+  layout.tsx                  # import app/web/styles/globals.css; favicon
   (public)/page.tsx           # HomePage
   (auth)/login/ …
   instructions/
@@ -237,10 +237,10 @@ src/
   github/sync.ts
 messages/{en,zh-Hans,zh-Hant}.json
 public/{sdd-logo,sdd-mark,favicon,apple-icon,EthanWeChat}.png
-prisma/schema.prisma
+app/shared/prisma/schema.prisma
 ```
 
-**UI source of truth:** HTML mockups under [`ui-mockup/`](./ui-mockup/). Production CSS/components under `src/` must match mockup class names and layout. When mockups change, update `src/styles/portal.css` + components in the same change.
+**UI source of truth:** HTML mockups under [`ui-mockup/`](./ui-mockup/). Production CSS/components under `src/` must match mockup class names and layout. When mockups change, update `app/web/styles/portal.css` + components in the same change.
 
 Admin BFF may import Prisma. Shared install/key core used by MCP must not import Next.
 
@@ -276,7 +276,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | Check | Rule |
 | --- | --- |
 | Structure | Same shells: `home-shell` / `auth-shell` / `app-shell` |
-| Tokens | Only CSS variables from `src/styles/tokens.css` |
+| Tokens | Only CSS variables from `app/web/styles/tokens.css` |
 | Copy | i18n keys from `messages/*.json` — no hard-coded product strings |
 | Locale | Switcher labels **EN / 简 / 繁**; `html lang` via `LOCALE_HTML_LANG` |
 | Brand | `/sdd-logo.png` wordmark (transparent); `/sdd-mark.png` square for mail; favicon `/favicon.png`; no host text beside logo; sizes/offsets per § Visual language |
@@ -288,17 +288,17 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 
 | Artifact | Path | Role |
 | --- | --- | --- |
-| Design tokens | `src/styles/tokens.css` | `:root` colors, type, control metrics |
-| Portal CSS | `src/styles/portal.css` | Full mockup stylesheet (class names frozen) |
-| Email CSS | `src/styles/email.css` | Transactional mail layout |
-| Globals entry | `src/styles/globals.css` | `@import "./portal.css"` |
+| Design tokens | `app/web/styles/tokens.css` | `:root` colors, type, control metrics |
+| Portal CSS | `app/web/styles/portal.css` | Full mockup stylesheet (class names frozen) |
+| Email CSS | `app/web/styles/email.css` | Transactional mail layout |
+| Globals entry | `app/web/styles/globals.css` | `@import "./portal.css"` |
 | Message catalogs | `messages/{en,zh-Hans,zh-Hant}.json` | All UI strings |
-| i18n helper | `src/i18n/t.ts` | `t(locale, key, vars?)` + locale labels |
+| i18n helper | `app/shared/i18n/t.ts` | `t(locale, key, vars?)` + locale labels |
 | Brand | `src/618x618.logos.png` → `public/sdd-logo.png` (718×256 wordmark, [ADR-121](../adr/ADR-121-sdd-works-wordmark-logo.md)); `sdd-mark.png` (square mail/icon); `favicon.png`; `apple-icon.png`; `EthanWeChat.png` | Logo / mail / tab / QR |
-| UI primitives | `src/components/ui/*` | Button, Callout, Field, LocaleSwitch, Logo, Dialog, PasswordField, CopyButton |
+| UI primitives | `app/web/components/ui/*` | Button, Callout, Field, LocaleSwitch, Logo, Dialog, PasswordField, CopyButton |
 | Floating frame | `portal.css` `.floating-frame`, `.floating-frame__scroll`, `.floating-frame__actions` | Reusable modal shell for guide-style markdown on admin chrome (Admin note, future overlays). Mockup source: [`mockup.css`](./ui-mockup/assets/mockup.css). |
-| Shells | `src/components/layout/*` | AuthShell, AppShell, SkipLink, SiteFooter |
-| Feature views | `src/components/features/*` | HomePage, LoginPage, KeysList, SettingsForm |
+| Shells | `app/web/components/layout/*` | AuthShell, AppShell, SkipLink, SiteFooter |
+| Feature views | `app/web/components/features/*` | HomePage, LoginPage, KeysList, SettingsForm |
 
 **CSS conventions (from mockup):** cream `--bg` `#fafafa`, ink `#0a0a0a`, radius `0`, bottom-border inputs, black primary `.btn`, quiet `.btn-text`, callouts `.callout-success` / `.callout-error`, tables without vertical rules, mono for keys/paths.
 
@@ -414,7 +414,7 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | --- | --- |
 | Job | Cache-backed read-only view of synced package artifacts (SYNK-01 unpacked tree); operator pack-file note ([Web-portal-26](../product-backlog.md#pb-123)) |
 | Layout | Eyebrow “Live sync with” + title “framework.sdd.works GitHub repository”; **repo path** (mono) + `framework-repo-actions`: `btn-page` **Change git repository in Settings**, **Sync with git repository**, then **Admin note** (`btn-text`, literal English); `h2.section-subtitle` “framework.sdd.works artifacts:” above tree; empty → CTA Settings; `cache_missing` → sync CTA; sync error callout keeps shell |
-| Admin note ([Web-portal-26](../product-backlog.md#pb-123)) | **Admin note** opens a **floating frame** (`.dialog-backdrop` + `.floating-frame`) with `role="dialog"`. Scroll region wraps `article.guide-section.guide-md-body.guide-md-body--prose` (same typography and tables as instructions content tabs). Body HTML from `content/.admin-note.md` (cache) or [`src/content/.admin-note.md`](../../src/content/.admin-note.md) (bundled). Fenced code maps to `.codeblock.codeblock--file` with **Copy** ([ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)). **Close** (literal English, `btn-page`) in `.floating-frame__actions` only; backdrop and Escape dismiss. |
+| Admin note ([Web-portal-26](../product-backlog.md#pb-123)) | **Admin note** opens a **floating frame** (`.dialog-backdrop` + `.floating-frame`) with `role="dialog"`. Scroll region wraps `article.guide-section.guide-md-body.guide-md-body--prose` (same typography and tables as instructions content tabs). Body HTML from `content/.admin-note.md` (cache) or [`app/shared/content/.admin-note.md`](../../app/shared/content/.admin-note.md) (bundled). Fenced code maps to `.codeblock.codeblock--file` with **Copy** ([ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)). **Close** (literal English, `btn-page`) in `.floating-frame__actions` only; backdrop and Escape dismiss. |
 | Mockup | [`12-framework.html`](./ui-mockup/12-framework.html) — `.floating-frame` + full note (regen: `npx tsx scripts/sync-admin-note-mockup.mjs`). Open: `?admin-note=1`. **Confirmed 2026-10-08** (Ethan). |
 | Tree | Top-level dirs (`agents/`, `rules/`, `skills/`, …) render as title-case labels (**Agents**, **Rules**, **Skills**) and **expand one level by default**. Immediate children are indented under each folder (files and subfolders). Deeper nesting uses `+`/`−` toggles, collapsed by default. Files never get toggles. At every level, **directories sort before files**, then entries sort **by name** (locale-aware `localeCompare`). |
 | Keys | `admin.framework.*` (`change_repo`, `sync_repo`, `tree_expand`, `tree_collapse`, `artifacts`, optional `admin_note_loading` / `admin_note_error`; display URL is data, not `lead` prose). **Admin note** and **Close** labels are literal English (Web-portal-26 exception). |
@@ -426,16 +426,16 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Pack path | `<unpacked>/content/.admin-note.md` |
-| Bundled fallback | [`src/content/.admin-note.md`](../../src/content/.admin-note.md) |
-| Resolver | [`src/lib/admin-note.ts`](../../src/lib/admin-note.ts): `readAdminNote()` — `resolveCachedVersion()` → read `<unpacked>/content/.admin-note.md`; else [`src/content/.admin-note.md`](../../src/content/.admin-note.md). Return `{ html, source: "cache" \| "package" }`. Prose via `renderPortalMarkdown` / `renderContentMarkdown` with rel path `content/.admin-note.md`. After markdown HTML, map `<pre><code class="language-*">` to `.codeblock.codeblock--file` markup (lang tag + copy affordance); preserve `<pre>` inner whitespace for indent. |
-| API | [`src/app/api/admin/admin-note/route.ts`](../../src/app/api/admin/admin-note/route.ts) — admin session required; 401 when unsigned; 404 or keyed error when both paths missing; JSON `{ html, source }`. No locale query param. |
-| UI | [`FrameworkView.tsx`](../../src/components/features/FrameworkView.tsx): literal **Admin note** `btn-text` after sync; opens `.dialog-backdrop` + `.floating-frame`; fetch on first open (loading/error callouts); inject API `html` into `article.guide-section.guide-md-body.guide-md-body--prose`; wire fenced blocks with [`CopyButton`](../../src/components/ui/CopyButton.tsx) (`codeblock-copy`, label **Copy** literal or `admin.keys.copy` for copy feedback only). **Close** literal in `.floating-frame__actions`. Copy [`.floating-frame`](./ui-mockup/assets/mockup.css) block into [`portal.css`](../../src/styles/portal.css) (mockup sync per §15.4). |
+| Bundled fallback | [`app/shared/content/.admin-note.md`](../../app/shared/content/.admin-note.md) |
+| Resolver | [`app/shared/lib/admin-note.ts`](../../app/shared/lib/admin-note.ts): `readAdminNote()` — `resolveCachedVersion()` → read `<unpacked>/content/.admin-note.md`; else [`app/shared/content/.admin-note.md`](../../app/shared/content/.admin-note.md). Return `{ html, source: "cache" \| "package" }`. Prose via `renderPortalMarkdown` / `renderContentMarkdown` with rel path `content/.admin-note.md`. After markdown HTML, map `<pre><code class="language-*">` to `.codeblock.codeblock--file` markup (lang tag + copy affordance); preserve `<pre>` inner whitespace for indent. |
+| API | [`app/web/app/api/admin/admin-note/route.ts`](../../app/web/app/api/admin/admin-note/route.ts) — admin session required; 401 when unsigned; 404 or keyed error when both paths missing; JSON `{ html, source }`. No locale query param. |
+| UI | [`FrameworkView.tsx`](../../app/web/components/features/FrameworkView.tsx): literal **Admin note** `btn-text` after sync; opens `.dialog-backdrop` + `.floating-frame`; fetch on first open (loading/error callouts); inject API `html` into `article.guide-section.guide-md-body.guide-md-body--prose`; wire fenced blocks with [`CopyButton`](../../app/web/components/ui/CopyButton.tsx) (`codeblock-copy`, label **Copy** literal or `admin.keys.copy` for copy feedback only). **Close** literal in `.floating-frame__actions`. Copy [`.floating-frame`](./ui-mockup/assets/mockup.css) block into [`portal.css`](../../app/web/styles/portal.css) (mockup sync per §15.4). |
 | Sync | After **Sync with git repository**, the next open reads the new cache file without redeploy (same as Features). |
 | CSS | Shared `.floating-frame` tokens; prose via existing ADR-123 rules; code blocks via global `.codeblock` / `.codeblock--file`. |
 
 **Implementation plan (Web-portal-26)**
 
-1. **task-01.** Unit tests in `src/lib/admin-note.test.ts`: cache preferred; package fallback; script stripped; fenced JSON → `codeblock--file`; inner pre keeps source indent.
+1. **task-01.** Unit tests in `app/shared/lib/admin-note.test.ts`: cache preferred; package fallback; script stripped; fenced JSON → `codeblock--file`; inner pre keeps source indent.
 2. **task-02.** `GET /api/admin/admin-note` route tests: 401 unsigned; 200 `{ html, source }` with fixture unpack; no locale param.
 3. **task-03.** Mockup confirm — **done 2026-10-08** ([`12-framework.html`](./ui-mockup/12-framework.html), `?admin-note=1`).
 4. **task-04.** Framework floating frame + `portal.css` sync; `FrameworkView` component test (open, Close, Escape, `guide-section` on body).
@@ -449,9 +449,9 @@ Implementation must be **100% aligned** with [`ui-mockup/`](./ui-mockup/). Prefe
 | | |
 | --- | --- |
 | Job | Present SDD.works: Built on Harness. Ready for Scrum (title key `admin.guide.title`); install steps on Setup tab |
-| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#L419)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) and `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)); install phrase + `sdd_install_framework` after MCP connect; **Manual setup** section below the copy prompt (feature-98 / [Web-portal-41](../product-backlog.md#pb-140)): one `mcp.json` codeblock with `framework.sdd.works` set to only `"url": "{origin}/mcp"` (no `command`) and a Copy control, then five clients in order — Claude Code (`claude mcp add --transport http --scope user framework.sdd.works {origin}/mcp`, codeblock + Copy), Codex (`codex mcp add framework.sdd.works --url {origin}/mcp`, codeblock + Copy), Cursor (paste into `~/.cursor/mcp.json`, text line), CodeBuddy CN / WorkBuddy CN (paste into `~/.codebuddy/mcp.json`, text line), TRAE CN (paste into `~/Library/Application Support/Trae CN/User/mcp.json`, text line); the sample and per-client methods match [`prompt.md`](../../lite-prompts/prompt.md) (the body of `GET /setup`); agents roster (7 names) without intro paragraph; **no** Tools table; update hint (`setup_update_tool`, one muted line naming `sdd_update_framework`) above agents heading; **no** secret form on Setup ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Learn Scrum: embed panel with secret form under the iframe ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); footer Admin portal link then copyright |
+| Layout | `AuthShell` home variant (`home-shell guide-shell`); top-right locale only; **no** Back to home; hero row (logo left of title) + mono tagline `SKILLS.RULES.AGENTS.TEMPLATES` with **no** hairline under the tagline; logo, title, tagline, and tabs sit in one sticky block ([ADR-111](../adr/ADR-111-guide-header-sticky.md), [Web-portal-29](../product-backlog.md#L419)); **Setup** / **Features** / **Scrum in SDD** tabs (`guide-tabs`, labels flush to content left edge, tab row keeps its underline); Setup: **one** pill CTA copies `Fetch and execute the setup instructions from https://sdd.works/setup` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)); **no** lite copy on framework.sdd.works (full pack only; partner sites use [`LITE_PARTNER_SETUP_SENTENCE`](../../app/shared/setup/brand.ts) and `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)); install phrase + `sdd_install_framework` after MCP connect; **Manual setup** section below the copy prompt (feature-98 / [Web-portal-41](../product-backlog.md#pb-140)): one `mcp.json` codeblock with `framework.sdd.works` set to only `"url": "{origin}/mcp"` (no `command`) and a Copy control, then five clients in order — Claude Code (`claude mcp add --transport http --scope user framework.sdd.works {origin}/mcp`, codeblock + Copy), Codex (`codex mcp add framework.sdd.works --url {origin}/mcp`, codeblock + Copy), Cursor (paste into `~/.cursor/mcp.json`, text line), CodeBuddy CN / WorkBuddy CN (paste into `~/.codebuddy/mcp.json`, text line), TRAE CN (paste into `~/Library/Application Support/Trae CN/User/mcp.json`, text line); the sample and per-client methods match [`prompt.md`](../../lite-prompts/prompt.md) (the body of `GET /setup`); agents roster (7 names) without intro paragraph; **no** Tools table; update hint (`setup_update_tool`, one muted line naming `sdd_update_framework`) above agents heading; **no** secret form on Setup ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); Features: `#features-body` from the synced markdown under `content/features/` ([ADR-071](../adr/ADR-071-portal-content-paths.md)), no secret form; Scrum in SDD: `#scrum-body` from `content/scrum-in-sdd/` (feature-16); Learn Scrum: embed panel with secret form under the iframe ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md)); footer Admin portal link then copyright |
 | Tabs (WA-06) | Setup, Features, and Scrum in SDD are links (`?tab=features` / `?tab=scrum-in-sdd` on the current path). Click updates client state and the URL, so a full load still opens the selected tab. The tab list sits inside `.guide-sticky` (`z-index: 20`). Inactive panel uses `hidden` with `display: none !important`. Same on `/` and `/instructions`. |
-| Guide tab (Web-portal-12 / feature-16) | Third tab after Features (`?tab=scrum-in-sdd`, `#panel-scrum`). Label key `admin.guide.tab_scrum` is `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant` (not translated). Cache path is **human-read** `<unpacked>/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` ([ADR-071](../adr/ADR-071-portal-content-paths.md), [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md)). Fallback is `src/content/scrum-in-sdd/`. English order: **Part I** The Scrum Gap for SDD, **Part II** Scrum in SDD Guide, **Appendix 1:** Agentic Programming, Harness Engineering, and SDD aligned with Agile practices, then **Appendix 2: Short summary of the 2020 Scrum Guide**. The **Index** lists h1 and h2 with GitHub-style `#` fragments ([ADR-109](../adr/ADR-109-content-tab-heading-anchors.md)); regenerate with `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` after part or heading edits. Keep lists **tight** ([knowledge](../knowledge/agent/cursor-markdown-preview-loose-list.md)). Panel `.scrum-body`: `h1` 1.65rem, later part titles 2.75rem top margin; `h2` 1.2rem. No Features em-dash split. **AI-read** install guide is `templates/framework.sdd.works/pack-scrum-in-sdd.md` beside `constants.json` ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)); it is not this tab. OGT #8: [ogt-8-pack-scrum-in-sdd.md](../framework/ogt-8-pack-scrum-in-sdd.md). Get secret is not on this tab. |
+| Guide tab (Web-portal-12 / feature-16) | Third tab after Features (`?tab=scrum-in-sdd`, `#panel-scrum`). Label key `admin.guide.tab_scrum` is `Scrum in SDD` in `en`, `zh-Hans`, and `zh-Hant` (not translated). Cache path is **human-read** `<unpacked>/content/scrum-in-sdd/scrum-in-sdd.{locale}.md` ([ADR-071](../adr/ADR-071-portal-content-paths.md), [ADR-125](../adr/ADR-125-dual-audience-scrum-guide-and-guide-editor-skill.md)). Fallback is `app/shared/content/scrum-in-sdd/`. English order: **Part I** The Scrum Gap for SDD, **Part II** Scrum in SDD Guide, **Appendix 1:** Agentic Programming, Harness Engineering, and SDD aligned with Agile practices, then **Appendix 2: Short summary of the 2020 Scrum Guide**. The **Index** lists h1 and h2 with GitHub-style `#` fragments ([ADR-109](../adr/ADR-109-content-tab-heading-anchors.md)); regenerate with `node scripts/rebuild-scrum-in-sdd-en.mjs --index-only` after part or heading edits. Keep lists **tight** ([knowledge](../knowledge/agent/cursor-markdown-preview-loose-list.md)). Panel `.scrum-body`: `h1` 1.65rem, later part titles 2.75rem top margin; `h2` 1.2rem. No Features em-dash split. **AI-read** install guide is `templates/framework.sdd.works/pack-scrum-in-sdd.md` beside `constants.json` ([ADR-126](../adr/ADR-126-ai-read-pack-templates-and-pack-scrum-in-sdd-filename.md)); it is not this tab. OGT #8: [ogt-8-pack-scrum-in-sdd.md](../framework/ogt-8-pack-scrum-in-sdd.md). Get secret is not on this tab. |
 | Secret form (feature-04 / feature-05, [ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md), [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md) / feature-73) | Learn panel only, after `.learn-embed-fallback`. No intro. Spacing: **15px** iframe→fallback, **45px** fallback→`#learn-secret`. `.secret-stack` with `.secret-lookup` (`.input-box` + `.btn.secret-action-btn`) then **found row** `.codeblock.secret-result-block` with `.codeblock-text` + `.codeblock-copy.secret-action-btn` (Copy width = Get secret). Global `.codeblock`: square corners, `1.5px` border, `var(--fill)` background. Secret-stack codeblock row height **2.125rem**. Mock confirm: [`13-instructions.html`](./ui-mockup/13-instructions.html). |
 | Test ids | `instructions-guide`, `guide-sticky`, `guide-tab-setup`, `guide-tab-features`, `guide-tab-scrum`, `panel-features`, `features-body`, `panel-scrum`, `scrum-body`, `guide-agents`, `setup-highlight`, `setup-update-preface`, `copy-setup-prompt`, `copy-install-phrase`, `copy-install-cmd`, `setup-manual`, `copy-manual-mcp`, `copy-manual-claude`, `copy-manual-codex`, `learn-embed-loading`, `learn-embed-loading-indicator`, `secret-lookup`, `secret-name`, `secret-get`, `secret-result`, `secret-error` |
 | Entry | Home + header open **new tab** |
@@ -463,10 +463,10 @@ The Features tab does not keep a fixed list in the app. It shows a markdown file
 
 | | |
 | --- | --- |
-| Authoring package | `src/content/features/features.en.md`, `features.zh-Hans.md`, `features.zh-Hant.md`. The runtime image copies `src/`, so these files are on the server. `specs/` is not copied. |
+| Authoring package | `app/shared/content/features/features.en.md`, `features.zh-Hans.md`, `features.zh-Hant.md`. The runtime image copies `src/`, so these files are on the server. `specs/` is not copied. |
 | Pack repo | Same three filenames under `content/features/` in the Settings GitHub pack ([ADR-071](../adr/ADR-071-portal-content-paths.md)). Not at the pack root. Not under `templates/`. |
 | Server read | Latest unpacked sync cache `.data/sdd-packages/<commit>/unpacked/content/features/` first. The page does not call GitHub. |
-| Package fallback | If that cache cannot be read, or it has no English file, read `src/content/features/` for the active locale. Response `source` is `package`. A missing Chinese file in that folder uses the English package file. There is no unavailable message. |
+| Package fallback | If that cache cannot be read, or it has no English file, read `app/shared/content/features/` for the active locale. Response `source` is `package`. A missing Chinese file in that folder uses the English package file. There is no unavailable message. |
 | Install | Allow-list copy does not include these three files. They never land on `{client_root}`. |
 | Page | `/` and `/instructions` server-render `#features-body` for cookie `sdd_locale` (default `en`). Locale switch reloads the page. The body is either the cache file or the package file. |
 | Reader | One shared reader used by `GET /api/sdd/features?locale=` and by the page. Public. No key values. Response `{ locale, sourceLocale, source, html }` where `source` is `cache` or `package`. |
@@ -497,11 +497,11 @@ Mockup: [`13-instructions.html`](./ui-mockup/13-instructions.html), [`14-invoke-
 
 Do these in order. Write the failing test for a step before the code for that step. Do not start feature-01, feature-02, or feature-03 in this plan.
 
-1. **task-01.** Add the three files under `src/content/features/`. Any markdown is valid. They do not need matching headings. These are the files the image deploys.
+1. **task-01.** Add the three files under `app/shared/content/features/`. Any markdown is valid. They do not need matching headings. These are the files the image deploys.
 2. **task-02.** Copy those filenames to the pack and sync. [ADR-071](../adr/ADR-071-portal-content-paths.md) places them at `content/features/`, not the pack root. Confirm they appear under `.data/sdd-packages/<commit>/unpacked/content/features/`. Install’s copied path list omits those files.
 3. **task-03.** Add the reader and `GET /api/sdd/features`. Tests: cache English file, cache zh file, missing cache zh falls back to cache English with `source` `cache`.
 4. **task-04.** Remove the fixed lists from `InstructionsPage`. Render `html` into `#features-body` on `/` and `/instructions`. Keep Get secret after that node. Tests: body text comes from the fixture file; a `<script>` in the fixture is text, not a script; Setup copy and `mcp.json` are unchanged.
-5. **task-05.** When the cache is missing or has no English file, read `src/content/features/` and set `source` to `package`. The page still shows `features-body`. Test locale `en` and a missing Chinese package file falling back to the English package file.
+5. **task-05.** When the cache is missing or has no English file, read `app/shared/content/features/` and set `source` to `package`. The page still shows `features-body`. Test locale `en` and a missing Chinese package file falling back to the English package file.
 6. **task-06.** Run the regression in [`app-tests.md`](./app-tests.md) §7 before marking feature-07 Done. That pass covers Setup, the tools table, Get secret, tab switch, and reset success on `/` and `/instructions`.
 
 #### Lite install file links (feature-55 / Web-portal-17)
@@ -510,9 +510,9 @@ Lite HTTP install ([`mcp-design.md`](../mcp/mcp-design.md) §2.1c) needs a publi
 
 | | |
 | --- | --- |
-| Allow-list file | `{unpacked}/lite-pack.allowlist.json` at pack repo root ([ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md), [`LITE_PACK_ALLOWLIST_FILENAME`](../../src/core/seeds/lite-install-manifest.ts)) |
-| Validation | [`validateLiteInstallManifest`](../../src/core/seeds/lite-install-manifest.ts) with `seedRoot` = latest unpack dir, `checkFilesExist: true`, `requireExactLists: false` |
-| List route | `GET /api/sdd/lite/files`. Optional query `version` (default `latest`). Same cache resolution as [`GET /api/sdd/package`](../../src/app/api/sdd/package/route.ts) via [`resolveCachedVersion`](../../src/core/sync/cache.ts). |
+| Allow-list file | `{unpacked}/lite-pack.allowlist.json` at pack repo root ([ADR-107](../adr/ADR-107-lite-pack-allowlist-filename.md), [`LITE_PACK_ALLOWLIST_FILENAME`](../../app/shared/core/seeds/lite-install-manifest.ts)) |
+| Validation | [`validateLiteInstallManifest`](../../app/shared/core/seeds/lite-install-manifest.ts) with `seedRoot` = latest unpack dir, `checkFilesExist: true`, `requireExactLists: false` |
+| List route | `GET /api/sdd/lite/files`. Optional query `version` (default `latest`). Same cache resolution as [`GET /api/sdd/package`](../../app/web/app/api/sdd/package/route.ts) via [`resolveCachedVersion`](../../app/shared/core/sync/cache.ts). |
 | List success body | `{ package_version, package_commit, cache_synced_at, files, downloads }`. `files` is sorted relative paths (`skills/…`, `rules/…`). `downloads` is `{ path, url }[]` with one entry per path. `package_version` and `package_commit` match the cached package ref. |
 | File route | `GET /api/sdd/lite/file?path={relativePath}`. Optional query `version` (default `latest`). |
 | Same-origin URLs | Build `url` from the request origin (or `PUBLIC_BASE_URL` when set, same pattern as setup markdown rewrite). Path query value is the relative path, URL-encoded. |
@@ -521,14 +521,14 @@ Lite HTTP install ([`mcp-design.md`](../mcp/mcp-design.md) §2.1c) needs a publi
 | Errors | JSON `{ error: { code, message } }`. Codes: `sync_pending` (409, no sync manifest), `version_not_found` (404), `lite_manifest_missing` (404), `lite_manifest_invalid` (422), `path_not_allowed` (404), `path_invalid` (400). No secret values in messages. |
 | Out of scope | Admin session, MCP tools, writing `.sdd-lite-installed.json`, tarball extract on the server |
 
-Shared module (recommended): `src/lib/lite-pack-files.ts` or `src/core/seeds/lite-pack-files.ts` — load allow-list JSON from an unpack root, validate, return sorted `files`, and resolve whether a path is allowed. Routes stay thin.
+Shared module (recommended): `app/shared/lib/lite-pack-files.ts` or `app/shared/core/seeds/lite-pack-files.ts` — load allow-list JSON from an unpack root, validate, return sorted `files`, and resolve whether a path is allowed. Routes stay thin.
 
 #### Implementation plan (feature-55 only)
 
 Do these in order. Write the failing test for a step before the code for that step.
 
 1. **task-01.** Add the shared loader or export a function from `lite-install-manifest.ts` that reads `{unpacked}/lite-pack.allowlist.json` and returns sorted paths after validation.
-2. **task-02.** Add `GET /api/sdd/lite/files` and integration tests in [`sdd-api.test.ts`](../../src/app/api/sdd/sdd-api.test.ts): success with fixture unpack + allow-list; `sync_pending`; missing file `lite_manifest_missing`; invalid JSON or bad paths `lite_manifest_invalid`.
+2. **task-02.** Add `GET /api/sdd/lite/files` and integration tests in [`sdd-api.test.ts`](../../app/web/app/api/sdd/sdd-api.test.ts): success with fixture unpack + allow-list; `sync_pending`; missing file `lite_manifest_missing`; invalid JSON or bad paths `lite_manifest_invalid`.
 3. **task-03.** Add `GET /api/sdd/lite/file` and tests: 200 for an allow-listed path; `path_not_allowed` for a path not in the list; `path_invalid` for traversal.
 4. **task-04.** Run [`app-tests.md`](./app-tests.md) §9 before marking feature-55 Done.
 
@@ -541,7 +541,7 @@ Part 1 is public agent markdown at `GET /lite/install` ([ADR-134](../adr/ADR-134
 | | |
 | --- | --- |
 | Portal | `/` and `/instructions` Setup show **full MCP only**. No `copy-lite-setup-prompt`. |
-| Partner sites | Paste [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts): `Fetch and execute the setup instructions from https://sdd.works/lite/install` (production URL in every locale). |
+| Partner sites | Paste [`LITE_PARTNER_SETUP_SENTENCE`](../../app/shared/setup/brand.ts): `Fetch and execute the setup instructions from https://sdd.works/lite/install` (production URL in every locale). |
 | Authoring | Document the sentence in [`lite-prompts/install.md`](../../lite-prompts/install.md) section **Partner site one-line prompt**. |
 | Verification | Agent fetches `GET /lite/install` after the user pastes the sentence in Trae CN or another partner UI. `GET /setup/install` redirects to `/lite/install`. |
 
@@ -550,8 +550,8 @@ Part 1 is public agent markdown at `GET /lite/install` ([ADR-134](../adr/ADR-134
 | | |
 | --- | --- |
 | Public URL | `GET /lite/install` ([ADR-134](../adr/ADR-134-lite-install-public-path.md)). `GET /setup/install` redirects to `/lite/install`. |
-| Rewrite | [`SETUP_REWRITES`](../../src/mcp/setup-paths.ts): `source` `/lite/install`, `destination` `/api/agent-setup/install`. [`SETUP_REDIRECTS`](../../src/mcp/setup-paths.ts): `source` `/setup/install`, `destination` `/lite/install`. |
-| Handler | [`src/app/api/agent-setup/install/route.ts`](../../src/app/api/agent-setup/install/route.ts) — mirror [`agent-setup/route.ts`](../../src/app/api/agent-setup/route.ts): read template from disk, optional local origin substitution, return `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
+| Rewrite | [`SETUP_REWRITES`](../../app/web/config/setup-paths.ts): `source` `/lite/install`, `destination` `/api/agent-setup/install`. [`SETUP_REDIRECTS`](../../app/web/config/setup-paths.ts): `source` `/setup/install`, `destination` `/lite/install`. |
+| Handler | [`app/web/app/api/agent-setup/install/route.ts`](../../app/web/app/api/agent-setup/install/route.ts) — mirror [`agent-setup/route.ts`](../../app/web/app/api/agent-setup/route.ts): read template from disk, optional local origin substitution, return `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
 | Source file | [`lite-prompts/install.md`](../../lite-prompts/install.md) (new). Version line at top (for example `Lite install version: YYYY-MM-DD.vN`) like full `prompt.md`. |
 | Local dev rewrite | When `isLocalMcpDev()`, replace production origin `https://sdd.works` with `getMcpWebsiteUrl()` so fetches hit the local portal. Same pattern as full setup markdown. |
 | Auth | None. Public like `GET /setup`. |
@@ -566,18 +566,18 @@ The served body must match `lite-prompts/install.md` after rewrite. Integration 
 | File index | Instruct `GET /api/sdd/lite/files` (or same-origin path after rewrite) |
 | Per-file download | Instruct `GET /api/sdd/lite/file` with allow-listed relative paths only |
 | Client root | Instruct resolving `{client_root}` for the running IDE or agent host |
-| Receipt | Instruct merge and `.sdd-lite-installed.json` per [Spec-seeds-18](../product-backlog.md#L482) and [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts) rules |
+| Receipt | Instruct merge and `.sdd-lite-installed.json` per [Spec-seeds-18](../product-backlog.md#L482) and [`planLiteInstallReceipt`](../../app/shared/core/seeds/lite-install-receipt.ts) rules |
 | Forbidden | Must not instruct `sdd_install_framework`, `sdd_update_framework`, or writing `.sdd-installed.json` |
 | Scope | Copy only paths from the manifest (`skills/`, `rules/`). No agents, workflows, or templates from lite allow-list |
 
-Shared helpers: `getLiteInstallSetupUrl()` and lite paste text from [`lite-prompts/paste-sentences.json`](../../lite-prompts/paste-sentences.json) via `resolvePasteSentence('lite_install')` ([feature-88](#nodejs-setup-prompt-feature-88--web-portal-38)). Until feature-88 ships, [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) remains the runtime source; tests assert parity with the JSON file once the loader lands.
+Shared helpers: `getLiteInstallSetupUrl()` and lite paste text from [`lite-prompts/paste-sentences.json`](../../lite-prompts/paste-sentences.json) via `resolvePasteSentence('lite_install')` ([feature-88](#nodejs-setup-prompt-feature-88--web-portal-38)). Until feature-88 ships, [`LITE_PARTNER_SETUP_SENTENCE`](../../app/shared/setup/brand.ts) remains the runtime source; tests assert parity with the JSON file once the loader lands.
 
 ##### Implementation plan (feature-56 only)
 
 Do these in order. Write the failing test for a step before the code for that step. **feature-55** routes must be green first.
 
 1. **task-01.** Add `lite-prompts/install.md` with the contract above and the partner one-line section. Review with operator before merge.
-2. **task-02.** Add rewrite + `GET /api/agent-setup/install` handler + `setup-paths` test update. Integration tests in [`sdd-api.test.ts`](../../src/app/api/sdd/sdd-api.test.ts): 200 body contains required phrases and `LITE_PARTNER_SETUP_SENTENCE`; `GET /setup` rewrite still serves stdio `prompt.md` (not lite body).
+2. **task-02.** Add rewrite + `GET /api/agent-setup/install` handler + `setup-paths` test update. Integration tests in [`sdd-api.test.ts`](../../app/web/app/api/sdd/sdd-api.test.ts): 200 body contains required phrases and `LITE_PARTNER_SETUP_SENTENCE`; `GET /setup` rewrite still serves stdio `prompt.md` (not lite body).
 3. **task-03.** Keep Setup UI full-pack only (`SetupGuidePanel`). Unit test: no `copy-lite-setup-prompt` on Setup.
 4. **task-04.** Mockups without lite pill. Run [`app-tests.md`](./app-tests.md) §10 before marking feature-56 Done.
 
@@ -587,8 +587,8 @@ Do these in order. Write the failing test for a step before the code for that st
 | --- | --- |
 | Authoring | [`lite-prompts/paste-sentences.json`](../../lite-prompts/paste-sentences.json) |
 | Schema | `version` (`1`). `sentences` object with keys **`lite_install`** and **`node_prerequisite`**. Each value is one string template containing `{origin}` once (no secrets). |
-| Loader | `src/mcp/paste-sentences.ts` (recommended): read JSON from disk, validate keys, `resolvePasteSentence(key, origin?)` where `origin` defaults to `getMcpWebsiteUrl()` without trailing slash. Export typed keys. |
-| Consumers | Partner lite paste ([AC21](./app-stories.md)); [`install.md`](../../lite-prompts/install.md) **Partner site one-line prompt** section quotes **`lite_install`**; node markdown quotes **`node_prerequisite`**. Framework Setup UI no longer shows a Node copy pill ([WA-20](../issues-log.md)). Production paste origin uses [`getVisitorPasteOrigin`](../../src/mcp/public-origin.ts) ([WA-19](../issues-log.md)). |
+| Loader | `app/shared/setup/paste-sentences.ts` (recommended): read JSON from disk, validate keys, `resolvePasteSentence(key, origin?)` where `origin` defaults to `getMcpWebsiteUrl()` without trailing slash. Export typed keys. |
+| Consumers | Partner lite paste ([AC21](./app-stories.md)); [`install.md`](../../lite-prompts/install.md) **Partner site one-line prompt** section quotes **`lite_install`**; node markdown quotes **`node_prerequisite`**. Framework Setup UI no longer shows a Node copy pill ([WA-20](../issues-log.md)). Production paste origin uses [`getVisitorPasteOrigin`](../../app/shared/setup/public-origin.ts) ([WA-19](../issues-log.md)). |
 
 | Full MCP setup | Stays on **`GET /setup`** / `prompt.md` and **`copy-setup-prompt`** ([AC36](./app-stories.md)). Optional later key **`mcp_full_setup`** in the same JSON is out of scope for feature-88. |
 
@@ -619,18 +619,18 @@ Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy
 
 | | |
 | --- | --- |
-| Status | **Removed** from [`SetupGuidePanel`](../../src/components/features/SetupGuidePanel.tsx). No **`copy-node-setup-prompt`**, no **Install Node.js first** card. |
+| Status | **Removed** from [`SetupGuidePanel`](../../app/web/components/features/SetupGuidePanel.tsx). No **`copy-node-setup-prompt`**, no **Install Node.js first** card. |
 | Kept | `GET /setup/node`, catalog API, paste key **`node_prerequisite`**. i18n keys `admin.guide.setup_node_*` / `copy_node_prompt` remain unused until a later cleanup story. |
 | Lite | No **`copy-lite-setup-prompt`** on framework.sdd.works. Lite sentence stays partner-only via the shared JSON file. |
-| Visitor paste origin | Setup **`copy-setup-prompt`** uses [`getVisitorPasteOrigin`](../../src/mcp/public-origin.ts): production always **`https://sdd.works`**; local keeps `PUBLIC_BASE_URL` ([WA-19](../issues-log.md)). |
+| Visitor paste origin | Setup **`copy-setup-prompt`** uses [`getVisitorPasteOrigin`](../../app/shared/setup/public-origin.ts): production always **`https://sdd.works`**; local keeps `PUBLIC_BASE_URL` ([WA-19](../issues-log.md)). |
 
 ##### Technical design (Part 1 — agent markdown)
 
 | | |
 | --- | --- |
 | Public URL | `GET /setup/node` ([ADR-061](../adr/ADR-061-setup-prompt-public-path.md)) |
-| Rewrite | [`SETUP_REWRITES`](../../src/mcp/setup-paths.ts): `source` `/setup/node`, `destination` `/api/agent-setup/node` |
-| Handler | [`src/app/api/agent-setup/node/route.ts`](../../src/app/api/agent-setup/node/route.ts) — read [`lite-prompts/node.md`](../../lite-prompts/node.md), local origin rewrite when `isLocalMcpDev()`, `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
+| Rewrite | [`SETUP_REWRITES`](../../app/web/config/setup-paths.ts): `source` `/setup/node`, `destination` `/api/agent-setup/node` |
+| Handler | [`app/web/app/api/agent-setup/node/route.ts`](../../app/web/app/api/agent-setup/node/route.ts) — read [`lite-prompts/node.md`](../../lite-prompts/node.md), local origin rewrite when `isLocalMcpDev()`, `text/markdown; charset=utf-8`, `Cache-Control: no-cache` |
 | Source file | `lite-prompts/node.md` with version line (for example `Node setup version: YYYY-MM-DD.vN`) |
 | Auth | None |
 
@@ -651,7 +651,7 @@ Part 1 is public agent markdown at `GET /setup/node`. Part 2 Setup tab Node copy
 | | |
 | --- | --- |
 | Route | `GET /api/setup/node/catalog` |
-| Source | [`lite-prompts/node-catalog.json`](../../lite-prompts/node-catalog.json) (or `src/content/node-catalog.json` bundled mirror; pick one path in implementation and document in handler) |
+| Source | [`lite-prompts/node-catalog.json`](../../lite-prompts/node-catalog.json) (or `app/shared/content/node-catalog.json` bundled mirror; pick one path in implementation and document in handler) |
 | Shape | `version`, `node_lts`, `downloads`, `npm_registries` (`default`, `cn_hk`), `npm_registry_policy.mirror_regions` (ISO codes, first release **`CN`**, **`HK`**, **`MO`**), plus response fields **`detected_country`**, **`recommended_npm_registry`** (`mirror` or `default`), **`recommended_registry_url`** |
 | Country | Read **`CF-IPCountry`** only. Unknown or missing header → **`default`**. Do not use `Accept-Language`. |
 | Auth | None |
@@ -688,7 +688,7 @@ A Manual setup section on the Setup tab shows the `mcp.json` sample and five cli
 | Command rows | Claude Code and Codex: a `codeblock` with the command in `pre.codeblock-text` plus a Copy control. Claude Code: `claude mcp add --transport http --scope user framework.sdd.works {origin}/mcp`. Codex: `codex mcp add framework.sdd.works --url {origin}/mcp` |
 | Paste rows | Cursor, CodeBuddy CN, TRAE CN: a `p.setup-manual-note` line "Manually paste the sample above into `<path>`." with the path in inline `code`. No codeblock |
 | Paths | Cursor `~/.cursor/mcp.json`; CodeBuddy CN `~/.codebuddy/mcp.json`; TRAE CN `~/Library/Application Support/Trae CN/User/mcp.json` |
-| Origin | `{origin}` is [`getVisitorPasteOrigin`](../../src/mcp/public-origin.ts): production `https://sdd.works`; local keeps `PUBLIC_BASE_URL` |
+| Origin | `{origin}` is [`getVisitorPasteOrigin`](../../app/shared/setup/public-origin.ts): production `https://sdd.works`; local keeps `PUBLIC_BASE_URL` |
 | i18n | Headings and step text use i18n keys in `en`, `zh-Hans`, `zh-Hant`. The JSON sample, commands, and file paths stay literal |
 | Mockup | [`13-instructions.html`](./ui-mockup/13-instructions.html); CSS in [`mockup.css`](./ui-mockup/assets/mockup.css) `.setup-manual`, `.setup-manual-paths`, `.setup-manual-client`, `.setup-manual-note` |
 
@@ -696,7 +696,7 @@ A Manual setup section on the Setup tab shows the `mcp.json` sample and five cli
 
 | | |
 | --- | --- |
-| Component | [`SetupGuidePanel`](../../src/components/features/SetupGuidePanel.tsx) renders the section. No new route |
+| Component | [`SetupGuidePanel`](../../app/web/components/features/SetupGuidePanel.tsx) renders the section. No new route |
 | Sample source | The `mcp.json` sample, the two commands, and the three paths come from [`lite-prompts/prompt.md`](../../lite-prompts/prompt.md) (the body of `GET /setup`). A shared reader parses the per-client sections so the page and `prompt.md` stay in sync |
 | Drift check | A Vitest integration test reads `prompt.md` and compares the URL and each client path to the rendered panel. The test fails on any mismatch (**AC61**) |
 | Origin resolution | `getVisitorPasteOrigin()` fills `{origin}` in the sample URL and the two commands, the same helper the setup sentence uses |
@@ -713,17 +713,17 @@ A Manual setup section on the Setup tab shows the `mcp.json` sample and five cli
 
 #### Instructions tabs (feature-58 / feature-59 / feature-60)
 
-Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scrum tab buttons. Operator rules for the JSON file are in [`src/content/.admin-note.md`](../../src/content/.admin-note.md). Technical design confirmed 2026-10-07: pack-primary config (B), default tab always Setup, bundled JSON-only fallback when cache config is missing or invalid.
+Configurable tabs on `/` and `/instructions` replace hard-coded Features and Scrum tab buttons. Operator rules for the JSON file are in [`app/shared/content/.admin-note.md`](../../app/shared/content/.admin-note.md). Technical design confirmed 2026-10-07: pack-primary config (B), default tab always Setup, bundled JSON-only fallback when cache config is missing or invalid.
 
 | | |
 | --- | --- |
 | Config file (pack) | `content/.instructions-tabs.json` at pack repo root under `content/` |
-| Config file (bundled) | [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) — same schema; used when cache file missing or fails validation |
-| Resolver | Shared module (for example `src/lib/instructions-tabs.ts`): read cache unpack → validate → else read bundled file only |
+| Config file (bundled) | [`app/shared/content/.instructions-tabs.json`](../../app/shared/content/.instructions-tabs.json) — same schema; used when cache file missing or fails validation |
+| Resolver | Shared module (for example `app/shared/lib/instructions-tabs.ts`): read cache unpack → validate → else read bundled file only |
 | Tab order | Order of objects in `tabs[]` |
 | Default tab | When URL has no `?tab=`, select Setup (`queryParam` `setup`) even if another row is first in JSON |
 | Tab types | **`code`:** React panel from app registry (`CODE_TAB_REGISTRY`; ship `setup` → `<SetupGuidePanel />` extracted from current `InstructionsPage`). **`content`:** server-rendered markdown from explicit per-locale paths in `paths`. **`embedded_external_page`:** iframe panel ([ADR-110](../adr/ADR-110-learn-tab-embedded-external-page.md)). **`internal_page_folder`:** index tree under **`rootPath`** ([ADR-124](../adr/ADR-124-internal-page-folder-index-json.md), feature-74). |
-| Content paths | `paths.en` required; `zh-Hans` / `zh-Hant` optional. Values are relative to unpack root. Reject `..` and absolute paths. Read cache file first, then package fallback under `src/content/…` for that path (reuse features/scrum reader helpers). |
+| Content paths | `paths.en` required; `zh-Hans` / `zh-Hant` optional. Values are relative to unpack root. Reject `..` and absolute paths. Read cache file first, then package fallback under `app/shared/content/…` for that path (reuse features/scrum reader helpers). |
 | API | `GET /api/sdd/instructions-tabs?locale=` — public; same resolver; response `{ version, source, tabs: [{ type, id, label, queryParam, panelTestId, html?, embedUrl?, sourceLocale?, contentSource? }] }` where `source` is `cache` or `bundled` for the config file |
 | Page | Server components on `/` and `/instructions` call resolver + markdown hydration for content tabs; client keeps WA-06 link tabs and panel `hidden` behavior |
 | Tab labels ([ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md)) | **`labels`** map on each tab row (`en` required; zh locales optional, fallback `en`). Resolver sets **`label`** for active locale. UI renders `tab.label` only. **`labelKey` removed.** Other guide strings stay in portal `messages/*.json`. |
@@ -774,7 +774,7 @@ Validation (fail → bundled file only): JSON parse; `version === 1`; non-empty 
 flowchart LR
   Pack["content/.instructions-tabs.json"]
   Sync["Sync unpack"]
-  Bundle["src/content/.instructions-tabs.json"]
+  Bundle["app/shared/content/.instructions-tabs.json"]
   Resolver["instructionsTabsResolver"]
   API["GET /api/sdd/instructions-tabs"]
   Page["InstructionsPage SSR"]
@@ -791,7 +791,7 @@ flowchart LR
 2. **feature-59.** Resolver + route + Vitest integration tests (cache hit, invalid cache → bundled, content html + locale fallback).
 3. **feature-60.** Extract Setup panel; dynamic tab list and panels; default Setup; deprecate direct `readFeaturesCatalog` / `readScrumInSddCatalog` on page once config drives those tabs. Update [`13-instructions.html`](./ui-mockup/13-instructions.html) note if order differs from legacy “Setup first in bar”.
 
-Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and scrum route may stay for direct access until a later cleanup story; the instructions page uses instructions-tabs only after feature-60.
+Legacy [`GET /api/sdd/features`](../../app/web/app/api/sdd/features/route.ts) and scrum route may stay for direct access until a later cleanup story; the instructions page uses instructions-tabs only after feature-60.
 
 #### Embedded external page (feature-70 / ADR-110)
 
@@ -804,11 +804,11 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | Default tab | Setup when `?tab=` is absent |
 | Frame | `.learn-embed-frame`: `width: 100%`, `border: 0`. No fixed `aspect-ratio` ([ADR-114](../adr/ADR-114-learn-embed-auto-height.md)). Height set inline from postMessage. Fallback height until first valid message. No crop via `transform` or `overflow` |
 | Loading ([ADR-118](../adr/ADR-118-learn-embed-loading-skeleton.md), centered indicator [ADR-120](../adr/ADR-120-learn-embed-centered-loading-indicator.md) / [WA-17](../issues-log.md)) | Host `.learn-embed-frame-host` wraps iframe plus overlay `.learn-embed-skeleton` (`data-testid="learn-embed-loading"`) and `.learn-embed-loading-indicator` (`data-testid="learn-embed-loading-indicator"`, `aria-hidden="true"`). Indicator centered in the host above the grid; ink/line ring ~1.25rem; rotate only when motion allowed. Iframe not painted until `load` (`visibility: hidden` while loading). Skeleton cells stay opaque; pulse background only. Overlay: 3×3 grid; `pointer-events: none`. Shown until iframe `load`; reset on `embedUrl` change. Host `aria-busy` and `admin.guide.learn_scrum_embed_loading` unchanged. Fallback and `#learn-secret` outside host. |
-| Resize | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx) (client): listen for `{ type: "sdd-learn-embed-height", height: number }` from embed host origins. Shared constant in [`src/lib/learn-embed-messaging.ts`](../../src/lib/learn-embed-messaging.ts) (new). |
+| Resize | [`LearnScrumEmbedPanel.tsx`](../../app/web/components/features/LearnScrumEmbedPanel.tsx) (client): listen for `{ type: "sdd-learn-embed-height", height: number }` from embed host origins. Shared constant in [`app/shared/lib/learn-embed-messaging.ts`](../../app/shared/lib/learn-embed-messaging.ts) (new). |
 | learn.sdd.works dependency | `learn-embedded` page: full-width grid CSS and script that posts height to portal origin **`https://sdd.works`**. Not built in this repo. |
 | Copy ([ADR-113](../adr/ADR-113-learn-embed-copy-and-fallback.md), spacing [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)) | No intro. Fallback link **15px** below iframe. Iframe `src` from resolver |
-| Get secret ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md), [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)) | Order: iframe → fallback → `#learn-secret` (**45px** below fallback). Found value: compact `.codeblock` with visible **1.5px** border; value and Copy share **2.125rem** row height. **§20** [`app-tests.md`](./app-tests.md); CSS contract [`learn-embed-spacing.test.ts`](../../src/styles/learn-embed-spacing.test.ts) |
-| Code | [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx): drop prefix plus split link keys; one external link; compose `GuideSecretLookup` between iframe and fallback. [`messages/*.json`](../../messages/en.json): update intro; replace two fallback keys with one |
+| Get secret ([ADR-115](../adr/ADR-115-get-secret-on-learn-tab.md), [ADR-117](../adr/ADR-117-learn-embed-spacing-and-codeblock-tokens.md)) | Order: iframe → fallback → `#learn-secret` (**45px** below fallback). Found value: compact `.codeblock` with visible **1.5px** border; value and Copy share **2.125rem** row height. **§20** [`app-tests.md`](./app-tests.md); CSS contract [`learn-embed-spacing.test.ts`](../../app/web/styles/learn-embed-spacing.test.ts) |
+| Code | [`LearnScrumEmbedPanel.tsx`](../../app/web/components/features/LearnScrumEmbedPanel.tsx): drop prefix plus split link keys; one external link; compose `GuideSecretLookup` between iframe and fallback. [`messages/*.json`](../../app/shared/messages/en.json): update intro; replace two fallback keys with one |
 | Embed page | Grid-only view at **`https://learn.sdd.works/en/learn-embedded/`** (replaces pre-cutover `sdd.works` embed URL) |
 
 #### Hostname cutover (feature-72 / Web-portal-30 / ADR-127)
@@ -819,13 +819,13 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 
 | Area | Change |
 | --- | --- |
-| Pack + bundled JSON | [`pack.framework.sdd.works/content/.instructions-tabs.json`](../../pack.framework.sdd.works/content/.instructions-tabs.json) and [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json): **`learn-scrum-in-sdd.urls.*`** → **`https://learn.sdd.works/en/learn-embedded/`** |
-| Embed allowlist | [`src/lib/embed-page-host-allowlist.ts`](../../src/lib/embed-page-host-allowlist.ts): **`learn.sdd.works`**, **`www.learn.sdd.works`** |
-| Learn URL helper | [`src/lib/sdd-works-learn-url.ts`](../../src/lib/sdd-works-learn-url.ts): constant matches pack JSON (rename optional) |
-| postMessage | [`src/lib/learn-embed-messaging.ts`](../../src/lib/learn-embed-messaging.ts): allow **`learn.sdd.works`** message origin; parent is **`sdd.works`** |
-| Production origin | [`src/mcp/brand.ts`](../../src/mcp/brand.ts), [`src/mcp/setup-markdown.ts`](../../src/mcp/setup-markdown.ts), [`src/core/tools/package-fetch.ts`](../../src/core/tools/package-fetch.ts): default **`https://sdd.works`** |
-| Setup UI | [`SetupGuidePanel.tsx`](../../src/components/features/SetupGuidePanel.tsx): paste sentence **`https://sdd.works/setup`** |
-| Host literals | [`src/i18n/t.ts`](../../src/i18n/t.ts) **`HOST`**, [`src/app/layout.tsx`](../../src/app/layout.tsx) **title** → **`sdd.works`** |
+| Pack + bundled JSON | [`pack.framework.sdd.works/content/.instructions-tabs.json`](../../pack.framework.sdd.works/content/.instructions-tabs.json) and [`app/shared/content/.instructions-tabs.json`](../../app/shared/content/.instructions-tabs.json): **`learn-scrum-in-sdd.urls.*`** → **`https://learn.sdd.works/en/learn-embedded/`** |
+| Embed allowlist | [`app/shared/lib/embed-page-host-allowlist.ts`](../../app/shared/lib/embed-page-host-allowlist.ts): **`learn.sdd.works`**, **`www.learn.sdd.works`** |
+| Learn URL helper | [`app/shared/lib/sdd-works-learn-url.ts`](../../app/shared/lib/sdd-works-learn-url.ts): constant matches pack JSON (rename optional) |
+| postMessage | [`app/shared/lib/learn-embed-messaging.ts`](../../app/shared/lib/learn-embed-messaging.ts): allow **`learn.sdd.works`** message origin; parent is **`sdd.works`** |
+| Production origin | [`app/shared/setup/brand.ts`](../../app/shared/setup/brand.ts), [`app/shared/setup/setup-markdown.ts`](../../app/shared/setup/setup-markdown.ts), [`app/shared/core/tools/package-fetch.ts`](../../app/shared/core/tools/package-fetch.ts): default **`https://sdd.works`** |
+| Setup UI | [`SetupGuidePanel.tsx`](../../app/web/components/features/SetupGuidePanel.tsx): paste sentence **`https://sdd.works/setup`** |
+| Host literals | [`app/shared/i18n/t.ts`](../../app/shared/i18n/t.ts) **`HOST`**, [`app/web/app/layout.tsx`](../../app/web/app/layout.tsx) **title** → **`sdd.works`** |
 | Tests | Vitest files listed in [`app-tests.md`](./app-tests.md) §29 |
 | Operator | DNS, TLS, NPM, **`framework.sdd.works`** redirect, WordPress **`frame-ancestors`** ([`go-live/`](../go-live/); delta recorded when ops steps land) |
 
@@ -847,7 +847,7 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | --- | --- |
 | `release.md` | Add a dedicated **Operator guide to public URLs** section that consolidates the three questions: visitor bookmark host (**`sdd.works`**), course host (**`learn.sdd.works`**), and admin entry versus public guide. Today this content is scattered across §7.1, §7.3, and §10. |
 | `go-live/` notes | Confirm [`hostname-cutover-inventory.md`](../go-live/20261008/hostname-cutover-inventory.md) already records live DNS, redirects, and WordPress notes. Add a one-line pointer from the `release.md` section to this file for detail. |
-| Copy audit (**AC48**) | Verify setup paste sentence and [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) use **`https://sdd.works`** only. No code change unless a second hostname persists. |
+| Copy audit (**AC48**) | Verify setup paste sentence and [`LITE_PARTNER_SETUP_SENTENCE`](../../app/shared/setup/brand.ts) use **`https://sdd.works`** only. No code change unless a second hostname persists. |
 | Admin routing (**AC49**) | Document that `/login`, `/reset-password`, and `/admin/*` live on **`sdd.works`** today, and the footer admin link opens in a new tab. No code change; app behavior already shipped with **feature-72**. |
 | Verification | Manual: operator reviews the `release.md` section against **AC48** and **AC49** scenarios. Curl: `framework.sdd.works` redirect and `sdd.works` smoke from §7.1. No new automated test. |
 
@@ -861,14 +861,14 @@ Legacy [`GET /api/sdd/features`](../../src/app/api/sdd/features/route.ts) and sc
 | --- | --- |
 | Partner page | Primary CTA: full MCP setup sentence or lite install sentence ([Web-portal-18](./product-backlog.md#pb-99)) |
 | Links | Instructions guide URL on **`sdd.works`**; optional link to learn course on **`learn.sdd.works`** |
-| Out of scope | This repo’s Next.js **`/`** route and [`InstructionsPage`](../../src/components/features/InstructionsPage.tsx) layout |
+| Out of scope | This repo’s Next.js **`/`** route and [`InstructionsPage`](../../app/web/components/features/InstructionsPage.tsx) layout |
 | Verification | **AC50**; [`app-tests.md`](./app-tests.md) §33 (manual or partner-repo checklist) |
 
 #### Knowledge tab — internal page folder (feature-74 / Web-portal-36 / ADR-124)
 
 **Reader summary:** The Knowledge tab lists folders and markdown files from the pack. Index files drive the list; a path trail shows where you are; articles render with the same markdown styling as other tabs. Pack operators add content under `content/knowledge/` without new portal CSS per article.
 
-Mockup confirmed: [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) (path trail revision accepted 2026-10-08). Spike script [`assets/knowledge-spike.js`](./ui-mockup/assets/knowledge-spike.js). Sample tree [`assets/samples/knowledge/`](./ui-mockup/assets/samples/knowledge/). Production mirrors pack [`content/knowledge/`](../../src/content/knowledge/). Notes: [`knowledge-folder-tab-spike.md`](../knowledge/agent/knowledge-folder-tab-spike.md).
+Mockup confirmed: [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-folder-spike.html) (path trail revision accepted 2026-10-08). Spike script [`assets/knowledge-spike.js`](./ui-mockup/assets/knowledge-spike.js). Sample tree [`assets/samples/knowledge/`](./ui-mockup/assets/samples/knowledge/). Production mirrors pack [`content/knowledge/`](../../app/shared/content/knowledge/). Notes: [`knowledge-folder-tab-spike.md`](../knowledge/agent/knowledge-folder-tab-spike.md).
 
 ##### UI
 
@@ -883,7 +883,7 @@ Mockup confirmed: [`16-knowledge-folder-spike.html`](./ui-mockup/16-knowledge-fo
 | Loading / error | Visible loading copy and error message in the panel; other tabs unaffected. |
 | a11y | Path links have visible focus. List uses **`ul`** / **`li`**. Focus management per [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md). |
 
-CSS: shared **`.guide-folder-*`** and **`.guide-inline-link`** under **`.guide-section.guide-folder-browser`** in [`portal.css`](../../src/styles/portal.css) (same tokens as **`.guide-md-body`**). No tab-specific **`.knowledge-*`** presentation rules in production.
+CSS: shared **`.guide-folder-*`** and **`.guide-inline-link`** under **`.guide-section.guide-folder-browser`** in [`portal.css`](../../app/web/styles/portal.css) (same tokens as **`.guide-md-body`**). No tab-specific **`.knowledge-*`** presentation rules in production.
 
 ##### URL sync
 
@@ -901,17 +901,17 @@ Sync with `InstructionsClient` tab switching: changing **`tab`** clears **`path`
 | --- | --- |
 | Config row | `type` **`internal_page_folder`**, **`id`**, **`labels`**, **`queryParam`**, **`panelTestId`**, **`rootPath`** (for example `content/knowledge`). |
 | Index contract | [ADR-124](../adr/ADR-124-internal-page-folder-index-json.md). |
-| Resolver module | Extend [`instructions-tabs.ts`](../../src/lib/instructions-tabs.ts) or add `knowledge-folder.ts`: load **`rootPath` + path + /.index.json`**, resolve locale labels, validate entries. |
-| Markdown | Reuse **`renderContentMarkdown`** (or shared pipeline) for article HTML. Read cache unpack then **`src/content/`** fallback ([ADR-071](../adr/ADR-071-portal-content-paths.md)). |
+| Resolver module | Extend [`instructions-tabs.ts`](../../app/shared/lib/instructions-tabs.ts) or add `knowledge-folder.ts`: load **`rootPath` + path + /.index.json`**, resolve locale labels, validate entries. |
+| Markdown | Reuse **`renderContentMarkdown`** (or shared pipeline) for article HTML. Read cache unpack then **`app/shared/content/`** fallback ([ADR-071](../adr/ADR-071-portal-content-paths.md)). |
 | API | Extend **`GET /api/sdd/instructions-tabs`** with folder index payloads, or add **`GET /api/sdd/instructions-folder?locale=&rootPath=&path=`** for index JSON and **`&doc=`** for article metadata + html. Pick one surface in implementation; tests lock the chosen contract. |
-| SSR | [`InstructionsPage`](../../src/app/instructions/page.tsx) (and home alias) passes initial index or article html for the active locale when query params are set. |
+| SSR | [`InstructionsPage`](../../app/web/app/instructions/page.tsx) (and home alias) passes initial index or article html for the active locale when query params are set. |
 | Client | **`KnowledgeFolderPanel`**: path trail, list vs article modes, **`new_tab`** rows, `router.push` + SSR refresh (no client-only index fetch). Drop **`folderTitle`** **`h2`** and **Back** per mockup. |
-| Validator | [`validateInstructionsTabsConfig`](../../src/core/seeds/instructions-tabs-config.ts) accepts **`internal_page_folder`**; CE-TABS tests include a fixture row. |
-| Pack ship | Bundled tab row for Knowledge plus tree under **`src/content/knowledge/`** (may replace standalone **`invoke-agents`** **`content`** tab in a follow-on commit in the same SBI). |
+| Validator | [`validateInstructionsTabsConfig`](../../app/shared/core/seeds/instructions-tabs-config.ts) accepts **`internal_page_folder`**; CE-TABS tests include a fixture row. |
+| Pack ship | Bundled tab row for Knowledge plus tree under **`app/shared/content/knowledge/`** (may replace standalone **`invoke-agents`** **`content`** tab in a follow-on commit in the same SBI). |
 
 ##### Implementation plan (feature-74)
 
-1. Validator + index parser unit tests (ADR-124 fixtures under **`src/content/knowledge/`**).
+1. Validator + index parser unit tests (ADR-124 fixtures under **`app/shared/content/knowledge/`**).
 2. API + resolver integration tests (cache vs bundled, locale fallback, bad index).
 3. **`KnowledgeFolderPanel`** + **`portal.css`** + i18n keys; wire into **`InstructionsClient`**.
 4. SSR deep link for **`path`** / **`doc`**; browser checks for root → subfolder → **`same_tab`** via path links and **`new_tab`** row.
@@ -930,12 +930,12 @@ Sync with `InstructionsClient` tab switching: changing **`tab`** clears **`path`
 | | |
 | --- | --- |
 | Job | Resend HTML for reset / invite |
-| Styles | `src/styles/email.css` + square `sdd-mark.png` / brand in mail body |
+| Styles | `app/web/styles/email.css` + square `sdd-mark.png` / brand in mail body |
 | Keys | `admin.mail.*` |
 
 ### 15.4 Wire-up notes for implementers
 
-1. Import `src/styles/globals.css` once in root layout; set `<link rel="icon" href="/favicon.png" />` and apple-touch.
+1. Import `app/web/styles/globals.css` once in root layout; set `<link rel="icon" href="/favicon.png" />` and apple-touch.
 2. Persist locale in cookie `sdd_locale`. First visit with no valid cookie negotiates `Accept-Language` and sets the cookie ([§8](#8-i18n), Web-portal-39). On switch, POST `/api/admin/locale` and update `html lang`.
 3. Wrap admin routes in `AppShell` with `activeNav` and optional `contentClassName="content--keys"`.
 4. Do not restyle buttons/inputs with Tailwind utilities that fight `portal.css` — prefer mockup classes.
@@ -974,7 +974,7 @@ Headings in those three bodies use `scroll-margin-top` so a fragment scroll is n
 
 ##### Technical
 
-Shared renderer: `createRenderer` in [`src/lib/features-catalog.ts`](../../src/lib/features-catalog.ts). Both `renderFeaturesMarkdown` and `renderPortalMarkdown` emit heading `id`s. `renderContentMarkdown` in [`src/lib/instructions-tabs.ts`](../../src/lib/instructions-tabs.ts) stays the only content-tab entry, so every `type: "content"` tab inherits the ids.
+Shared renderer: `createRenderer` in [`app/shared/lib/features-catalog.ts`](../../app/shared/lib/features-catalog.ts). Both `renderFeaturesMarkdown` and `renderPortalMarkdown` emit heading `id`s. `renderContentMarkdown` in [`app/shared/lib/instructions-tabs.ts`](../../app/shared/lib/instructions-tabs.ts) stays the only content-tab entry, so every `type: "content"` tab inherits the ids.
 
 Slug rules:
 
@@ -985,9 +985,9 @@ Slug rules:
 
 Features em-dash list splitting stays unchanged. Pack markdown is not rewritten. A repeated Index fragment still targets the first heading.
 
-CSS lives in [`src/styles/portal.css`](../../src/styles/portal.css) and the mockup stylesheet [`specs/admin-portal/ui-mockup/assets/mockup.css`](./ui-mockup/assets/mockup.css) for the same three body classes.
+CSS lives in [`app/web/styles/portal.css`](../../app/web/styles/portal.css) and the mockup stylesheet [`specs/admin-portal/ui-mockup/assets/mockup.css`](./ui-mockup/assets/mockup.css) for the same three body classes.
 
-Tests: unit cases in [`src/lib/features-catalog.test.ts`](../../src/lib/features-catalog.test.ts) and [`src/lib/scrum-in-sdd-catalog.test.ts`](../../src/lib/scrum-in-sdd-catalog.test.ts). See [`app-tests.md`](./app-tests.md) §12.
+Tests: unit cases in [`app/shared/lib/features-catalog.test.ts`](../../app/shared/lib/features-catalog.test.ts) and [`app/shared/lib/scrum-in-sdd-catalog.test.ts`](../../app/shared/lib/scrum-in-sdd-catalog.test.ts). See [`app-tests.md`](./app-tests.md) §12.
 
 #### Sticky guide header (Web-portal-29)
 
@@ -1005,9 +1005,9 @@ Mockups: [`01-home.html`](./ui-mockup/01-home.html) and [`13-instructions.html`]
 
 ##### Technical
 
-Markup in [`src/components/features/InstructionsPage.tsx`](../../src/components/features/InstructionsPage.tsx): wrap `header.guide-hero` and `div.guide-tabs` in `div.guide-sticky` with `data-testid="guide-sticky"`. The locale switch stays in `AuthShell` (`.shell-locale`), outside that wrapper. No new message keys. No API and no auth change.
+Markup in [`app/web/components/features/InstructionsPage.tsx`](../../app/web/components/features/InstructionsPage.tsx): wrap `header.guide-hero` and `div.guide-tabs` in `div.guide-sticky` with `data-testid="guide-sticky"`. The locale switch stays in `AuthShell` (`.shell-locale`), outside that wrapper. No new message keys. No API and no auth change.
 
-CSS in [`src/styles/portal.css`](../../src/styles/portal.css), mirrored in the mockup stylesheet:
+CSS in [`app/web/styles/portal.css`](../../app/web/styles/portal.css), mirrored in the mockup stylesheet:
 
 - `.guide-sticky`: `position: sticky; top: 0; z-index: 20; background: var(--bg)`. Negative horizontal margin equal to `.guide-shell .home-main` padding (`1.5rem`) so the background covers the column gutters. Matching horizontal padding keeps the logo and tabs on the content edge.
 - `.guide-hero`: no `border-bottom`. Bottom spacing about `0.75rem`. No extra padding under the tagline.
@@ -1020,7 +1020,7 @@ Tests: component cases on `InstructionsPage` and a browser check on `/` and `/in
 
 [WA-14](../issues-log.md) tracks a regression of the AC27 rule: the page must not scroll sideways; only `.guide-tabs` (and in-content `.content-table` wrappers) may scroll horizontally inside their boxes.
 
-Containment targets in [`src/styles/portal.css`](../../src/styles/portal.css):
+Containment targets in [`app/web/styles/portal.css`](../../app/web/styles/portal.css):
 
 - `.guide-shell`, `.guide-shell .home-main`, `.guide-body`, and tab panels: `min-width: 0` where flex layout applies, so wide descendants do not expand the document.
 - `.guide-sticky`: negative margin stays paired with padding; overflow from the sticky band must not widen `html` / `body`.
@@ -1035,7 +1035,7 @@ Verification: [`app-tests.md`](./app-tests.md) §19. Acceptance remains AC27; no
 
 **UI:** One ring centered in the frame host over the 3×3 skeleton. Guide ink and line tokens only. The skeleton grid stays; the ring is the primary motion cue.
 
-**Technical:** [`LearnScrumEmbedPanel.tsx`](../../src/components/features/LearnScrumEmbedPanel.tsx) renders `learn-embed-loading-indicator` while `!iframeLoaded`. [`portal.css`](../../src/styles/portal.css) matches [`mockup.css`](./ui-mockup/assets/mockup.css) for indicator placement and skeleton background pulse (not whole-cell opacity). Iframe gets a loading class with `visibility: hidden` until `load`.
+**Technical:** [`LearnScrumEmbedPanel.tsx`](../../app/web/components/features/LearnScrumEmbedPanel.tsx) renders `learn-embed-loading-indicator` while `!iframeLoaded`. [`portal.css`](../../app/web/styles/portal.css) matches [`mockup.css`](./ui-mockup/assets/mockup.css) for indicator placement and skeleton background pulse (not whole-cell opacity). Iframe gets a loading class with `visibility: hidden` until `load`.
 
 **Mockup:** [`13-instructions.html`](./ui-mockup/13-instructions.html) `data-mockup-state="loading"`.
 
@@ -1047,7 +1047,7 @@ Verification: [`app-tests.md`](./app-tests.md) §23; AC34.
 
 **UI:** Cyan **SDD**, splatter, orange **WORKS** on transparent PNG. Same height tokens as today; `object-fit: contain` preserves the 718×256 aspect in header, auth, and guide hero.
 
-**Technical:** Authoring file [`src/618x618.logos.png`](../../src/618x618.logos.png). Implementation copies to [`public/sdd-logo.png`](../../public/sdd-logo.png). [`Logo.tsx`](../../src/components/ui/Logo.tsx) sets `width={718}` and `height={256}` on `next/image`. No URL change. Optional CSS offset tweaks only after mockup sign-off.
+**Technical:** Authoring file [`app/web/618x618.logos.png`](../../app/web/618x618.logos.png). Implementation copies to [`public/sdd-logo.png`](../../public/sdd-logo.png). [`Logo.tsx`](../../app/web/components/ui/Logo.tsx) sets `width={718}` and `height={256}` on `next/image`. No URL change. Optional CSS offset tweaks only after mockup sign-off.
 
 **Mockup:** [`ui-mockup/assets/sdd-logo.png`](./ui-mockup/assets/sdd-logo.png). Review on [`13-instructions.html`](./ui-mockup/13-instructions.html), [`01-home.html`](./ui-mockup/01-home.html), [`02-login.html`](./ui-mockup/02-login.html).
 
@@ -1057,9 +1057,9 @@ Verification: [`app-tests.md`](./app-tests.md) §24; AC35. Mockup approved 2026-
 
 [ADR-122](../adr/ADR-122-instructions-guide-hero-and-setup-tab.md). [Web-portal-35](../product-backlog.md#pb-132).
 
-**UI:** Hero title key `admin.guide.title`; Antonio on `h1` via `--font-hero` in [`globals.css`](../../src/styles/globals.css) and [`portal.css`](../../src/styles/portal.css). Setup lead `setup_highlight`; update line `setup_update_tool` in `.setup-update-preface`; no Manual setup or Tools table.
+**UI:** Hero title key `admin.guide.title`; Antonio on `h1` via `--font-hero` in [`globals.css`](../../app/web/styles/globals.css) and [`portal.css`](../../app/web/styles/portal.css). Setup lead `setup_highlight`; update line `setup_update_tool` in `.setup-update-preface`; no Manual setup or Tools table.
 
-**Technical:** [`SetupGuidePanel.tsx`](../../src/components/features/SetupGuidePanel.tsx), [`InstructionsPage.tsx`](../../src/components/features/InstructionsPage.tsx). Stdio sample stays on `GET /setup` only.
+**Technical:** [`SetupGuidePanel.tsx`](../../app/web/components/features/SetupGuidePanel.tsx), [`InstructionsPage.tsx`](../../app/web/components/features/InstructionsPage.tsx). Stdio sample stays on `GET /setup` only.
 
 **Mockup:** [`01-home.html`](./ui-mockup/01-home.html), [`13-instructions.html`](./ui-mockup/13-instructions.html).
 

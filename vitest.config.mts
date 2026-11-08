@@ -21,16 +21,18 @@ export default defineConfig({
         "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
     },
     include: [
-      "src/**/*.test.ts",
-      "src/**/*.test.tsx",
-      "packages/**/*.test.ts",
+      "app/**/*.test.ts",
+      "app/**/*.test.tsx",
+      "app/shared/packages/**/*.test.ts",
     ],
-    exclude: ["node_modules", ".next", "e2e"],
+    exclude: ["node_modules", "**/.next", "app/web/e2e"],
   },
   resolve: {
     alias: {
-      "@": path.resolve(root, "./src"),
-      "@sdd/paths": path.resolve(root, "./packages/sdd-paths"),
+      "@web": path.resolve(root, "./app/web"),
+      "@mcp": path.resolve(root, "./app/mcp"),
+      "@shared": path.resolve(root, "./app/shared"),
+      "@sdd/paths": path.resolve(root, "./app/shared/packages/sdd-paths"),
     },
   },
 });

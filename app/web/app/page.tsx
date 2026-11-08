@@ -1,0 +1,32 @@
+import { InstructionsClient } from "./instructions/InstructionsClient";
+import { getRequestLocale } from "@shared/lib/request-locale";
+import { buildInstructionsPageModel } from "@shared/lib/instructions-tabs-page";
+import { getSetupGuidePasteSentences } from "@shared/lib/setup-guide-paste";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePageRoute({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string; path?: string; doc?: string }>;
+}) {
+  const locale = await getRequestLocale();
+  const params = await searchParams;
+  const { tabs, activeQueryParam } = buildInstructionsPageModel(
+    locale,
+    params.tab,
+    params.path,
+    params.doc,
+  );
+  const paste = getSetupGuidePasteSentences();
+
+  return (
+    <InstructionsClient
+      initialLocale={locale}
+      tabs={tabs}
+      activeQueryParam={activeQueryParam}
+      setupPromptSentence={paste.setupPromptSentence}
+      manualPaste={paste.manualPaste}
+    />
+  );
+}

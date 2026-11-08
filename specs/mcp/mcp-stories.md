@@ -16,7 +16,7 @@ Open questions: ~~merge vs overwrite~~ (DECIDED: manifest-tracked merge, ADR-048
 
 ## `sdd-mcp-path-map` — Client path map (seed data + resolver)
 
-Versioned data file `packages/sdd-paths/paths.json` + transport-agnostic resolver. Architecture foundation for install/update. v1 ships Cursor seed only. (PATH-01)
+Versioned data file `app/shared/packages/sdd-paths/paths.json` + transport-agnostic resolver. Architecture foundation for install/update. v1 ships Cursor seed only. (PATH-01)
 
 ### User story 1 — Resolver returns allow-listed roots
 
@@ -103,7 +103,7 @@ MC-21 revision: the "escapes the user home" rule applies only when the server ru
 
 ```gherkin
 Scenario: CI rejects an invalid map
-  Given a PR edits packages/sdd-paths/paths.json
+  Given a PR edits app/shared/packages/sdd-paths/paths.json
   When the table-validation unit test runs
   Then every entry resolves under HOME or USERPROFILE
   And no entry contains ".."
@@ -786,7 +786,7 @@ Scenario: Unknown client without a root gets root_required
 
 ## `sdd-mcp-path-llm` — Qwen client-config discovery — Retired from install (ADR-130 decision 10, ADR-131)
 
-**Retired.** The local LLM discovery path is removed from the end-user install. No writer binary, no stdio program, no Qwen call at install time. The agent sends `client` and `os`; the server uses the seed map for known clients ([ADR-132](../adr/ADR-132-simplified-install-root-and-templates.md)). `src/core/path-resolve-llm.ts` is retained for a deferred server-side discover endpoint; that endpoint is not part of the first release.
+**Retired.** The local LLM discovery path is removed from the end-user install. No writer binary, no stdio program, no Qwen call at install time. The agent sends `client` and `os`; the server uses the seed map for known clients ([ADR-132](../adr/ADR-132-simplified-install-root-and-templates.md)). `app/shared/core/path-resolve-llm.ts` is retained for a deferred server-side discover endpoint; that endpoint is not part of the first release.
 
 The ACs below are retained for the deferred endpoint, not for the first release.
 
@@ -1328,8 +1328,8 @@ The setup backend and the pack install backend run in separate code modules. A c
 ```gherkin
 Scenario: Setup backend files do not import from the pack install module
   When the import boundary check runs for the setup backend
-  Then no file under src/app/api/agent-setup or src/mcp/setup-* imports from src/core/tools or src/core/sync
-  And no file under src/mcp/paste-sentences.ts or src/mcp/node-setup-catalog.ts imports from src/core/tools or src/core/sync
+  Then no file under app/web/app/api/agent-setup or src/mcp/setup-* imports from app/shared/core/tools or app/shared/core/sync
+  And no file under app/shared/setup/paste-sentences.ts or app/shared/setup/node-setup-catalog.ts imports from app/shared/core/tools or app/shared/core/sync
 ```
 
 #### AC2 — handler behavior
@@ -1353,7 +1353,7 @@ Scenario: GET /setup does not call install plan or tarball functions
 ```gherkin
 Scenario: Pack install backend files do not import from the setup backend
   When the import boundary check runs for the pack install backend
-  Then no file under src/core/tools or src/core/sync imports from src/mcp/setup-markdown, src/mcp/setup-paths, src/mcp/paste-sentences, src/mcp/node-setup-catalog, or src/mcp/brand
+  Then no file under app/shared/core/tools or app/shared/core/sync imports from src/mcp/setup-markdown, src/mcp/setup-paths, src/mcp/paste-sentences, src/mcp/node-setup-catalog, or src/mcp/brand
 ```
 
 #### AC2 — handler behavior
@@ -1377,7 +1377,7 @@ Scenario: sdd_install_framework does not call setup functions
 ```gherkin
 Scenario: Only the MCP server entry imports from both modules
   When the import boundary check runs for the shared wiring
-  Then only src/mcp/create-server.ts and src/mcp/http-server.ts import from both the setup backend and the pack install backend
+  Then only app/mcp/create-server.ts and app/mcp/http-server.ts import from both the setup backend and the pack install backend
   And no other file imports from both modules
 ```
 

@@ -64,7 +64,7 @@ services:
       MCP_HTTP_PORT: "3041"
       MCP_HTTP_PATH: /mcp
       SDD_PACKAGE_CACHE_DIR: /data/sdd-packages
-    command: ["npx", "tsx", "src/mcp/http-server.ts"]
+    command: ["npx", "tsx", "app/mcp/http-server.ts"]
     networks:
       - default
 

@@ -1,0 +1,115 @@
+import { writeFile } from "node:fs/promises";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { assertCsrf } from "@shared/auth/csrf";
+import { checkRateLimit } from "@shared/auth/rate-limit";
+import { generateRawToken, hashToken } from "@shared/auth/token";
+import { resolveLocale } from "@shared/lib/locale";
+import { db } from "@shared/lib/db";
+import { sendResetMail } from "@shared/mail/resend";
+
+const bodySchema = z.object({
+  email: z.string().email(),
+});
+
+export async function POST(request: NextRequest) {
+  if (!assertCsrf(request)) {
+    return NextResponse.json(
+      { error: { key: "errors.csrf" } },
+      { status: 403 },
+    );
+  }
+
+  let json: unknown;
+  try {
+    json = await request.json();
+  } catch {
+    return NextResponse.json(
+      { error: { key: "errors.invalid_input" } },
+      { status: 400 },
+    );
+  }
+
+  const parsed = bodySchema.safeParse(json);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: { key: "errors.invalid_input" } },
+      { status: 400 },
+    );
+  }
+
+  const email = parsed.data.email.trim().toLowerCase();
+  // Playwright sets E2E_SKIP_MAIL=1; interactive `npm run dev` must not.
+  const e2eSkipMail = process.env.E2E_SKIP_MAIL === "1";
+  const rate = e2eSkipMail
+    ? ({ ok: true } as const)
+    : checkRateLimit(`reset:${email}`, 5, 15 * 60 * 1000);
+  if (!rate.ok) {
+    return NextResponse.json(
+      { error: { key: "errors.rate_limited" } },
+      { status: 429 },
+    );
+  }
+
+  const admin = await db.admin.findUnique({ where: { email } });
+  if (admin && admin.status === "ACTIVE") {
+    const raw = generateRawToken();
+    const tokenHash = hashToken(raw);
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+    await db.resetToken.create({
+      data: {
+        adminId: admin.id,
+        tokenHash,
+        expiresAt,
+      },
+    });
+
+    const base = process.env.PUBLIC_BASE_URL ?? "http://localhost:3040";
+    const setUrl = `${base.replace(/\/$/, "")}/set-password?token=${encodeURIComponent(raw)}`;
+    const locale = resolveLocale({
+      cookie: request.cookies.get("sdd_locale")?.value,
+      acceptLanguage: request.headers.get("accept-language"),
+    });
+
+    if (e2eSkipMail) {
+      const capture = process.env.E2E_RESET_FILE;
+      if (!capture) {
+        return NextResponse.json(
+          { error: { key: "errors.reset_mail_send_failed" } },
+          { status: 502 },
+        );
+      }
+      if (process.env.RESEND_API_KEY) {
+        console.warn(
+          "[mail] E2E_SKIP_MAIL=1; skipping Resend and writing reset URL to the capture file",
+        );
+      }
+      await writeFile(capture, setUrl, "utf8");
+    } else if (process.env.RESEND_API_KEY && process.env.MAIL_FROM) {
+      const sent = await sendResetMail({ to: email, locale, setUrl });
+      if (!sent.ok) {
+        return NextResponse.json(
+          { error: { key: "errors.reset_mail_send_failed" } },
+          { status: 502 },
+        );
+      }
+      console.info("[mail] password reset: Resend accepted");
+    } else {
+      if (process.env.NODE_ENV !== "production") {
+        console.info(
+          "[mail] password reset: mail not sent — configure Resend",
+        );
+      }
+      return NextResponse.json(
+        { error: { key: "errors.reset_mail_send_failed" } },
+        { status: 502 },
+      );
+    }
+  } else {
+    console.info(
+      "[mail] password reset: no mail sent (admin missing or not ACTIVE)",
+    );
+  }
+
+  return NextResponse.json({ ok: true });
+}

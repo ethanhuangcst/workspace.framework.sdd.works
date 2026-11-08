@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Regenerate admin note mockup HTML from src/content/.admin-note.md
+ * Regenerate admin note mockup HTML from app/shared/content/.admin-note.md
  * (same renderPortalMarkdown pipeline as portal content tabs).
  *
  * Run: npx tsx scripts/sync-admin-note-mockup.mjs

@@ -775,7 +775,7 @@ Scenario: Admin note uses bundled seed when cache file is absent
   Given a signed-in admin
   And the unpacked cache has no content/.admin-note.md
   When the admin opens Admin note
-  Then the modal body matches src/content/.admin-note.md rendered as HTML
+  Then the modal body matches app/shared/content/.admin-note.md rendered as HTML
   And the API or resolver reports source package
 ```
 
@@ -1011,7 +1011,7 @@ Scenario: A missing Chinese file shows the English file
 ```gherkin
 Scenario: A missing sync cache shows the package file
   Given the sync cache has no features markdown
-  And src/content/features/features.en.md contains the heading "Package copy"
+  And app/shared/content/features/features.en.md contains the heading "Package copy"
   When the visitor opens the Features tab in locale en
   Then features-body shows Package copy
   And the old fixed Agents, Skills, Rules, and Templates lists are not shown
@@ -1116,7 +1116,7 @@ Scenario: Guide prefers the sync unpack
   When the visitor opens the Scrum in SDD tab in locale en
   Then the body is from the unpack with source cache
   When the unpack has no English guide
-  Then the body is from src/content/scrum-in-sdd with source package
+  Then the body is from app/shared/content/scrum-in-sdd with source package
 
 Scenario: Install omits the portal guide files
   Given a pack contains content/scrum-in-sdd/scrum-in-sdd.en.md, scrum-in-sdd.zh-Hans.md, and scrum-in-sdd.zh-Hant.md
@@ -1214,7 +1214,7 @@ Scenario: Old lite URL redirects to the public path
 
 #### AC21 — feature-56 / Web-portal-18 Part 2 (partner one-line)
 
-Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** and **Agent paste sentences file (feature-88)** — key **`lite_install`** in [`lite-prompts/paste-sentences.json`](../../lite-prompts/paste-sentences.json); not on framework.sdd.works Setup UI. After feature-88, [`LITE_PARTNER_SETUP_SENTENCE`](../../src/mcp/brand.ts) must match the loader output.
+Engineering detail: [`app-design.md`](./app-design.md) **Lite install prompt (feature-56)** and **Agent paste sentences file (feature-88)** — key **`lite_install`** in [`lite-prompts/paste-sentences.json`](../../lite-prompts/paste-sentences.json); not on framework.sdd.works Setup UI. After feature-88, [`LITE_PARTNER_SETUP_SENTENCE`](../../app/shared/setup/brand.ts) must match the loader output.
 
 ```gherkin
 Scenario: Partner paste uses production lite URL
@@ -1265,7 +1265,7 @@ Scenario: Instructions tabs API returns parsed tabs for locale en
 Scenario: Missing or invalid cache config uses bundled JSON only
   Given the sync cache unpack has no content/.instructions-tabs.json or the file fails validation
   When GET /api/sdd/instructions-tabs?locale=en is called
-  Then the response lists tabs from src/content/.instructions-tabs.json only
+  Then the response lists tabs from app/shared/content/.instructions-tabs.json only
   And the response source for config is bundled
 ```
 
@@ -1321,7 +1321,7 @@ Scenario: Config with labelKey fails validation
   Given content/.instructions-tabs.json uses labelKey instead of labels on a tab row
   When the instructions tabs config is validated
   Then validation fails
-  And the portal serves tabs from bundled src/content/.instructions-tabs.json only when that bundled file is valid
+  And the portal serves tabs from bundled app/shared/content/.instructions-tabs.json only when that bundled file is valid
 
 Scenario: Operator renames a tab from the pack file only
   Given an operator changes labels.en for tab id features in the pack repo
@@ -1634,7 +1634,7 @@ Scenario: Invalid index or missing markdown fails visibly
 
 ```gherkin
 Scenario: Learn tab embeds WordPress on learn.sdd.works
-  Given pack content/.instructions-tabs.json and bundled src/content/.instructions-tabs.json list learn-scrum-in-sdd with type embedded_external_page
+  Given pack content/.instructions-tabs.json and bundled app/shared/content/.instructions-tabs.json list learn-scrum-in-sdd with type embedded_external_page
   And urls.en urls.zh-Hans and urls.zh-Hant are https://learn.sdd.works/en/learn-embedded/
   When the visitor opens / or /instructions with tab=learn-scrum-in-sdd
   Then learn-scrum-iframe src is https://learn.sdd.works/en/learn-embedded/

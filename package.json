@@ -6,25 +6,26 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "next dev -p 3040",
-    "build": "next build",
-    "start": "next start -p 3000",
+    "dev": "next dev app/web -p 3040",
+    "build": "next build app/web",
+    "start": "next start app/web -p 3000",
     "check:pack-seeds": "bash scripts/check-pack-seed-links.sh",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit -p app/web/tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:regression:freshness": "vitest run src/core/sync/freshness-regression.test.ts src/core/sync/package-content.test.ts src/core/sync/sync-e2e.test.ts src/core/sync/ensure-cache-fresh.test.ts src/core/sync/run-scheduled-sync.test.ts src/app/api/github/webhook/route.test.ts src/app/api/sync/cron/route.test.ts",
-    "mcp:http": "tsx --env-file=.env.local src/mcp/http-server.ts",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev",
-    "db:seed": "prisma db seed",
-    "postinstall": "prisma generate"
+    "test:regression:freshness": "vitest run app/shared/core/sync/freshness-regression.test.ts app/shared/core/sync/package-content.test.ts app/shared/core/sync/sync-e2e.test.ts app/shared/core/sync/ensure-cache-fresh.test.ts app/shared/core/sync/run-scheduled-sync.test.ts app/web/app/api/github/webhook/route.test.ts app/web/app/api/sync/cron/route.test.ts",
+    "mcp:http": "tsx --env-file=.env.local app/mcp/http-server.ts",
+    "db:generate": "prisma generate --schema=app/shared/prisma/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema=app/shared/prisma/schema.prisma",
+    "db:migrate:dev": "prisma migrate dev --schema=app/shared/prisma/schema.prisma",
+    "db:seed": "prisma db seed --schema=app/shared/prisma/schema.prisma",
+    "postinstall": "prisma generate --schema=app/shared/prisma/schema.prisma"
   },
   "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
+    "schema": "app/shared/prisma/schema.prisma",
+    "seed": "npx tsx app/shared/prisma/seed.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

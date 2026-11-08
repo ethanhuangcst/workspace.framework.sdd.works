@@ -1927,13 +1927,13 @@ Scenario: A path outside the allow-list shape fails review
   Then the allow-list does not pass review
 ```
 
-User confirmed usable 2026-10-07 ([feature-53](../sprint-backlog.md#sprint-8)). Authoring seed, [`validateLiteInstallManifest`](../../src/core/seeds/lite-install-manifest.ts), and **CE-LITE-01** / **CE-LITE-02** ship in this repo. Pack repo root copy is manual go-live; [Spec-seeds-15](../product-backlog.md#L474) stays open until [MCP-07](../product-backlog.md#L325) includes the file in sync cache and install tarball.
+User confirmed usable 2026-10-07 ([feature-53](../sprint-backlog.md#sprint-8)). Authoring seed, [`validateLiteInstallManifest`](../../app/shared/core/seeds/lite-install-manifest.ts), and **CE-LITE-01** / **CE-LITE-02** ship in this repo. Pack repo root copy is manual go-live; [Spec-seeds-15](../product-backlog.md#L474) stays open until [MCP-07](../product-backlog.md#L325) includes the file in sync cache and install tarball.
 
 ## `instructions-tabs-config` — Pack instructions tabs JSON (feature-58)
 
-Design: [`app-design.md`](../admin-portal/app-design.md) instructions tabs section. Tests: [`framework-tests.md`](./framework-tests.md#instructions-tabs-config) (**CE-TABS-01**, **CE-TABS-02**). [Spec-seeds-16](../product-backlog.md#L277). Operator rules: [`src/content/.admin-note.md`](../../src/content/.admin-note.md). Portal resolver, API, and UI are [Web-portal-24](../product-backlog.md#L395), [Web-portal-25](../product-backlog.md#L395), [feature-59](../sprint-backlog.md#sprint-8), [feature-60](../sprint-backlog.md#sprint-8).
+Design: [`app-design.md`](../admin-portal/app-design.md) instructions tabs section. Tests: [`framework-tests.md`](./framework-tests.md#instructions-tabs-config) (**CE-TABS-01**, **CE-TABS-02**). [Spec-seeds-16](../product-backlog.md#L277). Operator rules: [`app/shared/content/.admin-note.md`](../../app/shared/content/.admin-note.md). Portal resolver, API, and UI are [Web-portal-24](../product-backlog.md#L395), [Web-portal-25](../product-backlog.md#L395), [feature-59](../sprint-backlog.md#sprint-8), [feature-60](../sprint-backlog.md#sprint-8).
 
-Acceptance scenarios live in [`app-stories.md`](../admin-portal/app-stories.md) AC22. This repo ships the bundled seed at [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json). The pack repo copy is `content/.instructions-tabs.json` after sync.
+Acceptance scenarios live in [`app-stories.md`](../admin-portal/app-stories.md) AC22. This repo ships the bundled seed at [`app/shared/content/.instructions-tabs.json`](../../app/shared/content/.instructions-tabs.json). The pack repo copy is `content/.instructions-tabs.json` after sync.
 
 ## `lite-install-receipt` — Lite install client receipt (feature-57)
 
@@ -2007,7 +2007,7 @@ Scenario: A failed copy keeps the previous receipt
   And a first run that never succeeded still has no receipt
 ```
 
-User confirmed usable 2026-10-07 ([feature-57](../sprint-backlog.md#sprint-8)). Authoring example, [`validateLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), [`planLiteInstallReceipt`](../../src/core/seeds/lite-install-receipt.ts), and **CE-LITE-03** / **CE-LITE-04** ship in this repo. [Web-portal-18](../product-backlog.md#L488) Part 1 and the local agent apply these rules at runtime.
+User confirmed usable 2026-10-07 ([feature-57](../sprint-backlog.md#sprint-8)). Authoring example, [`validateLiteInstallReceipt`](../../app/shared/core/seeds/lite-install-receipt.ts), [`planLiteInstallReceipt`](../../app/shared/core/seeds/lite-install-receipt.ts), and **CE-LITE-03** / **CE-LITE-04** ship in this repo. [Web-portal-18](../product-backlog.md#L488) Part 1 and the local agent apply these rules at runtime.
 
 ---
 

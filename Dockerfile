@@ -6,14 +6,14 @@ RUN apk add --no-cache libc6-compat openssl
 
 FROM base AS deps
 COPY package.json package-lock.json ./
-COPY packages ./packages
-COPY prisma ./prisma
+COPY app/shared/packages ./app/shared/packages
+COPY app/shared/prisma ./app/shared/prisma
 RUN npm ci
 
 FROM deps AS builder
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npx prisma generate
+RUN npx prisma generate --schema=app/shared/prisma/schema.prisma
 RUN npm run build
 
 FROM base AS runner
@@ -26,22 +26,22 @@ ENV PATH="/app/node_modules/.bin:${PATH}"
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
+# Standalone server: project tree sits at standalone/app/web; flatten to /app so
+# server.js stays at the image root and process.cwd()-relative reads keep working.
+COPY --from=builder /app/app/web/.next/standalone/app/web ./
+COPY --from=builder /app/app/web/.next/standalone/node_modules ./node_modules
+COPY --from=builder /app/app/web/.next/static ./.next/static
 COPY --from=builder /app/lite-prompts ./lite-prompts
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/packages ./packages
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
-COPY --from=builder /app/next.config.ts ./next.config.ts
+# TS sources for the MCP container (tsx runs them directly) and fs-read fallback data.
+COPY --from=builder /app/app/mcp ./app/mcp
+COPY --from=builder /app/app/shared ./app/shared
 COPY docker-entrypoint-web.sh ./docker-entrypoint-web.sh
 RUN chmod +x docker-entrypoint-web.sh
 
 # Prisma migrate/seed + MCP (tsx) — not bundled in Next standalone output.
 COPY package.json package-lock.json ./
 RUN npm install --no-save prisma@6.16.0 tsx@4.20.5 \
-  && npx prisma generate \
+  && npx prisma generate --schema=app/shared/prisma/schema.prisma \
   && chown -R nextjs:nodejs /app
 
 USER nextjs

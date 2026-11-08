@@ -6,7 +6,7 @@ cd "$ROOT"
 
 SRC="$ROOT/public/sdd-mark.png"
 ASSET="$ROOT/src/mcp/assets/sdd-mark.png"
-OUT="$ROOT/src/mcp/generated/mcp-mark-base64.ts"
+OUT="$ROOT/app/shared/setup/generated/mcp-mark-base64.ts"
 
 if [[ ! -f "$SRC" ]]; then
   echo "Missing $SRC" >&2

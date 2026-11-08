@@ -36,7 +36,7 @@ Guided release for stack **`framework-sdd-works`**. Follow in order. Do **not** 
 | Public domain | **`sdd.works`** (canonical). Legacy **`framework.sdd.works`** redirects pages; **`/api/*`** is not redirected. |
 | Image (proposed) | `ghcr.io/ethanhuangcst/workspace.framework.sdd.works/web:<IMAGE_TAG>` |
 | Web process | **`next start -p 3000`** (Next.js 16 App Router) |
-| MCP process | **`node` / `tsx` `src/mcp/http-server.ts`** — Streamable HTTP on **`3041`**, path **`/mcp`** |
+| MCP process | **`node` / `tsx` `app/mcp/http-server.ts`** — Streamable HTTP on **`3041`**, path **`/mcp`** |
 | Web container listen | **`3000`** |
 | MCP container listen | **`3041`** (internal; NPM Custom Location forwards `/mcp` here) |
 | Host bind (debug only) | **`3008→3000`** (web), **`3204→3041`** (mcp). NPM Forward uses **container** ports, **not** `3008` / `3204`. |
@@ -104,7 +104,7 @@ Scheduled sync (30 min) starts via Next **`instrumentation.ts`** when `GITHUB_TO
 - Node 22 LTS
 - `npm ci` → `prisma generate` → `next build`
 - Listen **`0.0.0.0`** — set `HOSTNAME=0.0.0.0`, `PORT=3000` for web
-- MCP service command: `node` (or `tsx`) `src/mcp/http-server.ts` with `MCP_HTTP_HOST=0.0.0.0`
+- MCP service command: `node` (or `tsx`) `app/mcp/http-server.ts` with `MCP_HTTP_HOST=0.0.0.0`
 
 **Do not** commit real secrets. Production values live in Portainer only.
 
@@ -629,7 +629,7 @@ services:
       MCP_HTTP_PORT: "3041"
       MCP_HTTP_PATH: /mcp
       SDD_PACKAGE_CACHE_DIR: /data/sdd-packages
-    command: ["npx", "tsx", "src/mcp/http-server.ts"]
+    command: ["npx", "tsx", "app/mcp/http-server.ts"]
     networks:
       - default
 
@@ -645,7 +645,7 @@ networks:
 **Notes for implementers landing this file:**
 
 - Web entrypoint: `prisma migrate deploy` → `prisma db seed` → `node server.js` (Next standalone).
-- MCP command: `npx tsx src/mcp/http-server.ts` (`tsx` installed in image at build time).
+- MCP command: `npx tsx app/mcp/http-server.ts` (`tsx` installed in image at build time).
 - MCP must **not** run seed/migrate.
 - Both services must mount the **same** named volume for SYNK cache coherence.
 

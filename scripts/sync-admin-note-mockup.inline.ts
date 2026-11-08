@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { renderPortalMarkdown } from "../src/lib/features-catalog";
+import { renderPortalMarkdown } from "../app/shared/lib/features-catalog";
 
 /** Match mockup / portal: fenced blocks become codeblock--file with Copy. */
 function postProcessAdminNoteHtml(html: string): string {
@@ -20,7 +20,7 @@ function postProcessAdminNoteHtml(html: string): string {
 }
 
 const root = process.cwd();
-const md = readFileSync(join(root, "src/content/.admin-note.md"), "utf8");
+const md = readFileSync(join(root, "app/shared/content/.admin-note.md"), "utf8");
 const html = postProcessAdminNoteHtml(renderPortalMarkdown(md).trim());
 const samplePath = join(
   root,

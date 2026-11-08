@@ -25,3 +25,5 @@ blob-report/
 .DS_Store
 .idea/
 .vscode/
+app/web/AGENTS.md
+app/web/CLAUDE.md

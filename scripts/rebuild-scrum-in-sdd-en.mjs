@@ -9,7 +9,7 @@ import { join } from "node:path";
 const ROOT = join(import.meta.dirname, "..");
 const TARGETS = [
   join(ROOT, "pack.framework.sdd.works/content/scrum-in-sdd/scrum-in-sdd.en.md"),
-  join(ROOT, "src/content/scrum-in-sdd/scrum-in-sdd.en.md"),
+  join(ROOT, "app/shared/content/scrum-in-sdd/scrum-in-sdd.en.md"),
 ];
 
 const PART_SIGNATURES = [

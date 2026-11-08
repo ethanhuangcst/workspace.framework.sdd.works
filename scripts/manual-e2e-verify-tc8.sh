@@ -6,5 +6,5 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$repo_root"
 
 echo "=== TC-8 verify (Vitest MC-09 contract) ==="
-npx vitest run src/mcp/create-server.test.ts -t "get_key"
+npx vitest run app/mcp/create-server.test.ts -t "get_key"
 echo "=== TC-8 verify: PASS (automated; record one client MCP transcript in go-live-test.md) ==="

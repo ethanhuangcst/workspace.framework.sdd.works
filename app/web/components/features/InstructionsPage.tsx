@@ -1,0 +1,153 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { t, type Locale } from "@shared/i18n/t";
+import { AuthShell } from "@web/components/layout/AuthShell";
+import { Logo } from "@web/components/ui/Logo";
+import { LearnScrumEmbedPanel } from "@web/components/features/LearnScrumEmbedPanel";
+import { SetupGuidePanel } from "@web/components/features/SetupGuidePanel";
+import { KnowledgeFolderPanel } from "@web/components/features/KnowledgeFolderPanel";
+import {
+  contentBodyClassName,
+  contentBodyTestId,
+  guideTabDomId,
+  guideTabTestId,
+  type InstructionsPageTab,
+} from "@shared/lib/instructions-tabs-dom";
+import type { SetupManualPasteContent } from "@shared/lib/setup-manual";
+
+export function InstructionsPage({
+  locale,
+  onLocaleChange,
+  tabs,
+  activeQueryParam: activeFromServer = "setup",
+  setupPromptSentence,
+  manualPaste,
+}: {
+  locale: Locale;
+  onLocaleChange: (locale: Locale) => void;
+  tabs: InstructionsPageTab[];
+  activeQueryParam?: string;
+  setupPromptSentence: string;
+  manualPaste: SetupManualPasteContent;
+}) {
+  const pathname = usePathname() || "/";
+  const setupQueryParam =
+    tabs.find((tab) => tab.id === "setup")?.queryParam ?? "setup";
+  const [activeQueryParam, setActiveQueryParam] = useState(activeFromServer);
+  const [syncedQueryParam, setSyncedQueryParam] = useState(activeFromServer);
+
+  if (activeFromServer !== syncedQueryParam) {
+    setSyncedQueryParam(activeFromServer);
+    setActiveQueryParam(activeFromServer);
+  }
+
+  function tabHref(queryParam: string): string {
+    if (queryParam === setupQueryParam) return pathname;
+    const params = new URLSearchParams();
+    params.set("tab", queryParam);
+    return `${pathname}?${params.toString()}`;
+  }
+
+  return (
+    <AuthShell
+      locale={locale}
+      onLocaleChange={onLocaleChange}
+      variant="home"
+      className="guide-shell"
+      footerVariant="guide"
+    >
+      <article className="guide" data-testid="instructions-guide">
+        <div className="guide-sticky" data-testid="guide-sticky">
+          <header className="guide-hero">
+            <div className="guide-hero-title">
+              <Logo size="header" href="/" />
+              <h1>{t(locale, "admin.guide.title")}</h1>
+            </div>
+            <p className="guide-hero-tag">{t(locale, "admin.guide.lead")}</p>
+          </header>
+
+          <div
+            className="guide-tabs"
+            role="tablist"
+            aria-label={t(locale, "admin.guide.tabs_label")}
+          >
+            {tabs.map((tab) => (
+              <Link
+                key={tab.id}
+                href={tabHref(tab.queryParam)}
+                scroll={false}
+                className={
+                  activeQueryParam === tab.queryParam
+                    ? "guide-tab is-active"
+                    : "guide-tab"
+                }
+                role="tab"
+                id={guideTabDomId(tab.id)}
+                aria-selected={activeQueryParam === tab.queryParam}
+                aria-controls={tab.panelTestId}
+                data-tab={tab.queryParam}
+                data-testid={guideTabTestId(tab.id)}
+                onClick={() => setActiveQueryParam(tab.queryParam)}
+              >
+                {tab.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {tabs.map((tab) => (
+          <div
+            key={tab.id}
+            className="guide-tab-panel"
+            role="tabpanel"
+            id={tab.panelTestId}
+            aria-labelledby={guideTabDomId(tab.id)}
+            data-panel={tab.queryParam}
+            hidden={activeQueryParam !== tab.queryParam}
+            data-testid={tab.panelTestId}
+          >
+            {tab.type === "code" && tab.id === "setup" ? (
+              <SetupGuidePanel
+                locale={locale}
+                setupPromptSentence={setupPromptSentence}
+                manualPaste={manualPaste}
+              />
+            ) : null}
+            {tab.type === "embedded_external_page" && tab.embedUrl ? (
+              <LearnScrumEmbedPanel
+                key={tab.embedUrl}
+                locale={locale}
+                embedUrl={tab.embedUrl}
+              />
+            ) : null}
+            {tab.type === "content" ? (
+              <article
+                className={contentBodyClassName(tab.id)}
+                id={contentBodyTestId(tab.id)}
+                data-testid={contentBodyTestId(tab.id)}
+                dangerouslySetInnerHTML={{ __html: tab.html ?? "" }}
+              />
+            ) : null}
+            {tab.type === "internal_page_folder" &&
+            tab.rootPath &&
+            tab.knowledge ? (
+              <KnowledgeFolderPanel
+                locale={locale}
+                queryParam={tab.queryParam}
+                rootPath={tab.rootPath}
+                folderSegments={tab.knowledge.folderSegments}
+                doc={tab.knowledge.doc}
+                listing={tab.knowledge.listing}
+                articleHtml={tab.knowledge.articleHtml}
+                error={tab.knowledge.error}
+              />
+            ) : null}
+          </div>
+        ))}
+      </article>
+    </AuthShell>
+  );
+}

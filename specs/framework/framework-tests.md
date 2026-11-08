@@ -1141,7 +1141,7 @@ Unit checks on the JSON file and `validateLiteInstallManifest`. No HTTP route, n
 
 | Layer | Share | Tool |
 | --- | --- | --- |
-| Unit | 100% for this SBI | Vitest [`src/core/seeds/lite-install-manifest.test.ts`](../../src/core/seeds/lite-install-manifest.test.ts) |
+| Unit | 100% for this SBI | Vitest [`app/shared/core/seeds/lite-install-manifest.test.ts`](../../app/shared/core/seeds/lite-install-manifest.test.ts) |
 | API | N/A in feature-53 | File-links route is Web-portal-17; production cache check is [feature-82](../sprint-backlog.md#sprint-9) / [MCP-07](../product-backlog.md#pb-105) in [`mcp-tests.md`](../mcp/mcp-tests.md#15-feature-82-production-pack-sync) §15 |
 | Browser | N/A | No screen |
 
@@ -1157,7 +1157,7 @@ Unit checks on the JSON file and `validateLiteInstallManifest`. No HTTP route, n
 
 ### Automation
 
-Run: `npm test -- src/core/seeds/lite-install-manifest.test.ts`
+Run: `npm test -- app/shared/core/seeds/lite-install-manifest.test.ts`
 
 | Case | Vitest describe / behavior |
 | --- | --- |
@@ -1186,23 +1186,23 @@ Stories: [`app-stories.md`](../admin-portal/app-stories.md) AC22 ([feature-58](.
 
 ### Strategy
 
-Unit checks on the bundled JSON seed and the config validator. No HTTP server in this slice. Pack copy of the same file is verified after [MCP-07](../product-backlog.md#L325) sync. Validator `contentRoot` is the sync unpack root (directory that contains `content/`). JSON `paths` values are relative to that root, not to `src/content/` alone.
+Unit checks on the bundled JSON seed and the config validator. No HTTP server in this slice. Pack copy of the same file is verified after [MCP-07](../product-backlog.md#L325) sync. Validator `contentRoot` is the sync unpack root (directory that contains `content/`). JSON `paths` values are relative to that root, not to `app/shared/content/` alone.
 
 ### Plan
 
 | Layer | Share | Tool |
 | --- | --- | --- |
-| Unit | 100% for feature-58 validator | Vitest `src/core/seeds/instructions-tabs-config.test.ts` |
+| Unit | 100% for feature-58 validator | Vitest `app/shared/core/seeds/instructions-tabs-config.test.ts` |
 | API | feature-59 | [`app-tests.md`](../admin-portal/app-tests.md) integration rows |
 | Browser | feature-60 | [`app-tests.md`](../admin-portal/app-tests.md) §11 |
 
 ### Automation
 
-Run: `npm test -- src/core/seeds/instructions-tabs-config.test.ts`
+Run: `npm test -- app/shared/core/seeds/instructions-tabs-config.test.ts`
 
 | Case | Vitest describe / behavior |
 | --- | --- |
-| CE-TABS-01 | Bundled [`src/content/.instructions-tabs.json`](../../src/content/.instructions-tabs.json) passes validation when `contentRoot` is pack-shaped (`pack.framework.sdd.works/`) |
+| CE-TABS-01 | Bundled [`app/shared/content/.instructions-tabs.json`](../../app/shared/content/.instructions-tabs.json) passes validation when `contentRoot` is pack-shaped (`pack.framework.sdd.works/`) |
 | CE-TABS-02 | Invalid documents fail: wrong `version`, duplicate `queryParam`, unknown `code.id`, missing `paths.en`, path traversal, missing or empty `labels.en`, presence of `labelKey` ([ADR-119](../adr/ADR-119-instructions-tab-labels-in-pack-config.md)) |
 
 ### Cases
@@ -1210,7 +1210,7 @@ Run: `npm test -- src/core/seeds/instructions-tabs-config.test.ts`
 #### CE-TABS-01 — Default bundled config
 
 - **Layer:** L1 (automated).
-- **Pre-condition:** Authoring JSON exists at `src/content/.instructions-tabs.json`. Pack tree under `pack.framework.sdd.works/content/` includes the markdown paths named in that file.
+- **Pre-condition:** Authoring JSON exists at `app/shared/content/.instructions-tabs.json`. Pack tree under `pack.framework.sdd.works/content/` includes the markdown paths named in that file.
 - **Test steps:** Parse the bundled JSON. Call `validateInstructionsTabsConfig` with `contentRoot` set to `pack.framework.sdd.works` (unpack-shaped root) and `codeAllowlist` `["setup"]`.
 - **Expected results:** Three tabs in order setup, features, scrum-in-sdd. Each content `paths.en` resolves to an on-disk file under `contentRoot` (for example `content/features/features.en.md`).
 
@@ -1233,13 +1233,13 @@ Unit checks on receipt shape and the merge plan. No HTTP server, no browser, no 
 
 | Layer | Share | Tool |
 | --- | --- | --- |
-| Unit | 100% for this SBI | Vitest [`src/core/seeds/lite-install-receipt.test.ts`](../../src/core/seeds/lite-install-receipt.test.ts) |
+| Unit | 100% for this SBI | Vitest [`app/shared/core/seeds/lite-install-receipt.test.ts`](../../app/shared/core/seeds/lite-install-receipt.test.ts) |
 | API | N/A | File links stay on Web-portal-17 |
 | Browser | N/A | No screen |
 
 ### Automation
 
-Run: `npm test -- src/core/seeds/lite-install-receipt.test.ts`
+Run: `npm test -- app/shared/core/seeds/lite-install-receipt.test.ts`
 
 | Case | Vitest describe / behavior |
 | --- | --- |
